@@ -5,6 +5,10 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using System.Numerics;
 using Content.Shared.Roles;
+// Arcane-Start
+using Robust.Client.Graphics;
+using Robust.Client.UserInterface;
+// Arcane-End
 
 namespace Content.Client.CrewManifest.UI;
 
@@ -13,6 +17,7 @@ public sealed class CrewManifestSection : BoxContainer
     public CrewManifestSection(
         IPrototypeManager prototypeManager,
         SpriteSystem spriteSystem,
+        IClipboardManager clipboardManager, // Arcane
         DepartmentPrototype section,
         List<CrewManifestEntry> entries)
     {
@@ -69,8 +74,26 @@ public sealed class CrewManifestSection : BoxContainer
                 titleContainer.AddChild(title);
             }
 
-            gridContainer.AddChild(name);
-            gridContainer.AddChild(titleContainer);
+            // Arcane-Edit-Start
+            var nameButton = new ContainerButton
+            {
+                HorizontalExpand = true,
+                StyleBoxOverride = new StyleBoxEmpty(),
+            };
+            nameButton.AddChild(name);
+            nameButton.OnButtonDown += _ => clipboardManager.SetText(entry.Name);
+
+            var titleButton = new ContainerButton
+            {
+                HorizontalExpand = true,
+                StyleBoxOverride = new StyleBoxEmpty(),
+            };
+            titleButton.AddChild(titleContainer);
+            titleButton.OnButtonDown += _ => clipboardManager.SetText(entry.JobTitle);
+
+            gridContainer.AddChild(nameButton);
+            gridContainer.AddChild(titleButton);
+            // Arcane-Edit-End
         }
     }
 }
