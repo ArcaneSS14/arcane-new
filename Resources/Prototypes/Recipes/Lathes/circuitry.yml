@@ -105,7 +105,7 @@
   result: RipleyPeripheralsElectronics
 
 - type: latheRecipe
-  parent: [ BaseBananiumCircuitboardRecipe, BaseMechRecipeCategory ]
+  parent: [ BaseGoldCircuitboardRecipe, BaseMechRecipeCategory ]
   id: HonkerCentralElectronics
   result: HonkerCentralElectronics
   categories: [ Mech, Honker ] # Trauma

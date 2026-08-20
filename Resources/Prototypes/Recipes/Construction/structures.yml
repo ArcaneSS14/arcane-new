@@ -786,9 +786,9 @@
 
 - type: construction
   parent: BaseStructureFullTile
-  id: BananiumClownStatue
-  graph: BananiumStatueClown
-  targetNode: bananiumStatue
+  id: OrnateClownStatue
+  graph: OrnateStatueClown
+  targetNode: ornateStatueClown
   category: construction-category-structures
   placementMode: SnapgridCenter
   objectType: Structure

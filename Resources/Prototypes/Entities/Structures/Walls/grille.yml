@@ -20,6 +20,9 @@
     delay: 4
     fx: EffectRCDDeconstruct4
   - type: CanBuildWindowOnTop
+  - type: Anchorable
+    flags:
+    - Anchorable
   - type: Sprite
     drawdepth: Walls
     sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
@@ -184,7 +187,7 @@
     noRot: false
   - type: Sprite
     drawdepth: Walls
-    sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
+    sprite: Structures/Walls/grille-diagonal.rsi # Trauma # Arcane-Edit
     layers:
     - state: grille_diagonal
     - state: electrified_diagonal
@@ -193,7 +196,7 @@
       shader: unshaded
       visible: false
   - type: Icon
-    sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
+    sprite: Structures/Walls/grille-diagonal.rsi # Trauma # Arcane-Edit
     state: grille_diagonal
   - type: Tag
     tags:

@@ -1271,11 +1271,19 @@ CrateEngineeringThruster: CrateSpaceThruster
 # 2026-08-12
 LightReplacer: LightReplacerFilled
 
+#2026-08-14
+MeteorRock: AsteroidRock
+MeteorRockCoal: AsteroidRockCoal
+MeteorRockQuartz: AsteroidRockQuartz
+MeteorRockTin: AsteroidRockTin
+MeteorRockSilver: AsteroidRockSilver
+MeteorRockGold: AsteroidRockGold
+MeteorRockPlasma: AsteroidRockPlasma
+MeteorRockDiamond: AsteroidRockDiamond
+MeteorRockUranium: AsteroidRockUranium
+StatueBananiumClown: StatueOrnateClown
+
 #2026-08-18
 DrinkNeurotoxinGlass: null
-
-#2026-08-31
-DrinkWaterJug: JugWater
-
-#2026-09-05
-AsimovCircuitBoard: CrewsimovCircuitBoard
+#2026-08-19
+JanitorServiceLight: null
