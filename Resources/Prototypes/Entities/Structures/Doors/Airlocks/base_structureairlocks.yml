@@ -215,6 +215,10 @@
     - Airlocks
     - WirePanels
     - Networking
+  - type: StructureAligner
+  - type: StructureAlignerPylon
+  placement:
+    mode: SnapgridCenter
 
 - type: entity
   abstract: true
