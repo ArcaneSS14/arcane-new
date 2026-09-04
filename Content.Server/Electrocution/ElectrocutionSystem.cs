@@ -1,5 +1,5 @@
 // <Trauma>
-using Content.Goobstation.Common.Effects;
+using Content.Trauma.Common.Effects;
 // </Trauma>
 using Content.Server.Administration.Logs;
 using Content.Server.Doors.Systems;
@@ -164,7 +164,7 @@ public sealed partial class ElectrocutionSystem : SharedElectrocutionSystem
 
     private void OnElectrifiedStartCollide(EntityUid uid, ElectrifiedComponent electrified, ref StartCollideEvent args)
     {
-        if (!electrified.OnBump)
+        if (!electrified.OnBump || !args.OtherFixture.Hard) // Trauma - ignore non-hard fixtures
             return;
         TryDoElectrifiedAct(uid, args.OtherEntity, 1, electrified);
     }
