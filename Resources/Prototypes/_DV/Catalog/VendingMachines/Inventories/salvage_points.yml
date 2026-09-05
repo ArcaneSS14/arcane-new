@@ -17,6 +17,8 @@
   # TODO: stabilizing serum for 400
   - id: BoxMarkerBeacons
     cost: 300
+  - id: SeismicCharge # Arcane
+    cost: 350
   - id: Fulton
     cost: 400
   - id: FultonBeacon
