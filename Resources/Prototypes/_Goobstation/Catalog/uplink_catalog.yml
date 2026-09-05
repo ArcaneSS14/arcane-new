@@ -233,6 +233,30 @@
   - !type:ListingLimitedStockCondition
     stock: 1
 
+# Arcane-Start
+- type: listing
+  id: UplinkGlovesKnuckleDusters
+  name: uplink-gloves-knuckleduster-name
+  description: uplink-gloves-knuckleduster-desc
+  icon: { sprite: _Goobstation/Clothing/Hands/Gloves/knuckleduster.rsi, state: syndicateknuckleduster }
+  productEntity: ClothingHandsKnuckleDustersSyndicate
+  cost:
+    Telecrystal: 20
+  categories:
+  - UplinkWeaponry
+
+- type: listing
+  id: UplinkSyndicateDisabler
+  name: uplink-syndicate-disabler-name
+  description: uplink-syndicate-disabler-desc
+  icon: { sprite: _EinsteinEngines/Objects/Weapons/Guns/Battery/syndicate-disabler.rsi, state: base }
+  productEntity: WeaponDisablerSyndicate
+  cost:
+    Telecrystal: 20
+  categories:
+  - UplinkWeaponry
+# Arcane-End
+
 - type: listing
   id: UplinkFireAxeFlaming
   name: uplink-fire-axe-flaming-name
@@ -261,6 +285,19 @@
       - NukeOpsUplink
       components:
       - SpyRule
+
+# Arcane-Start
+- type: listing
+  id: UplinkWeaponShotgunHeavy
+  name: uplink-weapon-heavy-shotgun-name
+  description: uplink-weapon-heavy-shotgun-desc
+  icon: { sprite: /Textures/_Goobstation/Objects/Weapons/Guns/Shotguns/magshot.rsi, state: icon }
+  productEntity: WeaponShotgunHeavy
+  cost:
+    Telecrystal: 200
+  categories:
+  - UplinkWeaponry
+# Arcane-End
 
 - type: listing
   id: UplinkBowHardlight
@@ -314,6 +351,18 @@
     Telecrystal: 25
   categories:
     - UplinkWeaponry
+
+# Arcane-Start
+- type: listing
+  id: UplinkWeaponM7S
+  name: uplink-m7s-name
+  description: uplink-m7s-desc
+  productEntity: WeaponSubMachineGunM7S
+  cost:
+    Telecrystal: 60
+  categories:
+    -  UplinkWeaponry
+# Arcane-End
 
 # Wearables
 
@@ -740,6 +789,19 @@
   categories:
   - UplinkImplants
 
+# Arcane-Start
+- type: listing
+  id: UplinkKravMagaImplanter
+  name: uplink-krav-maga-implant-name
+  description: uplink-krav-maga-implant-desc
+  icon: { sprite: /Textures/_Goobstation/Clothing/Hands/Gloves/kravgloves.rsi, state: icon }
+  productEntity: KravMagaImplanter
+  cost:
+    Telecrystal: 40
+  categories:
+    - UplinkImplants
+# Arcane-End
+
 - type: listing
   id: UplinkBinaryImplant
   name: uplink-binary-implant-name
@@ -956,6 +1018,41 @@
     whitelist:
       tags:
       - NukeOpsUplink
+
+# Arcane-Start
+- type: listing
+  id: UplinkMagazineShotgunHeavy
+  name: uplink-heavy-shotgun-magazine-name
+  description: uplink-heavy-shotgun-magazine-desc
+  icon: { sprite: _Goobstation/Objects/Weapons/Guns/Ammunition/Magazine/heavy_shotgun.rsi, state: icon }
+  productEntity: MagazineShotgunHeavy
+  cost:
+    Telecrystal: 30
+  categories:
+  - UplinkAmmo
+
+- type: listing
+  id: UplinkMagazineShotgunHeavySlug
+  name: uplink-heavy-shotgun-magazine-slug-name
+  description: uplink-heavy-shotgun-magazine-slug-desc
+  icon: { sprite: _Goobstation/Objects/Weapons/Guns/Ammunition/Magazine/heavy_shotgun.rsi, state: icon2 }
+  productEntity: MagazineShotgunHeavySlug
+  cost:
+    Telecrystal: 40
+  categories:
+  - UplinkAmmo
+
+- type: listing
+  id: UplinkMagazineM7S
+  name: uplink-m7s-mag-name
+  description: uplink-m7s-mag-desc
+  icon: { sprite: _Goobstation/Objects/Weapons/Guns/Ammunition/Magazine/M7S_magazine.rsi, state: icon }
+  productEntity: MagazineLowCaliberM7S
+  cost:
+    Telecrystal: 5 # 105 dmg per TC which seems huge, but you're missing half of your shots
+  categories:
+  - UplinkAmmo
+# Arcane-End
 
 - type: listing
   id: UplinkHighCapacityMagazinePistol

@@ -53,22 +53,22 @@
   - !type:ListingLimitedStockCondition
     stock: 1
 
-# <Trauma> - no ERP yet
-#- type: listing
-#  id: UplinkCatEars
-#  name: uplink-cat-ears-name
-#  description: uplink-cat-ears-desc
-#  productEntity: ClothingHeadHatCatEars
-#  cost:
-#    Telecrystal: 26
-#  categories:
-#  - UplinkPointless
-#  conditions:
-#  - !type:BuyerWhitelistCondition
-#    blacklist:
-#      components:
-#      - SurplusBundle
-# </Trauma>
+# Arcane-Edit-Start
+- type: listing
+  id: UplinkCatEars
+  name: uplink-cat-ears-name
+  description: uplink-cat-ears-desc
+  productEntity: ClothingHeadHatCatEars
+  cost:
+    Telecrystal: 26
+  categories:
+  - UplinkPointless
+  conditions:
+  - !type:BuyerWhitelistCondition
+    blacklist:
+      components:
+      - SurplusBundle
+# Arcane-Edit-End
 
 - type: listing
   id: UplinkOutlawHat
