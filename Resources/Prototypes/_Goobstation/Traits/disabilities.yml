@@ -13,6 +13,16 @@
     prototype: VehicleWheelchair
   - type: LegsParalyzed
 
+# Arcane-Start
+- type: trait
+  id: ByondYourPrime
+  name: trait-tile-movement-name
+  description: trait-tile-movement-desc
+  category: Disabilities
+  components:
+  - type: TileMovement
+# Arcane-End
+
 - type: trait
   id: SocialAnxietyTrait
   name: trait-social-anxiety-name
