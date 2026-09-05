@@ -74,7 +74,7 @@
     fadeOutTime: 60
   # </Trauma>
   - type: GhostRole
-    prob: 0 # Trauma - was 0.05
+    prob: 0.05 # Arcane-Edit: 0 > 0.05
     makeSentient: true
     allowSpeech: true
     name: ghost-role-information-tomatokiller-name
