@@ -1343,7 +1343,7 @@
     - type: ItemBorgModule
       hands:
       - item: SyndicateJawsOfLife # Trauma - was crowbar
-      # - item: Emag # Trauma
+      - item: Emag # Trauma # Arcane-Edit: Enabled
       - item: AccessBreaker
       - item: PinpointerSyndicateNuclear
     - type: BorgModuleIcon
