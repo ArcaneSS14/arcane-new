@@ -92,13 +92,13 @@
       params:
         volume: -4
   - type: UseDelay
-  # <Trauma> No.
-#  - type: Clothing
-#    slots: [mask]
-#  - type: Tag
-#    tags:
-#    - PetWearable
-  #</Trauma>
+  # <Trauma> No. # Arcane-Edit-Start: Yes
+  - type: Clothing
+    slots: [mask]
+  - type: Tag
+    tags:
+    - PetWearable
+  #</Trauma> # Arcane-Edit-End
 
 - type: entity
   parent: [ BaseItem, BaseSportsBall ]
