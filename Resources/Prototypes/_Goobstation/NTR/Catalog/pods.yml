@@ -262,6 +262,15 @@
     prototype: CrateArmoryCombatHardsuit
 
 - type: entity
+  id: SpawnPodTaskFlatpack
+  categories: [ HideSpawnMenu ]
+  name: SpawnSupplyTaskFlatpack
+  parent: SpawnSupplyEmpty
+  components:
+  - type: SpawnOnDespawn
+    prototype: ComputerNTRTasksFlatpack
+
+- type: entity
   id: SpawnPodMarlen
   categories: [ HideSpawnMenu ]
   name: SpawnPodMarlen

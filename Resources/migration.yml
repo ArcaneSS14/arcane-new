@@ -157,10 +157,12 @@ WehMedipen: WehMedipenTiny
 # 2026-08-03
 BibleCommunistManifesto: Bible
 
+# Arcane-Edit-Start
 # 2026-08-17
-ComputerNTRTasks: null
-TaskBottle: ChemistryEmptyBottle01
-TaskJug: Jug
+#ComputerNTRTasks: null
+#TaskBottle: ChemistryEmptyBottle01
+#TaskJug: Jug
+# Arcane-Edit-End
 
 # 2026-08-24
 LightReplacerEmpty: LightReplacer
