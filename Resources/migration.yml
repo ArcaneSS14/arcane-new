@@ -97,7 +97,7 @@ ChestSkeleton: OrganSkeletonPersonTorso
 ChestHuman: OrganHumanTorso
 
 # 2026-02-18 removed vulp plushie
-PlushieVulp: null
+#PlushieVulp: null # Arcane-Edit: Nope
 
 # 2026-03-02 removed playing cards
 CardDeckBlack: null
