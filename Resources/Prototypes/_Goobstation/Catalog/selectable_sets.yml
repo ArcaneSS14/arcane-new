@@ -141,8 +141,9 @@
   - MagazinePistolCaselessRifle # 2
   - MagazinePistolCaselessRifle # 3
   - MagazinePistolCaselessRifle # 4
-  - CapoeiraManual
-  - EnergyDaggerBox
+  # Arcane-Edit-Start
+  - CQCManual
+  # Arcane-Edit-End
   - ClothingOuterArmourInvisibleSyndie
   - ClothingShoesBootsJack
   - CigPackSyndicate
@@ -164,7 +165,7 @@
   - ScramImplanter
   - FreedomImplanter
   - SmokeImplanter
-  - FakeMindShieldImplanter
+  - KravMagaImplanter #Trauma - Kill Krav Maga implanter. Replace with fakemindshield. # Arcane-Edit: NowEnabled
   - ClothingOuterDavidsJacketValid
   - AutosurgeonRightMantisBlade
   - AutosurgeonLeftMantisBlade
