@@ -1177,6 +1177,23 @@
     whitelist:
     - Human
 
+# Arcane-Start
+- type: listing
+  id: UplinkUndeterminedBundle
+  name: uplink-undetermined-bundle-name
+  description: uplink-undetermined-bundle-desc
+  productEntity: CrateSyndicateUndetermined
+  cost:
+    Telecrystal: 99 # :trollface:
+  categories:
+  - UplinkDisruption
+  conditions:
+  - !type:StoreWhitelistCondition
+    blacklist:
+      tags:
+      - NukeOpsUplink
+# Arcane-End
+
 - type: listing
   id: UplinkEnergyPickaxe
   name: uplink-energy-pickaxe-name
