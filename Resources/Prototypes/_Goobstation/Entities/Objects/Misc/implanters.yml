@@ -167,6 +167,16 @@
   - type: Implanter
     implant: StypticStimulatorImplant
 
+# Arcane-Start
+- type: entity
+  parent: BaseImplantOnlyImplanterSyndi
+  id: KravMagaImplanter
+  suffix: Krav Maga
+  components:
+  - type: Implanter
+    implant: KravMagaImplant
+# Arcane-End
+
 - type: entity
   id: BinaryImplanter
   suffix: Binary Decoder
