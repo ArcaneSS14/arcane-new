@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 - type: entity
-  name: Justice
+  name: DT-2 'Justice'
   parent: [BaseItem, BaseGrandTheftContraband]
   id: Justice
   description: An expensive & self-recharging energy sword, designed specifically for the Head of Security. If it were not for injustice, man would not know justice.
@@ -46,7 +46,7 @@
     attackRate: 1.5
     damage:
       types:
-        Slash: 12
+        Slash: 15 # Arcane-Edit: 12 -> 15
       woundSeverityMultipliers:
         Slash: 2
     soundHit:
@@ -70,6 +70,13 @@
       - Alive
   - type: StealTarget
     stealGroup: WeaponSecHeadSword
+  # Arcane-Start
+  - type: IntrinsicRadioReceiver
+  - type: ActiveRadio
+    channels:
+    - Common
+    - Security
+  # Arcane-End
   - type: ItemSwitch
     needsPower: true
     defaultState: off
@@ -88,7 +95,7 @@
           attackRate: 1.5
           damage:
             types:
-              Slash: 12
+              Slash: 15 # Arcane-Edit: 12 -> 15
             woundSeverityMultipliers:
               Slash: 2
           soundHit:
@@ -114,8 +121,12 @@
           soundHit:
             path: /Audio/_Goobstation/Weapons/Effects/energy-short-sword-swing.ogg
         - type: StaminaDamageOnHit
-          damage: 25
-          overtime: 10
+          damage: 25 # Arcane-Edit: 20 > 25
+          overtime: 15 # Arcane-Edit: 10 > 15
+        # Arcane-Start
+        - type: DelayedKnockdownOnHit
+          useDelay: stunbaton
+        # Arcane-End
         soundStateActivate:
           collection: sparks
           params:
@@ -156,8 +167,10 @@
           attackRate: 1.5
           damage:
             types:
-              Slash: 6
-              Heat: 12
+              # Arcane-Edit-Start
+              Slash: 15 # 6 -> 15
+              Heat: 7 # 12 -> 7
+              # Arcane-Edit-End
             woundSeverityMultipliers:
               Slash: 2
           angle: 60
@@ -169,34 +182,64 @@
           params:
             variation: 0.250
 
-      empowered: !type:ItemSwitchState
-        verb: empowered
-        energyPerUse: 999
+      # Arcane-Start
+      scuf: !type:ItemSwitchState
+        verb: scuf
+        energyPerUse: 100
         sprite:
           sprite: _Goobstation/Objects/Weapons/Melee/justice.rsi
-          state: empowered-icon
+          state: scuf-icon
         components:
-        - type: Explosive
-          explosionType: Default
-          totalIntensity: 16
-          intensitySlope: 0.5
-          maxIntensity: 1.6
-          canCreateVacuum: false
-          deleteAfterExplosion: false
-          repeatable: true
-        - type: ExplodeOnTrigger
-        - type: TriggerOnMeleeHit
         - type: MeleeWeapon
-          canWideSwing: false
-          attackRate: 0.5
-          animation: WeaponArcThrust
+          wideAnimationRotation: -135
+          attackRate: 1.5
           damage:
             types:
-              Slash: 25
-              Heat: 25
+              Blunt: 3
+          angle: 60
+          animation: WeaponArcThrust
           soundHit:
             path: /Audio/_Goobstation/Weapons/Effects/energy-short-sword-swing.ogg
+        - type: CuffsOnHit
+          proto: Cablecuffs
+          duration: 2.5
+          sound: /Audio/Items/Handcuffs/rope_start.ogg
         soundStateActivate:
           collection: sparks
           params:
             variation: 0.250
+      # Arcane-End
+
+      # Arcane-Edit-Start
+#      empowered: !type:ItemSwitchState
+#        verb: empowered
+#        energyPerUse: 999
+#        sprite:
+#          sprite: _Goobstation/Objects/Weapons/Melee/justice.rsi
+#          state: empowered-icon
+#        components:
+#        - type: Explosive
+#          explosionType: Default
+#          totalIntensity: 16
+#          intensitySlope: 0.5
+#          maxIntensity: 1.6
+#          canCreateVacuum: false
+#          deleteAfterExplosion: false
+#          repeatable: true
+#        - type: ExplodeOnTrigger
+#        - type: TriggerOnMeleeHit
+#        - type: MeleeWeapon
+#          canWideSwing: false
+#          attackRate: 0.5
+#          animation: WeaponArcThrust
+#          damage:
+#            types:
+#              Slash: 25
+#              Heat: 25
+#          soundHit:
+#            path: /Audio/_Goobstation/Weapons/Effects/energy-short-sword-swing.ogg
+#        soundStateActivate:
+#          collection: sparks
+#          params:
+#            variation: 0.250
+      # Arcane-Edit-End
