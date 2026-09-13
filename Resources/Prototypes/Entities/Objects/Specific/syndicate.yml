@@ -15,6 +15,16 @@
   - type: Stack
     count: 100
     stackType: Telecrystal
+  # Arcane-Start
+    baseLayer: base
+    layerStates:
+    - telecrystal
+    - telecrystal_2
+    - telecrystal_3
+    layerFunction: Threshold
+  - type: StackLayerThreshold
+    thresholds: [10, 20, 30]
+  # Arcane-End
   - type: StaticPrice
     price: 0
   - type: StackPrice

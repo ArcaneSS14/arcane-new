@@ -11,6 +11,23 @@
   - type: Sprite
     sprite: Objects/Specific/Medical/handheldcrewmonitor.rsi
     state: scanner
+    # Arcane-Edit-Start
+    layers:
+    - state: scanner
+    - state: scanner-light
+      map: ["light"]
+      shader: unshaded
+      visible: false
+    # Arcane-Edit-End
+  # Arcane-Start
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerCellSlotVisuals.Enabled:
+        light:
+          True: { visible: true }
+          False: { visible: false }
+  - type: Appearance
+  # Arcane-End
   - type: ActivatableUI
     key: enum.CrewMonitoringUIKey.Key
   - type: UserInterface

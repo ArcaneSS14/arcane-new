@@ -37,7 +37,7 @@
   components:
   - type: Sprite
     sprite: Objects/Specific/Medical/syndihandheldcrewmonitor.rsi
-    state: syndiscanner
+#    state: syndiscanner # Arcane-Edit: Resprited
   - type: Item
     sprite: Objects/Specific/Medical/syndihandheldcrewmonitor.rsi
   - type: PowerCellDraw
