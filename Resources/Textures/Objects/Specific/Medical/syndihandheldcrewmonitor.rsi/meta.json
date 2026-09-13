@@ -12,7 +12,6 @@
         },
         {
             "name": "scanner-light",
-            "directions": 1,
             "delays": [
                 [
                     0.2,
