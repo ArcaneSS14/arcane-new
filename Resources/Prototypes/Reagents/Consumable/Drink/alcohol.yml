@@ -839,7 +839,7 @@
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/dark&stormy.rsi
     state: icon_empty
-  metamorphicMaxFillLevels: 5
+  metamorphicMaxFillLevels: 6 # Arcane-Edit: 5 > 6
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
 
@@ -2039,7 +2039,7 @@
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/moscowmule.rsi
     state: icon_empty
-  metamorphicMaxFillLevels: 3
+  metamorphicMaxFillLevels: 6 # Arcane-Edit: 3 > 6
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
   metabolisms:
@@ -2193,7 +2193,7 @@
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/daiquiri.rsi
     state: icon_empty
-  metamorphicMaxFillLevels: 3
+  metamorphicMaxFillLevels: 5 # Arcane-Edit: 3 > 5
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
   metabolisms:
