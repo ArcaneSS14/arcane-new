@@ -17,39 +17,6 @@
     },
     {
       "name": "goliath_dead"
-    },
-    {
-      "name": "goliath_tentacle_spawn",
-      "delays": [
-        [
-          0.2,
-          0.2,
-          0.2,
-          0.1
-        ]
-      ]
-    },
-    {
-      "name": "goliath_tentacle_wiggle",
-      "delays": [
-        [
-          0.1,
-          0.1,
-          0.1,
-          0.1
-        ]
-      ]
-    },
-    {
-      "name": "goliath_tentacle_retract",
-      "delays": [
-        [
-          0.1,
-          0.2,
-          0.2,
-          0.2
-        ]
-      ]
     }
   ]
 }
