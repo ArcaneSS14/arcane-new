@@ -194,7 +194,7 @@
   id: FloorWhiteMini
   parent: BaseStationTile
   name: tiles-white-floor-mini
-  sprite: /Textures/Tiles/white_mini.png
+  sprite: /Textures/Tiles/white_mini.png # Trauma # Arcane-Edit
   variants: 4
   footstepSounds:
     collection: FootstepTile
