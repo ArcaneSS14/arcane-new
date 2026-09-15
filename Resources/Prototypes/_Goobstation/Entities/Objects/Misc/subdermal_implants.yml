@@ -55,6 +55,19 @@
     - type: EmitSoundOnTrigger
       sound: /Audio/Effects/smoke.ogg
 
+# Arcane-Start
+- type: entity
+  parent: BaseSubdermalImplant
+  id: KravMagaImplant
+  name: krav maga implant
+  description: This implant allows the user to perform various Krav Maga moves.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: ComponentsImplant
+#    added:
+#    - type: KravMaga
+# Arcane-End
+
 - type: entity
   parent: BaseSubdermalImplant
   id: AutoinjectorImplant

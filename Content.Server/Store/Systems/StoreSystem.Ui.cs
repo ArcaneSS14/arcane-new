@@ -1,5 +1,7 @@
 // <Trauma>
 using Content.Goobstation.Shared.ManifestListings;
+using Content.Goobstation.Shared.NTR;
+using Content.Goobstation.Shared.NTR.Events;
 using Content.Trauma.Common.Wizard;
 // </Trauma>
 using System.Linq;
@@ -125,20 +127,20 @@ public sealed partial class StoreSystem
                 return;
             }
         }
+        if (HasComp<NtrClientAccountComponent>(uid))
+            RaiseLocalEvent(uid, new NtrListingPurchaseEvent(cost.First().Value));
+        OnPurchase(listing); // Goob edit - ntr shittery
 
-        // <Trauma>
-        OnPurchase(listing);
+        // Goobstation start
         if (Mind.TryGetMind(buyer, out var mindId, out _))
         {
             var ev = new ListingPurchasedEvent(buyer, uid, listing);
             RaiseLocalEvent(mindId, ref ev);
         }
-        // </Trauma>
+        // Goobstation end
 
-        /* Trauma
-        if (!IsOnStartingMap(uid, component))
-            DisableRefund(uid, component);
-        */
+        // if (!IsOnStartingMap(uid, component)) // Goob edit
+        //    DisableRefund(uid, component);
 
         //subtract the cash
         foreach (var (currency, amount) in cost)

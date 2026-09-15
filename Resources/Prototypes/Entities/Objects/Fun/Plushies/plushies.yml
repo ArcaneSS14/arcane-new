@@ -1257,7 +1257,7 @@
     soundHit: *PlushieSpaceSheepSound
 
 - type: entity
-  abstract: true # Trauma - no ERP
+#  abstract: true # Trauma - no ERP # Arcane-Edit: E-RP
   parent: BasePlushie
   id: PlushieVulp
   name: vulpkanin plushie

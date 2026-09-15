@@ -149,7 +149,7 @@
   - SyndicateAgent
   special:
   - !type:AddImplantSpecial
-    implants: [ FreedomImplant, ScramImplant, NutrimentPumpImplant, StypticStimulatorImplant, UplinkImplant, MindShieldImplant, BluespaceLifelineImplant ]
+    implants: [ FreedomImplant, ScramImplant, NutrimentPumpImplant, StypticStimulatorImplant, UplinkImplant, MindShieldImplant, BluespaceLifelineImplant, KravMagaImplant ] # Arcane-Edit: KravMagaImplant
   - !type:AddComponentSpecial
     components:
     - type: NpcFactionMember

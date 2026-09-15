@@ -100,6 +100,11 @@
           - !type:MaxRuleOccurenceCondition
           - !type:PlayerCountCondition
             min: 30
+        - id: CorporateAgent
+          prob: 0.075
+          conditions:
+          - !type:HasBudgetCondition
+          - !type:MaxRuleOccurenceCondition
         # </Trauma>
         - id: Changeling
           prob: 0.25

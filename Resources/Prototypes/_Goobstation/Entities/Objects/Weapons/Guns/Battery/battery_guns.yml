@@ -339,6 +339,7 @@
     - BulletEnergyGunHotshot
     - BulletEnergyGunSleepshot
     - BulletEnergyGunLawyershot
+    - BulletEnergyGunBigshot # Arcane
   - type: UserInterface
     interfaces:
       enum.AmmoSelectorUiKey.Key:
