@@ -64,8 +64,8 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: ComponentsImplant
-    added:
-    - type: KravMaga
+#    added:
+#    - type: KravMaga
 # Arcane-End
 
 - type: entity
