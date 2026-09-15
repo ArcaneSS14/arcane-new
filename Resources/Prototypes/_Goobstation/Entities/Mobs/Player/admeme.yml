@@ -267,14 +267,13 @@
   id: HecuSoldier
   parent: EventHumanMindShielded
   components:
-  - type: AutoImplant
-    implants: [ FreedomImplant ]
   - type: GhostRole
     name: ghost-role-information-Hecu-name
     description: ghost-role-information-Hecu-description
     rules: ghost-role-information-Hecu-rules
     raffle:
       settings: short
+    job: HecuOperative
   - type: Loadout
     prototypes: [HECUOperativeGear]
   - type: RandomMetadata
