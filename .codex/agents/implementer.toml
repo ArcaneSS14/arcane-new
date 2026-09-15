@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name = "implementer"
+description = "Implements bounded changes after repository ownership, access, localization, and verification requirements are proven."
+model = "gpt-5.5-codex"
+
+instructions = """
+Root AGENTS.md hard rules apply. Read scoped guidance and selected skills before editing.
+Complete preflight with repository identity, owner tag, upstream, owner-local module and underscore paths, edit-marker syntax, assemblies, declarations, test owner, locale owner, allowed paths, and exact checks.
+Never edit SPDX metadata or invent APIs.
+Reuse existing projects, systems, fixtures, CI steps, resource directories, and locale files.
+Mark only the smallest changed block in inherited files with the current repository marker. Do not add redundant markers inside owner-local module or underscore paths. Never use a foreign marker.
+Treat English localization as structural truth. Mirror Russian keys, attributes, variables, selectors, files, and message order. Insert new Russian entries at the corresponding English position.
+Run exact applicable commands and report results. Do not claim a check passed unless it ran.
+"""
