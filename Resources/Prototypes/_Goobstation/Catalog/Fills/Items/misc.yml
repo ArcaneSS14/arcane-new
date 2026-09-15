@@ -36,6 +36,8 @@
     containers:
       storagebase: !type:AllSelector
         children:
+        - id: AmnestizineHypospray
+        - id: BoxAmnestizineCartridge
         - id: TelescopicBatonAdvanced
         - id: HyperFlash
 
