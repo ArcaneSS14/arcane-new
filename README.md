@@ -45,7 +45,7 @@ Exceptions to this are simple tools like Rider's single-line completion feature.
 
 ## Активность репозитория
 
-![Активность PR](https://repobeats.axiom.co/api/embed/27b2e1562b39ab9114e0dd3c1576b3078b1550c4.svg "Repobeats")
+![Активность PR](https://repobeats.axiom.co/api/embed/ed58486270846aa62ad2b577f1e6624a64d464b5.svg "Repobeats")
 
 </div>
 
