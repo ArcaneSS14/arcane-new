@@ -127,8 +127,8 @@
     sprite: Structures/Power/Cables/mv_cable.rsi
     layers:
     - state: mvcable_0
-      color: "#e0dd76" # Trauma - was Yellow
-    - state: mvstripes_0
+      color: Yellow # Trauma - was Yellow # Arcane-Edit
+#    - state: mvstripes_0 # Arcane-Edit: Removed
   - type: Icon
     sprite: Structures/Power/Cables/mv_cable.rsi
     state: mvcable_4
@@ -153,7 +153,7 @@
             max: 1
   - type: CableVisualizer
     statePrefix: mvcable_
-    extraLayerPrefix: mvstripes_
+#    extraLayerPrefix: mvstripes_ # Arcane-Edit: Removed
 
 - type: entity
   id: CableMVUncuttable
@@ -174,7 +174,7 @@
     key: cable_lv
   # </Trauma>
   - type: Sprite
-    color: "#566e52" # Trauma - was Green
+    color: Green # Trauma - was Green # Arcane-Edit
     sprite: Structures/Power/Cables/lv_cable.rsi
     state: lvcable_0
   - type: Icon

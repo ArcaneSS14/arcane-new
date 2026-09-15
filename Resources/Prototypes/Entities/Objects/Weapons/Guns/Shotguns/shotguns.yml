@@ -144,7 +144,7 @@
   - type: Sprite
     sprite: Objects/Weapons/Guns/Shotguns/db_shotgun.rsi
   - type: Item
-    sprite: Objects/Weapons/Guns/Shotguns/db_shotgun_inhands_64x.rsi
+    sprite: Objects/Weapons/Guns/Shotguns/db_shotgun.rsi # Arcane-Edit
   - type: GunRequiresWield #remove when inaccuracy on spreads is fixed
   - type: Gun
     fireRate: 3
@@ -177,7 +177,7 @@
   - type: Clothing
     sprite: Objects/Weapons/Guns/Shotguns/enforcer.rsi
   - type: Item
-    sprite: Objects/Weapons/Guns/Shotguns/enforcer_inhands_64x.rsi
+    sprite: Objects/Weapons/Guns/Shotguns/enforcer.rsi # Arcane-Edit
     shape: # Goobstation
     - 0,0,4,1
   - type: BallisticAmmoProvider
@@ -199,7 +199,7 @@
   description: An old yet faithful design, and a favorite among irregular forces of many worlds. Uses 12 Gauge shotgun shells. # Goob edit
   components: # intend for Kammerer to have tighter choke for slower fire rate and/or manual cycling
   - type: Item
-    sprite: Objects/Weapons/Guns/Shotguns/pump_inhands_64x.rsi
+    sprite: Objects/Weapons/Guns/Shotguns/pump.rsi # Arcane-Edit
   - type: Sprite
     sprite: Objects/Weapons/Guns/Shotguns/pump.rsi
   - type: Clothing
@@ -229,7 +229,7 @@
     size: Small
     shape:
     - 0,0,2,0
-    sprite: Objects/Weapons/Guns/Shotguns/sawn_inhands_64x.rsi
+    sprite: Objects/Weapons/Guns/Shotguns/sawn.rsi # Arcane-Edit
   - type: Gun
     fireRate: 15 # Trauma, was 3
   - type: GunSpreadModifier
@@ -321,7 +321,7 @@
   - type: Clothing
     sprite: Objects/Weapons/Guns/Shotguns/improvised_shotgun.rsi
   - type: Item
-    sprite: Objects/Weapons/Guns/Shotguns/improvised_shotgun_inhands_64x.rsi
+    sprite: Objects/Weapons/Guns/Shotguns/improvised_shotgun.rsi # Arcane-Edit
   - type: GunRequiresWield #remove when inaccuracy on spreads is fixed
   - type: Gun
     fireRate: 4 #No reason to stifle the firerate since you have to manually reload every time anyways.

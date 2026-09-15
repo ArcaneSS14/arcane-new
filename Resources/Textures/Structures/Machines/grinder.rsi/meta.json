@@ -1,6 +1,6 @@
 {
     "license":"CC-BY-SA-3.0",
-    "copyright":"https://github.com/tgstation/tgstation/commit/59f2a4e10e5ba36033c9734ddebfbbdc6157472d",
+    "copyright":"Taken from TG at commit https://github.com/tgstation/tgstation/commit/59f2a4e10e5ba36033c9734ddebfbbdc6157472d",
     "version":1,
     "size":{
         "x":32,
@@ -12,6 +12,9 @@
         },
         {
             "name":"grinder_beaker_attached"
+        },
+        {
+            "name":"grinder_on"
         },
         {
           "name": "beakerSlot1"

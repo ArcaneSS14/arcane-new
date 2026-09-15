@@ -113,7 +113,7 @@
       path: "/Audio/Weapons/slash.ogg"
     useDelay: 8
   - type: Sprite
-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
+    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Arcane-Edit
     layers:
     - state: goliath_tentacle_spawn
       map: ["enum.ActionVisuals.Icon"]
@@ -136,7 +136,7 @@
     canCollide: true
   - type: InteractionOutline
   - type: Sprite
-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
+    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Arcane-Edit
     layers:
     - state: goliath_tentacle_wiggle
   - type: StunOnCollide
@@ -174,7 +174,7 @@
     bodyType: Static
     canCollide: false
   - type: Sprite
-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
+    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Arcane-Edit
   - type: InteractionOutline
   - type: TimedDespawn
     lifetime: 0.7

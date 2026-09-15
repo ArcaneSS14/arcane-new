@@ -7,6 +7,7 @@
   - type: Sprite
     sprite: _Trauma/Structures/Wallmounts/extinguisher_cabinet.rsi # Trauma
     # snapCardinals: true # Trauma
+    noRot: false # Arcane
     layers:
     - state: frame
     - state: extinguisher

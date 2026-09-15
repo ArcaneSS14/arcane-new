@@ -91,6 +91,26 @@
     damage:
       types:
         Blunt: 5
+  # Arcane-Start
+#  - type: EmitSoundOnDrop
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_place.ogg
+#      params:
+#        volume: -4
+#        variation: 0.125
+#  - type: EmitSoundOnLand
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_place.ogg
+#      params:
+#        volume: -4
+#        variation: 0.125
+#  - type: EmitSoundOnPickup
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_pickup.ogg
+#      params:
+#        volume: -6
+#        variation: 0.125
+  # Arcane-End
   - type: StaticPrice
     price: 30
   - type: DnaSubstanceTrace
@@ -161,6 +181,26 @@
     fillBaseName: beaker
   - type: Damageable
     damageModifierSet: Glass
+  # Arcane-Start
+#  - type: EmitSoundOnDrop
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_place.ogg
+#      params:
+#        volume: -4
+#        variation: 0.125
+#  - type: EmitSoundOnLand
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_place.ogg
+#      params:
+#        volume: -4
+#        variation: 0.125
+#  - type: EmitSoundOnPickup
+#    sound:
+#      path: /Audio/_Arcane/Items/ReagentContainers/beaker_pickup.ogg
+#      params:
+#        volume: -6
+#        variation: 0.125
+  # Arcane-End
   - type: Injurable
     damageContainer: Inorganic
   - type: StaticPrice
@@ -169,10 +209,22 @@
 
 - type: entity
   name: beaker
-  parent: BaseBeaker
+  parent: [BaseBeaker, BaseOpenableBeaker] # Arcane-Edit
   description: Used to contain a moderate amount of chemicals and solutions.
   id: Beaker
   components:
+  # Arcane-Start
+  - type: Sprite
+    sprite: Objects/Specific/Chemistry/beaker.rsi
+    layers:
+      - state: beaker
+      - state: beaker1
+        map: ["enum.SolutionContainerLayers.Fill"]
+        visible: false
+      - state: lid_beaker
+        map: ["enum.OpenableVisuals.Layer"]
+        visible: false
+  # Arcane-End
   - type: Spillable
     solution: beaker
   - type: StaticPrice
@@ -279,7 +331,7 @@
 
 - type: entity
   name: large beaker
-  parent: [SolutionNormal, BaseBeaker]
+  parent: [SolutionNormal, BaseBeaker, BaseOpenableBeaker] # Arcane-Edit
   description: Used to contain a large amount of chemicals or solutions.
   id: LargeBeaker
   components:
@@ -292,6 +344,11 @@
       - state: beakerlarge1
         map: ["enum.SolutionContainerLayers.Fill"]
         visible: false
+      # Arcane-Start
+      - state: lid_beakerlarge
+        map: ["enum.OpenableVisuals.Layer"]
+        visible: false
+      # Arcane-End
   - type: Item
     size: Normal
     sprite: Objects/Specific/Chemistry/beaker_large.rsi
@@ -309,7 +366,7 @@
 
 - type: entity
   name: cryostasis beaker
-  parent: [SolutionCryo, BaseBeakerMetallic]
+  parent: [SolutionCryo, BaseBeakerMetallic, BaseOpenableBeaker] # Arcane-Edit
   description: Used to contain chemicals or solutions without reactions.
   id: CryostasisBeaker
   components:
@@ -325,12 +382,19 @@
     sprite: Objects/Specific/Chemistry/beaker_cryostasis.rsi
     layers:
       - state: beakernoreact
+      # Arcane-Start
+      - state: lid_beakernoreact
+        map: ["enum.OpenableVisuals.Layer"]
+        visible: false
+  - type: Item
+    sprite: Objects/Specific/Chemistry/beaker_cryostasis.rsi
+      # Arcane-End
   - type: SolutionContainerVisuals
     maxFillLevels: 0
 
 - type: entity
   name: bluespace beaker
-  parent: [SolutionGinormous, BaseBeakerMetallic] # Bluespace items hold 8x the solution of regular items (240u a tile)
+  parent: [SolutionGinormous, BaseBeakerMetallic, BaseOpenableBeaker] # Bluespace items hold 8x the solution of regular items (240u a tile) # Arcane-Edit
   description: Powered by experimental bluespace technology.
   id: BluespaceBeaker
   components:
@@ -350,10 +414,16 @@
     sprite: Objects/Specific/Chemistry/beaker_bluespace.rsi
     layers:
       - state: beakerbluespace
+      # Arcane-Start
+      - state: lid_beakerbluespace
+        map: ["enum.OpenableVisuals.Layer"]
+        visible: false
+      # Arcane-End
   - type: SolutionContainerVisuals
     maxFillLevels: 0
   - type: Item
     size: Normal
+    sprite: Objects/Specific/Chemistry/beaker_bluespace.rsi # Arcane
 
 - type: entity
   name: dropper

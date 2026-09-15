@@ -1,0 +1,18 @@
+- type: entity
+  abstract: true
+  id: BaseOpenableBeaker
+  components:
+  - type: Openable
+    opened: true
+    closeable: true
+    sound:
+      collection: bottleOpenSounds
+    closeSound:
+      collection: bottleCloseSounds
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.OpenableVisuals.Opened:
+        enum.OpenableVisuals.Layer:
+          True: { visible: false }
+          False: { visible: true }

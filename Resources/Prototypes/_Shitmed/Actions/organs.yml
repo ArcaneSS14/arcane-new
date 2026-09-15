@@ -9,7 +9,7 @@
   description: Use your tentacles to grab and stun a target player!
   components:
   - type: Sprite
-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
+    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Arcane-Edit
     layers:
     - state: goliath_tentacle_spawn
       map: [ "enum.ActionVisuals.Icon" ]

@@ -12,6 +12,10 @@
     noRot: false
     layers:
     - state: frame
+    # Arcane-Start
+    - state: light
+      shader: unshaded
+    # Arcane-End
     - state: fill
       map: ["enum.ItemCabinetVisuals.Layer"]
       visible: true
