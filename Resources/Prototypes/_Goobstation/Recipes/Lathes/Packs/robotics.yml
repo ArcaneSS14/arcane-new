@@ -70,6 +70,10 @@
   - UpgradedCyberneticLungs
   - JawsOfLifeLeftArm
   - JawsOfLifeRightArm
+  # Arcane-Start
+  - SpeedLeftLeg
+  - SpeedRightLeg
+  # Arcane-End
   - DexLeftHand
   - DexRightHand
   - DiagnosticCyberneticEyes

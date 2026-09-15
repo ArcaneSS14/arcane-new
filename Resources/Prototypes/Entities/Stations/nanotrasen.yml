@@ -20,6 +20,7 @@
     - BaseStationCargo
     - BaseStationJobsSpawning
     - BaseStationRecords
+    - BaseStationNtrTasks
     - BaseStationArrivals
     - BaseStationShuttles
     - BaseStationCentcomm

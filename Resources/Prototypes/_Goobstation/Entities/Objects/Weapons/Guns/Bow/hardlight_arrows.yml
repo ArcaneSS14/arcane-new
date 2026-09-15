@@ -139,7 +139,7 @@
     explosionType: Default
     totalIntensity: 18
     intensitySlope: 0.6
-    maxIntensity: 6
+    maxIntensity: 3 # Arcane-Edit: 6 > 3
     canCreateVacuum: false
 
 - type: entity

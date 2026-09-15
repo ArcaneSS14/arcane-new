@@ -15,7 +15,7 @@
     sprite: Objects/Weapons/Bombs/seismic.rsi
     state: icon
   product: CrateSeismicCharge
-  cost: 6000 # Trauma - was 1800, its useless for mining
+  cost: 3000 # Trauma - was 1800, its useless for mining # Arcane-Edit: 6000 > 3000
   category: cargoproduct-category-name-cargo
   group: SalvageJobReward2
 

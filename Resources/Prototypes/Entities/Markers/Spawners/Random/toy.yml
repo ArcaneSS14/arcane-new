@@ -41,7 +41,7 @@
     - id: PlushieMoth
     - id: PlushieArachind
     - id: PlushiePenguin
-    #- id: PlushieVulp # Trauma - no ERP
+    - id: PlushieVulp # Trauma - no ERP # Arcane-Edit: Where ERP?
     - id: PlushieSheep
     - id: PlushieSpaceSheep
     - !type:GroupSelector

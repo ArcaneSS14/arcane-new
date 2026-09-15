@@ -27,18 +27,18 @@
   categories:
     - UplinkImplants
 
-# <Trauma> - chuddy
-#- type: listing
-#  id: UplinkScramImplanter
-#  name: uplink-scram-implanter-name
-#  description: uplink-scram-implanter-desc
-#  icon: { sprite: /Textures/Structures/Specific/anomaly.rsi, state: anom4 }
-#  productEntity: ScramImplanter
-#  cost:
-#    Telecrystal: 15 # Trauma - was 2, 5x and more expensive
-#  categories:
-#    - UplinkImplants
-# </Trauma>
+# Arcane-Edit-Start
+- type: listing
+  id: UplinkScramImplanter
+  name: uplink-scram-implanter-name
+  description: uplink-scram-implanter-desc
+  icon: { sprite: /Textures/Structures/Specific/anomaly.rsi, state: anom4 }
+  productEntity: ScramImplanter
+  cost:
+    Telecrystal: 20 # Trauma - was 2, 5x and more expensive # Arcane-Edit: 15 > 20
+  categories:
+    - UplinkImplants
+# Arcane-Edit-End
 
 - type: listing
   id: UplinkDnaScramblerImplant

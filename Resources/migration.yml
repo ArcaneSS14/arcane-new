@@ -97,7 +97,7 @@ ChestSkeleton: OrganSkeletonPersonTorso
 ChestHuman: OrganHumanTorso
 
 # 2026-02-18 removed vulp plushie
-PlushieVulp: null
+#PlushieVulp: null # Arcane-Edit: Nope
 
 # 2026-03-02 removed playing cards
 CardDeckBlack: null
@@ -157,19 +157,23 @@ WehMedipen: WehMedipenTiny
 # 2026-08-03
 BibleCommunistManifesto: Bible
 
+# Arcane-Edit-Start
 # 2026-08-17
-ComputerNTRTasks: null
-TaskBottle: ChemistryEmptyBottle01
-TaskJug: Jug
+#ComputerNTRTasks: null
+#TaskBottle: ChemistryEmptyBottle01
+#TaskJug: Jug
+# Arcane-Edit-End
 
 # 2026-08-24
 LightReplacerEmpty: LightReplacer
 
+# Arcane-Edit-Start
 # 2026-08-30
-MachinePowerTransmissionLaser: null
-MachinePowerTransmissionLaserCrate: null
-MachinePowerTransmissionLaserFlatpack: null
+# MachinePowerTransmissionLaser: null
+# MachinePowerTransmissionLaserCrate: null
+# MachinePowerTransmissionLaserFlatpack: null
 # </Trauma>
+# Arcane-Edit-End
 
 # Goobstation - Submarine from DeltaV
 

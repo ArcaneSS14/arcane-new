@@ -172,6 +172,10 @@
   - UpgradedCyberneticLungs
   - JawsOfLifeLeftArm
   - JawsOfLifeRightArm
+  # Arcane-Start
+  - SpeedLeftLeg
+  - SpeedRightLeg
+  # Arcane-End
   - DexLeftHand
   - DexRightHand
   - DiagnosticCyberneticEyes
@@ -221,6 +225,24 @@
   recipeUnlocks:
   - AugmentPowerCellSlotCasing
   - AugmentRechargerCasing
+
+# Arcane-Start
+- type: technology
+  id: CombatAugmentation
+  name: research-technology-combat-augmentation
+  icon:
+    sprite: _Shitmed/Objects/Augments/arm.rsi
+    state: strength
+  discipline: Robotics
+  tier: 2
+  cost: 10000
+  position: -6,5
+  technologyPrerequisites:
+  - ImplantedTools
+  recipeUnlocks:
+  - AugmentStrengthCasing
+  - AugmentStrengthElectronics
+# Arcane-End
 
 - type: technology
   id: ImplantedTools

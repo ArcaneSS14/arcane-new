@@ -554,7 +554,6 @@
   - type: ZombieImmune
   # </Trauma>
   - type: GhostRole
-    prob: 0 # Trauma
     makeSentient: true
     allowSpeech: false
     allowMovement: true
@@ -691,7 +690,8 @@
   suffix: Smite
   components:
   - type: GhostRole
-    prob: 1 # Trauma
+    mindRoles:
+    - MindRoleGhostRoleFreeAgent
   - type: MobStateActions
     actions:
       Alive:
@@ -709,7 +709,9 @@
   suffix: Speed
   components:
   - type: GhostRole
-    prob: 1 # Trauma
+    name: ghost-role-information-snailspeed-name
+    description: ghost-role-information-snailspeed-description
+    rules: ghost-role-information-freeagent-rules
   - type: Sprite
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]
@@ -734,7 +736,9 @@
   name: snoth
   components:
   - type: GhostRole
-    prob: 1 # Trauma
+    name: ghost-role-information-snoth-name
+    description: ghost-role-information-snoth-description
+    rules: ghost-role-information-freeagent-rules
   - type: Sprite
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]

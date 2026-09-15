@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: localizedDataset
+  id: CorporateFlavor
+  values:
+    prefix: issuers-corporate-flavor-
+    count: 2
+
+# Arcane-Edit-Start
+#- type: localizedDataset
+#  id: TraitorCorporationsFlavor
+#  values:
+#    prefix: traitor-corporations-flavor-dataset-
+#    count: 12
+# Arcane-Edit-End

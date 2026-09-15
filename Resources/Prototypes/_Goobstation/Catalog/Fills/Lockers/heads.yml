@@ -5,21 +5,23 @@
   table: !type:AllSelector
     children:
     - id: BoxFolderCentCom
+    # - id: BriefcaseBrownFilled
     - id: WeaponDisablerAdvanced
     - id: BedsheetCentcom
     - id: CaneSheathFilledNanotrasen
     - id: HandheldFaxOfficial
     - id: RubberStampNanorep
-    - id: ExecutiveBriefcase
+    - id: ExecutiveBriefcaseEmpty # nanorep update
+    - id: ComputerNTRTasksFlatpack # nanorep update
     - id: Paper
       amount: !type:ConstantNumberSelector
         value: 5
-    - id: NanoRepStationReport
+    - id: NanoRepStationReport # Goobstation
 
 - type: entity
-  parent: LockerNanorep
   id: LockerNanorepFilled
   suffix: Filled
+  parent: LockerNanorep
   components:
   - type: EntityTableContainerFill
     containers:
