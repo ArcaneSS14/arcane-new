@@ -27,12 +27,12 @@
   color: "#0c344d"
   roles:
   # <Trauma>
-  - NanotrasenRepresentative
+  #- NanotrasenRepresentative # Arcane-Edit: Fix
   - NavyOfficer
   - NavyCaptain
   - NavyOfficerUndercover
   - Diplomat
-  - GovernmentMan
+  #- GovernmentMan # Arcane-Edit: Fix
   # </Trauma>
   - CentralCommandOfficial
   - CBURN
