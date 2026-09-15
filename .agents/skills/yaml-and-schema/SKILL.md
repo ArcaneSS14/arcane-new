@@ -1,6 +1,6 @@
 ---
 name: yaml-and-schema
-description: Author and diagnose YAML, prototype schemas, workflows, manifests, and structured configuration with exact validation.
+description: Diagnose and author YAML, prototype schemas, workflow files, module manifests, and structured configuration safely.
 ---
 
 <!--
@@ -11,35 +11,26 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Yaml And Schema
 
-YAML syntax validity is only the first layer. Identify the actual consumer and schema.
+YAML syntax validity is only the first layer. Confirm the file's domain schema and runtime loader.
 
 ## Workflow
 
-1. Identify the loader: prototype manager, GitHub Actions, module loader, map serializer, localization tooling, or custom configuration.
-2. Copy structure from a current nearby destination file.
-3. Verify scalar types, indentation, list and map shape, quoting, anchors, and required fields.
-4. Verify every ID, path, component field, and referenced resource.
-5. Avoid formatting unrelated blocks or reserializing maps.
-6. Run generic build validation and the domain-specific validator.
+1. Identify the consumer: prototype manager, GitHub Actions, module loader, localization tooling, or custom config.
+2. Copy structure from a current nearby file, not another fork.
+3. Preserve scalar types, indentation, list/map shape, anchors, and quoting semantics.
+4. Validate references and required fields.
+5. Run both generic parsing and the domain-specific validator.
 
 ## Common failures
 
-- valid YAML with an unknown component field;
+- valid YAML with an unknown prototype field;
+- string parsed where a number or boolean is required;
 - duplicate map keys;
-- string where a number or boolean is required;
-- invalid workflow expression quoting;
+- incorrect workflow expression quoting;
 - frontmatter not starting on the first line;
-- module manifest path from another repository;
-- prototype field renamed in destination code;
-- locale or prototype file placed outside the owner root.
+- module manifest path that exists only in another repository;
+- anchors or aliases rejected by a strict parser.
 
-## Exact validation commands
+## Review
 
-```powershell
-dotnet restore
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
-
-For workflow, map, RSI, or custom schema files, also run the exact specialized command from the current repository workflow. Do not guess from another fork.
+Keep diffs narrow and avoid reformatting unrelated blocks. Do not use a generic YAML formatter on serialized maps or files with repository-specific ordering expectations.

@@ -1,6 +1,6 @@
 ---
 name: prediction
-description: Keep responsive shared interactions deterministic and free of duplicated side effects while server authority wins.
+description: Design responsive shared interactions that reconcile with server authority without duplicated side effects.
 ---
 
 <!--
@@ -11,14 +11,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Prediction
 
-Prediction provides immediate local feedback while the server remains authoritative.
+Prediction gives the local player immediate feedback while the server remains authoritative.
 
-Predict only short player-driven interactions with locally known inputs and correctable results. Keep hidden information, economy outcomes, permissions, access checks, and persistence authoritative.
+## Suitable work
 
-Shared predicted code may execute more than once. Separate deterministic state changes from one-shot effects and avoid non-deterministic randomness in predicted paths.
+Predict short, player-driven interactions whose inputs are locally known and whose result can be corrected. Keep hidden information, economy results, access decisions, and persistence authoritative.
 
-Predicted player feedback requires English localization and an ordered Russian counterpart. Resolving the same key twice is acceptable. Showing the feedback twice is not.
+## Repeat execution
 
-Verify repository ownership and edit-marker requirements before changing inherited files.
+Shared predicted code can execute more than once. Separate deterministic state changes from one-shot side effects. Use the current repository pattern for first-time prediction when a sound, popup, animation, or spawn must not duplicate.
 
-Run the Debug build, root integration tests, and every affected module integration project. Test latency, rejection, repeated input, observers, deletion, and reconciliation.
+Avoid non-deterministic randomness in predicted paths. Do not mutate server-only state from shared prediction code.
+
+## Reconciliation
+
+The server must run the same validation or reject the request. Client state should converge after authoritative updates. A predicted popup or sound should not replay when confirmation arrives.
+
+## Testing
+
+Test with latency, rejection, repeated input, and interactions performed by observers or non-owning clients when relevant.

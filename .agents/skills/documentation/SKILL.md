@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: Write concise technical guidance, PR notes, architecture explanations, and reproducible verification reports.
+description: Write concise technical documentation, PR notes, architecture explanations, and verification reports.
 ---
 
 <!--
@@ -13,26 +13,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 Documentation should explain decisions that code alone does not make obvious.
 
-For substantial changes, document the problem, intended behavior, owner, assembly boundaries, data or event flow, compatibility, `en-US` and `ru-RU` impact, resources, tests, and limitations.
+For a substantial change, cover:
 
-Use current paths, declarations, and exact commands. Do not claim behavior based on the old repository or a source fork.
+- problem and intended behavior;
+- owner and assembly boundaries;
+- important data or event flow;
+- compatibility and migration concerns;
+- resources and localization;
+- tests performed and not performed.
 
-Verification reports must separate:
+Prefer updating an existing canonical document over adding an isolated note. Use real paths and commands. Do not claim current behavior based on the old repository.
 
-- commands actually run and their result;
-- commands not run and why;
-- manual checks performed;
-- unresolved risks;
-- files requiring human SPDX metadata.
-
-Do not write “all tests passed” when only a build ran. Do not translate internal implementation notes into a player changelog. Do not add documentation files when an existing canonical file owns the information.
-
-## Verification commands
-
-```powershell
-git diff --name-status
-git diff --check
-git diff -U0
-```
-
-When documenting commands, copy them from current workflows or verified project instructions. Do not invent or simplify flags.
+Keep player changelogs separate from internal implementation notes.

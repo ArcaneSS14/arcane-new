@@ -1,25 +1,34 @@
 ---
 name: testing
-description: Select the existing owner test project and run checks matching the real failure mode.
+description: Select and write focused tests, integration tests, YAML linting, RSI validation, and packaging checks.
 ---
 
 <!--
 SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 # Testing
 
-Match tests to the owner and failure mode.
+Match the test to the failure mode.
 
-Use `Content.Tests` for focused root tests, `Content.IntegrationTests` for integrated root behavior, and the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project for module behavior.
+## Focused tests
 
-Search before creating a project, fixture, CI step, or MSBuild target. Duplicate infrastructure is forbidden. Test projects do not belong in `module.yml`.
+Use `Content.Tests` for isolated systems, validation, serialization, prototypes, and deterministic regressions.
 
-Test through accessible public APIs or real event paths. Do not use reflection to reach private implementation.
+## Integration tests
 
-For localization changes, verify that Russian mirrors English message IDs, attributes, variables, selectors, relative paths, and message order.
+Use `Content.IntegrationTests` when server/client state, networking, maps, multiple systems, or lifecycle integration matters.
 
-Run restore, the Debug build, the applicable root tests, and every affected module integration project. Report exact commands, failures, and omitted checks.
+## Repository commands
+
+- `dotnet restore`
+- `dotnet build --configuration Debug --no-restore /m`
+- `dotnet test --no-build --configuration Debug Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0`
+- `dotnet test --no-build --configuration Debug Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed`
+- build `Release`, then run `Content.YAMLLinter` with `--no-build`
+- run RSI validation for sprite changes
+- build and run `Content.Packaging` when packaging is affected
+
+Keep tests deterministic. Report every command actually run.

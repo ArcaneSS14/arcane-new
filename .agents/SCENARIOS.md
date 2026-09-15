@@ -1,81 +1,154 @@
 <!--
 SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Scenario Routing
+# Scenario routing
 
-Root hard rules always apply.
+This file shows which guidance to load for common Orion tasks. It is a routing aid, not a substitute for reading current code.
 
-## Any write task
+## Add a networked Orion component
 
-Before editing:
+Read:
 
-1. verify repository, branch, remotes, upstream, and owner tag
-2. identify owner module and owner underscore paths
-3. inspect existing edit-marker syntax
-4. locate declarations, assemblies, resources, tests, and locale owners
-5. preserve the existing SPDX diff
+- `Modules/Orion/Content.Orion.Shared/AGENTS.md`
+- architecture and gameplay-networking rules
+- `module-architecture`
+- `ecs-components`
+- `serialization-and-datafields`
+- `networking`
+- `testing`
 
-## Change an inherited file
+Confirm the client needs every replicated field and dirty authoritative changes.
 
-Read `module-architecture`, `upstream-maintenance`, and `git-workflow`.
+## Add a predicted interaction
 
-- Add the current repository marker around the smallest changed inherited block.
-- Do not use a foreign marker.
-- Do not add the marker inside owner-local module or underscore paths.
-- Do not add comments to formats that cannot safely contain them.
+Read:
 
-## Change an owner-local file
+- nearest Shared and Server guidance
+- interactions-and-authority rule
+- `interaction-flow`
+- `prediction`
+- `networking`
+- `audio` or `localization-in-code` for feedback
+- `tests-authoring`
 
-Owner-local includes `Modules/<OwnerTag>`, verified `_<OwnerTag>` paths, and other projects proven to belong to the current repository.
+Trace repeated execution, first-time side effects, server rejection, and reconciliation.
 
-Do not add redundant owner edit markers there. Follow the scoped guidance and nearby style.
+## Add BUI and XAML
 
-## Add or update localization
+Read:
 
-Read `localization`, `localization-in-code`, and the owning domain skill.
+- Shared, Server, Client, and Resources scoped guidance
+- `bound-user-interface`
+- `xaml-ui`
+- `forms-and-input-validation`
+- `localization`
+- `testing`
 
-- Treat `en-US` as structural truth.
-- Mirror additions, deletions, renames, moves, attributes, variables, selectors, and ordering in `ru-RU`.
-- Insert a new Russian message at the corresponding English position, not at the file end.
-- Reuse existing mirrored files and preserve exact path spelling.
-- Write natural Russian without `THE(...)` wrappers.
+Keep messages as intent, revalidate on the server, and refresh state after mutation.
 
-```powershell
-Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|FEATURE_PREFIX" -- Resources Modules Content.*
-git diff -- "*.ftl"
-```
+## Add prototype, RSI, audio, and FTL
 
-## English localization changed
+Read:
 
-Compare the affected English and Russian files as ordered message sequences.
+- owning Resources guidance
+- `prototypes`
+- `prototype-localization`
+- `resources-and-assets`
+- `audio` or `appearance-and-visualizers`
+- `yaml-and-schema`
+- `testing`
 
-- English key added: add Russian key in the same relative position.
-- English key removed: remove the Russian counterpart.
-- English key renamed: rename the Russian counterpart and search stale references.
-- English block reordered: reorder Russian messages the same way.
-- English file moved or renamed: mirror the Russian file path.
-- English variables, selectors, or attributes changed: mirror the contract exactly.
+Verify all IDs, paths, sprite states, locale keys, attribution, and asset licenses.
 
-## Russian-only wording correction
+## Port one old Orion feature family
 
-Change only the translated value when structure is unchanged. Do not reorder keys, rename variables, add locale-only keys, or rewrite English without a semantic reason.
+Read:
 
-## Add or update a module integration test
+- `Modules/Orion/AGENTS.md`
+- `porting`
+- `module-architecture`
+- `upstream-maintenance`
+- `third-party-materials` rule
+- relevant gameplay and UI skills
+- `testing`
 
-Read the nearest scoped guidance, `testing`, and `tests-authoring`.
+Build a source PR family manifest, use final source behavior, and adapt integration to current Goob Reforged code.
 
-Use the existing `Content.<Module>.IntegrationTests` project. Do not create duplicate fixtures, CI steps, MSBuild targets, or `module.yml` entries.
+## Fix a client/server desync
 
-## Required private or internal state is inaccessible
+Read:
 
-VERIFY declarations and assemblies. Do not use cross-assembly partial classes, extension methods, reflection, or copied private logic. STOP and identify the smallest reusable extension point.
+- `client-server-shared`
+- `networking`
+- `prediction`
+- `pvs`
+- `debugging`
+- `tests-authoring`
 
-## Review a broad change
+Compare authoritative mutation, dirtying, PVS delivery, client application, and repeated prediction.
 
-Read `code-review` and all domain skills matching changed files. Verify ownership, marker placement, English/Russian order parity, resources, authority, lifecycle, compatibility, tests, and command evidence.
+## Add database persistence
+
+Read:
+
+- Server scoped guidance
+- `database-migrations`
+- `serialization-and-datafields`
+- `security-and-validation`
+- `tests-authoring`
+
+Review both SQLite and PostgreSQL upgrade paths and existing data defaults.
+
+## Add a game rule or objective
+
+Read:
+
+- Server and Shared guidance
+- `round-and-game-rules`
+- `minds-roles-and-objectives`
+- `actions-and-doafter` if player actions are granted
+- `localization`
+- `tests-authoring`
+
+Test late join, reconnect, body transfer, no eligible players, round end, and restart cleanup.
+
+## Optimize a hot event
+
+Read:
+
+- `performance`
+- `ecs-systems`
+- `ecs-events`
+- owning domain skill
+- `testing`
+
+Measure or establish event frequency, preserve behavior, and avoid allocations, global scans, and unnecessary dirtying.
+
+## Add an external API integration
+
+Read:
+
+- `external-services`
+- `commands-and-cvars`
+- `security-and-validation`
+- `save-data-and-configuration` when caching or persisting
+- `timers-and-async`
+- `logging-and-errors`
+- `tests-authoring`
+
+Define timeout, cancellation, retry, stale-result, privacy, and service-outage behavior.
+
+## Review a broad PR
+
+Read:
+
+- `code-review`
+- `module-architecture`
+- domain skills matching changed files
+- `testing`
+- `security-and-validation` for protected inputs
+
+Report concrete findings by severity with paths, execution sequence, impact, and minimal remediation.

@@ -1,6 +1,6 @@
 ---
 name: upstream-maintenance
-description: Keep inherited changes narrow, correctly marked, traceable, and easy to rebase across repository layers.
+description: Keep inherited changes narrow, traceable, and easy to compare with Goob Reforged or other owners.
 ---
 
 <!--
@@ -11,18 +11,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Upstream Maintenance
 
-Before editing inherited code, determine whether the change is an upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned behavior.
+Before editing inherited code, determine whether the change is:
 
-Verify the current repository owner tag and existing marker syntax.
+- an upstream bug fix;
+- a reusable extension point;
+- a compatibility adaptation;
+- Orion-only behavior.
 
-Repository-owned behavior belongs in owner-local module or underscore paths whenever possible. Those paths do not receive redundant owner edit markers.
+Keep Orion-only implementation in Orion. If an inherited project needs a hook, add the narrowest reusable hook and avoid unrelated formatting or refactoring.
 
-When an inherited file must change:
+Preserve file layout and nearby style to reduce future conflicts. Document intentional divergence and the upstream source revision. When updating upstream, separate mechanical conflict resolution from Orion behavior changes.
 
-- add the current repository marker around the smallest changed block
-- preserve nearby formatting and upstream layout
-- avoid unrelated cleanup
-- document intentional divergence and source revision when relevant
-- never replace an existing foreign marker with the current marker without understanding ownership
-
-Separate mechanical upstream conflict resolution from repository behavior changes. Do not copy a whole inherited file merely to change a small branch when a supported extension point exists.
+Do not copy an entire source file merely to change a small branch when a partial extension is possible.

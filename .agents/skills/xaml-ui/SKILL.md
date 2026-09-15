@@ -1,6 +1,6 @@
 ---
 name: xaml-ui
-description: Build localized client XAML controls with correct lifecycle, culture refresh, resource references, ownership, and validation.
+description: Build and maintain client XAML controls, windows, code-behind, styles, and resource references.
 ---
 
 <!--
@@ -9,20 +9,17 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Xaml UI
+# Xaml Ui
 
-XAML is client presentation. Keep authority and protected validation out of code-behind.
+XAML is client presentation. Keep game authority and protected validation out of code-behind.
 
-1. Verify repository identity, owner-local paths, and edit-marker requirements.
-2. Find a nearby control using the same UI framework.
-3. Verify control types, generated names, constructors, and lifecycle APIs.
-4. Keep code-behind focused on state binding and UI intent.
-5. Localize every visible label, tooltip, placeholder, validation message, and generated row.
-6. Treat English as structural truth and mirror Russian keys and order.
-7. Test long Russian strings, scaling, disabled state, reopen, disposal, and culture refresh.
+## Workflow
 
-Subscribe once and unsubscribe on disposal or shutdown. Do not cache resolved labels when a window survives culture changes.
+1. Find a nearby control using the same UI framework.
+2. Define layout and reusable styles in XAML.
+3. Keep code-behind focused on binding state and raising UI intents.
+4. Put shared messages and state in Shared for BUI/EUI flows.
+5. Validate resource paths, control names, and generated XAML compilation.
+6. Test scaling, long localization strings, disabled states, and window lifetime.
 
-Mark inherited changes with the current repository marker. Do not add redundant markers in owner-local module or underscore paths.
-
-Run the Debug build, Release resource validation, and the existing integration-test project for every affected owner.
+Do not place server services in client UI. Avoid hardcoded player-visible strings. Unsubscribe events when controls or windows close.
