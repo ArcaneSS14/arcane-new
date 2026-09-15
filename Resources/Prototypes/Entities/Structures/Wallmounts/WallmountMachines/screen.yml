@@ -15,7 +15,7 @@
       sprite: Structures/Wallmounts/screen.rsi
       state: outer_frame
   - type: Sprite
-    offset: 0, -0.5
+#    offset: 0, -0.5 # Arcane-Edit
     drawdepth: WallMountedItems
     sprite: Structures/Wallmounts/screen.rsi
     state: screen # Note: outer_frame will be added on top of text layers.
