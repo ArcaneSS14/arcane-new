@@ -21,6 +21,7 @@
   - type: Clickable
   - type: InteractionOutline
   - type: Sprite
+    offset: 0, 1
     drawdepth: WallMountedItems
     layers:
     - map: ["enum.PoweredLightLayers.Base"]

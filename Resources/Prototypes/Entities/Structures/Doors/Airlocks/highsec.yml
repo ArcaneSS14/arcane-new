@@ -6,62 +6,6 @@
   components:
   - type: Sprite
     sprite: Structures/Doors/Airlocks/Standard/airlock-vault.rsi
-    layers:
-    - state: closed
-      map: ["enum.DoorVisualLayers.Base"]
-    - state: closed_unlit
-      shader: unshaded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects-vault.rsi
-      map: ["enum.DoorVisualLayers.BaseUnlit"]
-      visible: true
-    - state: welded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects-vault.rsi
-      map: ["enum.WeldableLayers.BaseWelded"]
-    - state: bolted_unlit
-      shader: unshaded
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects-vault.rsi
-      map: ["enum.DoorVisualLayers.BaseBolted"]
-    - state: emergency_unlit
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects-vault.rsi
-      map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
-      shader: unshaded
-    - state: panel_open
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
-      map: ["enum.WiresVisualLayers.MaintenancePanel"]
-    - state: electrified_ai
-      sprite: Interface/Misc/ai_hud.rsi
-      shader: unshaded
-      visible: false
-      map: ["enum.ElectrifiedLayers.HUD"]
-    - state: electrified
-      sprite: Effects/electricity.rsi
-      shader: unshaded
-      visible: false
-      map: ["enum.ElectrifiedLayers.Sparks"]
-    - state: sparks
-      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
-      map: ["enum.DoorVisualLayers.BaseEmagging"]
-      shader: unshaded
-      visible: false
-  - type: AnimationPlayer
-  - type: Physics
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeAabb
-          bounds: "-0.49,-0.49,0.49,0.49" # don't want this colliding with walls or they won't close
-        density: 100
-        mask:
-        - FullTileMask
-        layer:
-        - WallLayer
-  - type: ContainerFill
-    containers:
-      board: [ DoorElectronics ]
-  - type: ContainerContainer
-    containers:
-      board: !type:Container
   - type: Door
     crushDamage:
       types:
@@ -76,20 +20,12 @@
     layoutId: HighSec
     alwaysRandomize: true
   - type: Damageable
-    damageModifierSet: StrongMetallic
-  - type: Injurable
-    damageContainer: StructuralInorganic
+    damageModifierSet: PlasteelStaticMod
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 1500
-      behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # <Trauma>
-    - trigger: !type:DamageTrigger
-        damage: 1450
+        damage: 350
       behaviors:
       - !type:SpawnEntitiesBehavior
         spawn:
@@ -99,11 +35,8 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalSlam
-      - !type:ChangeConstructionNodeBehavior
-        node: assembly
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # </Trauma>
+          params:
+            volume: -4
   - type: Construction
     graph: Airlock
     node: highSecDoor
