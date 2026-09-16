@@ -3,6 +3,10 @@
   parent: BaseStructure
   name: grille
   description: A flimsy framework of iron rods.
+  placement:
+    mode: SnapgridCenter
+    snap:
+    - Wall
   components:
   # <Trauma>
   - type: Penetratable # Goobstation - Better snipers
@@ -27,7 +31,6 @@
     drawdepth: Walls
     sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
     layers:
-    - state: grille
     - state: electrified
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
@@ -35,7 +38,13 @@
       visible: false
   - type: Icon
     sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
-    state: grille
+    state: full
+  - type: PlacementReplacement
+    key: grilles
+  - type: IconSmooth
+    index: 0
+    key: walls
+    base: grille
   - type: Construction
     graph: Grille
     node: grille
@@ -77,18 +86,18 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 200 #excess damage (nuke?). avoid computational cost of spawning entities.
+        damage: 80
       behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    - trigger:
-        !type:DamageTrigger
-        damage: 30 # Trauma - was 100, way too tanky (window has 50 hp lol)
-      behaviors:
+      - &SpawnRod !type:SpawnEntitiesBehavior
+        spawn:
+          PartRodMetal1:
+            min: 0
+            max: 1
       - !type:ChangeConstructionNodeBehavior
         node: grilleBroken
-      - !type:DoActsBehavior
-        acts: ["Breakage"]
+      - !type:PlaySoundBehavior
+        sound:
+          path: "/Audio/Weapons/grille_hit.ogg"
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -127,10 +136,10 @@
   - type: Sprite
     drawdepth: Walls
     sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
-    state: grille_broken
+    state: broken
   - type: Icon
     sprite: Structures/Walls/grille.rsi # Trauma # Arcane-Edit
-    state: grille_broken
+    state: broken
   - type: RCDDeconstructable
     cost: 6
     delay: 4
@@ -147,19 +156,19 @@
     tags:
     - ForceNoFixRotations
   - type: Damageable
-    damageModifierSet: FlimsyMetallic
+    damageModifierSet: RodMetalMod
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 10
+        damage: 5
       behaviors:
-      - !type:ChangeConstructionNodeBehavior
-        node: start
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
+      - *SpawnRod
+      - !type:PlaySoundBehavior
+        sound:
+          path: "/Audio/Weapons/grille_hit.ogg"
 
 - type: entity
   id: ClockworkGrilleBroken
@@ -179,17 +188,16 @@
     node: clockGrilleBroken
 
 - type: entity
-  id: GrilleDiagonal
   parent: Grille
+  id: GrilleDiagonal
   name: diagonal grille
   components:
   - type: Transform
     noRot: false
   - type: Sprite
-    drawdepth: Walls
     sprite: Structures/Walls/grille-diagonal.rsi # Trauma # Arcane-Edit
     layers:
-    - state: grille_diagonal
+    - state: state0
     - state: electrified_diagonal
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
@@ -197,7 +205,12 @@
       visible: false
   - type: Icon
     sprite: Structures/Walls/grille-diagonal.rsi # Trauma # Arcane-Edit
-    state: grille_diagonal
+    state: state0
+  - type: IconSmooth
+    index: 0
+    mode: Diagonal
+    key: grilles
+    base: state
   - type: Tag
     tags:
     - Diagonal

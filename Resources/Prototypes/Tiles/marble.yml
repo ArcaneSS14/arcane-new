@@ -15,7 +15,7 @@
   name: tiles-white-marble
   sprite: /Textures/Tiles/Marble/white-marble-mono.png
   variants: 6
-  itemDrop: FloorTileItemWhiteMarble
+  itemDrop: FloorTileItemWhiteMarbleMono # Arcane-Edit: Fix
 
 - type: tile
   id: FloorDarkMarble
@@ -31,4 +31,4 @@
   name: tiles-dark-marble
   sprite: /Textures/Tiles/Marble/dark-marble-mono.png
   variants: 6
-  itemDrop: FloorTileItemDarkMarble
+  itemDrop: FloorTileItemDarkMarbleMono # Arcane-Edit
