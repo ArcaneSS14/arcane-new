@@ -71,7 +71,7 @@
 
 - type: entity
   id: WallRockBasaltBSCrystal
-  parent: WallRockBasalt
+  parent: WallRock # Arcane-Edit: Fix
   suffix: bluespace crystal
   components:
     - type: OreVein
@@ -163,7 +163,7 @@
 
 - type: entity
   id: WallRockAndesiteBSCrystal
-  parent: WallRockAndesite
+  parent: WallRock # Arcane-Edit: Fix
   suffix: bluespace crystal
   components:
     - type: OreVein
