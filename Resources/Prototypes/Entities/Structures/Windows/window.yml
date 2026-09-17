@@ -13,8 +13,6 @@
   - type: SoundBlocker
     soundBlockPercent: 0.5
   - type: ReflectiveSurface
-  - type: PlacementReplacement
-    key: windows
   # </Trauma>
   - type: Anchorable
     flags:
