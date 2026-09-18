@@ -1,4 +1,4 @@
-# Feature-reduced parent, compatible with the requirements of the High Security Door
+﻿# Feature-reduced parent, compatible with the requirements of the High Security Door
 # You probably want to inherit from Airlock rather than this
 - type: entity
   abstract: true
@@ -215,10 +215,6 @@
     - Airlocks
     - WirePanels
     - Networking
-  - type: StructureAligner
-  - type: StructureAlignerPylon
-  placement:
-    mode: SnapgridCenter
 
 - type: entity
   abstract: true
