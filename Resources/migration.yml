@@ -1341,6 +1341,14 @@ FloorTileItemXenoSteelCorner: FloorTileItemExoCornerSW
 FloorTileItemXenoMaint: FloorTileItemExoTechmaint
 FloorTileItemXenoborg: FloorTileItemExoBorg
 FloorTileItemDarkSquiggly: FloorTileItemExoHorizontal
+WallCobblebrick: WallConcrete
+WallAsteroidCobblebrick: WallConcrete
+WallBasaltCobblebrick: WallConcrete
+WallSnowCobblebrick: WallRockSnow
+WallSandCobblebrick: WallRockSand
+WallChromiteCobblebrick: WallRockChromite
+WallAndesiteCobblebrick: WallRockAndesite
+WallIce: WallRockSnow
 # Arcane-End
 
 #2026-08-18
