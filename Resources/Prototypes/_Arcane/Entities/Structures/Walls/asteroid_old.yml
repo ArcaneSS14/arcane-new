@@ -1,3 +1,63 @@
+#region Bananium
+
+- type: entity
+  abstract: true
+  id: BaseVeinBananium
+  suffix: Bananium
+  components:
+  - type: OreVein
+    oreChance: 1.0
+    currentOre: OreBananium
+  - type: Sprite
+    layers:
+    - state: rock_bananium
+      sprite: _Arcane/Structures/Walls/stone-ore-old.rsi
+      map: [ "enum.MiningScannerVisualLayers.Overlay" ]
+      visible: false
+
+- type: entity
+  parent: [BaseVeinBananium, AsteroidRock]
+  id: AsteroidRockBananium
+
+- type: entity
+  parent: AsteroidRockBananium
+  id: AsteroidRockBananiumCrab
+  suffix: Bananium Crab
+  components:
+  - type: OreVein
+    currentOre: OreBananiumCrab
+
+- type: entity
+  parent: [BaseVeinBananium, IronRock]
+  id: IronRockBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRock]
+  id: WallRockBananium
+  components:
+  - type: EntityRemap
+    mask:
+      AsteroidRock: AsteroidRockBananium
+      WallRockBasalt: WallRockBasaltBananium
+      WallRockAndesite: WallRockAndesiteBananium
+      WallRockChromite: WallRockChromiteBananium
+      WallRockSand: WallRockSandBananium
+      WallRockSnow: WallRockSnowBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockSnow]
+  id: WallRockSnowBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockSand]
+  id: WallRockSandBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockChromite]
+  id: WallRockChromiteBananium
+
+#endregion
+
 #region Basalt
 
 - type: entity
