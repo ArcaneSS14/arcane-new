@@ -19,7 +19,7 @@
 
 - type: entity
   parent: [BaseVeinBSCrystal, AsteroidRock]
-  id: MeteorRockBSCrystal
+  id: AsteroidRockBSCrystal
 
 - type: entity
   parent: [BaseVeinBSCrystal, IronRock]

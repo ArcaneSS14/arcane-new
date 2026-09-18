@@ -104124,7 +104124,7 @@ entities:
     - type: Transform
       parent: 2
       pos: 8.298553,-20.66274
-- proto: MeteorRockBSCrystal
+- proto: AsteroidRockBSCrystal
   entities:
   - uid: 15387
     components:

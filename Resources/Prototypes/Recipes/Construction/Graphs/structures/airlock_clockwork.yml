@@ -70,13 +70,6 @@
       steps:
       - tool: Screwing
         doAfter: 2.5
-    - to: glassElectronics
-      conditions:
-      - !type:EntityAnchored {}
-      steps:
-      - material: ClockworkGlass
-        amount: 1
-        doAfter: 2
     - to: wired
       conditions:
       - !type:EntityAnchored {}
@@ -87,56 +80,6 @@
       steps:
       - tool: Prying
         doAfter: 5
-
-  - node: glassElectronics
-    entity: PinionAirlockAssemblyGlass
-    edges:
-    - to: glassAirlock
-      conditions:
-      - !type:EntityAnchored {}
-      steps:
-      - material: ClockworkGlass
-        amount: 1
-        doAfter: 2
-      - tool: Screwing
-        doAfter: 2.5
-    - to: wired
-      conditions:
-      - !type:EntityAnchored {}
-      completed:
-      - !type:EmptyAllContainers
-        pickup: true
-        emptyAtUser: true
-      - !type:SpawnPrototype
-        prototype: SheetClockworkGlass1
-        amount: 1
-      steps:
-      - tool: Prying
-        doAfter: 5
-
-## Glass airlock
-  - node: glassAirlock
-    entity: PinionAirlockGlass
-    doNotReplaceInheritingEntities: true
-    actions:
-    - !type:SetWiresPanelSecurity
-      wiresAccessible: true
-    edges:
-    - to: glassElectronics
-      conditions:
-      - !type:EntityAnchored {}
-      - !type:DoorWelded {}
-      - !type:DoorBolted
-        value: false
-      - !type:WirePanel {}
-      - !type:AllWiresCut
-      completed:
-      - !type:SpawnPrototype
-        prototype: SheetClockworkGlass1
-        amount: 1
-      steps:
-      - tool: Prying
-        doAfter: 2
 
 ## Standard airlock
   - node: airlock
