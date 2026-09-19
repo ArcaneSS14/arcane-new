@@ -22,7 +22,7 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: cultwalls
-    base: cult
+    base: malign # Arcane-Edit
 
 - type: entity
   parent: WallCosmicCult
@@ -37,17 +37,19 @@
     sprite: _DV/CosmicCult/Tileset/cosmicwall.rsi
     layers:
       - state: full
-      - map: [ "enum.EdgeLayer.South" ]
-        state: trim_south
-      - map: [ "enum.EdgeLayer.East" ]
-        state: trim_east
-      - map: [ "enum.EdgeLayer.North" ]
-        state: trim_north
-      - map: [ "enum.EdgeLayer.West" ]
-        state: trim_west
+      # Arcane-Edit-Start
+#      - map: [ "enum.EdgeLayer.South" ]
+#        state: trim_south
+#      - map: [ "enum.EdgeLayer.East" ]
+#        state: trim_east
+#      - map: [ "enum.EdgeLayer.North" ]
+#        state: trim_north
+#      - map: [ "enum.EdgeLayer.West" ]
+#        state: trim_west
+      # Arcane-Edit-End
   - type: IconSmooth
     key: cultwalls
-    base: cult
+    base: malign # Arcane-Edit
   - type: SmoothEdge
 
 - type: entity
@@ -84,7 +86,7 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    base: coswindow
+    base: malign # Arcane-Edit
   - type: Appearance
   - type: DamageVisuals
     thresholds: [5, 10, 20]
@@ -126,14 +128,14 @@
   - type: Sprite
     drawdepth: WallTops
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_diagonal.rsi
-    state: coswindow0
+    state: state0 # Arcane-Edit
   - type: IconSmooth
     mode: Diagonal
     key: cultwindows
-    base: coswindow
+    base: state # Arcane-Edit
   - type: Icon
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_diagonal.rsi
-    state: coswindow0
+    state: state0 # Arcane-Edit
   - type: Destructible
     thresholds:
     - trigger:

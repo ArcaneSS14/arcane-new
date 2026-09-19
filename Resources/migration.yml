@@ -1284,6 +1284,10 @@ MeteorRockUranium: AsteroidRockUranium
 StatueBananiumClown: StatueOrnateClown
 
 # Arcane-Start
+WallMalign: WallCosmicCult
+WallMalignIndestructible: WallCosmicCult
+WallMalignIndestructibleNoOcclusion: WallCosmicCult
+MalignWindow: WindowCosmicCult
 TurnstileGenpopEnter: EnergyGateGenpopEnter
 TurnstileGenpopLeave: EnergyGateGenpopLeave
 Turnstile: EnergyGate
