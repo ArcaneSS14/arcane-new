@@ -4,9 +4,9 @@
   name: clockwork window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Walls/window-brass.rsi
+    sprite: _Arcane/Structures/Windows/window-brass.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Walls/window-brass.rsi
+    sprite: _Arcane/Structures/Windows/window-brass.rsi
     state: full
   - type: IconSmooth
     base: bwindow
@@ -18,9 +18,9 @@
   suffix: diagonal
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Walls/window-diagonal-brass.rsi
+    sprite: _Arcane/Structures/Windows/window-diagonal-brass.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Walls/window-diagonal-brass.rsi
+    sprite: _Arcane/Structures/Windows/window-diagonal-brass.rsi
     state: state0
 
 - type: entity
