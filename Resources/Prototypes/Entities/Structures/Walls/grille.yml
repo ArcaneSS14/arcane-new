@@ -12,8 +12,6 @@
   - type: Penetratable # Goobstation - Better snipers
     penetrateDamage: 10
   # </Trauma>
-  - type: Transform # required
-    noRot: true
   - type: MeleeSound
     soundGroups:
       Brute:
