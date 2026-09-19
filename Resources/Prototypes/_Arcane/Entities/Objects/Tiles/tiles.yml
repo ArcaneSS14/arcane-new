@@ -1,0 +1,86 @@
+- type: entity
+  name: filled brass plate
+  parent: FloorTileItemBase
+  id: FloorTileItemBrassFilled
+  components:
+  - type: Sprite
+    state: brass-filled
+  - type: Item
+    heldPrefix: brass
+  - type: FloorTile
+    outputs:
+      - PlatingBrass
+      - FloorBrassFilled
+  - type: Stack
+    stackType: FloorTileBrassFilled
+  - type: Construction
+    graph: TilesBrass
+    node: filledPlate
+
+- type: entity
+  name: smooth brass plate
+  parent: FloorTileItemBase
+  id: FloorTileItemBrassReebe
+  components:
+  - type: Sprite
+    state: reebe
+  - type: Item
+    heldPrefix: brass
+  - type: FloorTile
+    outputs:
+      - PlatingBrass
+      - FloorBrassReebe
+  - type: Stack
+    stackType: FloorTileBrassReebe
+  - type: Construction
+    graph: TilesBrass
+    node: reebe
+
+- type: entity
+  name: dirty tile
+  parent: FloorTileItemBase
+  id: FloorTileItemDirty
+  components:
+  - type: Sprite
+    state: dirty
+  - type: Item
+    heldPrefix: dirty
+  - type: FloorTile
+    outputs:
+      - Plating
+      - FloorSteelDirty
+  - type: Stack
+    stackType: FloorTileDirty
+
+- type: entity
+  name: hydro tile
+  parent: FloorTileItemBase
+  id: FloorTileItemHydro
+  components:
+  - type: Sprite
+    state: hydro
+  - type: Item
+    heldPrefix: hydro
+  - type: FloorTile
+    outputs:
+      - Plating
+      - FloorHydro
+  - type: Stack
+    stackType: FloorTileHydro
+
+- type: entity
+  name: mono tile
+  parent: FloorTileItemBase
+  id: FloorTileItemMono
+  components:
+  - type: Sprite
+    state: monofloor
+  - type: Item
+    heldPrefix: steel
+  - type: FloorTile
+    outputs:
+      - Plating
+      - FloorMono
+  - type: Stack
+    stackType: FloorTileMono
+

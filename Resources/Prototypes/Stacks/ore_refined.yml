@@ -11,7 +11,7 @@
   parent: BaseSmallStack
   id: Bananium
   name: stack-bananium
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/materials.rsi, state: bananium } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/bananium.rsi, state: bananium-1 } # Arcane-Edit
   spawn: MaterialBananium1
 
 # Ingots

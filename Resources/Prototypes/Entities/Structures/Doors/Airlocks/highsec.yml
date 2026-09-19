@@ -20,20 +20,12 @@
     layoutId: HighSec
     alwaysRandomize: true
   - type: Damageable
-    damageModifierSet: StrongMetallic
-  - type: Injurable
-    damageContainer: StructuralInorganic
+    damageModifierSet: PlasteelStaticMod
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 1500
-      behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # <Trauma>
-    - trigger: !type:DamageTrigger
-        damage: 1450
+        damage: 350
       behaviors:
       - !type:SpawnEntitiesBehavior
         spawn:
@@ -43,11 +35,8 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalSlam
-      - !type:ChangeConstructionNodeBehavior
-        node: assembly
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # </Trauma>
+          params:
+            volume: -4
   - type: Construction
     graph: Airlock
     node: highSecDoor

@@ -1,4 +1,4 @@
-# Feature-reduced parent, compatible with the requirements of the High Security Door
+﻿# Feature-reduced parent, compatible with the requirements of the High Security Door
 # You probably want to inherit from Airlock rather than this
 - type: entity
   abstract: true
@@ -21,24 +21,28 @@
           "/Audio/Weapons/smash.ogg"
   - type: InteractionOutline
   - type: Sprite
-    sprite: Structures/Doors/Airlocks/Standard/basic.rsi
-    snapCardinals: true
+    sprite: Structures/Doors/Airlocks/Standard/airlock-base.rsi
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
     - state: closed_unlit
       shader: unshaded
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseUnlit"]
-      visible: false
+      visible: true
     - state: welded
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.WeldableLayers.BaseWelded"]
     - state: bolted_unlit
       shader: unshaded
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseBolted"]
     - state: emergency_unlit
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
       shader: unshaded
     - state: panel_open
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
     - state: electrified_ai
       sprite: Interface/Misc/ai_hud.rsi
@@ -51,6 +55,7 @@
       visible: false
       map: ["enum.ElectrifiedLayers.Sparks"]
     - state: sparks
+      sprite: Structures/Doors/Airlocks/Effects/airlock-effects.rsi
       map: ["enum.DoorVisualLayers.BaseEmagging"]
       shader: unshaded
       visible: false
@@ -92,6 +97,7 @@
     fuel: 5
     time: 3
   - type: Airlock
+    openUnlitVisible: true
   - type: NavMapDoor
   - type: DoorBolt
   - type: Appearance
@@ -126,10 +132,8 @@
   - type: RadiationBlocker
     resistance: 3
   - type: Occluder
-  - type: Injurable
-    damageContainer: StructuralInorganic
   - type: Damageable
-    damageModifierSet: Metallic # Trauma - Was SteelMod, too tanky
+    damageModifierSet: SteelStaticMod
   - type: Construction
     graph: Airlock
     node: airlock
@@ -152,10 +156,8 @@
     - WirePanels
   - type: StaticPrice
     price: 150
-  # <Trauma> - despritening
-  #- type: StructureAligner
-  #- type: StructureAlignerPylon
-  # </Trauma>
+  - type: StructureAligner
+  - type: StructureAlignerPylon
 
 - type: entity
   parent: [ BaseAirlockIndestructible, StructureHealthDoor ]
@@ -199,38 +201,12 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 500
+        damage: 200
       behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
       # TODO this should go to the broken node first
       - !type:PlaySoundBehavior
         sound:
           collection: MetalSlam
-    # <Trauma>
-    - trigger: !type:DamageTrigger
-        damage: 450
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawn:
-          SheetSteel1:
-            min: 1
-            max: 2
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalSlam
-      - !type:ChangeConstructionNodeBehavior
-        node: assembly
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # </Trauma>
-  - type: Construction
-    graph: Airlock
-    node: airlock
-    containers:
-    - board
-  - type: PlacementReplacement
-    key: walls
   - type: Paintable
     group: AirlockStandard
   - type: PryUnpowered
@@ -262,7 +238,7 @@
   - type: Occluder
     enabled: false
   - type: Sprite
-    sprite: Structures/Doors/Airlocks/Glass/glass.rsi # Trauma - despritening
+    sprite: Structures/Doors/Airlocks/Glass/airlock-base.rsi
   - type: Fixtures
     fixtures:
       fix1:
@@ -282,8 +258,8 @@
     node: glassAirlock
   - type: Paintable
     group: AirlockGlass
-  #- type: RadiationBlocker
-  #  resistance: 2
+  - type: RadiationBlocker
+    resistance: 1 # Arcane-Edit: 2 > 1
   - type: Tag
     tags:
       - GlassAirlock

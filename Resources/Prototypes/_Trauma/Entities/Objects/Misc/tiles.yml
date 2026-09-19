@@ -10,25 +10,6 @@
       Plastic: 25
 
 - type: entity
-  parent: BaseFloorTileAstro # it's made of plastic...
-  id: FloorTileItemPlastic
-  name: plastic tile
-  components:
-  - type: Sprite
-    state: steel # no plastic tile item sprites
-  - type: Item
-    heldPrefix: steel
-  - type: FloorTile
-    outputs:
-    - Plating
-    - FloorPlastic
-  - type: Stack
-    stackType: FloorTilePlastic
-  - type: Construction
-    graph: TilePlastic
-    node: plastic tile
-
-- type: entity
   parent: FloorTileItemPlastic
   id: FloorTileItemPlasticDark
   name: dark plastic tile

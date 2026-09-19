@@ -1,0 +1,33 @@
+- type: entity
+  parent: Grille
+  id: ClockworkGrille
+  name: clockwork grille
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Walls/brass-grille.rsi
+  - type: Icon
+    sprite: _Arcane/Structures/Walls/brass-grille.rsi
+    state: full
+
+- type: entity
+  parent: GrilleBroken
+  id: ClockworkGrilleBroken
+  name: clockwork grille
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Walls/brass-grille.rsi
+    state: broken
+  - type: Icon
+    sprite: _Arcane/Structures/Walls/brass-grille.rsi
+    state: broken
+
+- type: entity
+  parent: GrilleDiagonal
+  id: ClockworkGrilleDiagonal
+  name: diagonal clockwork grille
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Walls/brass-grille-diagonal.rsi
+  - type: Icon
+    sprite: _Arcane/Structures/Walls/brass-grille-diagonal.rsi
+    state: state0
