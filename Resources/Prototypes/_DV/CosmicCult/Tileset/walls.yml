@@ -37,16 +37,14 @@
     sprite: _DV/CosmicCult/Tileset/cosmicwall.rsi
     layers:
       - state: full
-      # Arcane-Edit-Start
-#      - map: [ "enum.EdgeLayer.South" ]
-#        state: trim_south
-#      - map: [ "enum.EdgeLayer.East" ]
-#        state: trim_east
-#      - map: [ "enum.EdgeLayer.North" ]
-#        state: trim_north
-#      - map: [ "enum.EdgeLayer.West" ]
-#        state: trim_west
-      # Arcane-Edit-End
+      - map: [ "enum.EdgeLayer.South" ]
+        state: trim_south
+      - map: [ "enum.EdgeLayer.East" ]
+        state: trim_east
+      - map: [ "enum.EdgeLayer.North" ]
+        state: trim_north
+      - map: [ "enum.EdgeLayer.West" ]
+        state: trim_west
   - type: IconSmooth
     key: cultwalls
     base: malign # Arcane-Edit

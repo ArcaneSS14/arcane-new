@@ -41,6 +41,18 @@
         {
             "name": "malign7",
             "directions": 4
+        },
+        {
+            "name": "trim_south"
+        },
+        {
+            "name": "trim_north"
+        },
+        {
+            "name": "trim_east"
+        },
+        {
+            "name": "trim_west"
         }
     ]
 }

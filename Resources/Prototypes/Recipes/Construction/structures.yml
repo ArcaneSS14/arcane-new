@@ -601,12 +601,6 @@
   # </Trauma>
 
 - type: construction
-  parent: PinionAirlock
-  id: PinionAirlockGlass
-  name: construction-recipe-pinion-airlock-glass
-  targetNode: glassAirlock
-
-- type: construction
   parent: BaseStructureFullTileDirectional
   id: AirlockShuttle
   graph: AirlockShuttle
