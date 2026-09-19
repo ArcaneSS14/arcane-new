@@ -1284,6 +1284,8 @@ MeteorRockUranium: AsteroidRockUranium
 StatueBananiumClown: StatueOrnateClown
 
 # Arcane-Start
+PinionAirlockGlass: PinionAirlock
+PinionAirlockAssemblyGlass: PinionAirlockAssembly
 WallMalign: WallCosmicCult
 WallMalignIndestructible: WallCosmicCult
 WallMalignIndestructibleNoOcclusion: WallCosmicCult

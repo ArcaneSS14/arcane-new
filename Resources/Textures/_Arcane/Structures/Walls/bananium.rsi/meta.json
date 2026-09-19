@@ -11,35 +11,35 @@
             "name": "full"
         },
         {
-            "name": "gold0",
+            "name": "bananium0",
             "directions": 4
         },
         {
-            "name": "gold1",
+            "name": "bananium1",
             "directions": 4
         },
         {
-            "name": "gold2",
+            "name": "bananium2",
             "directions": 4
         },
         {
-            "name": "gold3",
+            "name": "bananium3",
             "directions": 4
         },
         {
-            "name": "gold4",
+            "name": "bananium4",
             "directions": 4
         },
         {
-            "name": "gold5",
+            "name": "bananium5",
             "directions": 4
         },
         {
-            "name": "gold6",
+            "name": "bananium6",
             "directions": 4
         },
         {
-            "name": "gold7",
+            "name": "bananium7",
             "directions": 4
         }
     ]

@@ -11,35 +11,35 @@
             "name": "full"
         },
         {
-            "name": "gold0",
+            "name": "plastic0",
             "directions": 4
         },
         {
-            "name": "gold1",
+            "name": "plastic1",
             "directions": 4
         },
         {
-            "name": "gold2",
+            "name": "plastic2",
             "directions": 4
         },
         {
-            "name": "gold3",
+            "name": "plastic3",
             "directions": 4
         },
         {
-            "name": "gold4",
+            "name": "plastic4",
             "directions": 4
         },
         {
-            "name": "gold5",
+            "name": "plastic5",
             "directions": 4
         },
         {
-            "name": "gold6",
+            "name": "plastic6",
             "directions": 4
         },
         {
-            "name": "gold7",
+            "name": "plastic7",
             "directions": 4
         }
     ]
