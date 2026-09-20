@@ -73,41 +73,6 @@
     base: cult
 
 - type: entity
-  parent: BaseWall
-  id: WallPlastic
-  name: plastic wall
-  components:
-  - type: CosmicCorruptible
-    convertTo: WallCosmicCult
-  - type: Sprite
-    sprite: _Arcane/Structures/Walls/plastic.rsi
-  - type: Icon
-    sprite: _Arcane/Structures/Walls/plastic.rsi
-  - type: Construction
-    graph: Girder
-    node: plasticWall
-  - type: RCDDeconstructable
-    cost: 6
-    delay: 8
-    fx: EffectRCDDeconstruct8
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 150
-      behaviors:
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalSlam
-      - !type:ChangeConstructionNodeBehavior
-        node: girder
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: walls
-    base: plastic
-
-- type: entity
   parent: [ BaseWall, StructureHealthWallWeak ]
   id: WallDiamond
   name: diamond wall
