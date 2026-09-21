@@ -74,101 +74,103 @@
 # 2026/07/22
 # The respritening! With this one simple trick, i give 200 mappers a collective aneurysm.
 
-- type: tileAlias
-  id: FloorBrassReebe
-  target: FloorSteelDamaged
-
-- type: tileAlias
-  id: FloorBrassFilled
-  target: FloorSteelDamaged
-
-- type: tileAlias
-  id: PlatingBrass
-  target: Plating
-
-- type: tileAlias
-  id: FloorDarkDiagonal
-  target: FloorDark
-
-- type: tileAlias
-  id: FloorDarkDiagonalMini
-  target: FloorDark
-
-- type: tileAlias
-  id: FloorDarkOffset
-  target: FloorDark
-
-- type: tileAlias
-  id: FloorSteelDiagonal
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorSteelDiagonalMini
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorSteelOffset
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorSteelDirty
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorWhiteDiagonal
-  target: FloorWhite
-
-- type: tileAlias
-  id: FloorWhiteDiagonalMini
-  target: FloorWhite
-
-- type: tileAlias
-  id: FloorWhiteOffset
-  target: FloorWhite
-
-- type: tileAlias
-  id: FloorUraniumMarble
-  target: FloorDarkMarble
-
-- type: tileAlias
-  id: FloorPlasmaMarble
-  target: FloorMarble
-
-- type: tileAlias
-  id: FloorEighties
-  target: FloorArcadeBlue
-
-- type: tileAlias
-  id: FloorArcadeBlue2
-  target: FloorArcadeBlue
-
-- type: tileAlias
-  id: FloorHydro
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorElevatorShaft
-  target: FloorDark
-
-- type: tileAlias
-  id: FloorMining
-  target: FloorDarkPlastic
-
-- type: tileAlias
-  id: FloorMiningLight
-  target: FloorDarkPlastic
-
-- type: tileAlias
-  id: FloorMiningDark
-  target: FloorDarkPlastic
-
-- type: tileAlias
-  id: FloorRockVault
-  target: FloorSteel
-
-- type: tileAlias
-  id: FloorShowroom
-  target: FloorSteel
+# Arcane-Edit-Start: We again with this
+#- type: tileAlias
+#  id: FloorBrassReebe
+#  target: FloorSteelDamaged
+#
+#- type: tileAlias
+#  id: FloorBrassFilled
+#  target: FloorSteelDamaged
+#
+#- type: tileAlias
+#  id: PlatingBrass
+#  target: Plating
+#
+#- type: tileAlias
+#  id: FloorDarkDiagonal
+#  target: FloorDark
+#
+#- type: tileAlias
+#  id: FloorDarkDiagonalMini
+#  target: FloorDark
+#
+#- type: tileAlias
+#  id: FloorDarkOffset
+#  target: FloorDark
+#
+#- type: tileAlias
+#  id: FloorSteelDiagonal
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorSteelDiagonalMini
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorSteelOffset
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorSteelDirty
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorWhiteDiagonal
+#  target: FloorWhite
+#
+#- type: tileAlias
+#  id: FloorWhiteDiagonalMini
+#  target: FloorWhite
+#
+#- type: tileAlias
+#  id: FloorWhiteOffset
+#  target: FloorWhite
+#
+#- type: tileAlias
+#  id: FloorUraniumMarble
+#  target: FloorDarkMarble
+#
+#- type: tileAlias
+#  id: FloorPlasmaMarble
+#  target: FloorMarble
+#
+#- type: tileAlias
+#  id: FloorEighties
+#  target: FloorArcadeBlue
+#
+#- type: tileAlias
+#  id: FloorArcadeBlue2
+#  target: FloorArcadeBlue
+#
+#- type: tileAlias
+#  id: FloorHydro
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorElevatorShaft
+#  target: FloorDark
+#
+#- type: tileAlias
+#  id: FloorMining
+#  target: FloorDarkPlastic
+#
+#- type: tileAlias
+#  id: FloorMiningLight
+#  target: FloorDarkPlastic
+#
+#- type: tileAlias
+#  id: FloorMiningDark
+#  target: FloorDarkPlastic
+#
+#- type: tileAlias
+#  id: FloorRockVault
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: FloorShowroom
+#  target: FloorSteel
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorSteelSlatsContinuous
@@ -182,23 +184,27 @@
   id: FloorWhiteSlatsContinuous
   target: FloorWhiteVerticalSlatsBordered
 
-- type: tileAlias
-  id: FloorMono
-  target: FloorSteel
-
-- type: tileAlias
-  id: TrainLattice
-  target: Lattice
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorMono
+#  target: FloorSteel
+#
+#- type: tileAlias
+#  id: TrainLattice
+#  target: Lattice
+# Arcane-Edit-End
 
 # 2026/07/28
 # More respritening
-- type: tileAlias
-  id: FloorGrassLight
-  target: FloorGrass
-
-- type: tileAlias
-  id: FloorLightAstroGrass
-  target: FloorAstroGrass
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorGrassLight
+#  target: FloorGrass
+#
+#- type: tileAlias
+#  id: FloorLightAstroGrass
+#  target: FloorAstroGrass
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorIronsandTile
@@ -210,35 +216,41 @@
 
 - type: tileAlias
   id: FloorIronsandConcreteMono
-  target: FloorAsteroidIronsand
+  target: FloorIronsandConcreteSmooth # Arcane-Edit
 
 - type: tileAlias
   id: FloorIronsandConcreteSmooth
   target: FloorAsteroidIronsand
 
-- type: tileAlias
-  id: FloorGrayConcrete
-  target: FloorConcrete
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorGrayConcrete
+#  target: FloorConcrete
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorGrayConcreteMono
-  target: FloorConcreteMono
+  target: FloorGrayConcreteSmooth # Arcane-Edit
 
-- type: tileAlias
-  id: FloorGrayConcreteSmooth
-  target: FloorConcreteSmooth
-
-- type: tileAlias
-  id: FloorOldConcrete
-  target: FloorConcrete
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorGrayConcreteSmooth
+#  target: FloorConcreteSmooth
+#
+#- type: tileAlias
+#  id: FloorOldConcrete
+#  target: FloorConcrete
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorOldConcreteMono
-  target: FloorConcreteMono
+  target: FloorOldConcreteSmooth # Arcane-Edit
 
-- type: tileAlias
-  id: FloorOldConcreteSmooth
-  target: FloorConcreteSmooth
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorOldConcreteSmooth
+#  target: FloorConcreteSmooth
+# Arcane-Edit-End
 
 - type: tileAlias
   id: IronsandPacked
@@ -252,29 +264,31 @@
   id: PlatingIronsand
   target: Plating
 
-- type: tileAlias
-  id: FloorCaveDrought
-  target: FloorCave
-
-- type: tileAlias
-  id: FloorAsteroidSandRedBorderless
-  target: FloorAsteroidSandBorderless
-
-- type: tileAlias
-  id: FloorAsteroidSandRed
-  target: FloorAsteroidSand
-
-- type: tileAlias
-  id: FloorAsteroidSandDug
-  target: FloorAsteroidSand
-
-- type: tileAlias
-  id: FloorAsteroidSandDugBorderless
-  target: FloorAsteroidSandBorderless
-
-- type: tileAlias
-  id: FloorLowDesert
-  target: FloorDesert
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorCaveDrought
+#  target: FloorCave
+#
+#- type: tileAlias
+#  id: FloorAsteroidSandRedBorderless
+#  target: FloorAsteroidSandBorderless
+#
+#- type: tileAlias
+#  id: FloorAsteroidSandRed
+#  target: FloorAsteroidSand
+#
+#- type: tileAlias
+#  id: FloorAsteroidSandDug
+#  target: FloorAsteroidSand
+#
+#- type: tileAlias
+#  id: FloorAsteroidSandDugBorderless
+#  target: FloorAsteroidSandBorderless
+#
+#- type: tileAlias
+#  id: FloorLowDesert
+#  target: FloorDesert
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorAsteroidSandUnvariantizedBorderless
@@ -292,13 +306,15 @@
   id: FloorAsteroidIronsandUnvariantizedBorderless
   target: FloorAsteroidIronsand
 
-- type: tileAlias
-  id: FloorSnowDug
-  target: FloorSnow
-
-- type: tileAlias
-  id: FloorTechMaint
-  target: FloorTechMaint2
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorSnowDug
+#  target: FloorSnow
+#
+#- type: tileAlias
+#  id: FloorTechMaint
+#  target: FloorTechMaint2
+# Arcane-Edit-End
 
 - type: tileAlias
   id: FloorXenoborg
@@ -324,6 +340,8 @@
   id: FloorDarkSquiggly
   target: FloorExoHorizontal
 
-- type: tileAlias
-  id: FloorAsphalt
-  target: FloorConcrete
+# Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorAsphalt
+#  target: FloorConcrete
+# Arcane-Edit-End

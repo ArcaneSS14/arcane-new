@@ -1,0 +1,5 @@
+- type: tile
+  id: FloorLowDesert
+  name: tiles-low-desert-floor
+  sprite: /Textures/_Arcane/Tiles/Planet/Desert/low_desert.png
+  variants: 6

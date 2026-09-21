@@ -1,0 +1,13 @@
+- type: tile
+  id: PlatingBrass
+  parent: BasePlating
+  name: tiles-brass-plating
+  sprite: /Textures/_Arcane/Tiles/Clockwork/clockwork_floor.png
+
+- type: tile
+  id: TrainLattice
+  parent: Lattice
+  name: tiles-lattice-train
+  sprite: /Textures/_Arcane/Tiles/latticeTrain.png
+  footstepSounds:
+    collection: FootstepPlating
