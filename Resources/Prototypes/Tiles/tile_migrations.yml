@@ -204,25 +204,25 @@
 #- type: tileAlias
 #  id: FloorLightAstroGrass
 #  target: FloorAstroGrass
+#
+#- type: tileAlias
+#  id: FloorIronsandTile
+#  target: FloorAsteroidIronsand
+#
+#- type: tileAlias
+#  id: FloorIronsandConcrete
+#  target: FloorAsteroidIronsand
 # Arcane-Edit-End
-
-- type: tileAlias
-  id: FloorIronsandTile
-  target: FloorAsteroidIronsand
-
-- type: tileAlias
-  id: FloorIronsandConcrete
-  target: FloorAsteroidIronsand
 
 - type: tileAlias
   id: FloorIronsandConcreteMono
   target: FloorIronsandConcreteSmooth # Arcane-Edit
 
-- type: tileAlias
-  id: FloorIronsandConcreteSmooth
-  target: FloorAsteroidIronsand
-
 # Arcane-Edit-Start
+#- type: tileAlias
+#  id: FloorIronsandConcreteSmooth
+#  target: FloorAsteroidIronsand
+#
 #- type: tileAlias
 #  id: FloorGrayConcrete
 #  target: FloorConcrete

@@ -1304,9 +1304,7 @@ FloorTileItemGrayConcreteSmooth: FloorTileItemConcreteSmooth
 FloorTileItemOldConcrete: FloorTileItemConcrete
 FloorTileItemOldConcreteMono: FloorTileItemConcreteMono
 FloorTileItemOldConcreteSmooth: FloorTileItemConcreteSmooth
-FloorTileItemIronsandConcrete: null
-FloorTileItemIronsandConcreteMono: null
-FloorTileItemIronsandConcreteSmooth: null
+FloorTileItemIronsandConcreteMono: FloorTileItemIronsandConcreteSmooth
 IronSandstone: IronRock
 IronSandstoneMining: IronRock
 FloorTileItemTechmaint: FloorTileItemSteelMaint

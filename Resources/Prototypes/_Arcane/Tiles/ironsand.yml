@@ -1,0 +1,46 @@
+- type: tile
+  id: FloorIronsandTile
+  name: tiles-ironsand-tile
+  sprite: /Textures/_Arcane/Tiles/Asteroid/ironsand_tile.png
+  baseTurf: Plating
+  isSubfloor: false
+  deconstructTools: [ Prying ]
+  footstepSounds:
+    collection: FootstepAsteroid
+  heatCapacity: 10000
+
+- type: tile
+  id: FloorIronsandConcrete
+  name: tiles-ironsand-concrete-tile
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/ironsandconcrete.png
+  variants: 4
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  baseTurf: Plating
+  isSubfloor: false
+  deconstructTools: [ Prying ]
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemIronsandConcrete
+  heatCapacity: 10000
+
+- type: tile
+  id: FloorIronsandConcreteSmooth
+  name: tiles-ironsand-concrete-smooth
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/ironsandconcrete_smooth.png
+  variants: 4
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  baseTurf: Plating
+  isSubfloor: false
+  deconstructTools: [ Prying ]
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemIronsandConcreteSmooth
+  heatCapacity: 10000

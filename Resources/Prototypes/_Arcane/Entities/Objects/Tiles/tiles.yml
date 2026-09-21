@@ -84,3 +84,32 @@
   - type: Stack
     stackType: FloorTileMono
 
+- type: entity
+  parent: FloorTileItemBase
+  id: FloorTileItemIronsandConcrete
+  name: iron sand concrete tile
+  components:
+  - type: Sprite
+    state: ironsandconcrete
+  - type: Item
+    heldPrefix: ironsandconcrete
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorIronsandConcrete
+  - type: Stack
+    stackType: FloorTileIronsandConcrete
+
+- type: entity
+  parent: FloorTileItemIronsandConcrete
+  id: FloorTileItemIronsandConcreteSmooth
+  name: iron sand concrete smooth
+  components:
+  - type: Sprite
+    state: ironsandconcrete-smooth
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorIronsandConcreteSmooth
+  - type: Stack
+    stackType: FloorTileIronsandConcreteSmooth
