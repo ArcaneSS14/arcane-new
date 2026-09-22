@@ -3,9 +3,6 @@
 - type: latheRecipePack
   id: OreSmelting
   recipes:
-  # <Trauma>
-  - ArtifactFragment1
-  # </Trauma>
   - SheetSteel
   - SheetGlass1
   - SheetPlasma1

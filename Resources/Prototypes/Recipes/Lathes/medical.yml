@@ -234,7 +234,6 @@
     Wood: 100
 
 - type: latheRecipe
-  abstract: true # Trauma - goob syringe gun
   id: LauncherSyringe
   result: LauncherSyringe
   completetime: 10
@@ -245,7 +244,6 @@
     Glass: 100
 
 - type: latheRecipe
-  abstract: true # Trauma - goob syringe gun
   id: MiniSyringe
   result: MiniSyringe
   completetime: 2
@@ -255,7 +253,6 @@
     Plastic: 100
 
 - type: latheRecipe
-  abstract: true # Trauma - le quirky syringe
   id: JetInjector
   result: JetInjector
   categories:
@@ -268,7 +265,6 @@
     Silver: 250
 
 - type: latheRecipe
-  abstract: true # Trauma - le quirky syringe
   id: AdvancedJetInjector
   result: AdvancedJetInjector
   categories:

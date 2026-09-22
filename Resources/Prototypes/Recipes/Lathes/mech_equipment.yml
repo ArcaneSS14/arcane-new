@@ -6,7 +6,6 @@
   categories:
   - Mech
   - Parts
-  - MechEquipment # Goobstation
   completetime: 10
   materials:
     Steel: 500
@@ -18,25 +17,11 @@
   parent: BaseMechEquipmentRecipe
   id: MechEquipmentGrabber
   result: MechEquipmentGrabber
-  # <Trauma> - add it to ripley category
-  categories:
-  - Mech
-  - Parts
-  - MechEquipment
-  - Ripley
-  # </Trauma>
 
 - type: latheRecipe
   parent: BaseMechEquipmentRecipe
   id: MechEquipmentGrabberSmall
   result: MechEquipmentGrabberSmall
-  # <Trauma> - add it to hamptr category
-  categories:
-  - Mech
-  - Parts
-  - MechEquipment
-  - Hamptr
-  # </Trauma>
   materials:
     Steel: 400
     Plastic: 100
@@ -45,13 +30,6 @@
   parent: BaseMechEquipmentRecipe
   id: MechEquipmentHorn
   result: MechEquipmentHorn
-  # <Trauma> - add it to honker category
-  categories:
-  - Mech
-  - Parts
-  - MechEquipment
-  - Honker
-  # </Trauma>
   materials:
     Steel: 500
     Gold: 200

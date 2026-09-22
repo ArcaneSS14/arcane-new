@@ -4,12 +4,6 @@
   id: BaseFurniture
   category: construction-category-furniture
   placementMode: SnapgridCenter
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    MetalworkingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   abstract: true
@@ -90,19 +84,11 @@
   parent: BaseChair
   id: ChairWood
   targetNode: chairWood
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
   id: ChairMeat
   targetNode: chairMeat
-  # <Trauma>
-  practical:
-    CookingKnowledge: 2 # meat....
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
@@ -110,21 +96,11 @@
   graph: RitualSeat
   startNode: start
   targetNode: chairRitual
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
   id: ChairFolding
   targetNode: chairFolding
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    MechanicsKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
@@ -135,32 +111,20 @@
   parent: BaseChair
   id: StoolCard
   targetNode: stoolCard
-  theory:
-    FurnitureKnowledge: 0
-  practical: null
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
   id: ChairWoodBench
   targetNode: chairWoodBench
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseChair
   id: RedComfBench
   name: construction-recipe-red-comf-bench
   targetNode: redComfBench
-  # <Trauma>
-  practical:
-    TailoringKnowledge: 1
-  # </Trauma>
 
 - type: construction
-  parent: RedComfBench # Trauma
+  parent: BaseChair
   id: BlueComfBench
   name: construction-recipe-blue-comf-bench
   targetNode: blueComfBench
@@ -207,78 +171,67 @@
   parent: BaseTable
   id: TableWood
   targetNode: TableWood
-  # <Trauma>
-  practical:
-    FurnitureKnowledge: 1
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseTable
   id: TableCarpet
   targetNode: TableCarpet
-  # <Trauma>
-  practical:
-    FurnitureKnowledge: 1
-    TailoringKnowledge: 1
-  # </Trauma>
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyBlack
   name: construction-recipe-table-fancy-black
   targetNode: TableFancyBlack
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyBlue
   name: construction-recipe-table-fancy-blue
   targetNode: TableFancyBlue
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancySkyBlue
   name: construction-recipe-table-fancy-sky-blue
   targetNode: TableFancySkyBlue
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyCyan
   name: construction-recipe-table-fancy-cyan
   targetNode: TableFancyCyan
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyGreen
   name: construction-recipe-table-fancy-green
   targetNode: TableFancyGreen
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyOrange
   name: construction-recipe-table-fancy-orange
   targetNode: TableFancyOrange
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyPurple
-  name: construction-recipe-table-fancy-purple # Trauma
   targetNode: TableFancyPurple
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyPink
   name: construction-recipe-table-fancy-pink
   targetNode: TableFancyPink
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyRed
   name: construction-recipe-table-fancy-red
   targetNode: TableFancyRed
 
 - type: construction
-  parent: TableCarpet # Trauma
+  parent: BaseTable
   id: TableFancyWhite
   name: construction-recipe-table-fancy-white
   targetNode: TableFancyWhite
@@ -393,24 +346,12 @@
   canRotate: false
   conditions:
   - !type:TileNotBlocked
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    TailoringKnowledge: 2
-  # </Trauma>
 
 - type: construction
   parent: BaseTable # close enough
   id: Bookshelf
   graph: Bookshelf
   targetNode: bookshelf
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseTable # close enough
@@ -433,12 +374,6 @@
   canBuildInImpassable: true
   conditions:
   - !type:WallmountCondition
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseFurniture
@@ -458,9 +393,3 @@
   canRotate: true
   conditions:
   - !type:TileNotBlocked
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    CarvingKnowledge: 2
-  # </Trauma>

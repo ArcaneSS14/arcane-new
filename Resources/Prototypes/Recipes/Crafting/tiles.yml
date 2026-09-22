@@ -6,11 +6,6 @@
   id: BaseTile
   category: construction-category-tiles
   objectType: Item
-  # <Trauma>
-  theory:
-    FabricationKnowledge: 0
-  useQuality: false # annoying for construction, masterwork tiles as weapons is sad but not worth the hassle
-  # </Trauma>
 # endregion Base
 
 # region Tiles
@@ -25,18 +20,6 @@
   id: TileWood
   graph: TileWood
   targetNode: woodtile
-
-- type: construction
-  parent: BaseTile
-  id: TileBrassFilled
-  graph: TilesBrass
-  targetNode: filledPlate
-
-- type: construction
-  parent: BaseTile
-  id: TileBrassReebe
-  graph: TilesBrass
-  targetNode: reebe
 
 - type: construction
   parent: BaseTile

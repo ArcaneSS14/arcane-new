@@ -148,36 +148,6 @@
           steps:
             - tool: Screwing
               doAfter: 1
-    # begin Goobstation - Rocket Chair Recipes
-        - to: chairOfficeRocket
-          steps:
-            - tag: FireExtinguisher
-              name: construction-graph-tag-fire-extinguisher
-              icon:
-                sprite: Objects/Misc/fire_extinguisher.rsi
-                state: fire_extinguisher_closed
-              doAfter: 1
-            - tag: FireExtinguisher
-              name: construction-graph-tag-fire-extinguisher
-              icon:
-                sprite: Objects/Misc/fire_extinguisher.rsi
-                state: fire_extinguisher_closed
-              doAfter: 1
-            - tool: Screwing
-              doAfter: 1
-
-    - node: chairOfficeRocket
-      entity: ChairOfficeWhiteRocket
-      edges:
-        - to: chairOffice
-          completed:
-            - !type:SpawnPrototype
-              prototype: FireExtinguisher
-              amount: 2
-          steps:
-            - tool: Screwing
-              doAfter: 1
-    # end Goobstation - Rocket Chair Recipes
 
     - node: chairOfficeDark
       entity: ChairOfficeDark
@@ -190,36 +160,6 @@
           steps:
             - tool: Screwing
               doAfter: 1
-    # begin Goobstation - Rocket Chair Recipes
-        - to: chairOfficeDarkRocket
-          steps:
-            - tag: FireExtinguisher
-              name: construction-graph-tag-fire-extinguisher
-              icon:
-                sprite: Objects/Misc/fire_extinguisher.rsi
-                state: fire_extinguisher_closed
-              doAfter: 1
-            - tag: FireExtinguisher
-              name: construction-graph-tag-fire-extinguisher
-              icon:
-                sprite: Objects/Misc/fire_extinguisher.rsi
-                state: fire_extinguisher_closed
-              doAfter: 1
-            - tool: Screwing
-              doAfter: 1
-
-    - node: chairOfficeDarkRocket
-      entity: ChairOfficeDarkRocket
-      edges:
-        - to: chairOfficeDark
-          completed:
-            - !type:SpawnPrototype
-              prototype: FireExtinguisher
-              amount: 2
-          steps:
-            - tool: Screwing
-              doAfter: 1
-    # end Goobstation - Rocket Chair Recipes
 
     - node: chairComfy
       entity: ComfyChair

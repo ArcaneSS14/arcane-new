@@ -3,7 +3,3 @@
   id: HornBananium
   graph: BananiumHorn
   targetNode: bananiumHorn
-  # <Trauma>
-  theory:
-    BananiumKnowledge: 0
-  # </Trauma>

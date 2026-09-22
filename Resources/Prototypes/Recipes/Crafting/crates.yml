@@ -4,24 +4,12 @@
   id: BaseCrate
   category: construction-category-storage
   canRotate: false
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-  practical:
-    MetalworkingKnowledge: 1
-  useQuality: false
-  # </Trauma>
 
 - type: construction
   abstract: true
   id: BaseBox
   category: construction-category-storage
   objectType: Item
-  # <Trauma>
-  theory:
-    FabricationKnowledge: 0
-  useQuality: false
-  # </Trauma>
 # endregion Base
 
 # region Crates
@@ -30,10 +18,6 @@
   id: CrateLivestock
   graph: CrateLivestock
   targetNode: cratelivestock
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseCrate
@@ -46,11 +30,6 @@
   id: CrateSecure
   graph: CrateSecure
   targetNode: cratesecure
-  # <Trauma>
-  theory:
-    FurnitureKnowledge: 0
-    ElectronicsKnowledge: 0
-  # </Trauma>
 
 - type: construction
   parent: BaseCrate
@@ -71,11 +50,6 @@
   name: construction-recipe-big-box
   graph: BaseBigBox
   targetNode: basebigbox
-  # <Trauma>
-  theory: {} # cardboard
-  practical: {}
-  useQuality: false
-  # </Trauma>
 
 - type: construction
   parent: BaseCrate
@@ -83,22 +57,12 @@
   name: construction-recipe-box-cardboard
   graph: BoxCardboard
   targetNode: boxcardboard
-  # <Trauma>
-  theory:
-    FabricationKnowledge: 0
-  useQuality: false
-  # </Trauma>
 
 - type: construction
   parent: BaseCrate
   id: CrateCoffin
   graph: CrateCoffin
   targetNode: cratecoffin
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 2
-  useQuality: false
-  # </Trauma>
 # endregion Crates
 
 # region Boxes

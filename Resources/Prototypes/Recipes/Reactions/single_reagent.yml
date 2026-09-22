@@ -59,19 +59,17 @@
   products:
     Holywater: 1
 
-# <Trauma> - not cherry picked
-#- type: reaction
-#  id: Hivarol
-#  requiredMixerCategories:
-#  - Electrolysis
-#  minTemp: 370
-#  reactants:
-#    LivingTissue:
-#      amount: 1
-#    Histamine:
-#      amount: 1
-#    Impedrezene:
-#      amount: 1
-#  products:
-#    Hivarol: 1
-# </Trauma>
+- type: reaction
+  id: Hivarol
+  requiredMixerCategories:
+  - Electrolysis
+  minTemp: 370
+  reactants:
+    LivingTissue:
+      amount: 1
+    Histamine:
+      amount: 1
+    Impedrezene:
+      amount: 1
+  products:
+    Hivarol: 1

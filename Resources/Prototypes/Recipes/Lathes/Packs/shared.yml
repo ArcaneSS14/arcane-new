@@ -4,11 +4,9 @@
   id: MaterialsStatic
   recipes:
   - SheetRGlass
- # - MaterialDurathread # Trauma - remove durathread lathe print
+  - MaterialDurathread
 
 - type: latheRecipePack
-  parent:
-  - TraumaPartsStatic # Trauma
   id: PartsStatic
   recipes:
   - Igniter
@@ -71,6 +69,6 @@
   id: SalvageSecurityWeapons
   recipes:
   - WeaponProtoKineticAccelerator
-  - WeaponProtoKineticShotgun
-  - WeaponProtoKineticRepeater
-  - WeaponProtoKineticPistol
+  - PKAUpgradeDamage
+  - PKAUpgradeRange
+  - PKAUpgradeFireRate

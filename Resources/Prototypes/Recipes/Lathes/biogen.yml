@@ -22,7 +22,7 @@
   categories:
   - Materials
   icon:
-    sprite: _Trauma/Objects/Materials/materials.rsi # Trauma
+    sprite: Objects/Materials/materials.rsi
     state: cloth
   completetime: 1
   materials:
@@ -34,7 +34,7 @@
   categories:
   - Materials
   icon:
-    sprite: _Trauma/Objects/Materials/materials.rsi # Trauma
+    sprite: Objects/Materials/materials.rsi
     state: cardboard
   completetime: 1
   materials:
@@ -267,9 +267,9 @@
   icon:
     sprite: Objects/Specific/Chemistry/bottle.rsi
     state: bottle-1
-  completetime: 1 # Trauma - was 5
+  completetime: 5
   materials:
-    Biomass: 12 # Trauma - was 20
+    Biomass: 20
 
 - type: latheRecipe
   id: BioGenCompostAmmonia

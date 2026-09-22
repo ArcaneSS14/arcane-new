@@ -2,7 +2,6 @@
 
 - type: latheRecipePack
   id: SecurityEquipmentStatic
-  parent: TraumaSecurityEquipmentStatic # Trauma
   recipes:
   - ClothingEyesHudSecurity
   - ForensicPad
@@ -18,7 +17,7 @@
   id: SecurityPracticeStatic
   recipes:
   - BoxShotgunPractice
-  # - MagazineBoxLightRiflePractice # Goobstation - remove light rifle
+  - MagazineBoxLightRiflePractice
   - MagazineBoxMagnumPractice
   - MagazineBoxPistolPractice
   - MagazineBoxRiflePractice
@@ -29,7 +28,7 @@
   - MagazinePistolPractice
   - SpeedLoaderMagnumPractice
   - MagazinePistolSubMachineGunPractice
-  # - WeaponFlareGunSecurity # Trauma
+  - WeaponFlareGunSecurity
 
 # Shared between secfab and emagged autolathe
 - type: latheRecipePack
@@ -37,13 +36,12 @@
   recipes:
   - BoxLethalshot
   - BoxShotgunSlug
-  - BoxShotgunBreaching # Trauma
-  # - MagazineBoxLightRifle # Goobstation - remove light rifle
+  - MagazineBoxLightRifle
   - MagazineBoxMagnum
   - MagazineBoxPistol
   - MagazineBoxRifle
-  # - MagazineLightRifle # Goobstation - remove light rifle
-  # - MagazineLightRifleEmpty # Goobstation - remove light rifle
+  - MagazineLightRifle
+  - MagazineLightRifleEmpty
   - MagazinePistol
   - MagazinePistolEmpty
   - MagazinePistolSubMachineGun
@@ -54,12 +52,6 @@
   - MagazineRifleEmpty
   - SpeedLoaderMagnum
   - SpeedLoaderMagnumEmpty
-  # <Trauma>
-  - MagazineBoxGaussgunBullet
-  - MagazineBoxGaussgunDisc
-  - MagazineBoxGaussgunShard
-  - MagazineGaussgun
-  # </Trauma>
 
 - type: latheRecipePack
   id: SecurityWeaponsStatic
@@ -76,8 +68,6 @@
   recipes:
   - ClothingBackpackElectropack
   - HoloprojectorSecurity
-  - HoloprojectorSecurityAdvanced # Goob
-  - AntiMindControlDevice # Goob
   - PortableRecharger
   - PowerCageHigh
   - PowerCageMedium
@@ -94,11 +84,13 @@
   - ShuttleGunSvalinnMachineGunCircuitboard
 
 - type: latheRecipePack
+  parent:
+  - ScienceExplosives # sec gets everything for modular grenade making that sci does
   id: SecurityExplosives
   recipes:
   - CableDetStack1
   - EmptyDetonator
-  - ShrapnelPayload # Trauma - was ExplosivePayload
+  - ExplosivePayload
   - GrenadeBlast
   - GrenadeEMP
   - GrenadeFlash
@@ -112,16 +104,16 @@
   - BoxShotgunIncendiary
   - BoxShotgunUranium
   - BoxShellTranquilizer
-  # - MagazineBoxLightRifleIncendiary # Goobstation - remove light rifle
-  # - MagazineBoxLightRifleUranium # Goobstation - remove light rifle
+  - MagazineBoxLightRifleIncendiary
+  - MagazineBoxLightRifleUranium
   - MagazineBoxMagnumIncendiary
   - MagazineBoxMagnumUranium
   - MagazineBoxPistolIncendiary
   - MagazineBoxPistolUranium
   - MagazineBoxRifleIncendiary
   - MagazineBoxRifleUranium
-  # - MagazineLightRifleIncendiary # Goobstation - remove light rifle
-  # - MagazineLightRifleUranium # Goobstation - remove light rifle
+  - MagazineLightRifleIncendiary
+  - MagazineLightRifleUranium
   - MagazinePistolIncendiary
   - MagazinePistolUranium
   - MagazinePistolSubMachineGunIncendiary
@@ -134,15 +126,14 @@
   - SpeedLoaderMagnumUranium
 
 - type: latheRecipePack
-  parent:
-  - TraumaSecurityWeapons # Trauma
   id: SecurityWeapons
   recipes:
   - Truncheon
-  # - WeaponAdvancedLaser # Trauma, No longer has a niche
+  - WeaponAdvancedLaser
   - WeaponLaserCannon
   - WeaponLaserCarbine
   - WeaponXrayCannon
+  - WeaponTemperatureGun
 
 - type: latheRecipePack
   id: SecurityDisablers

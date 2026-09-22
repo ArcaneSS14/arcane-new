@@ -12,7 +12,6 @@
 
 - type: reaction
   id: Phlogiston
-  priority: 20
   reactants:
     Phosphorus:
       amount: 1

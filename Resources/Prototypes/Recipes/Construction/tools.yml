@@ -4,10 +4,6 @@
   id: BaseTool
   category: construction-category-tools
   objectType: Item
-  # <Trauma>
-  theory:
-    FabricationKnowledge: 0
-  # </Trauma>
 # endregion Base
 
 # region Logic Gates
@@ -16,13 +12,6 @@
   id: LogicGate
   graph: LogicGate
   targetNode: logic_gate
-  # <Trauma>
-  theory:
-    ElectronicsKnowledge: 0
-  practical:
-    ElectronicsKnowledge: 2
-  useQuality: false
-  # </Trauma>
 
 - type: construction
   parent: LogicGate
@@ -57,30 +46,16 @@
   id: MakeshiftMortarAndPestle
   graph: MakeshiftMortarAndPestle
   targetNode: mortarAndPestle
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 2
-  # </Trauma>
 
 - type: construction
   parent: BaseTool
   id: MakeshiftJuicer
   graph: MakeshiftJuicer
   targetNode: juicer
-  # <Trauma>
-  practical:
-    CarvingKnowledge: 2
-  # </Trauma>
 
 - type: construction
   parent: BaseTool
   id: MakeshiftCentrifuge
   graph: MakeshiftCentrifuge
   targetNode: makeshiftCentrifuge
-  # <Trauma>
-  theory:
-    FabricationKnowledge: 0
-    ElectronicsKnowledge: 0
-    # TODO: some kind of knowledge that you know about separating liquids by centrifugal forces
-  # </Trauma>
 # endregion Miscellaneous

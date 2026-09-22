@@ -12,7 +12,7 @@
             - tag: CrystalCyan
               name: construction-graph-tag-cyan-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard0
                 color: #52ff39
               doAfter: 1
@@ -33,7 +33,7 @@
             - tag: CrystalBlue
               name: construction-graph-tag-blue-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard1
               doAfter: 1
     - node: icon
@@ -53,7 +53,7 @@
             - tag: CrystalYellow
               name: construction-graph-tag-yellow-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard2
               doAfter: 1
     - node: icon
@@ -73,7 +73,7 @@
             - tag: CrystalPink
               name: construction-graph-tag-pink-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard3
               doAfter: 1
     - node: icon
@@ -93,7 +93,7 @@
             - tag: CrystalOrange
               name: construction-graph-tag-orange-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard0
               doAfter: 1
     - node: icon
@@ -113,7 +113,7 @@
             - tag: CrystalBlack
               name: construction-graph-tag-black-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard1
               doAfter: 1
     - node: icon
@@ -133,7 +133,7 @@
             - tag: CrystalRed
               name: construction-graph-tag-red-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard2
               doAfter: 1
     - node: icon
@@ -153,7 +153,7 @@
             - tag: CrystalGreen
               name: construction-graph-tag-green-crystal-shard
               icon:
-                sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+                sprite: Objects/Materials/Shards/crystal-shard.rsi
                 state: shard3
               doAfter: 1
     - node: icon
@@ -173,7 +173,7 @@
       - tag: CrystalCyan
         name: construction-graph-tag-cyan-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard0
           color: #52ff39
         doAfter: 1
@@ -194,7 +194,7 @@
       - tag: CrystalBlue
         name: construction-graph-tag-blue-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard1
         doAfter: 1
   - node: icon
@@ -214,7 +214,7 @@
       - tag: CrystalYellow
         name: construction-graph-tag-yellow-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard2
         doAfter: 1
   - node: icon
@@ -234,7 +234,7 @@
       - tag: CrystalPink
         name: construction-graph-tag-pink-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard3
         doAfter: 1
   - node: icon
@@ -254,7 +254,7 @@
       - tag: CrystalOrange
         name: construction-graph-tag-orange-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard0
         doAfter: 1
   - node: icon
@@ -274,7 +274,7 @@
       - tag: CrystalBlack
         name: construction-graph-tag-black-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard1
         doAfter: 1
   - node: icon
@@ -294,7 +294,7 @@
       - tag: CrystalRed
         name: construction-graph-tag-red-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard2
         doAfter: 1
   - node: icon
@@ -314,7 +314,7 @@
       - tag: CrystalGreen
         name: construction-graph-tag-green-crystal-shard
         icon:
-          sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
+          sprite: Objects/Materials/Shards/crystal-shard.rsi
           state: shard3
         doAfter: 1
   - node: icon

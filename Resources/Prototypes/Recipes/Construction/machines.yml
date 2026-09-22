@@ -6,25 +6,14 @@
   placementMode: SnapgridCenter
   conditions:
   - !type:TileNotBlocked
-  # <Trauma>
-  theory:
-    ElectronicsKnowledge: 0
-  practical:
-    MechanicsKnowledge: 1
-  # </Trauma>
 
 - type: construction
   abstract: true
   parent: BaseMachine
   id: BaseSwitch
   canBuildInImpassable: true
-  # <Trauma>
-  #conditions:
-  #- !type:WallmountCondition
-  theory:
-    ElectronicsKnowledge: 0
-  useQuality: false
-  # </Trauma>
+  conditions:
+  - !type:WallmountCondition
 # endregion Base
 
 # region Machines
@@ -33,12 +22,6 @@
   id: Computer
   graph: Computer
   targetNode: computer
-  # <Trauma>
-  theory:
-    ElectronicsKnowledge: 0
-  practical:
-    ElectronicsKnowledge: 1
-  # </Trauma>
 
 - type: construction
   parent: BaseMachine

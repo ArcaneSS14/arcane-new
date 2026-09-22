@@ -3,10 +3,3 @@
   id: DefibrillatorCabinet
   graph: DefibrillatorCabinet
   targetNode: done
-  # <Trauma>
-  theory:
-    ElectronicsKnowledge: 0
-  practical:
-    MetalworkingKnowledge: 1
-  useQuality: false
-  # </Trauma>

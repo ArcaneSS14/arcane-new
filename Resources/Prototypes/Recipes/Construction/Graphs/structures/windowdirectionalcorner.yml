@@ -1,47 +1,48 @@
 - type: constructionGraph
-  id: WindowDirectional
+  id: WindowDirectionalCorner
   start: start
   graph:
     - node: start
       edges:
 
-        - to: windowDirectional
+        - to: windowDirectionalCorner
           steps:
             - material: Glass
               amount: 1
               doAfter: 2
 
-        - to: windowReinforcedDirectional
+        - to: windowReinforcedDirectionalCorner
           steps:
             - material: ReinforcedGlass
               amount: 1
               doAfter: 3
 
-        - to: plasmaWindowDirectional
+        - to: plasmaWindowDirectionalCorner
           steps:
             - material: PlasmaGlass
               amount: 1
               doAfter: 2
 
-        - to: plasmaReinforcedWindowDirectional
+        - to: plasmaReinforcedWindowDirectionalCorner
           steps:
             - material: ReinforcedPlasmaGlass
               amount: 1
               doAfter: 3
-        - to: uraniumWindowDirectional
+
+        - to: uraniumWindowDirectionalCorner
           steps:
             - material: UraniumGlass
               amount: 1
               doAfter: 2
 
-        - to: uraniumReinforcedWindowDirectional
+        - to: uraniumReinforcedWindowDirectionalCorner
           steps:
             - material: ReinforcedUraniumGlass
               amount: 1
               doAfter: 3
 
-    - node: windowDirectional
-      entity: WindowDirectional
+    - node: windowDirectionalCorner
+      entity: WindowDirectionalCorner
       edges:
         - to: start
           completed:
@@ -55,8 +56,8 @@
             - tool: Anchoring
               doAfter: 2
 
-    - node: windowReinforcedDirectional
-      entity: WindowReinforcedDirectional
+    - node: windowReinforcedDirectionalCorner
+      entity: WindowReinforcedDirectionalCorner
       edges:
         - to: start
           completed:
@@ -74,8 +75,8 @@
             - tool: Anchoring
               doAfter: 2
 
-    - node: plasmaWindowDirectional
-      entity: PlasmaWindowDirectional
+    - node: plasmaWindowDirectionalCorner
+      entity: PlasmaWindowDirectionalCorner
       edges:
         - to: start
           completed:
@@ -93,8 +94,8 @@
             - tool: Anchoring
               doAfter: 3
 
-    - node: plasmaReinforcedWindowDirectional
-      entity: PlasmaReinforcedWindowDirectional
+    - node: plasmaReinforcedWindowDirectionalCorner
+      entity: PlasmaReinforcedWindowDirectionalCorner
       edges:
         - to: start
           completed:
@@ -111,8 +112,9 @@
               doAfter: 2
             - tool: Anchoring
               doAfter: 3
-    - node: uraniumWindowDirectional
-      entity: UraniumWindowDirectional
+
+    - node: uraniumWindowDirectionalCorner
+      entity: UraniumWindowDirectionalCorner
       edges:
         - to: start
           completed:
@@ -130,8 +132,8 @@
             - tool: Anchoring
               doAfter: 3
 
-    - node: uraniumReinforcedWindowDirectional
-      entity: UraniumReinforcedWindowDirectional
+    - node: uraniumReinforcedWindowDirectionalCorner
+      entity: UraniumReinforcedWindowDirectionalCorner
       edges:
         - to: start
           completed:

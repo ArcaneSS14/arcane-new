@@ -97,7 +97,7 @@
   reactants:
     Cognac:
       amount: 1
-    IrishCarBomb:
+    IrishSlammer:
       amount: 1
     CoffeeLiqueur:
       amount: 1
@@ -321,9 +321,9 @@
 - type: reaction
   id: CubaLibre
   reactants:
-    RumAndCoke: # Trauma - was coke
+    Cola:
       amount: 2
-    JuiceLime: # Trauma - was rum
+    Rum:
       amount: 1
   products:
     CubaLibre: 3
@@ -633,20 +633,22 @@
   reactants:
     EnergyDrink:
       amount: 1
-    IrishCarBomb:
+    IrishSlammer:
       amount: 1
   products:
     IrishBool: 2
 
 - type: reaction
-  id: IrishCarBomb
+  id: IrishSlammer
   reactants:
     Ale:
       amount: 1
     IrishCream:
       amount: 1
   products:
-    IrishCarBomb: 2
+    IrishSlammer: 2
+  sound:
+    path: /Audio/Animals/penguin_squawk.ogg # Cocktail is called grenade penguin in localisation
 
 - type: reaction
   id: IrishCoffee
@@ -1558,3 +1560,17 @@
     Fluorine: 2
     Hydrogen: 0.5
     Oxygen: 0.5
+
+- type: reaction
+  id: ChangelingSting
+  reactants:
+    AcidSpit:
+      amount: 1
+    Whiskey:
+      amount: 1
+    SodaWater:
+      amount: 1
+    Ice:
+      amount: 1
+  products:
+    ChangelingSting: 2
