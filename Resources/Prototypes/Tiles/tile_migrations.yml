@@ -74,6 +74,12 @@
 # 2026/07/22
 # The respritening! With this one simple trick, i give 200 mappers a collective aneurysm.
 
+# Arcane-Start
+- type: tileAlias
+  id: FloorAstroGrassJungle
+  target: FloorJungleAstroGrass
+# Arcane-End
+
 # Arcane-Edit-Start: We again with this
 #- type: tileAlias
 #  id: FloorBrassReebe
