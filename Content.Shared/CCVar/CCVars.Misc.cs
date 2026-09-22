@@ -140,6 +140,6 @@ public sealed partial class CCVars
     ///     May be considered a stopgap measure when unupgraded maps are in rotation?
     /// </remarks>
     public static readonly CVarDef<bool> MapInitAlign =
-        CVarDef.Create("align.map_init", false, CVar.SERVER | CVar.REPLICATED);
+        CVarDef.Create("align.map_init", true, CVar.SERVER | CVar.REPLICATED); // Arcane-Edit: false > true
 
 }
