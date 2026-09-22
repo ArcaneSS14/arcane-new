@@ -3,7 +3,6 @@
   parent: BaseStationTile
   name: tiles-steel-floor-diagonal
   sprite: /Textures/_Arcane/Tiles/steel_diagonal.png
-  variants: 4
   itemDrop: FloorTileItemSteelDiagonal
 
 - type: tile
@@ -18,7 +17,6 @@
   parent: BaseStationTile
   name: tiles-steel-floor-diagonal-mini
   sprite: /Textures/_Arcane/Tiles/steel_diagonal_mini.png
-  variants: 4
   itemDrop: FloorTileItemSteelDiagonalMini
 
 - type: tile
@@ -44,7 +42,6 @@
   parent: BaseStationTile
   name: tiles-white-floor-diagonal
   sprite: /Textures/_Arcane/Tiles/white_diagonal.png
-  variants: 4
   footstepSounds:
     collection: FootstepTile
   itemDrop: FloorTileItemWhiteDiagonal
@@ -65,7 +62,6 @@
   parent: BaseStationTile
   name: tiles-white-floor-diagonal-mini
   sprite: /Textures/_Arcane/Tiles/white_diagonal_mini.png
-  variants: 4
   footstepSounds:
     collection: FootstepTile
   itemDrop: FloorTileItemWhiteDiagonalMini
@@ -76,7 +72,6 @@
   parent: BaseStationTile
   name: tiles-dark-floor-diagonal
   sprite: /Textures/_Arcane/Tiles/dark_diagonal.png
-  variants: 4
   footstepSounds:
     collection: FootstepTile
   itemDrop: FloorTileItemDarkDiagonal
@@ -97,7 +92,6 @@
   parent: BaseStationTile
   name: tiles-dark-floor-diagonal-mini
   sprite: /Textures/_Arcane/Tiles/dark_diagonal_mini.png
-  variants: 4
   footstepSounds:
     collection: FootstepTile
   itemDrop: FloorTileItemDarkDiagonalMini
