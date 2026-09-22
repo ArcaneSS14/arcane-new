@@ -23,7 +23,7 @@
   id: FloorBrassFilled
   parent: BaseStationTile
   name: tiles-brass-floor-filled
-  sprite: /Textures/_Arcane/Tiles/Clockwork/clockwork_floor_filled.png
+  sprite: /Textures/_Arcane/Tiles/Misc/Clockwork/clockwork_floor_filled.png
   footstepSounds:
     collection: FootstepHull
   itemDrop: FloorTileItemBrassFilled
@@ -32,7 +32,7 @@
   id: FloorBrassReebe
   parent: BaseStationTile
   name: tiles-brass-floor-reebe
-  sprite: /Textures/_Arcane/Tiles/Clockwork/reebe.png
+  sprite: /Textures/_Arcane/Tiles/Misc/Clockwork/reebe.png
   footstepSounds:
     collection: FootstepHull
   itemDrop: FloorTileItemBrassReebe
