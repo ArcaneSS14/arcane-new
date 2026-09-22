@@ -9,5 +9,6 @@
   parent: Lattice
   name: tiles-lattice-train
   sprite: /Textures/_Arcane/Tiles/latticeTrain.png
+  variants: 1 # Arcane
   footstepSounds:
     collection: FootstepPlating
