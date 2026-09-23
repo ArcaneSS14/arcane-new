@@ -770,7 +770,7 @@ CentcomPDAFake: null
 CentcomIDCardSyndie: null
 
 # 2024-09-06
-AntimovCircuitBoard: null
+AsimovCircuitBoard: AntimovCircuitBoard # Arcane-Edit
 OverlordCircuitBoard: null
 
 # 2024-09-08
