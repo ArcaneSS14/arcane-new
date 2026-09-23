@@ -51,7 +51,7 @@
           params:
             volume: -4
   - type: Construction
-    graph: PinionAirlock
+    graph: ArcanePinionAirlock
     node: assembly
   placement:
     mode: SnapgridCenter

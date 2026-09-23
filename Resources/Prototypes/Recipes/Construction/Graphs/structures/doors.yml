@@ -34,6 +34,15 @@
             - material: Silver
               amount: 10
               doAfter: 8
+        # Arcane-Start
+        - to: bananiumDoor
+          completed:
+          - !type:SnapToGrid {}
+          steps:
+          - material: Bananium
+            amount: 5
+            doAfter: 8
+        # Arcane-End
         - to: paperDoor
           completed:
             - !type:SnapToGrid { }
@@ -92,6 +101,19 @@
           steps:
             - tool: Anchoring
               doAfter: 8
+    # Arcane-Start
+    - node: bananiumDoor
+      entity: BananiumDoor
+      edges:
+      - to: start
+        completed:
+        - !type:SpawnPrototype
+          prototype: MaterialBananium1
+          amount: 5
+        steps:
+        - tool: Anchoring
+          doAfter: 8
+    # Arcane-End
     - node: paperDoor
       entity: PaperDoor
       edges:

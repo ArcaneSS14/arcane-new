@@ -14,7 +14,7 @@
   - type: Stack
     stackType: FloorTileBrassFilled
   - type: Construction
-    graph: TilesBrass
+    graph: ArcaneTilesBrass
     node: filledPlate
 
 - type: entity
@@ -33,7 +33,7 @@
   - type: Stack
     stackType: FloorTileBrassReebe
   - type: Construction
-    graph: TilesBrass
+    graph: ArcaneTilesBrass
     node: reebe
 
 - type: entity

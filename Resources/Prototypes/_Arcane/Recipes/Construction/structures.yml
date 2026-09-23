@@ -1,0 +1,72 @@
+- type: construction
+  parent: BaseStructureFullTileDirectional
+  id: BananiumDoor
+  graph: DoorGraph
+  targetNode: bananiumDoor
+
+- type: construction
+  parent: Girder
+  id: ClownWall
+  targetNode: bananiumWall
+
+- type: construction
+  parent: Girder
+  id: PlasticWall
+  targetNode: plasticWall
+
+- type: construction
+  parent: BaseStructureFullTile
+  id: FloorBananium
+  graph: ArcaneFloorBananium
+  targetNode: BananiumFloor
+  conditions:
+  - !type:TileNotBlocked
+    failIfSpace: false
+  - !type:TileType
+    targets:
+    - Plating
+
+- type: construction
+  parent: BaseStructureFullTile
+  id: PinionAirlock
+  name: construction-recipe-pinion-airlock
+  graph: ArcanePinionAirlock
+  targetNode: airlock
+
+- type: construction
+  parent: Grille
+  id: ClockGrille
+  targetNode: clockGrille
+
+- type: construction
+  parent: GrilleDiagonal
+  id: ClockworkGrilleDiagonal
+  targetNode: clockworkGrilleDiagonal
+
+- type: construction
+  parent: BaseWindow
+  id: ClockworkWindow
+  graph: Window
+  targetNode: clockworkWindow
+
+- type: construction
+  parent: BaseWindowDiagonal
+  id: ClockworkWindowDiagonal
+  name: construction-recipe-clockwork-window-diagonal
+  graph: WindowDiagonal
+  targetNode: clockworkWindowDiagonal
+
+- type: construction
+  parent: WindowDirectional
+  id: WindowClockworkDirectional
+  targetNode: windowClockworkDirectional
+
+- type: construction
+  parent: Windoor
+  id: ClockworkWindoor
+  targetNode: windoorClockwork
+
+- type: construction
+  parent: Windoor
+  id: SecureWindoor
+  targetNode: windoorSecure

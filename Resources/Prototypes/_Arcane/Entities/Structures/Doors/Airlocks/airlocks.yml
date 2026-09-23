@@ -5,3 +5,6 @@
   components:
   - type: Sprite
     sprite: _Arcane/Structures/Doors/Airlocks/Standard/brass-base.rsi
+  - type: Construction
+    graph: ArcanePinionAirlock
+    node: airlock
