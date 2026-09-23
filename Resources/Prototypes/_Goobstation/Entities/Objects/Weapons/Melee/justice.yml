@@ -203,7 +203,6 @@
         - type: CuffsOnHit
           proto: Cablecuffs
           duration: 2.5
-          sound: /Audio/Items/Handcuffs/rope_start.ogg
         soundStateActivate:
           collection: sparks
           params:

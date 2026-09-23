@@ -99,7 +99,6 @@
   - type: RandomDocument
     documentType: ServiceDocument # Default fallback
   - type: FaxableObject
-    copyable: false # womp womp no free points
 
 # Regular Documents
 - type: entity
