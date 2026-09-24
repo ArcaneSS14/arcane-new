@@ -335,6 +335,7 @@
     - !type:SetWiresPanelSecurity
       examine: wires-panel-component-on-examine-security-level1
       wiresAccessible: false
+    edges:
     - to: sealedGlassAirlock # Goobstation - Sealed doors
       completed:
       - !type:GivePrototype
@@ -361,7 +362,6 @@
       - tool: Prying
         doAfter: 4
 
-    edges:
     - to: glassAirlock
       completed:
       - !type:GivePrototype
@@ -428,6 +428,32 @@
       examine: wires-panel-component-on-examine-security-level3
       wiresAccessible: false
     edges:
+    - to: sealedGlassAirlock # Goobstation - Sealed doors
+      completed:
+      - !type:GivePrototype
+        prototype: SheetPlasteel1
+        amount: 2
+      conditions:
+      - !type:WirePanel {}
+      - !type:HasTag
+        tag: SealedGlassAirlock
+      steps:
+      - tool: Prying
+        doAfter: 4
+
+    - to: sealedAirlock # Goobstation - Sealed doors
+      completed:
+      - !type:GivePrototype
+        prototype: SheetPlasteel1
+        amount: 2
+      conditions:
+      - !type:WirePanel {}
+      - !type:HasTag
+        tag: SealedAirlock
+      steps:
+      - tool: Prying
+        doAfter: 4
+
     - to: glassAirlock
       completed:
       - !type:GivePrototype
