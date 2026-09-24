@@ -539,7 +539,7 @@
         - to: wall
           steps:
             - tool: Welding
-              doAfter: 2
+              doAfter: 5 # Arcane-Edit: 2 > 5
         - to: wall
           steps:
             - tool: Brushing
@@ -551,7 +551,7 @@
         - to: reinforcedWall
           steps:
             - tool: Welding
-              doAfter: 2
+              doAfter: 5 # Arcane-Edit: 2 > 5
         - to: reinforcedWall
           steps:
             - tool: Brushing

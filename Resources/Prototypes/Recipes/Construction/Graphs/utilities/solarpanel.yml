@@ -4,6 +4,21 @@
   graph:
     - node: start
       edges:
+        # Goobstation - allow from-materials construction
+        - to: solarassembly
+          steps:
+            - material: Manipulator
+              amount: 1
+              doAfter: 1
+            - material: Steel
+              amount: 2
+              doAfter: 1
+            - material: MetalRod
+              amount: 2
+              doAfter: 1
+            - material: Cable
+              amount: 2
+              doAfter: 1
         - to: solarassembly
           steps:
             - tag: SolarAssemblyFlatpack
