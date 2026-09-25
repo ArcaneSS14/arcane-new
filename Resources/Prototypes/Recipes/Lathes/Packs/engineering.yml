@@ -22,6 +22,7 @@
   - HandheldStationMap
   - ClothingHeadHatWelding
   - ClothingHeadHatCone
+  - WeaponHammer # Goob
 
 - type: latheRecipePack
   id: AtmosStatic
@@ -32,6 +33,11 @@
 - type: latheRecipePack
   id: ElectronicsStatic
   recipes:
+  # <Trauma>
+  - CameraElectronics
+  - HolographicFieldGeneratorCircuitboard
+  - HolographicBarrierGeneratorCircuitboard
+  # </Trauma>
   - IntercomElectronics
   - FirelockElectronics
   - DoorElectronics
@@ -49,6 +55,7 @@
   - FreezerElectronics
 
 - type: latheRecipePack
+  parent: [EngineeringBoardsStaticTrauma] # Trauma
   id: EngineeringBoardsStatic
   recipes:
   - SpaceHeaterMachineCircuitBoard
@@ -61,8 +68,8 @@
   - PowerDrill
   - WelderExperimental
   - JawsOfLife
-  - Fulton
-  - FultonBeacon
+  #- Fulton # Goob
+  #- FultonBeacon # Goob
 
 - type: latheRecipePack
   id: AtmosTools
@@ -75,6 +82,8 @@
   - WeaponParticleDecelerator
 
 - type: latheRecipePack
+  parent:
+  - EngineeringBoardsGoob # Goobstation
   id: EngineeringBoards
   recipes:
   - ThermomachineFreezerMachineCircuitBoard
@@ -90,3 +99,5 @@
   - TelecomServerCircuitboard
   - SMESAdvancedMachineCircuitboard
   - HolopadMachineCircuitboard
+  - TeslaCoilCircuitboard # Arcane: Goob
+  - RadiationCollectorCircuitboard # Arcane: Goob

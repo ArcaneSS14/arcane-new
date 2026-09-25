@@ -1,6 +1,8 @@
 ## Static
 
 - type: latheRecipePack
+  parent:
+  - CargoStaticTrauma # Trauma
   id: CargoStatic
   recipes:
   - AppraisalTool
@@ -23,10 +25,11 @@
   - MineralScannerEmpty
   - AdvancedMineralScannerEmpty
   - OreBagOfHolding
+  - DrillHead # Trauma
 
 - type: latheRecipePack
   id: CargoBoards
   recipes:
   - OreProcessorIndustrialMachineCircuitboard
   - CargoTelepadMachineCircuitboard
-  - ShuttleGunKineticCircuitboard
+  #- ShuttleGunKineticCircuitboard - Goobstation - Moved to MiningBoards

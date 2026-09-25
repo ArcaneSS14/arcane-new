@@ -8,6 +8,12 @@
     tags:
     - SpiderCraft
   objectType: Item
+  # <Trauma>
+  theory:
+    SpiderCraftKnowledge: 0
+  practical:
+    TailoringKnowledge: 4
+  # </Trauma>
 # endregion Base
 
 # region Web Objects
@@ -16,6 +22,11 @@
   id: TileWeb
   targetNode: tile
   category: construction-category-tiles
+  # <Trauma>
+  practical:
+    TailoringKnowledge: 2
+  useQuality: false
+  # </Trauma>
 
 - type: construction
   parent: BaseWebObject
@@ -38,6 +49,10 @@
   name: construction-recipe-silk-woven-cloth
   targetNode: cloth
   category: construction-category-materials
+  # <Trauma>
+  practical: null
+  useQuality: false
+  # </Trauma>
 
 - type: construction
   parent: BaseWebObject

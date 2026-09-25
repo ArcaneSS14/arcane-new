@@ -1,6 +1,8 @@
 ## Static
 
 - type: latheRecipePack
+  parent: # Arcane: Trauma
+  - TraumaServiceStatic
   id: ServiceStatic
   recipes:
   - Bucket
@@ -28,6 +30,8 @@
   - WireBrush
 
 - type: latheRecipePack
+  parent:
+  - TraumaServiceBoardsStatic # Trauma
   id: ServiceBoardsStatic
   recipes:
   - BiogeneratorMachineCircuitboard
@@ -57,6 +61,8 @@
   - PushHorn
 
 - type: latheRecipePack
+  parent:
+  - TraumaServiceBoards # Trauma
   id: ServiceBoards
   recipes:
   - BiofabricatorMachineCircuitboard

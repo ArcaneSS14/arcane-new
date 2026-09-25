@@ -6,6 +6,11 @@
   id: BaseTile
   category: construction-category-tiles
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  useQuality: false # annoying for construction, masterwork tiles as weapons is sad but not worth the hassle
+  # </Trauma>
 # endregion Base
 
 # region Tiles

@@ -6,6 +6,11 @@
   category: construction-category-atmospherics
   objectType: Structure
   canRotate: true
+  # <Trauma>
+  theory:
+    ElectronicsKnowledge: 0
+    InfrastructureKnowledge: 0
+  # </Trauma>
 
 - type: construction
   abstract: true
@@ -14,6 +19,12 @@
   placementMode: AlignAtmosPipeLayers
   graph: GasPipe
   canBuildInImpassable: true # for player convenience
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   abstract: true
@@ -21,13 +32,12 @@
   id: BaseGasDevice
   conditions:
   - !type:NoUnstackableInTile
-
-# we allow stacking for shit like radiators on top of atmosdevices
-# for now (trademark patent pending)
-- type: construction
-  abstract: true
-  parent: BaseAtmos
-  id: BaseGasDeviceStackable
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   abstract: true
@@ -54,6 +64,14 @@
   parent: BaseGasDevice
   id: BaseGasTrinary
   graph: GasTrinary
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 # endregion Base
 
 # region Machines
@@ -63,8 +81,10 @@
   graph: AirAlarm
   targetNode: air_alarm
   canBuildInImpassable: true
-  conditions:
-  - !type:WallmountCondition
+  # <Trauma>
+  #conditions:
+  #- !type:WallmountCondition
+  # </Trauma>
 
 - type: construction
   parent: BaseAtmos
@@ -72,8 +92,10 @@
   graph: FireAlarm
   targetNode: fire_alarm
   canBuildInImpassable: true
-  conditions:
-  - !type:WallmountCondition
+  # <Trauma>
+  #conditions:
+  #- !type:WallmountCondition
+  # </Trauma>
 
 - type: construction
   parent: BaseAtmos
@@ -150,6 +172,12 @@
   graph: GasPipeSpecial
   targetNode: manifold
   placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 2 # way more intricate
+  # </Trauma>
 # endregion Pipes
 
 # region Unary
@@ -178,10 +206,18 @@
   id: !type:CreateVariants
     values: [ GasVentScrubber, GasVentScrubberAlt1, GasVentScrubberAlt2 ]
   hide: !type:CreateVariants
-    values: [ false, true, true ]  
+    values: [ false, true, true ]
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: ventscrubber
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasUnary
@@ -192,6 +228,14 @@
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: outletinjector
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    InfrastructureKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 # endregion Unary
 
 # region Binary
@@ -204,6 +248,14 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: pressurepump
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    InfrastructureKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasBinary
@@ -214,6 +266,14 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: volumepump
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    InfrastructureKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasBinary
@@ -234,6 +294,14 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: pressureregulator
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    InfrastructureKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasBinary
@@ -244,6 +312,12 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: valve
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasBinary
@@ -254,6 +328,14 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: signalvalve
+  # <Trauma>
+  theory:
+    InfrastructureKnowledge: 0
+    ElectronicsKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+    ElectronicsKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseGasBinary

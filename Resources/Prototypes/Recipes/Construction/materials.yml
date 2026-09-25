@@ -4,6 +4,11 @@
   id: BaseMaterial
   category: construction-category-materials
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  useQuality: false
+  # </Trauma>
 # endregion Base
 
 # region Materials
@@ -14,6 +19,7 @@
   targetNode: MetalRod
 
 - type: construction
+#  abstract: true # Trauma - no handcrafting durathread # Arcane-Edit
   parent: BaseMaterial
   id: MaterialDurathread
   graph: Durathread

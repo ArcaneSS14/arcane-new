@@ -3,3 +3,8 @@
   id: Artifact
   graph: Artifact
   targetNode: done
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  useQuality: false
+  # </Trauma>

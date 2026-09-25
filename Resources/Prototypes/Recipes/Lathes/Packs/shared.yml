@@ -7,6 +7,8 @@
   - MaterialDurathread
 
 - type: latheRecipePack
+  parent:
+  - TraumaPartsStatic # Trauma
   id: PartsStatic
   recipes:
   - Igniter
@@ -69,6 +71,8 @@
   id: SalvageSecurityWeapons
   recipes:
   - WeaponProtoKineticAccelerator
-  - PKAUpgradeDamage
-  - PKAUpgradeRange
-  - PKAUpgradeFireRate
+  # Arcane-Edit-Start: Lavaland change
+  - WeaponProtoKineticShotgun
+  - WeaponProtoKineticRepeater
+  - WeaponProtoKineticPistol
+  # Arcane-Edit-End

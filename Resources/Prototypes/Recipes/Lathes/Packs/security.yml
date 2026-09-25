@@ -2,6 +2,7 @@
 
 - type: latheRecipePack
   id: SecurityEquipmentStatic
+  parent: TraumaSecurityEquipmentStatic # Trauma
   recipes:
   - ClothingEyesHudSecurity
   - ForensicPad
@@ -17,7 +18,7 @@
   id: SecurityPracticeStatic
   recipes:
   - BoxShotgunPractice
-  - MagazineBoxLightRiflePractice
+  # - MagazineBoxLightRiflePractice # Goobstation - remove light rifle
   - MagazineBoxMagnumPractice
   - MagazineBoxPistolPractice
   - MagazineBoxRiflePractice
@@ -36,12 +37,13 @@
   recipes:
   - BoxLethalshot
   - BoxShotgunSlug
-  - MagazineBoxLightRifle
+  - BoxShotgunBreaching # Trauma
+  # - MagazineBoxLightRifle # Goobstation - remove light rifle
   - MagazineBoxMagnum
   - MagazineBoxPistol
   - MagazineBoxRifle
-  - MagazineLightRifle
-  - MagazineLightRifleEmpty
+  # - MagazineLightRifle # Goobstation - remove light rifle
+  # - MagazineLightRifleEmpty # Goobstation - remove light rifle
   - MagazinePistol
   - MagazinePistolEmpty
   - MagazinePistolSubMachineGun
@@ -52,6 +54,12 @@
   - MagazineRifleEmpty
   - SpeedLoaderMagnum
   - SpeedLoaderMagnumEmpty
+  # <Trauma>
+  - MagazineBoxGaussgunBullet
+  - MagazineBoxGaussgunDisc
+  - MagazineBoxGaussgunShard
+  - MagazineGaussgun
+  # </Trauma>
 
 - type: latheRecipePack
   id: SecurityWeaponsStatic
@@ -68,6 +76,8 @@
   recipes:
   - ClothingBackpackElectropack
   - HoloprojectorSecurity
+  - HoloprojectorSecurityAdvanced # Goob
+  - AntiMindControlDevice # Goob
   - PortableRecharger
   - PowerCageHigh
   - PowerCageMedium
@@ -104,16 +114,16 @@
   - BoxShotgunIncendiary
   - BoxShotgunUranium
   - BoxShellTranquilizer
-  - MagazineBoxLightRifleIncendiary
-  - MagazineBoxLightRifleUranium
+  # - MagazineBoxLightRifleIncendiary # Goobstation - remove light rifle
+  # - MagazineBoxLightRifleUranium # Goobstation - remove light rifle
   - MagazineBoxMagnumIncendiary
   - MagazineBoxMagnumUranium
   - MagazineBoxPistolIncendiary
   - MagazineBoxPistolUranium
   - MagazineBoxRifleIncendiary
   - MagazineBoxRifleUranium
-  - MagazineLightRifleIncendiary
-  - MagazineLightRifleUranium
+  # - MagazineLightRifleIncendiary # Goobstation - remove light rifle
+  # - MagazineLightRifleUranium # Goobstation - remove light rifle
   - MagazinePistolIncendiary
   - MagazinePistolUranium
   - MagazinePistolSubMachineGunIncendiary
@@ -126,6 +136,8 @@
   - SpeedLoaderMagnumUranium
 
 - type: latheRecipePack
+  parent:
+  - TraumaSecurityWeapons # Trauma
   id: SecurityWeapons
   recipes:
   - Truncheon

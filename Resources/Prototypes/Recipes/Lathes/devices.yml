@@ -41,7 +41,7 @@
     #one fourth of what making a flash would cost
 
 - type: latheRecipe
-  id: ShrapnelPayload # Arcane-Edit: Replaced explosive with shrapnel
+  id: ShrapnelPayload # Trauma - replaced explosive with shrapnel
   result: ShrapnelPayload # Arcane-Edit
   categories:
   - Weapons
@@ -152,6 +152,7 @@
     Silver: 750
     Plasma: 1500
     Uranium: 150
+    BSCrystal: 200 # Goobstation
 
 - type: latheRecipe
   parent: ClothingBackpackHolding

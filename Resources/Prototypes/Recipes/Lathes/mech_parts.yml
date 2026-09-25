@@ -11,6 +11,7 @@
   abstract: true
   parent: BaseMechPartRecipe
   id: BaseRipleyLimbRecipe
+  categories: [ Mech, Ripley ] # Trauma
   materials:
     Steel: 1000
     Glass: 750
@@ -19,15 +20,17 @@
   abstract: true
   parent: BaseMechPartRecipe
   id: BaseHonkerLimbRecipe
+  categories: [ Mech, Honker ] # Trauma
   materials:
     Steel: 2000
     Glass: 750
-    Gold: 250
+    Bananium: 250
 
 - type: latheRecipe
   abstract: true
   parent: BaseMechPartRecipe
   id: BaseHamtrLimbRecipe
+  categories: [ Mech, Hamptr ] # Trauma
   materials:
     Steel: 800
     Glass: 600
@@ -71,7 +74,7 @@
   materials:
     Steel: 3000
     Glass: 1200
-    Gold: 500
+    Bananium: 500
 
 - type: latheRecipe
   parent: BaseHonkerLimbRecipe
@@ -126,6 +129,7 @@
 - type: latheRecipe
   parent: BaseMechPartRecipe
   id: VimHarness
+  categories: [ Mech, Vim ] # Trauma
   result: VimHarness
   completetime: 5
   materials:

@@ -6,6 +6,12 @@
   placementMode: SnapgridCenter
   conditions:
   - !type:TileNotBlocked
+  # <Trauma>
+  theory:
+    FurnitureKnowledge: 0
+  practical:
+    MetalworkingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   abstract: true
@@ -41,6 +47,10 @@
   id: ShowCase
   graph: GlassBox
   targetNode: glassBox
+  # <Trauma>
+  practical:
+    CarvingKnowledge: 1
+  # </Trauma>
 # endregion Item Cabinets
 
 # region Shelves
@@ -48,6 +58,11 @@
   parent: BaseShelf
   id: ShelfWood
   targetNode: ShelfWood
+  # <Trauma>
+  theory: {} # it's 2 pieces of wood
+  practical:
+    CarvingKnowledge: 1 # nailing it to the wall or smth
+  # </Trauma>
 
 - type: construction
   parent: BaseShelf
@@ -63,6 +78,10 @@
   parent: BaseShelf
   id: ShelfRWood
   targetNode: ShelfRWood
+  # <Trauma>
+  practical:
+    CarvingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseShelf
@@ -78,6 +97,10 @@
   parent: BaseShelf
   id: ShelfBar
   targetNode: ShelfBar
+  # <Trauma>
+  practical:
+    CarvingKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseShelf

@@ -33,6 +33,7 @@
   id: Robotics
   recipes:
   - ProximitySensor
+  - Drone # Goob
 
 - type: latheRecipePack
   id: BorgModules
@@ -40,7 +41,7 @@
   - BorgModuleAdvancedCleaning
   - BorgModuleAdvancedTool
   - BorgModuleAdvancedClowning
-  - BorgModuleAdvancedTopical
+  #- BorgModuleAdvancedTopical # Goob
   - BorgModuleAdvancedMining
 
 - type: latheRecipePack

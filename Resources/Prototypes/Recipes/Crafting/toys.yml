@@ -3,6 +3,12 @@
   id: PlushieGhostRevenant
   graph: PlushieGhostRevenant
   targetNode: plushie
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  practical:
+    TailoringKnowledge: 1
+  # </Trauma>
 
 - type: construction
   parent: BaseClothing
@@ -15,3 +21,9 @@
   id: MoproachShoes
   graph: MoproachShoes
   targetNode: shoes
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  practical:
+    TailoringKnowledge: 1
+  # </Trauma>

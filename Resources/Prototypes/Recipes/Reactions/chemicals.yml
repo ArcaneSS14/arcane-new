@@ -136,7 +136,7 @@
 
 - type: reaction
   id: Smoke
-  priority: -10
+  priority: 10 # Trauma
   impact: High
   conserveEnergy: false
   reactants:
@@ -155,7 +155,7 @@
 
 - type: reaction
   id: Foam
-  priority: -10
+  priority: 10 # Trauma
   impact: High
   conserveEnergy: false
   reactants:
@@ -173,7 +173,7 @@
 - type: reaction
   id: IronMetalFoam
   impact: High
-  priority: -10
+  priority: 10 # Trauma
   conserveEnergy: false
   reactants:
     Iron:
@@ -192,7 +192,7 @@
 - type: reaction
   id: AluminiumMetalFoam
   impact: High
-  priority: -10
+  priority: 10 # Trauma
   conserveEnergy: false
   reactants:
     Aluminium:
@@ -343,7 +343,7 @@
     Oxygen:
       amount: 2
   products:
-    Stimulants: 2
+    Stimulants: 3 # Goobstation edit
 
 - type: reaction
   id: StrawberryIce
@@ -388,7 +388,7 @@
     SpaceGlue:
       amount: 2
   products:
-    MuteToxin: 2
+    MuteToxin: 4 #goob edit
 
 - type: reaction
   id: ChloralHydrate
@@ -440,6 +440,7 @@
 - type: reaction
   id: Ethyloxyephedrine
   impact: Medium
+  minTemp: 370    #Goobstation edit
   reactants:
     Desoxyephedrine:
       amount: 1
@@ -542,7 +543,7 @@
     Vestine:
       amount: 1
   products:
-    Nocturine: 1
+    Nocturine: 2 #goob edit
 
 - type: reaction
   id: Tazinide
@@ -553,7 +554,7 @@
     Vestine:
       amount: 1
   products:
-    Tazinide: 1
+    Tazinide: 2 #goob edit
 
 - type: reaction
   id: ArtifactGlue
@@ -614,5 +615,3 @@
       amount: 1
   products:
     TearGas: 3
-
-

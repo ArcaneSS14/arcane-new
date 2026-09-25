@@ -37,13 +37,13 @@
 
 - type: latheRecipe
   abstract: true
-  parent: BaseWeaponRecipe
+  parent: [BaseWeaponRecipe , BaseRedAlert] # Trauma
   id: BaseWeaponRecipeLong
   completetime: 5
 
 - type: latheRecipe
   abstract: true
-  parent: BaseWeaponRecipe
+  parent: [BaseWeaponRecipe , BaseRedAlert] # Trauma
   id: BaseWeaponRecipeSidearm
   completetime: 6
 
