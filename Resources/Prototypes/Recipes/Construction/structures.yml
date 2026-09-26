@@ -264,6 +264,10 @@
     - !type:NoWindowsInTile
   objectType: Structure
   placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: WindowDirectional
@@ -282,6 +286,10 @@
     - !type:NoWindowsInTile
   objectType: Structure
   placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: WindowDirectional
@@ -300,6 +308,10 @@
     - !type:NoWindowsInTile
   objectType: Structure
   placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: WindowDirectional
