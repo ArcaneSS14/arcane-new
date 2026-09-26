@@ -1,0 +1,45 @@
+- type: entity
+  parent: Window
+  id: ClockworkWindow
+  name: clockwork window
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Windows/window-brass.rsi
+  - type: Icon
+    sprite: _Arcane/Structures/Windows/window-brass.rsi
+    state: full
+  - type: IconSmooth
+    base: bwindow
+  - type: Construction
+    graph: Window
+    node: clockworkWindow
+
+- type: entity
+  parent: WindowDiagonal
+  id: ClockworkWindowDiagonal
+  name: diagonal clockwork window
+  suffix: diagonal
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Windows/window-diagonal-brass.rsi
+  - type: Icon
+    sprite: _Arcane/Structures/Windows/window-diagonal-brass.rsi
+    state: state0
+  - type: Construction
+    graph: WindowDiagonal
+    node: clockworkWindowDiagonal
+
+- type: entity
+  parent: WindowDirectional
+  id: WindowClockworkDirectional
+  name: directional clockwork window
+  components:
+  - type: Sprite
+    sprite: Structures/Windows/directional.rsi
+    state: clock_window
+  - type: Icon
+    sprite: Structures/Windows/directional.rsi
+    state: clock_window
+  - type: Construction
+    graph: WindowDirectional
+    node: windowClockworkDirectional

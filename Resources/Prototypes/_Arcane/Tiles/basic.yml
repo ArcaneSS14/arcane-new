@@ -1,0 +1,191 @@
+- type: tile
+  id: FloorSteelDiagonal
+  parent: BaseStationTile
+  name: tiles-steel-floor-diagonal
+  sprite: /Textures/_Arcane/Tiles/steel_diagonal.png
+  itemDrop: FloorTileItemSteelDiagonal
+
+- type: tile
+  id: FloorSteelOffset
+  parent: BaseStationTile
+  name: tiles-steel-floor-offset
+  sprite: /Textures/_Arcane/Tiles/steel_offset.png
+  itemDrop: FloorTileItemSteelOffset
+
+- type: tile
+  id: FloorSteelDiagonalMini
+  parent: BaseStationTile
+  name: tiles-steel-floor-diagonal-mini
+  sprite: /Textures/_Arcane/Tiles/steel_diagonal_mini.png
+  itemDrop: FloorTileItemSteelDiagonalMini
+
+- type: tile
+  id: FloorBrassFilled
+  parent: BaseStationTile
+  name: tiles-brass-floor-filled
+  sprite: /Textures/_Arcane/Tiles/Misc/Clockwork/clockwork_floor_filled.png
+  footstepSounds:
+    collection: FootstepHull
+  itemDrop: FloorTileItemBrassFilled
+
+- type: tile
+  id: FloorBrassReebe
+  parent: BaseStationTile
+  name: tiles-brass-floor-reebe
+  sprite: /Textures/_Arcane/Tiles/Misc/Clockwork/reebe.png
+  footstepSounds:
+    collection: FootstepHull
+  itemDrop: FloorTileItemBrassReebe
+
+- type: tile
+  id: FloorWhiteDiagonal
+  parent: BaseStationTile
+  name: tiles-white-floor-diagonal
+  sprite: /Textures/_Arcane/Tiles/white_diagonal.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemWhiteDiagonal
+  tileRipResistance: 80
+
+- type: tile
+  id: FloorWhiteOffset
+  parent: BaseStationTile
+  name: tiles-white-floor-offset
+  sprite: /Textures/_Arcane/Tiles/white_offset.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemWhiteOffset
+  tileRipResistance: 80
+
+- type: tile
+  id: FloorWhiteDiagonalMini
+  parent: BaseStationTile
+  name: tiles-white-floor-diagonal-mini
+  sprite: /Textures/_Arcane/Tiles/white_diagonal_mini.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemWhiteDiagonalMini
+  tileRipResistance: 80
+
+- type: tile
+  id: FloorDarkDiagonal
+  parent: BaseStationTile
+  name: tiles-dark-floor-diagonal
+  sprite: /Textures/_Arcane/Tiles/dark_diagonal.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemDarkDiagonal
+  tileRipResistance: 100
+
+- type: tile
+  id: FloorDarkOffset
+  parent: BaseStationTile
+  name: tiles-dark-floor-offset
+  sprite: /Textures/_Arcane/Tiles/dark_offset.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemDarkOffset
+  tileRipResistance: 100
+
+- type: tile
+  id: FloorDarkDiagonalMini
+  parent: BaseStationTile
+  name: tiles-dark-floor-diagonal-mini
+  sprite: /Textures/_Arcane/Tiles/dark_diagonal_mini.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemDarkDiagonalMini
+  tileRipResistance: 100
+
+- type: tile
+  id: FloorTechMaint
+  parent: BaseStationTile
+  name: tiles-techmaint-floor
+  sprite: /Textures/_Arcane/Tiles/tech_maint.png
+  footstepSounds:
+    collection: FootstepHull
+  itemDrop: FloorTileItemSteelMaint
+  tileRipResistance: 250
+
+- type: tile
+  id: FloorMono
+  parent: BaseStationTile
+  name: tiles-mono-floor
+  sprite: /Textures/_Arcane/Tiles/mono.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemMono
+  tileRipResistance: 100
+
+- type: tile
+  id: FloorSteelDirty
+  parent: BaseStationTile
+  name: tiles-dirty-steel-floor
+  sprite: /Textures/_Arcane/Tiles/steel_dirty.png
+  footstepSounds:
+    collection: FootstepPlating
+  itemDrop: FloorTileItemDirty
+
+- type: tile
+  id: FloorElevatorShaft
+  parent: BaseStationTile
+  name: tiles-elevator-shaft
+  sprite: /Textures/_Arcane/Tiles/elevator_shaft.png
+  footstepSounds:
+    collection: FootstepHull
+  itemDrop: FloorTileItemElevatorShaft
+
+- type: tile
+  id: FloorRockVault
+  parent: BaseStationTile
+  name: tiles-rock-floor
+  sprite: /Textures/_Arcane/Tiles/rock_vault.png
+  footstepSounds:
+    collection: FootstepAsteroid
+  itemDrop: FloorTileItemRockVault
+  tileRipResistance: 400
+
+- type: tile
+  id: FloorMining
+  parent: BaseStationTile
+  name: tiles-mining-tile
+  sprite: /Textures/_Arcane/Tiles/mining_floor.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemMining
+  tileRipResistance: 250
+
+- type: tile
+  id: FloorMiningDark
+  parent: BaseStationTile
+  name: tiles-mining-dark-tile
+  sprite: /Textures/_Arcane/Tiles/mining_floor_dark.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemMiningDark
+  tileRipResistance: 250
+
+- type: tile
+  id: FloorMiningLight
+  parent: BaseStationTile
+  name: tiles-mining-light-tile
+  sprite: /Textures/_Arcane/Tiles/mining_floor_light.png
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemMiningLight
+  tileRipResistance: 250
+
+- type: tile
+  id: FloorShowroom
+  parent: BaseStationTile
+  name: tiles-showroom-floor
+  sprite: /Textures/_Arcane/Tiles/showroom.png
+  itemDrop: FloorTileItemShowroom
+  tileRipResistance: 100
+
+- type: tile
+  id: FloorHydro
+  parent: BaseStationTile
+  name: tiles-hydro-floor
+  sprite: /Textures/_Arcane/Tiles/hydro.png
+  itemDrop: FloorTileItemHydro

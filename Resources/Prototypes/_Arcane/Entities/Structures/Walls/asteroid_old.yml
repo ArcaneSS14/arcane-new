@@ -1,0 +1,176 @@
+#region Bananium
+
+- type: entity
+  abstract: true
+  id: BaseVeinBananium
+  suffix: Bananium
+  components:
+  - type: OreVein
+    oreChance: 1.0
+    currentOre: OreBananium
+  - type: Sprite
+    layers:
+    - state: rock_bananium
+      sprite: _Arcane/Structures/Walls/stone-ore-old.rsi
+      map: [ "enum.MiningScannerVisualLayers.Overlay" ]
+      visible: false
+
+- type: entity
+  parent: [BaseVeinBananium, AsteroidRock]
+  id: AsteroidRockBananium
+
+- type: entity
+  parent: AsteroidRockBananium
+  id: AsteroidRockBananiumCrab
+  suffix: Bananium Crab
+  components:
+  - type: OreVein
+    currentOre: OreBananiumCrab
+
+- type: entity
+  parent: [BaseVeinBananium, IronRock]
+  id: IronRockBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRock]
+  id: WallRockBananium
+  components:
+  - type: EntityRemap
+    mask:
+      AsteroidRock: AsteroidRockBananium
+      WallRockBasalt: WallRockBasaltBananium
+      WallRockAndesite: WallRockAndesiteBananium
+      WallRockChromite: WallRockChromiteBananium
+      WallRockSand: WallRockSandBananium
+      WallRockSnow: WallRockSnowBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockSnow]
+  id: WallRockSnowBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockSand]
+  id: WallRockSandBananium
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockChromite]
+  id: WallRockChromiteBananium
+
+#endregion
+
+#region Basalt
+
+- type: entity
+  parent: WallRock
+  id: WallRockBasalt
+  name: basalt
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Walls/basalt.rsi
+    state: full
+  - type: Sprite
+    sprite: _Arcane/Structures/Walls/basalt.rsi
+
+- type: entity
+  parent: [BaseVeinCoal, WallRockBasalt]
+  id: WallRockBasaltCoal
+
+- type: entity
+  parent: [BaseVeinGold, WallRockBasalt]
+  id: WallRockBasaltGold
+
+- type: entity
+  parent: [BaseVeinDiamond, WallRockBasalt]
+  id: WallRockBasaltDiamond
+
+- type: entity
+  parent: [BaseVeinPlasma, WallRockBasalt]
+  id: WallRockBasaltPlasma
+
+- type: entity
+  parent: [BaseVeinQuartz, WallRockBasalt]
+  id: WallRockBasaltQuartz
+
+- type: entity
+  parent: [BaseVeinSilver, WallRockBasalt]
+  id: WallRockBasaltSilver
+
+- type: entity
+  parent: [BaseVeinSteel, WallRockBasalt]
+  id: WallRockBasaltTin
+
+- type: entity
+  parent: [BaseVeinUranium, WallRockBasalt]
+  id: WallRockBasaltUranium
+
+- type: entity
+  parent: [BaseVeinArtifactFragment, WallRockBasalt]
+  id: WallRockBasaltArtifactFragment
+
+- type: entity
+  parent: [BaseVeinSalt, WallRockBasalt]
+  id: WallRockBasaltSalt
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockBasalt]
+  id: WallRockBasaltBananium
+
+#endregion
+#region Andesite
+
+- type: entity
+  parent: WallRock
+  id: WallRockAndesite
+  name: andesite
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Walls/andesite.rsi
+    state: full
+  - type: Sprite
+    sprite: _Arcane/Structures/Walls/andesite.rsi
+
+- type: entity
+  parent: [BaseVeinCoal, WallRockAndesite]
+  id: WallRockAndesiteCoal
+
+- type: entity
+  parent: [BaseVeinGold, WallRockAndesite]
+  id: WallRockAndesiteGold
+
+- type: entity
+  parent: [BaseVeinDiamond, WallRockAndesite]
+  id: WallRockAndesiteDiamond
+
+- type: entity
+  parent: [BaseVeinPlasma, WallRockAndesite]
+  id: WallRockAndesitePlasma
+
+- type: entity
+  parent: [BaseVeinQuartz, WallRockAndesite]
+  id: WallRockAndesiteQuartz
+
+- type: entity
+  parent: [BaseVeinSilver, WallRockAndesite]
+  id: WallRockAndesiteSilver
+
+- type: entity
+  parent: [BaseVeinSteel, WallRockAndesite]
+  id: WallRockAndesiteTin
+
+- type: entity
+  parent: [BaseVeinUranium, WallRockAndesite]
+  id: WallRockAndesiteUranium
+
+- type: entity
+  parent: [BaseVeinArtifactFragment, WallRockAndesite]
+  id: WallRockAndesiteArtifactFragment
+
+- type: entity
+  parent: [BaseVeinSalt, WallRockAndesite]
+  id: WallRockAndesiteSalt
+
+- type: entity
+  parent: [BaseVeinBananium, WallRockAndesite]
+  id: WallRockAndesiteBananium
+
+#endregion

@@ -1,0 +1,57 @@
+- type: entity
+  parent: StructureHealthDoorWeak
+  id: PinionAirlockAssembly
+  name: pinion airlock assembly
+  description: It opens, it closes, and maybe crushes you.
+  components:
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    sprite: _Arcane/Structures/Doors/Airlocks/Standard/brass-base.rsi
+    state: "assembly"
+  - type: Physics
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 110
+        mask:
+        - FullTileMask
+        layer:
+        - HumanoidBlockLayer
+        - BulletImpassable
+  - type: Anchorable
+    delay: 2
+  - type: Pullable
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Damageable
+    damageModifierSet: SteelStaticMod
+  - type: RCDDeconstructable
+    cost: 6
+    delay: 8
+    fx: EffectRCDDeconstruct8
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetBrass1:
+            min: 1
+            max: 2
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+          params:
+            volume: -4
+  - type: Construction
+    graph: ArcanePinionAirlock
+    node: assembly
+  placement:
+    mode: SnapgridCenter

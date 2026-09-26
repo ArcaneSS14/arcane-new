@@ -867,6 +867,7 @@
     - FloorIndustrialTilesStatic
     - FloorWoodTilesStatic
     - FloorConcreteTilesStatic
+    - ArcaneFloorTilesStatic # Arcane
     - CircuitFloorsStatic
     - FloorMarbleTilesStatic
     - FloorShuttleTilesStatic

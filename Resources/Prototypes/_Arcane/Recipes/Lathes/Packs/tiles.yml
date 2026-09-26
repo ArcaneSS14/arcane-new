@@ -1,0 +1,17 @@
+- type: latheRecipePack
+  id: ArcaneFloorTilesStatic
+  recipes:
+  - FloorTileItemDirty
+  - FloorTileItemHydro
+  - FloorTileItemMono
+  - FloorTileItemIronsandConcrete
+  - FloorTileItemIronsandConcreteSmooth
+  - FloorTileItemSteelDiagonal
+  - FloorTileItemSteelOffset
+  - FloorTileItemSteelDiagonalMini
+  - FloorTileItemWhiteDiagonal
+  - FloorTileItemWhiteOffset
+  - FloorTileItemWhiteDiagonalMini
+  - FloorTileItemDarkDiagonal
+  - FloorTileItemDarkOffset
+  - FloorTileItemDarkDiagonalMini

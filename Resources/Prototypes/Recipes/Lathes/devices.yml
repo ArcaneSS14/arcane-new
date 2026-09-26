@@ -42,7 +42,7 @@
 
 - type: latheRecipe
   id: ShrapnelPayload # Trauma - replaced explosive with shrapnel
-  result: ShrapnelPayload
+  result: ShrapnelPayload # Arcane-Edit
   categories:
   - Weapons
   completetime: 4

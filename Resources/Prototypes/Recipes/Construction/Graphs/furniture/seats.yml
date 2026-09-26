@@ -148,6 +148,7 @@
           steps:
             - tool: Screwing
               doAfter: 1
+
     # begin Goobstation - Rocket Chair Recipes
         - to: chairOfficeRocket
           steps:
@@ -190,6 +191,7 @@
           steps:
             - tool: Screwing
               doAfter: 1
+
     # begin Goobstation - Rocket Chair Recipes
         - to: chairOfficeDarkRocket
           steps:

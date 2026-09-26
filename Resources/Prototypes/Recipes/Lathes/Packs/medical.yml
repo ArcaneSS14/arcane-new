@@ -100,6 +100,7 @@
   - TraumaChemistry # Trauma
   id: Chemistry
   recipes:
+#  - ChemicalPayload # Arcane-Edit: Goob
   - CryostasisBeaker
   - SyringeCryostasis
   - BluespaceBeaker

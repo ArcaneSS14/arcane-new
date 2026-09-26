@@ -19,7 +19,7 @@
   targetNode: MetalRod
 
 - type: construction
-  abstract: true # Trauma - no handcrafting durathread
+#  abstract: true # Trauma - no handcrafting durathread # Arcane-Edit
   parent: BaseMaterial
   id: MaterialDurathread
   graph: Durathread

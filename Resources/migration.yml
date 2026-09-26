@@ -770,7 +770,7 @@ CentcomPDAFake: null
 CentcomIDCardSyndie: null
 
 # 2024-09-06
-AntimovCircuitBoard: null
+AsimovCircuitBoard: AntimovCircuitBoard # Arcane-Edit
 OverlordCircuitBoard: null
 
 # 2024-09-08
@@ -1271,11 +1271,60 @@ CrateEngineeringThruster: CrateSpaceThruster
 # 2026-08-12
 LightReplacer: LightReplacerFilled
 
+#2026-08-14
+MeteorRock: AsteroidRock
+MeteorRockCoal: AsteroidRockCoal
+MeteorRockQuartz: AsteroidRockQuartz
+MeteorRockTin: AsteroidRockTin
+MeteorRockSilver: AsteroidRockSilver
+MeteorRockGold: AsteroidRockGold
+MeteorRockPlasma: AsteroidRockPlasma
+MeteorRockDiamond: AsteroidRockDiamond
+MeteorRockUranium: AsteroidRockUranium
+MeteorRockBananium: AsteroidRockBananium
+StatueBananiumClown: StatueOrnateClown
+
+# Arcane-Start
+PinionAirlockGlass: PinionAirlock
+PinionAirlockAssemblyGlass: PinionAirlockAssembly
+WallMalign: WallCosmicCult
+WallMalignIndestructible: WallCosmicCult
+WallMalignIndestructibleNoOcclusion: WallCosmicCult
+MalignWindow: WindowCosmicCult
+TurnstileGenpopEnter: EnergyGateGenpopEnter
+TurnstileGenpopLeave: EnergyGateGenpopLeave
+Turnstile: EnergyGate
+MetalDoor: SilverDoor
+MiningWindow: ReinforcedWindow
+MiningWindowDiagonal: ReinforcedWindowDiagonal
+FloorTileItemLightAstroGrass: FloorTileItemAstroGrass
+FloorTileItemGrayConcrete: FloorTileItemConcrete
+FloorTileItemGrayConcreteMono: FloorTileItemConcreteMono
+FloorTileItemGrayConcreteSmooth: FloorTileItemConcreteSmooth
+FloorTileItemOldConcrete: FloorTileItemConcrete
+FloorTileItemOldConcreteMono: FloorTileItemConcreteMono
+FloorTileItemOldConcreteSmooth: FloorTileItemConcreteSmooth
+FloorTileItemIronsandConcreteMono: FloorTileItemIronsandConcreteSmooth
+IronSandstone: IronRock
+IronSandstoneMining: IronRock
+FloorTileItemTechmaint: FloorTileItemSteelMaint
+FloorTileItemXeno: FloorTileItemExoViscera
+FloorTileItemXenoSteel: FloorTileItemExoHull
+FloorTileItemXenoSteelCorner: FloorTileItemExoCornerSW
+FloorTileItemXenoMaint: FloorTileItemExoTechmaint
+FloorTileItemXenoborg: FloorTileItemExoBorg
+FloorTileItemDarkSquiggly: FloorTileItemExoHorizontal
+WallCobblebrick: WallConcrete
+WallAsteroidCobblebrick: WallConcrete
+WallBasaltCobblebrick: WallConcrete
+WallSnowCobblebrick: WallRockSnow
+WallSandCobblebrick: WallRockSand
+WallChromiteCobblebrick: WallRockChromite
+WallAndesiteCobblebrick: WallRockAndesite
+WallIce: WallRockSnow
+# Arcane-End
+
 #2026-08-18
 DrinkNeurotoxinGlass: null
-
-#2026-08-31
-DrinkWaterJug: JugWater
-
-#2026-09-05
-AsimovCircuitBoard: CrewsimovCircuitBoard
+#2026-08-19
+JanitorServiceLight: null

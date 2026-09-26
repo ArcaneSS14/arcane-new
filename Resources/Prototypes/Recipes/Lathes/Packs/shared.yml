@@ -4,7 +4,7 @@
   id: MaterialsStatic
   recipes:
   - SheetRGlass
- # - MaterialDurathread # Trauma - remove durathread lathe print
+  - MaterialDurathread
 
 - type: latheRecipePack
   parent:
@@ -71,6 +71,8 @@
   id: SalvageSecurityWeapons
   recipes:
   - WeaponProtoKineticAccelerator
+  # Arcane-Edit-Start: Lavaland change
   - WeaponProtoKineticShotgun
   - WeaponProtoKineticRepeater
   - WeaponProtoKineticPistol
+  # Arcane-Edit-End

@@ -1,0 +1,83 @@
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileBrassFilled
+  name: stack-filled-brass-plate
+  spawn: FloorTileItemBrassFilled
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileBrassReebe
+  name: stack-smooth-brass-plate
+  spawn: FloorTileItemBrassReebe
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileDirty
+  name: stack-dirty-tile
+  spawn: FloorTileItemDirty
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileHydro
+  name: stack-hydro-tile
+  spawn: FloorTileItemHydro
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileMono
+  name: stack-mono-tile
+  spawn: FloorTileItemMono
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileSteelDiagonal
+  name: stack-steel-diagonal-tile
+  spawn: FloorTileItemSteelDiagonal
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileSteelOffset
+  name: stack-offset-steel-tile
+  spawn: FloorTileItemSteelOffset
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileSteelDiagonalMini
+  name: stack-steel-diagonal-mini-tile
+  spawn: FloorTileItemSteelDiagonalMini
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileWhiteDiagonal
+  name: stack-white-steel-diagonal-tile
+  spawn: FloorTileItemWhiteDiagonal
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileWhiteOffset
+  name: stack-offset-white-steel-tile
+  spawn: FloorTileItemWhiteOffset
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileWhiteDiagonalMini
+  name: stack-white-steel-diagonal-mini-tile
+  spawn: FloorTileItemWhiteDiagonalMini
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileDarkDiagonal
+  name: stack-dark-steel-diagonal-tile
+  spawn: FloorTileItemDarkDiagonal
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileDarkOffset
+  name: stack-offset-dark-steel-tile
+  spawn: FloorTileItemDarkOffset
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileDarkDiagonalMini
+  name: stack-dark-steel-diagonal-mini-tile
+  spawn: FloorTileItemDarkDiagonalMini
