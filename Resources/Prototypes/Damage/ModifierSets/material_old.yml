@@ -7,7 +7,6 @@
   coefficients:
     Blunt: 0.7
     Slash: 0.5
-    Piercing: 0.7
     Piercing: 0.5 # Trauma
     Ballistic: 0.5 # Trauma
     Shock: 1.2
