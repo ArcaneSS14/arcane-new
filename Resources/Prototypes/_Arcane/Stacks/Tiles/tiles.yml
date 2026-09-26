@@ -1,0 +1,29 @@
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileBrassFilled
+  name: stack-filled-brass-plate
+  spawn: FloorTileItemBrassFilled
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileBrassReebe
+  name: stack-smooth-brass-plate
+  spawn: FloorTileItemBrassReebe
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileDirty
+  name: stack-dirty-tile
+  spawn: FloorTileItemDirty
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileHydro
+  name: stack-hydro-tile
+  spawn: FloorTileItemHydro
+
+- type: stack
+  parent: BaseTileStack
+  id: FloorTileMono
+  name: stack-mono-tile
+  spawn: FloorTileItemMono
