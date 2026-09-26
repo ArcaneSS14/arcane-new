@@ -104,7 +104,7 @@
   sprite: /Textures/_Arcane/Tiles/tech_maint.png
   footstepSounds:
     collection: FootstepHull
-  itemDrop: FloorTileItemTechmaint
+  itemDrop: FloorTileItemSteelMaint
   tileRipResistance: 250
 
 - type: tile

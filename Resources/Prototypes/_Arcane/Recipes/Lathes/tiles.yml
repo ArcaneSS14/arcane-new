@@ -1,0 +1,29 @@
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemDirty
+  result: FloorTileItemDirty
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemHydro
+  result: FloorTileItemHydro
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemMono
+  result: FloorTileItemMono
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemIronsandConcrete
+  result: FloorTileItemIronsandConcrete
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemIronsandConcreteSmooth
+  result: FloorTileItemIronsandConcreteSmooth
+
+- type: latheRecipePack
+  id: ArcaneFloorTilesStatic
+  recipes:
+  - FloorTileItemDirty
