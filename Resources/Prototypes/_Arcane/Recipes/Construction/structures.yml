@@ -1,13 +1,22 @@
 - type: construction
-  parent: BaseStructureFullTileDirectional
+  parent: SilverDoor
   id: BananiumDoor
-  graph: DoorGraph
   targetNode: bananiumDoor
+  # <Trauma>
+  theory:
+    DoorsKnowledge: 0
+    BananiumKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: Girder
   id: ClownWall
   targetNode: bananiumWall
+  # <Trauma>
+  theory:
+    WallsKnowledge: 0
+    BananiumKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: Girder
@@ -25,6 +34,11 @@
   - !type:TileType
     targets:
     - Plating
+  # <Trauma>
+  theory:
+    BananiumKnowledge: 0
+  useQuality: false
+  # </Trauma>
 
 - type: construction
   parent: BaseStructureFullTile
@@ -32,6 +46,12 @@
   name: construction-recipe-pinion-airlock
   graph: ArcanePinionAirlock
   targetNode: airlock
+  # <Trauma>
+  theory:
+    AirlocksKnowledge: 0
+  practical:
+    MechanicsKnowledge: 2
+  # </Trauma>
 
 - type: construction
   parent: Grille

@@ -54,7 +54,7 @@
 
 - type: construction
   abstract: true
-  parent: BaseGasDeviceStackable
+  parent: BaseAtmos
   id: BaseGasBinaryStackable
   graph: GasBinary
   placementMode: AlignAtmosPipeLayers
