@@ -331,6 +331,10 @@
     - !type:NoWindowsInTile
   objectType: Structure
   placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 # region Firelocks
 - type: construction
@@ -737,7 +741,6 @@
   id: OrnateClownStatue
   graph: OrnateStatueClown
   targetNode: ornateStatueClown
-  conditions: # Arcane
   # <Trauma>
   theory:
     BananiumKnowledge: 0
