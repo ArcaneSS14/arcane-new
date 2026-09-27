@@ -224,6 +224,7 @@
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Wallmounts/camera.rsi
+    offset: 0, -0.5 # Arcane
     layers:
     - state: camera_off
   - type: Clickable
