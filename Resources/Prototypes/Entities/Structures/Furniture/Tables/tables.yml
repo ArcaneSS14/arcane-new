@@ -633,7 +633,6 @@
     convertTo: CosmicTable
 
 - type: entity
-  abstract: true # Trauma - xeno station content wasn't cherry picked
   parent: TableBase
   id: TableXeno
   name: xeno table
