@@ -6,7 +6,7 @@
   variants: 4
   footstepSounds:
     collection: FootstepTile
-  itemDrop: FloorTileItemConcrete
+  itemDrop: FloorTileItemGrayConcrete
   tileRipResistance: 300
 
 - type: tile
@@ -17,7 +17,7 @@
   variants: 4
   footstepSounds:
     collection: FootstepTile
-  itemDrop: FloorTileItemConcreteSmooth
+  itemDrop: FloorTileItemGrayConcreteSmooth
   tileRipResistance: 300
 
 - type: tile
@@ -28,7 +28,7 @@
   variants: 4
   footstepSounds:
     collection: FootstepTile
-  itemDrop: FloorTileItemConcrete
+  itemDrop: FloorTileItemOldConcrete
   tileRipResistance: 300
 
 - type: tile
@@ -39,7 +39,7 @@
   variants: 4
   footstepSounds:
     collection: FootstepTile
-  itemDrop: FloorTileItemConcreteSmooth
+  itemDrop: FloorTileItemOldConcreteSmooth
   tileRipResistance: 300
 
 - type: tile
