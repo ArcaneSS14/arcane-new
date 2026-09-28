@@ -487,6 +487,9 @@
     - FloorPlastic
   - type: Stack
     stackType: FloorTileStackPlastic
+  - type: Construction # Arcane
+    graph: TilePlastic
+    node: plastic tile
 
 - type: entity
   parent: FloorTileItemDark

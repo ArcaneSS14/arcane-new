@@ -25,6 +25,7 @@
   - type: Stack
     stackType: FloorTilePlasticDark
   - type: Construction
+    graph: TilePlastic # Arcane
     node: dark plastic tile
 
 - type: entity
@@ -43,4 +44,5 @@
   - type: Stack
     stackType: FloorTilePlasticWhite
   - type: Construction
+    graph: TilePlastic # Arcane
     name: white plastic tile

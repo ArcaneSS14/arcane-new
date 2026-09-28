@@ -9,6 +9,7 @@
   weather: false
   baseTurf: Plating
   baseWhitelist:
+  - PlatingBrass # Arcane
   - FloorAsteroidIronsand
   - FloorAsteroidSand
   - FloorAsteroidSandBorderless
