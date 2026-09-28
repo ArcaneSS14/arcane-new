@@ -8,6 +8,13 @@
 # WallSolid: Window
 # Table: null
 
+# Arcane-Start
+WallMalign: WallCosmicCult
+WallMalignIndestructible: WallCosmicCult
+WallMalignIndestructibleNoOcclusion: WallCosmicCult
+MalignWindow: WindowCosmicCult
+# Arcane-End
+
 # <Trauma> - too lazy to port debugoks multi migration thing
 # 2025-10-19
 LockerBlueshieldOfficerFilled: null
@@ -893,7 +900,7 @@ BorgModuleAdvancedTreatment: null
 # ClothingMaskSexyClown: ClothingMaskBlushingClown
 # ClothingMaskSexyMime: ClothingMaskBlushingMime
 ClothingMaskBlushingMime: ClothingMaskSexyMime
-ClothingMaskBlushingClown: ClothingMaskSexyMime
+ClothingMaskBlushingClown: ClothingMaskSexyClown
 # Arcane-Edit-End
 
 # 2025-01-27
@@ -1240,34 +1247,42 @@ CratePartsT3T4: null
 CratePartsT4: null
 
 # 2026-07-16 # Arcane-Edit: New Sprites
-WallNecropolis: WallSolid
+# WallNecropolis: WallSolid # Arcane-Edit
 WallVaultAlien: WallSolid
 WallVaultRock: WallSolid
 WallVaultSandstone: WallSolid
 WallSandstone: WallSolid
-WallDiamond: WallReinforced
-WallCult: WallBrick
-WallClown: WallGold
+# Arcane-Edit-Start
+# WallDiamond: WallReinforced
+# WallCult: WallBrick
+# WallClown: WallGold
+# Arcane-Edit-End
 WallClock: WallBrass
-WallPlastic: WallSolid
-ClockworkGrille: Grille
-ClockworkGrilleBroken: GrilleBroken
-ClockworkGrilleDiagonal: GrilleDiagonal
-ClockworkWindow: Window
-ClockworkWindowDiagonal: WindowDiagonal
-WindowClockworkDirectional: WindowDirectional
-WindoorClockwork: Windoor
-WindoorAssemblyClockwork: WindoorAssembly
-PinionAirlock: Airlock
-PinionAirlockGlass: AirlockGlass
-PinionAirlockAssembly: AirlockAssembly
-BananiumDoor: GoldDoor
+# Arcane-Edit-Start
+# WallPlastic: WallSolid
+# ClockworkGrille: Grille
+# ClockworkGrilleBroken: GrilleBroken
+# ClockworkGrilleDiagonal: GrilleDiagonal
+# ClockworkWindow: Window
+# ClockworkWindowDiagonal: WindowDiagonal
+# WindowClockworkDirectional: WindowDirectional
+# WindoorClockwork: Windoor
+# WindoorAssemblyClockwork: WindoorAssembly
+# PinionAirlock: Airlock
+# Arcane-Edit-End
+PinionAirlockGlass: PinionAirlock # Arcane-Edit
+# Arcane-Edit-Start
+# PinionAirlockAssembly: AirlockAssembly
+# BananiumDoor: GoldDoor
+# Arcane-Edit-End
 EncrustedIronstoneDoor: SilverDoor
 IronstoneDoor: SilverDoor
-WallSnowCobblebrick: WallBrick
-WallSandCobblebrick: WallBrick
-WallChromiteCobblebrick: WallBrick
-WallAndesiteCobblebrick: WallBrick
+# Arcane-Edit-Start
+WallSnowCobblebrick: WallRockSnow
+WallSandCobblebrick: WallRockSand
+WallChromiteCobblebrick: WallRockChromite
+WallAndesiteCobblebrick: WallRockAndesite
+# Arcane-Edit-End
 WallIronsandCobblebrick: WallBrick
 WallCobblebrick: WallConcrete
 WallAsteroidCobblebrick: WallConcrete
@@ -1336,44 +1351,52 @@ BlastDoorXenoborg: BlastDoorXeno
 BlastDoorXenoborgOpen: BlastDoorXenoOpen
 
 ### Dark Tiles
-FloorTileItemDarkDiagonalMini: FloorTileItemDark
-FloorTileItemDarkDiagonal: FloorTileItemDark
-FloorTileItemDarkOffset: FloorTileItemDark
+# Arcane-Edit-Start
+# FloorTileItemDarkDiagonalMini: FloorTileItemDark
+# FloorTileItemDarkDiagonal: FloorTileItemDark
+# FloorTileItemDarkOffset: FloorTileItemDark
+# Arcane-Edit-End
 FloorTileItemDarkSlatsContinuous: FloorTileItemDarkVerticalSlatsBordered
 
 ### Steel Tiles
-FloorTileItemSteelDiagonalMini: FloorTileItemSteel
-FloorTileItemSteelDiagonal: FloorTileItemSteel
-FloorTileItemSteelOffset: FloorTileItemSteel
-FloorTileItemShowroom: FloorTileItemSteel
+# Arcane-Edit-Start
+# FloorTileItemSteelDiagonalMini: FloorTileItemSteel
+# FloorTileItemSteelDiagonal: FloorTileItemSteel
+# FloorTileItemSteelOffset: FloorTileItemSteel
+# FloorTileItemShowroom: FloorTileItemSteel
+# Arcane-Edit-End
 FloorTileItemSteelSlatsContinuous: FloorTileItemSteelVerticalSlatsBordered
 
 ### White Tiles
-FloorTileItemWhiteDiagonalMini: FloorTileItemWhite
-FloorTileItemWhiteDiagonal: FloorTileItemWhite
-FloorTileItemWhiteOffset: FloorTileItemWhite
+# Arcane-Edit-Start
+# FloorTileItemWhiteDiagonalMini: FloorTileItemWhite
+# FloorTileItemWhiteDiagonal: FloorTileItemWhite
+# FloorTileItemWhiteOffset: FloorTileItemWhite
+# Arcane-Edit-End
 FloorTileItemWhiteSlatsContinuous: FloorTileItemWhiteVerticalSlatsBordered
 
 ### Misc Tiles
-FloorTileItemUraniumMarble: FloorTileItemDarkMarble
-FloorTileItemPlasmaMarble: FloorTileItemWhiteMarble
-FloorTileItemEighties: FloorTileItemArcadeBlue
-FloorTileItemArcadeBlue2: FloorTileItemArcadeBlue
-FloorTileItemElevatorShaft: FloorTileItemDark
-FloorTileItemMining: FloorTileItemDarkPlastic
-FloorTileItemMiningLight: FloorTileItemDarkPlastic
-FloorTileItemMiningDark: FloorTileItemDarkPlastic
-FloorTileItemRockVault: FloorTileItemSteel
-FloorTileItemBrassReebe: null
-FloorTileItemBrassFilled: null
-FloorBananiumEntity: null
-FloorTileItemMono: FloorTileItemSteel
+# Arcane-Edit-Start
+# FloorTileItemUraniumMarble: FloorTileItemDarkMarble
+# FloorTileItemPlasmaMarble: FloorTileItemWhiteMarble
+# FloorTileItemEighties: FloorTileItemArcadeBlue
+# FloorTileItemArcadeBlue2: FloorTileItemArcadeBlue
+# FloorTileItemElevatorShaft: FloorTileItemDark
+# FloorTileItemMining: FloorTileItemDarkPlastic
+# FloorTileItemMiningLight: FloorTileItemDarkPlastic
+# FloorTileItemMiningDark: FloorTileItemDarkPlastic
+# FloorTileItemRockVault: FloorTileItemSteel
+# FloorTileItemBrassReebe: null
+# FloorTileItemBrassFilled: null
+# FloorBananiumEntity: null
+# FloorTileItemMono: FloorTileItemSteel
 
 # 2026-07-23
-AirAlarmAssemblyXeno: AirAlarmAssembly
-AirAlarmXeno: AirAlarm
-FireAlarmAssemblyXeno: FireAlarmAssembly
-FireAlarmXeno: FireAlarm
+# AirAlarmAssemblyXeno: AirAlarmAssembly
+# AirAlarmXeno: AirAlarm
+# FireAlarmAssemblyXeno: FireAlarmAssembly
+# FireAlarmXeno: FireAlarm
+# Arcane-Edit-End
 
 # 2026-07-26
 IronsandStepConvexCorner: null
@@ -1388,49 +1411,55 @@ MetalDoor: SilverDoor
 MiningWindow: ReinforcedWindow
 MiningWindowDiagonal: ReinforcedWindowDiagonal
 FloorTileItemLightAstroGrass: FloorTileItemAstroGrass
-FloorTileItemGrayConcrete: FloorTileItemConcrete
+# FloorTileItemGrayConcrete: FloorTileItemConcrete # Arcane-Edit
 FloorTileItemGrayConcreteMono: FloorTileItemConcreteMono
-FloorTileItemGrayConcreteSmooth: FloorTileItemConcreteSmooth
-FloorTileItemOldConcrete: FloorTileItemConcrete
+# FloorTileItemGrayConcreteSmooth: FloorTileItemConcreteSmooth # Arcane-Edit
+# FloorTileItemOldConcrete: FloorTileItemConcrete # Arcane-Edit
 FloorTileItemOldConcreteMono: FloorTileItemConcreteMono
-FloorTileItemOldConcreteSmooth: FloorTileItemConcreteSmooth
-FloorTileItemIronsandConcrete: null
-FloorTileItemIronsandConcreteMono: null
-FloorTileItemIronsandConcreteSmooth: null
+# Arcane-Edit-End
+# FloorTileItemOldConcreteSmooth: FloorTileItemConcreteSmooth
+# FloorTileItemIronsandConcrete: null
+FloorTileItemIronsandConcreteMono: FloorTileItemIronsandConcreteSmooth
+# FloorTileItemIronsandConcreteSmooth: null
+# Arcane-Edit-End
 IronSandstone: IronRock
 IronSandstoneMining: IronRock
-AsteroidRockBananium: AsteroidRock
-AsteroidRockBananiumCrab: AsteroidRock
-IronRockBananium: IronRock
-WallRockBananium: WallRock
-WallRockChromiteBananium: WallRockChromite
-WallRockSandBananium: WallRockSand
-WallRockSnowBananium: WallRockSnow
+# Arcane-Edit-Start
+# AsteroidRockBananium: AsteroidRock
+# AsteroidRockBananiumCrab: AsteroidRock
+# IronRockBananium: IronRock
+# WallRockBananium: WallRock
+# WallRockChromiteBananium: WallRockChromite
+# WallRockSandBananium: WallRockSand
+# WallRockSnowBananium: WallRockSnow
+# Arcane-Edit-End
 MeteorRockBananium: AsteroidRock
-WallRockBasalt: WallRock
-WallRockBasaltCoal: WallRockCoal
-WallRockBasaltGold: WallRockGold
-WallRockBasaltDiamond: WallRockDiamond
-WallRockBasaltPlasma: WallRockPlasma
-WallRockBasaltQuartz: WallRockQuartz
-WallRockBasaltSilver: WallRockSilver
-WallRockBasaltBananium: WallRock
-WallRockBasaltTin: WallRockTin
-WallRockBasaltUranium: WallRockUranium
-WallRockBasaltArtifactFragment: WallRockArtifactFragment
-WallRockBasaltSalt: WallRockSalt
-WallRockAndesite: WallRock
-WallRockAndesiteCoal: WallRockCoal
-WallRockAndesiteGold: WallRockGold
-WallRockAndesiteDiamond: WallRockDiamond
-WallRockAndesitePlasma: WallRockPlasma
-WallRockAndesiteQuartz: WallRockQuartz
-WallRockAndesiteSilver: WallRockSilver
-WallRockAndesiteBananium: WallRock
-WallRockAndesiteTin: WallRockTin
-WallRockAndesiteUranium: WallRockUranium
-WallRockAndesiteArtifactFragment: WallRockArtifactFragment
-WallRockAndesiteSalt: WallRockSalt
+# Arcane-Edit-Start
+# WallRockBasalt: WallRock
+# WallRockBasaltCoal: WallRockCoal
+# WallRockBasaltGold: WallRockGold
+# WallRockBasaltDiamond: WallRockDiamond
+# WallRockBasaltPlasma: WallRockPlasma
+# WallRockBasaltQuartz: WallRockQuartz
+# WallRockBasaltSilver: WallRockSilver
+# WallRockBasaltBananium: WallRock
+# WallRockBasaltTin: WallRockTin
+# WallRockBasaltUranium: WallRockUranium
+# WallRockBasaltArtifactFragment: WallRockArtifactFragment
+# WallRockBasaltSalt: WallRockSalt
+# WallRockAndesite: WallRock
+# WallRockAndesiteCoal: WallRockCoal
+# WallRockAndesiteGold: WallRockGold
+# WallRockAndesiteDiamond: WallRockDiamond
+# WallRockAndesitePlasma: WallRockPlasma
+# WallRockAndesiteQuartz: WallRockQuartz
+# WallRockAndesiteSilver: WallRockSilver
+# WallRockAndesiteBananium: WallRock
+# WallRockAndesiteTin: WallRockTin
+# WallRockAndesiteUranium: WallRockUranium
+# WallRockAndesiteArtifactFragment: WallRockArtifactFragment
+# WallRockAndesiteSalt: WallRockSalt
+# Arcane-Edit-End
 FloorTileItemTechmaint: FloorTileItemSteelMaint
 FloorTileItemXeno: FloorTileItemExoViscera
 FloorTileItemXenoSteel: FloorTileItemExoHull
@@ -1445,65 +1474,69 @@ FloorDesertChasm: FloorChasmEntity
 FloorChromiteChasm: FloorChasmEntity
 
 # 2026-08-06
-FloorTileItemHydro: FloorTileItemSteel
+# FloorTileItemHydro: FloorTileItemSteel # Arcane-Edit
 WallRiveted: WallMarble
-WallSpawnAsteroidBananium: null
-WallSpawnAsteroidBananiumCrab: null
+# Arcane-Edit-Start
+# WallSpawnAsteroidBananium: null
+# WallSpawnAsteroidBananiumCrab: null
+# Arcane-Edit-End
 
 # 2026-08-11
-FloorTileItemDirty: null
+# FloorTileItemDirty: null # Arcane-Edit
 PinionAirlockAssemblyGlass: AirlockAssemblyGlass
-AnomalyRockBananium: AnomalyRockCoal
+# AnomalyRockBananium: AnomalyRockCoal # Arcane-Edit
 ClockworkGirder: Girder
-BaseAsteroidRock: AsteroidRock
-ButtonFrameExit: ButtonFrameWhite
+# Arcane-Edit-Start
+# BaseAsteroidRock: AsteroidRock
+# ButtonFrameExit: ButtonFrameWhite
 
 # 2026-08-12
-WindoorSecure: Windoor
-WindoorSecurePlasma: WindoorPlasma
-WindoorSecureUranium: WindoorUranium
-WindoorSecureArmoryLocked: WindoorArmoryLocked
-PlasmaWindoorSecureArmoryLocked: PlasmaWindoorArmoryLocked
-WindoorSecureEngineeringLocked: WindoorEngineeringLocked
-WindoorSecureAtmosphericsLocked: WindoorEngineeringLocked
-PlasmaWindoorSecureEngineeringLocked: PlasmaWindoorEngineeringLocked
-PlasmaWindoorSecureAtmosphericsLocked: PlasmaWindoorAtmosphericsLocked
-WindoorSecureServiceLocked: WindoorServiceLocked
-WindoorSecureKitchenLocked: WindoorKitchenLocked
-WindoorSecureBarLocked: WindoorBarLocked
-WindoorSecureJanitorLocked: WindoorJanitorLocked
-WindoorSecureSecurityLocked: WindoorSecurityLocked
-WindoorSecureBrigLocked: WindoorBrigLocked
-WindoorSecureDetectiveLocked: WindoorDetectiveLocked
-WindoorSecureSecurityLawyerLocked: WindoorSecurityLawyerLocked
-WindoorSecureCargoLocked: WindoorCargoLocked
-WindoorSecureSalvageLocked: WindoorSalvageLocked
-WindoorSecureChapelLocked: WindoorChapelLocked
-WindoorSecureMedicalLocked: WindoorMedicalLocked
-WindoorSecureChemistryLocked: WindoorChemistryLocked
-PlasmaWindoorSecureChemistryLocked: PlasmaWindoorChemistryLocked
-WindoorSecureCommandLocked: WindoorCommandLocked
-WindoorSecureCentralCommandLocked: WindoorCentralCommandLocked
-PlasmaWindoorSecureCentralCommandLocked: PlasmaWindoorCentralCommandLocked
-UraniumWindoorSecureCentralCommandLocked: UraniumWindoorCentralCommandLocked
-PlasmaWindoorSecureCommandLocked: PlasmaWindoorCommandLocked
-UraniumWindoorSecureEngineeringLocked: UraniumWindoorEngineeringLocked
-WindoorSecureExternalLocked: WindoorExternalLocked
-PlasmaWindoorSecureJanitorLocked: PlasmaWindoorJanitorLocked
-WindoorSecureResearchDirectorLocked: WindoorResearchDirectorLocked
-PlasmaWindoorSecureSecurityLocked: PlasmaWindoorSecurityLocked
-WindoorSecureScienceLocked: WindoorScienceLocked
-PlasmaWindoorSecureScienceLocked: PlasmaWindoorScienceLocked
-WindoorSecureHeadOfPersonnelLocked: WindoorHeadOfPersonnelLocked
-WindoorSecureSyndicateLocked: WindoorSyndicateLocked
-PlasmaWindoorSecureSyndicateLocked: PlasmaWindoorSyndicateLocked
-UraniumWindoorSecureSyndicateLocked: UraniumWindoorSyndicateLocked
-WindoorSecureNukeopLocked: WindoorNukeopLocked
-PlasmaWindoorSecureNukeopLocked: PlasmaWindoorNukeopLocked
-UraniumWindoorSecureNukeopLocked: UraniumWindoorNukeopLocked
-WindoorAssemblySecure: WindoorAssembly
-WindoorAssemblySecurePlasma: WindoorAssemblyPlasma
-WindoorAssemblySecureUranium: WindoorAssemblyUranium
+# WindoorSecure: Windoor
+# WindoorSecurePlasma: WindoorPlasma
+# WindoorSecureUranium: WindoorUranium
+# WindoorSecureArmoryLocked: WindoorArmoryLocked
+# PlasmaWindoorSecureArmoryLocked: PlasmaWindoorArmoryLocked
+# WindoorSecureEngineeringLocked: WindoorEngineeringLocked
+# WindoorSecureAtmosphericsLocked: WindoorEngineeringLocked
+# PlasmaWindoorSecureEngineeringLocked: PlasmaWindoorEngineeringLocked
+# PlasmaWindoorSecureAtmosphericsLocked: PlasmaWindoorAtmosphericsLocked
+# WindoorSecureServiceLocked: WindoorServiceLocked
+# WindoorSecureKitchenLocked: WindoorKitchenLocked
+# WindoorSecureBarLocked: WindoorBarLocked
+# WindoorSecureJanitorLocked: WindoorJanitorLocked
+# WindoorSecureSecurityLocked: WindoorSecurityLocked
+# WindoorSecureBrigLocked: WindoorBrigLocked
+# WindoorSecureDetectiveLocked: WindoorDetectiveLocked
+# WindoorSecureSecurityLawyerLocked: WindoorSecurityLawyerLocked
+# WindoorSecureCargoLocked: WindoorCargoLocked
+# WindoorSecureSalvageLocked: WindoorSalvageLocked
+# WindoorSecureChapelLocked: WindoorChapelLocked
+# WindoorSecureMedicalLocked: WindoorMedicalLocked
+# WindoorSecureChemistryLocked: WindoorChemistryLocked
+# PlasmaWindoorSecureChemistryLocked: PlasmaWindoorChemistryLocked
+# WindoorSecureCommandLocked: WindoorCommandLocked
+# WindoorSecureCentralCommandLocked: WindoorCentralCommandLocked
+# PlasmaWindoorSecureCentralCommandLocked: PlasmaWindoorCentralCommandLocked
+# UraniumWindoorSecureCentralCommandLocked: UraniumWindoorCentralCommandLocked
+# PlasmaWindoorSecureCommandLocked: PlasmaWindoorCommandLocked
+# UraniumWindoorSecureEngineeringLocked: UraniumWindoorEngineeringLocked
+# WindoorSecureExternalLocked: WindoorExternalLocked
+# PlasmaWindoorSecureJanitorLocked: PlasmaWindoorJanitorLocked
+# WindoorSecureResearchDirectorLocked: WindoorResearchDirectorLocked
+# PlasmaWindoorSecureSecurityLocked: PlasmaWindoorSecurityLocked
+# WindoorSecureScienceLocked: WindoorScienceLocked
+# PlasmaWindoorSecureScienceLocked: PlasmaWindoorScienceLocked
+# WindoorSecureHeadOfPersonnelLocked: WindoorHeadOfPersonnelLocked
+# WindoorSecureSyndicateLocked: WindoorSyndicateLocked
+# PlasmaWindoorSecureSyndicateLocked: PlasmaWindoorSyndicateLocked
+# UraniumWindoorSecureSyndicateLocked: UraniumWindoorSyndicateLocked
+# WindoorSecureNukeopLocked: WindoorNukeopLocked
+# PlasmaWindoorSecureNukeopLocked: PlasmaWindoorNukeopLocked
+# UraniumWindoorSecureNukeopLocked: UraniumWindoorNukeopLocked
+# WindoorAssemblySecure: WindoorAssembly
+# WindoorAssemblySecurePlasma: WindoorAssemblyPlasma
+# WindoorAssemblySecureUranium: WindoorAssemblyUranium
+# Arcane-Edit-End
 LightReplacer: LightReplacerFilled
 
 #2026-08-14
@@ -1527,11 +1560,5 @@ JanitorServiceLight: null
 #2026-08-31
 DrinkWaterJug: JugWater
 
-# Arcane-Edit-Start: We don't have this
 #2026-09-05
 AsimovCircuitBoard: CrewsimovCircuitBoard
-
-# 2026-09-24
-ClothingShoesTourist: ClothingShoesSandalsBlack
-ClothingShoesWizard: ClothingShoesSandalsBrown
-# Arcane-Edit-End
