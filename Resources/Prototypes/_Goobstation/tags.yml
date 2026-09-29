@@ -66,9 +66,6 @@
   id: Chair
 
 - type: Tag
-  id: ClothingBeltGeminiHoloProjector
-
-- type: Tag
   id: Clarke
 
 - type: Tag
@@ -277,9 +274,6 @@
 
 - type: Tag
   id: HonkmotherMaw
-
-- type: Tag
-  id: HydroponicsToolClippers
 
 - type: Tag
   id: IgnoreBindSoul

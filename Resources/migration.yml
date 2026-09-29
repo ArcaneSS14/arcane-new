@@ -164,12 +164,10 @@ WehMedipen: WehMedipenTiny
 # 2026-08-03
 BibleCommunistManifesto: Bible
 
-# Arcane-Edit-Start
 # 2026-08-17
-#ComputerNTRTasks: null
-#TaskBottle: ChemistryEmptyBottle01
-#TaskJug: Jug
-# Arcane-Edit-End
+ComputerNTRTasks: null
+TaskBottle: ChemistryEmptyBottle01
+TaskJug: Jug
 
 # 2026-08-24
 LightReplacerEmpty: LightReplacer
@@ -179,6 +177,15 @@ LightReplacerEmpty: LightReplacer
 # MachinePowerTransmissionLaser: null
 # MachinePowerTransmissionLaserCrate: null
 # MachinePowerTransmissionLaserFlatpack: null
+
+# 2026-09-16
+SpawnMobPlantbot: null
+
+# 2026-09-19
+PoweredFloorLight: null
+WallXenoMembrane: ResinMembrane
+WallXenoResin: WallResin
+WallXenoResinThick: WallResin
 # </Trauma>
 # Arcane-Edit-End
 
@@ -1562,3 +1569,7 @@ DrinkWaterJug: JugWater
 
 #2026-09-05
 AsimovCircuitBoard: CrewsimovCircuitBoard
+
+# 2026-09-24
+ClothingShoesTourist: ClothingShoesSandalsBlack
+ClothingShoesWizard: ClothingShoesSandalsBrown
