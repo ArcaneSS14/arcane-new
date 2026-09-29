@@ -40,6 +40,8 @@ This project does not accept low-effort or wholesale AI-generated contributions.
 
 Exceptions to this are simple tools like Rider's single-line completion feature.
 
+For advanced uses bear in mind we use Trauma engine, [QuietToolbox](https://github.com/Trauma-Station/QuietToolbox).
+
 ---
 <div align="center">
 
