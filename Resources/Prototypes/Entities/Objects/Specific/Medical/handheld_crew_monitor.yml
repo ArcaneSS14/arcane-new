@@ -1,9 +1,8 @@
 - type: entity
+  parent: [ BaseHandheldComputer, BaseGrandTheftContraband ]
+  id: BaseHandheldCrewMonitor # Trauma - Changed to Base to allow creation of child monitors without BaseHandheldComputer power components
+  categories: [ DoNotMap ] # CMO-only bud, don't add more.
   name: handheld crew monitor
-#  categories: [ DoNotMap ] # Goobstation
-  parent: [ BaseHandheldComputer, BaseMedicalContraband ] # Goobstation
-  # CMO-only bud, don't add more. # Goobstation - no lmao
-  id: HandheldCrewMonitor
   description: A hand-held crew monitor displaying the status of suit sensors.
   components:
   - type: Item
@@ -47,10 +46,9 @@
     price: 500
   - type: Tag
     tags:
-    - HandheldCrewMonitor # Goobstation - start
-    # - HighRiskItem
-  # - type: StealTarget
-  #   stealGroup: HandheldCrewMonitor # Goobstation - end
+    - HighRiskItem
+  - type: StealTarget
+    stealGroup: HandheldCrewMonitor
 
 - type: entity
   id: HandheldCrewMonitorEmpty

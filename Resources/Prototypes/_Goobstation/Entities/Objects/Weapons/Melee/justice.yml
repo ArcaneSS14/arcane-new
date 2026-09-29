@@ -121,12 +121,22 @@
           soundHit:
             path: /Audio/_Goobstation/Weapons/Effects/energy-short-sword-swing.ogg
         - type: StaminaDamageOnHit
-          damage: 25 # Arcane-Edit: 20 > 25
+          damage: 20
           overtime: 15 # Arcane-Edit: 10 > 15
-        # Arcane-Start
+          lightAttackOvertimeDamageMultiplier: 4
+          lightAttackDamageMultiplier: 4
         - type: DelayedKnockdownOnHit
           useDelay: stunbaton
-        # Arcane-End
+        - type: UseDelayBlockMelee
+          delays:
+          - stunbaton
+        - type: KnowledgeGrantOnWear
+          blocked:
+            MartialArtCorporateJudo: true
+        - type: UseDelay
+          delays:
+            stunbaton:
+              length: 2.5
         soundStateActivate:
           collection: sparks
           params:
