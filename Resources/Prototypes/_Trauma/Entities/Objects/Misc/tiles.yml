@@ -45,4 +45,4 @@
     stackType: FloorTilePlasticWhite
   - type: Construction
     graph: TilePlastic # Arcane
-    name: white plastic tile
+    node: white plastic tile

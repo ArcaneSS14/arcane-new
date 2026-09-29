@@ -6,7 +6,7 @@
     edges:
     - to: cratesecure
       steps:
-      - material: Plasteel
+      - material: Steel
         amount: 5
       - material: Cable
         amount: 2
@@ -26,7 +26,7 @@
         locked: false
       completed:
       - !type:SpawnPrototype
-        prototype: SheetPlasteel1
+        prototype: SheetSteel1
         amount: 5
       - !type:SpawnPrototype
         prototype: CableApcStack1
