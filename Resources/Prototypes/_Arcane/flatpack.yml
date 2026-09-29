@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  parent: BaseFlatpack
+  id: MachinePowerTransmissionLaserFlatpack
+  name: power transmision laser flatpack
+  description: A flatpack used for constructing a power transmission laser
+  components:
+  - type: Flatpack
+    entity: MachinePowerTransmissionLaser
