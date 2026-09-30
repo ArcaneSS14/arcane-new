@@ -280,6 +280,10 @@
     - DoorBumpOpener
     - AnomalyHost
     - IPCDrinkBlacklist # Don't let self antagging IPCs steal power from other ipcs.
+  # Arcane-Start
+  - type: Sprinter
+    sprintSpeedMultiplier: 1.1
+  # Arcane-End
 
 ## Base
 
