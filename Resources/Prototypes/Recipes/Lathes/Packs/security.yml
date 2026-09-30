@@ -94,8 +94,10 @@
   - ShuttleGunSvalinnMachineGunCircuitboard
 
 - type: latheRecipePack
-  parent:
-  - ScienceExplosives # sec gets everything for modular grenade making that sci does
+# Arcane-Edit-Start
+#  parent:
+#  - ScienceExplosives # sec gets everything for modular grenade making that sci does
+# Arcane-Edit-End
   id: SecurityExplosives
   recipes:
   - CableDetStack1
@@ -141,11 +143,11 @@
   id: SecurityWeapons
   recipes:
   - Truncheon
-  - WeaponAdvancedLaser
+#  - WeaponAdvancedLaser # Arcane-Edit
   - WeaponLaserCannon
   - WeaponLaserCarbine
   - WeaponXrayCannon
-  - WeaponTemperatureGun
+#  - WeaponTemperatureGun # Arcane-Edit
 
 - type: latheRecipePack
   id: SecurityDisablers
