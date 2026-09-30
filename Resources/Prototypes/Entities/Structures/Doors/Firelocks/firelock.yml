@@ -51,7 +51,7 @@
       shader: unshaded
       sprite: Structures/Doors/Airlocks/Effects/airlock-effects-firelock.rsi
       map: ["enum.DoorVisualLayers.BaseUnlit"]
-      visible: false
+      visible: true # Arcane-Edit: false > true
     - state: welded
       sprite: Structures/Doors/Airlocks/Effects/airlock-effects-firelock.rsi
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -223,7 +223,7 @@
         shader: unshaded
         sprite: Structures/Doors/Misc/edge_door_hazard.rsi
         map: [ "enum.DoorVisualLayers.BaseUnlit" ]
-        visible: false
+        visible: true # Arcane-Edit: false > true
       - state: welded
         sprite: Structures/Doors/Misc/edge_door_hazard.rsi
         map: [ "enum.WeldableLayers.BaseWelded" ]
