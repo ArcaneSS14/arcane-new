@@ -233,6 +233,10 @@ public abstract partial class GameTest
             // if the test threw exceptions. But that'd require fixing all of them to do cleanup properly on failure.
             //
             // So not yet.
+            TestContext.Error.WriteLine(
+                $"Before teardown: {TestContext.CurrentContext.Result.Outcome}; " +
+                $"{TestContext.CurrentContext.Result.Message}");
+
             if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
             {
                 _pairDestroyed = true; // Blow it up, we failed and it might be screwed.
@@ -247,10 +251,10 @@ public abstract partial class GameTest
             // And other teardown logic will go here. Eventually.
 
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             _pairDestroyed = true;
-            Assert.Fail();
+            TestContext.Error.WriteLine(exception.ToString());
             throw;
         }
         finally
