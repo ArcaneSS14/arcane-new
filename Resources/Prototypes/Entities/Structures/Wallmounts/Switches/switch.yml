@@ -21,13 +21,13 @@
   - type: Appearance
   - type: GenericVisualizer
     visuals:
-      enum.SignalSwitchVisuals.State:
+      enum.SwitchVisuals.Visuals:
         shaded:
-          On: { state: on }
-          Off: { state: off }
+          True: { state: on }
+          False: { state: off }
         unshaded:
-          On: { state: on-unshaded }
-          Off: { state: off-unshaded }
+          True: { state: on-unshaded }
+          False: { state: off-unshaded }
   - type: SignalSwitch
   - type: UseDelay
     delay: 0.5 # prevent light-toggling auto-clickers.
@@ -197,7 +197,7 @@
   - type: Sprite
     offset: 0, -0.25
     drawdepth: WallMountedItems
-    sprite: Structures/Wallmounts/locked_switch.rsi
+    sprite: Structures/Wallmounts/switch-lockable.rsi
     layers:
     - state: base
     - state: button
@@ -486,7 +486,7 @@
   - type: Sprite
     offset: 0, -0.25
     drawdepth: SmallObjects
-    sprite: Structures/Wallmounts/switch_frame.rsi
+    sprite: Structures/Wallmounts/switch-frame.rsi
     state: grey
   - type: Rotatable
   - type: Transform

@@ -12,11 +12,11 @@
             "directions": 4
         },
         {
-            "name": "caution-security",
+            "name": "caution_security",
             "directions": 4
         },
         {
-            "name": "white",
+            "name": "exit",
             "directions": 4
         },
         {
