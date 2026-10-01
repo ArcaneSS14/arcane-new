@@ -1495,7 +1495,7 @@ PinionAirlockAssemblyGlass: AirlockAssemblyGlass
 ClockworkGirder: Girder
 # Arcane-Edit-Start
 # BaseAsteroidRock: AsteroidRock
-# ButtonFrameExit: ButtonFrameWhite
+ButtonFrameExit: ButtonFrameWhite
 
 # 2026-08-12
 # WindoorSecure: Windoor
