@@ -1,0 +1,54 @@
+- type: tile
+  id: FloorGrayConcrete
+  parent: BaseStationTile
+  name: tiles-gray-concrete-tile
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/grayconcrete.png
+  variants: 4
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemGrayConcrete
+  tileRipResistance: 300
+
+- type: tile
+  id: FloorGrayConcreteSmooth
+  parent: BaseStationTile
+  name: tiles-gray-concrete-smooth
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/grayconcrete_smooth.png
+  variants: 4
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemGrayConcreteSmooth
+  tileRipResistance: 300
+
+- type: tile
+  id: FloorOldConcrete
+  parent: BaseStationTile
+  name: tiles-old-concrete-tile
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/oldconcrete.png
+  variants: 4
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemOldConcrete
+  tileRipResistance: 300
+
+- type: tile
+  id: FloorOldConcreteSmooth
+  parent: BaseStationTile
+  name: tiles-old-concrete-smooth
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/oldconcrete_smooth.png
+  variants: 4
+  footstepSounds:
+    collection: FootstepTile
+  itemDrop: FloorTileItemOldConcreteSmooth
+  tileRipResistance: 300
+
+- type: tile
+  id: FloorAsphalt
+  name: tiles-asphalt
+  sprite: /Textures/_Arcane/Tiles/Planet/Concrete/asphalt.png
+  variants: 10
+  baseTurf: FloorDirt
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepTile
+  heatCapacity: 10000

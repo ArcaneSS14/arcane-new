@@ -1,0 +1,5 @@
+- type: tile
+  id: PlatingBrass
+  parent: BasePlating
+  name: tiles-brass-plating
+  sprite: /Textures/_Arcane/Tiles/Misc/Clockwork/clockwork_floor.png

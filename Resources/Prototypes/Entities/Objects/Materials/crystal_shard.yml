@@ -15,7 +15,7 @@
     doAfterDuration: 4.0
   - type: Sprite
     layers:
-      - sprite: _Trauma/Objects/Materials/Shards/crystal.rsi # Trauma
+      - sprite: Objects/Materials/Shards/crystal-shard.rsi # Arcane-Edit
         state: shard1
         map: [ "enum.DamageStateVisualLayers.Base" ]
   - type: RandomSprite

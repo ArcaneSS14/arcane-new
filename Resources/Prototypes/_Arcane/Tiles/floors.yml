@@ -1,0 +1,36 @@
+- type: tile
+  id: FloorArcadeBlue2
+  parent: BaseStationTile
+  name: tiles-blue-arcade-floor
+  sprite: /Textures/_Arcane/Tiles/arcadeblue2.png
+  footstepSounds:
+    collection: FootstepCarpet
+  barestepSounds:
+    collection: BarestepCarpet
+  friction: 1.25
+  itemDrop: FloorTileItemArcadeBlue2
+  tileRipResistance: 75
+
+- type: tile
+  id: FloorEighties
+  parent: BaseStationTile
+  name: tiles-eighties-floor
+  sprite: /Textures/_Arcane/Tiles/eighties.png
+  footstepSounds:
+    collection: FootstepCarpet
+  barestepSounds:
+    collection: BarestepCarpet
+  friction: 1.25
+  itemDrop: FloorTileItemEighties
+  tileRipResistance: 75
+
+- type: tile
+  id: FloorCaveDrought
+  name: tiles-cave-drought
+  sprite: /Textures/_Arcane/Tiles/cavedrought.png
+  variants: 8
+  baseTurf: Space
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepAsteroid
+  heatCapacity: 10000

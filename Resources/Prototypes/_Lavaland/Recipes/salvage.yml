@@ -1,37 +1,39 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-- type: latheRecipe
-  id: PKAUpgradeDamage
-  result: PKAUpgradeDamage # Probably the strongest so might as well keep it under control.
-  categories:
-  - Weapons
-  completetime: 10
-  materials:
-    Steel: 4500
-    Gold: 2500
-    Silver: 2500
-
-- type: latheRecipe
-  id: PKAUpgradeRange
-  result: PKAUpgradeRange
-  categories:
-  - Weapons
-  completetime: 10
-  materials:
-    Steel: 1500
-    Gold: 500
-    Silver: 500
-
-- type: latheRecipe
-  id: PKAUpgradeFireRate
-  result: PKAUpgradeFireRate
-  categories:
-  - Weapons
-  completetime: 10
-  materials:
-    Steel: 1500
-    Gold: 500
-    Silver: 500
+# Arcane-Edit-Start: To WizDen
+#- type: latheRecipe
+#  id: PKAUpgradeDamage
+#  result: PKAUpgradeDamage # Probably the strongest so might as well keep it under control.
+#  categories:
+#  - Weapons
+#  completetime: 10
+#  materials:
+#    Steel: 4500
+#    Gold: 2500
+#    Silver: 2500
+#
+#- type: latheRecipe
+#  id: PKAUpgradeRange
+#  result: PKAUpgradeRange
+#  categories:
+#  - Weapons
+#  completetime: 10
+#  materials:
+#    Steel: 1500
+#    Gold: 500
+#    Silver: 500
+#
+#- type: latheRecipe
+#  id: PKAUpgradeFireRate
+#  result: PKAUpgradeFireRate
+#  categories:
+#  - Weapons
+#  completetime: 10
+#  materials:
+#    Steel: 1500
+#    Gold: 500
+#    Silver: 500
+# Arcane-Edit-End
 
 - type: latheRecipe
   id: PKAUpgradeSpace

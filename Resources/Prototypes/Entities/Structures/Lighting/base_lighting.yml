@@ -22,6 +22,7 @@
   - type: Clickable
   - type: InteractionOutline
   - type: Sprite
+    offset: 0, 1
     drawdepth: WallMountedItems
     layers:
     - map: ["enum.PoweredLightLayers.Base"]
@@ -34,7 +35,7 @@
     energy: 1.5 # Arcane-Edit: 0.8 > 1.5
     radius: 6 # Arcane-Edit: 10 > 6
     softness: 1
-    offset: "0, 0.495"
+#    offset: "0, 0.25"
   - type: Damageable
     damageModifierSet: Metallic
   - type: Injurable
@@ -317,7 +318,7 @@
     enabled: false
   - type: PointLight
     enabled: false
-    offset: "0, 0.495"
+#    offset: "0, 0.25"
   - type: ContainerContainer
     containers:
       light_bulb: !type:ContainerSlot
@@ -461,6 +462,7 @@
       color: "#7CFC00"
       shader: "unshaded"
       visible: false
+  - type: Appearance
   - type: Construction
     graph: LightFixture
     node: emergencyLight

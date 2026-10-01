@@ -1,0 +1,55 @@
+- type: entity
+  name: gray concrete tile
+  parent: FloorTileItemConcrete
+  id: FloorTileItemGrayConcrete
+  components:
+  - type: Sprite
+    state: grayconcrete
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorGrayConcrete
+  - type: Stack
+    stackType: FloorTileGrayConcrete
+
+- type: entity
+  name: gray concrete smooth
+  parent: FloorTileItemGrayConcrete
+  id: FloorTileItemGrayConcreteSmooth
+  components:
+  - type: Sprite
+    state: grayconcrete-smooth
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorGrayConcreteSmooth
+  - type: Stack
+    stackType: FloorTileGrayConcreteSmooth
+
+- type: entity
+  name: old concrete tile
+  parent: FloorTileItemConcrete
+  id: FloorTileItemOldConcrete
+  components:
+  - type: Sprite
+    state: oldconcrete
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorOldConcrete
+  - type: Stack
+    stackType: FloorTileOldConcrete
+
+- type: entity
+  name: old concrete smooth
+  parent: FloorTileItemOldConcrete
+  id: FloorTileItemOldConcreteSmooth
+  components:
+  - type: Sprite
+    state: oldconcrete-smooth
+  - type: FloorTile
+    outputs:
+    - Plating
+    - FloorOldConcreteSmooth
+  - type: Stack
+    stackType: FloorTileOldConcreteSmooth

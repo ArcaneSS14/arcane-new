@@ -23,6 +23,14 @@
               amount: 1
               doAfter: 2
 
+        # Arcane-Start
+        - to: windowClockworkDirectional
+          steps:
+          - material: ClockworkGlass
+            amount: 1
+            doAfter: 3
+        # Arcane-End
+
         - to: plasmaReinforcedWindowDirectional
           steps:
             - material: ReinforcedPlasmaGlass
@@ -37,12 +45,6 @@
         - to: uraniumReinforcedWindowDirectional
           steps:
             - material: ReinforcedUraniumGlass
-              amount: 1
-              doAfter: 3
-
-        - to: windowClockworkDirectional
-          steps:
-            - material: ClockworkGlass
               amount: 1
               doAfter: 3
 
@@ -99,24 +101,26 @@
             - tool: Anchoring
               doAfter: 3
 
+    # Arcane-Start
     - node: windowClockworkDirectional
       entity: WindowClockworkDirectional
       edges:
-        - to: start
-          completed:
-            - !type:GivePrototype
-              prototype: SheetClockworkGlass1
-              amount: 1
-            - !type:DeleteEntity {}
-          steps:
-            - tool: Screwing
-              doAfter: 2
-            - tool: Prying
-              doAfter: 3
-            - tool: Screwing
-              doAfter: 2
-            - tool: Anchoring
-              doAfter: 3
+      - to: start
+        completed:
+        - !type:GivePrototype
+          prototype: SheetClockworkGlass1
+          amount: 1
+        - !type:DeleteEntity {}
+        steps:
+        - tool: Screwing
+          doAfter: 2
+        - tool: Prying
+          doAfter: 3
+        - tool: Screwing
+          doAfter: 2
+        - tool: Anchoring
+          doAfter: 3
+    # Arcane-End
 
     - node: plasmaReinforcedWindowDirectional
       entity: PlasmaReinforcedWindowDirectional

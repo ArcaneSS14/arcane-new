@@ -54,6 +54,13 @@
 
 - type: construction
   abstract: true
+  parent: BaseAtmos
+  id: BaseGasBinaryStackable
+  graph: GasBinary
+  placementMode: AlignAtmosPipeLayers
+
+- type: construction
+  abstract: true
   parent: BaseGasDevice
   id: BaseGasTrinary
   graph: GasTrinary
@@ -351,13 +358,13 @@
   targetNode: dualportventpump
 
 - type: construction
-  parent: BaseGasBinary
+  parent: BaseGasBinaryStackable
   id: HeatExchanger
   targetNode: radiator
   placementMode: SnapgridCenter
 
 - type: construction
-  parent: BaseGasBinary
+  parent: BaseGasBinaryStackable
   id: HeatExchangerBend
   name: construction-recipe-heat-exchanger-bend
   targetNode: bendradiator

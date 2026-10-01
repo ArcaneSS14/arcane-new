@@ -18,24 +18,29 @@
   parent: FloorWood
   id: FloorWoodBlack
   name: tiles-wood-black
+  sprite: /Textures/_Corvax/Tiles/wood_black.png
   itemDrop: FloorTileItemWoodBlack
 
 - type: tile
   parent: FloorWood
   id: FloorWoodLargeBlack
   name: tiles-wood-large-black
+  variants: 4 # Arcane
+  sprite: /Textures/_Corvax/Tiles/wood_large_black.png
   itemDrop: FloorTileItemWoodLargeBlack
 
 - type: tile
   parent: FloorWood
   id: FloorWoodParquetBlack
   name: tiles-wood-parquet-black
+  sprite: /Textures/_Corvax/Tiles/wood_parquet_black.png
   itemDrop: FloorTileItemWoodParquetBlack
 
 - type: tile
   parent: FloorWood
   id: FloorWoodChessBlack
   name: tiles-wood-chess-black
+  sprite: /Textures/_Corvax/Tiles/wood_chess_black.png
   itemDrop: FloorTileItemWoodChessBlack
 
 - type: tile
@@ -50,6 +55,7 @@
   id: FloorWoodLargeDark
   name: tiles-wood-large-dark
   sprite: /Textures/_Corvax/Tiles/wood_large_dark.png
+  variants: 4 # Arcane
   itemDrop: FloorTileItemWoodLargeDark
 
 - type: tile
@@ -78,6 +84,7 @@
   id: FloorWoodLargeLight
   name: tiles-wood-large-light
   sprite: /Textures/_Corvax/Tiles/wood_large_light.png
+  variants: 4 # Arcane
   itemDrop: FloorTileItemWoodLargeLight
 
 - type: tile
@@ -105,6 +112,8 @@
   parent: FloorWood
   id: FloorWoodLargeRed
   name: tiles-wood-large-red
+  variants: 4 # Arcane
+  sprite: /Textures/_Corvax/Tiles/wood_large_red.png
   itemDrop: FloorTileItemWoodLargeRed
 
 - type: tile

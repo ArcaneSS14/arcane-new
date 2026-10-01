@@ -1,0 +1,147 @@
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemDirty
+  result: FloorTileItemDirty
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemHydro
+  result: FloorTileItemHydro
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemMono
+  result: FloorTileItemMono
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemIronsandConcrete
+  result: FloorTileItemIronsandConcrete
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemIronsandConcreteSmooth
+  result: FloorTileItemIronsandConcreteSmooth
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemSteelDiagonal
+  result: FloorTileItemSteelDiagonal
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemSteelOffset
+  result: FloorTileItemSteelOffset
+
+- type: latheRecipe
+  parent: BaseSteelTileRecipe
+  id: FloorTileItemSteelDiagonalMini
+  result: FloorTileItemSteelDiagonalMini
+
+- type: latheRecipe
+  parent: BaseWhiteTileRecipe
+  id: FloorTileItemWhiteDiagonal
+  result: FloorTileItemWhiteDiagonal
+
+- type: latheRecipe
+  parent: BaseWhiteTileRecipe
+  id: FloorTileItemWhiteOffset
+  result: FloorTileItemWhiteOffset
+
+- type: latheRecipe
+  parent: BaseWhiteTileRecipe
+  id: FloorTileItemWhiteDiagonalMini
+  result: FloorTileItemWhiteDiagonalMini
+
+- type: latheRecipe
+  parent: BaseDarkTileRecipe
+  id: FloorTileItemDarkDiagonal
+  result: FloorTileItemDarkDiagonal
+
+- type: latheRecipe
+  parent: BaseDarkTileRecipe
+  id: FloorTileItemDarkOffset
+  result: FloorTileItemDarkOffset
+
+- type: latheRecipe
+  parent: BaseDarkTileRecipe
+  id: FloorTileItemDarkDiagonalMini
+  result: FloorTileItemDarkDiagonalMini
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemElevatorShaft
+  result: FloorTileItemElevatorShaft
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemRockVault
+  result: FloorTileItemRockVault
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemMining
+  result: FloorTileItemMining
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemMiningDark
+  result: FloorTileItemMiningDark
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemMiningLight
+  result: FloorTileItemMiningLight
+
+- type: latheRecipe
+  parent: BaseIndustrialTileRecipe
+  id: FloorTileItemShowroom
+  result: FloorTileItemShowroom
+
+- type: latheRecipe
+  parent: BaseCarpetTileRecipe
+  id: FloorTileItemArcadeBlue2
+  result: FloorTileItemArcadeBlue2
+
+- type: latheRecipe
+  parent: BaseCarpetTileRecipe
+  id: FloorTileItemEighties
+  result: FloorTileItemEighties
+
+- type: latheRecipe
+  parent: BaseMarbleTileRecipe
+  id: FloorTileItemPlasmaMarble
+  result: FloorTileItemPlasmaMarble
+  materials:
+    Steel: 25
+    Glass: 25
+    Plasma: 25
+
+- type: latheRecipe
+  parent: BaseMarbleTileRecipe
+  id: FloorTileItemUraniumMarble
+  result: FloorTileItemUraniumMarble
+  materials:
+    Steel: 25
+    Glass: 25
+    Uranium: 25
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemGrayConcrete
+  result: FloorTileItemGrayConcrete
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemGrayConcreteSmooth
+  result: FloorTileItemGrayConcreteSmooth
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemOldConcrete
+  result: FloorTileItemOldConcrete
+
+- type: latheRecipe
+  parent: BaseConcreteTileRecipe
+  id: FloorTileItemOldConcreteSmooth
+  result: FloorTileItemOldConcreteSmooth

@@ -11,14 +11,14 @@
   parent: BaseMediumStack
   id: WoodPlank
   name: stack-wood-plank
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/materials.rsi, state: wood } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: wood }
   spawn: MaterialWoodPlank1
 
 - type: stack
   parent: BaseMediumStack
   id: Cardboard
   name: stack-cardboard
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/materials.rsi, state: cardboard } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cardboard }
   spawn: MaterialCardboard1
 
 # Stacks which come from or might come from a creature
@@ -27,33 +27,33 @@
   parent: BaseLargeStack
   id: WebSilk
   name: stack-silk
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/silk.rsi, state: icon } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/silk.rsi, state: icon }
   spawn: MaterialWebSilk1
 
 - type: stack
   parent: BaseMediumStack
   id: Bones
   name: stack-bones
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/materials.rsi, state: bones } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: bones }
   spawn: MaterialBones1
 
 - type: stack
   parent: BaseMediumStack
   id: SpaceCarpTooth
   name: stack-space-carp-tooth
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/Mob/carptooth.rsi, state: tooth } # trauma
+  icon: { sprite: /Textures/Objects/Materials/Mob/carptooth.rsi, state: tooth }
   spawn: MaterialToothSpaceCarp1
 
 - type: stack
   parent: BaseMediumStack
   id: SharkMinnowTooth
   name: stack-sharkminnow-tooth
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/Mob/sharktooth.rsi, state: tooth } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/Mob/sharktooth.rsi, state: tooth }
   spawn: MaterialToothSharkminnow1
 
 - type: stack
   parent: BaseMediumStack
   id: GoliathHide
   name: stack-goliath-hide
-  icon: { sprite: /Textures/_Trauma/Objects/Materials/hide.rsi, state: goliath_hide } # Trauma
+  icon: { sprite: /Textures/Objects/Materials/hide.rsi, state: goliath_hide }
   spawn: MaterialGoliathHide1

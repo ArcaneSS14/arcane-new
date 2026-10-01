@@ -1639,7 +1639,7 @@
           tags:
           - CableCoil
     - hand:
-        emptyRepresentative: FloorTileItemXenoborg # Trauma - fat chud
+        emptyRepresentative: FloorTileItemExoBorg # Trauma - fat chud # Arcane-Edit
         emptyLabel: borg-slot-tiles-empty
         whitelist:
           components:

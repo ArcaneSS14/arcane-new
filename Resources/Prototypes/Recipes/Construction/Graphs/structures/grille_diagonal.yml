@@ -13,16 +13,17 @@
             - material: MetalRod
               amount: 2
               doAfter: 1
-
+        # Arcane-Start
         - to: clockworkGrilleDiagonal
           completed:
-            - !type:AdminLog
-              message: "Construction"
-              impact: High
+          - !type:AdminLog
+            message: "Construction"
+            impact: High
           steps:
-            - material: MetalRod
-              amount: 2
-              doAfter: 1
+          - material: MetalRod
+            amount: 2
+            doAfter: 1
+        # Arcane-End
 
     - node: grilleDiagonal
       entity: GrilleDiagonal
@@ -39,17 +40,19 @@
             - tool: Cutting
               doAfter: 0.25
 
+    # Arcane-Start
     - node: clockworkGrilleDiagonal
       entity: ClockworkGrilleDiagonal
       edges:
-        - to: start
-          completed:
-            - !type:AdminLog
-              message: "A grille was cut"
-            - !type:SpawnPrototype
-              prototype: PartRodMetal1
-              amount: 2
-            - !type:DeleteEntity
-          steps:
-            - tool: Cutting
-              doAfter: 0.25
+      - to: start
+        completed:
+        - !type:AdminLog
+          message: "A grille was cut"
+        - !type:SpawnPrototype
+          prototype: PartRodMetal1
+          amount: 2
+        - !type:DeleteEntity {}
+        steps:
+        - tool: Cutting
+          doAfter: 0.25
+    # Arcane-End

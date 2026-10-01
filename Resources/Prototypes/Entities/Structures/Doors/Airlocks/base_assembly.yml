@@ -1,5 +1,6 @@
 #Base
 - type: entity
+  parent: StructureHealthDoorWeak
   id: AirlockAssembly
   name: airlock assembly
   description: It opens, it closes, and maybe crushes you.
@@ -7,7 +8,7 @@
   - type: Clickable
   - type: InteractionOutline
   - type: Sprite
-    sprite: Structures/Doors/Airlocks/Standard/basic.rsi
+    sprite: Structures/Doors/Airlocks/Standard/airlock-base.rsi
     state: "assembly"
   - type: Physics
   - type: Fixtures
@@ -29,9 +30,7 @@
     anchored: true
     noRot: true
   - type: Damageable
-    damageModifierSet: Metallic # Trauma - Was StructuralMetallicStrong
-  - type: Injurable
-    damageContainer: StructuralInorganic
+    damageModifierSet: SteelStaticMod
   - type: RCDDeconstructable
     cost: 6
     delay: 8
@@ -40,28 +39,18 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 300
+        damage: 100
       behaviors:
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-    # <Trauma>
-    - trigger: !type:DamageTrigger
-        damage: 50
-      behaviors:
-      - !type:SpawnEntitiesBehavior
+      - !type:SpawnEntitiesBehavior # Arcane
         spawn:
           SheetSteel1:
             min: 1
             max: 2
       - !type:PlaySoundBehavior
         sound:
-          collection: MetalSlam
-      - !type:DoActsBehavior
-        acts: ["Destruction"]
-  - type: Tag
-    tags:
-    - AirlockAssembly
-    # </Trauma>
+          collection: MetalBreak
+          params:
+            volume: -4
   - type: Construction
     graph: Airlock
     node: assembly

@@ -29,7 +29,7 @@
   - MagazinePistolPractice
   - SpeedLoaderMagnumPractice
   - MagazinePistolSubMachineGunPractice
-  # - WeaponFlareGunSecurity # Trauma
+  - WeaponFlareGunSecurity
 
 # Shared between secfab and emagged autolathe
 - type: latheRecipePack
@@ -94,6 +94,10 @@
   - ShuttleGunSvalinnMachineGunCircuitboard
 
 - type: latheRecipePack
+# Arcane-Edit-Start
+#  parent:
+#  - ScienceExplosives # sec gets everything for modular grenade making that sci does
+# Arcane-Edit-End
   id: SecurityExplosives
   recipes:
   - CableDetStack1
@@ -139,10 +143,11 @@
   id: SecurityWeapons
   recipes:
   - Truncheon
-  # - WeaponAdvancedLaser # Trauma, No longer has a niche
+#  - WeaponAdvancedLaser # Arcane-Edit
   - WeaponLaserCannon
   - WeaponLaserCarbine
   - WeaponXrayCannon
+#  - WeaponTemperatureGun # Arcane-Edit
 
 - type: latheRecipePack
   id: SecurityDisablers

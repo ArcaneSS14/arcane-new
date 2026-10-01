@@ -3,7 +3,7 @@
 - type: weightedRandomEntity
   id: WizardWallDoor
   weights:
-    MetalDoor: 1
+#    MetalDoor: 1 # Arcane-Edit
     WoodDoor: 1
     PlasmaDoor: 1
     GoldDoor: 1

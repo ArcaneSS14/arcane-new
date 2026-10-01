@@ -50,6 +50,11 @@
   - WeaponPistolCHIMP
   - WeaponForceGun
   - WeaponProtoKineticAccelerator
+  # Arcane-Edit-Start: Lavaland change
+#  - PKAUpgradeDamage
+#  - PKAUpgradeRange
+#  - PKAUpgradeFireRate
+  # Arcane-Edit-End
   - WeaponTetherGun
   - WeaponGauntletGorilla
 

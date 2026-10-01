@@ -3,7 +3,7 @@
 - type: biomeMarkerLayer
   id: OreBSCrystal
   entityMask:
-    AsteroidRock: MeteorRockBSCrystal
+    AsteroidRock: AsteroidRockBSCrystal
     WallRock: WallRockBSCrystal
     WallRockBasalt: WallRockBasaltBSCrystal
     WallRockChromite: WallRockChromiteBSCrystal

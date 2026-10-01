@@ -46,8 +46,10 @@
     - FloorAstroSnow
     - FloorAstroAsteroidSand
     - FloorFlesh
-    - FloorAsteroidSandUnvariantized
-    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-Start
+#    - FloorAsteroidSandUnvariantized
+#    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-End
     - FloorCave
     - FloorAsteroidIronsand
     - FloorAsteroidTile
@@ -128,8 +130,10 @@
     - FloorAstroSnow
     - FloorAstroAsteroidSand
     - FloorFlesh
-    - FloorAsteroidSandUnvariantized
-    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-Start
+#    - FloorAsteroidSandUnvariantized
+#    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-End
     - FloorCave
     - FloorAsteroidIronsand
     - FloorAsteroidTile

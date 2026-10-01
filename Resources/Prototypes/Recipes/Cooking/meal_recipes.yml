@@ -2329,6 +2329,7 @@
   name: beef taco recipe
   result: FoodTacoBeef
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodMeatCutlet: 1
@@ -2339,6 +2340,7 @@
   name: chicken taco recipe
   result: FoodTacoChicken
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodMeatChickenCutlet: 1
@@ -2349,6 +2351,7 @@
   name: fish taco recipe
   result: FoodTacoFish
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodMeatFish: 1
@@ -2361,6 +2364,7 @@
   name: rat taco recipe
   result: FoodTacoRat
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodCheeseSlice: 1
@@ -2371,6 +2375,7 @@
   name: beef taco supreme recipe
   result: FoodTacoBeefSupreme
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodCheeseSlice: 1
@@ -2384,6 +2389,7 @@
   name: beef taco supreme recipe
   result: FoodTacoChickenSupreme
   time: 10
+  group: Savory
   solids:
     FoodTacoShell: 1
     FoodCheeseSlice: 1

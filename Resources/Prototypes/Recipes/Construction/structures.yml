@@ -78,12 +78,6 @@
 
 - type: construction
   parent: Girder
-  id: ClockworkGirder
-  graph: ClockworkGirder
-  targetNode: clockGirder
-
-- type: construction
-  parent: Girder
   id: Wall
   targetNode: wall
 
@@ -91,11 +85,6 @@
   parent: Girder
   id: ReinforcedWall
   targetNode: reinforcedWall
-
-- type: construction
-  parent: ClockworkGirder
-  id: WallClock
-  targetNode: clockworkWall
 
 - type: construction
   parent: Girder
@@ -112,11 +101,6 @@
   parent: Girder
   id: SilverWall
   targetNode: silverWall
-
-- type: construction
-  parent: Girder
-  id: PlasticWall
-  targetNode: plasticWall
 
 - type: construction
   parent: Girder
@@ -139,16 +123,6 @@
   name: construction-recipe-diagonal-shuttle-wall
   targetNode: diagonalshuttleWall
   canRotate: true
-
-- type: construction
-  parent: Girder
-  id: ClownWall
-  targetNode: bananiumWall
-  # <Trauma>
-  theory:
-    WallsKnowledge: 0
-    BananiumKnowledge: 0
-  # </Trauma>
 
 - type: construction
   parent: Girder
@@ -188,21 +162,10 @@
 
 - type: construction
   parent: Grille
-  id: ClockGrille
-  graph: ClockGrille
-  targetNode: clockGrille
-
-- type: construction
-  parent: Grille
   id: GrilleDiagonal
   graph: GrilleDiagonal
   targetNode: grilleDiagonal
   canRotate: true
-
-- type: construction
-  parent: GrilleDiagonal
-  id: ClockworkGrilleDiagonal
-  targetNode: clockworkGrilleDiagonal
 # endregion Grilles
 
 # region Windows
@@ -232,17 +195,6 @@
   parent: BaseWindow
   id: TintedWindow
   targetNode: tintedWindow
-
-- type: construction
-  parent: BaseWindow
-  id: ClockworkWindow
-  targetNode: clockworkWindow
-
-- type: construction
-  parent: BaseWindowDiagonal
-  id: ClockworkWindowDiagonal
-  name: construction-recipe-clockwork-window-diagonal
-  targetNode: clockworkWindowDiagonal
 
 - type: construction
   parent: BaseWindow
@@ -301,14 +253,43 @@
   canRotate: true
 
 - type: construction
+  id: WindowDirectionalCorner
+  graph: WindowDirectionalCorner
+  startNode: start
+  targetNode: windowDirectionalCorner
+  category: construction-category-structures
+  canBuildInImpassable: true
+  conditions:
+    - !type:EmptyOrWindowValidInTile
+    - !type:NoWindowsInTile
+  objectType: Structure
+  placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
+
+- type: construction
   parent: WindowDirectional
   id: WindowReinforcedDirectional
   targetNode: windowReinforcedDirectional
 
 - type: construction
-  parent: WindowDirectional
-  id: WindowClockworkDirectional
-  targetNode: windowClockworkDirectional
+  id: WindowReinforcedDirectionalCorner
+  graph: WindowDirectionalCorner
+  startNode: start
+  targetNode: windowReinforcedDirectionalCorner
+  category: construction-category-structures
+  canBuildInImpassable: true
+  conditions:
+    - !type:EmptyOrWindowValidInTile
+    - !type:NoWindowsInTile
+  objectType: Structure
+  placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   parent: WindowDirectional
@@ -316,14 +297,48 @@
   targetNode: plasmaWindowDirectional
 
 - type: construction
+  id: PlasmaWindowDirectionalCorner
+  graph: WindowDirectionalCorner
+  startNode: start
+  targetNode: plasmaWindowDirectionalCorner
+  category: construction-category-structures
+  canBuildInImpassable: true
+  conditions:
+    - !type:EmptyOrWindowValidInTile
+    - !type:NoWindowsInTile
+  objectType: Structure
+  placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
+
+- type: construction
   parent: WindowDirectional
   id: PlasmaReinforcedWindowDirectional
   targetNode: plasmaReinforcedWindowDirectional
 # endregion Windows
 
+- type: construction
+  id: PlasmaReinforcedWindowDirectionalCorner
+  graph: WindowDirectionalCorner
+  startNode: start
+  targetNode: plasmaReinforcedWindowDirectionalCorner
+  category: construction-category-structures
+  canBuildInImpassable: true
+  conditions:
+    - !type:EmptyOrWindowValidInTile
+    - !type:NoWindowsInTile
+  objectType: Structure
+  placementMode: SnapgridCenter
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
+
 # region Firelocks
 - type: construction
-  parent: BaseStructureFullTile
+  parent: BaseStructureFullTileDirectional
   id: Firelock
   graph: Firelock
   targetNode: Firelock
@@ -344,7 +359,6 @@
   id: FirelockEdge
   name: construction-recipe-firelock-edge
   targetNode: FirelockEdge
-  canRotate: true
 # endregion Firelocks
 
 # region Shutters
@@ -390,23 +404,6 @@
   #  - Plating
   theory:
     FurnitureKnowledge: 0
-  useQuality: false
-  # </Trauma>
-
-- type: construction
-  parent: BaseStructureFullTile
-  id: FloorBananium
-  graph: FloorBananium
-  targetNode: BananiumFloor
-  conditions:
-  - !type:TileNotBlocked
-    failIfSpace: false
-  - !type:TileType
-    targets:
-    - Plating
-  # <Trauma>
-  theory:
-    BananiumKnowledge: 0
   useQuality: false
   # </Trauma>
 # endregion Floors
@@ -571,7 +568,7 @@
 
 # region Airlocks
 - type: construction
-  parent: BaseStructureFullTile
+  parent: BaseStructureFullTileDirectional
   id: Airlock
   graph: Airlock
   targetNode: airlock
@@ -588,29 +585,9 @@
   targetNode: glassAirlock
 
 - type: construction
-  parent: BaseStructureFullTile
-  id: PinionAirlock
-  name: construction-recipe-pinion-airlock
-  graph: PinionAirlock
-  targetNode: airlock
-  # <Trauma>
-  theory:
-    AirlocksKnowledge: 0
-  practical:
-    MechanicsKnowledge: 2
-  # </Trauma>
-
-- type: construction
-  parent: PinionAirlock
-  id: PinionAirlockGlass
-  name: construction-recipe-pinion-airlock-glass
-  targetNode: glassAirlock
-
-- type: construction
-  parent: BaseStructureFullTileDirectional
+  parent: Airlock
   id: AirlockShuttle
   graph: AirlockShuttle
-  targetNode: airlock
   # <Trauma>
   theory:
     AirlocksKnowledge: 0
@@ -644,16 +621,6 @@
   practical:
     MechanicsKnowledge: 2
   # </Trauma>
-
-- type: construction
-  parent: Windoor
-  id: SecureWindoor
-  targetNode: windoorSecure
-
-- type: construction
-  parent: Windoor
-  id: ClockworkWindoor
-  targetNode: windoorClockwork
 # endregion Windoors
 
 # region Lighting
@@ -696,9 +663,9 @@
 # region Material Doors
 - type: construction
   parent: BaseStructureFullTileDirectional
-  id: MetalDoor
+  id: SilverDoor
   graph: DoorGraph
-  targetNode: metalDoor
+  targetNode: silverDoor
   # <Trauma>
   theory:
     DoorsKnowledge: 0
@@ -707,7 +674,7 @@
   # </Trauma>
 
 - type: construction
-  parent: MetalDoor
+  parent: SilverDoor
   id: WoodDoor
   targetNode: woodDoor
   # <Trauma>
@@ -718,22 +685,17 @@
   # </Trauma>
 
 - type: construction
-  parent: MetalDoor
+  parent: SilverDoor
   id: PlasmaDoor
   targetNode: plasmaDoor
 
 - type: construction
-  parent: MetalDoor
+  parent: SilverDoor
   id: GoldDoor
   targetNode: goldDoor
 
 - type: construction
-  parent: MetalDoor
-  id: SilverDoor
-  targetNode: silverDoor
-
-- type: construction
-  parent: MetalDoor
+  parent: SilverDoor
   id: PaperDoor
   targetNode: paperDoor
   # <Trauma>
@@ -746,16 +708,6 @@
   parent: PaperDoor # Trauma - closer to paper than metal
   id: CardDoor
   targetNode: cardDoor
-
-- type: construction
-  parent: MetalDoor
-  id: BananiumDoor
-  targetNode: bananiumDoor
-  # <Trauma>
-  theory:
-    DoorsKnowledge: 0
-    BananiumKnowledge: 0
-  # </Trauma>
 # endregion Material Doors
 
 # region Plastic Flaps
@@ -786,15 +738,9 @@
 
 - type: construction
   parent: BaseStructureFullTile
-  id: BananiumClownStatue
-  graph: BananiumStatueClown
-  targetNode: bananiumStatue
-  category: construction-category-structures
-  placementMode: SnapgridCenter
-  objectType: Structure
-  canBuildInImpassable: false
-  conditions:
-    - !type:TileNotBlocked
+  id: OrnateClownStatue
+  graph: OrnateStatueClown
+  targetNode: ornateStatueClown
   # <Trauma>
   theory:
     BananiumKnowledge: 0
@@ -830,9 +776,9 @@
 
 - type: construction
   parent: BaseStructureFullTileDirectional
-  id: Turnstile
-  graph: Turnstile
-  targetNode: turnstile
+  id: EnergyGate
+  graph: EnergyGate
+  targetNode: energyGate
   # <Trauma>
   theory:
     DoorsKnowledge: 0

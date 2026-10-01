@@ -15,7 +15,7 @@
       edges:
         - to: lens #goobstation edge - lens to cameras
           steps:
-            - material: Glass
+            - material: Glass # Goob
               amount: 1
               doAfter: 1
         - to: start

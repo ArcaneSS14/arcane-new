@@ -4,6 +4,7 @@
   parent: Lattice
   id: LatticeDiagonalNW
   sprite: /Textures/_Goobstation/Tiles/latticeDiagonalNW.png
+  variants: 1 # Arcane
   heatCapacity: 5000 # half of 10kJ
   mass: 100 # half of 200
 

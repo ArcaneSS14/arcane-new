@@ -127,12 +127,15 @@
   - FauxTileMowedAstroGrass
   - FauxTileJungleAstroGrass
   - FauxTileDarkAstroGrass
-  - FauxTileLightAstroGrass
   - FauxTileAstroIce
   - FauxTileAstroSnow
   - FauxTileAstroAsteroidSand
   - FauxTileAstroAsteroidSandBorderless
   - FauxTileDesertAstroSand
+  # Arcane-Start
+  - FauxTileAstroIronsand
+  - FauxTileAstroIronsandBorderless
+  # Arcane-End
   # Goobstation R&D Console rework start
   position: 1,5
   technologyPrerequisites:

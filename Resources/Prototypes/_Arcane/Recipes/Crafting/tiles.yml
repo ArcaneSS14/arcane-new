@@ -1,0 +1,11 @@
+- type: construction
+  parent: BaseTile
+  id: TileBrassFilled
+  graph: ArcaneTilesBrass
+  targetNode: filledPlate
+
+- type: construction
+  parent: BaseTile
+  id: TileBrassReebe
+  graph: ArcaneTilesBrass
+  targetNode: reebe

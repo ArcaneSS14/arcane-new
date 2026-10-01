@@ -1,7 +1,7 @@
 ## Static
 
 - type: latheRecipePack
-  parent:
+  parent: # Arcane: Trauma
   - TraumaServiceStatic
   id: ServiceStatic
   recipes:

@@ -22,7 +22,7 @@
     InsectBlood:
       amount: 30
   products:
-    Water: 11
+    Water: 11 # Arcane: Goob
     Saline: 6 # Goob - changed to saline due to SodiumExplosion reacion
     Chlorine: 1.5
     CarbonDioxide: 5.5

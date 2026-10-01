@@ -1,0 +1,21 @@
+- type: tile
+  id: FloorPlasmaMarble
+  parent: BaseStationTile
+  name: tiles-plasma-marble
+  sprite: /Textures/_Arcane/Tiles/plasmarble.png
+  variants: 8
+  footstepSounds:
+    collection: FootstepTile
+  friction: 0.8
+  itemDrop: FloorTileItemPlasmaMarble
+
+- type: tile
+  id: FloorUraniumMarble
+  parent: BaseStationTile
+  name: tiles-uranium-marble
+  sprite: /Textures/_Arcane/Tiles/uranium_marble.png
+  variants: 8
+  footstepSounds:
+    collection: FootstepTile
+  friction: 0.8
+  itemDrop: FloorTileItemUraniumMarble

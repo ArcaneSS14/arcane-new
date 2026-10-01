@@ -17,8 +17,10 @@
     - FloorAstroIce
     - FloorAstroSnow
     - FloorAstroAsteroidSand
-    - FloorAsteroidSandUnvariantized
-    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-Start
+#    - FloorAsteroidSandUnvariantized
+#    - FloorAsteroidIronsandUnvariantized
+    # Arcane-Edit-End
     - FloorCave
     - FloorAsteroidIronsand
     - FloorAsteroidTile
