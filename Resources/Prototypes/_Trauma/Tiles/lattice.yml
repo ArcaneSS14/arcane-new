@@ -4,7 +4,7 @@
   parent: Lattice
   id: TrainLattice
   name: tiles-lattice-train
-  sprite: /Textures/_Trauma/Tiles/latticeTrain.png
+  sprite: /Textures/_Arcane/Tiles/latticeTrain.png # Arcane-Edit
   variants: 1 # Arcane
   footstepSounds:
     collection: FootstepPlating
