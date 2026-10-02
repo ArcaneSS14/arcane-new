@@ -29,8 +29,10 @@
       visible: false
     - map: [ "enum.DisposalUnitVisualLayers.OverlayCharging" ]
       state: dispover-ready
+      shader: unshaded
     - map: [ "enum.DisposalUnitVisualLayers.OverlayFull" ]
       state: dispover-full
+      shader: unshaded
       visible: false
     - map: [ "enum.DisposalUnitVisualLayers.OverlayEngaged" ]
       state: dispover-handle
