@@ -9,7 +9,6 @@
     - Disposal
   components:
   - type: DisposalUnit
-    flushDelay: 2.5 # Arcane
     container:
       occludes: true
       showEnts: false
@@ -40,20 +39,16 @@
       visible: false
   - type: GenericVisualizer
     visuals:
-      # Arcane-Start
-      enum.DisposalUnitVisuals.IsFlushing:
-        enum.DisposalUnitVisualLayers.Base:
-          True: { visible: false }
-          False: { visible: true }
-        enum.DisposalUnitVisualLayers.OverlayFlushing:
-          True: { visible: true }
-          False: { visible: false }
-      # Arcane-End
       enum.DisposalUnitVisuals.IsReady:
         enum.DisposalUnitVisualLayers.Base:
           True: { state: disposal }
           False: { state: disposal-charging }
       enum.DisposalUnitVisuals.IsFlushing:
+        # Arcane-Start
+        enum.DisposalUnitVisualLayers.Base:
+          True: { visible: false }
+          False: { visible: true }
+        # Arcane-End
         enum.DisposalUnitVisualLayers.OverlayFlushing:
           True: { visible: true }
           False: { visible: false }
