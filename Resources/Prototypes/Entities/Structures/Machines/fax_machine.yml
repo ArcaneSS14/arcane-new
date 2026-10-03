@@ -8,8 +8,16 @@
     sprite: Structures/Machines/fax_machine.rsi
     drawdepth: SmallObjects
     layers:
+    # Arcane-Edit-Start
     - state: icon
-      map: [ "enum.FaxMachineVisuals.VisualState" ]
+    - state: printing
+      map: ["enum.FaxMachineVisuals.VisualState"]
+    - state: inserting
+      map: ["enum.MaterialStorageVisualLayers.Inserting"]
+    - state: idle
+      shader: unshaded
+      map: ["enum.PowerDeviceVisualLayers.Powered"]
+    # Arcane-Edit-End
   - type: Icon
     sprite: Structures/Machines/fax_machine.rsi
     state: icon
@@ -63,14 +71,12 @@
           - CargoSlip
   - type: GenericVisualizer
     visuals:
-      enum.PowerDeviceVisuals.Powered:
-        enum.FaxMachineVisuals.VisualState:
-          True: { state: idle }
-          False: { state: icon }
+      # Arcane-Edit-Start
       enum.FaxMachineVisuals.VisualState:
         enum.FaxMachineVisuals.VisualState:
-          Printing: { state: printing }
-          Normal: {state: idle}
+          Printing: { visible: true }
+          Normal: { visible: false }
+      # Arcane-Edit-End
   - type: ItemSlots
   - type: ContainerContainer
     containers:
