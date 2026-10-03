@@ -11,10 +11,10 @@
     # Arcane-Edit-Start
     - state: icon
     - state: printing
+      visible: false
       map: ["enum.FaxMachineVisuals.VisualState"]
-    - state: inserting
-      map: ["enum.MaterialStorageVisualLayers.Inserting"]
     - state: idle
+      visible: false
       shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     # Arcane-Edit-End
@@ -72,10 +72,15 @@
   - type: GenericVisualizer
     visuals:
       # Arcane-Edit-Start
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
       enum.FaxMachineVisuals.VisualState:
         enum.FaxMachineVisuals.VisualState:
-          Printing: { visible: true }
           Normal: { visible: false }
+          Inserting: { visible: true }
+          Printing: { state: printing, visible: true }
       # Arcane-Edit-End
   - type: ItemSlots
   - type: ContainerContainer
