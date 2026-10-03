@@ -1,20 +1,17 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from tgstation at https://github.com/tgstation/tgstation/commit/1516a728931b4985c1e86f0c5995a5aa1554a1ad and modified by Swept, modified by emisse for ss14",
+  "copyright": "Taken from tgstation at https://github.com/tgstation/tgstation/commit/1516a728931b4985c1e86f0c5995a5aa1554a1ad",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
     {
-      "name": "smartfridge_open"
-    },
-    {
       "name": "smartfridge"
     },
     {
-      "name": "off"
+      "name": "icon"
     },
     {
       "name": "broken"
@@ -23,7 +20,46 @@
       "name": "smartfridge_door"
     },
     {
+      "name": "smartfridge_powered"
+    },
+    {
       "name": "panel"
+    },
+    {
+      "name": "smartfridge-chem-1"
+    },
+    {
+      "name": "smartfridge-chem-2"
+    },
+    {
+      "name": "smartfridge-chem-3"
+    },
+    {
+      "name": "smartfridge-organ-1"
+    },
+    {
+      "name": "smartfridge-organ-2"
+    },
+    {
+      "name": "smartfridge-organ-3"
+    },
+    {
+      "name": "smartfridge-plant-1"
+    },
+    {
+      "name": "smartfridge-plant-2"
+    },
+    {
+      "name": "smartfridge-plant-3"
+    },
+    {
+      "name": "smartfridge-slime-1"
+    },
+    {
+      "name": "smartfridge-slime-2"
+    },
+    {
+      "name": "smartfridge-slime-3"
     }
   ]
 }
