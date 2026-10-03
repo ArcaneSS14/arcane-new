@@ -29,8 +29,10 @@
       visible: false
     - map: [ "enum.DisposalUnitVisualLayers.OverlayCharging" ]
       state: dispover-ready
+      shader: unshaded # Arcane
     - map: [ "enum.DisposalUnitVisualLayers.OverlayFull" ]
       state: dispover-full
+      shader: unshaded # Arcane
       visible: false
     - map: [ "enum.DisposalUnitVisualLayers.OverlayEngaged" ]
       state: dispover-handle
@@ -42,6 +44,11 @@
           True: { state: disposal }
           False: { state: disposal-charging }
       enum.DisposalUnitVisuals.IsFlushing:
+        # Arcane-Start
+        enum.DisposalUnitVisualLayers.Base:
+          True: { visible: false }
+          False: { visible: true }
+        # Arcane-End
         enum.DisposalUnitVisualLayers.OverlayFlushing:
           True: { visible: true }
           False: { visible: false }
