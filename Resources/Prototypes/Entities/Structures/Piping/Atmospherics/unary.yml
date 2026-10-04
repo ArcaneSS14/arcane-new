@@ -342,7 +342,13 @@
       granularLayersRendering: true
       layers:
         - state: freezerOff
-          map: [ "enum.PowerDeviceVisualLayers.Powered" ]
+        # Arcane-Edit-Start
+        - state: freezerOn
+          map: ["enum.PowerDeviceVisualLayers.Powered"]
+        - state: freezer-Unshaded
+          shader: unshaded
+          map: ["freezing"]
+        # Arcane-Edit-End
         - state: freezerPanelOpen
           map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
         - sprite: !type:CreateVariants
@@ -365,8 +371,13 @@
       visuals:
         enum.PowerDeviceVisuals.Powered:
           enum.PowerDeviceVisualLayers.Powered:
-            True: { state: freezerOn }
-            False: { state: freezerOff }
+          # Arcane-Edit-Start
+            True: { visible: true }
+            False: { visible: false }
+          freezing:
+            True: { visible: true }
+            False: { visible: false }
+          # Arcane-Edit-End
     - type: GasThermoMachine
       coefficientOfPerformance: -3.9
     - type: ApcPowerReceiver
@@ -377,6 +388,13 @@
       prefix: device-address-prefix-freezer
     - type: StealTarget
       stealGroup: FreezerHeater
+    # Arcane-Start
+    - type: LitOnPowered
+    - type: PointLight
+      radius: 1.5
+      energy: 1.5
+      color: "#47bfff"
+    # Arcane-End
 
 - type: entity
   parent: !type:CreateVariants
@@ -407,16 +425,17 @@
       granularLayersRendering : true
       layers:
         - state: heaterOff
-          map: [ "enum.PowerDeviceVisualLayers.Powered" ]
+        # Arcane-Edit-Start
+        - state: heaterOn
+          map: ["enum.PowerDeviceVisualLayers.Powered"]
+        - state: heater-Unshaded
+          shader: unshaded
+          map: ["heating"]
         - state: heaterPanelOpen
-          map: ["enum.WiresVisualLayers.MaintenancePanel"]
-        - sprite: !type:CreateVariants
-            values:
-            - Structures/Piping/Atmospherics/thermomachine.rsi
-            - Structures/Piping/Atmospherics/thermomachine_alt1.rsi
-            - Structures/Piping/Atmospherics/thermomachine_alt2.rsi
-          state: pipe
+          map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+        - state: pipe
           map: [ "enum.PipeVisualLayers.Pipe" ]
+        # Arcane-Edit-End
           renderingStrategy: Default
     - type: AtmosPipeLayers
       pipeLayer: !type:CreateVariants
@@ -430,8 +449,13 @@
       visuals:
         enum.PowerDeviceVisuals.Powered:
           enum.PowerDeviceVisualLayers.Powered:
-            True: { state: heaterOn }
-            False: { state: heaterOff }
+          # Arcane-Edit-Start
+            True: { visible: true }
+            False: { visible: false }
+          heating:
+            True: { visible: true }
+            False: { visible: false }
+          # Arcane-Edit-End
     - type: GasThermoMachine
       coefficientOfPerformance: 0.95
     - type: ApcPowerReceiver
@@ -442,6 +466,13 @@
       prefix: device-address-prefix-heater
     - type: StealTarget
       stealGroup: FreezerHeater
+    # Arcane-Start
+    - type: LitOnPowered
+    - type: PointLight
+      radius: 1.5
+      energy: 1.5
+      color: "#ffc747"
+    # Arcane-End
 
 - type: entity
   parent: !type:CreateVariants
@@ -468,6 +499,30 @@
   components:
   - type: Sprite
     sprite: Structures/Piping/Atmospherics/hellfirethermomachine.rsi
+  # Arcane-Start
+    granularLayersRendering : true
+    layers:
+      - state: freezerOff
+      - state: freezerOn
+        map: ["enum.PowerDeviceVisualLayers.Powered"]
+      - state: freezer-Unshaded
+        shader: unshaded
+        map: ["hellfreezing"]
+      - state: freezerPanelOpen
+        map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+      - state: pipe
+        map: [ "enum.PipeVisualLayers.Pipe" ]
+        renderingStrategy: Default
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+        hellfreezing:
+          True: { visible: true }
+          False: { visible: false }
+  # Arcane-End
   - type: GasThermoMachine
     minTemperature: 23.15
     heatCapacity: 40000
@@ -487,6 +542,30 @@
   components:
   - type: Sprite
     sprite: Structures/Piping/Atmospherics/hellfirethermomachine.rsi
+  # Arcane-Start
+    granularLayersRendering : true
+    layers:
+      - state: heaterOff
+      - state: heaterOn
+        map: ["enum.PowerDeviceVisualLayers.Powered"]
+      - state: heater-Unshaded
+        shader: unshaded
+        map: ["hellheating"]
+      - state: heaterPanelOpen
+        map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+      - state: pipe
+        map: [ "enum.PipeVisualLayers.Pipe" ]
+        renderingStrategy: Default
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+        hellheating:
+          True: { visible: true }
+          False: { visible: false }
+  # Arcane-End
   - type: GasThermoMachine
     maxTemperature: 1193.15
     heatCapacity: 40000
