@@ -37,15 +37,19 @@ A change inside an Arcane marker is the repository's deliberate divergence from 
 Marker forms actually present in the tree, by file type:
 
 ```
-C#:    // Arcane-Edit: <old> > <new>                 inline only, 3 uses
-YAML:  # Arcane-Edit: <old> > <new>                  inline, 62 uses
-YAML:  # Arcane-Edit-Start / # Arcane-Edit-End       block, 50 and 45 uses
+YAML:  # Arcane                                    one added line, 26 uses
+YAML:  # Arcane-Edit: <old> > <new>                  one changed line, 62 uses
+C#:    // Arcane-Edit: <old> > <new>                 one changed line, 3 uses
+YAML:  # Arcane-Start / # Arcane-End                 two or more added lines, 58 uses each
+YAML:  # Arcane-Edit-Start / # Arcane-Edit-End       two or more changed lines, 50 and 45 uses
 YAML:  # Arcane-Edit-Start: <reason>                 block with reason, 16 uses
 ```
 
+The rule behind those numbers: one line gets a trailing inline marker, bare `Arcane` for an addition and `Arcane-Edit: <old> > <new>` for a change. Two or more lines of the same kind get a `-Start` / `-End` pair. A bare `-Start` or `-End` never appears on its own line as a trailing marker.
+
 The reason suffix is optional and used when the block's purpose is not obvious. `# Arcane-Edit-End` never carries a colon.
 
-No C# block form exists today. If a merged C# conflict needs more than one line of Arcane context, that is a signal to keep the change minimal rather than to invent a marker style; ask before introducing one.
+No C# block form exists in the tree yet, but the rule covers C#: a merged C# conflict touching two or more lines uses `// Arcane-Edit-Start` / `// Arcane-Edit-End`. When a conflict offers a larger Arcane block than the change actually needs, keep the block minimal and say so.
 
 When an Arcane change conflicts with an incoming change to the same line, keep the Arcane value. If the incoming change makes the Arcane one wrong, that is a decision for the user, not a silent overwrite. Report it.
 

@@ -5,7 +5,13 @@ Do not reproduce those documents here. Use this adapter only to ensure Claude lo
 
 Edit markers, non-negotiable, because these channels do not load `.agents/rules` on their own:
 
-- Our own changes carry Arcane markers only: `// Arcane-Edit: <old> > <new>`, `// Arcane-Start` / `// Arcane-End`, `# Arcane-Edit`, `# Arcane-Start` / `# Arcane-End`. Never `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker.
+- One added line: trailing `# Arcane` or `// Arcane`, never `Arcane-Start`.
+- Two or more added lines: `# Arcane-Start` / `# Arcane-End`, `// Arcane-Start` / `// Arcane-End`.
+- One changed line: trailing `# Arcane-Edit: <old> > <new>` or `// Arcane-Edit: <old> > <new>`.
+- Two or more changed lines: `# Arcane-Edit-Start` / `# Arcane-Edit-End`, `// Arcane-Edit-Start` / `// Arcane-Edit-End`.
+- More than 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block.
+- Never put a bare `-Start` or `-End` on a line instead of a pair.
+- Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker.
 - No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
 - Mark Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths. Editing a Trauma file is allowed and often correct; an unmarked change there is reverted by the next sync.
 - Changing a line that carries an upstream marker makes it ours: `# Arcane-Edit: 1800 > 3000`. Leave upstream markers on untouched lines alone.

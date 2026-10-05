@@ -16,8 +16,11 @@ Before editing:
 
 Read `module-architecture`, `upstream-maintenance`, and `git-workflow`.
 
-- Add the current repository marker around the smallest changed inherited block.
 - Mark our own changes with Arcane markers only. Never with `Trauma - `, `<Trauma>`, or any other upstream marker.
+- One added line is a bare trailing `# Arcane` or `// Arcane`. Two or more added lines use `Arcane-Start` / `Arcane-End`.
+- One changed line is a trailing `Arcane-Edit: <old> > <new>`. Two or more changed lines use `Arcane-Edit-Start` / `Arcane-Edit-End`.
+- More than 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block.
+- Never put a bare `-Start` or `-End` on a line instead of a pair.
 - Do not add the marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
 - Do mark Arcane changes inside Trauma, vanilla, Medical, and Shitmed paths. Those are owner-local for us but upstream surface for sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
 - When a line we change carries an upstream marker, replace it with `Arcane-Edit: <upstream value> > <our value>`. Leave upstream markers on untouched lines alone.

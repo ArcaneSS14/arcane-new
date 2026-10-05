@@ -45,7 +45,7 @@ The requirement is not avoidance. It is that the edit stay cheap to reconcile. R
 
 **1. Append, do not insert.** Add new list entries at the end of the list, inside one contiguous block. An appended block is one conflict point; entries sprinkled into an alphabetically sorted list are one conflict point each.
 
-**2. One block, not many.** Gather every addition in the file into a single `Arcane-Start` / `Arcane-End` region. `CONTRIBUTING.md` gives the same reason for putting its own additions in one block.
+**2. One block, not many.** Two or more added lines go into a single `Arcane-Start` / `Arcane-End` region rather than being scattered. A single added line gets a bare trailing `Arcane`. `CONTRIBUTING.md` gives the same reason for putting its own additions in one block.
 
 **3. Prefer additive over destructive.** Adding a key, tag, or component entry is easy to replay on conflict. Deleting or rewriting an upstream line collides with every nearby upstream edit. When both are needed, prefer the addition and achieve the removal through a partial or an `!Remove`.
 
@@ -137,7 +137,7 @@ Sometimes there is no owner-local alternative: a prototype ID already exists ups
 Then:
 
 - change the smallest number of lines that makes the feature work
-- wrap added lines in `Arcane-Start` / `Arcane-End` and changed lines in `Arcane-Edit` / `Arcane-Edit-Start` / `Arcane-Edit-End`, per `.agents/rules/arcane-edit-markers.md`
+- mark per `.agents/rules/arcane-edit-markers.md`: one added line is a bare trailing `Arcane`, two or more added lines use `Arcane-Start` / `Arcane-End`, one changed line is a trailing `Arcane-Edit`, two or more changed lines use `Arcane-Edit-Start` / `Arcane-Edit-End`
 - put added `using` directives last in the using block, inside a marker
 - do not reformat, reorder, or tidy anything else in the file
 - report the base-path edit explicitly in the delivery note, naming the file and the reason

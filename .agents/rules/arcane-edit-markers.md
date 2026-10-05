@@ -6,38 +6,77 @@ Marking applies only outside owner-local paths. Inside `Modules/Arcane`, `Resour
 
 ## Which form to use
 
-The form depends on whether the lines are new or changed.
+The form depends on whether the lines are new or changed, and on how many.
 
 | Change | Form | Location |
 |---|---|---|
-| lines added | `Arcane-Start` / `Arcane-End` | wraps the added lines |
-| one line changed | inline `Arcane-Edit` | trailing on the changed line |
-| several lines changed, up to 5 | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines |
+| exactly one line added | inline `Arcane` | trailing on the added line, no `-Start` / `-End` |
+| two or more lines added | `Arcane-Start` / `Arcane-End` | wraps the added lines |
+| exactly one line changed | inline `Arcane-Edit` | trailing on the changed line |
+| two or more lines changed, up to 5 | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines |
 | more than 5 lines changed | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines, all commented out |
+
+The single-line case is the common one, because most changes touch one line. A single added line gets a bare trailing `Arcane`, never `Arcane-Start`:
+
+```yaml
+# one added line
+  - SpeedLeftLeg # Arcane
+```
+
+```csharp
+// one added line
+private readonly int[] _cache = new int[16]; // Arcane
+```
+
+The moment a change covers two or more lines of the same kind, the block form is required. Do not use inline markers for each line of a multi-line change, and do not open a `-Start` / `-End` pair around one line.
+
+`-Start` / `-End` are never trailing markers. A single added line is marked `Arcane`; `Arcane-Start` only appears as the opening half of a pair.
 
 Added and modified never share a marker. A block that contains both a new line and a changed line is two blocks.
 
 ## Marker syntax as it exists
 
 ```
+C#:    // Arcane
 C#:    // Arcane-Edit: <old> > <new>
+YAML:  # Arcane
 YAML:  # Arcane-Edit: <old> > <new>
 YAML:  # Arcane-Start
+YAML:  # Arcane-Start: <reason>
 YAML:  # Arcane-End
 YAML:  # Arcane-Edit-Start
 YAML:  # Arcane-Edit-Start: <reason>
 YAML:  # Arcane-Edit-End
 ```
 
-`# Arcane-Edit-Start: <reason>` explains why the change exists when the block's purpose is not obvious. `# Arcane-Edit-End` never takes a colon.
+Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more lines of the same kind require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
 
-There is no C# block form in the tree. In C# an inline `// Arcane-Edit: <old> > <new>` is the only established marker, and a multi-line C# change goes into an owner-local partial file instead. Ask before introducing a C# block form.
+Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
+
+The C# tree currently has no `-Start` / `-End` block and no `// Arcane`. The only established C# marker is inline `// Arcane-Edit: <old> > <new>`, with 3 uses. The rule above applies to C# exactly as it applies to YAML: one added line is a trailing `// Arcane`, two or more added lines get the pair, one changed line is a trailing `// Arcane-Edit: <old> > <new>`, two or more changed lines get the pair.
+
+A multi-line C# change still prefers an owner-local partial file when the addition is additive enough to live there. The marker requirement is separate from that choice: wherever the change does land, it gets the form its line count calls for.
+
+```csharp
+// two or more changed lines
+// Arcane-Edit-Start: 1800 > 3000
+// cost: 3000
+// cooldown: 5
+// Arcane-Edit-End
+```
+
+A bare `# Arcane` for a single added line is established practice in YAML, with 26 uses across prototypes.
 
 `# Arcane-Edit: <old> > <new>` records what Arcane replaced. Read `new`, not `old`: if a rebase offers `old`, the correct resolution is to restore `new`.
 
 ## Added usings
 
-Every added `using` goes below all other `using` directives in the file, and inside a marker.
+Every added `using` goes below all other `using` directives in the file, and inside a marker. One added `using` gets a trailing `// Arcane`; two or more get the pair.
+
+```csharp
+// one added using
+using Content.Arcane.Shared.Atmos; // Arcane
+```
 
 ```csharp
 using Content.Shared.Atmos;
@@ -45,12 +84,13 @@ using Robust.Shared.Map;
 
 // Arcane-Start
 using Content.Arcane.Shared.Atmos;
+using Content.Arcane.Shared.Map;
 // Arcane-End
 ```
 
 Two requirements at once: last position, and marked. A new `using` placed alphabetically among the existing ones is wrong even when it is marked, because it will collide with every upstream edit to the using block.
 
-Note that the current C# tree does not yet follow this. Arcane has never marked a `using` in C#, and the existing fork usings use `// <Trauma>` / `// </Trauma>` or a trailing `// Trauma` comment instead. Arcane follows the rule above, and those upstream markers stay as they are on lines we did not touch.
+The current C# tree does not follow this yet. Arcane has never marked a `using` in C#, and existing fork usings use `// <Trauma>` / `// </Trauma>` or a trailing `// Trauma` instead. Those are upstream markers on lines we did not touch, so they stay. New Arcane usings follow the rule above.
 
 ## More than five modified lines
 
@@ -74,16 +114,68 @@ Reason the threshold: a live multi-line replacement is a silent behavioral chang
 
 ## Merge adjacent markers
 
-Two marker blocks separated only by blank lines are one block. Merge them into a single `-Start` / `-End` pair.
+Two changes of the same kind are one change when they touch neighbouring lines. Merge them into a single `-Start` / `-End` pair, whatever their sizes.
+
+Merging keeps one hunk instead of several, which means one place for a rebase to conflict rather than several. Merging is mechanical, and say it happened in the report.
+
+### Merge two pairs
 
 ```yaml
 # Arcane-Start
 itemOne: 1
+itemTwo: 2
 # Arcane-End
 
 # Arcane-Start
-itemTwo: 2
+itemThree: 3
+itemFour: 4
 # Arcane-End
+```
+
+becomes
+
+```yaml
+# Arcane-Start
+itemOne: 1
+itemTwo: 2
+itemThree: 3
+itemFour: 4
+# Arcane-End
+```
+
+Changed lines merge the same way.
+
+```yaml
+# Arcane-Edit-Start
+cost: 3000
+cooldown: 5
+# Arcane-Edit-End
+
+# Arcane-Edit-Start
+delay: 2
+delayPerUnit: 0.5
+# Arcane-Edit-End
+```
+
+becomes
+
+```yaml
+# Arcane-Edit-Start
+cost: 3000
+cooldown: 5
+delay: 2
+delayPerUnit: 0.5
+# Arcane-Edit-End
+```
+
+### Merge inline markers into one pair
+
+Two inline markers near each other are one change too, so put them in a single pair rather than marking each line separately.
+
+```yaml
+itemOne: 1 # Arcane
+
+itemTwo: 2 # Arcane
 ```
 
 becomes
@@ -95,14 +187,81 @@ itemTwo: 2
 # Arcane-End
 ```
 
-Two pairs in current use of this shape, both from an incomplete earlier merge:
+```yaml
+cost: 3000 # Arcane-Edit: 1800 > 3000
+cooldown: 5 # Arcane-Edit: 10 > 5
+```
 
-- `Resources/Prototypes/Tiles/tile_migrations.yml`, `Arcane-End` at 81 followed by `-Start` at 83
-- `Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Melee/justice.yml`, line 220 to 222
+becomes
 
-Merging is mechanical. Say it happened in the report.
+```yaml
+# Arcane-Edit-Start
+cost: 3000
+cooldown: 5
+# Arcane-Edit-End
+```
 
-Never merge across an `-End` and a `-Edit-Start`. Those are different change kinds and must stay separate markers.
+Note what the merge costs in a rewrite. The inline form records `1800 > 3000` per line, and the block form has nowhere to put those values. When a future sync will need them, keep them in the reason suffix.
+
+```yaml
+# Arcane-Edit-Start: mining was too cheap to spam, was 1800
+cost: 3000
+cooldown: 5
+# Arcane-Edit-End
+```
+
+### What does not merge
+
+A lone added line wrapped in its own pair.
+
+```yaml example="wrong"
+# Arcane-Start
+itemOne: 1
+# Arcane-End
+```
+
+One added line is a bare trailing marker, not a block.
+
+```yaml
+itemOne: 1 # Arcane
+```
+
+A block and a lone line beside it. The block was a block because it covered two or more lines, and the lone line was never a block.
+
+```yaml
+# Arcane-Start
+itemOne: 1
+itemTwo: 2
+# Arcane-End
+
+itemThree: 3 # Arcane
+```
+
+## Never merge across change kinds
+
+Two pairs of the same kind merge. Pairs of different kinds never merge.
+
+Merge `Arcane-Start` into `Arcane-Start` and `Arcane-Edit-Start` into `Arcane-Edit-Start`. Never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block, even when they are adjacent. The `-End` marker says which kind of change a reader is looking at, and a merged block cannot say that.
+
+```yaml example="wrong"
+# Arcane-Edit-Start
+oldName: oldValue
+# Arcane-Edit-End
+
+# Arcane-Start
+newName: newValue
+# Arcane-End
+```
+
+stays two blocks. The rewrite and the addition are separate facts, and the next sync has to resolve them independently.
+
+The tree has three boundaries of this shape, and all three are correct as they stand:
+
+- `Resources/Prototypes/Entities/Objects/Specific/Medical/handheld_crew_monitor.yml`, `Arcane-End` at 19 followed by `Arcane-Edit-Start` at 20
+- `Resources/Prototypes/Tiles/tile_migrations.yml`, `Arcane-End` at 81 followed by `Arcane-Edit-Start: We again with this` at 83
+- `Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Melee/justice.yml`, `Arcane-End` at 220 followed by `Arcane-Edit-Start` at 222
+
+There is currently no place in the tree with two same-kind pairs that should have been merged, so this rule is preventive rather than a cleanup list.
 
 ## Verification
 
@@ -122,7 +281,7 @@ An `-Edit-Start` with no matching `-End` is a real defect, not a style question.
 
 Current known defects, all reported rather than fixed, since they are inherited:
 
-- 7 files with an unclosed `Arcane-Edit-Start`, where the block runs to end of file because the change disables a prototype rather than relocating it: `Resources/Prototypes/Entities/Structures/Walls/malign.yml`, `Resources/Prototypes/Entities/Structures/Windows/malign.yml`, `Resources/Prototypes/_Arcane/Entities/Objects/Tiles/astro.yml`, `Resources/Prototypes/_Goobstation/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Lavaland/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Trauma/Partials/Entities/Structures/Doors/turnstile.yml`, `Resources/Prototypes/_Trauma/Tiles/astro.yml`
+- 7 files with an unclosed `Arcane-Edit-Start`, where the block runs to end of file because the change disables a prototype rather than relocating it: `Resources/Prototypes/Entities/Structures/Walls/malign.yml`, `Resources/Prototypes/Entities/Structures/Windows/malign.yml`, `Resources/Prototypes/_Arcane/Entities/Objects/Tiles/astro.yml`, `Resources/Prototypes/_Goobstation/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Lavaland/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Trauma/Partials/Entities/Structures/Doors/turnstile.yml`, `Resources/Prototypes/_Trauma/Tiles/astro.yml`. One of these, `Resources/Prototypes/_Arcane/Entities/Objects/Tiles/astro.yml`, carries a second and larger defect: it is the only file under `Resources/Prototypes/_Arcane/**` with any Arcane marker at all, and a marker there is wrong on its own, since that path is Arcane-owned.
 - `Resources/migration.yml`, two orphan `Arcane-Edit-End` at lines 1426 and 1431, left by a half-applied merge
 
 Fixing inherited markers is a scope decision for the user, not a side effect of another task.
@@ -150,7 +309,11 @@ So the asymmetry runs the other way from the usual ownership reflex:
 
 - a line we did not touch keeps its upstream marker, untouched
 - a line we touched carries an Arcane marker, replacing whatever was there
-- a line we added carries `Arcane-Start` / `Arcane-End`
+- one added line carries a trailing bare `Arcane`, never `Arcane-Start`
+- several added lines are wrapped in `Arcane-Start` / `Arcane-End`
+- one changed line carries a trailing `Arcane-Edit: <old> > <new>`
+- several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
+- put a bare `-Start` or `-End` on a line rather than wrapping a pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work
 
 The Trauma vocabulary has more forms than the Arcane one, because it describes a different job: `// Trauma - reason` for a single line, `// <Trauma>` / `// </Trauma>` for a block, `/* Trauma` ... `*/` for removing a section. Reproducing any of them on our own change is wrong even though the syntax is valid and appears thousands of times in the tree.

@@ -13,13 +13,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 Treat `Modules/Arcane`, verified `_Arcane` paths, and Arcane-owned projects as owner-local.
 
-Do not add `// Arcane-Edit`, `# Arcane-Edit`, or equivalent Arcane markers inside owner-local paths. These markers are only for Arcane changes to inherited files outside Arcane-owned paths.
+Do not add `// Arcane`, `// Arcane-Edit`, `# Arcane`, `# Arcane-Edit`, or equivalent Arcane markers inside owner-local paths. These markers are only for Arcane changes to inherited files outside Arcane-owned paths.
 
-That includes `Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials. They are owner-local for us, but they are also upstream surface for everyone syncing TraumaStation, so an Arcane change in them is marked with an Arcane marker rather than left bare. Existing practice: 11 Trauma-owned files carry `Arcane-Edit` or `Arcane-Start`.
+That includes `Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials. They are owner-local for us, but they are also upstream surface for everyone syncing TraumaStation, so an Arcane change in them is marked with an Arcane marker rather than left bare. Existing practice: 11 Trauma-owned files carry `Arcane` or `Arcane-Edit` markers.
 
 When a line we change carries an upstream marker such as `# Trauma - was 1800`, the resolved line becomes ours and carries `# Arcane-Edit: 1800 > 3000`. Leaving the upstream marker on our line would claim someone else's authorship and hide our divergence from the next sync. Upstream markers on lines we did not touch stay as they are.
 
-When an inherited file must change, use the existing repository marker syntax around the smallest changed block.
+When an inherited file must change, mark the smallest changed block. One added line takes a bare trailing `# Arcane` or `// Arcane`; two or more added lines take `Arcane-Start` / `Arcane-End`. One changed line takes a trailing `Arcane-Edit: <old> > <new>`; two or more changed lines take `Arcane-Edit-Start` / `Arcane-Edit-End`, and more than 5 changed lines are commented out inside that block. Never put a bare `-Start` or `-End` on a line instead of a pair.
 
 Before editing a vanilla root path or a Trauma-owned path, look for an owner-local home instead. Syncs arrive along the Trauma trajectory, so both are the conflict surface. See `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`.
 

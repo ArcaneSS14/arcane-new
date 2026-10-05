@@ -7,8 +7,13 @@ from pathlib import Path
 
 ARCANE_OWNED = ("Modules/Arcane/", "Content.Arcane.", "Resources/_Arcane/")
 INFRASTRUCTURE = (".agents/", ".claude/", ".cursor/", ".codex/", "AGENTS.md", "CLAUDE.md")
-MARKER = re.compile(r"Arcane-(?:Edit|Start)")
+MARKER = re.compile(r"Arcane(?:-Edit|-Start|-Edit-Start|-End|-Edit-End)?\b")
 FOREIGN = re.compile(r"(?:Trauma\s*-\s|<Trauma>|</Trauma>|Goobstation\s*-\s|<Goob>|/\*\s*Trauma)")
+# A `-Start` marker is only legal as a whole comment line. Trailing after code it means
+# a single-line change was wrapped instead of marked inline.
+TRAILING_START = re.compile(
+    r"^.*\S\s(?:#|//)\s*Arcane-(?:Edit-)?Start(?:\s*:.*)?$"
+)
 
 
 def git(*args: str) -> str:
@@ -47,6 +52,11 @@ def main() -> int:
             continue
         if FOREIGN.search(added) and not MARKER.search(added):
             findings.append(f"foreign marker on an added line: {current}: {added.strip()[:70]}")
+        if TRAILING_START.match(added.rstrip()):
+            findings.append(
+                f"trailing -Start on a single line, use inline Arcane or Arcane-Edit: "
+                f"{current}: {added.strip()[:70]}"
+            )
 
     untracked = [
         p for p in git("ls-files", "--others", "--exclude-standard").split("\n") if p

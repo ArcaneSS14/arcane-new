@@ -11,8 +11,11 @@ Every selected skill is an execution contract. Follow its discovery, ownership, 
 Always-on invariants, no skill needed:
 
 - Our own changes carry Arcane markers only. Never `Trauma - `, `<Trauma>`, or another fork's marker.
+- One added line is a bare trailing `# Arcane`. Two or more added lines use `# Arcane-Start` / `# Arcane-End`.
+- One changed line is `# Arcane-Edit: <old> > <new>`. Two or more changed lines use `# Arcane-Edit-Start` / `# Arcane-Edit-End`.
+- Never put a bare `-Start` or `-End` on a line instead of a pair.
 - No marker inside `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`.
-- A change to an upstream-marked line becomes ours: `# Arcane-Edit: <old> > <new>`.
+- A change to an upstream-marked line becomes ours, so its marker becomes `Arcane-Edit`.
 - Editing a Trauma file is allowed and often correct; keep it cheap to reconcile.
 - English localization is structural truth; Russian mirrors key, variable, selector, path, and message order.
 - C# or project references: `csharp-style`, `module-architecture`, `testing`.

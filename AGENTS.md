@@ -239,11 +239,14 @@ Arcane is a fork of TraumaStation and TraumaStation is the sync source, so inher
 
 Our own changes carry Arcane markers only:
 
-* modified line: `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
-* added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
-* over 5 changed lines: comment the payload inside an `Arcane-Edit-Start` / `Arcane-Edit-End` block
-* merge adjacent Arcane blocks instead of leaving them back to back
-* an added `using` goes after all others, inside an Arcane block
+* one added line: trailing `// Arcane` or `# Arcane`, no `-Start` / `-End`
+* two or more added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
+* one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
+* two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
+* over 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block
+* merge adjacent Arcane blocks of the same kind into one pair, never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
+* an added `using` goes after all others, inside an Arcane block or trailing `Arcane`
+* never put a bare `-Start` or `-End` on a line instead of a pair
 
 Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change, whatever the surrounding file uses.
 
