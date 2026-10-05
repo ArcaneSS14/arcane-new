@@ -3,14 +3,6 @@ name: xaml-ui
 description: Build localized client XAML controls with correct lifecycle, culture refresh, resource references, ownership, and validation.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Xaml UI
-
 XAML is client presentation. Keep authority and protected validation out of code-behind.
 
 1. Verify repository identity, owner-local paths, and edit-marker requirements.
@@ -25,4 +17,4 @@ Subscribe once and unsubscribe on disposal or shutdown. Do not cache resolved la
 
 Mark inherited changes with the current repository marker. Do not add redundant markers in owner-local module or underscore paths.
 
-Run the Debug build, Release resource validation, and the existing integration-test project for every affected owner.
+Run the DebugOpt build, Release resource validation, and the existing integration-test project for every affected owner.

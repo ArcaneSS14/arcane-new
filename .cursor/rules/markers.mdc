@@ -1,0 +1,31 @@
+---
+description: Arcane edit markers and sync-conflict avoidance
+globs: **/*.cs,**/*.yml,**/*.yaml,**/*.ftl,**/*.xaml,**/*.toml,**/*.json,**/*.py
+alwaysApply: true
+---
+Canonical text: `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, `.agents/rules/merge-conflict-resolution.md`. This adapter exists because those files are not auto-loaded.
+
+Our own changes carry Arcane markers only:
+
+- modified line: `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
+- added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
+- over 5 changed lines: comment the payload inside an `Arcane-Edit-Start` / `Arcane-Edit-End` block
+- merge adjacent Arcane blocks rather than leaving them back to back
+- added `using` goes after all others, inside an Arcane block
+
+Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change.
+
+No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there, so a marker is noise.
+
+Mark Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths. Those paths are owner-local for us but upstream surface for a sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
+
+Changing a line that carries an upstream marker makes it ours:
+
+```yaml
+cost: 3000 # Trauma - was 1800, its useless for mining
+cost: 6000 # Arcane-Edit: 1800 > 3000
+```
+
+Leave upstream markers on lines we did not touch alone, and never convert them in bulk as a side effect of unrelated work.
+
+When a sync conflict must be resolved, the resolved line takes the marker of whoever wrote it. Our resolution is ours, so it carries an Arcane marker. Read all three versions, merge semantically, and never blanket-resolve with `git checkout --ours/--theirs`, `-X ours`, or `-X theirs`.

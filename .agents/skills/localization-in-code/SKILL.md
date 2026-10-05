@@ -3,14 +3,6 @@ name: localization-in-code
 description: Resolve localized text at presentation boundaries after verifying English-source keys, owner files, ordered Russian parity, and lifecycle refresh.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Localization In Code
-
 Keep internal logic typed and language-independent. Resolve localized text only where presented.
 
 Before adding `LocId`, `Loc.GetString`, XAML localization, popup text, or validation text:
@@ -38,7 +30,7 @@ Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -Exp
 Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
 git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|UI_CONTROL" -- Resources Modules Content.*
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
 ```

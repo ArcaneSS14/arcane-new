@@ -3,14 +3,6 @@ name: bound-user-interface
 description: Implement BUI contracts, server validation, localized client windows, lifecycle cleanup, and state refresh.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Bound User Interface
-
 A BUI crosses Shared, Server, Client, and usually Resources.
 
 Shared defines the UI key, serializable intent messages, and minimal state. Messages express requested actions, not trusted results.
@@ -27,9 +19,9 @@ Use repository ownership rules for edit markers. Do not mark owner-local module 
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 $env:DOTNET_gcServer=1
-dotnet test --no-build --configuration Debug Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```
 
 Run the existing integration-test project of every changed module.

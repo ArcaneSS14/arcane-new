@@ -1,10 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Content and Localization
 
 Store content in the resource root declared by its owner. Base resources belong in root `Resources`. Module resources belong in that module.
 

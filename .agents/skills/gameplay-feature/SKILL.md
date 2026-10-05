@@ -3,14 +3,6 @@ name: gameplay-feature
 description: Implement complete SS14 features across ownership, ECS, networking, resources, localization, UI, and tests.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Gameplay Feature
-
 Use this as the routing skill for multi-layer work.
 
 Before editing, map repository ownership, owner-local paths, inherited files, edit-marker requirements, assembly layers, authority, prototypes, resources, English and Russian locale files, UI lifecycle, persistence, and tests.
@@ -32,9 +24,9 @@ Mark inherited edits with the current repository marker. Do not add redundant ma
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 $env:DOTNET_gcServer=1
-dotnet test --no-build --configuration Debug Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
 ```

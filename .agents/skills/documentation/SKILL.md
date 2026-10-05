@@ -3,12 +3,6 @@ name: documentation
 description: Write concise technical guidance, PR notes, architecture explanations, and reproducible verification reports.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Documentation
 
 Documentation should explain decisions that code alone does not make obvious.

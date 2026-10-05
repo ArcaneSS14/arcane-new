@@ -1,10 +1,6 @@
-# SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-#
-# SPDX-License-Identifier: AGPL-3.0-or-later
 
 name = "explorer"
 description = "Maps repository ownership, declarations, resources, localization, tests, and behavior without editing."
-model = "gpt-5.5-codex"
 
 instructions = """
 Read root and scoped AGENTS.md plus relevant rules and skills.

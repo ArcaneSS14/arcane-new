@@ -3,14 +3,6 @@ name: save-data-and-configuration
 description: Validate, migrate, and atomically persist files and configuration with safe fallback and restart coverage.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Save Data And Configuration
-
 Persistent files and configuration are compatibility and reliability surfaces.
 
 ## Reading
@@ -37,8 +29,8 @@ A saved setting must restore after restart. Removed or invalid values must fall 
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
-dotnet test --no-build --configuration Debug Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet build --configuration DebugOpt --no-restore /m
+dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```
 
 Run the owning integration project for runtime reload, client settings UI, server/client propagation, or restart behavior. Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.

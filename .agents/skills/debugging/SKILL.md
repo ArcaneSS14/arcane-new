@@ -3,14 +3,6 @@ name: debugging
 description: Reproduce failures, trace authoritative flow, prove the broken assumption, and add targeted regression coverage.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Debugging
-
 Debug before redesigning.
 
 1. Reproduce the exact symptom and record inputs, runtime side, repository owner, and lifecycle stage.
@@ -27,8 +19,8 @@ Apply repository markers only to inherited files and never to owner-local module
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
-dotnet test --no-build --configuration Debug Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet build --configuration DebugOpt --no-restore /m
+dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```
 
 Run the existing integration-test project for each affected owner.

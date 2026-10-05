@@ -3,12 +3,6 @@ name: resources-and-assets
 description: Discover and reuse owner resource structure, then validate paths, RSI, audio, maps, attribution, and localization companions.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Resources And Assets
 
 Use the owning resource root. Inspect the existing tree before creating any path. Do not derive directories from repository names, module names, namespaces, or prototype IDs.
@@ -26,7 +20,7 @@ Get-ChildItem Resources -Recurse | Select-Object -ExpandProperty FullName
 Get-ChildItem Modules -Recurse | Select-Object -ExpandProperty FullName
 git grep -n -E "FEATURE_PREFIX|RESOURCE_PATH|LOCALE_KEY" -- Resources Modules Content.*
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
 git diff --check

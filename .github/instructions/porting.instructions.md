@@ -1,5 +1,5 @@
 ---
-applyTo: "Modules/Orion/**/*"
+applyTo: "Modules/Arcane/**/*"
 ---
 
 <!--

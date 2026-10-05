@@ -3,14 +3,6 @@ name: commands-and-cvars
 description: Implement commands and CVar-backed configuration with validation, authority, persistence, localized feedback, and compatibility.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Commands And Cvars
-
 ## Console commands
 
 Keep parsing, authorization, validation, execution, and feedback distinct. Verify the current command and shell interfaces before implementation.
@@ -33,8 +25,8 @@ CVar and command names are operational APIs. Renames require migration or compat
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
-dotnet test --no-build --configuration Debug Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet build --configuration DebugOpt --no-restore /m
+dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```
 
 Run the owning integration project for replicated settings, client UI, permission flows, runtime changes, or restart lifecycle. Test missing arguments, invalid and boundary values, unauthorized use, config reload, help output, and persisted fallback.

@@ -3,25 +3,26 @@ name: module-architecture
 description: Prove repository ownership, module ownership, assembly boundaries, edit-marker rules, extension points, and test placement.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Module Architecture
-
 ## Mandatory workflow
 
 1. verify origin, upstream, branch, and repository owner tag
 2. identify owner module and verified underscore owner paths
-3. search root content and every module for the existing behavior
-4. read owner manifests, project files, scoped guidance, and solution entries
-5. identify target and caller assemblies
-6. locate every required declaration and access modifier
-7. verify project-reference direction
-8. find existing tests, fixtures, CI steps, and resource roots
-9. choose Common, Shared, Server, Client, or Resources from actual dependencies
+3. classify the target path as Arcane owner-local, vanilla unmarked, Trauma owner-local, or foreign fork, per `.agents/rules/fork-trajectory-priority.md`
+4. search root content and every module for the existing behavior
+5. read owner manifests, project files, scoped guidance, and solution entries
+6. identify target and caller assemblies
+7. locate every required declaration and access modifier
+8. verify project-reference direction
+9. find existing tests, fixtures, CI steps, and resource roots
+10. choose Common, Shared, Server, Client, or Resources from actual dependencies
+
+## Trajectory
+
+`arcane-new` is a fork of TraumaStation, and TraumaStation is the sync source. `CONTRIBUTING.md` is the inherited TraumaStation guide and is authoritative for how Trauma-owned code is written: new C# in `Content.Trauma.*`, `.Trauma.cs` partials for additions to base files, no new handlers on upstream systems, resources under `_Trauma`, and partial prototypes in `Resources/Prototypes/_Trauma/Partials`.
+
+Trauma-owned code and vanilla space-station-14 root paths are the conflict surface: keep edits there minimal. Arcane-only behavior goes in `Modules/Arcane`. Foreign fork paths such as `Modules/GoobStation/**`, `Resources/_Goobstation/**`, and `Resources/_EinsteinEngines/**` are not part of this trajectory, so the minimization requirement is weaker there.
+
+Classification details: `.agents/rules/fork-trajectory-priority.md`.
 
 ## Edit-marker boundary
 

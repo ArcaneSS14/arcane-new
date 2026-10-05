@@ -1,10 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Localization workflow
 
 1. Identify every player-visible string introduced or changed.
 2. Find the owner's locale subtree.
