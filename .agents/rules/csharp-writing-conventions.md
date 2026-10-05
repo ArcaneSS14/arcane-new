@@ -113,7 +113,7 @@ Prefer this only where the accessor is trivial. A setter with real logic still n
 
 ### Use `extension` blocks only where they add something
 
-A classic `this`-parameter extension method cannot declare operators, static properties, or instance properties. When you need one of those, use an `extension` block. Otherwise use the classic form. This repository has both, including `Content.Server/Database/EFCoreExtensions.cs` and `Content.IntegrationTests/Utilities/ITestExtensions.cs`. Neither form can reach private state of the extended type.
+A classic `this`-parameter extension method cannot declare operators, static properties, or instance properties. When you need one of those, use an `extension` block. Otherwise use the classic form. This repository has both, including `Content.Server/Database/EFCoreExtensions.cs` line 9 and `Content.IntegrationTests/NUnit/Constraints/CompConstraintExtensions.cs` line 21. Neither form can reach private state of the extended type.
 
 ### Name `TimeSpan` durations, not raw seconds
 
