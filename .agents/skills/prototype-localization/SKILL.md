@@ -3,14 +3,6 @@ name: prototype-localization
 description: Keep prototype names, descriptions, markings, datasets, suffixes, selectors, and ordered Russian localization synchronized with English.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Prototype Localization
-
 Prototype localization is part of the prototype contract.
 
 1. Identify localization conventions for the prototype type.

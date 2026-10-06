@@ -1,10 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Repository map
 
 Base content lives in root `Content.Common`, `Content.Shared`, `Content.Server`, `Content.Client`, and `Resources`.
 
@@ -12,7 +5,7 @@ Current modules:
 
 - `Modules/GoobStation`: Common, Shared, Server, Server.Database, Client, Client.UIKit, and Resources.
 - `Modules/Lavaland`: Common, Shared, Server, Client, and Resources.
-- `Modules/Orion`: Common, Shared, Server, Client, and Resources.
+- `Modules/Arcane`: Common, Shared, Server, Client, and Resources.
 
 Verification projects include `Content.Tests`, `Content.IntegrationTests`, `Content.YAMLLinter`, and `Content.Packaging`.
 

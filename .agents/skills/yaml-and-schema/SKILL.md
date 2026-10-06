@@ -3,14 +3,6 @@ name: yaml-and-schema
 description: Author and diagnose YAML, prototype schemas, workflows, manifests, and structured configuration with exact validation.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Yaml And Schema
-
 YAML syntax validity is only the first layer. Identify the actual consumer and schema.
 
 ## Workflow

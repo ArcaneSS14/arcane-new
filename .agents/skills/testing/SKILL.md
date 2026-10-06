@@ -3,15 +3,6 @@ name: testing
 description: Select the existing owner test project and run checks matching the real failure mode.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Testing
-
 Match tests to the owner and failure mode.
 
 Use `Content.Tests` for focused root tests, `Content.IntegrationTests` for integrated root behavior, and the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project for module behavior.
@@ -22,4 +13,6 @@ Test through accessible public APIs or real event paths. Do not use reflection t
 
 For localization changes, verify that Russian mirrors English message IDs, attributes, variables, selectors, relative paths, and message order.
 
-Run restore, the Debug build, the applicable root tests, and every affected module integration project. Report exact commands, failures, and omitted checks.
+Run restore, the build in the configuration CI uses, the applicable root tests, and every affected module integration project. Report exact commands, failures, and omitted checks.
+
+CI builds in `DebugOpt` and then tests the produced binaries, rather than passing a project path to `dotnet test`. Reproduce that shape locally when verifying behavior that CI gates. Run integration tests with `DOTNET_gcServer=1`, matching CI. Use `--configuration Debug` only when the goal is fast local iteration, and say so, because `Debug` and `DebugOpt` differ in optimization and tool availability.

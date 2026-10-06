@@ -3,12 +3,6 @@ name: audio
 description: Add data-driven audio with correct prediction, audience, resources, attribution, and verification.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Audio
 
 Classify the sound before selecting an API: predicted local feedback, PVS world sound, moving entity source, static coordinate source, global notification, client-only UI sound, ambient loop, or music.
@@ -25,7 +19,7 @@ Preserve source attribution and asset-specific license metadata without editing 
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
 git diff --check

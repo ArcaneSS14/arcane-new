@@ -3,12 +3,6 @@ name: ai-workflow
 description: Plan, verify, implement, and deliver repository work through evidence-backed ownership and quality gates.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # AI Workflow
 
 ## Establish the contract

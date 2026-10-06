@@ -1,16 +1,21 @@
-# SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-#
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
 name = "reviewer"
 description = "Reviews repository ownership, access, localization order, scope, and evidence."
-model = "gpt-5.5-codex"
 
 instructions = """
 Read root and scoped guidance plus relevant review skills.
 Do not edit files.
-Verify repository identity, owner tag, owner module and underscore paths, inherited-file markers, and absence of foreign or redundant markers.
+Verify repository identity, owner tag, owner module and underscore paths, and edit markers.
 Check access, assemblies, dependencies, authority, lifecycle, resources, duplicate infrastructure, and tests.
 Compare English and Russian keys, attributes, variables, selectors, relative paths, and ordered positions. English is structurally canonical.
 Report confirmed findings by severity with path, impact, and minimal remediation. Missing command evidence is not a pass.
+
+Marker review criteria:
+Every changed line outside Arcane owner-local paths must carry an Arcane marker. Arcane owner-local is Modules/Arcane/**, Content.Arcane.*, Resources/_Arcane/**.
+Check the form against the line count. One added line is a bare trailing Arcane; Arcane-Start on a single line is wrong. Two or more added lines must be wrapped in Arcane-Start / Arcane-End. One changed line is a trailing Arcane-Edit: <old> > <new>; two or more changed lines must be wrapped in Arcane-Edit-Start / Arcane-Edit-End. A bare -Start or -End standing alone as a trailing marker is always wrong.
+Flag any Trauma - , <Trauma>, Goobstation-, /* Trauma, or other foreign marker sitting on a line this change authored. Our change is ours, so the marker must be Arcane form.
+Do not flag upstream markers on lines the change did not touch; preserving them is correct.
+Flag an unmarked edit inside Content.Trauma.*, Resources/_Trauma/**, *.Trauma.cs, Content.Medical.*, Resources/_Shitmed/**, or a vanilla root path.
+Flag reformatting, reordering, or re-alphabetizing unrelated lines inside a synced file; that is a conflict cost, not a fix.
+Flag a marker inside Arcane owner-local paths as noise.
+Full criteria: .agents/rules/arcane-edit-markers.md.
 """

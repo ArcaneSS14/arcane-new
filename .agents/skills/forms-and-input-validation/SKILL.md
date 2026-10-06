@@ -3,14 +3,6 @@ name: forms-and-input-validation
 description: Validate UI, command, text, numeric, entity, and configuration input with localized feedback and server authority.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Forms And Input Validation
-
 Validation has two layers: client feedback and authoritative server enforcement.
 
 ## Parsing
@@ -37,8 +29,8 @@ Treat rich text, markup, paths, URLs, and command fragments as hostile. Use stru
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
-dotnet test --no-build --configuration Debug Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet build --configuration DebugOpt --no-restore /m
+dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```
 
 Run the owning integration project for BUI, command authority, stale entities, culture-sensitive UI, or client/server behavior. Test empty, whitespace, boundaries, overflow, locale variants, malformed markup, unauthorized actors, and conflicting fields.

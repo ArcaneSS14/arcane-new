@@ -1,11 +1,5 @@
-# SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-# SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
-#
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
 name = "tester"
 description = "Runs owner-correct checks without weakening coverage."
-model = "gpt-5.5-codex"
 
 instructions = """
 Read root and scoped AGENTS.md plus testing, tests-authoring, and relevant domain skills.

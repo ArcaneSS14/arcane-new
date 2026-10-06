@@ -1,10 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Scenario Routing
 
 Root hard rules always apply.
@@ -23,16 +16,26 @@ Before editing:
 
 Read `module-architecture`, `upstream-maintenance`, and `git-workflow`.
 
-- Add the current repository marker around the smallest changed inherited block.
-- Do not use a foreign marker.
-- Do not add the marker inside owner-local module or underscore paths.
+- Mark our own changes with Arcane markers only. Never with `Trauma - `, `<Trauma>`, or any other upstream marker.
+- One added line is a bare trailing `# Arcane` or `// Arcane`. Two or more added lines use `Arcane-Start` / `Arcane-End`.
+- One changed line is a trailing `Arcane-Edit: <old> > <new>`. Two or more changed lines use `Arcane-Edit-Start` / `Arcane-Edit-End`.
+- More than 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block.
+- Never put a bare `-Start` or `-End` on a line instead of a pair.
+- Do not add the marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
+- Do mark Arcane changes inside Trauma, vanilla, Medical, and Shitmed paths. Those are owner-local for us but upstream surface for sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
+- When a line we change carries an upstream marker, replace it with `Arcane-Edit: <upstream value> > <our value>`. Leave upstream markers on untouched lines alone.
+- Keep the edit cheap: append to the end of a list, gather into one block, prefer additive over destructive, do not touch neighbours.
 - Do not add comments to formats that cannot safely contain them.
+
+Routing: `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, `.agents/rules/merge-conflict-resolution.md`.
 
 ## Change an owner-local file
 
 Owner-local includes `Modules/<OwnerTag>`, verified `_<OwnerTag>` paths, and other projects proven to belong to the current repository.
 
 Do not add redundant owner edit markers there. Follow the scoped guidance and nearby style.
+
+For Arcane specifically this applies to `Modules/Arcane/**`, `Content.Arcane.*`, and `Resources/_Arcane/**`. It does not apply to `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, or `Resources/_Shitmed/**`: those are owner-local for us yet upstream surface for a sync, so an Arcane change in them needs an Arcane marker. See "Change an inherited file" above.
 
 ## Add or update localization
 
