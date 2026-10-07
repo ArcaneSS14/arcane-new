@@ -1,7 +1,7 @@
 {
     "version": 1,
     "license": "CC-BY-SA-3.0",
-    "copyright": "Taken from TauCetiClassic at commit https://github.com/TauCetiStation/TauCetiClassic/tree/13b5c47145804dd24507b75f250de5e87d34e194.",
+    "copyright": "New Canisters by AftrLite(Github). Taken from ImpStation https://github.com/impstation/imp-station-14/commit/667fc33a23eda72bd028d315c2c533876f70f951, inspired by CEV-Eris sprites at https://github.com/discordia-space/CEV-Eris/commit/476e374cea95ff5e8b1603c48342bf700e2cd7af. Paper label sprites by Entings (GitHub)",
     "size": {
         "x": 32,
         "y": 32
@@ -38,8 +38,12 @@
             "name": "can-o0",
             "delays": [
                 [
-                    0.2,
-                    0.2
+                    0.25,
+                    0.25,
+                    0.25,
+                    0.25,
+                    0.25,
+                    0.25
                 ]
             ]
         },
