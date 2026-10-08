@@ -1,13 +1,26 @@
 ---
-description: Orion guidance adapter for core
+description: Arcane guidance entry point
 globs: **/*
 alwaysApply: true
 ---
+Read `AGENTS.md`. It carries the scoped-`AGENTS.md` rule, the always-on `.agents/rules` set, and the skill routing table. Do not preload skills here.
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
+Edit markers, always-applicable because `.agents/rules` are not auto-loaded here:
 
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
+- One added line: trailing `# Arcane` or `// Arcane`, never `Arcane-Start`.
+- Two or more added lines: `# Arcane-Start` / `# Arcane-End`, `// Arcane-Start` / `// Arcane-End`.
+- One changed line: trailing `# Arcane-Edit: <old> > <new>` or `// Arcane-Edit: <old> > <new>`.
+- Two or more changed lines: `# Arcane-Edit-Start` / `# Arcane-Edit-End`, `// Arcane-Edit-Start` / `// Arcane-Edit-End`.
+- More than 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block.
+- Never put a bare `-Start` or `-End` on a line instead of a pair.
+- Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker.
+- No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
+- Mark Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths. Editing a Trauma file is allowed and often correct; an unmarked change there is reverted by the next sync.
+- Changing a line that carries an upstream marker makes it ours: `# Arcane-Edit: 1800 > 3000`. Leave upstream markers on untouched lines alone.
+- Keep Trauma-file edits cheap: append to the end of a list, gather additions into one block, prefer additive over destructive, do not touch neighbours.
 
-Read `AGENTS.md`, the nearest scoped `AGENTS.md`, `.agents/rules`, and task-specific `.agents/skills`.
+Canonical text: `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, `.agents/rules/merge-conflict-resolution.md`.
+
+Prefer `Modules/Arcane` and `Content.Trauma.*` for new work. For a feature port, `Content.Trauma.*` survives a sync while `Modules/Arcane` does not. Base-file edits are the exception and must be marked.
+
+Sync resolution: a conflicted line gets the marker of whoever wrote the resolved line. Our resolution is ours, so it carries an Arcane marker. Do not blanket-`git checkout --ours/--theirs`, do not pass `-X ours`/`-X theirs`, and never `git add -u` a path you did not read.

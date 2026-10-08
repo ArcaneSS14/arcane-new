@@ -4,13 +4,6 @@ globs: Content.Tests/**/*.cs,Content.IntegrationTests/**/*.cs,Modules/*/Content.
 alwaysApply: false
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 Root `AGENTS.md` hard rules apply. Read the nearest scoped `AGENTS.md` and canonical `testing` and `tests-authoring` skills.
 
 Verify repository identity, owner-local module and underscore paths, and edit-marker requirements before changing inherited test files. Do not add redundant owner markers inside owner-local paths.

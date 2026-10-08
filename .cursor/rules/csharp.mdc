@@ -1,13 +1,12 @@
 ---
-description: Orion guidance adapter for csharp
+description: Arcane guidance adapter for csharp
 globs: **/*.cs,**/*.csproj
 alwaysApply: false
 ---
-
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 Follow module ownership, ECS API design, networking, and verification guidance.
+
+Read `.agents/rules/csharp-writing-conventions.md`, `.agents/rules/ecs-writing-conventions.md`, and the `csharp-style` skill plus `references/dependency-injection.md`.
+
+Marker: one added line is a bare trailing `// Arcane`; two or more added lines use `// Arcane-Start` / `// Arcane-End`; one changed line is `// Arcane-Edit: <old> > <new>`; two or more changed lines use `// Arcane-Edit-Start` / `// Arcane-Edit-End`. Skip markers inside `Modules/Arcane/**` and `Content.Arcane.*`. Required inside `Content.Trauma.*` and `*.Trauma.cs`, since those sync. Never write `Trauma - ` or `<Trauma>` on our own change; see `.cursor/rules/core.mdc`.
+
+`[Dependency] private Type _field = default!;` without `readonly`. Reusable `EntityQuery<T>` and `HashSet<T>` over per-call allocation. Mark types `sealed`, `static`, `abstract`, or `[Virtual]`.

@@ -3,14 +3,6 @@ name: localization
 description: Maintain English-source localization with ordered Russian parity, existing owner paths, correct variables, selectors, and runtime behavior.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Localization
-
 Localization is part of feature implementation.
 
 ## Mandatory discovery

@@ -1,10 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Asset validation
 
 For every asset change verify:
 
@@ -17,4 +10,4 @@ For every asset change verify:
 - audio format and collection references;
 - removal of replaced paths.
 
-Use `RobustToolbox/Schemas/validate_rsis.py` for RSI work after the submodule and Python dependencies are available.
+Use `RobustToolbox/Schemas/validate_rsis.py` for RSI work. Running this read-only validator is allowed by `.agents/rules/engine-boundaries.md`; modifying anything inside the engine is not. If the submodule is not populated, stop and report it instead of running `git submodule update` yourself.

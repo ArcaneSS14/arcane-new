@@ -1,13 +1,10 @@
 ---
-description: Orion guidance adapter for feature-family ports
-globs: Modules/Orion/**/*
+description: Arcane guidance adapter for feature-family ports
+globs: Modules/Arcane/**/*
 alwaysApply: false
 ---
+For a port, read the `porting`, `upstream-maintenance`, `module-architecture`, and `testing` skills plus `.agents/rules/third-party-materials.md` and `.agents/rules/port-destination.md`. Build a source PR family manifest and adapt integration edits to current Goob Reforged code.
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
+Destination: port into `Modules/Arcane/**` or `Content.Arcane.*` per `.agents/rules/port-destination.md`. Prefer `Content.Trauma.*` when the feature should survive a sync. Source markers do not travel: the ported change is ours, so it carries Arcane markers. The only unavoidable exception is a base-type change, and that is wrapped in the smallest Arcane block.
 
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-For a port, load porting, upstream-maintenance, module-architecture, third-party-materials, and testing guidance. Build a source PR family manifest and adapt integration edits to current Goob Reforged code.
+Add `en-US` and `ru-RU` locale entries in matching positions, and carry asset licensing and attribution.

@@ -3,12 +3,6 @@ name: git-workflow
 description: Preserve user work, scope, metadata, history, and verifiable delivery.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Git Workflow
 
 ## Baseline
@@ -34,6 +28,8 @@ Do not include generated files, logs, test results, IDE files, or unrelated clea
 ## Shared history
 
 Do not force-push, reset hard, clean untracked files, rewrite published history, or choose merge versus rebase without approval. Resolve conflicts by understanding both sides, not by selecting ours or theirs mechanically.
+
+Every conflicted hunk has three versions: base, the incoming side, and the current branch. Identify all three before editing, then resolve by the priority order in `.agents/rules/merge-conflict-resolution.md`: an Arcane-marked change outranks both other versions, and otherwise the version being pushed forward wins unless the incoming side carries an independent reason to change.
 
 ## Commits
 

@@ -3,14 +3,6 @@ name: maps-and-mapping
 description: Edit maps, map prototypes, grids, placements, entity references, and serialized compatibility safely.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Maps And Mapping
-
 Maps are serialized compatibility artifacts, not ordinary hand-written YAML.
 
 ## Workflow
@@ -29,8 +21,8 @@ Do not copy map chunks from another fork before resolving unavailable prototypes
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
-dotnet build Content.MapRenderer/Content.MapRenderer.csproj --configuration Debug --no-restore
+dotnet build --configuration DebugOpt --no-restore /m
+dotnet build Content.MapRenderer/Content.MapRenderer.csproj --configuration DebugOpt --no-restore
 dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
 git diff --check

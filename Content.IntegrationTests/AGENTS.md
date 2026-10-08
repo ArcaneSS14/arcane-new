@@ -19,7 +19,7 @@ For localization behavior, treat English as structural truth and verify ordered 
 
 ```powershell
 dotnet restore
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 $env:DOTNET_gcServer=1
-dotnet test --no-build --configuration Debug Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 ```

@@ -3,12 +3,6 @@ name: code-review
 description: Review correctness, access, repository ownership, authority, localization, compatibility, resources, scope, and verification evidence.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 # Code Review
 
 Review observable behavior and architectural validity before style.

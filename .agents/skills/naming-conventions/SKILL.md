@@ -3,14 +3,6 @@ name: naming-conventions
 description: Name C# symbols, events, prototypes, FTL keys, resources, and compatibility surfaces consistently.
 ---
 
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Naming Conventions
-
 Names must communicate ownership, timing, and intent.
 
 ## C#
@@ -18,6 +10,14 @@ Names must communicate ownership, timing, and intent.
 Use repository-standard casing and suffixes. Components and systems should be discoverable by type search. Events should state whether they are attempts, pre-change checks, notifications, or completed changes.
 
 Do not introduce an abbreviation that is not established project vocabulary.
+
+A partial class added by a fork takes the suffix of the owning trajectory, placed after the semantic suffix: `MobStateSystem.Trauma.cs`, `ActionsSystem.Goob.cs`, `EnergySwordSystem.Arcane.cs`. `CONTRIBUTING.md` rule 4 requires this form for new methods and fields added to base files, and requires the base class to be made `partial` with a comment when it is not already. Never rename an existing partial to a different fork's suffix, and never name a new partial after a fork that does not own the code.
+
+## Fork-suffixed partials as a conflict tool
+
+`Content.Shared`, `Content.Client`, `Content.Server`, and `Content.Common` are the conflict surface, because sync brings upstream edits into the same files. A suffixed partial is how a fork adds behavior without editing a base file.
+
+Before editing a base declaration, check whether a partial can carry the change. There are 247 `.Trauma.cs` partials in those four projects. Adding a new one costs nothing; editing the base file costs a conflict on every sync. Details: `.agents/rules/fork-trajectory-priority.md`.
 
 ## Prototypes and resources
 
@@ -38,7 +38,7 @@ Before renaming a serialized field, prototype ID, map entity, database field, CV
 ```powershell
 git grep -n "OLD_NAME" -- .
 git grep -n "NEW_NAME" -- .
-dotnet build --configuration Debug --no-restore /m
+dotnet build --configuration DebugOpt --no-restore /m
 git diff --check
 ```
 

@@ -1,12 +1,7 @@
-<!--
-SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.github.com>
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-# Coding and API design
 
 Follow nearby repository style, but never substitute style matching for API verification.
+
+For how C#, ECS, and YAML read in this repository, see `csharp-writing-conventions.md`, `ecs-writing-conventions.md`, and `yaml-prototype-conventions.md`.
 
 ## Symbol verification
 
@@ -62,6 +57,22 @@ For entity actions:
 Keep components focused on serialized state. Put behavior in systems. Prefer existing system helpers, typed prototype IDs, and established entity APIs over raw manager access and magic strings.
 
 Do not add an event merely to avoid calling an owning system. Use events for real decoupling or an established event flow.
+
+## Method shape
+
+Public system APIs take `EntityUid` and `Entity<T?>` parameters first, then gameplay arguments, and resolve before doing work:
+
+```csharp
+public void SetCount(Entity<StackComponent?> stack, int count)
+{
+    if (!Resolve(stack, ref stack.Comp))
+        return;
+}
+```
+
+Event handlers take the component or uid, then the event, with the event last: `OnMapInit(Entity<FooComponent> ent, MapInitEvent args)`.
+
+`Can...` never mutates. `Try...` performs full validation on its own and does not assume `Can...` ran first. Apply mutation in a dedicated step.
 
 ## Forbidden workarounds
 
