@@ -21,7 +21,7 @@
   - type: Sprite
     layers:
       - sprite: Structures/Hydroponics/containers.rsi
-        state: hydrotray # Arcane-Edit
+        state: hydrotray3
       - sprite: Structures/Hydroponics/overlays.rsi
         state: lowhealth3
         shader: unshaded # Arcane
