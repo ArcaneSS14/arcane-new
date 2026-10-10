@@ -34,6 +34,7 @@
   - ERTMedical
   - ERTSecurity
   - ERTEngineer
+  - BlueshieldOfficer # Arcane
 
 - type: department
   id: Civilian
@@ -61,6 +62,7 @@
   - HeadOfSecurity
   - ResearchDirector
   - Quartermaster
+  - BlueshieldOfficer # Arcane
   # Please kill these
   - CentralCommandOfficial
   - CBURN
