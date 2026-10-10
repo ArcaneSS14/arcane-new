@@ -3,21 +3,12 @@ name: client-server-shared
 description: Place contracts and behavior across authority, prediction, presentation, localization, and assembly boundaries.
 ---
 
-Shared owns replicated contracts, common events, BUI contracts, and prediction-safe logic. Do not move hidden state, persistence, client controls, or server services into Shared merely for accessibility.
+Follow the layer ownership table in `.agents/rules/architecture-and-ownership.md`. Choose from actual dependencies and authority, not from the easiest project reference. Arcane-only behavior belongs in Arcane owner projects; base projects own reusable base behavior.
 
-Server validates requests, owns protected and persistent state, selects authority-only outcomes, performs mutation, and dirties replicated state.
+For client-originated messages, trace the actual dispatch path. Confirm framework guarantees from current declarations, then validate remaining authorization, ownership, value bounds, and state requirements on the authoritative server execution path before committing the outcome. A handler may live in Shared when it is safe on both sides; keep hidden or server-only decisions in Server. Shared handlers that also run predictively must not perform irreversible or privileged work.
 
-Client presents replicated state, renders visuals, owns controls, and provides prediction-safe feedback. Client checks are not security checks.
+Keep payloads minimal and represent requested intent rather than a claimed result. Replicate only state the client may know. Prefer typed state that the client localizes over resolved strings in network messages. Player-visible strings require matching English and Russian localization structure.
 
-Player-visible feedback requires English localization and structurally ordered Russian localization. Do not network resolved strings when typed state can be localized at presentation time.
+For UI flows, keep XAML and code-behind in Client, serializable cross-boundary contracts in Shared, and authoritative validation/mutation in Server. A BUI/EUI adapter connects the window to the state and message flow; it should not become a second gameplay system.
 
-Verify repository owner, assembly boundaries, project references, and edit-marker requirements before changing inherited files.
-
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-$env:DOTNET_gcServer=1
-dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-```
-
-Run existing changed-module integration tests as applicable.
+Before inherited-file changes, verify ownership, assembly boundaries, project references, and marker requirements. Choose verification for the changed behavior and follow root `AGENTS.md`; do not restore, build the full solution, or run every integration test by default.

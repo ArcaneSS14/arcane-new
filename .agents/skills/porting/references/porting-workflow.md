@@ -1,9 +1,9 @@
 
 Create a migration inventory before editing:
 
-- source PR family;
+- source PR family and history timeline, including introduction, follow-up fixes, reverts, and later restorations;
 - final source commit;
-- feature-owned files;
+- feature-owned files added, changed, renamed, or removed across that timeline;
 - base/inherited files modified for integration;
 - assets and licenses;
 - dependencies;

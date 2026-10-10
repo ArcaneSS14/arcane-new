@@ -2,7 +2,7 @@
 
 Marking an inherited file is what makes an Arcane change survive the next upstream sync. A change that is not marked is a change that will be reverted by someone else's rebase.
 
-Marking applies only outside owner-local paths. Inside `Modules/Arcane`, `Resources/Prototypes/_Arcane`, and other Arcane-owned paths the path is the marker.
+Marking applies only outside owner-local paths. Arcane runtime projects are root-level `Content.Arcane.*`; Arcane-owned resource directories include existing `Resources/**/_Arcane/**` paths. `Modules/Arcane` currently contains guidance files, not runtime code.
 
 ## Which form to use
 
@@ -14,7 +14,7 @@ The form depends on whether the lines are new or changed, and on how many.
 | two or more lines added | `Arcane-Start` / `Arcane-End` | wraps the added lines |
 | exactly one line changed | inline `Arcane-Edit` | trailing on the changed line |
 | two or more lines changed, up to 5 | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines |
-| more than 5 lines changed | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines, all commented out |
+| more than 5 lines changed | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines; keep active code and data active |
 
 The single-line case is the common one, because most changes touch one line. A single added line gets a bare trailing `Arcane`, never `Arcane-Start`:
 
@@ -94,7 +94,9 @@ The current C# tree does not follow this yet. Arcane has never marked a `using` 
 
 ## More than five modified lines
 
-When a change touches more than 5 existing lines, comment every changed line out and wrap the block, keeping the original values visible so the next sync can read what was replaced.
+The line count changes the marker form, not whether the new behavior is enabled. Wrap changed lines in an `Arcane-Edit-Start` / `Arcane-Edit-End` block and leave working code or data active. Add a reason suffix when it helps a future sync understand the change.
+
+Comment out removed entries only when disabling those entries is the intended behavior, the format supports comments, and preserving the old text is useful. Do not comment out a working replacement just to satisfy the marker rule.
 
 ```yaml
 # Arcane-Edit-Start
@@ -108,9 +110,7 @@ When a change touches more than 5 existing lines, comment every changed line out
 # Arcane-Edit-End
 ```
 
-This is the pattern already used for the largest `migration.yml` edits. Below 5 lines the block stays live and uncommented; above 5 the block is disabled and commented, which is also how the surrounding file has been handled for years.
-
-Reason the threshold: a live multi-line replacement is a silent behavioral change that no reader can diff. A commented one is inert and visible.
+This removal pattern is appropriate only when the commented entries are intentionally disabled. For a live replacement, keep the replacement active inside the marker block and preserve old values in a reason suffix when needed.
 
 ## Merge adjacent markers
 
@@ -318,7 +318,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 
 The Trauma vocabulary has more forms than the Arcane one, because it describes a different job: `// Trauma - reason` for a single line, `// <Trauma>` / `// </Trauma>` for a block, `/* Trauma` ... `*/` for removing a section. Reproducing any of them on our own change is wrong even though the syntax is valid and appears thousands of times in the tree.
 
-Placement differs too, and the difference is deliberate: an upstream block goes where `CONTRIBUTING.md` puts it, first in a list, and an Arcane block goes last, so the two never collide. `CONTRIBUTING.md` puts `<Trauma>` at the top of a `using` block with upstream's imports following.
+Placement differs by owner and file. Preserve upstream placement on untouched content; place Arcane additions according to the file structure and the rules in this document. Do not copy another fork's ordering convention as an Arcane requirement.
 
 ## Marking inside Trauma files
 
@@ -344,13 +344,13 @@ private static readonly EntProtoId IceWallPrototype = "WallRockSnow"; // Arcane-
 # Arcane-End
 ```
 
-Owner-local for Arcane means no marker is *needed for ownership*, but a marker is still *required* whenever the line is a divergence from TraumaStation. `Modules/Arcane/**` and `Content.Arcane.*` are the only paths where a marked line is genuinely wrong, because nothing syncs into them.
+Arcane-owned means no marker is needed for ownership. `Content.Arcane.*` and existing `Resources/**/_Arcane/**` paths do not sync from TraumaStation, so an Arcane marker there is unnecessary.
 
 An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's, not Trauma's. That is exactly the information a sync needs.
 
 ## Never do this
 
-- add a marker inside `Modules/Arcane/**`, `Content.Arcane.*`, or `Resources/_Arcane/**`; nothing syncs there, so a marker is noise
+- add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
 - add a marker inside another fork's underscore dir
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked

@@ -43,6 +43,8 @@ Comments belong in components and prototype types, and beside genuinely non-obvi
 
 The surrounding file may predate these. Apply them when writing or touching a line, without a separate style-only refactor.
 
+The repository uses `LangVersion` 14 on `net10.0`. The complete guidance for C# 14 language behavior and overload-resolution hazards lives in `.agents/skills/csharp-style/SKILL.md`; use that source instead of duplicating compiler details in this rule. Language features do not change the ownership, serialization, compatibility, or readability requirements below.
+
 ### Use `var` where the type is apparent
 
 `.editorconfig` sets `csharp_style_var_for_built_in_types`, `_when_type_is_apparent`, and `_elsewhere` to `true`. Prefer `var` unless the type is genuinely unclear or is being declared for the first time with a non-obvious target.

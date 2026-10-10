@@ -61,7 +61,7 @@ The rule for any conflicted line: the marker must match who authored the resolve
 
 An incoming Trauma change does not arrive as an Arcane change because it lands in our tree. Do not resolve a conflict by adopting upstream's line and re-marking it as ours, and do not resolve it by keeping a `Trauma - ` marker on a line we authored.
 
-Markers inside owner-local paths are supposed to be absent, since ownership there is the path. That rule holds for `Modules/Arcane`, but not in practice: 8 `Arcane-Edit-Start` uses sit under `Resources/Prototypes/_Goobstation/` and `_Lavaland/`, which are owner-local for their own fork. Treat those as inherited-file markers that happen to live in an underscore path, and preserve them. Do not add new ones there.
+Arcane owner-local paths are the root-level `Content.Arcane.*` projects and existing `_Arcane` resource directories. Do not add Arcane markers there. Existing markers under another fork's underscore directory belong to that fork; preserve them and do not add new Arcane markers there.
 
 ### Trajectory
 
@@ -69,12 +69,12 @@ Syncs arrive along the Trauma trajectory. Before resolving, classify the file, b
 
 | File class | Cost of keeping our side |
 |---|---|
-| Arcane owner-local | none; resolve normally |
+| Arcane owner-local, root `Content.Arcane.*` or `_Arcane` resources | none; resolve normally |
 | Trauma owner-local, `*.Trauma.cs` | none; these are ours, resolve normally |
 | vanilla space-station-14, unmarked | high; this is the conflict surface |
-| foreign fork path, `Modules/GoobStation/**`, `_Goobstation`, `_DV`, `_EinsteinEngines` | low; not part of this trajectory |
+| foreign fork path, `Content.Goobstation.*`, `_Goobstation`, `_DV`, `_EinsteinEngines` | low; not part of this trajectory |
 
-For a vanilla root-path conflict, prefer removing the local divergence over defending it: take upstream's version and relocate the feature to an owner-local path. That converts a recurring conflict into a one-time move. Escalate instead when the divergence is genuinely required and cannot be relocated.
+For a vanilla root-path conflict, consider whether the local behavior can move to an Arcane-owned extension. Relocate it only when the move preserves behavior and dependency boundaries. Otherwise merge both sides semantically and explain the resolution.
 
 For a foreign-fork-path conflict, resolve on its own terms. Do not import the Trauma minimization pressure onto a file that the trajectory never touches.
 

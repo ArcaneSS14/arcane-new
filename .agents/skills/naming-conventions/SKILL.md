@@ -11,7 +11,7 @@ Use repository-standard casing and suffixes. Components and systems should be di
 
 Do not introduce an abbreviation that is not established project vocabulary.
 
-A partial class added by a fork takes the suffix of the owning trajectory, placed after the semantic suffix: `MobStateSystem.Trauma.cs`, `ActionsSystem.Goob.cs`, `EnergySwordSystem.Arcane.cs`. `CONTRIBUTING.md` rule 4 requires this form for new methods and fields added to base files, and requires the base class to be made `partial` with a comment when it is not already. Never rename an existing partial to a different fork's suffix, and never name a new partial after a fork that does not own the code.
+A partial class added by a fork should follow the suffix already used for that owner and file family, placed after the semantic suffix: `MobStateSystem.Trauma.cs`, `ActionsSystem.Goob.cs`, `EnergySwordSystem.Arcane.cs`. Before adding a partial, verify that the type can be extended in the same assembly and read the applicable owner and sync rules. Never rename an existing partial to a different fork's suffix or name a new partial after a fork that does not own the code.
 
 ## Fork-suffixed partials as a conflict tool
 

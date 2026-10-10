@@ -7,19 +7,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Arcane module guidance
 
-`Modules/Arcane` owns Arcane-specific code and resources. Root hard rules remain in force.
+This file is guidance for Arcane code and resources. In this checkout, runtime code is in the root-level `Content.Arcane.*` projects and resources are under existing `_Arcane` directories in root `Resources`. Root hard rules remain in force.
 
 ## Owner-local paths and edit markers
 
-Treat `Modules/Arcane`, verified `_Arcane` paths, and Arcane-owned projects as owner-local.
+Treat `Content.Arcane.*` projects and verified `_Arcane` resource paths as owner-local.
 
 Do not add `// Arcane`, `// Arcane-Edit`, `# Arcane`, `# Arcane-Edit`, or equivalent Arcane markers inside owner-local paths. These markers are only for Arcane changes to inherited files outside Arcane-owned paths.
 
-That includes `Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials. They are owner-local for us, but they are also upstream surface for everyone syncing TraumaStation, so an Arcane change in them is marked with an Arcane marker rather than left bare. Existing practice: 11 Trauma-owned files carry `Arcane` or `Arcane-Edit` markers.
+That includes `Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials. They are owner-local for us, but they are also upstream surface for everyone syncing TraumaStation, so an Arcane change in them is marked with an Arcane marker rather than left bare. Check the current files for established marker patterns.
 
 When a line we change carries an upstream marker such as `# Trauma - was 1800`, the resolved line becomes ours and carries `# Arcane-Edit: 1800 > 3000`. Leaving the upstream marker on our line would claim someone else's authorship and hide our divergence from the next sync. Upstream markers on lines we did not touch stay as they are.
 
-When an inherited file must change, mark the smallest changed block. One added line takes a bare trailing `# Arcane` or `// Arcane`; two or more added lines take `Arcane-Start` / `Arcane-End`. One changed line takes a trailing `Arcane-Edit: <old> > <new>`; two or more changed lines take `Arcane-Edit-Start` / `Arcane-Edit-End`, and more than 5 changed lines are commented out inside that block. Never put a bare `-Start` or `-End` on a line instead of a pair.
+When an inherited file must change, mark the smallest changed block according to `.agents/rules/arcane-edit-markers.md`. Never put a bare `-Start` or `-End` on a line instead of a pair, and do not comment out active code merely to mark a large change.
 
 Before editing a vanilla root path or a Trauma-owned path, look for an owner-local home instead. Syncs arrive along the Trauma trajectory, so both are the conflict surface. See `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`.
 
@@ -29,7 +29,7 @@ Before editing a vanilla root path or a Trauma-owned path, look for an owner-loc
 - Shared may depend on Arcane Common and root `Content.Shared`.
 - Server may depend on Arcane Common, Arcane Shared, and root `Content.Server`.
 - Client may depend on Arcane Common, Arcane Shared, and root `Content.Client`.
-- Arcane resources belong in `Modules/Arcane/Resources`.
+- Arcane resources belong in the existing `_Arcane` directories under root `Resources`.
 
 Do not add root-to-Arcane dependencies or Arcane-to-foreign-module references for convenience.
 
@@ -55,9 +55,9 @@ Preserve exact paths, underscores, casing, attributes, variables, selectors, and
 
 ## Existing infrastructure
 
-Prefer Arcane-local systems, components, prototypes, locale, UI, assets, and the existing `Content.Arcane.IntegrationTests` project.
+Prefer Arcane-local systems, components, prototypes, locale, UI, and assets. Use `Content.Tests` or `Content.IntegrationTests` when the existing test ownership covers the behavior.
 
-`Content.Arcane.IntegrationTests` is not a runtime project and MUST NOT be listed in `module.yml`. Do not create another Arcane integration project, duplicate PoolManager setup, or duplicate its CI step.
+Do not create a separate Arcane integration-test project or duplicate test fixtures, PoolManager setup, or CI steps without a demonstrated need.
 
 ## Verification
 
