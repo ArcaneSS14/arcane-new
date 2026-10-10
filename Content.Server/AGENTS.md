@@ -9,4 +9,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 Root Server is authoritative base content. Changes here have broad impact.
 
-Validate client actions, preserve persistence and security boundaries, and avoid module-specific branches. If only Arcane needs the behavior, implement it in `Modules/Arcane/Content.Arcane.Server` or add a narrow reusable extension point here.
+Validate client actions, preserve persistence and security boundaries, and avoid module-specific branches. If only Arcane needs the behavior, implement it in the root `Content.Arcane.Server` project or add a narrow reusable extension point here.

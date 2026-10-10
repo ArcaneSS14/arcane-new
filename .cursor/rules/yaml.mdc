@@ -7,4 +7,4 @@ Load yaml-and-schema plus the relevant prototype, map, resource, localization, o
 
 Read `.agents/rules/yaml-prototype-conventions.md`. Prototype entry order follows the `.Trauma.cs` suffix for partials: `Item`, `Container`, `Entity`, then the component family.
 
-Marker: one added entry is a bare trailing `# Arcane`; two or more added entries use `# Arcane-Start` / `# Arcane-End`; one changed entry is `# Arcane-Edit: <old> > <new>`; two or more changed entries use `# Arcane-Edit-Start` / `# Arcane-Edit-End`. Append new list entries at the end of the list inside one block, and prefer `!Remove` or a partial over deleting an upstream entry. Never `Trauma - ` or `<Trauma>` on our own change; see `.cursor/rules/core.mdc`.
+Apply the canonical marker rule by changed line count, not by YAML entry count. Append additions as one contiguous block where practical, and prefer `!Remove` or a partial over deleting an upstream entry. Never use `Trauma - ` or `<Trauma>` as authorship for our change; see `.cursor/rules/core.mdc`.

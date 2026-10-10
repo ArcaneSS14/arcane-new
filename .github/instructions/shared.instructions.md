@@ -1,5 +1,5 @@
 ---
-applyTo: "Content.Shared/**/*.cs,Modules/*/Content.*.Shared/**/*.cs"
+applyTo: "Content.Shared/**/*.cs,Content.*.Shared/**/*.cs,Modules/*/Content.*.Shared/**/*.cs"
 ---
 
 <!--

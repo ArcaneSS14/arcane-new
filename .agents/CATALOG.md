@@ -8,6 +8,7 @@ Rules are repository policy; skills are task playbooks. A selected skill is an e
 ## Rules by situation
 
 - Any task: root and nearest scoped `AGENTS.md`; use `CONTRIBUTING.md` for contributor-facing project conventions.
+- Work in a root `Content.*` project: consult `Modules/CATALOG.md` and read the linked owner/project guide because its documentation location under `Modules/` is not in the source project's automatic `AGENTS.md` scope.
 - Ownership, project references, or module placement: `.agents/rules/architecture-and-ownership.md`; read `.agents/skills/module-architecture/SKILL.md` when assembly or ownership analysis is needed.
 - Inherited file or upstream sync choice: `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`.
 - Reverts, restorations, cherry-picks/backports, ports, or unexplained removals: `.agents/rules/change-history-analysis.md`; add domain rules and skills for affected code and resources.
@@ -29,7 +30,7 @@ Rules are repository policy; skills are task playbooks. A selected skill is an e
 - UI: `xaml-ui` for XAML controls/code-behind; `bound-user-interface` for entity-owned UI contracts and message/state flow (use both when both surfaces change); `eui` for session-oriented interfaces. Add `forms-and-input-validation` and localization skills only when those surfaces change.
 - Localization: `localization`; add `localization-in-code` when code resolves text, and `prototype-localization` when visible prototype text changes.
 - Prototypes and structured resources: `prototypes` for prototype authoring, `yaml-and-schema` for other schema/config YAML, `maps-and-mapping` for maps, and `resources-and-assets` for resource ownership/validation. Add `appearance-and-visualizers`, `sprite-overlays-and-shaders`, or `audio` for those presentation assets and behaviors.
-- Build, project, CI, or packaging: `build-and-packaging`; add `module-architecture` when project ownership or references change.
+- Build, project, CI, or packaging: `build-and-packaging`; add `module-architecture` when project ownership or references change. For root `Content.*` module ownership, references, and build impact, consult `Modules/CATALOG.md` and read only the linked owner/layer guide for the affected project.
 - Tests: `tests-authoring` when writing tests; `testing` when choosing or running checks. Debugging a reproduced failure uses `debugging`.
 - Documentation and task process: `documentation` for technical docs/reports, `git-workflow` for history/staging/commit operations, and `ai-workflow` for multi-step planning, preflight, and delivery gates.
 - Complete feature spanning layers: `gameplay-feature` plus the technical skills for the affected layers.

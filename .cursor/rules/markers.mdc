@@ -11,7 +11,7 @@ Our own changes carry Arcane markers only:
 - two or more added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
 - one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
 - two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
-- over 5 changed lines: comment the payload inside an `Arcane-Edit-Start` / `Arcane-Edit-End` block
+- over 5 changed lines: keep the changed content active inside an `Arcane-Edit-Start` / `Arcane-Edit-End` block; comment out removed content only when disabling it is intended
 - merge adjacent Arcane blocks of the same kind into one pair; never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
 - a block and a lone line beside it do not combine: the block covers two or more lines, the lone line was never a block
 - added `using` goes after all others, as a trailing `Arcane` or inside a block

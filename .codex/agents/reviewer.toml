@@ -6,7 +6,7 @@ Read root and scoped guidance plus relevant review skills.
 Do not edit files.
 Verify repository identity, owner tag, owner module and underscore paths, and edit markers.
 Check access, assemblies, dependencies, authority, lifecycle, resources, duplicate infrastructure, and tests.
-Compare English and Russian keys, attributes, variables, selectors, relative paths, and ordered positions. English is structurally canonical.
+Treat English as the structural localization source. Review Russian entries only when Russian changes are requested or the reported issue concerns Russian; then compare keys, attributes, variables, selectors, paths, and order. Do not require Russian edits for an English-only change.
 Report confirmed findings by severity with path, impact, and minimal remediation. Missing command evidence is not a pass.
 
 Marker review criteria:

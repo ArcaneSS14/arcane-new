@@ -1,5 +1,5 @@
 ---
-applyTo: "Content.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs,**/*.xaml"
+applyTo: "Content.Client/**/*.cs,Content.*.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs,**/*.xaml"
 ---
 
 <!--

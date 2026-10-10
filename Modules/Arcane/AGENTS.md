@@ -59,6 +59,10 @@ Prefer Arcane-local systems, components, prototypes, locale, UI, and assets. Use
 
 Do not create a separate Arcane integration-test project or duplicate test fixtures, PoolManager setup, or CI steps without a demonstrated need.
 
+## Current source map
+
+The Arcane runtime projects are currently small: Shared contains Arcane CVars, Server contains map tile variant normalization, and Common/Client currently contain their entry points. Treat this as a snapshot of C# source, not proof that Arcane has no resource-driven content. See the linked project guides and [`CATALOG.md`](../CATALOG.md) for current file locations, build dependencies, and resource ownership.
+
 ## Verification
 
 Use the existing Arcane project build and integration-test commands from current workflows. When prototypes, locale, maps, or structured resources change, also run the Release build and YAML linter from root guidance.

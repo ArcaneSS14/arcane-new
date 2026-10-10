@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Integration Test Guidance
 
-This directory owns base-content integration tests and shared integration-test infrastructure. Module-specific behavior belongs in the corresponding existing module integration project.
+This project owns integration tests and shared integration-test infrastructure for the root content and its modules. Add module-specific cases to the existing owner folder under `Tests/` (for example `_Trauma`, `_Goobstation`, or `_Lavaland`); this repository does not define separate module integration-test projects.
 
 Use integration tests for behavior crossing server, client, networking, maps, prototypes, culture lifecycle, UI lifecycle, or multiple systems.
 
@@ -15,7 +15,7 @@ Control time and randomness. Assert authority first and replicated client state 
 
 Do not duplicate PoolManager setup in module projects. Do not use runtime module loading as compile-time access. Do not add module test projects to `module.yml`.
 
-For localization behavior, treat English as structural truth and verify ordered Russian parity, variables, selectors, fallback, repeated switching, and subscription cleanup.
+For localization behavior, treat English as structural truth. Verify Russian parity, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
 
 ```powershell
 dotnet restore

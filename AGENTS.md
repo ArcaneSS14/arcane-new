@@ -33,6 +33,8 @@ When expanding the instruction scope, state which concrete changed surface requi
 
 Select skills from the actual requested change, not from hypothetical side effects. `.agents/CATALOG.md` is the canonical skill-routing index; consult only the entries relevant to changed surfaces, then read only those skills. A task spanning layers may require multiple skills.
 
+For work in any root `Content.*` project, use `Modules/CATALOG.md` to find its owner and project guide, then read that linked guide when its source area is relevant. Those guides are stored under `Modules/` for organization and are not discovered automatically as the nearest `AGENTS.md` for root project files. Runtime projects remain at the repository root; use their project references and existing owner guidance rather than expecting a `module.yml` under `Modules/`.
+
 This repository is based on TraumaStation and receives changes along its sync trajectory. `CONTRIBUTING.md` describes Arcane's project layout and contributor conventions. For changes intended for a Trauma-owned path, apply `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`; do not use another fork's marker for our changes.
 
 ## Targeted discovery

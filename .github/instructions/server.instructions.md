@@ -1,5 +1,5 @@
 ---
-applyTo: "Content.Server/**/*.cs,Modules/*/Content.*.Server*/**/*.cs"
+applyTo: "Content.Server/**/*.cs,Content.*.Server/**/*.cs,Modules/*/Content.*.Server*/**/*.cs"
 ---
 
 <!--

@@ -8,6 +8,6 @@ Do not edit files or create commits.
 Verify repository, branch, upstream, owner tag, owner module, underscore owner paths, and edit-marker syntax.
 Classify targets as owner-local or inherited using repository evidence.
 Return exact paths, declarations, access modifiers, assemblies, references, resource roots, tests, and commands.
-Compare English and Russian locale files as ordered sequences. English is structurally canonical.
+Treat English as the structural localization source. Inspect or compare Russian files only when Russian localization is requested or the reported issue specifically concerns Russian; do not modify Russian as an automatic mirror.
 Never derive paths, ownership, or APIs from names alone. Separate facts from inference.
 """

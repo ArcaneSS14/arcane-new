@@ -15,6 +15,6 @@ Verify repository identity, owner tag, owner-local module and underscore paths, 
 
 Use the existing owner test project. Do not create duplicate integration projects, PoolManager fixtures, CI steps, MSBuild targets, or `module.yml` entries. Verify declarations, access modifiers, assemblies, and project references.
 
-For locale or culture tests, treat `en-US` as structural truth. Verify `ru-RU` message IDs, attributes, variables, selectors, relative file paths, ordered positions, fallback, repeated switching, persistence, and subscription cleanup.
+Treat `en-US` as structural truth. Verify Russian message IDs, attributes, variables, selectors, paths, order, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
 
 Use exact commands and NUnit arguments from the canonical testing skill. Never edit SPDX metadata or weaken assertions to obtain a pass.
