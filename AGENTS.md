@@ -8,9 +8,9 @@ Use paths, symbols, projects, modules, prototypes, locale keys, resources, and e
 
 Do not inspect, inventory, summarize, or recursively enumerate the whole repository before starting work.
 
-Do not read every `AGENTS.md`, `.agents/rules` file, skill, catalog, or scenario file.
+Do not read every `AGENTS.md`, `.agents/rules` file, skill, catalog, or scenario file for routine work. If the user explicitly requests an audit of agent instructions, inspect the instruction set needed to complete that audit.
 
-Do not read every entry in `.agents/CATALOG.md` or `.agents/SCENARIOS.md`. Consult only the relevant catalog entry or matching scenario when task routing needs them; these files are indexes, not additional rules to load wholesale.
+Do not read every entry in `.agents/CATALOG.md` or `.agents/SCENARIOS.md` for routine work. Consult relevant entries for task routing; inspect the wider index only when the user explicitly requests an audit of agent instructions.
 
 Do not inspect unrelated modules, forks, upstream repositories, projects, resources, localization trees, tests, or workflows.
 
@@ -23,7 +23,7 @@ Use instructions in this order:
 3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
 4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
 
-More specific instructions add detail to general instructions. If two applicable repository instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
+More specific instructions add detail to general instructions. Root scope and verification limits are ceilings: scoped rules and skills may narrow them, but must not silently expand repository searches, builds, restores, or test runs. If two applicable instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
 
 Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
 

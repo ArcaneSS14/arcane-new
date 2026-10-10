@@ -19,13 +19,6 @@ Do not copy map chunks from another fork before resolving unavailable prototypes
 
 ## Verification commands
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet build Content.MapRenderer/Content.MapRenderer.csproj --configuration DebugOpt --no-restore
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
+Run the exact current map schema workflow command only for changed map files. Build the affected project if code changed, and inspect the diff for mass reserialization, missing prototypes, or unrelated GUID and metadata changes. Follow root `AGENTS.md`; do not restore dependencies or run full builds and global linters by default.
 
 Run the exact current map schema workflow command for changed map files. Inspect the diff for mass reserialization, missing prototypes, and unrelated GUID or metadata changes.

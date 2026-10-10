@@ -98,7 +98,7 @@ Quote only when required: leading special characters, a value that would parse a
 
 Change the smallest block. Keep existing key order rather than reordering the file, and keep existing quoting even when you would have chosen differently. Reorder only when adding a block that has an established position.
 
-Run the linter over the affected resource root after editing:
+Use a targeted validator for the changed prototype and directly referenced resources when the repository provides one. The general YAML linter is a repository-wide check; do not run it for a local prototype edit by default. Run it only when the user requests broad validation or the task specifically requires that workflow, following `.agents/rules/verification.md`:
 
 ```powershell
 dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build

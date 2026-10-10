@@ -17,7 +17,7 @@ A partial class added by a fork should follow the suffix already used for that o
 
 `Content.Shared`, `Content.Client`, `Content.Server`, and `Content.Common` are the conflict surface, because sync brings upstream edits into the same files. A suffixed partial is how a fork adds behavior without editing a base file.
 
-Before editing a base declaration, check whether a partial can carry the change. There are 247 `.Trauma.cs` partials in those four projects. Adding a new one costs nothing; editing the base file costs a conflict on every sync. Details: `.agents/rules/fork-trajectory-priority.md`.
+Before editing a base declaration, check whether a partial can carry the change. An owner-suffixed partial can keep additive behavior out of a shared upstream file when the type and assembly support it. Details: `.agents/rules/fork-trajectory-priority.md`.
 
 ## Prototypes and resources
 
@@ -36,10 +36,10 @@ Before renaming a serialized field, prototype ID, map entity, database field, CV
 ## Verification commands
 
 ```powershell
-git grep -n "OLD_NAME" -- .
-git grep -n "NEW_NAME" -- .
-dotnet build --configuration DebugOpt --no-restore /m
+git grep -n "OLD_NAME" -- path/to/relevant/code path/to/relevant/resources path/to/relevant/config
+git grep -n "NEW_NAME" -- path/to/relevant/code path/to/relevant/resources path/to/relevant/config
+dotnet build path/to/affected-project.csproj --no-restore
 git diff --check
 ```
 
-For prototype or locale renames also run the Release build and YAML linter from `yaml-and-schema`.
+Search all references only when the renamed identifier is a public compatibility surface or the task requires finding every reference. For prototype or locale changes, use a targeted validator when available; follow root `AGENTS.md` for verification scope instead of automatically running a Release build or global YAML linter.

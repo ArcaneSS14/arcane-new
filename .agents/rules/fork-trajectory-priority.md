@@ -51,7 +51,7 @@ The requirement is not avoidance. It is that the edit stay cheap to reconcile. R
 
 Then, regardless of technique:
 
-- mark the change with Arcane markers. An unmarked Arcane change inside a Trauma file is indistinguishable from a Trauma change and gets reverted by the next sync. Eleven Trauma-owned files already carry `Arcane-Edit` or `Arcane-Start` for exactly this reason
+- mark the change with Arcane markers. An unmarked Arcane change inside a Trauma file is indistinguishable from a Trauma change and gets reverted by the next sync
 - when we change a line carrying an upstream marker, replace it with an Arcane marker. The line is ours now, and keeping `Trauma - ` on it claims someone else's authorship for our change
 - leave upstream markers on untouched lines alone, and never convert them in bulk
 - do not nest an `Arcane-Start` block inside a `<Trauma>` block. Keep them sequential

@@ -27,10 +27,5 @@ A saved setting must restore after restart. Removed or invalid values must fall 
 
 ## Verification commands
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-```
-
-Run the owning integration project for runtime reload, client settings UI, server/client propagation, or restart behavior. Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.
+Build only the affected project. When verification is requested, select focused tests for persistence, reload, client settings, propagation, or restart behavior. Do not restore dependencies or run complete test suites by default. Relevant cases include missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart scenarios.
+ Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.

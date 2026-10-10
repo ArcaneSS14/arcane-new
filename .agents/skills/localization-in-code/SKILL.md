@@ -25,12 +25,4 @@ Use entity-name and grammar helpers instead of manual name, pronoun, or article 
 
 Review failures include hardcoded player text, mismatched variables, localized string comparison, persisted output, stale UI, and duplicate culture-change subscriptions. Russian key coverage and ordering are review criteria only when Russian is in scope.
 
-```powershell
-Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|UI_CONTROL" -- Resources Modules Content.*
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-```
+Inspect the affected FTL file and exact keys, then review the code or XAML that resolves them. Search plausible owner roots for an exact duplicate key only when needed. Follow root `AGENTS.md` for verification scope; FTL-only changes do not require dependency restore, a full build, or YAML linting by default.

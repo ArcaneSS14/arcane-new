@@ -53,7 +53,7 @@ Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that
 
 Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
 
-The C# tree currently has no `-Start` / `-End` block and no `// Arcane`. The only established C# marker is inline `// Arcane-Edit: <old> > <new>`, with 3 uses. The rule above applies to C# exactly as it applies to YAML: one added line is a trailing `// Arcane`, two or more added lines get the pair, one changed line is a trailing `// Arcane-Edit: <old> > <new>`, two or more changed lines get the pair.
+Use the marker form above consistently in C# and YAML: one added line gets a trailing `Arcane`, multiple added lines get a paired block, one changed line gets a trailing `Arcane-Edit`, and multiple changed lines get a paired edit block.
 
 A multi-line C# change still prefers an owner-local partial file when the addition is additive enough to live there. The marker requirement is separate from that choice: wherever the change does land, it gets the form its line count calls for.
 
@@ -65,7 +65,7 @@ A multi-line C# change still prefers an owner-local partial file when the additi
 // Arcane-Edit-End
 ```
 
-A bare `# Arcane` for a single added line is established practice in YAML, with 26 uses across prototypes.
+A bare `# Arcane` is the single-line addition form in YAML.
 
 `# Arcane-Edit: <old> > <new>` records what Arcane replaced. Read `new`, not `old`: if a rebase offers `old`, the correct resolution is to restore `new`.
 
@@ -255,13 +255,7 @@ newName: newValue
 
 stays two blocks. The rewrite and the addition are separate facts, and the next sync has to resolve them independently.
 
-The tree has three boundaries of this shape, and all three are correct as they stand:
-
-- `Resources/Prototypes/Entities/Objects/Specific/Medical/handheld_crew_monitor.yml`, `Arcane-End` at 19 followed by `Arcane-Edit-Start` at 20
-- `Resources/Prototypes/Tiles/tile_migrations.yml`, `Arcane-End` at 81 followed by `Arcane-Edit-Start: We again with this` at 83
-- `Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Melee/justice.yml`, `Arcane-End` at 220 followed by `Arcane-Edit-Start` at 222
-
-There is currently no place in the tree with two same-kind pairs that should have been merged, so this rule is preventive rather than a cleanup list.
+When reviewing a file, inspect its actual marker boundaries; do not rely on a remembered repository-wide inventory.
 
 ## Verification
 
@@ -279,16 +273,11 @@ Check, per file:
 
 An `-Edit-Start` with no matching `-End` is a real defect, not a style question. It means the block runs to end of file and the next sync has no boundary to work with.
 
-Current known defects, all reported rather than fixed, since they are inherited:
-
-- 7 files with an unclosed `Arcane-Edit-Start`, where the block runs to end of file because the change disables a prototype rather than relocating it: `Resources/Prototypes/Entities/Structures/Walls/malign.yml`, `Resources/Prototypes/Entities/Structures/Windows/malign.yml`, `Resources/Prototypes/_Arcane/Entities/Objects/Tiles/astro.yml`, `Resources/Prototypes/_Goobstation/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Lavaland/Entities/Structures/Walls/asteroid.yml`, `Resources/Prototypes/_Trauma/Partials/Entities/Structures/Doors/turnstile.yml`, `Resources/Prototypes/_Trauma/Tiles/astro.yml`. One of these, `Resources/Prototypes/_Arcane/Entities/Objects/Tiles/astro.yml`, carries a second and larger defect: it is the only file under `Resources/Prototypes/_Arcane/**` with any Arcane marker at all, and a marker there is wrong on its own, since that path is Arcane-owned.
-- `Resources/migration.yml`, two orphan `Arcane-Edit-End` at lines 1426 and 1431, left by a half-applied merge
-
-Fixing inherited markers is a scope decision for the user, not a side effect of another task.
+Do not repair an unrelated inherited marker defect as a side effect of another task. If a defect is in a file being changed, inspect its current context and fix only what is necessary for the requested change; report unrelated defects separately.
 
 ## Foreign markers are upstream markers
 
-`Trauma`, `Goobstation`, `Goob`, `DeltaV`, `Shitmed`, `EinsteinEngines` markers are not ours. They record upstream authorship. There are 2222 `Trauma - ` and 2497 `<Trauma>` uses in the tree, plus 57 `/* Trauma` block removals, against 65 `Arcane-Edit:` and 58 `Arcane-Start`.
+`Trauma`, `Goobstation`, `Goob`, `DeltaV`, `Shitmed`, and `EinsteinEngines` markers are not ours. They record upstream authorship; interpret them from the affected line and its history rather than assuming the marker identifies who authored a later change.
 
 The rule that follows from this is absolute:
 
@@ -324,7 +313,7 @@ Placement differs by owner and file. Preserve upstream placement on untouched co
 
 `Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are owner-local for Arcane, but they are also upstream surface for everyone syncing TraumaStation, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
 
-Mark the Arcane change there, with Arcane markers. Eleven Trauma-owned files already do this:
+Mark Arcane changes in inherited Trauma files with Arcane markers:
 
 ```csharp
 // Content.Trauma.Server/Heretic/Systems/PathSpecific/AristocratSystem.cs

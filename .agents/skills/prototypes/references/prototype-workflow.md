@@ -13,4 +13,4 @@ Review:
 - missing RSI state or sound file;
 - module resource ownership.
 
-Use the YAML linter after code has been built in the required configuration.
+Use a targeted validator for the changed prototype and directly referenced resources when one exists. The general YAML linter is a broad repository check; run it only when requested or when the task specifically requires that workflow, following root `AGENTS.md` and `.agents/rules/verification.md`.

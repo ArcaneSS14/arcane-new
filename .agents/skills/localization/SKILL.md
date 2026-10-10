@@ -46,16 +46,8 @@ English remains canonical for translation synchronization, but verify that the E
 
 ## Module safety
 
-Search root and modules for duplicate keys and relative file-path collisions. A module must not rely on shadowing another owner's FTL file.
+Check the candidate owner path against the root locale path and directly relevant module paths to avoid shadowing another owner's FTL file. Search an exact key across plausible load roots only when a duplicate-key check is needed; do not enumerate unrelated locale trees.
 
 ## Verification
 
-```powershell
-Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|FEATURE_PREFIX|UI_CONTROL" -- Resources Modules Content.*
-git diff -- "*.ftl"
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
+Inspect only the affected English locale file, directly referenced keys, and the final FTL diff. Run a targeted localization validator only when one exists; do not run a full build, YAML linter, or dependency restore for an FTL-only change. Always run `git diff --check`.

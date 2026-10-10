@@ -34,18 +34,18 @@ When the three versions disagree, decide in this order and stop at the first rul
 
 A change inside an Arcane marker is the repository's deliberate divergence from upstream. It outranks both other versions, and it outranks any preference below.
 
-Marker forms actually present in the tree, by file type:
+Marker forms, by file type:
 
 ```
-YAML:  # Arcane                                    one added line, 26 uses
-YAML:  # Arcane-Edit: <old> > <new>                  one changed line, 62 uses
-C#:    // Arcane-Edit: <old> > <new>                 one changed line, 3 uses
-YAML:  # Arcane-Start / # Arcane-End                 two or more added lines, 58 uses each
-YAML:  # Arcane-Edit-Start / # Arcane-Edit-End       two or more changed lines, 50 and 45 uses
-YAML:  # Arcane-Edit-Start: <reason>                 block with reason, 16 uses
+YAML:  # Arcane                                    one added line
+YAML:  # Arcane-Edit: <old> > <new>                  one changed line
+C#:    // Arcane-Edit: <old> > <new>                 one changed line
+YAML:  # Arcane-Start / # Arcane-End                 two or more added lines
+YAML:  # Arcane-Edit-Start / # Arcane-Edit-End       two or more changed lines
+YAML:  # Arcane-Edit-Start: <reason>                 edit block with reason
 ```
 
-The rule behind those numbers: one line gets a trailing inline marker, bare `Arcane` for an addition and `Arcane-Edit: <old> > <new>` for a change. Two or more lines of the same kind get a `-Start` / `-End` pair. A bare `-Start` or `-End` never appears on its own line as a trailing marker.
+One line gets a trailing inline marker, bare `Arcane` for an addition and `Arcane-Edit: <old> > <new>` for a change. Two or more lines of the same kind get a `-Start` / `-End` pair. A bare `-Start` or `-End` never appears on its own line as a trailing marker.
 
 The reason suffix is optional and used when the block's purpose is not obvious. `# Arcane-Edit-End` never carries a colon.
 

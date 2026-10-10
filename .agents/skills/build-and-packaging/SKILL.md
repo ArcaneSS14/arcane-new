@@ -17,19 +17,8 @@ Configurations are `Debug`, `DebugOpt`, `Tools`, and `Release`. CI builds `Debug
 
 Do not run `git submodule update` unless the user asked for it in the current request. It populates the engine checkout, and the engine is off limits by default per `.agents/rules/engine-boundaries.md`. If the submodule is missing, stop and report it instead of initializing it yourself.
 
-```powershell
-git submodule update --init --recursive
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet test bin/Content.Tests/Content.Tests.dll -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-$env:DOTNET_gcServer=1
-dotnet test bin/Content.IntegrationTests/Content.IntegrationTests.dll -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-dotnet build --configuration Release --no-restore /m
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-dotnet build Content.Packaging --configuration Release --no-restore /m
-```
+For routine changes, follow root `AGENTS.md` and validate only the changed project or workflow. When the user requests CI-equivalent, release, or packaging validation, reproduce only the exact relevant workflow steps and report unavailable checks. Restore only when dependencies changed or are unavailable. Do not run `git submodule update` unless the user explicitly asks and `.agents/rules/engine-boundaries.md` permits it; if the engine submodule is missing, report it.
 
-CI links `bin/Content.IntegrationTests/runtimes` into `bin/Content.Tests/` before running unit tests. Reproduce that when a local unit-test run fails on a missing native runtime rather than assuming the test itself is broken.
+CI links `bin/Content.IntegrationTests/runtimes` into `bin/Content.Tests/` before running unit tests. Reproduce that only when a requested local test run fails on a missing native runtime rather than assuming the test itself is broken.
 
-Discover and run each affected module integration project. Run packaging platforms and specialized validators from exact current workflows. Report unavailable checks explicitly.
+Run module integration projects, packaging platforms, and specialized validators only when they cover changed behavior or the requested CI/package target. Do not run every module suite or packaging platform by default.

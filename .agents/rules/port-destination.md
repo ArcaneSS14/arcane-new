@@ -1,6 +1,18 @@
 
 A port is easy to paste into an existing upstream file. Choose its owner before implementation and place Arcane-only behavior in Arcane-owned projects and resources.
 
+## Port and cherry-pick destination by provenance
+
+The default destination for every port or cherry-pick is the corresponding Arcane-owned project or resource path. This keeps imported work in paths owned exclusively by Arcane and reduces conflicts with other forks and upstream files. “Arcane module” means the root-level `Content.Arcane.*` projects and existing `_Arcane` resource directories; `Modules/Arcane` contains guidance, not runtime code. Port behavior into the correct Arcane layer; do not copy files mechanically when the destination architecture differs.
+
+Exception: when source history confirms that the change is an addition made by TraumaStation, keep it on the corresponding Trauma-owned or vanilla path so the TraumaStation sync can carry it forward. Do not relocate that upstream addition into Arcane solely because it arrived through a port or cherry-pick. Apply Arcane edit markers to any Arcane-authored adaptation on that inherited path; preserve upstream authorship markers on unchanged source lines.
+
+Revert/restoration exception: when the requested change restores content removed by a TraumaStation revert or other Trauma-side deletion, put the restored file and behavior in Arcane-owned paths, even if the original file belonged to TraumaStation or the restoration is delivered as a new file. Do not reintroduce the removed content into the Trauma-owned file or treat the revert as a new TraumaStation addition eligible for the sync exception. This keeps the restoration isolated from the upstream deletion and avoids recurring conflicts. Trace the original addition, removal, and any follow-ups under `.agents/rules/change-history-analysis.md`; port the intended behavior adapted to current APIs, not a blind copy of the reverted patch. If a small integration change in a Trauma/base file is unavoidable, keep it minimal and mark it as Arcane.
+
+Determine provenance from the actual source commit and diff, not only a PR title, branch name, marker, or the fact that the file currently lives under `Content.Trauma.*`. A TraumaStation marker alone does not prove that a change was added by TraumaStation. A restoration of Trauma-removed content follows the revert/restoration exception above and takes precedence over the ordinary TraumaStation-addition exception. If history is unavailable or does not establish TraumaStation authorship, use the Arcane-owned destination by default and report the uncertainty. Place Arcane-specific adaptations in Arcane-owned paths even when they derive from TraumaStation behavior.
+
+Follow `.agents/rules/change-history-analysis.md` when a port, revert, cherry-pick, or restoration depends on history. This rule sets Arcane ownership as the default to minimize conflicts and defines the narrow TraumaStation sync exception; keep any necessary inherited edits minimal and correctly marked.
+
 ## Where a port lands
 
 | Port kind | Destination |

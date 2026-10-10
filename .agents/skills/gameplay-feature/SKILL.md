@@ -22,13 +22,4 @@ A feature is incomplete when code exists but required English localization, prot
 
 Mark inherited edits with the current repository marker. Do not add redundant markers in owner-local module or underscore paths.
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-$env:DOTNET_gcServer=1
-dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-```
-
-Also run the existing integration-test project for every changed module.
+Choose a build and focused test for each changed behavior, using the owning projects. Use targeted resource validation for changed prototypes and assets. Follow root `AGENTS.md`; do not restore dependencies or run full root and module suites by default. Run broader CI-equivalent checks only when requested or needed to validate a specific release or CI requirement.

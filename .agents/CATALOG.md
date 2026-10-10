@@ -20,17 +20,20 @@ Rules are repository policy; skills are task playbooks. A selected skill is an e
 
 ## Skills by changed surface
 
-- Local C# implementation: `csharp-style`; add `module-architecture` for project boundaries and `testing` when choosing checks.
-- ECS implementation: choose the relevant `ecs-*`, entity API, lifecycle, interaction, or domain skill.
-- Client/server/shared, network state, prediction, or trust boundary: `client-server-shared` plus only the applicable `networking`, `prediction`, `security-and-validation`, and domain skills.
-- UI: `xaml-ui` for XAML controls/code-behind; `bound-user-interface` for entity-owned UI contracts and message/state flow (use both when both surfaces change); `eui` for session-oriented interfaces. Add input validation and localization skills only when those surfaces change.
-- Localization: `localization`; add `localization-in-code` when code resolves text.
-- Prototypes and YAML: `prototypes` or `yaml-and-schema`; add `prototype-localization` when visible prototype text changes.
-- Maps and assets: `maps-and-mapping` and/or `resources-and-assets`, plus the affected format or domain skill.
+- Local C# implementation: `csharp-style`; add `naming-conventions` for symbol/API naming, `performance` for hot paths, `logging-and-errors` for diagnostics, and `security-and-validation` for trust boundaries. Use `module-architecture` for project or assembly boundaries.
+- ECS: use `ecs-basics` to understand an unfamiliar subsystem; use `ecs-components`, `ecs-events`, and/or `ecs-systems` for the corresponding implementation. Add `entity-api-patterns` for shared helpers/prototypes, `serialization-and-datafields` for serialized contracts, and `entity-lifecycle-and-spawning` or `entity-relations-and-links` for those lifecycle concerns.
+- Client/server/shared, networking, prediction, or PVS: `client-server-shared` plus only the applicable `networking`, `prediction`, `pvs`, `security-and-validation`, and gameplay-domain skills.
+- Interactions and entity behavior: `interaction-flow` for verbs/in-hand/reusable interactions; `actions-and-doafter` for actions/cooldowns/DoAfter; `containers-and-inventory` for item movement; `transform-and-physics` for coordinates/collisions; `timers-and-async` for delayed work.
+- Gameplay domains: `damage-status-and-effects`, `round-and-game-rules`, `minds-roles-and-objectives`, `npc-ai`, `commands-and-cvars`, `admin-and-permissions`, `database-migrations`, `save-data-and-configuration`, `randomness-and-determinism`, or `external-services` when that domain changes.
+- Content systems: `construction-and-machines`, `chemistry-and-reagents`, `atmos`, or `collections-and-datasets` for those respective systems.
+- UI: `xaml-ui` for XAML controls/code-behind; `bound-user-interface` for entity-owned UI contracts and message/state flow (use both when both surfaces change); `eui` for session-oriented interfaces. Add `forms-and-input-validation` and localization skills only when those surfaces change.
+- Localization: `localization`; add `localization-in-code` when code resolves text, and `prototype-localization` when visible prototype text changes.
+- Prototypes and structured resources: `prototypes` for prototype authoring, `yaml-and-schema` for other schema/config YAML, `maps-and-mapping` for maps, and `resources-and-assets` for resource ownership/validation. Add `appearance-and-visualizers`, `sprite-overlays-and-shaders`, or `audio` for those presentation assets and behaviors.
 - Build, project, CI, or packaging: `build-and-packaging`; add `module-architecture` when project ownership or references change.
-- Tests: `tests-authoring` when writing tests; `testing` when choosing or running checks.
+- Tests: `tests-authoring` when writing tests; `testing` when choosing or running checks. Debugging a reproduced failure uses `debugging`.
+- Documentation and task process: `documentation` for technical docs/reports, `git-workflow` for history/staging/commit operations, and `ai-workflow` for multi-step planning, preflight, and delivery gates.
 - Complete feature spanning layers: `gameplay-feature` plus the technical skills for the affected layers.
-- Feature port: `porting` and `upstream-maintenance`, plus the domain skills for ported code and resources.
+- Feature port or inherited upstream work: `porting` and `upstream-maintenance`, plus `git-workflow` when history/staging is part of the task and domain skills for ported code/resources.
 - Review: `code-review` plus the technical skills for the changed surfaces.
 
 ## Always-on invariants

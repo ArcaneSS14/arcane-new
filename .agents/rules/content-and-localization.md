@@ -50,9 +50,9 @@ Check long Russian text in constrained UI controls when Russian is in scope. Fix
 
 ## Module paths and duplicates
 
-Before creating a module FTL file, search root resources and every module for the same relative path. A module MUST NOT depend on shadowing a core or foreign-module file.
+Before creating a module FTL file, check the candidate path against the root locale path and directly relevant module paths. A module MUST NOT depend on shadowing a core or foreign-module file.
 
-Search keys globally. File separation does not make duplicate FTL keys safe.
+When a duplicate-key check is needed, search the exact key in the resource roots that can load it. Do not enumerate or search unrelated locale trees.
 
 ## Runtime culture behavior
 
@@ -60,12 +60,4 @@ Do not store localized output in persistent, network, or authoritative state. Re
 
 ## Verification
 
-```powershell
-Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|FEATURE_PREFIX" -- Resources Modules Content.*
-git diff -- "*.ftl"
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
+Inspect the affected FTL file, exact key references, and FTL diff. Run a targeted localization validator only if the repository provides one. Do not run full builds, YAML linting, or dependency restore for an FTL-only change by default. Run `git diff --check`.
