@@ -17,9 +17,9 @@ Use one authoritative validation source where possible. Do not allow UI and serv
 
 ## Feedback
 
-Return specific player-safe errors in both `en-US` and `ru-RU`. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
+Return specific player-safe errors in `en-US`; add `ru-RU` only when explicitly requested. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
 
-Variable names and values passed into validation messages must match both locale files.
+Variable names and values passed into validation messages must match `en-US`; match Russian too only when Russian is in scope.
 
 ## Security failures
 
@@ -27,10 +27,5 @@ Treat rich text, markup, paths, URLs, and command fragments as hostile. Use stru
 
 ## Verification commands
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-```
-
-Run the owning integration project for BUI, command authority, stale entities, culture-sensitive UI, or client/server behavior. Test empty, whitespace, boundaries, overflow, locale variants, malformed markup, unauthorized actors, and conflicting fields.
+Build only the affected project. When verification is requested, choose focused tests for the changed validation boundary (such as BUI, command authority, stale entities, or client/server behavior). Do not restore dependencies or run complete test suites by default. Relevant cases include empty and whitespace input, boundaries, overflow, locale variants when in scope, malformed markup, unauthorized actors, and conflicting fields.
+ Test empty, whitespace, boundaries, overflow, locale variants, malformed markup, unauthorized actors, and conflicting fields.

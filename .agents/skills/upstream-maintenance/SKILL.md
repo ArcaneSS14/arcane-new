@@ -5,6 +5,8 @@ description: Keep inherited changes narrow, correctly marked, traceable, and eas
 
 Before editing inherited code, determine whether the change is an upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned behavior.
 
+When behavior was added, removed, reverted, or later restored upstream, trace its commit history before deciding what to carry forward. Follow `.agents/rules/change-history-analysis.md`; do not infer intent from a commit subject or marker alone.
+
 Verify the current repository owner tag and existing marker syntax.
 
 Repository-owned behavior belongs in owner-local module or underscore paths whenever possible. Those paths do not receive redundant owner edit markers.

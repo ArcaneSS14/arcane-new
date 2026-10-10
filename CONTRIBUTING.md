@@ -1,110 +1,58 @@
-# Trauma Station contribution guidelines and standards
+# Arcane contribution guidelines
 
-For the basics and anything not listed here, read [SS14's upstream documentation](https://docs.spacestation14.com)
+This repository is an Arcane fork built on Space Station 14 and TraumaStation. These guidelines describe where Arcane work belongs and how to contribute safely. For project-specific instructions, read the root [AGENTS.md](AGENTS.md), the nearest scoped `AGENTS.md`, and the matching workflow in `.agents/SCENARIOS.md`. `.agents/CATALOG.md` routes task-specific skills; do not load every skill for a routine change.
 
-## Core guidelines
+## Contribution basics
 
-1. Do not rely on language models to do everything for you. You will be ridiculed for this.
-2. If your code is shit, you will be forced to improve it. You will naturally improve as time goes on and you learn more.
+- Keep changes focused and explain the player-visible or maintenance reason for them.
+- For behavior fixes, add or extend a focused test that captures the expected result when the owning test project can cover it.
+- Before opening or updating a pull request, review the diff, run checks that cover the changed behavior, and report exact commands and results.
+- Include screenshots or a short video for meaningful visual or UI changes when they help reviewers.
+- Address review feedback, then rerun the relevant checks before requesting review again.
+- Add a changelog only for changes players or server operators should notice. See the format below.
 
-## Making a PR
+## Where changes belong
 
-For non-trivial changes, include screenshots or videos showing it works.
-Most PRs will be squash-merged so you don't need to rebase to clean your history up before merging.
-When your PR has changes requested, go through this process:
-1. If what to do is obvious, make the requested change and mark it as resolved when done.
-2. If what to do is not obvious, comment on the request asking for clarification.
-3. Once all requested changes are complete, request another review.
+Arcane runtime code is organized into root-level projects:
 
-Remember to test your PR again after making changes to it! Not doing so is one of the most common sources of bugs.
+- `Content.Arcane.Common`: low-level types needed below gameplay Shared.
+- `Content.Arcane.Shared`: shared components, systems, network contracts, and prediction-compatible behavior.
+- `Content.Arcane.Server`: authoritative outcomes, server-only simulation, validation, and persistence coordination.
+- `Content.Arcane.Client`: presentation, client-only systems, controls, and UI.
 
-## Programming
+Follow the existing project references and dependency direction. A project name or matching namespace does not grant access across assemblies. Verify the declaration, accessibility, and project reference before using a type. Do not add references merely to make a misplaced type compile.
 
-### C#
+Arcane prototypes, textures, and locale files use the existing `_Arcane` directories under `Resources`. Preserve the established resource tree and exact path casing. Check for an existing owner file before creating another. Other resource types should follow the corresponding existing owner directory and nearby conventions.
 
-1. All new C# code must go in the `Content.Trauma.*` modules.
-2. Try to only add events to `Content.Trauma.Common`, to allow for deocoupling for upstream's and your logic.
-3. If you absolutely need to use an upstream `Content.Shared` type from `Content.*.Common`, you *may* move it to `Content.Common` without changing its namespace to keep code compatible.
-4. If you are adding new methods, fields, etc. in upstream files make a partial class with the same filename but with `.Trauma.cs`. If it isn't partial already, make it partial with a comment.
-5. Do not add new event handlers to upstream systems, make your own system in `Content.Trauma.*` instead.
-6. Always use proxy methods when they are available, e.g. `TryComp` instead of `EntityManager.TryGetComponent`. This also means don't depend on `EntityManager` when you are in a `EntitySystem` or a BUI.
-7. If a shared system is abstract, the server/client systems should have Server/Client prefix instead of prefixing the shared system with Shared.
+Use `Content.Tests` or `Content.IntegrationTests` when their existing test ownership fits the behavior. Do not create a parallel Arcane test project or duplicate fixtures and CI setup without a demonstrated need.
 
-### Resources
+## Choosing an owner and editing inherited code
 
-All resources go in a `_Trauma` subdirectory inside the resource's folder, e.g. `Resources/Prototypes/_Trauma` for all YML prototypes.
+Put Arcane-only behavior in `Content.Arcane.*` and Arcane-owned resource directories. Do not put feature behavior into a different fork's module simply because it has a similar project name.
 
-### Partial Prototypes
+Some changes may belong on the TraumaStation sync trajectory or in shared upstream code. Prefer an existing supported extension point and keep inherited-file changes small. Before changing an inherited path, check whether the behavior can live in an Arcane-owned project or resource directory. Follow `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md` for placement and markers; follow `.agents/rules/merge-conflict-resolution.md` only when resolving a real conflict.
 
-If you are modifying upstream prototypes, use a partial prototype in `Resources/Prototypes/_Trauma/Partials` instead of directly changing upstream's YML.
+Arcane-authored changes to inherited files use Arcane markers in the file's supported comment syntax. Do not put markers inside Arcane-owned projects or `_Arcane` resource directories. Preserve upstream markers on untouched lines; replace one only when changing that line. If the file format cannot safely contain the required marker, do not break the file to force one in; report the limitation and follow the focused marker guidance.
 
-This should always be done except for special cases where it would be too obtuse or using partial prototypes isn't possible.
+## C# and gameplay behavior
 
-Example:
-```
-- type: entity # modifying an EntityPrototype
-  id: HydroponicsToolClippers # with this ID. It will error if this doesnt' exist.
-  name: "evil plant clippers" # replace a prototype field directly
-  components: # by default, any components here will be added unless they already exist, then they will be merged.
-  - type: Tag # already exists upstream,
-    tags:
-    - AddedTag # so this gets added to the existing tags instead of removing the original ones
-  - type: Tool
-    qualities:
-    - !Remove Shearing # this quality will be removed, but any others it couldve had are kept
-  - type: MeleeWeapon
-    damage:
-      types: !Clear # remove the existing damage, this will replace it and behave like prototype inheritance
-        Blunt: 50
-  - !Remove type: PhysicalComposition # remove a component
-```
+Choose the narrowest project that owns the behavior. Keep client presentation out of Server, authority and hidden state out of Client, and Shared logic safe for both client and server execution. Validate client-originated requests on the server. Keep components focused on state and put behavior in systems, following the existing APIs and nearby patterns.
 
-See the documentation of partial prototypes on the xmldoc of `IPrototypeManager.PartialDirectory` for everything you can do.
+Keep XAML for UI layout and styling, and `.xaml.cs` code-behind for view state and translating control input into intent. A BUI/EUI adapter owns window lifecycle and state/message binding; Shared contains only the minimal serializable contract, while Server validates and applies authoritative changes. Follow `.agents/skills/xaml-ui/SKILL.md` and `.agents/skills/bound-user-interface/SKILL.md` for the specific UI type.
 
-### Update logic
+Prefer the owning system's public API over direct manager access. Do not use reflection, copied private logic, or cross-assembly partial classes to reach inaccessible state. If the required extension point is missing, identify the declaration and assembly boundary and stop before introducing a workaround.
 
-When querying for entities to update, the first component in an `EntityQueryEnumerator` should be the least common. The `ActiveXComponent` pattern is great for this, so you only ever query components that need to be updated.
-This also means never ever do something like `EntityQueryEnumerator<TransformComponent, MyComponent>` as it will go through every entity in the game to check if it has your component!
+For entity queries, lifecycle, timing, networking, prediction, and hot paths, use the corresponding skills from `.agents/skills` as routed by `.agents/CATALOG.md`. Verify behavior at the layer that owns it; a successful build alone does not prove runtime behavior.
 
-Do not use frametime for game logic at all. Compare timespans with `IGameTiming.CurTime` instead, with `AutoPausedField` on component fields where necessary.
+The repository targets `net10.0` with C# 14. Use newer language features when they make intent clearer or support the API being added; do not rewrite working code only to adopt new syntax. Check `.agents/skills/csharp-style/SKILL.md` for C# 14 behavior that can affect overload resolution or property and extension declarations.
 
-In hot code paths which are executed a lot, use EntityQuery and other micro-optimisations to reduce burden on the server and/or clients.
+## Resources and localization
 
-### Component networking
+Use localized strings for player-visible text. English (`en-US`) defines localization keys and structure. By default, add and update localization only in English (`en-US`). Add or change Russian (`ru-RU`) entries only when explicitly requested; do not create counterparts or mirror structural changes automatically. When Russian is requested, preserve the existing key contract, variables, selectors, attributes, and paths; write natural Russian and do not use `THE(...)` wrappers.
 
-Most components that can be shared should be in shared. Also network them unless their lifetimes are extremely short or you have another good reason for it.
+Reuse existing prototypes, assets, sprite states, audio, maps, and locale files before adding new ones. Check attribution and license terms before importing third-party material. Follow the owner-specific resource and localization rules for validation.
 
-Your fields only need to be networked if either:
-1. You change them in your code
-2. You add the component with modified fields in e.g. a ComponentRegistry. These need to be networked or clients may only get the default values.
-
-If you have many fields, use `fieldDeltas: true` and `DirtyField(ent, ent.Comp, nameof(MyComponent.MyField))` after changing `MyField`.
-This minimizes bandwidth usage compared to sending the entire component state for a tiny change.
-
-### Sounds
-
-Sounds played globally (lobby music, antag briefings, etc.) should be stereo. This is usually how you get sounds from the internet anyway.
-
-Sounds played positionally (most ingame objects do this) must be mono. Use ffmpeg or similar tools to convert it to mono if your sound is stereo.
-
-### UI
-
-If you need to add elements to an upstream UI, e.g. game bar buttons, try to inject it where possible to keep your code separate from upstream.
-For example, you can add a `public static event Action<MyControl>? OnCreated;` then call `OnCreated?.Invoke(this)` at the end of `MyControl`'s constructor.
-Then in a UI controller, system, etc. add a handler for `MyControl.OnCreated` and add your custom controls as children to it.
-Doing this eliminates the need for upstream code to be dependent on your random systems, or those random systems to have any code in `Trauma.Common`.
-
-### Prediction
-
-All interactions must be predicted unless you have a very good reason not to do it.
-
-All code should be in shared unless they have a hard dependency in server/client or are only used clientside, with no need to have the server control its existence.
-
-### Tags
-
-Tags you add to `Resources/Prototypes/_Trauma/tags.yml` must be added in alphabetical order, with documentation of how they are used.
-For example, if you add a `Katana` tag for a katana sheath' storage whitelist, add `# Used in ClothingBeltKatanaSheath slot whitelist`
-Try to update this documentation if you add a substatial use of a tag.
+## Formatting conventions
 
 ### YML style
 
@@ -143,52 +91,12 @@ Instead of copy pasting something in the same file 20 times, use anchors using `
     sound: *sound
 ```
 
-## Commenting changes
 
-Changes to upstream files must be commented properly.
-For single line changes use `// Trauma - explanation` or in YML, `# Trauma - explanation`.
-This should basically be a single-line diff explaining what you changed, e.g. `// Trauma - removed Access` would clearly mean the `[Access]` attribute on a class was removed.
-If you are changing a value say what it used to be, and optionally why it was changed. e.g. `attackRate: 1 # Trauma - was 2, nerfed for being op`
+## Markers and upstream sync
 
-For multi-line changes or replacements use the tag-like `// <Trauma>` `// </Trauma>` comment style.
-When removing entire sections of code use `/* Trauma` ... `*/`, assuming there are no multiline comments inside of that code.
+The marker rules are intentionally maintained in `.agents/rules/arcane-edit-markers.md`; consult that file instead of copying marker syntax into this guide. In short, Arcane markers record our edits to inherited files, while the owner path identifies Arcane-owned code and resources. Never author a change under another fork's marker.
 
-When adding things to a list where the order is not important, e.g. file imports, components in an entity prototype, always put them at the top to minimize the chances of conflicts.
-Examples of this:
-```cs
-// <Trauma>
-using Content.Shared.Examine;
-using Robust.Shared.Prototypes;
-// </Trauma>
-using Content.Shared.Actions; // upstream's imports follow...
-...
-```
-
-```yml
-- type: entity
-  parent: ...
-  id: MobHuman
-  name: Urist McHands
-  components:
-  # <Trauma>
-  - type: Mutatable
-    ...
-  - type: Skinnable
-    ...
-  # </Trauma>
-  - type: ... # upstream's components below
-```
-
-This causes less conflicts with upstream for 2 reasons:
-1. Having all additions in 1 block means there is only 1 place it can conflict, as opposed to placing them randomly
-2. When new additions are slapped onto existing prototypes etc, it's almost always added to the bottom or alphabetically sorted etc. It's extremely rare that someone would put it at the top to spite you.
-
-However, **use partial prototypes instead** for YML to make conflicts **impossible** and make certain things like adding a single tag easier, without having to copy paste the parent's tags and hope they never get changed.
-
-## Sprite Changes
-
-If you are respriting anything from upstream you **do not need** to make a new rsi in `_Trauma/`. Just amend the copyright line and keep new states at the top of the list.
-This doesn't apply to entirely new sprites, such as icons for a new job.
+For changes to inherited prototypes, prefer supported partial prototypes when they express the change cleanly. Verify the current resource path and schema before using or creating a partial. Do not reorder unrelated upstream entries or reformat neighboring content.
 
 ## Changelogs
 

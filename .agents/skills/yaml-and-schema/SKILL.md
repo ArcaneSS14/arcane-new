@@ -27,11 +27,6 @@ YAML syntax validity is only the first layer. Identify the actual consumer and s
 
 ## Exact validation commands
 
-```powershell
-dotnet restore
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
+Validate the changed YAML files with the narrowest available validator. For workflow, map, RSI, or custom schema files, use the exact specialized command from the current repository workflow. Build code projects only when code changed. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run a repository-wide linter by default.
 
 For workflow, map, RSI, or custom schema files, also run the exact specialized command from the current repository workflow. Do not guess from another fork.

@@ -9,6 +9,11 @@ included_prs:
 pending_prs: []
 excluded_prs: {}
 source_commit: full-source-sha
+introducing_commits: []
+follow_up_commits: []
+reverted_commits: []
+restoration_commits: []
+history_notes: "Summarize verified final behavior and unresolved source-history gaps."
 dependencies: []
 target_module: Arcane
 status: planned

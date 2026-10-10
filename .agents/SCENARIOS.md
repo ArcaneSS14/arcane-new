@@ -1,84 +1,51 @@
-# Scenario Routing
+# Scenario routing
 
-Root hard rules always apply.
+Use this file to identify the workflow for a task. The root `AGENTS.md` defines common constraints; `.agents/CATALOG.md` routes skills; `.agents/rules` contains focused policies. Read only the rule files and skills that apply to the actual changed paths.
 
-## Any write task
+## Routine owner-local change
 
-Before editing:
+1. Read root guidance and the nearest scoped `AGENTS.md` files.
+2. Identify the exact owner from the path and project/resource metadata.
+3. Search the narrowest relevant directory for existing behavior and patterns.
+4. Select the relevant skills in `.agents/CATALOG.md`.
+5. Verify with the smallest check covering the changed files.
 
-1. verify repository, branch, remotes, upstream, and owner tag
-2. identify owner module and owner underscore paths
-3. inspect existing edit-marker syntax
-4. locate declarations, assemblies, resources, tests, and locale owners
-5. preserve the existing SPDX diff
+Arcane projects live at the repository root as `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`. Arcane prototypes and textures use the existing `Resources/**/_Arcane` paths. Arcane English locale uses `Resources/Locale/en-US/_Arcane`; add or update `ru-RU/_Arcane` only when the user explicitly requests Russian localization. `Modules/Arcane` currently holds guidance, not runtime projects.
 
-## Change an inherited file
+## Inherited or sync-sensitive change
 
-Read `module-architecture`, `upstream-maintenance`, and `git-workflow`.
+Use this workflow only when a changed path is inherited or lies on the TraumaStation sync surface. Read `architecture-and-ownership.md`, `fork-trajectory-priority.md`, and `arcane-edit-markers.md`; read `merge-conflict-resolution.md` only when resolving an actual conflict. Use `module-architecture`, `upstream-maintenance`, or `git-workflow` when the change also affects their concerns.
 
-- Mark our own changes with Arcane markers only. Never with `Trauma - `, `<Trauma>`, or any other upstream marker.
-- One added line is a bare trailing `# Arcane` or `// Arcane`. Two or more added lines use `Arcane-Start` / `Arcane-End`.
-- One changed line is a trailing `Arcane-Edit: <old> > <new>`. Two or more changed lines use `Arcane-Edit-Start` / `Arcane-Edit-End`.
-- More than 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block.
-- Never put a bare `-Start` or `-End` on a line instead of a pair.
-- Do not add the marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
-- Do mark Arcane changes inside Trauma, vanilla, Medical, and Shitmed paths. Those are owner-local for us but upstream surface for sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
-- When a line we change carries an upstream marker, replace it with `Arcane-Edit: <upstream value> > <our value>`. Leave upstream markers on untouched lines alone.
-- Keep the edit cheap: append to the end of a list, gather into one block, prefer additive over destructive, do not touch neighbours.
-- Do not add comments to formats that cannot safely contain them.
+- Mark our own changes with Arcane markers only. Never write an upstream fork marker as authorship for our change.
+- Match marker comment syntax to the file format. If comments are unsafe or unsupported, do not force a marker into the file; follow the focused marker rule and report the limitation.
+- Do not mark Arcane-owned projects or `_Arcane` resource directories.
+- Replace an upstream marker only on a line we actually change; preserve markers on untouched lines.
+- Keep inherited diffs small and avoid unrelated formatting or neighboring-line edits.
 
-Routing: `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, `.agents/rules/merge-conflict-resolution.md`.
+## Revert, restoration, port, or unexplained removal
 
-## Change an owner-local file
+Read `.agents/rules/change-history-analysis.md` before deciding what behavior to restore, omit, or port. Trace the introduction, follow-up fixes, reverts, and current source/destination state by exact commit and affected paths; do not rely on commit titles alone. For a port, also read `port-destination.md`, `fork-trajectory-priority.md`, and `third-party-materials.md` when external material is involved, then route skills for the affected layers. Keep the history search path-scoped and report unavailable or conflicting evidence.
 
-Owner-local includes `Modules/<OwnerTag>`, verified `_<OwnerTag>` paths, and other projects proven to belong to the current repository.
+## Localization or player-visible text
 
-Do not add redundant owner edit markers there. Follow the scoped guidance and nearby style.
+Read `.agents/rules/content-and-localization.md` and route `localization` plus `localization-in-code` only when code resolves text; include the owning domain skill when relevant. Inspect the affected `en-US` owner file and directly referenced keys. By default, leave `ru-RU` untouched. If Russian localization is explicitly requested, update only its affected owner file and preserve variables, selectors, markup, and natural Russian wording.
 
-For Arcane specifically this applies to `Modules/Arcane/**`, `Content.Arcane.*`, and `Resources/_Arcane/**`. It does not apply to `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, or `Resources/_Shitmed/**`: those are owner-local for us yet upstream surface for a sync, so an Arcane change in them needs an Arcane marker. See "Change an inherited file" above.
+## Cross-assembly or networked feature
 
-## Add or update localization
+Read the applicable scoped project guidance and `architecture-and-ownership.md`. Route client/server/shared, networking, prediction, actions, UI, or security skills according to the actual affected behavior. Verify declarations and project references before implementation; use the existing owner test project when behavior needs coverage.
 
-Read `localization`, `localization-in-code`, and the owning domain skill.
+## Prototype, map, asset, or structured resource
 
-- Treat `en-US` as structural truth.
-- Mirror additions, deletions, renames, moves, attributes, variables, selectors, and ordering in `ru-RU`.
-- Insert a new Russian message at the corresponding English position, not at the file end.
-- Reuse existing mirrored files and preserve exact path spelling.
-- Write natural Russian without `THE(...)` wrappers.
+Read `yaml-prototype-conventions.md` for prototype formatting. Route the corresponding prototype, mapping, resource, localization, and YAML skills by the resources changed. Validate only the affected resource roots and references.
 
-```powershell
-Get-ChildItem Resources/Locale -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-Get-ChildItem Modules -Recurse -File -Filter *.ftl | Select-Object -ExpandProperty FullName
-git grep -n -E "EXACT_KEY|OLD_KEY|PROPOSED_KEY|FEATURE_PREFIX" -- Resources Modules Content.*
-git diff -- "*.ftl"
-```
+## Build, project, CI, or packaging change
 
-## English localization changed
+Read `architecture-and-ownership.md` and route `module-architecture` and `build-and-packaging`. Confirm the current project graph and workflow before changing references or adding infrastructure.
 
-Compare the affected English and Russian files as ordered message sequences.
+## Broad review or feature port
 
-- English key added: add Russian key in the same relative position.
-- English key removed: remove the Russian counterpart.
-- English key renamed: rename the Russian counterpart and search stale references.
-- English block reordered: reorder Russian messages the same way.
-- English file moved or renamed: mirror the Russian file path.
-- English variables, selectors, or attributes changed: mirror the contract exactly.
+For a user-requested broad review, read `code-review` plus rules and skills for changed surfaces. For a port, follow the history scenario above in addition to `port-destination.md`, `fork-trajectory-priority.md`, and `third-party-materials.md` when external material is involved; route the domain skills for the ported behavior. Do not turn a local task into a repository-wide audit.
 
-## Russian-only wording correction
+## Unsupported access boundary
 
-Change only the translated value when structure is unchanged. Do not reorder keys, rename variables, add locale-only keys, or rewrite English without a semantic reason.
-
-## Add or update a module integration test
-
-Read the nearest scoped guidance, `testing`, and `tests-authoring`.
-
-Use the existing `Content.<Module>.IntegrationTests` project. Do not create duplicate fixtures, CI steps, MSBuild targets, or `module.yml` entries.
-
-## Required private or internal state is inaccessible
-
-VERIFY declarations and assemblies. Do not use cross-assembly partial classes, extension methods, reflection, or copied private logic. STOP and identify the smallest reusable extension point.
-
-## Review a broad change
-
-Read `code-review` and all domain skills matching changed files. Verify ownership, marker placement, English/Russian order parity, resources, authority, lifecycle, compatibility, tests, and command evidence.
+Verify the concrete declaration, access modifier, and assemblies. Do not use cross-assembly partial classes, reflection, or copied private logic. Stop and report the smallest supported extension point needed.

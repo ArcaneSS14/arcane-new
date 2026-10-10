@@ -21,16 +21,11 @@ Write to a unique temporary file, flush when durability matters, and replace ato
 
 ## Player-facing settings
 
-Names, descriptions, options, validation errors, and fallback notices require `en-US` and `ru-RU`. Culture names and saved culture values must be validated against cultures actually found at runtime.
+Names, descriptions, options, validation errors, and fallback notices require `en-US`; update `ru-RU` only when explicitly requested. Culture names and saved culture values must be validated against cultures actually found at runtime.
 
 A saved setting must restore after restart. Removed or invalid values must fall back safely without corrupting the config.
 
 ## Verification commands
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-```
-
-Run the owning integration project for runtime reload, client settings UI, server/client propagation, or restart behavior. Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.
+Build only the affected project. When verification is requested, select focused tests for persistence, reload, client settings, propagation, or restart behavior. Do not restore dependencies or run complete test suites by default. Relevant cases include missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart scenarios.
+ Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.

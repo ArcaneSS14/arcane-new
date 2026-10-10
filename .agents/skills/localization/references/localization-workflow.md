@@ -2,7 +2,7 @@
 1. Identify every player-visible string introduced or changed.
 2. Find the owner's locale subtree.
 3. Add or update the source locale key.
-4. Update Russian when the wording is known and the feature supports it.
+4. Update Russian only when the user explicitly requests Russian localization. Otherwise leave existing `ru-RU` files untouched.
 5. Pass variables from code or prototypes.
 6. Search for the key to confirm spelling and usage.
 7. Run resource validation.

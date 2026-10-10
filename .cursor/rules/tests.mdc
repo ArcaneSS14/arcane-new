@@ -10,6 +10,6 @@ Verify repository identity, owner-local module and underscore paths, and edit-ma
 
 Use existing owner-local test infrastructure. Verify symbol access and project references. Do not create duplicate test projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
 
-For locale and culture tests, treat `en-US` as structural truth. Verify `ru-RU` keys, attributes, variables, selectors, relative file paths, ordered positions, fallback, persistence, repeated switching, and cleanup.
+Treat `en-US` as structural truth. Verify Russian keys, attributes, variables, selectors, file paths, order, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
 
 Run exact canonical commands, preserve failures, never edit SPDX metadata, and never weaken assertions for green CI.

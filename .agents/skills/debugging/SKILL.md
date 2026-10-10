@@ -13,14 +13,8 @@ Debug before redesigning.
 6. Add temporary diagnostics only around the suspected divergence.
 7. Confirm the failing assumption, fix the narrow cause, remove diagnostics, and add a stable regression test.
 
-For localization bugs, compare English and Russian file discovery, relative paths, ordered keys, variables, selectors, loaded roots, and UI refresh.
+For localization bugs, inspect English file discovery, keys, variables, selectors, loaded roots, and UI refresh. Compare Russian files only when the issue is Russian-specific or Russian is in scope.
 
 Apply repository markers only to inherited files and never to owner-local module or underscore paths.
 
-```powershell
-dotnet restore
-dotnet build --configuration DebugOpt --no-restore /m
-dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
-```
-
-Run the existing integration-test project for each affected owner.
+After reproducing the issue, build only the affected project and use a focused regression test when verification is requested and the owner can cover the failure. Run an integration test only when it exercises the broken cross-layer path. Follow root `AGENTS.md`; do not restore dependencies or run every affected owner’s full suite by default.

@@ -5,11 +5,11 @@ description: Prove repository ownership, module ownership, assembly boundaries, 
 
 ## Mandatory workflow
 
-1. verify origin, upstream, branch, and repository owner tag
-2. identify owner module and verified underscore owner paths
-3. classify the target path as Arcane owner-local, vanilla unmarked, Trauma owner-local, or foreign fork, per `.agents/rules/fork-trajectory-priority.md`
-4. search root content and every module for the existing behavior
-5. read owner manifests, project files, scoped guidance, and solution entries
+1. verify remotes, branch, and repository owner only when ownership, inherited files, synchronization, or repository automation is in scope
+2. identify the owner from the target project or resource path and its metadata
+3. classify inherited paths per `.agents/rules/fork-trajectory-priority.md`
+4. search the narrowest relevant project or resource root for existing behavior
+5. read owning project files, applicable scoped guidance, and solution entries; inspect `module.yml` only when that owner uses one
 6. identify target and caller assemblies
 7. locate every required declaration and access modifier
 8. verify project-reference direction
@@ -18,9 +18,9 @@ description: Prove repository ownership, module ownership, assembly boundaries, 
 
 ## Trajectory
 
-`arcane-new` is a fork of TraumaStation, and TraumaStation is the sync source. `CONTRIBUTING.md` is the inherited TraumaStation guide and is authoritative for how Trauma-owned code is written: new C# in `Content.Trauma.*`, `.Trauma.cs` partials for additions to base files, no new handlers on upstream systems, resources under `_Trauma`, and partial prototypes in `Resources/Prototypes/_Trauma/Partials`.
+TraumaStation is the sync trajectory for inherited code in this repository. Read this repository's `CONTRIBUTING.md` for Arcane ownership and contributor conventions; consult the focused rules for inherited-file placement and markers.
 
-Trauma-owned code and vanilla space-station-14 root paths are the conflict surface: keep edits there minimal. Arcane-only behavior goes in `Modules/Arcane`. Foreign fork paths such as `Modules/GoobStation/**`, `Resources/_Goobstation/**`, and `Resources/_EinsteinEngines/**` are not part of this trajectory, so the minimization requirement is weaker there.
+Arcane runtime code lives in the root-level `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client` projects. Arcane resources live in existing `_Arcane` owner directories under `Resources`. Keep Arcane-only behavior there. Trauma-owned code and vanilla root paths are sync-sensitive; keep any required edits minimal and marked. Foreign fork paths are not Arcane-owned just because they are present in this repository.
 
 Classification details: `.agents/rules/fork-trajectory-priority.md`.
 
@@ -42,6 +42,6 @@ When a required member is inaccessible, STOP and identify the smallest public ex
 
 ## Existing infrastructure
 
-Before creating anything, search for an existing module project, integration-test project, fixture, manifest entry, CI step, MSBuild target, manager, system, event, or service.
+Before creating anything, search for an existing project, integration-test project, fixture, manifest entry when applicable, CI step, MSBuild target, manager, system, event, or service.
 
-Build the affected project graph and run the existing owner test project.
+Build the smallest affected project and use the existing `Content.Tests` or `Content.IntegrationTests` project when it owns coverage for the changed behavior. Do not assume a separate Arcane integration-test project exists.

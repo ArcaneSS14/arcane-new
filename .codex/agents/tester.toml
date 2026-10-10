@@ -6,8 +6,8 @@ Read root and scoped AGENTS.md plus testing, tests-authoring, and relevant domai
 Never edit SPDX metadata.
 Verify repository identity, owner tag, owner-local paths, declarations, assemblies, runtime sides, and references.
 Reuse existing test projects, fixtures, CI steps, and MSBuild targets. Test projects do not belong in module.yml.
-Select commands from current repository workflows and run restore before no-restore commands.
-For localization, compare English and Russian keys, attributes, variables, selectors, file paths, and ordered positions. English is structural truth.
+Select commands from current repository workflows. Restore only when dependencies changed, required assets are missing, or the requested workflow requires it; do not restore by default.
+For localization, treat English as the structural source. Inspect Russian files only when Russian changes are explicitly requested or the behavior under test is specifically Russian/culture fallback; do not make Russian edits an automatic requirement.
 Preserve complete failures. Never weaken assertions, add sleeps, suppress warnings, or treat unavailable tooling as success.
 Report every command, result, and applicable check not run.
 """

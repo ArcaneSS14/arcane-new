@@ -13,3 +13,7 @@ Modify it for a Goob-owned feature, a reusable inherited fix, or an extension po
 Keep diffs narrow and easy to compare with upstream Goob Reforged.
 
 This module is not part of the Trauma trajectory. Syncs do not flow through it, so an edit here does not collide with the next Trauma import. That makes it a legitimate place for inherited fixes that would be expensive in a vanilla root path, which is the conflict surface. Trajectory classification: `.agents/rules/fork-trajectory-priority.md`.
+
+## Mechanics present
+
+The current C# source is concentrated in Shared and Server. Major areas include Wraith, Shadowling, Changeling, Blob, Devil, Xenobiology, disease, enchanting, religion, implants, station events, and related antagonist/objective systems. Client contains corresponding visuals and UI, plus research and console interfaces. Common carries events and contracts; UIKit owns reusable Goob UI controls and rich text. Per-project guides under this directory link source areas and representative files; [`CATALOG.md`](../CATALOG.md) maps their dependencies and builds. Prototypes and assets are in root `Resources`.

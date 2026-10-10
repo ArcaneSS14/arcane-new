@@ -1,10 +1,10 @@
 ---
 description: Arcane guidance adapter for module ownership and dependency direction
-globs: Modules/**/*
+globs: Modules/**/*,Content.*/*.csproj,Content.*.*/*.csproj
 alwaysApply: false
 ---
-Read the module manifest, nearest scoped AGENTS.md, module-architecture skill, and dependency reference before editing. Keep module-specific work in its owner and avoid base-to-module references.
+For root `Content.*` projects, consult `Modules/CATALOG.md` and the linked owner/project guide; those guides are stored separately from the runtime source. Verify ownership and dependency direction from the actual project references. Read a `module.yml` only when one exists for the selected runtime owner.
 
-Classify the change against `.agents/rules/fork-trajectory-priority.md` before editing a `Modules/**` path or any underscore owner dir. Prefer `Modules/Arcane` for Arcane-only behavior and `Content.Trauma.*` for upstream-compatible behavior.
+Classify sync-sensitive source/resource edits against `.agents/rules/fork-trajectory-priority.md`. Prefer root `Content.Arcane.*` and existing `_Arcane` resource paths for Arcane-only behavior; use the provenance-based exceptions in `.agents/rules/port-destination.md` for confirmed TraumaStation additions and Trauma-side revert restorations.
 
-Marker: none inside `Modules/Arcane/**`. For anything else, wrap the smallest changed block in Arcane form and see `.cursor/rules/core.mdc`.
+Use Arcane edit markers for our changes to inherited game code/resources when the canonical rule requires them. Instruction/documentation edits do not use gameplay edit markers. See `.cursor/rules/core.mdc` and `.agents/rules/arcane-edit-markers.md`.

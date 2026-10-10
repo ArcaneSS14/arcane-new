@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ARCANE_OWNED = ("Modules/Arcane/", "Content.Arcane.", "Resources/_Arcane/")
+ARCANE_OWNED = ("Modules/Arcane/", "Content.Arcane.")
 INFRASTRUCTURE = (".agents/", ".claude/", ".cursor/", ".codex/", "AGENTS.md", "CLAUDE.md")
 MARKER = re.compile(r"Arcane(?:-Edit|-Start|-Edit-Start|-End|-Edit-End)?\b")
 FOREIGN = re.compile(r"(?:Trauma\s*-\s|<Trauma>|</Trauma>|Goobstation\s*-\s|<Goob>|/\*\s*Trauma)")
@@ -44,7 +44,10 @@ def main() -> int:
             continue
         if current.endswith((".md", ".yml", ".yaml", ".toml")):
             continue
-        if any(current.startswith(p) for p in ARCANE_OWNED):
+        arcane_owned = any(current.startswith(p) for p in ARCANE_OWNED) or (
+            current.startswith("Resources/") and "_Arcane" in current.split("/")
+        )
+        if arcane_owned:
             if MARKER.search(added):
                 findings.append(f"marker inside Arcane owner-local path: {current}: {added.strip()[:70]}")
             continue

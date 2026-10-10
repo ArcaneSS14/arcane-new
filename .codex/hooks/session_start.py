@@ -21,12 +21,13 @@ def main() -> int:
 
     parts = [
         "Repository: Arcane, a fork of TraumaStation. TraumaStation is the sync source, so inherited"
-        " and Trauma-owned files are the conflict surface. Prefer Content.Trauma.* for upstream-compatible"
-        " behavior and Modules/Arcane for Arcane-only behavior.",
+        " and Trauma-owned files are the conflict surface. Prefer root Content.Arcane.* projects and"
+        " existing _Arcane resource paths for Arcane-only behavior. Follow port-destination.md for"
+        " confirmed upstream additions and Trauma-side revert restorations.",
         "",
         "EDIT MARKERS, APPLIED VERBATIM. Every change we author carries Arcane markers only.",
         "Never write Trauma - , <Trauma>, Goobstation-, /* Trauma, or any other fork's marker.",
-        "No marker inside Arcane owner-local paths: Modules/Arcane/**, Content.Arcane.*, Resources/_Arcane/**.",
+        "No marker inside Arcane owner-local paths: Modules/Arcane/**, Content.Arcane.*, Resources/**/_Arcane/**, Resources/Locale/**/_Arcane/**.",
         "Required inside Content.Trauma.*, Resources/_Trauma/**, *.Trauma.cs, Content.Medical.*,",
         "Resources/_Shitmed/**, and vanilla root paths. Editing a Trauma file is allowed and often correct.",
         "A line we change becomes ours, so an upstream marker becomes Arcane-Edit: <old> > <new>.",
@@ -35,7 +36,7 @@ def main() -> int:
         "prefer additive over destructive, do not reformat or reorder neighbours.",
         "",
         "Read AGENTS.md, the nearest scoped AGENTS.md, and the task-matching .agents/skills before editing.",
-        "English localization is structural truth; mirror Russian keys, variables, selectors, paths, and order.",
+        "English localization is structural truth. Add or edit Russian localization only when the user explicitly requests it.",
     ]
 
     for name in ("arcane-edit-markers.md", "fork-trajectory-priority.md"):

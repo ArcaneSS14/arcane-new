@@ -155,7 +155,7 @@ public void ApplyMarkEffect(EntityUid target, HereticCombatMarkComponent mark, E
 - `ProtoMan.HasIndex<EntityEffectPrototype>(...)` guarding a string-built prototype ID before use
 - two trailing comments that each justify a ranking decision, `// Prioritize living mobs` and `// Prioritize mobs nearby`. Neither restates the code it sits next to
 
-The query ordering rule from `CONTRIBUTING.md` also holds in practice: `EntityQueryEnumerator<CrackedLanternSummonComponent, MeleeWeaponComponent, PhysicsComponent, ...>` in `Content.Trauma.Shared/Heretic/Systems/PathSpecific/Ash/` puts the rare feature component first and the ubiquitous `TransformComponent` last. The `ActiveXComponent` type that `CONTRIBUTING.md` names as the pattern has zero occurrences in the current codebase.
+Existing code orders `EntityQueryEnumerator` by the rare feature component first and the ubiquitous `TransformComponent` last. Follow that repository pattern and the performance skill; do not depend on an example type that is absent from this checkout.
 
 The same file declares a compact event next to its raiser instead of in a shared events file:
 
@@ -185,12 +185,9 @@ Prefer prototypes over enums for anything data-driven or content-extensible. Enu
 
 Do not add extension methods on `EntityUid`, components, or systems. The existing `EntityUid` extensions are legacy. Behavior belongs on the owning system so the call site is discoverable.
 
-## C# 14 in ECS code
+## C# language features in ECS code
 
-- `field`-backed properties: only for trivial accessors, and never a member named `field`. Diagnostics differ between CS9272 and CS9258.
-- `extension` blocks: justified when adding operators or properties to `IQueryable<TEntity>` and similar, which classic extension methods cannot express. `Content.Server/Database/EFCoreExtensions.cs` is the local example. Never as a way to reach private state.
-- Span overload resolution: prefer the non-span overload inside `Expression<Func<...>>` passed to EF Core, otherwise the interpreted expression throws at runtime. Relevant to `Content.Server/Database/EFCoreExtensions.cs` and `Content.Server/Database/ServerDbBase.cs`.
-- Collection expressions for empty field initializers, `[]`, not `new()`.
+Use the C# 14 guidance in `.agents/skills/csharp-style/SKILL.md` for language-specific behavior, including `field`-backed properties, extension blocks, and span overload resolution. In ECS code, keep `[DataField]` and other attribute-driven members in the shape required by their serializers and framework APIs; newer property syntax does not make a field-based contract interchangeable with a property. Do not modernize unrelated ECS code as a side effect.
 
 ## Anchoring
 

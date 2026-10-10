@@ -11,20 +11,14 @@ description: Create, inherit, compose, localize, and validate YAML prototypes in
 4. Verify fields against the destination component schema.
 5. Prefer inheritance or composition over copying a large prototype.
 6. Use stable specific IDs and typed IDs in code.
-7. Add required English display text and mirror Russian structure and ordering.
+7. Add English display text; add or update Russian only when explicitly requested.
 8. Verify every referenced prototype, sprite, state, sound, dataset, map, and locale key.
 9. Search for duplicate IDs and stale references.
 
 Do not place repository-owned prototypes in another owner's root for convenience. Do not expose prototype IDs as fallback player text.
 
-When English prototype localization changes, mirror Russian additions, removals, renames, attributes, variables, selectors, file paths, and ordered positions.
+When Russian prototype localization is explicitly requested, preserve matching keys, attributes, variables, selectors, paths, and ordering.
 
-```powershell
-git grep -n "PROTOTYPE_ID" -- Resources Modules
-dotnet restore
-dotnet build --configuration Release --no-restore /p:WarningsAsErrors= /m
-dotnet run --project Content.YAMLLinter/Content.YAMLLinter.csproj --no-build
-git diff --check
-```
+Validate only the changed prototype and directly referenced resources with an available targeted validator. Build the affected project when code changes. Run a focused owner test when lifecycle or map-loading behavior is in scope and verification is requested. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run the global YAML linter by default.
 
-Run the existing owner integration project when the prototype participates in server/client lifecycle or map loading.
+When verification is requested and the prototype changes server/client lifecycle or map loading, select a focused owner test that covers that path. Do not run the complete integration project by default.

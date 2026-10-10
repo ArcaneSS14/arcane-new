@@ -8,147 +8,34 @@ Use paths, symbols, projects, modules, prototypes, locale keys, resources, and e
 
 Do not inspect, inventory, summarize, or recursively enumerate the whole repository before starting work.
 
-Do not read every `AGENTS.md`, `.agents/rules` file, skill, catalog, or scenario file.
+Do not read every `AGENTS.md`, `.agents/rules` file, skill, catalog, or scenario file for routine work. If the user explicitly requests an audit of agent instructions, inspect the instruction set needed to complete that audit.
 
-Do not read `.agents/CATALOG.md` or `.agents/SCENARIOS.md` unless the user explicitly requests:
-
-* a repository-wide review
-* a full pull request review
-* a complete feature port
-* a broad architecture change
-* a final pre-merge audit
+Do not read every entry in `.agents/CATALOG.md` or `.agents/SCENARIOS.md` for routine work. Consult relevant entries for task routing; inspect the wider index only when the user explicitly requests an audit of agent instructions.
 
 Do not inspect unrelated modules, forks, upstream repositories, projects, resources, localization trees, tests, or workflows.
 
 ## Instruction selection
 
-For a normal task, initially read only:
+Use instructions in this order:
 
-1. this root `AGENTS.md`
-2. the nearest scoped `AGENTS.md` for each explicitly targeted path
-3. no more than two directly relevant skills from `.agents/skills`
+1. System and developer instructions, then the user's current request.
+2. This root `AGENTS.md` and the nearest `AGENTS.md` files applying to the paths being changed.
+3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
+4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
 
-A third skill may be read only when the current code proves that another technical surface is directly affected.
+More specific instructions add detail to general instructions. Root scope and verification limits are ceilings: scoped rules and skills may narrow them, but must not silently expand repository searches, builds, restores, or test runs. If two applicable instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
 
-Do not open a skill merely because it could be generally useful.
+Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
 
-Do not read both a broad skill and all of its neighboring domain skills by default.
-
-When expanding instruction scope, state the concrete changed surface that requires the additional instruction.
+When expanding the instruction scope, state which concrete changed surface requires it.
 
 ## Skill routing
 
-Select skills from the actual requested change, not from hypothetical side effects.
+Select skills from the actual requested change, not from hypothetical side effects. `.agents/CATALOG.md` is the canonical skill-routing index; consult only the entries relevant to changed surfaces, then read only those skills. A task spanning layers may require multiple skills.
 
-This table routes every skill in `.agents/skills`. If a task matches a row, that skill is the required read. Always-on constraints live in `.agents/rules` and are not repeated here.
+For work in any root `Content.*` project, use `Modules/CATALOG.md` to find its owner and project guide, then read that linked guide when its source area is relevant. Those guides are stored under `Modules/` for organization and are not discovered automatically as the nearest `AGENTS.md` for root project files. Runtime projects remain at the repository root; use their project references and existing owner guidance rather than expecting a `module.yml` under `Modules/`.
 
-### Ownership, process, and delivery
-
-* End-to-end feature across all layers: `.agents/skills/gameplay-feature/SKILL.md`
-* Plan, preflight, and delivery quality gates: `.agents/skills/ai-workflow/SKILL.md`
-* Cross-project ownership or project references: `.agents/skills/module-architecture/SKILL.md`
-* Staging, commits, history, and scope control: `.agents/skills/git-workflow/SKILL.md`
-* Resolving merge conflicts or choosing a side: `.agents/rules/merge-conflict-resolution.md`
-* Marking Arcane changes to inherited files: `.agents/rules/arcane-edit-markers.md`
-* Choosing where a change belongs, or handling Trauma and vanilla upstream files: `.agents/rules/fork-trajectory-priority.md`
-* Porting a complete feature family: `.agents/rules/port-destination.md`
-
-`arcane-new` is a fork of TraumaStation, and TraumaStation is the sync source. `CONTRIBUTING.md` is the inherited TraumaStation contribution guide and is authoritative for Trauma-owned code: all new C# in `Content.Trauma.*`, `.Trauma.cs` partials for additions to base files, no new handlers on upstream systems, resources under `_Trauma`, partial prototypes in `Resources/Prototypes/_Trauma/Partials`, and `Trauma - reason` or `<Trauma>` markers on upstream edits. Read it before changing anything on the Trauma trajectory.
-* Inherited upstream code and edit markers: `.agents/skills/upstream-maintenance/SKILL.md`
-* Porting a complete feature family: `.agents/skills/porting/SKILL.md`
-* Reviewing a change or pull request: `.agents/skills/code-review/SKILL.md`
-* Reproducing and proving a failure: `.agents/skills/debugging/SKILL.md`
-* Technical docs, PR notes, and reports: `.agents/skills/documentation/SKILL.md`
-* Naming symbols, events, prototypes, keys, and resources: `.agents/skills/naming-conventions/SKILL.md`
-
-### Code, assemblies, and performance
-
-* Local C# implementation and symbol access: `.agents/skills/csharp-style/SKILL.md`
-* Hot paths, allocations, iteration, and caching: `.agents/skills/performance/SKILL.md`
-* Logging, diagnostics, and player-facing failures: `.agents/skills/logging-and-errors/SKILL.md`
-* Trust boundaries, abuse resistance, and secrets: `.agents/skills/security-and-validation/SKILL.md`
-
-### ECS
-
-* Reading an unfamiliar subsystem first: `.agents/skills/ecs-basics/SKILL.md`
-* Serialized component state: `.agents/skills/ecs-components/SKILL.md`
-* Event choice, direction, and cancellation: `.agents/skills/ecs-events/SKILL.md`
-* System behavior and subscriptions: `.agents/skills/ecs-systems/SKILL.md`
-* EntitySystem helpers and prototype APIs: `.agents/skills/entity-api-patterns/SKILL.md`
-* DataFields and serialization contracts: `.agents/skills/serialization-and-datafields/SKILL.md`
-
-### Client, server, and shared
-
-* Client, server, or shared boundaries: `.agents/skills/client-server-shared/SKILL.md`
-* Network state or network events: `.agents/skills/networking/SKILL.md`
-* Predicted execution: `.agents/skills/prediction/SKILL.md`
-* Visibility, network interest, and PVS: `.agents/skills/pvs/SKILL.md`
-
-### Gameplay behavior
-
-* Verbs, in-hand use, and reusable interactions: `.agents/skills/interaction-flow/SKILL.md`
-* Actions, cooldowns, and DoAfter flows: `.agents/skills/actions-and-doafter/SKILL.md`
-* Spawning, initialization, transfer, and deletion: `.agents/skills/entity-lifecycle-and-spawning/SKILL.md`
-* Entity references, links, and target relations: `.agents/skills/entity-relations-and-links/SKILL.md`
-* Containers, hands, slots, and inventories: `.agents/skills/containers-and-inventory/SKILL.md`
-* Grids, coordinates, anchoring, and physics: `.agents/skills/transform-and-physics/SKILL.md`
-* Timers, cancellation, and async work: `.agents/skills/timers-and-async/SKILL.md`
-* Damage, healing, status effects, and modifiers: `.agents/skills/damage-status-and-effects/SKILL.md`
-* Round lifecycle, rules, and win conditions: `.agents/skills/round-and-game-rules/SKILL.md`
-* Minds, sessions, bodies, roles, and objectives: `.agents/skills/minds-roles-and-objectives/SKILL.md`
-* NPC behavior, HTN tasks, and navigation: `.agents/skills/npc-ai/SKILL.md`
-* Commands, CVars, and CVar-backed configuration: `.agents/skills/commands-and-cvars/SKILL.md`
-* Privileged commands and admin controls: `.agents/skills/admin-and-permissions/SKILL.md`
-* Persistent models and migrations: `.agents/skills/database-migrations/SKILL.md`
-* File and configuration persistence: `.agents/skills/save-data-and-configuration/SKILL.md`
-* Authoritative and weighted randomness: `.agents/skills/randomness-and-determinism/SKILL.md`
-
-### Content and gameplay systems
-
-* Construction graphs and machine lifecycle: `.agents/skills/construction-and-machines/SKILL.md`
-* Reagents, reactions, and metabolism: `.agents/skills/chemistry-and-reagents/SKILL.md`
-* Atmospherics, gases, fire, and pressure: `.agents/skills/atmos/SKILL.md`
-* Weighted collections and datasets: `.agents/skills/collections-and-datasets/SKILL.md`
-
-### Presentation
-
-* XAML controls: `.agents/skills/xaml-ui/SKILL.md`
-* Bound user interfaces: `.agents/skills/bound-user-interface/SKILL.md`
-* EUI sessions and state: `.agents/skills/eui/SKILL.md`
-* Input validation and feedback: `.agents/skills/forms-and-input-validation/SKILL.md`
-* Appearance data and visualizer mappings: `.agents/skills/appearance-and-visualizers/SKILL.md`
-* Sprite layers, overlays, and shaders: `.agents/skills/sprite-overlays-and-shaders/SKILL.md`
-* Data-driven audio: `.agents/skills/audio/SKILL.md`
-
-### Content and resources
-
-* FTL localization: `.agents/skills/localization/SKILL.md`
-* Localized values used from code: `.agents/skills/localization-in-code/SKILL.md`
-* YAML prototypes: `.agents/skills/prototypes/SKILL.md`
-* Prototype display text: `.agents/skills/prototype-localization/SKILL.md`
-* General YAML or schema work: `.agents/skills/yaml-and-schema/SKILL.md`
-* Assets or resource paths: `.agents/skills/resources-and-assets/SKILL.md`
-* Maps and map prototypes: `.agents/skills/maps-and-mapping/SKILL.md`
-
-### Integration and verification
-
-* External HTTP, webhooks, and processes: `.agents/skills/external-services/SKILL.md`
-* Build, solution, CI, or packaging changes: `.agents/skills/build-and-packaging/SKILL.md`
-* Creating or changing tests: `.agents/skills/tests-authoring/SKILL.md`
-* Selecting verification commands: `.agents/skills/testing/SKILL.md`
-
-Examples:
-
-* A local C# fix normally requires only `csharp-style`.
-* Writing or reviewing C# layout, reuse, or idiom choice: `.agents/rules/csharp-writing-conventions.md`
-* Adding or removing comments, or judging whether a comment belongs: `.agents/rules/commenting-conventions.md`
-* Writing or reviewing systems, components, events, or prototype types: `.agents/rules/ecs-writing-conventions.md`
-* Writing or reviewing prototype and resource YAML: `.agents/rules/yaml-prototype-conventions.md`
-* An FTL wording correction normally requires only `localization`.
-* A prototype with a new visible name normally requires `prototypes` and `prototype-localization`.
-* A networked component normally requires `client-server-shared` and `networking`.
-* A XAML layout correction normally requires only `xaml-ui`.
-* A test-only correction normally requires `tests-authoring` and `testing`.
+This repository is based on TraumaStation and receives changes along its sync trajectory. `CONTRIBUTING.md` describes Arcane's project layout and contributor conventions. For changes intended for a Trauma-owned path, apply `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`; do not use another fork's marker for our changes.
 
 ## Targeted discovery
 
@@ -158,18 +45,18 @@ Search commands must use the narrowest practical directory or pathspec.
 
 Preferred examples:
 
-```powershell
-git grep -n "ExactSymbol" -- Modules/Arcane/Content.Arcane.Server
-git grep -n "exact-locale-key" -- Modules/Arcane/Resources/Locale
-git grep -n "PrototypeId" -- Modules/Arcane/Resources/Prototypes
-Get-ChildItem Modules/Arcane/Content.Arcane.Server/Feature -File
-dotnet build Modules/Arcane/Content.Arcane.Server/Content.Arcane.Server.csproj --no-restore
+```sh
+git grep -n "ExactSymbol" -- Content.Arcane.Server
+git grep -n "exact-locale-key" -- Resources/Locale
+git grep -n "PrototypeId" -- Resources/Prototypes
+find Content.Arcane.Server/Feature -maxdepth 1 -type f
+dotnet build Content.Arcane.Server/Content.Arcane.Server.csproj --no-restore
 ```
 
 Do not begin with unrestricted commands such as:
 
-```powershell
-Get-ChildItem -Recurse
+```sh
+find . -type f
 git grep -n "generic-term"
 rg "generic-term" .
 dotnet build SpaceStation14.slnx
@@ -189,7 +76,7 @@ Stop expanding once enough evidence exists to implement the requested change.
 
 Do not perform a full repository identity audit for every task.
 
-For work inside a clearly owner-local path such as `Modules/Arcane`, treat that path as Arcane-owned unless nearby project or module metadata contradicts it.
+Arcane runtime projects are the root-level `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client` projects. Arcane resources use the existing root `Resources` tree and `_Arcane` owner directories. Treat these as Arcane-owned unless current project metadata contradicts it. `Modules/Arcane` contains guidance files; it is not the runtime project root.
 
 Run repository, remote, upstream, owner-tag, and edit-marker discovery only when the task changes:
 
@@ -243,16 +130,16 @@ Our own changes carry Arcane markers only:
 * two or more added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
 * one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
 * two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
-* over 5 changed lines: comment the payload inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block
+* over 5 changed lines: keep the active change inside an `Arcane-Edit` block; comment out removed content only when disabling it is the intended behavior
 * merge adjacent Arcane blocks of the same kind into one pair, never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
 * an added `using` goes after all others, inside an Arcane block or trailing `Arcane`
 * never put a bare `-Start` or `-End` on a line instead of a pair
 
 Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change, whatever the surrounding file uses.
 
-Arcane owner-local paths take no marker, because nothing syncs into them: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`.
+Arcane owner-local paths take no marker, because nothing syncs into them: `Content.Arcane.*`, `Resources/**/_Arcane/**`, and `Resources/Locale/**/_Arcane/**`.
 
-Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths require an Arcane marker. Those paths are owner-local for us but upstream surface for a sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
+Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths require an Arcane marker when the file format supports comments. If a valid marker cannot be represented, stop before editing and report the limitation rather than corrupting the file or silently leaving an unmarked change.
 
 Editing a Trauma file is allowed and often correct. Keep it cheap to reconcile:
 
@@ -265,7 +152,7 @@ Editing a Trauma file is allowed and often correct. Keep it cheap to reconcile:
 
 Changing a line that carries an upstream marker makes that line ours, so the marker becomes `Arcane-Edit`. Leave upstream markers on lines we did not touch alone, and never convert them in bulk.
 
-Prefer `Modules/Arcane` for Arcane-only behavior and `Content.Trauma.*` for upstream-compatible behavior. For a feature port, `Content.Trauma.*` survives a sync while `Modules/Arcane` does not.
+Prefer `Content.Arcane.*` and Arcane resource directories for Arcane-only behavior. Changes intended for the TraumaStation sync trajectory may belong in Trauma-owned or vanilla paths; keep those changes minimal, marked, and consistent with the inherited contribution rules.
 
 When a sync conflict must be resolved, read all three versions and merge semantically. The resolved line takes the marker of whoever wrote it, and our resolution is ours, so it carries an Arcane marker. Never blanket-resolve with `git checkout --ours/--theirs`, `-X ours`, or `-X theirs`, and never `git add -u` a path you did not read.
 
@@ -279,9 +166,9 @@ Do not scan or classify unrelated files.
 
 For changed localization entries, `en-US` is the structural source of truth.
 
-When an English message is added, removed, renamed, moved, reordered, or structurally changed, apply the matching change to the corresponding `ru-RU` file.
+By default, make localization changes in `en-US` only. Add, edit, move, reorder, or remove `ru-RU` entries only when the user explicitly requests Russian localization. Do not create or update Russian counterparts as an automatic consequence of an English structural change.
 
-Russian localization must use natural wording and must not contain `THE(...)` or equivalent English grammar wrappers.
+When Russian localization is explicitly requested, use natural wording and do not use `THE(...)` or equivalent English grammar wrappers. Preserve existing Russian entries during English-only work.
 
 Compare only the affected locale files and directly referenced keys. Do not enumerate the complete locale tree for a local correction.
 
@@ -341,7 +228,7 @@ Before reporting completion, verify only the surfaces touched by the task:
 
 * changed files belong to the requested scope
 * used symbols exist and are accessible
-* required localization counterparts were updated
+* requested localization files were updated
 * no unrelated files were modified
 * claimed verification commands actually ran
 * the final diff matches the requested outcome
