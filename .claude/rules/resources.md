@@ -3,4 +3,4 @@ For prototypes, locale, RSI, textures, audio, maps, and datasets, load the ownin
 
 Verify module ownership, schema fields, IDs, references, FTL, asset metadata, and case-sensitive paths. Run YAML or RSI validation as appropriate.
 
-Marker: one added entry is a bare trailing `# Arcane`; two or more added entries use `# Arcane-Start` / `# Arcane-End`; one changed entry is `# Arcane-Edit: <old> > <new>`; two or more changed entries use `# Arcane-Edit-Start` / `# Arcane-Edit-End`. Append to the end of a list inside one block. No marker inside `Resources/_Arcane/**`; required inside `Resources/_Trauma/**`, `Resources/_Shitmed/**`, and vanilla `Resources/Prototypes/**`. Never `Trauma - ` or `<Trauma>` on our own change.
+Marker: follow the canonical line-count rules in `.agents/rules/arcane-edit-markers.md`. Append to the end of a list inside one contiguous block where practical. No marker inside `Resources/**/_Arcane/**` or `Resources/Locale/**/_Arcane/**`; inherited resource paths use Arcane markers where the format supports comments. Never `Trauma - ` or `<Trauma>` on our own change.

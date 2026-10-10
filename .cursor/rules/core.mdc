@@ -14,7 +14,7 @@ Edit markers, always-applicable because `.agents/rules` are not auto-loaded here
 - More than 5 changed lines: keep the changed content active inside the `Arcane-Edit-Start` / `Arcane-Edit-End` block; comment out removed content only when disabling it is intended.
 - Never put a bare `-Start` or `-End` on a line instead of a pair.
 - Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker.
-- No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there.
+- No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/**/_Arcane/**`, and `Resources/Locale/**/_Arcane/**`. Nothing syncs there.
 - Mark Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths. Editing a Trauma file is allowed and often correct; an unmarked change there is reverted by the next sync.
 - Changing a line that carries an upstream marker makes it ours: `# Arcane-Edit: 1800 > 3000`. Leave upstream markers on untouched lines alone.
 - Keep Trauma-file edits cheap: append to the end of a list, gather additions into one block, prefer additive over destructive, do not touch neighbours.

@@ -27,7 +27,7 @@ def main() -> int:
         "",
         "EDIT MARKERS, APPLIED VERBATIM. Every change we author carries Arcane markers only.",
         "Never write Trauma - , <Trauma>, Goobstation-, /* Trauma, or any other fork's marker.",
-        "No marker inside Arcane owner-local paths: Modules/Arcane/**, Content.Arcane.*, Resources/_Arcane/**.",
+        "No marker inside Arcane owner-local paths: Modules/Arcane/**, Content.Arcane.*, Resources/**/_Arcane/**, Resources/Locale/**/_Arcane/**.",
         "Required inside Content.Trauma.*, Resources/_Trauma/**, *.Trauma.cs, Content.Medical.*,",
         "Resources/_Shitmed/**, and vanilla root paths. Editing a Trauma file is allowed and often correct.",
         "A line we change becomes ours, so an upstream marker becomes Arcane-Edit: <old> > <new>.",

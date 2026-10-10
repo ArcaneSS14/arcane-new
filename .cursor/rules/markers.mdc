@@ -19,7 +19,7 @@ Our own changes carry Arcane markers only:
 
 Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change.
 
-No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/_Arcane/**`. Nothing syncs there, so a marker is noise.
+No marker inside Arcane owner-local paths: `Modules/Arcane/**`, `Content.Arcane.*`, `Resources/**/_Arcane/**`, and `Resources/Locale/**/_Arcane/**`. Nothing syncs there, so a marker is noise.
 
 Mark Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths. Those paths are owner-local for us but upstream surface for a sync, so an unmarked change there is indistinguishable from a Trauma change and gets reverted.
 
