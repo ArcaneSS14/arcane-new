@@ -10,7 +10,7 @@ Use this file to identify the workflow for a task. The root `AGENTS.md` defines 
 4. Select the relevant skills in `.agents/CATALOG.md`.
 5. Verify with the smallest check covering the changed files.
 
-Arcane projects live at the repository root as `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`. Arcane prototypes and textures use the existing `Resources/**/_Arcane` paths. Arcane English locale uses `Resources/Locale/en-US/_Arcane`; add or update the matching `ru-RU/_Arcane` file for structural localization changes. `Modules/Arcane` currently holds guidance, not runtime projects.
+Arcane projects live at the repository root as `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`. Arcane prototypes and textures use the existing `Resources/**/_Arcane` paths. Arcane English locale uses `Resources/Locale/en-US/_Arcane`; add or update `ru-RU/_Arcane` only when the user explicitly requests Russian localization. `Modules/Arcane` currently holds guidance, not runtime projects.
 
 ## Inherited or sync-sensitive change
 
@@ -28,7 +28,7 @@ Read `.agents/rules/change-history-analysis.md` before deciding what behavior to
 
 ## Localization or player-visible text
 
-Read `.agents/rules/content-and-localization.md` and route `localization` plus `localization-in-code` only when code resolves text; include the owning domain skill when relevant. Compare only the affected English and Russian owner files and directly referenced keys. Mirror structural changes and order; keep Russian natural and preserve variables, selectors, and markup.
+Read `.agents/rules/content-and-localization.md` and route `localization` plus `localization-in-code` only when code resolves text; include the owning domain skill when relevant. Inspect the affected `en-US` owner file and directly referenced keys. By default, leave `ru-RU` untouched. If Russian localization is explicitly requested, update only its affected owner file and preserve variables, selectors, markup, and natural Russian wording.
 
 ## Cross-assembly or networked feature
 

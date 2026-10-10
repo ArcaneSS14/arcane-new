@@ -21,7 +21,7 @@ Write to a unique temporary file, flush when durability matters, and replace ato
 
 ## Player-facing settings
 
-Names, descriptions, options, validation errors, and fallback notices require `en-US` and `ru-RU`. Culture names and saved culture values must be validated against cultures actually found at runtime.
+Names, descriptions, options, validation errors, and fallback notices require `en-US`; update `ru-RU` only when explicitly requested. Culture names and saved culture values must be validated against cultures actually found at runtime.
 
 A saved setting must restore after restart. Removed or invalid values must fall back safely without corrupting the config.
 

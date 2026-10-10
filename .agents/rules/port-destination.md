@@ -8,7 +8,7 @@ A port is easy to paste into an existing upstream file. Choose its owner before 
 | gameplay system, component, event | root-level `Content.Arcane.Shared/`, `Content.Arcane.Server/`, or `Content.Arcane.Common/` |
 | client UI | root-level `Content.Arcane.Client/` |
 | prototype, map, texture | the existing Arcane-owned resource path, commonly `Resources/Prototypes/_Arcane/` or `Resources/Textures/_Arcane/` |
-| localization | existing `Resources/Locale/{en-US,ru-RU}/_Arcane/` paths, when present |
+| localization | existing `Resources/Locale/en-US/_Arcane/` path; update `ru-RU/_Arcane/` only when explicitly requested |
 | a change to an existing base type that the port cannot avoid | the base file, smallest possible diff, Arcane markers, reported |
 
 Read root and nearest scoped `AGENTS.md` files for the chosen path. Verify the exact resource path and project references before writing. `Modules/Arcane` currently contains guidance files and is not a runtime destination.
@@ -49,7 +49,7 @@ Do not port another fork's ownership into the tree. A source marker from `Trauma
 
 ## Localization
 
-`en-US` is the structural source of truth. Every English key added by a port needs a `ru-RU` counterpart, in the same position, with the same attributes, variables, and selectors. Do not ship an English-only port key and report it as follow-up.
+`en-US` is the structural source of truth and is the required locale by default. Do not add or synchronize Russian as an automatic part of a port. If Russian is explicitly requested, preserve matching keys, attributes, variables, selectors, and ordering.
 
 ## Assets and third-party material
 

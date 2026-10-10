@@ -13,7 +13,7 @@ Debug before redesigning.
 6. Add temporary diagnostics only around the suspected divergence.
 7. Confirm the failing assumption, fix the narrow cause, remove diagnostics, and add a stable regression test.
 
-For localization bugs, compare English and Russian file discovery, relative paths, ordered keys, variables, selectors, loaded roots, and UI refresh.
+For localization bugs, inspect English file discovery, keys, variables, selectors, loaded roots, and UI refresh. Compare Russian files only when the issue is Russian-specific or Russian is in scope.
 
 Apply repository markers only to inherited files and never to owner-local module or underscore paths.
 

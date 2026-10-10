@@ -9,10 +9,10 @@ All player-visible text MUST use localization. Do not expose raw enum names, pro
 
 Before editing localization:
 
-1. inspect the complete owner-local `en-US` and `ru-RU` trees
+1. inspect only the affected owner-local `en-US` file
 2. search exact, old, alternative, and proposed keys
 3. identify the existing file for the same UI, system, prototype family, or feature
-4. inspect the mirrored file in the other culture
+4. inspect `ru-RU` only when Russian is explicitly requested or the issue is Russian-specific
 5. create a file only when no existing file is a valid owner
 
 Preserve exact directories, leading underscores, casing, grouping, and relative paths. Never derive a path from a module name without inspecting the repository.
@@ -30,23 +30,23 @@ Preserve exact directories, leading underscores, casing, grouping, and relative 
 - selector structure
 - relative file paths
 
-Any structural English change MUST be mirrored in `ru-RU`.
+By default, update `en-US` only. Do not create, change, remove, reorder, or synchronize `ru-RU` entries unless the user explicitly requests Russian localization.
 
-New Russian entries go at the corresponding English position. They MUST NOT be appended to the end by default.
+When Russian is requested, preserve its key contract and place entries consistently with the English structure.
 
-Removing, renaming, moving, or reordering English localization requires the same Russian operation. Search code, XAML, prototypes, maps, and locale files for stale references after renames or removals.
+Removing, renaming, moving, or reordering English localization does not require an automatic Russian edit. Search code, XAML, prototypes, maps, and the affected English file for stale references after renames or removals.
 
-A Russian-only wording fix may remain Russian-only when the structural contract is unchanged.
+A Russian-only wording fix is in scope only when the user explicitly requests Russian localization.
 
-Russian-only keys are presumed stale unless a verified framework requirement or documented convention proves otherwise.
+Do not treat missing or stale Russian entries as defects during English-only work unless they cause the reported issue.
 
 ## Translation quality
 
-Write natural Russian for the actual context. Preserve meaning, variables, markup, and control hints rather than English word order.
+When Russian is requested, write natural Russian for the actual context. Preserve meaning, variables, markup, and control hints rather than English word order.
 
-Do not add `THE(...)`, article wrappers, or equivalent English grammar markers to Russian strings.
+When Russian is requested, do not add `THE(...)`, article wrappers, or equivalent English grammar markers to Russian strings.
 
-Check long Russian text in constrained UI controls. Fix layout rather than silently removing meaning.
+Check long Russian text in constrained UI controls when Russian is in scope. Fix layout rather than silently removing meaning.
 
 ## Module paths and duplicates
 

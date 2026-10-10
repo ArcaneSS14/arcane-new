@@ -27,11 +27,11 @@ Prototype IDs are stable machine identifiers, not display names. Use a feature p
 
 FTL keys use lowercase kebab-case and a stable owner or feature prefix. Variable names describe meaning, not UI position.
 
-Use the same keys and variables in `en-US` and `ru-RU`. A module key prefix must make ownership clear. File placement does not protect duplicate keys.
+Use stable keys and variables in `en-US`. Keep them consistent with `ru-RU` only when Russian localization is explicitly in scope. A module key prefix must make ownership clear. File placement does not protect duplicate keys.
 
 ## Compatibility
 
-Before renaming a serialized field, prototype ID, map entity, database field, CVar, locale key, or network message, search code, prototypes, maps, migrations, config, both cultures, and downstream references. Provide a migration or compatibility alias where required.
+Before renaming a serialized field, prototype ID, map entity, database field, CVar, locale key, or network message, search code, prototypes, maps, migrations, config, the affected locale, and downstream references; include Russian files only when Russian is in scope. Provide a migration or compatibility alias where required.
 
 ## Verification commands
 

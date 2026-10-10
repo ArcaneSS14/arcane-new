@@ -17,9 +17,9 @@ Use one authoritative validation source where possible. Do not allow UI and serv
 
 ## Feedback
 
-Return specific player-safe errors in both `en-US` and `ru-RU`. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
+Return specific player-safe errors in `en-US`; add `ru-RU` only when explicitly requested. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
 
-Variable names and values passed into validation messages must match both locale files.
+Variable names and values passed into validation messages must match `en-US`; match Russian too only when Russian is in scope.
 
 ## Security failures
 

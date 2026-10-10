@@ -5,9 +5,9 @@ description: Implement complete SS14 features across ownership, ECS, networking,
 
 Use this as the routing skill for multi-layer work.
 
-Before editing, map repository ownership, owner-local paths, inherited files, edit-marker requirements, assembly layers, authority, prototypes, resources, English and Russian locale files, UI lifecycle, persistence, and tests.
+Before editing, map repository ownership, owner-local paths, inherited files, edit-marker requirements, assembly layers, authority, prototypes, resources, English locale files, UI lifecycle, persistence, and tests.
 
-A feature is incomplete when code exists but prototypes, ordered Russian localization, assets, UI refresh, validation, or owner tests are missing.
+A feature is incomplete when code exists but required English localization, prototypes, assets, UI refresh, validation, or owner tests are missing. Russian localization is required only when explicitly requested.
 
 ## Implementation order
 
@@ -16,7 +16,7 @@ A feature is incomplete when code exists but prototypes, ordered Russian localiz
 3. Implement server authority and validation.
 4. Implement client presentation and prediction-safe feedback.
 5. Add prototypes and resources in the owner root.
-6. Add English localization and mirror Russian structure and order.
+6. Add English localization. Add Russian only when explicitly requested, preserving the existing structure and order.
 7. Add regression coverage in existing owner tests.
 8. Run commands for every changed surface.
 

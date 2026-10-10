@@ -19,7 +19,7 @@ Keep payloads as small as practical. Prefer typed state localized by the client 
 - Create the window on open and release references on close. Subscribe once per window lifetime; unsubscribe from longer-lived publishers and prevent duplicate subscriptions after reopen.
 - Handle owner deletion, range loss, multiple viewers, stale state, and reopen according to the actual UI framework lifecycle.
 - Choose one source for displayed state. Refresh controls from the latest replicated component or BUI state; avoid a second stale copy in the adapter or window.
-- Long-lived windows must refresh localized text on culture changes without discarding authoritative state. Every visible string requires matching English and ordered Russian localization.
+- Long-lived windows must refresh localized text on culture changes without discarding authoritative state. Every visible string requires `en-US` localization; add Russian only when explicitly requested.
 
 Use repository ownership rules for edit markers. Do not mark owner-local module or underscore paths.
 

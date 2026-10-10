@@ -13,6 +13,6 @@ Act through the public API, real event, command, UI message, or lifecycle entry 
 
 Use controlled simulation time and deterministic randomness. Avoid wall-clock sleeps, machine locale, live services, order dependence, and leaked global state.
 
-For localization behavior, test English and Russian key parity, ordered placement, variables, selectors, fallback, repeated switching, and subscription cleanup.
+For localization behavior, test the requested locale contract. Require Russian parity, ordering, and culture-switch behavior only when Russian localization is in scope.
 
 Run the DebugOpt build, the complete owning test project, and every affected module integration project. Preserve complete failure output and report exact filters and arguments.

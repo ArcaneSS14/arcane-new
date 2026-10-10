@@ -11,7 +11,7 @@ Search before creating a project, fixture, CI step, or MSBuild target. Duplicate
 
 Test through accessible public APIs or real event paths. Do not use reflection to reach private implementation.
 
-For localization changes, verify that Russian mirrors English message IDs, attributes, variables, selectors, relative paths, and message order.
+For localization changes, verify the affected `en-US` keys and structure. Verify corresponding Russian contracts only when Russian localization is explicitly in scope.
 
 Run restore, the build in the configuration CI uses, the applicable root tests, and every affected module integration project. Report exact commands, failures, and omitted checks.
 

@@ -17,7 +17,7 @@ The one exception is a change to an existing base type that the port cannot avoi
 
 Before choosing the port's final state, follow `.agents/rules/change-history-analysis.md`. Trace the source base/head, introducing change, follow-up fixes, reverts/restorations, and current state by exact commits and affected paths; inspect actual diffs, not only titles.
 
-Record the source repository, source commit, root PR, follow-ups, exclusions, dependencies, and licensing evidence. Inventory code layers, prototypes, English, Russian, UI, maps, sprites, audio, tests, database changes, CVars, additions/removals, and every inherited-file modification.
+Record the source repository, source commit, root PR, follow-ups, exclusions, dependencies, and licensing evidence. Inventory code layers, prototypes, English localization, UI, maps, sprites, audio, tests, database changes, CVars, additions/removals, and every inherited-file modification. Include Russian localization only when explicitly in scope.
 
 Verify the destination repository identity, owner tag, owner module, owner underscore paths, current APIs, project references, resources, and test infrastructure.
 
@@ -33,7 +33,7 @@ Do not bundle independent systems or create duplicate build and test infrastruct
 
 ## Localization
 
-English localization is structurally canonical. Add natural Russian localization and mirror English keys, attributes, variables, selectors, file paths, and order. An English-only key is not a follow-up item.
+English localization is structurally canonical and required by default. Do not add or synchronize Russian localization as an automatic part of a port. If Russian is explicitly requested, preserve matching keys, attributes, variables, selectors, paths, and ordering with natural wording.
 
 ## Verification
 

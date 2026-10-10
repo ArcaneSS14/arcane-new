@@ -11,13 +11,13 @@ description: Create, inherit, compose, localize, and validate YAML prototypes in
 4. Verify fields against the destination component schema.
 5. Prefer inheritance or composition over copying a large prototype.
 6. Use stable specific IDs and typed IDs in code.
-7. Add required English display text and mirror Russian structure and ordering.
+7. Add English display text; add or update Russian only when explicitly requested.
 8. Verify every referenced prototype, sprite, state, sound, dataset, map, and locale key.
 9. Search for duplicate IDs and stale references.
 
 Do not place repository-owned prototypes in another owner's root for convenience. Do not expose prototype IDs as fallback player text.
 
-When English prototype localization changes, mirror Russian additions, removals, renames, attributes, variables, selectors, file paths, and ordered positions.
+When Russian prototype localization is explicitly requested, preserve matching keys, attributes, variables, selectors, paths, and ordering.
 
 ```powershell
 git grep -n "PROTOTYPE_ID" -- Resources Modules

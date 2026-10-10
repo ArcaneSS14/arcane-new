@@ -12,7 +12,7 @@ Maps are serialized compatibility artifacts, not ordinary hand-written YAML.
 3. Verify every prototype, tile, component field, resource, and required runtime module.
 4. Review parents, grids, coordinates, anchored state, containers, map IDs, and entity references.
 5. Avoid unrelated serializer churn.
-6. Add `en-US` and `ru-RU` for player-visible map, landmark, device, or UI text introduced by the change.
+6. Add `en-US` for player-visible map, landmark, device, or UI text. Add `ru-RU` only when explicitly requested.
 7. Load or validate the affected map.
 
 Do not copy map chunks from another fork before resolving unavailable prototypes and changed schemas deliberately.

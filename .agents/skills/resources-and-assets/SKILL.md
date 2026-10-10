@@ -9,7 +9,7 @@ Use the owning resource root. Inspect the existing tree before creating any path
 
 Verify repository identity, resource owner, owner-local module and underscore directories, nearest feature files, existing IDs, keys, paths, states, and collections.
 
-Add English text and ordered Russian counterparts for player-visible content. Preserve attribution and asset metadata without editing SPDX.
+Add English text for player-visible content. Add Russian counterparts only when explicitly requested. Preserve attribution and asset metadata without editing SPDX.
 
 Do not add repository edit markers inside owner-local module or underscore paths. Add the current repository marker only to inherited text files when ownership requires it and the format supports comments.
 

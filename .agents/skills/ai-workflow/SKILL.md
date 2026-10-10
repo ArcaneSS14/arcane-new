@@ -23,7 +23,7 @@ Target and caller assemblies:
 Required declarations and access:
 Existing extension point:
 Existing test owner:
-Localization owner and mirrored files:
+Localization owner and requested locale files:
 Verification plan:
 ```
 
@@ -39,7 +39,7 @@ Subagent summaries are not proof without declarations, file evidence, or command
 
 Reuse existing owners and infrastructure. Mark inherited edits with the current repository marker. Do not mark owner-local module or underscore paths. Do not edit SPDX.
 
-Treat English localization as the structural source of truth and mirror every structural change in Russian at the same relative position.
+Treat English localization as the structural source of truth. Update Russian only when explicitly requested; do not mirror English structural changes automatically.
 
 ## Verify claims
 
@@ -47,4 +47,4 @@ Run the narrowest meaningful check first, then broaden according to risk. A miss
 
 ## Deliver
 
-Inspect final status and diff. Confirm the applicable scope, marker placement, accessibility, localization parity, duplicate infrastructure, and exact verification results. Confirm commit count and remote branch SHA only if commits or remote publication were part of the task.
+Inspect final status and diff. Confirm the applicable scope, marker placement, accessibility, requested localization coverage, duplicate infrastructure, and exact verification results. Confirm commit count and remote branch SHA only if commits or remote publication were part of the task.

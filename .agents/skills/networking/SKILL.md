@@ -7,7 +7,7 @@ Define payloads in Shared and verify current serialization and entity-conversion
 
 Replicate only fields needed by clients. After authoritative mutation, call the correct dirtying path. Predicted state must converge without duplicate popups, sounds, spawns, or resource charges.
 
-Player-facing feedback generated from replicated state requires English localization and an ordered Russian counterpart.
+Player-facing feedback generated from replicated state requires `en-US` localization; add Russian only when explicitly requested.
 
 Verify repository ownership and edit-marker requirements before modifying inherited files.
 

@@ -11,7 +11,7 @@ Prefer component fields, prototypes, `SoundSpecifier`, and sound collections ove
 
 Predicted actions must not play the same sound locally and again on authoritative confirmation. Verify source deletion, cancellation, range, repetition, and concurrent playback.
 
-Add both `en-US` and `ru-RU` when the audio feature introduces player-visible captions, UI labels, announcements, examine text, or settings.
+Add `en-US` when the audio feature introduces player-visible captions, UI labels, announcements, examine text, or settings. Add `ru-RU` only when explicitly requested.
 
 Preserve source attribution and asset-specific license metadata without editing SPDX.
 

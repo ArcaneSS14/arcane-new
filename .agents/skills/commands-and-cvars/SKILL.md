@@ -9,7 +9,7 @@ Keep parsing, authorization, validation, execution, and feedback distinct. Verif
 
 Commands affecting players, round state, persistence, or server configuration require permission checks and useful audit logging.
 
-Command descriptions, help, usage, success, and player-safe errors must use `en-US` and `ru-RU` where the command framework supports localization. Do not expose internal exceptions or raw IDs.
+Command descriptions, help, usage, success, and player-safe errors must use `en-US`; add `ru-RU` only when explicitly requested. Do not expose internal exceptions or raw IDs.
 
 ## CVars
 

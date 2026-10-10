@@ -17,8 +17,8 @@ XAML is client presentation. Keep authority and protected validation out of code
 
 - Subscribe once. Unsubscribe when the window closes or disposes if the event source can outlive the window; prevent duplicate subscriptions after reopen.
 - Refresh localized labels when culture changes if the window can remain open. Do not cache resolved text beyond the culture in which it was created.
-- Localize visible labels, tooltips, placeholders, feedback, and generated rows. English (`en-US`) defines key structure; mirror structural changes in `ru-RU` in the same relative order.
-- Check long Russian strings, scaling, disabled/loading states, reopen, disposal, and culture refresh when those states are affected.
+- Localize visible labels, tooltips, placeholders, feedback, and generated rows. Use `en-US` by default; update `ru-RU` only when explicitly requested.
+- Check long translated strings and culture refresh when Russian is in scope; otherwise verify the English UI states affected by the change.
 
 Verify owner paths and edit-marker requirements before changing inherited files. Do not add markers to owner-local module paths. For code-behind boundaries see `.agents/rules/architecture-and-ownership.md`; for BUI contracts and message flow see `.agents/skills/bound-user-interface/SKILL.md`.
 

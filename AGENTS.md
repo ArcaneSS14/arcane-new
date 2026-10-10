@@ -164,9 +164,9 @@ Do not scan or classify unrelated files.
 
 For changed localization entries, `en-US` is the structural source of truth.
 
-When an English message is added, removed, renamed, moved, reordered, or structurally changed, apply the matching change to the corresponding `ru-RU` file.
+By default, make localization changes in `en-US` only. Add, edit, move, reorder, or remove `ru-RU` entries only when the user explicitly requests Russian localization. Do not create or update Russian counterparts as an automatic consequence of an English structural change.
 
-Russian localization must use natural wording and must not contain `THE(...)` or equivalent English grammar wrappers.
+When Russian localization is explicitly requested, use natural wording and do not use `THE(...)` or equivalent English grammar wrappers. Preserve existing Russian entries during English-only work.
 
 Compare only the affected locale files and directly referenced keys. Do not enumerate the complete locale tree for a local correction.
 
@@ -226,7 +226,7 @@ Before reporting completion, verify only the surfaces touched by the task:
 
 * changed files belong to the requested scope
 * used symbols exist and are accessible
-* required localization counterparts were updated
+* requested localization files were updated
 * no unrelated files were modified
 * claimed verification commands actually ran
 * the final diff matches the requested outcome

@@ -48,7 +48,7 @@ The repository targets `net10.0` with C# 14. Use newer language features when th
 
 ## Resources and localization
 
-Use localized strings for player-visible text. English (`en-US`) defines localization keys and structure. Mirror structural changes in the corresponding Russian (`ru-RU`) file at the matching relative path, creating the counterpart when needed. Preserve key order, variables, selectors, attributes, and paths. Write natural Russian and do not use `THE(...)` wrappers.
+Use localized strings for player-visible text. English (`en-US`) defines localization keys and structure. By default, add and update localization only in English (`en-US`). Add or change Russian (`ru-RU`) entries only when explicitly requested; do not create counterparts or mirror structural changes automatically. When Russian is requested, preserve the existing key contract, variables, selectors, attributes, and paths; write natural Russian and do not use `THE(...)` wrappers.
 
 Reuse existing prototypes, assets, sprite states, audio, maps, and locale files before adding new ones. Check attribution and license terms before importing third-party material. Follow the owner-specific resource and localization rules for validation.
 

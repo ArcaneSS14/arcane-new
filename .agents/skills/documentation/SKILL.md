@@ -7,7 +7,7 @@ description: Write concise technical guidance, PR notes, architecture explanatio
 
 Documentation should explain decisions that code alone does not make obvious.
 
-For substantial changes, document the problem, intended behavior, owner, assembly boundaries, data or event flow, compatibility, `en-US` and `ru-RU` impact, resources, tests, and limitations.
+For substantial changes, document the problem, intended behavior, owner, assembly boundaries, data or event flow, compatibility, localization impact (`ru-RU` only when in scope), resources, tests, and limitations.
 
 Use current paths, declarations, and exact commands. Do not claim behavior based on the old repository or a source fork.
 

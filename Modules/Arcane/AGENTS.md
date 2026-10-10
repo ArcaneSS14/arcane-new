@@ -41,17 +41,17 @@ A matching namespace, extension method, or partial declaration does not make Arc
 
 ## Localization structure
 
-New Arcane player-visible text requires both `en-US` and `ru-RU` unless explicitly scoped otherwise.
+New Arcane player-visible text requires `en-US`. Add or update `ru-RU` only when the user explicitly requests Russian localization.
 
-`en-US` is the structural source of truth. When English adds, removes, renames, moves, or reorders a message, attribute, variable, selector, section, or file, apply the same structural change to Russian.
+Keep `en-US` as the structural source of truth. Do not mirror English additions, removals, renames, moves, or reordering into Russian automatically.
 
-Insert new Russian messages at the corresponding English position. Do not append them to the end unless the English entry is also at the end.
+When Russian localization is requested, place entries consistently with the existing English structure.
 
-Before selecting a file, inspect both locale trees, search exact and competing keys, identify the existing feature owner file, and inspect its mirrored counterpart.
+Before selecting a file, inspect only the affected English owner file and search exact and competing keys. Inspect Russian files only when Russian localization is explicitly requested or the reported issue is Russian-specific.
 
 The established module-local locale namespace directory is `_arcane`. Do not create `arcane` or derive a new hierarchy from the module name.
 
-Preserve exact paths, underscores, casing, attributes, variables, selectors, and ordering. Russian must be natural and must not contain `THE(...)` wrappers.
+Preserve exact paths, underscores, casing, attributes, variables, selectors, and ordering. When Russian is requested, use natural wording and do not use `THE(...)` wrappers.
 
 ## Existing infrastructure
 

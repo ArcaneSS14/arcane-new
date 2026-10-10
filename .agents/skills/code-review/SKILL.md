@@ -13,11 +13,11 @@ Review observable behavior and architectural validity before style.
 4. Identify projects, assemblies, declarations, and access modifiers.
 5. Trace validation, mutation, dirtying, persistence, lifecycle, and presentation.
 6. Check failure paths, cleanup, repeated execution, and reconnect.
-7. Compare English and Russian keys, attributes, variables, selectors, relative paths, and message order.
+7. Review the affected English keys, attributes, variables, selectors, paths, and order. Review Russian coverage and parity only when explicitly requested or when the reported issue is Russian-specific.
 8. Verify resources, compatibility surfaces, test ownership, and regression behavior.
 9. Inspect the complete diff for unrelated changes, SPDX edits, and duplicate infrastructure.
 10. Review maintainability and style last.
 
-Treat inaccessible members, cross-assembly partial assumptions, reversed dependencies, duplicate infrastructure, foreign edit markers, missing inherited-file markers, redundant owner-local markers, missing Russian entries, Russian order drift, mismatched FTL contracts, stale culture UI, hardcoded text, and unproven test claims as defects.
+Treat inaccessible members, cross-assembly partial assumptions, reversed dependencies, duplicate infrastructure, foreign edit markers, missing inherited-file markers, redundant owner-local markers, missing or out-of-order Russian entries when Russian is in scope, mismatched FTL contracts, stale culture UI, hardcoded text, and unproven test claims as defects.
 
 Every finding needs a path, declaration or execution sequence, impact, and minimal remediation.

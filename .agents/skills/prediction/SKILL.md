@@ -9,7 +9,7 @@ Predict only short player-driven interactions with locally known inputs and corr
 
 Shared predicted code may execute more than once. Separate deterministic state changes from one-shot effects and avoid non-deterministic randomness in predicted paths.
 
-Predicted player feedback requires English localization and an ordered Russian counterpart. Resolving the same key twice is acceptable. Showing the feedback twice is not.
+Predicted player feedback requires `en-US` localization; add Russian only when explicitly requested. Resolving the same key twice is acceptable. Showing the feedback twice is not.
 
 Verify repository ownership and edit-marker requirements before changing inherited files.
 
