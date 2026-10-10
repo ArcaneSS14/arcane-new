@@ -17,6 +17,11 @@ humanoid-profile-editor-sex-female-text = Female
 humanoid-profile-editor-sex-unsexed-text = None
 humanoid-profile-editor-voice-label = Voice:
 humanoid-profile-editor-age-label = Age:
+# Arcane-Start: Character growth controls
+humanoid-profile-editor-height-label = Height: {$height}cm
+humanoid-profile-editor-width-label = Width: {$width}cm
+humanoid-profile-editor-weight-label = Weight: {$weight}kg
+# Arcane-End
 humanoid-profile-editor-skin-color-label = Skin color:
 humanoid-profile-editor-species-label = Species:
 humanoid-profile-editor-randomizer-lock-tooltip = Prevents the value from being randomized

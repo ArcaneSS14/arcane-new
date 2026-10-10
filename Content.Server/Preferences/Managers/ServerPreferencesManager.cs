@@ -203,7 +203,11 @@ namespace Content.Server.Preferences.Managers
                 profile.BarkVoice ?? HumanoidProfileSystem.DefaultBarkVoice,
                 KnowledgeProfile.Verify(profile.KnowledgeMastery, _prototypeManager)
                 // </Trauma>
-            );
+            ) // Arcane-Edit
+                // Arcane-Start: Restore saved growth dimensions
+                .WithHeight(profile.Height)
+                .WithWidth(profile.Width);
+                // Arcane-End
         }
 
         private async void HandleSelectCharacterMessage(MsgSelectCharacter message)

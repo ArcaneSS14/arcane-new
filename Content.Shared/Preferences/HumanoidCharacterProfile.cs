@@ -208,6 +208,10 @@ namespace Content.Shared.Preferences
                 other.Knowledge)
                 // </Trauma>
         {
+            // Arcane-Start: Preserve growth settings when profiles are copied
+            Height = other.Height;
+            Width = other.Width;
+            // Arcane-End
         }
 
         /// <summary>
@@ -235,6 +239,10 @@ namespace Content.Shared.Preferences
                 Species = species.Value,
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
+                // Arcane-Start: Use species-specific default dimensions
+                Height = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultHeight,
+                Width = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultWidth,
+                // Arcane-End
             };
         }
 
@@ -392,6 +400,20 @@ namespace Content.Shared.Preferences
 
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
+            // Arcane-Start: Preserve or randomize dimensions with the species
+            if ((randomizeCfg & RandomizeCfg.Species) != 0)
+            {
+                var random = IoCManager.Resolve<IRobustRandom>();
+                profile.Height = random.NextFloat(speciesProto.MinHeight, speciesProto.MaxHeight);
+                profile.Width = random.NextFloat(speciesProto.MinWidth, speciesProto.MaxWidth);
+            }
+            else
+            {
+                profile.Height = baseProfile.Height;
+                profile.Width = baseProfile.Width;
+            }
+            // Arcane-End
+
             return profile;
         }
 
@@ -403,11 +425,19 @@ namespace Content.Shared.Preferences
         public static HumanoidCharacterProfile RandomWithSpecies(string? species = null)
         {
             species ??= DefaultSpecies;
-
-            return Random(
+            // Arcane-Edit-Start: RandomWithSpecies now adds dimensions to the randomized profile
+            var profile = Random(
                 RandomizeConfigAll ^ RandomizeCfg.Species,
                 new HumanoidCharacterProfile().WithSpecies(species)
             );
+            // Arcane-Edit-End
+            // Arcane-Start: Randomize body dimensions for generated characters
+            var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
+            var random = IoCManager.Resolve<IRobustRandom>();
+            return profile
+                .WithHeight(random.NextFloat(speciesPrototype.MinHeight, speciesPrototype.MaxHeight))
+                .WithWidth(random.NextFloat(speciesPrototype.MinWidth, speciesPrototype.MaxWidth));
+            // Arcane-End
         }
 
         public HumanoidCharacterProfile WithName(string name)
@@ -442,7 +472,15 @@ namespace Content.Shared.Preferences
 
         public HumanoidCharacterProfile WithSpecies(string species)
         {
-            return new(this) { Species = species };
+            // Arcane-Edit-Start: Reset dimensions on species changes (replaces a species-only copy)
+            var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
+            return new(this)
+            {
+                Species = species,
+                Height = speciesPrototype.DefaultHeight,
+                Width = speciesPrototype.DefaultWidth,
+            };
+            // Arcane-Edit-End
         }
 
         public HumanoidCharacterProfile WithCharacterAppearance(HumanoidCharacterAppearance appearance)
@@ -633,6 +671,10 @@ namespace Content.Shared.Preferences
 
         public bool MemberwiseEquals(HumanoidCharacterProfile other)
         {
+            // Arcane-Start: Include growth in profile comparisons
+            if (Height != other.Height) return false;
+            if (Width != other.Width) return false;
+            // Arcane-End
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
             if (Sex != other.Sex) return false;
@@ -908,6 +950,10 @@ namespace Content.Shared.Preferences
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
             hashCode.Add(Species);
+            // Arcane-Start: Hash character growth settings
+            hashCode.Add(Height);
+            hashCode.Add(Width);
+            // Arcane-End
             hashCode.Add(Age);
             hashCode.Add((int)Sex);
             hashCode.Add(Voice);

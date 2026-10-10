@@ -391,6 +391,7 @@ namespace Content.Client.Lobby.UI
             UpdateSkinColor();
             UpdateSpawnPriorityControls();
             UpdateAgeEdit();
+            UpdateGrowthControls(); // Arcane
             UpdateEyePickers();
             UpdateSaveButton();
             UpdateMarkings();
