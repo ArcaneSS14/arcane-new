@@ -33,6 +33,7 @@ public sealed partial class HumanoidProfileSystem : EntitySystem
         SetBarkVoice((ent, ent.Comp), profile.BarkVoice);
         SetKnowledgeProfile((ent, ent.Comp), profile.Knowledge);
         // </Trauma>
+        ApplyGrowth((ent.Owner, ent.Comp), profile.Height, profile.Width); // Arcane
 
         var voiceChanged = new VoiceChangedEvent(ent.Comp.Voice, profile.Voice);
         RaiseLocalEvent(ent, ref voiceChanged);
