@@ -243,7 +243,6 @@
       destroyOnBreak: false # Arcane
     - type: PipeRestrictOverlap
     - type: TegCirculator
-      visualSpeedDelta: 101.325 # Arcane
     - type: StealTarget
       stealGroup: Teg
     - type: DirectionalArrowIndicator
