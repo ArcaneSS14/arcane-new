@@ -412,9 +412,10 @@ public sealed partial class TegSystem : EntitySystem
     /// <returns>Null if the node group is not yet available. This can happen during initialization.</returns>
     private TegNodeGroup? GetNodeGroup(EntityUid uidGenerator)
     {
-        NodeContainerComponent? nodeContainer = null;
-        if (!_nodeContainerQuery.Resolve(uidGenerator, ref nodeContainer))
+        // Arcane-Edit-Start: Node containers may be absent during component startup or shutdown.
+        if (!_nodeContainerQuery.TryComp(uidGenerator, out var nodeContainer))
             return null;
+        // Arcane-Edit-End
 
         // Arcane-Edit-Start: Find the TEG group from either machine part.
         if (!nodeContainer.Nodes.TryGetValue(NodeNameTeg, out var tegNode) &&
@@ -529,11 +530,11 @@ public sealed partial class TegSystem : EntitySystem
 
     private void OnCirculatorInteract(Entity<TegCirculatorComponent> ent, ref InteractUsingEvent args)
     {
-        if (args.Handled)
+        if (args.Handled || IsPanelOpen(ent))
             return;
 
         var mode = _tool.HasQuality(args.Used, PulsingQuality);
-        var flip = _tool.HasQuality(args.Used, PryingQuality) && !IsPanelOpen(ent);
+        var flip = _tool.HasQuality(args.Used, PryingQuality);
         if (!mode && !flip)
             return;
 
@@ -547,7 +548,7 @@ public sealed partial class TegSystem : EntitySystem
         if (args.Cancelled || args.Handled || args.Used is not { } tool ||
             !_tool.HasQuality(tool, args.ChangeMode ? PulsingQuality : PryingQuality) ||
             args.Mode != ent.Comp.Mode || args.Flipped != ent.Comp.Flipped ||
-            !args.ChangeMode && IsPanelOpen(ent))
+            IsPanelOpen(ent))
             return;
 
         args.Handled = true;

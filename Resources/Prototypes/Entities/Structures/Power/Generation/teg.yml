@@ -205,8 +205,8 @@
     - type: PointLight
       enabled: false
       castShadows: false
-      radius: 1.5
-      color: "#CC00FF"
+      radius: 1 # Arcane-Edit: 1.5 > 1
+      color: "#FFFFFF" # Arcane-Edit: #CC00FF > #FFFFFF
 
     # tags
     - type: Tag
