@@ -431,12 +431,10 @@ namespace Content.Shared.Preferences
         public static HumanoidCharacterProfile RandomWithSpecies(string? species = null)
         {
             species ??= DefaultSpecies;
-            // Arcane-Edit-Start: RandomWithSpecies now adds dimensions to the randomized profile
-            var profile = Random(
+            var profile = Random( // Arcane-Edit
                 RandomizeConfigAll ^ RandomizeCfg.Species,
                 new HumanoidCharacterProfile().WithSpecies(species)
             );
-            // Arcane-Edit-End
             // Arcane-Start: Randomize body dimensions for generated characters
             var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
             var random = IoCManager.Resolve<IRobustRandom>();
