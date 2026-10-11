@@ -1,0 +1,11 @@
+- type: species
+  id: Shadowkin
+  name: species-name-shadowkin
+  roundStart: true
+  prototype: MobShadowkin
+  dollPrototype: AppearanceShadowkin
+  defaultSkinTone: "#FFFFFF"
+  skinColoration: Hues
+  naming: First
+  maleFirstNames: NamesShadowkin
+  femaleFirstNames: NamesShadowkin

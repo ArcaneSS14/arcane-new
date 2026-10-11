@@ -1,0 +1,19 @@
+- type: damageModifierSet
+  id: Tajaran
+  coefficients: # Heat and cold adjustments for a fur-bearing species
+    Blunt: 1.15
+    Slash: 1.15
+    Piercing: 1.15
+    Heat: 1.20
+    Cold: 0.80
+  ignoreArmorPierceFlags: All
+
+- type: damageModifierSet
+  id: Shadowkin
+  coefficients:
+    Blunt: 1.25
+    Slash: 1.25
+    Piercing: 1.25
+    Asphyxiation: 0.50
+    Heat: 1.4
+  ignoreArmorPierceFlags: All
