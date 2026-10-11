@@ -13,12 +13,14 @@ using Content.Shared.Power.EntitySystems;
 using Content.Shared.Power.Generation.Teg;
 using Content.Shared.Rounding;
 using Robust.Server.GameObjects;
+// Arcane-Start
 using Content.Shared.Destructible;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Repairable;
 using Content.Shared.Tools.Systems;
 using Content.Shared.Wires;
+// Arcane-End
 
 namespace Content.Server.Power.Generation.Teg;
 

@@ -1,5 +1,5 @@
 using Robust.Shared.Serialization;
-using Content.Shared.DoAfter;
+using Content.Shared.DoAfter; // Arcane
 
 namespace Content.Shared.Power.Generation.Teg;
 

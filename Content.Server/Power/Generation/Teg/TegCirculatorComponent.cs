@@ -1,5 +1,5 @@
 using Content.Shared.Atmos;
-using Content.Shared.Power.Generation.Teg;
+using Content.Shared.Power.Generation.Teg; // Arcane
 
 namespace Content.Server.Power.Generation.Teg;
 

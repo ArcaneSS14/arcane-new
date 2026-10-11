@@ -1,8 +1,8 @@
 using Content.Shared.Examine;
-using System.Numerics;
 using Robust.Client.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Spawners;
+using System.Numerics; // Arcane
 
 namespace Content.Client.DirectionalArrowIndicator;
 
@@ -12,8 +12,11 @@ namespace Content.Client.DirectionalArrowIndicator;
 /// </summary>
 public sealed partial class DirectionalArrowIndicatorSystem : EntitySystem
 {
-    [Dependency] private SpriteSystem _sprite = default!; // Arcane-Edit: Mirror the indicator without rotating its transform.
-    [Dependency] private SharedAppearanceSystem _appearance = default!; // Arcane
+    // [Dependency] private TransformSystem _transform = default!; // Arcane-Edit: Use sprite mirroring for indicators.
+    // Arcane-Start
+    [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    // Arcane-End
 
     private const float EdgeOffset = 0.78125f; // Used for moving arrow to the edge of the tile by default.
 
