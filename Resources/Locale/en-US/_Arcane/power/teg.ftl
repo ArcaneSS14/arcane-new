@@ -1,0 +1,9 @@
+teg-generator-examine-links = Anchor an intact generator between two correctly positioned circulators and close their panels.
+teg-mode-changed = Circulator set to {$mode} mode.
+teg-flipped = Circulator inlet and outlet reversed.
+teg-mode-hot = hot
+teg-mode-cold = cold
+teg-state-broken = The machine is broken and needs welding repairs.
+teg-state-connected = Connected to the generator.
+teg-state-disconnected = Disconnected from the generator.
+teg-circulator-readings = {$mode} loop: inlet {$inPressure} kPa / {$inTemperature} K; outlet {$outPressure} kPa / {$outTemperature} K.

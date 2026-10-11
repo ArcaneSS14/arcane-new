@@ -13,6 +13,12 @@ using Content.Shared.Power.EntitySystems;
 using Content.Shared.Power.Generation.Teg;
 using Content.Shared.Rounding;
 using Robust.Server.GameObjects;
+using Content.Shared.Destructible;
+using Content.Shared.Interaction;
+using Content.Shared.Popups;
+using Content.Shared.Repairable;
+using Content.Shared.Tools.Systems;
+using Content.Shared.Wires;
 
 namespace Content.Server.Power.Generation.Teg;
 
@@ -68,6 +74,15 @@ public sealed partial class TegSystem : EntitySystem
     [Dependency] private SharedPowerReceiverSystem _receiver = default!;
     [Dependency] private EntityQuery<NodeContainerComponent> _nodeContainerQuery = default!;
 
+    // Arcane-Start
+    [Dependency] private SharedToolSystem _tool = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    private const string PulsingQuality = "Pulsing";
+    private const string PryingQuality = "Prying";
+    private static readonly Color HotLightColor = Color.FromHex("#FF3232");
+    private static readonly Color ColdLightColor = Color.FromHex("#4F82FF");
+    // Arcane-End
+
     public override void Initialize()
     {
         base.Initialize();
@@ -76,13 +91,30 @@ public sealed partial class TegSystem : EntitySystem
         SubscribeLocalEvent<TegGeneratorComponent, PowerChangedEvent>(GeneratorPowerChange);
 
         SubscribeLocalEvent<TegGeneratorComponent, ExaminedEvent>(GeneratorExamined);
+        // Arcane-Start
+        SubscribeLocalEvent<TegGeneratorComponent, ComponentStartup>(OnGeneratorStartup);
+        SubscribeLocalEvent<TegGeneratorComponent, ComponentShutdown>(OnGeneratorShutdown);
+        SubscribeLocalEvent<TegGeneratorComponent, AnchorStateChangedEvent>(OnGeneratorAnchorChanged);
+        SubscribeLocalEvent<TegGeneratorComponent, BreakageEventArgs>(OnGeneratorBreakage);
+        SubscribeLocalEvent<TegGeneratorComponent, RepairedEvent>(OnGeneratorRepaired);
+        SubscribeLocalEvent<TegGeneratorComponent, PanelChangedEvent>(OnGeneratorPanelChanged);
+        SubscribeLocalEvent<TegCirculatorComponent, InteractUsingEvent>(OnCirculatorInteract);
+        SubscribeLocalEvent<TegCirculatorComponent, ExaminedEvent>(OnCirculatorExamined);
+        SubscribeLocalEvent<TegCirculatorComponent, ComponentStartup>(OnCirculatorStartup);
+        SubscribeLocalEvent<TegCirculatorComponent, ComponentShutdown>(OnCirculatorShutdown);
+        SubscribeLocalEvent<TegCirculatorComponent, AnchorStateChangedEvent>(OnCirculatorAnchorChanged);
+        SubscribeLocalEvent<TegCirculatorComponent, BreakageEventArgs>(OnCirculatorBreakage);
+        SubscribeLocalEvent<TegCirculatorComponent, RepairedEvent>(OnCirculatorRepaired);
+        SubscribeLocalEvent<TegCirculatorComponent, PanelChangedEvent>(OnCirculatorPanelChanged);
+        SubscribeLocalEvent<TegCirculatorComponent, TegCirculatorDoAfterEvent>(OnCirculatorDoAfter);
+        // Arcane-End
     }
 
     private void GeneratorExamined(EntityUid uid, TegGeneratorComponent component, ExaminedEvent args)
     {
-        if (GetNodeGroup(uid) is not { IsFullyBuilt: true })
+        if (!component.Connected) // Arcane-Edit: Check whether the generator is connected.
         {
-            args.PushMarkup(Loc.GetString("teg-generator-examine-connection"));
+            args.PushMarkup(Loc.GetString("teg-generator-examine-links")); // Arcane-Edit: Explain automatic assembly requirements.
         }
         else
         {
@@ -92,6 +124,13 @@ public sealed partial class TegSystem : EntitySystem
             {
                 args.PushMarkup(Loc.GetString("teg-generator-examine-power", ("power", supplier.CurrentSupply)));
                 args.PushMarkup(Loc.GetString("teg-generator-examine-power-max-output", ("power", supplier.MaxSupply)));
+                // Arcane-Start
+                if (args.IsInDetailsRange && GetNodeGroup(uid) is { IsFullyBuilt: true } group)
+                {
+                    PushCirculatorReadings(group.CirculatorA!.Owner, args);
+                    PushCirculatorReadings(group.CirculatorB!.Owner, args);
+                }
+                // Arcane-End
             }
         }
     }
@@ -107,8 +146,13 @@ public sealed partial class TegSystem : EntitySystem
         }
 
         var tegGroup = GetNodeGroup(uid);
-        if (tegGroup is not { IsFullyBuilt: true })
+        // Arcane-Edit-Start: Require an intact connected assembly.
+        if (!component.Connected || component.Broken || tegGroup is not { IsFullyBuilt: true })
+        {
+            supplier.MaxSupply = 0;
             return;
+        }
+        // Arcane-Edit-End
 
         var circA = tegGroup.CirculatorA!.Owner;
         var circB = tegGroup.CirculatorB!.Owner;
@@ -131,7 +175,12 @@ public sealed partial class TegSystem : EntitySystem
 
         var electricalEnergy = 0f;
 
-        if (airA.Pressure > 0 && airB.Pressure > 0)
+        // Arcane-Start
+        var modeHotA = Comp<TegCirculatorComponent>(circA).Mode == TegCirculatorMode.Hot;
+        var correctTemperatures = modeHotA ? airA.Temperature > airB.Temperature : airB.Temperature > airA.Temperature;
+        // Arcane-End
+        if (airA.Pressure > 0 && airB.Pressure > 0 && correctTemperatures && // Arcane-Edit: Require the hot loop to be hotter than the cold loop.
+            Comp<TegCirculatorComponent>(circA).Mode != Comp<TegCirculatorComponent>(circB).Mode) // Arcane
         {
             var hotA = airA.Temperature > airB.Temperature;
 
@@ -200,13 +249,20 @@ public sealed partial class TegSystem : EntitySystem
         ApcPowerReceiverComponent powerReceiver,
         TegNodeGroup nodeGroup)
     {
+        // Arcane-Start
+        var connected = component.Connected && nodeGroup.IsFullyBuilt && !component.Broken;
+        _appearance.SetData(uid, TegVisuals.MachineState, component.Broken
+            ? TegMachineState.Broken : connected ? TegMachineState.Assembled : TegMachineState.Unassembled);
+        // Arcane-End
         int powerLevel;
-        if (powerReceiver.Powered)
+        if (powerReceiver.Powered && connected && component.LastGeneration > 0) // Arcane-Edit: Show output only while the generator is operating.
         {
+            // Arcane-Edit-Start: Use generated power for the output animation.
             powerLevel = ContentHelpers.RoundToLevels(
-                component.RampPosition - component.RampMinimum,
-                component.MaxVisualPower - component.RampMinimum,
+                Comp<PowerSupplierComponent>(uid).MaxSupply / component.RampFactor,
+                component.MaxVisualPower,
                 12);
+            // Arcane-Edit-End
         }
         else
         {
@@ -221,8 +277,10 @@ public sealed partial class TegSystem : EntitySystem
 
         if (nodeGroup.IsFullyBuilt)
         {
-            UpdateCirculatorAppearance(nodeGroup.CirculatorA!.Owner, powerReceiver.Powered);
-            UpdateCirculatorAppearance(nodeGroup.CirculatorB!.Owner, powerReceiver.Powered);
+            // Arcane-Edit-Start: Refresh circulator visuals from assembly readiness.
+            UpdateCirculatorAppearance(nodeGroup.CirculatorA!.Owner, powerReceiver.Powered && connected);
+            UpdateCirculatorAppearance(nodeGroup.CirculatorB!.Owner, powerReceiver.Powered && connected);
+            // Arcane-Edit-End
         }
     }
 
@@ -237,7 +295,23 @@ public sealed partial class TegSystem : EntitySystem
 
         var powerReceiver = Comp<ApcPowerReceiverComponent>(uid);
 
-        _receiver.SetPowerDisabled(uid, !group.IsFullyBuilt, powerReceiver);
+        // Arcane-Start
+        if (group.IsFullyBuilt)
+        {
+            Comp<TegCirculatorComponent>(group.CirculatorA!.Owner).Mode ??= TegCirculatorMode.Hot;
+            Comp<TegCirculatorComponent>(group.CirculatorB!.Owner).Mode ??= TegCirculatorMode.Cold;
+        }
+
+        component.Connected = IsAssemblyReady(uid, component, group);
+
+        if (!component.Connected)
+        {
+            component.LastGeneration = 0;
+            component.RampPosition = component.RampMinimum;
+            Comp<PowerSupplierComponent>(uid).MaxSupply = 0;
+        }
+        // Arcane-End
+        _receiver.SetPowerDisabled(uid, !component.Connected, powerReceiver); // Arcane-Edit: Disable power when the assembly is disconnected.
         UpdateAppearance(uid, component, powerReceiver, group);
     }
 
@@ -250,17 +324,17 @@ public sealed partial class TegSystem : EntitySystem
         if (!Resolve(uid, ref component))
             return;
 
-        // If the group IS fully built, the generator will update its circulators.
-        // Otherwise, make sure circulator is set to nothing.
-        if (!group.IsFullyBuilt)
-        {
-            UpdateCirculatorAppearance((uid, component), false);
-        }
+        // Arcane-Edit-Start: Read connection and power state from the generator.
+        var powered = group.Generator != null &&
+            TryComp<TegGeneratorComponent>(group.Generator.Owner, out var generator) && generator.Connected &&
+            Comp<ApcPowerReceiverComponent>(group.Generator.Owner).Powered;
+        UpdateCirculatorAppearance((uid, component), powered);
+        // Arcane-Edit-End
     }
 
     private void UpdateCirculatorAppearance(Entity<TegCirculatorComponent?> ent, bool powered)
     {
-        if (!Resolve(ent, ref ent.Comp))
+        if (!Resolve(ent, ref ent.Comp) || TerminatingOrDeleted(ent)) // Arcane-Edit: Skip parts queued for deletion.
             return;
 
         var circ = ent.Comp;
@@ -278,14 +352,41 @@ public sealed partial class TegSystem : EntitySystem
             speed = TegCirculatorSpeed.SpeedStill;
         }
 
-        _appearance.SetData(ent, TegVisuals.CirculatorSpeed, speed);
-        _appearance.SetData(ent, TegVisuals.CirculatorPower, powered);
-
-        if (_pointLight.TryGetLight(ent, out var pointLight))
+        // Arcane-Edit-Start: Use persistent loop modes for colors and animation.
+        var connected = IsConnected(ent);
+        if (!powered)
         {
-            _pointLight.SetEnabled(ent, powered, pointLight);
-            _pointLight.SetColor(ent, speed == TegCirculatorSpeed.SpeedFast ? circ.LightColorFast : circ.LightColorSlow, pointLight);
+            circ.LastPressureDelta = 0;
+            circ.LastMolesTransferred = 0;
         }
+
+        var hot = circ.Mode != TegCirculatorMode.Cold;
+        var state = !powered || circ.Broken ? TegCirculatorState.Off : speed switch
+        {
+            TegCirculatorSpeed.SpeedStill => TegCirculatorState.Idle,
+            TegCirculatorSpeed.SpeedFast => hot ? TegCirculatorState.HotFast : TegCirculatorState.ColdFast,
+            _ => hot ? TegCirculatorState.HotSlow : TegCirculatorState.ColdSlow,
+        };
+        _appearance.SetData(ent, TegVisuals.Flipped, circ.Flipped);
+        _appearance.SetData(ent, TegVisuals.MachineState, circ.Broken ? TegMachineState.Broken
+            : connected ? circ.Flipped ? TegMachineState.AssembledFlipped : TegMachineState.Assembled
+            : circ.Flipped ? TegMachineState.UnassembledFlipped : TegMachineState.Unassembled);
+        _appearance.SetData(ent, TegVisuals.CirculatorState, state);
+
+        if (!_pointLight.TryGetLight(ent, out var light))
+            return;
+
+        _pointLight.SetEnabled(ent, powered && !circ.Broken, light);
+        _pointLight.SetColor(ent, speed == TegCirculatorSpeed.SpeedStill
+            ? Color.White : hot ? HotLightColor : ColdLightColor, light);
+        _pointLight.SetRadius(ent, speed switch
+        {
+            TegCirculatorSpeed.SpeedFast => 3f,
+            TegCirculatorSpeed.SpeedSlow => 2f,
+            _ => 1f,
+        }, light);
+        _pointLight.SetEnergy(ent, speed == TegCirculatorSpeed.SpeedFast ? 2f : 1f, light);
+        // Arcane-Edit-End
     }
 
     private void GeneratorPowerChange(EntityUid uid, TegGeneratorComponent component, ref PowerChangedEvent args)
@@ -298,6 +399,13 @@ public sealed partial class TegSystem : EntitySystem
         if (nodeGroup == null)
             return;
 
+        // Arcane-Start
+        if (!args.Powered)
+        {
+            component.LastGeneration = 0;
+            Comp<PowerSupplierComponent>(uid).MaxSupply = 0;
+        }
+        // Arcane-End
         UpdateAppearance(uid, component, Comp<ApcPowerReceiverComponent>(uid), nodeGroup);
     }
 
@@ -308,7 +416,10 @@ public sealed partial class TegSystem : EntitySystem
         if (!_nodeContainerQuery.Resolve(uidGenerator, ref nodeContainer))
             return null;
 
-        if (!nodeContainer.Nodes.TryGetValue(NodeNameTeg, out var tegNode))
+        // Arcane-Edit-Start: Find the TEG group from either machine part.
+        if (!nodeContainer.Nodes.TryGetValue(NodeNameTeg, out var tegNode) &&
+            !nodeContainer.Nodes.TryGetValue("circulator", out tegNode))
+        // Arcane-Edit-End
             return null;
 
         if (tegNode.NodeGroup is not TegNodeGroup tegGroup)
@@ -347,14 +458,14 @@ public sealed partial class TegSystem : EntitySystem
         var inlet = (PipeNode) nodeContainer.Nodes[NodeNameInlet];
         var outlet = (PipeNode) nodeContainer.Nodes[NodeNameOutlet];
 
-        return (inlet, outlet);
+        return Comp<TegCirculatorComponent>(uidCirculator).Flipped ? (outlet, inlet) : (inlet, outlet); // Arcane-Edit: Swap logical inlet and outlet when flipped.
     }
 
     [SubscribeLocalEvent]
     private void OnSyncPayload(Entity<TegGeneratorComponent> ent, ref DeviceNetworkPacketEvent<TegSensorSyncPayload> args)
     {
         var group = GetNodeGroup(ent.Owner);
-        if (group is not { IsFullyBuilt: true })
+        if (!ent.Comp.Connected || group is not { IsFullyBuilt: true }) // Arcane-Edit: Report disconnection from the generator.
             return;
 
         var supplier = Comp<PowerSupplierComponent>(ent);
@@ -381,4 +492,160 @@ public sealed partial class TegSystem : EntitySystem
             inlet.Air.Temperature,
             outlet.Air.Temperature);
     }
+
+    // Arcane-Start: Reuse the existing tool and machine lifecycle.
+    private bool IsAssemblyReady(EntityUid uid, TegGeneratorComponent component, TegNodeGroup group)
+    {
+        if (TerminatingOrDeleted(uid) || !Transform(uid).Anchored || component.Broken || IsPanelOpen(uid) || !group.IsFullyBuilt)
+            return false;
+
+        return IsCirculatorReady(group.CirculatorA!.Owner) && IsCirculatorReady(group.CirculatorB!.Owner);
+    }
+
+    private bool IsCirculatorReady(EntityUid uid) => !TerminatingOrDeleted(uid) &&
+        !Comp<TegCirculatorComponent>(uid).Broken && Transform(uid).Anchored && !IsPanelOpen(uid);
+
+    private bool IsPanelOpen(EntityUid uid) => TryComp<WiresPanelComponent>(uid, out var panel) && panel.Open;
+
+    private bool IsConnected(EntityUid uid) => GetNodeGroup(uid) is { Generator: { } generator } &&
+        TryComp<TegGeneratorComponent>(generator.Owner, out var component) && component.Connected;
+
+    private void ResetCirculator(TegNodeCirculator? node)
+    {
+        if (node != null && !TerminatingOrDeleted(node.Owner))
+            UpdateCirculatorAppearance(node.Owner, false);
+    }
+
+    private void RefreshGenerator(EntityUid uid)
+    {
+        if (GetNodeGroup(uid) is { Generator: { } generator } group &&
+            TryComp<TegGeneratorComponent>(generator.Owner, out var component))
+        {
+            ResetCirculator(group.CirculatorA);
+            ResetCirculator(group.CirculatorB);
+            UpdateGeneratorConnectivity(generator.Owner, group, component);
+        }
+    }
+
+    private void OnCirculatorInteract(Entity<TegCirculatorComponent> ent, ref InteractUsingEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        var mode = _tool.HasQuality(args.Used, PulsingQuality);
+        var flip = _tool.HasQuality(args.Used, PryingQuality) && !IsPanelOpen(ent);
+        if (!mode && !flip)
+            return;
+
+        args.Handled = true;
+        _tool.UseTool(args.Used, args.User, ent, mode ? 2f : 5f, mode ? PulsingQuality : PryingQuality,
+            new TegCirculatorDoAfterEvent { ChangeMode = mode, Mode = ent.Comp.Mode, Flipped = ent.Comp.Flipped });
+    }
+
+    private void OnCirculatorDoAfter(Entity<TegCirculatorComponent> ent, ref TegCirculatorDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled || args.Used is not { } tool ||
+            !_tool.HasQuality(tool, args.ChangeMode ? PulsingQuality : PryingQuality) ||
+            args.Mode != ent.Comp.Mode || args.Flipped != ent.Comp.Flipped ||
+            !args.ChangeMode && IsPanelOpen(ent))
+            return;
+
+        args.Handled = true;
+        var mode = args.ChangeMode;
+        if (mode)
+            ent.Comp.Mode = ent.Comp.Mode == TegCirculatorMode.Cold ? TegCirculatorMode.Hot : TegCirculatorMode.Cold;
+        else
+            ent.Comp.Flipped = !ent.Comp.Flipped;
+        var group = GetNodeGroup(ent);
+        if (group?.Generator is { } generator && TryComp<TegGeneratorComponent>(generator.Owner, out var center))
+        {
+            center.LastGeneration = 0;
+            Comp<PowerSupplierComponent>(generator.Owner).MaxSupply = 0;
+            ResetCirculator(group.CirculatorA);
+            ResetCirculator(group.CirculatorB);
+            UpdateAppearance(generator.Owner, center, Comp<ApcPowerReceiverComponent>(generator.Owner), group);
+        }
+        else
+            UpdateCirculatorAppearance(ent.AsNullable(), false);
+        _popup.PopupEntity(Loc.GetString(mode ? "teg-mode-changed" : "teg-flipped",
+            ("mode", Loc.GetString(ent.Comp.Mode == TegCirculatorMode.Cold ? "teg-mode-cold" : "teg-mode-hot"))), ent, args.User);
+    }
+
+    private void OnCirculatorExamined(Entity<TegCirculatorComponent> ent, ref ExaminedEvent args)
+    {
+        if (args.IsInDetailsRange)
+            PushCirculatorReadings(ent, args);
+    }
+
+    private void PushCirculatorReadings(EntityUid uid, ExaminedEvent args)
+    {
+        var component = Comp<TegCirculatorComponent>(uid);
+        var readings = GetCirculatorSensorData(uid);
+        var mode = Loc.GetString(component.Mode == TegCirculatorMode.Cold ? "teg-mode-cold" : "teg-mode-hot");
+        args.PushMarkup(Loc.GetString("teg-circulator-readings", ("mode", mode),
+            ("inPressure", readings.InletPressure.ToString("F1")), ("outPressure", readings.OutletPressure.ToString("F1")),
+            ("inTemperature", readings.InletTemperature.ToString("F1")), ("outTemperature", readings.OutletTemperature.ToString("F1"))));
+        args.PushMarkup(Loc.GetString(component.Broken ? "teg-state-broken" : IsConnected(uid) ? "teg-state-connected" : "teg-state-disconnected"));
+    }
+
+    private void OnGeneratorStartup(Entity<TegGeneratorComponent> ent, ref ComponentStartup args)
+    {
+        _appearance.SetData(ent, TegVisuals.MachineState, ent.Comp.Broken ? TegMachineState.Broken : TegMachineState.Unassembled);
+    }
+
+    private void OnCirculatorStartup(Entity<TegCirculatorComponent> ent, ref ComponentStartup args) => UpdateCirculatorAppearance(ent.AsNullable(), false);
+    private void OnGeneratorShutdown(Entity<TegGeneratorComponent> ent, ref ComponentShutdown args) => RefreshGenerator(ent);
+    private void OnCirculatorShutdown(Entity<TegCirculatorComponent> ent, ref ComponentShutdown args) => RefreshGenerator(ent);
+
+    private void OnGeneratorAnchorChanged(Entity<TegGeneratorComponent> ent, ref AnchorStateChangedEvent args) => RefreshGenerator(ent);
+
+    private void OnCirculatorAnchorChanged(Entity<TegCirculatorComponent> ent, ref AnchorStateChangedEvent args)
+    {
+        RefreshGenerator(ent);
+        if (!args.Anchored)
+            UpdateCirculatorAppearance(ent.AsNullable(), false);
+    }
+
+    private void OnGeneratorBreakage(Entity<TegGeneratorComponent> ent, ref BreakageEventArgs args)
+    {
+        ent.Comp.Broken = true;
+        RefreshGenerator(ent);
+        _appearance.SetData(ent, TegVisuals.MachineState, TegMachineState.Broken);
+    }
+
+    private void OnCirculatorBreakage(Entity<TegCirculatorComponent> ent, ref BreakageEventArgs args)
+    {
+        ent.Comp.Broken = true;
+        RefreshGenerator(ent);
+        UpdateCirculatorAppearance(ent.AsNullable(), false);
+    }
+
+    private void OnGeneratorRepaired(Entity<TegGeneratorComponent> ent, ref RepairedEvent args)
+    {
+        if (!ent.Comp.Broken)
+            return;
+        ent.Comp.Broken = false;
+        RefreshGenerator(ent);
+    }
+
+    private void OnCirculatorRepaired(Entity<TegCirculatorComponent> ent, ref RepairedEvent args)
+    {
+        if (!ent.Comp.Broken)
+            return;
+        ent.Comp.Broken = false;
+        RefreshGenerator(ent);
+        if (!IsConnected(ent))
+            UpdateCirculatorAppearance(ent.AsNullable(), false);
+    }
+
+    private void OnGeneratorPanelChanged(Entity<TegGeneratorComponent> ent, ref PanelChangedEvent args)
+    {
+        RefreshGenerator(ent);
+    }
+
+    private void OnCirculatorPanelChanged(Entity<TegCirculatorComponent> ent, ref PanelChangedEvent args)
+    {
+        RefreshGenerator(ent);
+    }
+    // Arcane-End
 }

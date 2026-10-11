@@ -1,4 +1,5 @@
 using Content.Shared.Atmos;
+using Content.Shared.Power.Generation.Teg;
 
 namespace Content.Server.Power.Generation.Teg;
 
@@ -11,6 +12,23 @@ namespace Content.Server.Power.Generation.Teg;
 [Access(typeof(TegSystem))]
 public sealed partial class TegCirculatorComponent : Component
 {
+    // Arcane-Start
+    /// <summary>
+    /// Unset modes are assigned once from the first complete TEG layout.
+    /// </summary>
+    [DataField]
+    public TegCirculatorMode? Mode;
+
+    /// <summary>
+    /// Reverses the inlet and outlet without rebuilding the pipe network.
+    /// </summary>
+    [DataField]
+    public bool Flipped;
+
+    [DataField]
+    public bool Broken;
+    // Arcane-End
+
     /// <summary>
     /// The difference between the inlet and outlet pressure at the start of the previous tick.
     /// </summary>

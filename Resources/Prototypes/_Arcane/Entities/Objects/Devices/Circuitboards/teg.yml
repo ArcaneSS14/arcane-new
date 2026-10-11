@@ -1,0 +1,28 @@
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: TegGeneratorMachineCircuitboard
+  name: thermo-electric generator machine board
+  components:
+  - type: Sprite
+    state: engineering
+  - type: MachineBoard
+    prototype: TegCenter
+    stackRequirements:
+      # TODO: Replace modular parts with 3 capacitors and glass with 1 console screen, as in TauCeti.
+      Manipulator: 3
+      Glass: 1
+      Cable: 5
+
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: TegCirculatorMachineCircuitboard
+  name: circulator machine board
+  components:
+  - type: Sprite
+    state: engineering
+  - type: MachineBoard
+    prototype: TegCirculator
+    stackRequirements:
+      # TODO: Replace one of these modular parts with a matter bin; TauCeti uses 1 bin and 3 manipulators.
+      Manipulator: 4
+      Cable: 5
