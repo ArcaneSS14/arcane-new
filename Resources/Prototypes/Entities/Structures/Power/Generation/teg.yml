@@ -2,7 +2,7 @@
   id: TegCenter
   name: thermo-electric generator
   description: A high efficiency generator that uses energy transfer between hot and cold gases to produce electricity.
-  parent: [ BaseMachinePowered, BaseConstructibleMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Use the normal machine-frame destruction path.
+  parent: [ BaseMachinePowered, BaseMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Leave a destroyed frame on destruction.
   placement:
     mode: SnapgridCenter
   components:
@@ -120,9 +120,6 @@
       stealGroup: Teg
 
     # Arcane-Start
-    - type: Penetratable
-      penetrateDamage: 5
-      damagePenalty: .5
     - type: WiresPanel
     - type: Repairable
       doAfterDelay: 5
@@ -136,13 +133,17 @@
         behaviors:
         - !type:DoActsBehavior
           acts: ["Breakage"]
+      - trigger: !type:DamageTrigger
+          damage: 175
+        behaviors:
+        - !type:EmptyAllContainersBehaviour
     # Arcane-End
 
 - type: entity
   id: TegCirculator
   name: circulator
   description: Passes gas through the thermo-electric generator to exchange heat. Has an inlet and outlet port.
-  parent: [ BaseMachine, BaseConstructibleMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Use the normal machine-frame destruction path.
+  parent: [ BaseMachine, BaseMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Leave a destroyed frame on destruction.
   placement:
     mode: SnapgridCenter
   components:
@@ -253,9 +254,6 @@
       - offset: 0, 0
         arrowType: BlueDirectionalArrowIndicator
     # Arcane-Start
-    - type: Penetratable
-      penetrateDamage: 5
-      damagePenalty: .5
     - type: WiresPanel
     - type: Repairable
       doAfterDelay: 5
@@ -269,6 +267,10 @@
         behaviors:
         - !type:DoActsBehavior
           acts: ["Breakage"]
+      - trigger: !type:DamageTrigger
+          damage: 175
+        behaviors:
+        - !type:EmptyAllContainersBehaviour
     - type: PipeAppearance
       exposedConnections: true
       sprite:

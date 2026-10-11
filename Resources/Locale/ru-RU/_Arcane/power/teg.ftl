@@ -6,4 +6,5 @@ teg-mode-cold = холодный
 teg-state-broken = Машина сломана, требуется ремонт сваркой.
 teg-state-connected = Соединён с генератором.
 teg-state-disconnected = Отсоединён от генератора.
+teg-deconstruction-repair-required = Отремонтируйте ТЭГ перед разборкой: урон, устраняемый сваркой, не должен превышать 25.
 teg-circulator-readings = {$mode} контур: вход {$inPressure} кПа / {$inTemperature} К; выход {$outPressure} кПа / {$outTemperature} К.
