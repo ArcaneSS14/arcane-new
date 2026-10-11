@@ -1,5 +1,5 @@
 teg-generator-examine-links = Закрепите исправный генератор между двумя правильно расположенными циркуляторами и закройте их панели.
-teg-mode-changed = Установлен {$mode} режим циркулятора.
+teg-mode-changed = Режим циркулятора: {$mode}.
 teg-flipped = Вход и выход циркулятора поменяны местами.
 teg-mode-hot = горячий
 teg-mode-cold = холодный
@@ -7,4 +7,4 @@ teg-state-broken = Машина сломана, требуется ремонт 
 teg-state-connected = Соединён с генератором.
 teg-state-disconnected = Отсоединён от генератора.
 teg-deconstruction-repair-required = Отремонтируйте ТЭГ перед разборкой: урон, устраняемый сваркой, не должен превышать 25.
-teg-circulator-readings = {$mode} контур: вход {$inPressure} кПа / {$inTemperature} К; выход {$outPressure} кПа / {$outTemperature} К.
+teg-circulator-readings = Контур ({$mode}): вход {$inPressure} кПа / {$inTemperature} К; выход {$outPressure} кПа / {$outTemperature} К.

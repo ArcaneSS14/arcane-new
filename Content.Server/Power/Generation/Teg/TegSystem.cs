@@ -468,7 +468,7 @@ public sealed partial class TegSystem : EntitySystem
     private void OnSyncPayload(Entity<TegGeneratorComponent> ent, ref DeviceNetworkPacketEvent<TegSensorSyncPayload> args)
     {
         var group = GetNodeGroup(ent.Owner);
-        if (!ent.Comp.Connected || group is not { IsFullyBuilt: true }) // Arcane-Edit: Report disconnection from the generator.
+        if (group is not { IsFullyBuilt: true })
             return;
 
         var supplier = Comp<PowerSupplierComponent>(ent);
