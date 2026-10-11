@@ -104,7 +104,7 @@
       enabled: false
       castShadows: false
       radius: 1.5
-      color: "#FFAA00"
+      color: "#FF8800" # Arcane-Edit: #FFAA00 > #FF8800
 
     - type: AmbientSound
       volume: -4
@@ -133,10 +133,20 @@
         behaviors:
         - !type:DoActsBehavior
           acts: ["Breakage"]
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalCrunch
+            params:
+              variation: 0.2
       - trigger: !type:DamageTrigger
           damage: 175
         behaviors:
         - !type:EmptyAllContainersBehaviour
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+            params:
+              variation: 0.1
     # Arcane-End
 
 - type: entity
@@ -267,10 +277,20 @@
         behaviors:
         - !type:DoActsBehavior
           acts: ["Breakage"]
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalCrunch
+            params:
+              variation: 0.2
       - trigger: !type:DamageTrigger
           damage: 175
         behaviors:
         - !type:EmptyAllContainersBehaviour
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+            params:
+              variation: 0.1
     - type: PipeAppearance
       exposedConnections: true
       sprite:

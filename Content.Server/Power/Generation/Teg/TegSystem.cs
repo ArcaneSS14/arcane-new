@@ -20,6 +20,7 @@ using Content.Shared.Popups;
 using Content.Shared.Repairable;
 using Content.Shared.Tools.Systems;
 using Content.Shared.Wires;
+using Content.Server.Atmos.Piping.EntitySystems;
 // Arcane-End
 
 namespace Content.Server.Power.Generation.Teg;
@@ -79,6 +80,7 @@ public sealed partial class TegSystem : EntitySystem
     // Arcane-Start
     [Dependency] private SharedToolSystem _tool = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private AtmosUnsafeUnanchorSystem _unsafeUnanchor = default!;
     private const string PulsingQuality = "Pulsing";
     private const string PryingQuality = "Prying";
     private static readonly Color HotLightColor = Color.FromHex("#FF3232");
@@ -106,6 +108,7 @@ public sealed partial class TegSystem : EntitySystem
         SubscribeLocalEvent<TegCirculatorComponent, ComponentShutdown>(OnCirculatorShutdown);
         SubscribeLocalEvent<TegCirculatorComponent, AnchorStateChangedEvent>(OnCirculatorAnchorChanged);
         SubscribeLocalEvent<TegCirculatorComponent, BreakageEventArgs>(OnCirculatorBreakage);
+        SubscribeLocalEvent<TegCirculatorComponent, DestructionEventArgs>(OnCirculatorDestruction);
         SubscribeLocalEvent<TegCirculatorComponent, RepairedEvent>(OnCirculatorRepaired);
         SubscribeLocalEvent<TegCirculatorComponent, PanelChangedEvent>(OnCirculatorPanelChanged);
         SubscribeLocalEvent<TegCirculatorComponent, TegCirculatorDoAfterEvent>(OnCirculatorDoAfter);
@@ -387,7 +390,7 @@ public sealed partial class TegSystem : EntitySystem
             TegCirculatorSpeed.SpeedSlow => 2f,
             _ => 1f,
         }, light);
-        _pointLight.SetEnergy(ent, speed == TegCirculatorSpeed.SpeedFast ? 2f : 1f, light);
+        _pointLight.SetEnergy(ent, speed == TegCirculatorSpeed.SpeedFast ? 3f : 1.5f, light);
         // Arcane-Edit-End
     }
 
@@ -639,6 +642,12 @@ public sealed partial class TegSystem : EntitySystem
         RefreshGenerator(ent);
         if (!IsConnected(ent))
             UpdateCirculatorAppearance(ent.AsNullable(), false);
+    }
+
+    // The pipe nodes are still grouped; leak only this machine's volume before deletion removes it from the networks.
+    private void OnCirculatorDestruction(Entity<TegCirculatorComponent> ent, ref DestructionEventArgs args)
+    {
+        _unsafeUnanchor.LeakGas(ent, false);
     }
 
     private void OnGeneratorPanelChanged(Entity<TegGeneratorComponent> ent, ref PanelChangedEvent args)

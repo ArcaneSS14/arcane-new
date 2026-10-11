@@ -4,7 +4,7 @@
   name: thermo-electric generator machine board
   components:
   - type: Sprite
-    state: engineering
+    state: cpu_engineering
   - type: MachineBoard
     prototype: TegCenter
     stackRequirements:
