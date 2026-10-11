@@ -244,6 +244,8 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
         if (_guide != null)
             _profileEditor.OnOpenGuidebook += _guide.OpenHelp;
 
+        LobbyUIController.RaiseProfileEditorCreated(_profileEditor);
+
         _profileEditor.Save += SaveCharacterProfile;
 
         _characterSetup = new CharacterSetupGui(_profileEditor);
@@ -263,11 +265,13 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
         {
             if (_profileEditor.Profile != null && _profileEditor.IsDirty && _profileEditor.CharacterSlot != slot)
             {
-                OpenCharacterSavePanel(() =>
-                {
-                    _preferencesManager.SelectCharacter(slot);
-                    ReloadCharacterSetup();
-                });
+                OpenCharacterSavePanel(
+                    () =>
+                    {
+                        _preferencesManager.SelectCharacter(slot);
+                        ReloadCharacterSetup();
+                    },
+                    _characterSetup.ReloadCharacterPickers);
                 return;
             }
 
@@ -279,11 +283,13 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
         {
             if (_profileEditor.Profile != null && _profileEditor.IsDirty && _profileEditor.CharacterSlot == slot)
             {
-                OpenCharacterSavePanel(() =>
-                {
-                    _preferencesManager.DeleteCharacter(slot);
-                    ReloadCharacterSetup();
-                });
+                OpenCharacterSavePanel(
+                    () =>
+                    {
+                        _preferencesManager.DeleteCharacter(slot);
+                        ReloadCharacterSetup();
+                    },
+                    _characterSetup.ReloadCharacterPickers);
                 return;
             }
 
@@ -343,7 +349,7 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
             _preferencesManager.Preferences?.SelectedCharacterIndex);
     }
 
-    private void OpenCharacterSavePanel(Action? onConfirm = null)
+    private void OpenCharacterSavePanel(Action? onConfirm = null, Action? onCancel = null)
     {
         var savePanel = new CharacterSetupGuiSavePanel();
 
@@ -359,6 +365,9 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
             savePanel.Close();
             onConfirm?.Invoke();
         };
+
+        if (onCancel != null)
+            savePanel.CancelButton.OnPressed += _ => onCancel();
 
         savePanel.OpenCentered();
     }
