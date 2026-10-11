@@ -252,7 +252,7 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
         {
             if (_profileEditor.Profile != null && _profileEditor.IsDirty)
             {
-                OpenCharacterSavePanel();
+                OpenCharacterSavePanel(CloseCharacterSetup);
                 return;
             }
 
@@ -261,12 +261,32 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
 
         _characterSetup.SelectCharacter += slot =>
         {
+            if (_profileEditor.Profile != null && _profileEditor.IsDirty && _profileEditor.CharacterSlot != slot)
+            {
+                OpenCharacterSavePanel(() =>
+                {
+                    _preferencesManager.SelectCharacter(slot);
+                    ReloadCharacterSetup();
+                });
+                return;
+            }
+
             _preferencesManager.SelectCharacter(slot);
             ReloadCharacterSetup();
         };
 
         _characterSetup.DeleteCharacter += slot =>
         {
+            if (_profileEditor.Profile != null && _profileEditor.IsDirty && _profileEditor.CharacterSlot == slot)
+            {
+                OpenCharacterSavePanel(() =>
+                {
+                    _preferencesManager.DeleteCharacter(slot);
+                    ReloadCharacterSetup();
+                });
+                return;
+            }
+
             _preferencesManager.DeleteCharacter(slot);
 
             if (_profileEditor.CharacterSlot == slot)
@@ -323,7 +343,7 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
             _preferencesManager.Preferences?.SelectedCharacterIndex);
     }
 
-    private void OpenCharacterSavePanel()
+    private void OpenCharacterSavePanel(Action? onConfirm = null)
     {
         var savePanel = new CharacterSetupGuiSavePanel();
 
@@ -331,13 +351,13 @@ public sealed partial class EscapeUIController : UIController, IOnStateEntered<G
         {
             SaveCharacterProfile();
             savePanel.Close();
-            CloseCharacterSetup();
+            onConfirm?.Invoke();
         };
 
         savePanel.NoSaveButton.OnPressed += _ =>
         {
             savePanel.Close();
-            CloseCharacterSetup();
+            onConfirm?.Invoke();
         };
 
         savePanel.OpenCentered();
