@@ -15,12 +15,9 @@ namespace Content.Shared.Humanoid;
 /// </summary>
 public sealed partial class HumanoidProfileComponent
 {
-    // Arcane-Start: Replicate character growth on live humanoids
+    // Arcane-Start: Replicate character scale on live humanoids
     [DataField, AutoNetworkedField]
-    public float Height = 1f;
-
-    [DataField, AutoNetworkedField]
-    public float Width = 1f;
+    public float Scale = 1f;
     // Arcane-End
 
     [DataField]

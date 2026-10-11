@@ -34,67 +34,48 @@ public sealed partial class HumanoidProfileEditor
 
         OnSetProfile += _ => UpdateBarkVoice(); // TODO: move bark shitcode into module
 
-        // Arcane-Start: Wire character growth controls
-        HeightSlider.OnValueChanged += _ => UpdateDimensions(true);
-        WidthSlider.OnValueChanged += _ => UpdateDimensions(false);
-        HeightReset.OnPressed += _ => ResetDimension(true);
-        WidthReset.OnPressed += _ => ResetDimension(false);
+        // Arcane-Start: Wire character scale control
+        ScaleSlider.OnValueChanged += _ => UpdateScale();
+        ScaleReset.OnPressed += _ => ResetScale();
         // Arcane-End
     }
 
-    // Arcane-Start: Keep sliders, profile values, labels, and preview in sync
+    // Arcane-Start: Keep slider, profile value, labels, and preview in sync
     private void UpdateGrowthControls()
     {
         if (Profile == null)
             return;
 
         var species = _prototypeManager.Index<SpeciesPrototype>(Profile.Species);
-        HeightSlider.MinValue = 0;
-        HeightSlider.MaxValue = 2;
-        HeightSlider.SetValueWithoutEvent(Profile.Height);
-        HeightSlider.MinValue = species.MinHeight;
-        HeightSlider.MaxValue = species.MaxHeight;
-        WidthSlider.MinValue = 0;
-        WidthSlider.MaxValue = 2;
-        WidthSlider.SetValueWithoutEvent(Profile.Width);
-        WidthSlider.MinValue = species.MinWidth;
-        WidthSlider.MaxValue = species.MaxWidth;
+        ScaleSlider.MinValue = 0;
+        ScaleSlider.MaxValue = 2;
+        ScaleSlider.SetValueWithoutEvent(Profile.Scale);
+        ScaleSlider.MinValue = species.MinScale;
+        ScaleSlider.MaxValue = species.MaxScale;
         UpdateGrowthLabels(species);
     }
 
-    private void ResetDimension(bool height)
+    private void ResetScale()
     {
         if (Profile == null)
             return;
 
         var species = _prototypeManager.Index<SpeciesPrototype>(Profile.Species);
-        if (height)
-            Profile = Profile.WithHeight(species.DefaultHeight);
-        else
-            Profile = Profile.WithWidth(species.DefaultWidth);
+        Profile = Profile.WithScale(species.DefaultScale);
         UpdateGrowthControls();
         SpriteView.ReloadProfilePreview(Profile);
         IsDirty = true;
     }
 
-    private void UpdateDimensions(bool heightChanged)
+    private void UpdateScale()
     {
         if (Profile == null)
             return;
 
         var species = _prototypeManager.Index<SpeciesPrototype>(Profile.Species);
-        var sizeRatio = Math.Max(1f, species.SizeRatio);
-        var height = Math.Clamp(HeightSlider.Value, species.MinHeight, species.MaxHeight);
-        var width = Math.Clamp(WidthSlider.Value, species.MinWidth, species.MaxWidth);
-        var ratio = height / width;
-        if (heightChanged && (ratio < 1f / sizeRatio || ratio > sizeRatio))
-            width = Math.Clamp(height / Math.Clamp(ratio, 1f / sizeRatio, sizeRatio), species.MinWidth, species.MaxWidth);
-        else if (!heightChanged && (ratio < 1f / sizeRatio || ratio > sizeRatio))
-            height = Math.Clamp(width * Math.Clamp(ratio, 1f / sizeRatio, sizeRatio), species.MinHeight, species.MaxHeight);
-
-        Profile = Profile.WithHeight(height).WithWidth(width);
-        HeightSlider.SetValueWithoutEvent(height);
-        WidthSlider.SetValueWithoutEvent(width);
+        var scale = Math.Clamp(ScaleSlider.Value, species.MinScale, species.MaxScale);
+        Profile = Profile.WithScale(scale);
+        ScaleSlider.SetValueWithoutEvent(scale);
         UpdateGrowthLabels(species);
         SpriteView.ReloadProfilePreview(Profile);
         IsDirty = true;
@@ -105,9 +86,8 @@ public sealed partial class HumanoidProfileEditor
         if (Profile == null)
             return;
 
-        HeightLabel.Text = Loc.GetString("humanoid-profile-editor-height-label", ("height", (int)MathF.Round(species.AverageHeight * Profile.Height)));
-        WidthLabel.Text = Loc.GetString("humanoid-profile-editor-width-label", ("width", (int)MathF.Round(species.AverageWidth * Profile.Width)));
-        WeightLabel.Text = Loc.GetString("humanoid-profile-editor-weight-label", ("weight", (int)MathF.Round(species.AverageWeight * (Profile.Height + Profile.Width) / 2f)));
+        ScaleLabel.Text = Loc.GetString("humanoid-profile-editor-scale-label", ("scale", (int)MathF.Round(Profile.Scale * 100f)));
+        WeightLabel.Text = Loc.GetString("humanoid-profile-editor-weight-label", ("weight", (int)MathF.Round(species.AverageWeight * Profile.Scale)));
     }
     // Arcane-End
 

@@ -208,9 +208,8 @@ namespace Content.Shared.Preferences
                 other.Knowledge)
                 // </Trauma>
         {
-            // Arcane-Start: Preserve growth settings when profiles are copied
-            Height = other.Height;
-            Width = other.Width;
+            // Arcane-Start: Preserve scale settings when profiles are copied
+            Scale = other.Scale;
             // Arcane-End
         }
 
@@ -239,9 +238,8 @@ namespace Content.Shared.Preferences
                 Species = species.Value,
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
-                // Arcane-Start: Use species-specific default dimensions
-                Height = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultHeight,
-                Width = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultWidth,
+                // Arcane-Start: Use species-specific default scale
+                Scale = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultScale,
                 // Arcane-End
             };
         }
@@ -358,11 +356,10 @@ namespace Content.Shared.Preferences
             {
                 baseProfile.Species = RandomSpecies(ignoredSpecies);
                 config ^= RandomizeCfg.Species;
-                // Arcane-Start: Generate dimensions from the chosen species since its randomization is disabled
+                // Arcane-Start: Generate scale from the chosen species since its randomization is disabled
                 var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(baseProfile.Species);
                 var random = IoCManager.Resolve<IRobustRandom>();
-                baseProfile.Height = random.NextFloat(speciesPrototype.MinHeight, speciesPrototype.MaxHeight);
-                baseProfile.Width = random.NextFloat(speciesPrototype.MinWidth, speciesPrototype.MaxWidth);
+                baseProfile.Scale = random.NextFloat(speciesPrototype.MinScale, speciesPrototype.MaxScale);
                 // Arcane-End
             }
             var profile = Random(config, baseProfile);
@@ -406,17 +403,15 @@ namespace Content.Shared.Preferences
 
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
-            // Arcane-Start: Preserve or randomize dimensions with the species
+            // Arcane-Start: Preserve or randomize scale with the species
             if ((randomizeCfg & RandomizeCfg.Species) != 0)
             {
                 var random = IoCManager.Resolve<IRobustRandom>();
-                profile.Height = random.NextFloat(speciesProto.MinHeight, speciesProto.MaxHeight);
-                profile.Width = random.NextFloat(speciesProto.MinWidth, speciesProto.MaxWidth);
+                profile.Scale = random.NextFloat(speciesProto.MinScale, speciesProto.MaxScale);
             }
             else
             {
-                profile.Height = baseProfile.Height;
-                profile.Width = baseProfile.Width;
+                profile.Scale = baseProfile.Scale;
             }
             // Arcane-End
 
@@ -435,12 +430,11 @@ namespace Content.Shared.Preferences
                 RandomizeConfigAll ^ RandomizeCfg.Species,
                 new HumanoidCharacterProfile().WithSpecies(species)
             );
-            // Arcane-Start: Randomize body dimensions for generated characters
+            // Arcane-Start: Randomize body scale for generated characters
             var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
             var random = IoCManager.Resolve<IRobustRandom>();
             return profile
-                .WithHeight(random.NextFloat(speciesPrototype.MinHeight, speciesPrototype.MaxHeight))
-                .WithWidth(random.NextFloat(speciesPrototype.MinWidth, speciesPrototype.MaxWidth));
+                .WithScale(random.NextFloat(speciesPrototype.MinScale, speciesPrototype.MaxScale));
             // Arcane-End
         }
 
@@ -476,13 +470,12 @@ namespace Content.Shared.Preferences
 
         public HumanoidCharacterProfile WithSpecies(string species)
         {
-            // Arcane-Edit-Start: Reset dimensions on species changes (replaces a species-only copy)
+            // Arcane-Edit-Start: Reset scale on species changes (replaces a species-only copy)
             var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
             return new(this)
             {
                 Species = species,
-                Height = speciesPrototype.DefaultHeight,
-                Width = speciesPrototype.DefaultWidth,
+                Scale = speciesPrototype.DefaultScale,
             };
             // Arcane-Edit-End
         }
@@ -675,9 +668,8 @@ namespace Content.Shared.Preferences
 
         public bool MemberwiseEquals(HumanoidCharacterProfile other)
         {
-            // Arcane-Start: Include growth in profile comparisons
-            if (Height != other.Height) return false;
-            if (Width != other.Width) return false;
+            // Arcane-Start: Include scale in profile comparisons
+            if (Scale != other.Scale) return false;
             // Arcane-End
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
@@ -954,9 +946,8 @@ namespace Content.Shared.Preferences
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
             hashCode.Add(Species);
-            // Arcane-Start: Hash character growth settings
-            hashCode.Add(Height);
-            hashCode.Add(Width);
+            // Arcane-Start: Hash character scale settings
+            hashCode.Add(Scale);
             // Arcane-End
             hashCode.Add(Age);
             hashCode.Add((int)Sex);

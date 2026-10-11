@@ -15,16 +15,11 @@ namespace Content.Shared.Preferences;
 /// </summary>
 public sealed partial class HumanoidCharacterProfile
 {
-    // Arcane-Start: Persist character growth preferences in profile data
+    // Arcane-Start: Persist character scale preference in profile data
     [DataField]
-    public float Height { get; private set; } = 1f;
+    public float Scale { get; private set; } = 1f;
 
-    [DataField]
-    public float Width { get; private set; } = 1f;
-
-    public HumanoidCharacterProfile WithHeight(float height) => new(this) { Height = height };
-
-    public HumanoidCharacterProfile WithWidth(float width) => new(this) { Width = width };
+    public HumanoidCharacterProfile WithScale(float scale) => new(this) { Scale = scale };
     // Arcane-End
 
     [DataField]
@@ -61,10 +56,9 @@ public sealed partial class HumanoidCharacterProfile
 
     private void EnsureValidTrauma(IDependencyCollection collection, IPrototypeManager proto)
     {
-        // Arcane-Start: Keep saved growth values within the selected species range
+        // Arcane-Start: Keep saved growth value within the selected species range
         var species = proto.Index(Species);
-        Height = float.IsFinite(Height) ? Math.Clamp(Height, species.MinHeight, species.MaxHeight) : species.DefaultHeight;
-        Width = float.IsFinite(Width) ? Math.Clamp(Width, species.MinWidth, species.MaxWidth) : species.DefaultWidth;
+        Scale = float.IsFinite(Scale) ? Math.Clamp(Scale, species.MinScale, species.MaxScale) : species.DefaultScale;
         // Arcane-End
 
         if (!proto.HasIndex(BarkVoice))

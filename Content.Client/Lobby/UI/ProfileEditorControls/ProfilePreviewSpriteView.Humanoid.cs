@@ -26,7 +26,7 @@ public sealed partial class ProfilePreviewSpriteView
             return;
 
         EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
-        EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Width, humanoid.Height)); // Arcane
+        EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale)); // Arcane
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public sealed partial class ProfilePreviewSpriteView
 
         // Arcane-Start: Apply profile visual scale after entity selection for both preview branches
         if (humanoid is not null)
-            EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Width, humanoid.Height));
+            EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale));
         // Arcane-End
 
         if (humanoid != null && jobClothes)

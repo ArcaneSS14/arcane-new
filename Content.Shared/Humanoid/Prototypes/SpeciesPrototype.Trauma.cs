@@ -10,36 +10,18 @@ namespace Content.Shared.Humanoid.Prototypes;
 /// </summary>
 public sealed partial class SpeciesPrototype
 {
-    // Arcane-Start: Character growth range
+    // Arcane-Start: Character scale range
     [DataField]
-    public float MinHeight = 0.9f;
+    public float MinScale = 0.75f;
 
     [DataField]
-    public float DefaultHeight = 1f;
+    public float DefaultScale = 1f;
 
     [DataField]
-    public float MaxHeight = 1.2f;
-
-    [DataField]
-    public float MinWidth = 0.9f;
-
-    [DataField]
-    public float DefaultWidth = 1f;
-
-    [DataField]
-    public float MaxWidth = 1.1f;
-
-    [DataField]
-    public float AverageHeight = 170f;
-
-    [DataField]
-    public float AverageWidth = 45f;
+    public float MaxScale = 1.25f;
 
     [DataField]
     public float AverageWeight = 71f;
-
-    [DataField]
-    public float SizeRatio = 1.2f;
     // Arcane-End
 
     [DataField]

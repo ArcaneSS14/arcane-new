@@ -45,22 +45,19 @@ public sealed partial class HumanoidProfileSystem
     };
 
     // Arcane-Start: Apply visual and collision scale from the saved profile
-    public void ApplyGrowth(Entity<HumanoidProfileComponent> ent, float height, float width)
+    public void ApplyGrowth(Entity<HumanoidProfileComponent> ent, float scale)
     {
         var species = ProtoMan.Index(ent.Comp.Species);
-        height = float.IsFinite(height) ? Math.Clamp(height, species.MinHeight, species.MaxHeight) : species.DefaultHeight;
-        width = float.IsFinite(width) ? Math.Clamp(width, species.MinWidth, species.MaxWidth) : species.DefaultWidth;
-        ent.Comp.Height = height;
-        ent.Comp.Width = width;
+        scale = float.IsFinite(scale) ? Math.Clamp(scale, species.MinScale, species.MaxScale) : species.DefaultScale;
+        ent.Comp.Scale = scale;
         Dirty(ent);
 
-        var scale = new System.Numerics.Vector2(width, height);
-        SetGrowthVisualScale(ent.Owner, scale);
+        var visualScale = new System.Numerics.Vector2(scale, scale);
+        SetGrowthVisualScale(ent.Owner, visualScale);
 
         if (!TryComp<FixturesComponent>(ent.Owner, out var fixtures))
             return;
 
-        var average = (height + width) / 2f;
         foreach (var (fixtureId, fixture) in fixtures.Fixtures)
         {
             if (!ent.Comp.BaseFixtureRadii.TryGetValue(fixtureId, out var baseRadius))
@@ -69,7 +66,7 @@ public sealed partial class HumanoidProfileSystem
                 ent.Comp.BaseFixtureRadii[fixtureId] = baseRadius;
             }
 
-            _physics.SetRadius(ent.Owner, fixtureId, fixture, fixture.Shape, Math.Clamp(baseRadius * average, 0.01f, 0.49f), fixtures);
+            _physics.SetRadius(ent.Owner, fixtureId, fixture, fixture.Shape, Math.Clamp(baseRadius * scale, 0.01f, 0.49f), fixtures);
         }
     }
 
@@ -154,8 +151,7 @@ public sealed partial class HumanoidProfileSystem
             ent.Comp.BarkVoice,
             new(ent.Comp.Knowledge))
             // Arcane-Start
-            .WithHeight(ent.Comp.Height)
-            .WithWidth(ent.Comp.Width);
+            .WithScale(ent.Comp.Scale);
             // Arcane-End
     }
 

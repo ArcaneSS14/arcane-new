@@ -204,9 +204,8 @@ namespace Content.Server.Preferences.Managers
                 KnowledgeProfile.Verify(profile.KnowledgeMastery, _prototypeManager)
                 // </Trauma>
             ) // Arcane-Edit
-                // Arcane-Start: Restore saved growth dimensions
-                .WithHeight(profile.Height)
-                .WithWidth(profile.Width);
+                // Arcane-Start: Restore saved character scale
+                .WithScale(profile.Scale);
                 // Arcane-End
         }
 
