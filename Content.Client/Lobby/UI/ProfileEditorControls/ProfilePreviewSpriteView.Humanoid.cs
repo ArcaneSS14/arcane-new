@@ -52,12 +52,16 @@ public sealed partial class ProfilePreviewSpriteView
             var dummy = _prototypeManager.Index(humanoid.Species).DollPrototype;
             PreviewDummy = EntMan.SpawnEntity(dummy, MapCoordinates.Nullspace);
             EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
-            EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Width, humanoid.Height)); // Arcane
         }
         else
         {
             PreviewDummy = EntMan.SpawnEntity(_prototypeManager.Index(HumanoidCharacterProfile.DefaultSpecies).DollPrototype, MapCoordinates.Nullspace);
         }
+
+        // Arcane-Start: Apply profile visual scale after entity selection for both preview branches
+        if (humanoid is not null)
+            EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Width, humanoid.Height));
+        // Arcane-End
 
         if (humanoid != null && jobClothes)
         {

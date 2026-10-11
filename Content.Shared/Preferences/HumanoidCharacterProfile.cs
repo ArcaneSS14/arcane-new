@@ -358,6 +358,12 @@ namespace Content.Shared.Preferences
             {
                 baseProfile.Species = RandomSpecies(ignoredSpecies);
                 config ^= RandomizeCfg.Species;
+                // Arcane-Start: Generate dimensions from the chosen species since its randomization is disabled
+                var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(baseProfile.Species);
+                var random = IoCManager.Resolve<IRobustRandom>();
+                baseProfile.Height = random.NextFloat(speciesPrototype.MinHeight, speciesPrototype.MaxHeight);
+                baseProfile.Width = random.NextFloat(speciesPrototype.MinWidth, speciesPrototype.MaxWidth);
+                // Arcane-End
             }
             var profile = Random(config, baseProfile);
             return profile;
