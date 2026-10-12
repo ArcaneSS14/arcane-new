@@ -18,7 +18,7 @@ humanoid-profile-editor-sex-unsexed-text = None
 humanoid-profile-editor-voice-label = Voice:
 humanoid-profile-editor-age-label = Age:
 # Arcane-Start: Character scale control
-humanoid-profile-editor-scale-label = Scale: {$scale}%
+humanoid-profile-editor-height-label = Height: {$height}cm
 humanoid-profile-editor-weight-label = Weight: {$weight}kg
 # Arcane-End
 humanoid-profile-editor-skin-color-label = Skin color:

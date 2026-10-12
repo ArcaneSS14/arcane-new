@@ -25,6 +25,4 @@ public sealed partial class HumanoidProfileComponent
 
     [DataField]
     public KnowledgeProfile Knowledge = new();
-
-    public Dictionary<string, float> BaseFixtureRadii = new(); // Arcane
 }

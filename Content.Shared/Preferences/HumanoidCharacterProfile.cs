@@ -470,7 +470,10 @@ namespace Content.Shared.Preferences
 
         public HumanoidCharacterProfile WithSpecies(string species)
         {
-            // Arcane-Edit-Start: Reset scale on species changes (replaces a species-only copy)
+            // Arcane-Edit-Start: Reset scale on species changes, keep it when the species is unchanged
+            if (species == Species)
+                return new(this) { Species = species };
+
             var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
             return new(this)
             {

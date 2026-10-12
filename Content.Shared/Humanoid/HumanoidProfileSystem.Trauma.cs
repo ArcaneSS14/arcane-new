@@ -49,36 +49,43 @@ public sealed partial class HumanoidProfileSystem
     {
         var species = ProtoMan.Index(ent.Comp.Species);
         scale = float.IsFinite(scale) ? Math.Clamp(scale, species.MinScale, species.MaxScale) : species.DefaultScale;
+
+        if (MathF.Abs(ent.Comp.Scale - scale) < 1e-4f)
+            return;
+
+        var ratio = float.IsFinite(ent.Comp.Scale) && ent.Comp.Scale > 0f ? scale / ent.Comp.Scale : scale;
         ent.Comp.Scale = scale;
         Dirty(ent);
 
-        var visualScale = new System.Numerics.Vector2(scale, scale);
-        SetGrowthVisualScale(ent.Owner, visualScale);
+        _scaleVisuals.SetSpriteScale(ent.Owner, _scaleVisuals.GetSpriteScale(ent.Owner) * ratio);
+        SetOrganScale(ent.Owner, scale);
 
         if (!TryComp<FixturesComponent>(ent.Owner, out var fixtures))
             return;
 
         foreach (var (fixtureId, fixture) in fixtures.Fixtures)
         {
-            if (!ent.Comp.BaseFixtureRadii.TryGetValue(fixtureId, out var baseRadius))
-            {
-                baseRadius = fixture.Shape.Radius;
-                ent.Comp.BaseFixtureRadii[fixtureId] = baseRadius;
-            }
+            if (fixture.Shape.Radius <= 0f)
+                continue;
 
-            _physics.SetRadius(ent.Owner, fixtureId, fixture, fixture.Shape, Math.Clamp(baseRadius * scale, 0.01f, 0.49f), fixtures);
+            _physics.SetRadius(ent.Owner, fixtureId, fixture, fixture.Shape, Math.Clamp(fixture.Shape.Radius * ratio, 0.01f, 0.49f), fixtures);
         }
     }
 
     public void SetGrowthVisualScale(EntityUid uid, System.Numerics.Vector2 scale)
     {
         _scaleVisuals.SetSpriteScale(uid, scale);
+        SetOrganScale(uid, scale.X);
+    }
+
+    private void SetOrganScale(EntityUid uid, float scale)
+    {
         if (!TryComp<BodyComponent>(uid, out var body))
             return;
 
         foreach (var organ in _body.EnumerateOrgans<VisualOrganComponent>((uid, body)))
         {
-            _scaleVisuals.SetSpriteScale(organ.Owner, scale);
+            _scaleVisuals.SetSpriteScale(organ.Owner, new System.Numerics.Vector2(scale, scale));
         }
     }
     // Arcane-End

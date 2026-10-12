@@ -52,6 +52,7 @@ public sealed partial class HumanoidProfileEditor
         ScaleSlider.SetValueWithoutEvent(Profile.Scale);
         ScaleSlider.MinValue = species.MinScale;
         ScaleSlider.MaxValue = species.MaxScale;
+        ScaleSlider.SetValueWithoutEvent(Profile.Scale);
         UpdateGrowthLabels(species);
     }
 
@@ -64,7 +65,7 @@ public sealed partial class HumanoidProfileEditor
         Profile = Profile.WithScale(species.DefaultScale);
         UpdateGrowthControls();
         SpriteView.ReloadProfilePreview(Profile);
-        IsDirty = true;
+        SetDirty();
     }
 
     private void UpdateScale()
@@ -78,7 +79,7 @@ public sealed partial class HumanoidProfileEditor
         ScaleSlider.SetValueWithoutEvent(scale);
         UpdateGrowthLabels(species);
         SpriteView.ReloadProfilePreview(Profile);
-        IsDirty = true;
+        SetDirty();
     }
 
     private void UpdateGrowthLabels(SpeciesPrototype species)
@@ -86,7 +87,7 @@ public sealed partial class HumanoidProfileEditor
         if (Profile == null)
             return;
 
-        ScaleLabel.Text = Loc.GetString("humanoid-profile-editor-scale-label", ("scale", (int)MathF.Round(Profile.Scale * 100f)));
+        ScaleLabel.Text = Loc.GetString("humanoid-profile-editor-height-label", ("height", (int)MathF.Round(species.AverageHeight * Profile.Scale)));
         WeightLabel.Text = Loc.GetString("humanoid-profile-editor-weight-label", ("weight", (int)MathF.Round(species.AverageWeight * Profile.Scale)));
     }
     // Arcane-End
