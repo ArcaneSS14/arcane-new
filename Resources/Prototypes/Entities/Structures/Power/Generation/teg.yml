@@ -218,6 +218,7 @@
       castShadows: false
       radius: 1 # Arcane-Edit: 1.5 > 1
       color: "#FFFFFF" # Arcane-Edit: #CC00FF > #FFFFFF
+      energy: 1.5 # Arcane
 
     # tags
     - type: Tag
