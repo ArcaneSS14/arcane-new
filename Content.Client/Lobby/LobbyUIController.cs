@@ -36,6 +36,13 @@ public sealed partial class LobbyUIController : UIController, IOnStateEntered<Lo
     public static event Action<HumanoidProfileEditor>? OnProfileEditorCreated;
     // </Trauma>
 
+    // Arcane-Start
+    public static void RaiseProfileEditorCreated(HumanoidProfileEditor editor)
+    {
+        OnProfileEditorCreated?.Invoke(editor);
+    }
+    // Arcane-End
+
     private CharacterSetupGui? _characterSetup;
     private HumanoidProfileEditor? _profileEditor;
     private CharacterSetupGuiSavePanel? _savePanel;

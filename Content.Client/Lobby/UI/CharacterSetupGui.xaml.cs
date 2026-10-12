@@ -64,8 +64,10 @@ namespace Content.Client.Lobby.UI
 
             StatsButton.OnPressed += _ => new PlaytimeStatsWindow().OpenCentered();
 
-            _cfg.OnValueChanged(CCVars.SeeOwnNotes, p => AdminRemarksButton.Visible = p, true);
-            _cfg.OnValueChanged(CCVars.GameMaxCharacterSlots, _ => ReloadCharacterPickers());
+            // Arcane-Edit-Start: track handlers so they can be unsubscribed on dispose
+            _cfg.OnValueChanged(CCVars.SeeOwnNotes, OnSeeOwnNotesChanged, true);
+            _cfg.OnValueChanged(CCVars.GameMaxCharacterSlots, OnMaxCharacterSlotsChanged);
+            // Arcane-Edit-End
         }
 
         /// <summary>
@@ -125,5 +127,28 @@ namespace Content.Client.Lobby.UI
             _createNewCharacterButton.Disabled = numberOfFullSlots >= maxCharactersSlots;
             Characters.AddChild(_createNewCharacterButton);
         }
+
+        // Arcane-Start
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (!disposing)
+                return;
+
+            _cfg.UnsubValueChanged(CCVars.SeeOwnNotes, OnSeeOwnNotesChanged);
+            _cfg.UnsubValueChanged(CCVars.GameMaxCharacterSlots, OnMaxCharacterSlotsChanged);
+        }
+
+        private void OnSeeOwnNotesChanged(bool value)
+        {
+            AdminRemarksButton.Visible = value;
+        }
+
+        private void OnMaxCharacterSlotsChanged(int _)
+        {
+            ReloadCharacterPickers();
+        }
+        // Arcane-End
     }
 }
