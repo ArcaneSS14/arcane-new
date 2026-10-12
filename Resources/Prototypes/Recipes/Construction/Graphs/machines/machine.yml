@@ -99,6 +99,7 @@
               event: !type:MachineDeconstructedEvent
               broadcast: false
           conditions:
+            - !type:TegRepairableDamage # Arcane
             - !type:EntityAnchored
             - !type:WirePanel
             - !type:Locked

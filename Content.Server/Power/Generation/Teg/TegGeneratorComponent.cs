@@ -8,6 +8,17 @@ namespace Content.Server.Power.Generation.Teg;
 [Access(typeof(TegSystem))]
 public sealed partial class TegGeneratorComponent : Component
 {
+    // Arcane-Start
+    /// <summary>
+    /// Cached readiness of the anchored, intact assembly. Rebuilt by node and lifecycle events.
+    /// </summary>
+    [ViewVariables]
+    public bool Connected;
+
+    [DataField]
+    public bool Broken;
+    // Arcane-End
+
     /// <summary>
     /// When transferring energy from the hot to cold side,
     /// determines how much of that energy can be extracted as electricity.

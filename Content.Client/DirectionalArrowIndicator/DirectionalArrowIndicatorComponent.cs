@@ -10,6 +10,19 @@ namespace Content.Client.DirectionalArrowIndicator;
 [RegisterComponent]
 public sealed partial class DirectionalArrowIndicatorComponent : Component
 {
+    // Arcane-Start
+    /// <summary>
+    /// Optional boolean appearance key that mirrors the arrows along their local Y axis.
+    /// </summary>
+    [DataField]
+    public Enum? FlipOnAppearance;
+
+    /// <summary>
+    /// Client-only arrows from the last examination.
+    /// </summary>
+    public List<EntityUid> SpawnedArrows = new();
+    // Arcane-End
+
     /// <summary>
     /// The lifetime of the arrow indicator in seconds.
     /// </summary>

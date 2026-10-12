@@ -1,4 +1,5 @@
 using Robust.Shared.Serialization;
+using Content.Shared.DoAfter; // Arcane
 
 namespace Content.Shared.Power.Generation.Teg;
 
@@ -11,6 +12,11 @@ public enum TegVisuals
     PowerOutput,
     CirculatorSpeed,
     CirculatorPower,
+    // Arcane-Start: Yogstation TEG appearance
+    CirculatorState,
+    MachineState,
+    Flipped,
+    // Arcane-End
 }
 
 /// <summary>
@@ -34,3 +40,41 @@ public enum TegCirculatorSpeed
     SpeedSlow,
     SpeedFast
 }
+
+// Arcane-Start: Yogstation TEG appearance
+[Serializable, NetSerializable]
+public enum TegCirculatorState
+{
+    Off,
+    Idle,
+    HotSlow,
+    HotFast,
+    ColdSlow,
+    ColdFast,
+}
+
+[Serializable, NetSerializable]
+public enum TegMachineState
+{
+    Unassembled,
+    UnassembledFlipped,
+    Assembled,
+    AssembledFlipped,
+    Broken,
+}
+
+[Serializable, NetSerializable]
+public enum TegCirculatorMode
+{
+    Hot,
+    Cold,
+}
+
+[Serializable, NetSerializable]
+public sealed partial class TegCirculatorDoAfterEvent : SimpleDoAfterEvent
+{
+    [DataField] public bool ChangeMode;
+    [DataField] public TegCirculatorMode? Mode;
+    [DataField] public bool Flipped;
+}
+// Arcane-End
