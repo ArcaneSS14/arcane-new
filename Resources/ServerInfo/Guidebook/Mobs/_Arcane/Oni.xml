@@ -1,0 +1,14 @@
+<Document>
+  # Oni
+
+  <Box>
+    <GuideEntityEmbed Entity="AppearanceOni" Caption=""/>
+  </Box>
+
+  Large, horned people that come in a variety of colors. Their thick hides make them tougher than most.
+
+  ## Benefits
+
+  - Takes 15% less Blunt, Slash, and Piercing damage.
+
+</Document>

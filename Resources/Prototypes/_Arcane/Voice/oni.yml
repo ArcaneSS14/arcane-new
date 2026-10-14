@@ -1,0 +1,15 @@
+- type: speechVerb
+  id: Oni
+  name: chat-speech-verb-name-oni
+  speechVerbStrings:
+  - chat-speech-verb-oni-1
+  - chat-speech-verb-oni-2
+  - chat-speech-verb-oni-3
+  - chat-speech-verb-oni-4
+
+- type: typingIndicator
+  id: oni
+  spritePath: /Textures/_Arcane/Effects/speech.rsi
+  typingState: oni0
+  idleState: oni0
+  offset: 0, 0.0625

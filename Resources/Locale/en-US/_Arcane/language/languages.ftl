@@ -6,3 +6,9 @@ language-SiikMaas-description =
     The ancient religious tongue of the Tajara, now the most widely spoken and taught language on Adhomai.
 
 chat-speech-verb-marish = mars
+
+language-Schechi-name = Schechi
+language-Schechi-description =
+    The language of Resomi, primarily featuring frontal sounds made without rounding. Fluent speakers sound quite close to birdsong.
+
+chat-language-Schechi-name = Schechi

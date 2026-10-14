@@ -400,6 +400,13 @@
   - type: VisualOrganMarkings
     markingData:
       group: IPC
+  # Arcane-Start
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+      state: no_eyes
+  # Arcane-End
 
 - type: entity
   parent: [ OrganIPCInternal,  OrganBaseTongue ]
