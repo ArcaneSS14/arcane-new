@@ -2,11 +2,12 @@ using Content.Arcane.Shared.Sprinting;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
+using Robust.Shared.Physics.Components;
 using Robust.Shared.Timing;
 
 namespace Content.Arcane.Client.Sprinting;
 
-public sealed partial class SprintifngSystem : SharedSprintingSystem
+public sealed partial class SprintingSystem : SharedSprintingSystem
 {
     [Dependency] private AnimationPlayerSystem _animationPlayer = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -55,7 +56,9 @@ public sealed partial class SprintifngSystem : SharedSprintingSystem
         {
             if (!component.IsSprinting
                 || !_timing.IsFirstTimePredicted
-                || _timing.CurTime - component.LastStep < component.TimeBetweenSteps)
+                || _timing.CurTime - component.LastStep < component.TimeBetweenSteps
+                || !TryComp<PhysicsComponent>(uid, out var physics)
+                || physics.LinearVelocity.LengthSquared() < 1f)
                 continue;
 
             var ent = Spawn(component.StepAnimation, Transform(uid).Coordinates);

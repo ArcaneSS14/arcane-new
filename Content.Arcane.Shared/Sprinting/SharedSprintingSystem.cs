@@ -134,8 +134,8 @@ namespace Content.Arcane.Shared.Sprinting
             // Only apply the cooldown if the entity has sprinted before, so the very first sprint after spawning is not delayed.
             if (newSprintState
                 && (!CanSprint(uid, component)
-                || component.LastSprint != TimeSpan.Zero
-                && _timing.CurTime - component.LastSprint < component.TimeBetweenSprints))
+                || (component.LastSprint != TimeSpan.Zero
+                    && _timing.CurTime - component.LastSprint < component.TimeBetweenSprints)))
                 return;
 
             component.LastSprint = _timing.CurTime;
@@ -232,7 +232,7 @@ namespace Content.Arcane.Shared.Sprinting
         private void OnMobStateChangedEvent(EntityUid uid, SprinterComponent component, MobStateChangedEvent args)
         {
             if (!component.IsSprinting
-                || args.NewMobState is MobState.Critical or MobState.Dead)
+                || args.NewMobState is not (MobState.Critical or MobState.Dead))
                 return;
 
             ToggleSprint(args.Target, component, false, gracefulStop: false);
@@ -275,8 +275,12 @@ namespace Content.Arcane.Shared.Sprinting
         }
 
         [SubscribeLocalEvent]
-        private void OnZombified(EntityUid uid, SprinterComponent component, ref EntityZombifiedEvent args) =>
+        private void OnZombified(EntityUid uid, SprinterComponent component, ref EntityZombifiedEvent args)
+        {
             component.SprintSpeedMultiplier *= 0.5f; // We dont want super fast zombies do we?
+            Dirty(uid, component);
+            _movementSpeed.RefreshMovementSpeedModifiers(uid);
+        }
 
         [SubscribeLocalEvent]
         private void OnCollide(EntityUid uid, SprinterComponent sprinter, ref StartCollideEvent args)

@@ -48,7 +48,8 @@ public abstract partial class SharedStaminaSystem
     public void ModifyStaminaDrain(EntityUid target, string key, float drainRate)
     {
         if (!TryComp<StaminaComponent>(target, out var stamina)
-            || !stamina.ActiveDrains.TryGetValue(key, out var drain))
+            || !stamina.ActiveDrains.TryGetValue(key, out var drain)
+            || drain.DrainRate == drainRate)
             return;
 
         stamina.ActiveDrains[key] = (drainRate, drain.ModifiesSpeed, drain.Source, drain.ApplyResistances);
