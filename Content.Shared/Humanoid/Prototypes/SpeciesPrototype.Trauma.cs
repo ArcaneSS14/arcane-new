@@ -12,7 +12,7 @@ public sealed partial class SpeciesPrototype
 {
     // Arcane-Start: Character scale range
     [DataField]
-    public float MinScale = 0.90f;
+    public float MinScale = 0.9f;
 
     [DataField]
     public float DefaultScale = 1f;

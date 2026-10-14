@@ -7,9 +7,7 @@
   dollPrototype: AppearanceMoth
   skinColoration: Hues
   # Arcane-Start
-  averageHeight: 170
-  minScale: 0.9
-  maxScale: 1.2
+  maxScale: 1.1
   averageWeight: 55
   # Arcane-End
   maleFirstNames: NamesMothFirstMale

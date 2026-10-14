@@ -7,7 +7,6 @@
   dollPrototype: AppearanceDiona
   skinColoration: Hues
   # Arcane-Start
-  averageHeight: 170
   averageWeight: 80
   minScale: 0.85
   maxScale: 1.3

@@ -9,7 +9,7 @@
   # Arcane-Start
   averageHeight: 180
   averageWeight: 80
-  minScale: 0.85
+  defaultScale: 1.1
   maxScale: 1.4
   # Arcane-End
   maleFirstNames: NamesArachnidFirst
