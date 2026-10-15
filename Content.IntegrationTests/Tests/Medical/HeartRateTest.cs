@@ -1,6 +1,7 @@
 // Arcane-Start
 #nullable enable
 using System.Linq;
+using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -97,13 +98,42 @@ public sealed class HeartRateTest : GameTest
         var heart = SComp<HeartRateComponent>(uid);
         _heart.SetRate(uid, heart, 0f, false);
 
-        var defib = SSpawn("Defibrillator");
+        var defib = SSpawn("DefibrillatorCompact");
         var ev = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
         Assert.That(heart.CurrentRate, Is.EqualTo(210f));
 
         SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(120f));
+        Assert.That(heart.CurrentRate, Is.EqualTo(165f));
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void ManualVoltageSettingsControlTheShock()
+    {
+        var patient = SSpawn("MobHuman");
+        var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
+        var heart = SComp<HeartRateComponent>(heartUid);
+        var defib = SSpawn("Defibrillator");
+        var config = SComp<HeartDefibrillatorComponent>(defib);
+        var zap = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+
+        var low = new DefibrillatorChargeSettingMessage(new() { Flips = [true, false, false, false] }) { Actor = patient };
+        SEntMan.EventBus.RaiseLocalEvent(defib, low);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
+        Assert.That(heart.CurrentRate, Is.Zero, "One switch must slow the heart, without automatic stabilisation.");
+
+        var restart = new DefibrillatorChargeSettingMessage(new() { Flips = [true, true, true, false] }) { Actor = patient };
+        SEntMan.EventBus.RaiseLocalEvent(defib, restart);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
+        Assert.That(heart.CurrentRate, Is.EqualTo(200f), "Three switches must restart a flatlined heart.");
+
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
+        Assert.That(heart.CurrentRate, Is.EqualTo(350f), "A manual shock must retain its selected direction above the resting rate.");
+
+        var malformed = new DefibrillatorChargeSettingMessage(new() { Flips = [] }) { Actor = patient };
+        SEntMan.EventBus.RaiseLocalEvent(defib, malformed);
+        Assert.That(config.BpmZapHeal, Is.EqualTo(150f), "Malformed switch arrays must not change the voltage.");
     }
 }
 // Arcane-End

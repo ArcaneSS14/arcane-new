@@ -1,0 +1,60 @@
+- type: entity
+  id: BaseDefibrillator
+  components:
+  - type: Defibrillator
+    allowDoAfterMovement: false
+
+- type: entity
+  id: Defibrillator
+  name: manual defibrillator
+  description: A defibrillator with a pulse monitor and manually adjustable voltage. Choose the appropriate setting before shocking a patient.
+  components:
+  - type: HeartDefibrillator
+    autoStabilisation: false
+    bpmZapHeal: 0
+    bpmZapHealFlatline: 0
+  - type: ManualDefibrillator
+  - type: ItemToggle
+    onUse: false
+    onActivate: false
+    wieldToggle: false
+  - type: ActivatableUI
+    key: enum.ManualDefibrillatorUiKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
+  - type: UserInterface
+    interfaces:
+      enum.ManualDefibrillatorUiKey.Key:
+        type: ManualDefibrillatorBui
+  - type: GuideHelp
+    guides:
+    - ArcaneDefibrillator
+
+- type: entity
+  id: DefibrillatorCompact
+  name: auto defibrillator
+  description: An automatic defibrillator that adjusts its shock to stabilise the patient's heart rate. Now in fun size!
+
+- type: entity
+  id: DefibrillatorSyndicate
+  description: Doubles as a self-defense weapon against war-crime inclined tiders. Charges faster and automatically stabilises the patient's heart rate.
+  components:
+  - type: Defibrillator
+    doAfterDuration: 2
+
+- type: entity
+  id: DefibrillatorCabinet
+  components:
+  - type: Charger
+    slotId: ItemCabinet
+    chargeRate: 5
+    passiveDraw: 1
+  - type: ApcPowerReceiver
+    powerLoad: 1
+  - type: ExtensionCableReceiver
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }

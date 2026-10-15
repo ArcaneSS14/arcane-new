@@ -1,4 +1,6 @@
 using Content.Arcane.Shared.Medical.Heart;
+using Content.Arcane.Shared.Medical.Defibrillator;
+using Content.Arcane.Server.Medical.Defibrillator;
 using Content.Shared.Body;
 using Content.Shared.Medical;
 
@@ -8,6 +10,7 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
     [Dependency] private BodySystem _body = default!;
+    [Dependency] private ManualDefibrillatorSystem _manualDefibrillator = default!;
 
     private static readonly ProtoId<OrganCategoryPrototype> Heart = "Heart";
 
@@ -23,6 +26,12 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
             || _body.GetOrgan(ent, Heart) is not { } uid
             || !TryComp<HeartRateComponent>(uid, out var heart))
             return;
+
+        if (TryComp<ManualDefibrillatorComponent>(args.Defibrillator, out var manual))
+        {
+            manual.PulseState = "Pulse3000";
+            _manualDefibrillator.UpdateUi((args.Defibrillator, manual));
+        }
 
         if (_heartRate.GetState(heart) == HeartState.Stopped)
         {
