@@ -1,0 +1,319 @@
+- type: reagent
+  id: Ethanol
+  metabolisms:
+    Metabolites:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -1.5
+        lowerCap: 45
+
+- type: reagent
+  id: Cryptobiolin
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 4
+        higherCap: 165
+
+- type: reagent
+  id: Bicaridine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 4.5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Bicaridine
+          min: 15
+
+- type: reagent
+  id: Dermaline
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 4.5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Dermaline
+          min: 10
+
+- type: reagent
+  id: Dexalin
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -2
+        conditions:
+        - !type:ReagentCondition
+          reagent: Dexalin
+          min: 20
+
+- type: reagent
+  id: DexalinPlus
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -2
+        conditions:
+        - !type:ReagentCondition
+          reagent: DexalinPlus
+          min: 25
+
+- type: reagent
+  id: Epinephrine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 2
+        heartRestart: true
+        autoStabilisation: true
+
+- type: reagent
+  id: Omnizine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+
+- type: reagent
+  id: Desoxyephedrine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 5.5
+
+- type: reagent
+  id: Ephedrine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 3
+        higherCap: 230
+
+- type: reagent
+  id: Stimulants
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 2
+        autoStabilisation: true
+
+- type: reagent
+  id: THC
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -3
+        lowerCap: 45
+
+- type: reagent
+  id: SpaceDrugs
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -2.5
+        lowerCap: 45
+
+- type: reagent
+  id: ChloralHydrate
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -2
+        lowerCap: 55
+
+- type: reagent
+  id: Lexorin
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -10
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lexorin
+          min: 5
+      - !type:ModifyHeartRate
+        amount: -6
+
+- type: reagent
+  id: Lead
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -1.4
+        lowerCap: 55
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lead
+          min: 2.5
+
+- type: reagent
+  id: EldritchEssence
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+
+- type: reagent
+  id: LingPanacea
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+
+- type: reagent
+  id: Tirimol
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 3
+
+- type: reagent
+  id: SalicylicAcid
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 8
+        conditions:
+        - !type:ReagentCondition
+          reagent: SalicylicAcid
+          min: 25
+
+- type: reagent
+  id: Oxandrolone
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 8
+        conditions:
+        - !type:ReagentCondition
+          reagent: Oxandrolone
+          min: 25
+
+- type: reagent
+  id: PentenicAcid
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -1.5
+        lowerCap: 65
+
+- type: reagent
+  id: Tramadol
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -4
+        lowerCap: 51
+
+- type: reagent
+  id: Fentanyl
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -6
+        lowerCap: 19
+
+- type: reagent
+  id: Aranesp
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -3
+
+- type: reagent
+  id: Heroin
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -3
+        lowerCap: 19
+
+- type: reagent
+  id: MinersSalve
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 2
+        autoStabilisation: true
+
+- type: reagent
+  id: Luxurium
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 4
+        heartRestart: true
+        autoStabilisation: true
+
+- type: reagent
+  id: Cocaine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 3
+
+- type: reagent
+  id: CrackCocaine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: 3.5
+
+- type: reagent
+  id: CocaSlurry
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -1.5
+
+- type: reagent
+  id: Morphine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:ModifyHeartRate
+        amount: -5
+        lowerCap: 41
+      - !type:ModifyHeartRate
+        amount: -5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Morphine
+          min: 16

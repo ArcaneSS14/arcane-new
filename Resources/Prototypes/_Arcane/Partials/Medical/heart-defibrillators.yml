@@ -1,0 +1,10 @@
+- type: entity
+  id: BaseDefibrillator
+  components:
+  - type: HeartDefibrillator
+
+- type: entity
+  id: Defibrillator
+  components:
+  - type: HeartDefibrillator
+    bpmZapHeal: 90
