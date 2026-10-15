@@ -66,9 +66,6 @@ MailTeleporter: CargoMailTeleporter
 MailMetricsCartridge: null
 ComputerShuttleSalvage: ComputerShuttleMiningLavaland # 2 maps had this for some reason...
 
-# 2026-01-10
-ChemDispenser: EnergyChemDispenser
-
 # 2026-01-19 Goob reference purge
 PlushieBingleYakub: null
 PosterContrabandGoobYakub: null
@@ -193,7 +190,10 @@ WallXenoResinThick: WallResin
 
 # </Trauma>
 
-# Arcane-Edit-Start: Keep radiation collectors on existing maps
+# Arcane-Edit-Start: Keep original dispensers and radiation collectors on existing maps
+# 2026-01-10
+# ChemDispenser: EnergyChemDispenser
+
 # 2026-10-10
 # CrateEngineeringSingularityCollector: null
 # RadiationCollector: null
