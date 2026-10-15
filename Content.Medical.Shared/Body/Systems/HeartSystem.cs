@@ -28,6 +28,12 @@ public sealed partial class HeartSystem : EntitySystem
         if (TerminatingOrDeleted(args.Target) || _timing.ApplyingState)
             return;
 
+        // Arcane-Start
+        var ev = new OrganRemovalDeathAttemptEvent();
+        RaiseLocalEvent(uid, ref ev);
+        if (ev.Cancelled)
+            return;
+        // Arcane-End
         // TODO: Add some form of very violent bleeding effect.
         EnsureComp<DelayedDeathComponent>(args.Target);
     }

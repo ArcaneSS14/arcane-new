@@ -56,8 +56,9 @@ public sealed partial class DebrainedSystem : EntitySystem
             return;
 
         RemComp<StunnedComponent>(uid);
-        if (_body.GetOrgan(uid, Heart) != null)
-            RemComp<DelayedDeathComponent>(uid);
+        // Arcane-Edit-Start
+        RemComp<DelayedDeathComponent>(uid);
+        // Arcane-Edit-End
     }
 
     private void OnSpeakAttempt(EntityUid uid, DebrainedComponent _, SpeakAttemptEvent args)

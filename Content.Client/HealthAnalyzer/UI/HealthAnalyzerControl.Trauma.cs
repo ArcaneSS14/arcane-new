@@ -144,6 +144,11 @@ public sealed partial class HealthAnalyzerControl
                 PopulateChemicals(target);
                 break;
         }
+        // Arcane-Start
+        BpmLabel.Text = Loc.GetString("health-analyzer-window-entity-unknown-value-text");
+        var populate = new HealthAnalyzerPopulateEvent(BpmLabel, ConditionsListContainer);
+        _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
+        // Arcane-End
 
         if (ConditionsListContainer.ChildCount == 0)
         {
