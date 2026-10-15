@@ -191,11 +191,14 @@ WallXenoResin: WallResin
 WallXenoResinThick: WallResin
 # Arcane-Edit-End
 
-# 2026-10-10
-CrateEngineeringSingularityCollector: null
-RadiationCollector: null
-RadiationCollectorFlatpack: null
 # </Trauma>
+
+# Arcane-Edit-Start: Keep radiation collectors on existing maps
+# 2026-10-10
+# CrateEngineeringSingularityCollector: null
+# RadiationCollector: null
+# RadiationCollectorFlatpack: null
+# Arcane-Edit-End
 
 AirlockBoxerGlassLocked: AirlockServiceGlassLocked
 AirlockClownGlassLocked: AirlockServiceGlassLocked

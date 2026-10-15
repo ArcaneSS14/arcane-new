@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 - type: cargoProduct
-  abstract: true # die
+  abstract: false # Arcane-Edit: true > false
   id: EngineSingularityCollector
 
 - type: cargoProduct
-  abstract: true # die
+  abstract: false # Arcane-Edit: true > false
   id: EngineTeslaCoil
