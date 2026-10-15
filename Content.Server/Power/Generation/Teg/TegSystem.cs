@@ -97,6 +97,7 @@ public sealed partial class TegSystem : EntitySystem
         SubscribeLocalEvent<TegGeneratorComponent, ExaminedEvent>(GeneratorExamined);
         // Arcane-Start
         SubscribeLocalEvent<TegGeneratorComponent, ComponentStartup>(OnGeneratorStartup);
+        SubscribeLocalEvent<TegGeneratorComponent, MapInitEvent>(OnGeneratorMapInit);
         SubscribeLocalEvent<TegGeneratorComponent, ComponentShutdown>(OnGeneratorShutdown);
         SubscribeLocalEvent<TegGeneratorComponent, AnchorStateChangedEvent>(OnGeneratorAnchorChanged);
         SubscribeLocalEvent<TegGeneratorComponent, BreakageEventArgs>(OnGeneratorBreakage);
@@ -301,7 +302,8 @@ public sealed partial class TegSystem : EntitySystem
         var powerReceiver = Comp<ApcPowerReceiverComponent>(uid);
 
         // Arcane-Start
-        if (group.IsFullyBuilt)
+        // Uninitialized maps must not acquire persistent modes just from node-group updates.
+        if (group.IsFullyBuilt && MetaData(uid).EntityLifeStage == EntityLifeStage.MapInitialized)
         {
             Comp<TegCirculatorComponent>(group.CirculatorA!.Owner).Mode ??= TegCirculatorMode.Hot;
             Comp<TegCirculatorComponent>(group.CirculatorB!.Owner).Mode ??= TegCirculatorMode.Cold;
@@ -593,6 +595,8 @@ public sealed partial class TegSystem : EntitySystem
             ("inTemperature", readings.InletTemperature.ToString("F1")), ("outTemperature", readings.OutletTemperature.ToString("F1"))));
         args.PushMarkup(Loc.GetString(component.Broken ? "teg-state-broken" : IsConnected(uid) ? "teg-state-connected" : "teg-state-disconnected"));
     }
+
+    private void OnGeneratorMapInit(Entity<TegGeneratorComponent> ent, ref MapInitEvent args) => RefreshGenerator(ent);
 
     private void OnGeneratorStartup(Entity<TegGeneratorComponent> ent, ref ComponentStartup args)
     {
