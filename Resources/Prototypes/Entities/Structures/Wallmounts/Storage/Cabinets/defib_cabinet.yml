@@ -44,6 +44,21 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalGlassBreak
+  # Arcane-Start
+  - type: Charger
+    slotId: ItemCabinet
+    chargeRate: 5
+    passiveDraw: 1
+  - type: ApcPowerReceiver
+    powerLoad: 1
+  - type: ExtensionCableReceiver
+  - type: GenericVisualizer
+    visuals:
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+  # Arcane-End
 
 - type: entity
   parent: DefibrillatorCabinet

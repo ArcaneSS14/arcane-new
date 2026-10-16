@@ -34,6 +34,7 @@
       zapHeal:
         types:
           Asphyxiation: -40
+      allowDoAfterMovement: false # Arcane
     - type: DoAfter
     - type: UseDelay
     - type: StaticPrice
@@ -51,6 +52,10 @@
 - type: entity
   id: Defibrillator
   parent: [ BaseDefibrillator, PowerCellSlotMediumItem ]
+  # Arcane-Start
+  name: manual defibrillator
+  description: A defibrillator with a pulse monitor and manually adjustable voltage. Choose the appropriate setting before shocking a patient.
+  # Arcane-End
   components:
   - type: MultiHandedItem
   - type: ToggleCellDraw
@@ -58,7 +63,25 @@
     useCharge: 100
   # Arcane-Start
   - type: HeartDefibrillator
-    bpmZapHeal: 90
+    bpmZapHeal: 0
+    autoStabilisation: false
+    bpmZapHealFlatline: 0
+  - type: ManualDefibrillator
+  - type: ItemToggle
+    onUse: false
+    onActivate: false
+    wieldToggle: false
+  - type: ActivatableUI
+    key: enum.ManualDefibrillatorUiKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
+  - type: UserInterface
+    interfaces:
+      enum.ManualDefibrillatorUiKey.Key:
+        type: ManualDefibrillatorBui
+  - type: GuideHelp
+    guides:
+    - ArcaneDefibrillator
   # Arcane-End
 
 - type: entity
@@ -79,8 +102,10 @@
 - type: entity
   id: DefibrillatorCompact # This should be a research item at some point # Goobstation - it is.
   parent: [ BaseDefibrillator, PowerCellSlotMediumItem ]
-  name: compact defibrillator
-  description: Now in fun size!
+  # Arcane-Edit-Start
+  name: auto defibrillator
+  description: An automatic defibrillator that adjusts its shock to stabilise the patient's heart rate. Now in fun size!
+  # Arcane-Edit-End
   components:
   - type: Sprite
     sprite: Objects/Specific/Medical/defibsmall.rsi
@@ -110,7 +135,7 @@
   id: DefibrillatorSyndicate
   parent: [ DefibrillatorCompact, BaseSyndicateContraband ]
   name: interdyne defibrillator
-  description: Doubles as a self-defense weapon against war-crime inclined tiders.
+  description: Doubles as a self-defense weapon against war-crime inclined tiders. Charges faster and automatically stabilises the patient's heart rate. # Arcane-Edit: Doubles as a self-defense weapon against war-crime inclined tiders. > Doubles as a self-defense weapon against war-crime inclined tiders. Charges faster and automatically stabilises the patient's heart rate.
   components:
   - type: Sprite
     sprite: Objects/Specific/Medical/defibsyndi.rsi
@@ -143,3 +168,7 @@
         Blunt: 8
         Shock: 8 # Trauma - was 16, adjusted for balance
         Heat: 8 # Trauma - was 0, adjusted for balance
+  # Arcane-Start
+  - type: Defibrillator
+    doAfterDuration: 2
+  # Arcane-End
