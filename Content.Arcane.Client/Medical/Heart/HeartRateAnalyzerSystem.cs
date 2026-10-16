@@ -1,8 +1,7 @@
+using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Shared.Medical.Heart;
-using Content.Client.HealthAnalyzer.UI;
 using Content.Shared.Body;
 using Content.Shared.IdentityManagement;
-using Robust.Client.UserInterface.Controls;
 
 namespace Content.Arcane.Client.Medical.Heart;
 
@@ -25,7 +24,7 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
         {
             if (_heartRate.RequiresHeart(ent))
             {
-                args.Pulse.Text = Loc.GetString("health-analyzer-window-entity-bpm-stopped-text");
+                args.Pulse = Loc.GetString("health-analyzer-window-entity-bpm-stopped-text");
                 AddCondition(args, "condition-heart-missing", ent);
             }
             return;
@@ -35,7 +34,7 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
             return;
 
         var state = _heartRate.GetState(heart);
-        args.Pulse.Text = state == HeartState.Stopped
+        args.Pulse = state == HeartState.Stopped
             ? Loc.GetString("health-analyzer-window-entity-bpm-stopped-text")
             : Loc.GetString("health-analyzer-window-entity-bpm-value-text", ("bpm", MathF.Round(heart.CurrentRate)));
 
@@ -53,10 +52,6 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
 
     private void AddCondition(HealthAnalyzerPopulateEvent args, string key, EntityUid body)
     {
-        args.Conditions.AddChild(new RichTextLabel
-        {
-            Text = Loc.GetString(key, ("entity", Identity.Name(body, EntityManager))),
-            Margin = new Thickness(0, 4),
-        });
+        args.Conditions.Add(Loc.GetString(key, ("entity", Identity.Name(body, EntityManager))));
     }
 }

@@ -25,6 +25,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Medical.HealthAnalyzer; // Arcane
 
 namespace Content.Client.HealthAnalyzer.UI;
 
@@ -145,9 +146,17 @@ public sealed partial class HealthAnalyzerControl
                 break;
         }
         // Arcane-Start
-        BpmLabel.Text = Loc.GetString("health-analyzer-window-entity-unknown-value-text");
-        var populate = new HealthAnalyzerPopulateEvent(BpmLabel, ConditionsListContainer);
+        var populate = new HealthAnalyzerPopulateEvent();
         _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
+        BpmLabel.Text = populate.Pulse ?? Loc.GetString("health-analyzer-window-entity-unknown-value-text");
+        foreach (var condition in populate.Conditions)
+        {
+            ConditionsListContainer.AddChild(new RichTextLabel
+            {
+                Text = condition,
+                Margin = new Thickness(0, 4),
+            });
+        }
         // Arcane-End
 
         if (ConditionsListContainer.ChildCount == 0)

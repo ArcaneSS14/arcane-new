@@ -4,6 +4,7 @@ using Content.Medical.Common.Body;
 using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Heart; // Arcane
 
 namespace Content.Medical.Shared.Body;
 
