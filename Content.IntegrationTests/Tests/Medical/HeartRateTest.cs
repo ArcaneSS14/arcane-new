@@ -263,6 +263,27 @@ public sealed class HeartRateTest : GameTest
         Assert.That(_body.InsertOrgan(patient, heart), Is.True);
     }
 
+    [TestCase(30f, 40f)]
+    [TestCase(70f, 80f)]
+    public async Task FullBloodVolumeDoesNotCureBradycardia(float rate, float upperBound)
+    {
+        EntityUid heartUid = default;
+        await Server.WaitPost(() =>
+        {
+            var patient = SSpawn("MobHuman");
+            heartUid = _body.GetOrgan(patient, "Heart")!.Value;
+            _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), rate, true);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitPost(() =>
+        {
+            var heart = SComp<HeartRateComponent>(heartUid);
+            Assert.That(heart.CurrentRate, Is.GreaterThan(0f).And.LessThan(upperBound),
+                "A full bloodstream must not instantly restore a low pulse to its resting rate.");
+        });
+    }
+
     [TestCase("MobSlimeXenobioBaby")]
     [TestCase("MobBlobPod")]
     [RunOnSide(Side.Server)]
