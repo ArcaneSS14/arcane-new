@@ -1,4 +1,4 @@
-using Content.Shared.Body.Events;
+using Content.Arcane.Common.Medical.Heart;
 using Content.Medical.Common.Body;
 using Content.Shared.Alert;
 using Content.Shared.Bed.Components;
@@ -125,19 +125,17 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     public bool RequiresHeart(EntityUid body)
     {
-        return _blood.TryComp(body, out var blood)
-            && blood.RequiresHeart
+        return _blood.HasComp(body)
+            && (!TryComp<HeartCirculationComponent>(body, out var circulation) || circulation.RequiresHeart)
             && HasComp<BodyComponent>(body)
             && _initialBody.HasInitialOrgan(body, HeartCategory) != false;
     }
 
     private void OnFindHeart(Entity<BloodstreamComponent> ent, ref FindWorkingHeartEvent args)
     {
-        if (!RequiresHeart(ent) || HasComp<StasisBedBuckledComponent>(ent))
-        {
-            args.DoEffects = false;
+        args.DoEffects = RequiresHeart(ent) && !HasComp<StasisBedBuckledComponent>(ent);
+        if (!args.DoEffects)
             return;
-        }
 
         var hearts = _body.GetOrgans<HeartRateComponent>(ent.Owner);
         foreach (var heart in hearts)
