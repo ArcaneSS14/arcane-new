@@ -150,6 +150,10 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     private void DoBloodVolume(EntityUid uid, HeartRateComponent heart, EntityUid body)
     {
+        // Compensating for blood loss must not cure bradycardia.
+        if (heart.CurrentRate < heart.NormalRate)
+            return;
+
         if (!_blood.TryComp(body, out var blood)
             || !_solutionContainer.ResolveSolution(body, blood.BloodSolutionName, ref blood.BloodSolution, out var solution)
             || blood.BloodReferenceSolution.Volume <= 0
