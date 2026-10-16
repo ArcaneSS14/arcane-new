@@ -105,7 +105,7 @@ public sealed partial class AtmosPipeAppearanceSystem : SharedAtmosPipeAppearanc
                 var dir = (PipeDirection)layerKey;
                 var visible = connectedDirections.HasDirection(dir);
 
-                layer.Visible &= visible;
+                layer.Visible = visible && (component.ExposedConnections || layer.Visible); // Arcane-Edit: Allow explicitly exposed pipe connections.
 
                 if (!visible)
                     continue;

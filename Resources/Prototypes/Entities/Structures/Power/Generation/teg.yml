@@ -2,7 +2,7 @@
   id: TegCenter
   name: thermo-electric generator
   description: A high efficiency generator that uses energy transfer between hot and cold gases to produce electricity.
-  parent: [ BaseMachinePowered, BaseMachineDestructible ]
+  parent: [ BaseMachinePowered, BaseMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Leave a destroyed frame on destruction.
   placement:
     mode: SnapgridCenter
   components:
@@ -10,21 +10,35 @@
       noRot: false
     - type: Sprite
       sprite: Structures/Power/Generation/teg.rsi
+      # Arcane-Edit-Start: Select casing, panel and output states.
       layers:
-        - state: teg
-        - state: teg_mid
-          shader: unshaded
-          map: [ "enum.PowerDeviceVisualLayers.Powered" ]
+        - state: teg-unassembled
+          map: [ "base" ]
+        - state: teg-panel
+          visible: false
+          map: [ "panel" ]
         - state: teg-op1
           shader: unshaded
           visible: false
           map: [ "enum.TegVisualLayers.PowerOutput" ]
+      # Arcane-Edit-End
     - type: GenericVisualizer
       visuals:
-        enum.PowerDeviceVisuals.Powered:
-          enum.PowerDeviceVisualLayers.Powered:
+        # Arcane-Edit-Start: Show the maintenance panel.
+        enum.WiresVisuals.MaintenancePanelState:
+          panel:
             True: { visible: true }
             False: { visible: false }
+        # Arcane-Edit-End
+        # Arcane-Start
+        enum.TegVisuals.MachineState:
+          base:
+            Unassembled: { state: teg-unassembled }
+            Assembled: { state: teg-assembled }
+            Broken: { state: teg-broken }
+          panel:
+            Broken: { visible: false }
+        # Arcane-End
         enum.TegVisuals.PowerOutput:
           enum.TegVisualLayers.PowerOutput:
             0: { visible: false }
@@ -55,7 +69,7 @@
       group: Generator
       loadNode: output
       sprite: Structures/Power/Generation/teg.rsi
-      state: static
+      state: teg-assembled # Arcane-Edit: static > teg-assembled
     - type: Rotatable
 
     # Note that only the TEG center is an AtmosDevice.
@@ -90,7 +104,7 @@
       enabled: false
       castShadows: false
       radius: 1.5
-      color: "#FFAA00"
+      color: "#FF8800" # Arcane-Edit: #FFAA00 > #FF8800
 
     - type: AmbientSound
       volume: -4
@@ -105,11 +119,41 @@
     - type: StealTarget
       stealGroup: Teg
 
+    # Arcane-Start
+    - type: WiresPanel
+    - type: Repairable
+      doAfterDelay: 5
+      damageValue: -25
+    - type: Machine
+      board: TegGeneratorMachineCircuitboard
+    - type: Destructible
+      thresholds:
+      - trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: ["Breakage"]
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalCrunch
+            params:
+              variation: 0.2
+      - trigger: !type:DamageTrigger
+          damage: 175
+        behaviors:
+        - !type:EmptyAllContainersBehaviour
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+            params:
+              variation: 0.1
+    # Arcane-End
+
 - type: entity
   id: TegCirculator
   name: circulator
   description: Passes gas through the thermo-electric generator to exchange heat. Has an inlet and outlet port.
-  parent: [ BaseMachine, BaseMachineDestructible ]
+  parent: [ BaseMachine, BaseMachineDestructible, ConstructibleMachine ] # Arcane-Edit: Leave a destroyed frame on destruction.
   placement:
     mode: SnapgridCenter
   components:
@@ -119,35 +163,62 @@
     # visuals
     - type: Sprite
       sprite: Structures/Power/Generation/teg.rsi
+      # Arcane-Edit-Start: Separate casing, panel and loop effects.
       layers:
-        - state: circ-0
+        - state: circ-unassembled-0
           map: [ "enum.TegVisualLayers.CirculatorBase" ]
-        - state: circ-0-light
+        - state: circ-off
           shader: unshaded
+          visible: false
+          map: [ "heat" ]
+        - state: circ-slow
+          shader: unshaded
+          visible: false
           map: [ "enum.TegVisualLayers.CirculatorLight" ]
-
+        - state: circ-panel
+          visible: false
+          map: [ "panel" ]
+      # Arcane-Edit-End
     - type: GenericVisualizer
+      # Arcane-Edit-Start: Display machine and loop state.
       visuals:
-        enum.TegVisuals.CirculatorPower:
-          enum.TegVisualLayers.CirculatorLight:
+        enum.WiresVisuals.MaintenancePanelState:
+          panel:
             True: { visible: true }
             False: { visible: false }
-        enum.TegVisuals.CirculatorSpeed:
+        enum.TegVisuals.MachineState:
           enum.TegVisualLayers.CirculatorBase:
-            SpeedStill: { state: circ-0 }
-            SpeedSlow: { state: circ-1 }
-            SpeedFast: { state: circ-2 }
+            Unassembled: { state: circ-unassembled-0 }
+            UnassembledFlipped: { state: circ-unassembled-1 }
+            Assembled: { state: circ-assembled-0 }
+            AssembledFlipped: { state: circ-assembled-1 }
+            Broken: { state: circ-broken }
+          panel:
+            Broken: { visible: false }
+        enum.TegVisuals.CirculatorState:
+          heat:
+            Off: { visible: false }
+            Idle: { visible: true, state: circ-off }
+            HotSlow: { visible: true, state: circ-hot }
+            HotFast: { visible: true, state: circ-exhot }
+            ColdSlow: { visible: true, state: circ-cold }
+            ColdFast: { visible: true, state: circ-excold }
           enum.TegVisualLayers.CirculatorLight:
-            SpeedStill: { state: circ-0-light }
-            SpeedSlow: { state: circ-1-light }
-            SpeedFast: { state: circ-2-light }
+            Off: { visible: false }
+            Idle: { visible: false }
+            HotSlow: { visible: true, state: circ-slow }
+            HotFast: { visible: true, state: circ-run }
+            ColdSlow: { visible: true, state: circ-slow }
+            ColdFast: { visible: true, state: circ-run }
+      # Arcane-Edit-End
 
     - type: Appearance
     - type: PointLight
       enabled: false
       castShadows: false
-      radius: 1.5
-      color: "#CC00FF"
+      radius: 1 # Arcane-Edit: 1.5 > 1
+      color: "#FFFFFF" # Arcane-Edit: #CC00FF > #FFFFFF
+      energy: 1.5 # Arcane
 
     # tags
     - type: Tag
@@ -181,13 +252,48 @@
           nodeGroupID: Teg
 
     - type: AtmosUnsafeUnanchor
+      destroyOnBreak: false # Arcane
     - type: PipeRestrictOverlap
     - type: TegCirculator
     - type: StealTarget
       stealGroup: Teg
     - type: DirectionalArrowIndicator
+      flipOnAppearance: enum.TegVisuals.Flipped # Arcane
       arrows:
       - offset: 0, -1.5
         arrowType: BlueDirectionalArrowIndicator
       - offset: 0, 0
         arrowType: BlueDirectionalArrowIndicator
+    # Arcane-Start
+    - type: WiresPanel
+    - type: Repairable
+      doAfterDelay: 5
+      damageValue: -25
+    - type: Machine
+      board: TegCirculatorMachineCircuitboard
+    - type: Destructible
+      thresholds:
+      - trigger: !type:DamageTrigger
+          damage: 100
+        behaviors:
+        - !type:DoActsBehavior
+          acts: ["Breakage"]
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalCrunch
+            params:
+              variation: 0.2
+      - trigger: !type:DamageTrigger
+          damage: 175
+        behaviors:
+        - !type:EmptyAllContainersBehaviour
+        - !type:PlaySoundBehavior
+          sound:
+            collection: MetalBreak
+            params:
+              variation: 0.1
+    - type: PipeAppearance
+      exposedConnections: true
+      sprite:
+      - { sprite: Structures/Power/Generation/teg.rsi, state: cap }
+    # Arcane-End

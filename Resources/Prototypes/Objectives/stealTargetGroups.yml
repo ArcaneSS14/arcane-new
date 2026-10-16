@@ -340,7 +340,7 @@
   name: steal-target-groups-teg
   sprite:
     sprite: Structures/Power/Generation/teg.rsi
-    state: teg
+    state: teg-assembled # Arcane-Edit: teg > teg-assembled
 
 - type: stealTargetGroup
   id: BoozeDispenser
