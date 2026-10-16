@@ -26,14 +26,17 @@ public sealed class DefibrillatorBuiState : BoundUserInterfaceState
     public readonly DefibrillatorChargeSetting ChargeSetting;
     public readonly ProtoId<PulseStatePrototype> PulseState;
     public readonly float? Bpm;
+    public readonly uint SettingsRevision;
 
     public DefibrillatorBuiState(
         DefibrillatorChargeSetting chargeSetting,
         ProtoId<PulseStatePrototype> pulseState,
-        float? bpm)
+        float? bpm,
+        uint settingsRevision)
     {
         ChargeSetting = chargeSetting;
         PulseState = pulseState;
         Bpm = bpm;
+        SettingsRevision = settingsRevision;
     }
 }

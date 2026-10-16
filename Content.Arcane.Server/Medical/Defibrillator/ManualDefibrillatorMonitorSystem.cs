@@ -3,6 +3,7 @@ using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Shared.Body;
 using Content.Shared.Interaction;
 using Content.Shared.Item.ItemToggle;
+using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
 
@@ -11,6 +12,7 @@ namespace Content.Arcane.Server.Medical.Defibrillator;
 public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
 {
     [Dependency] private BodySystem _body = default!;
+    [Dependency] private ActivatableUISystem _activatableUi = default!;
     [Dependency] private ItemToggleSystem _itemToggle = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private ManualDefibrillatorSystem _manualDefibrillator = default!;
@@ -52,19 +54,26 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
             || _itemToggle.IsActivated(ent.Owner)
             || !args.CanReach
             || args.Target is not { } target
-            || _body.GetOrgan(target, HeartCategory) is not {} heartUid
-            || !TryComp<HeartRateComponent>(heartUid, out var heart))
+            || !HasComp<BodyComponent>(target)
+            || !TryComp<ActivatableUIComponent>(ent, out var activatable))
             return;
 
-        ent.Comp.HeartEntity = (heartUid, heart);
+        if (!_ui.IsUiOpen(ent.Owner, ManualDefibrillatorUiKey.Key, args.User))
+            _activatableUi.InteractUI(args.User, ent.Owner, activatable, ManualDefibrillatorUiKey.Key);
+
+        if (!_ui.IsUiOpen(ent.Owner, ManualDefibrillatorUiKey.Key, args.User))
+            return;
+
+        ent.Comp.MonitoredBody = target;
+        ent.Comp.ShockUntil = TimeSpan.Zero;
         args.Handled = true;
-        SetMonitorState(ent, heart.CurrentRate);
-        _ui.OpenUi(ent.Owner, ManualDefibrillatorUiKey.Key, args.User);
+        UpdateMonitor(ent);
     }
 
     private void OnUiClosed(Entity<ManualDefibrillatorComponent> ent, ref BoundUIClosedEvent args)
     {
-        if (!args.UiKey.Equals(ManualDefibrillatorUiKey.Key))
+        if (!args.UiKey.Equals(ManualDefibrillatorUiKey.Key)
+            || _ui.IsUiOpen(ent.Owner, ManualDefibrillatorUiKey.Key))
             return;
 
         ResetMonitor(ent);
@@ -72,30 +81,48 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
 
     private void UpdateMonitor(Entity<ManualDefibrillatorComponent> ent)
     {
-        if (ent.Comp.HeartEntity is not { } heart)
+        if (ent.Comp.MonitoredBody is not { } body)
             return;
 
-        if (Deleted(heart.Owner)
-            || !_interaction.InRangeUnobstructed(ent.Owner, heart.Owner))
+        if (Deleted(body)
+            || !_interaction.InRangeUnobstructed(ent.Owner, body))
         {
             ResetMonitor(ent);
             return;
         }
 
-        SetMonitorState(ent, heart.Comp.CurrentRate);
+        var bpm = _body.GetOrgan(body, HeartCategory) is { } heartUid
+            && TryComp<HeartRateComponent>(heartUid, out var heart)
+            ? heart.CurrentRate
+            : 0f;
+        SetMonitorState(ent, bpm);
+    }
+
+    public void ShowShock(Entity<ManualDefibrillatorComponent> ent, EntityUid patient, float bpm)
+    {
+        if (!_ui.IsUiOpen(ent.Owner, ManualDefibrillatorUiKey.Key))
+            return;
+
+        ent.Comp.MonitoredBody = patient;
+        ent.Comp.ShockUntil = _timing.CurTime + UpdateInterval;
+        SetMonitorState(ent, bpm);
     }
 
     private void ResetMonitor(Entity<ManualDefibrillatorComponent> ent)
     {
-        ent.Comp.HeartEntity = null;
-        Dirty(ent);
-        SetMonitorState(ent, 0f);
+        ent.Comp.MonitoredBody = null;
+        ent.Comp.ShockUntil = TimeSpan.Zero;
+        SetMonitorState(ent, null);
     }
 
-    private void SetMonitorState(Entity<ManualDefibrillatorComponent> ent, float bpm)
+    private void SetMonitorState(Entity<ManualDefibrillatorComponent> ent, float? bpm)
     {
-        var pulse = GetPulseState(bpm);
+        ProtoId<PulseStatePrototype> pulse = _timing.CurTime < ent.Comp.ShockUntil ? "Pulse3000" : GetPulseState(bpm ?? 0f);
+        if (ent.Comp.PulseState == pulse && ent.Comp.DisplayedBpm == bpm)
+            return;
+
         ent.Comp.PulseState = pulse;
+        ent.Comp.DisplayedBpm = bpm;
         _manualDefibrillator.UpdateUi(ent);
     }
 

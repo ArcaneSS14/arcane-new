@@ -3,7 +3,6 @@ using Content.Arcane.Shared.Medical.Heart;
 using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
-using Content.Shared.Medical;
 using Robust.Server.GameObjects;
 
 namespace Content.Arcane.Server.Medical.Defibrillator;
@@ -29,13 +28,18 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
 
     private void OnUiOpened(Entity<ManualDefibrillatorComponent> ent, ref BoundUIOpenedEvent args)
     {
-        UpdateUi(ent);
+        if (args.UiKey.Equals(ManualDefibrillatorUiKey.Key))
+            UpdateUi(ent);
     }
 
     private void OnSettingChanged(Entity<ManualDefibrillatorComponent> ent, ref DefibrillatorChargeSettingMessage args)
     {
+        ent.Comp.SettingsRevision++;
         if (args.ChargeSetting is not { Flips.Length: DefibrillatorChargeSetting.FlipAmount })
+        {
+            UpdateUi(ent);
             return;
+        }
 
         var powered = args.ChargeSetting.Power && args.ChargeSetting.Flips.Any(flip => flip);
         if (TryComp<ItemToggleComponent>(ent, out var itemToggle)
@@ -47,7 +51,6 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
 
         ent.Comp.ChargeSetting = args.ChargeSetting.Clone();
         UpdateFibCharge(ent);
-        Dirty(ent);
         UpdateUi(ent);
     }
 
@@ -57,26 +60,34 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
             return;
 
         var flips = ent.Comp.ChargeSetting.Flips.Count(flip => flip);
-        defibrillator.BpmZapHeal = ent.Comp.BpmZapFlip
-            .Where(threshold => threshold.Key <= flips)
-            .MaxBy(threshold => threshold.Key)
-            .Value;
-        defibrillator.BpmZapHealFlatline = ent.Comp.BpmZapFlatlineFlip
-            .Where(threshold => threshold.Key <= flips)
-            .MaxBy(threshold => threshold.Key)
-            .Value;
+        defibrillator.BpmZapHeal = GetCharge(ent.Comp.BpmZapFlip, flips);
+        defibrillator.BpmZapHealFlatline = GetCharge(ent.Comp.BpmZapFlatlineFlip, flips);
+    }
+
+    private static float GetCharge(Dictionary<int, float> thresholds, int flips)
+    {
+        var selected = int.MinValue;
+        var charge = 0f;
+        foreach (var (threshold, value) in thresholds)
+        {
+            if (threshold > flips || threshold <= selected)
+                continue;
+
+            selected = threshold;
+            charge = value;
+        }
+        return charge;
     }
 
     public void UpdateUi(Entity<ManualDefibrillatorComponent> ent)
     {
-        var bpm = ent.Comp.HeartEntity?.Comp.CurrentRate;
-
         _ui.SetUiState(
             ent.Owner,
             ManualDefibrillatorUiKey.Key,
             new DefibrillatorBuiState(
-                ent.Comp.ChargeSetting,
+                ent.Comp.ChargeSetting.Clone(),
                 ent.Comp.PulseState,
-                bpm));
+                ent.Comp.DisplayedBpm,
+                ent.Comp.SettingsRevision));
     }
 }

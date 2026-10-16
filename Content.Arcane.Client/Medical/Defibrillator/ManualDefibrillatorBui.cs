@@ -23,7 +23,7 @@ public sealed class ManualDefibrillatorBui : BoundUserInterface
         if (state is not DefibrillatorBuiState defibState || _window == null)
             return;
 
-        _window.SetActiveSetting(defibState.ChargeSetting);
+        _window.SetActiveSetting(defibState.ChargeSetting, defibState.SettingsRevision);
         _window.SetPulseState(defibState.PulseState);
         _window.SetBpm(defibState.Bpm);
     }

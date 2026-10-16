@@ -1,4 +1,3 @@
-using Content.Arcane.Shared.Medical.Heart;
 using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Shared.Medical.Defibrillator;
@@ -33,7 +32,14 @@ public sealed partial class ManualDefibrillatorComponent : Component
     public ProtoId<PulseStatePrototype> PulseState = "Pulse0";
 
     [ViewVariables]
-    public Entity<HeartRateComponent>? HeartEntity;
+    public EntityUid? MonitoredBody;
+
+    [ViewVariables]
+    public float? DisplayedBpm;
+
+    public TimeSpan ShockUntil;
+
+    public uint SettingsRevision;
 }
 
 [DataDefinition, Serializable, NetSerializable]

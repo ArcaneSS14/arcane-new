@@ -13,6 +13,8 @@ using Content.Shared.Alert;
 using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Medical;
+using Content.Shared.Interaction;
+using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
@@ -28,6 +30,7 @@ public sealed class HeartRateTest : GameTest
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
     [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
+    [SidedDependency(Side.Server)] private readonly UserInterfaceSystem _ui = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -131,6 +134,8 @@ public sealed class HeartRateTest : GameTest
 
         var low = new DefibrillatorChargeSettingMessage(new() { Flips = [true, false, false, false] }) { Actor = patient };
         SEntMan.EventBus.RaiseLocalEvent(defib, low);
+        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var firstState), Is.True);
+        Assert.That(firstState!.SettingsRevision, Is.EqualTo(1));
         SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
         Assert.That(heart.CurrentRate, Is.Zero, "One switch must slow the heart, without automatic stabilisation.");
 
@@ -145,6 +150,54 @@ public sealed class HeartRateTest : GameTest
         var malformed = new DefibrillatorChargeSettingMessage(new() { Flips = [] }) { Actor = patient };
         SEntMan.EventBus.RaiseLocalEvent(defib, malformed);
         Assert.That(config.BpmZapHeal, Is.EqualTo(150f), "Malformed switch arrays must not change the voltage.");
+        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
+        Assert.That(state!.SettingsRevision, Is.EqualTo(3), "Rejected input must acknowledge the authoritative setting.");
+        Assert.That(firstState.ChargeSetting.Flips, Is.EqualTo(new[] { true, false, false, false }),
+            "Published UI states must not change when later settings are applied.");
+    }
+
+    [Test]
+    public async Task MonitorTracksThePatientThroughHeartReplacement()
+    {
+        await Pair.CreateTestMap();
+        EntityUid patient = default;
+        EntityUid defib = default;
+        EntityUid heart = default;
+        await Server.WaitPost(() =>
+        {
+            patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+            defib = SSpawnAtPosition("Defibrillator", TestMap.GridCoords);
+            heart = _body.GetOrgan(patient, "Heart")!.Value;
+            var scan = new AfterInteractEvent(patient, defib, patient, SComp<TransformComponent>(patient).Coordinates, true);
+            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
+            Assert.That(scan.Handled, Is.False, "A defibrillator lying on the ground must not bypass the hands requirement.");
+
+            _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, patient);
+            scan = new AfterInteractEvent(patient, defib, patient, SComp<TransformComponent>(patient).Coordinates, true);
+            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
+            Assert.That(scan.Handled, Is.True);
+            Assert.That(SComp<ManualDefibrillatorComponent>(defib).DisplayedBpm, Is.EqualTo(80f));
+            _body.RemoveOrgan(patient, heart);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitPost(() =>
+        {
+            var monitor = SComp<ManualDefibrillatorComponent>(defib);
+            Assert.That(monitor.DisplayedBpm, Is.Zero, "A removed heart must not keep the patient's monitor beating.");
+            Assert.That(monitor.PulseState.Id, Is.EqualTo("Pulse0"));
+            Assert.That(_body.InsertOrgan(patient, heart), Is.True);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitPost(() =>
+        {
+            var monitor = SComp<ManualDefibrillatorComponent>(defib);
+            Assert.That(monitor.DisplayedBpm, Is.EqualTo(SComp<HeartRateComponent>(heart).CurrentRate));
+            _ui.CloseUi(defib, ManualDefibrillatorUiKey.Key, patient);
+            Assert.That(monitor.MonitoredBody, Is.Null);
+            Assert.That(monitor.DisplayedBpm, Is.Null);
+        });
     }
 
     [Test]

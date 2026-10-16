@@ -21,6 +21,8 @@ public sealed partial class DefibrillatorWindow : DefaultWindow
 
     private DefibrillatorChargeSetting _activeSetting = new();
     private DefibrillatorChargeSetting _serverSetting = new();
+    private DefibrillatorChargeSetting? _sentSetting;
+    private uint _settingsRevision;
     private ProtoId<PulseStatePrototype>? _pulseState;
     private float? _sendTimeLeft;
     private List<DefibSwitchAnimation> _animations = new();
@@ -61,27 +63,39 @@ public sealed partial class DefibrillatorWindow : DefaultWindow
         MAX.StyleBoxOverride = transparent;
     }
 
-    public void SetActiveSetting(DefibrillatorChargeSetting setting)
+    public void SetActiveSetting(DefibrillatorChargeSetting setting, uint revision)
     {
         if (setting.Flips.Length != DefibrillatorChargeSetting.FlipAmount)
             return;
 
-        if (_sendTimeLeft != null)
+        // Monitor updates can arrive while a switch change is still in flight.
+        if (revision < _settingsRevision || _sentSetting != null && revision == _settingsRevision)
             return;
 
+        var hadPendingRequest = _sentSetting != null;
+        var hasQueuedChanges = hadPendingRequest && !SettingsEqual(_activeSetting, _sentSetting!);
+        _sentSetting = null;
+        _settingsRevision = revision;
         _serverSetting = setting.Clone();
 
-        ApplySetting(setting);
+        if (hasQueuedChanges)
+            _sendTimeLeft = Delay;
+        else if (hadPendingRequest || _sendTimeLeft == null)
+        {
+            _sendTimeLeft = null;
+            ApplySetting(setting);
+        }
 
         SetSwitchesDisabled(false);
     }
 
     public void FlushPendingSetting()
     {
-        if (_sendTimeLeft == null)
+        if (_sendTimeLeft == null && (_sentSetting == null || SettingsEqual(_activeSetting, _sentSetting)))
             return;
 
-        SendSetting();
+        _sendTimeLeft = null;
+        OnChargeSettingSelected?.Invoke(_activeSetting.Clone());
     }
 
     public void SetPulseState(ProtoId<PulseStatePrototype> pulseState)
@@ -123,7 +137,7 @@ public sealed partial class DefibrillatorWindow : DefaultWindow
 
     private void UpdatePendingSend(float deltaSeconds)
     {
-        if (_sendTimeLeft == null)
+        if (_sendTimeLeft == null || _sentSetting != null)
             return;
 
         _sendTimeLeft -= deltaSeconds;
@@ -180,7 +194,8 @@ public sealed partial class DefibrillatorWindow : DefaultWindow
         if (SettingsEqual(_activeSetting, _serverSetting))
             return;
 
-        OnChargeSettingSelected?.Invoke(_activeSetting);
+        _sentSetting = _activeSetting.Clone();
+        OnChargeSettingSelected?.Invoke(_sentSetting.Clone());
     }
 
     private void Flip(AnimatedTextureRect texture, bool oldValue, bool newValue)

@@ -10,7 +10,7 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
     [Dependency] private BodySystem _body = default!;
-    [Dependency] private ManualDefibrillatorSystem _manualDefibrillator = default!;
+    [Dependency] private ManualDefibrillatorMonitorSystem _monitor = default!;
 
     private static readonly ProtoId<OrganCategoryPrototype> Heart = "Heart";
 
@@ -27,18 +27,14 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
             || !TryComp<HeartRateComponent>(uid, out var heart))
             return;
 
-        if (TryComp<ManualDefibrillatorComponent>(args.Defibrillator, out var manual))
-        {
-            manual.PulseState = "Pulse3000";
-            _manualDefibrillator.UpdateUi((args.Defibrillator, manual));
-        }
-
         if (_heartRate.GetState(heart) == HeartState.Stopped)
         {
             _heartRate.SetRate(uid, heart, defib.BpmZapHealFlatline, true);
-            return;
         }
+        else
+            _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
 
-        _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
+        if (TryComp<ManualDefibrillatorComponent>(args.Defibrillator, out var manual))
+            _monitor.ShowShock((args.Defibrillator, manual), ent.Owner, heart.CurrentRate);
     }
 }
