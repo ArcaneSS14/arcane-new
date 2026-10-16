@@ -8,6 +8,7 @@ using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Events;
+using Content.Shared.Alert;
 using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Medical;
@@ -20,10 +21,12 @@ namespace Content.IntegrationTests.Tests.Medical;
 public sealed class HeartRateTest : GameTest
 {
     private static readonly ProtoId<ReagentPrototype> Epinephrine = "Epinephrine";
+    private static readonly ProtoId<AlertPrototype> HeartStopAlert = "HeartStop";
 
     [SidedDependency(Side.Server)] private readonly HeartRateSystem _heart = null!;
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
+    [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -104,6 +107,93 @@ public sealed class HeartRateTest : GameTest
 
         SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
         Assert.That(heart.CurrentRate, Is.EqualTo(120f));
+
+        _heart.SetRate(uid, heart, 90f, false);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "An automatic shock must stop at the resting rate.");
+
+        _heart.SetRate(uid, heart, 70f, false);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void RateCapsLimitEffectsWithoutReversingThem()
+    {
+        var uid = SSpawn("OrganHumanHeart");
+        var heart = SComp<HeartRateComponent>(uid);
+        _heart.SetRate(uid, heart, 250f, true);
+        _heart.UpdateRate(uid, heart, 3f, false, highCap: 230f);
+        Assert.That(heart.CurrentRate, Is.EqualTo(250f));
+
+        _heart.SetRate(uid, heart, 30f, true);
+        _heart.UpdateRate(uid, heart, -2f, false, lowCap: 55f);
+        Assert.That(heart.CurrentRate, Is.EqualTo(30f));
+
+        _heart.SetRate(uid, heart, 81f, true);
+        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
+        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "Stabilising medicine must not oscillate around the resting rate.");
+        _heart.UpdateRate(uid, heart, -5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(75f), "A destabilising effect must retain its direction at the resting rate.");
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void HeartTransplantsRefreshAlerts()
+    {
+        var patient = SSpawn("MobHuman");
+        var uid = _body.GetOrgan(patient, "Heart")!.Value;
+        var heart = SComp<HeartRateComponent>(uid);
+        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
+        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
+
+        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
+        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.False);
+
+        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
+        _heart.SetRate(uid, heart, 0f, false);
+        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
+        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    [RunOnSide(Side.Server)]
+    public void BrainReinsertionKeepsTheAppropriateMissingHeartBehavior(bool hasCirculation)
+    {
+        var patient = SSpawn("MobHuman");
+        if (!hasCirculation)
+            SEntMan.RemoveComponent<BloodstreamComponent>(patient);
+
+        var heart = _body.GetOrgan(patient, "Heart")!.Value;
+        var brain = _body.GetOrgan(patient, "Brain")!.Value;
+        Assert.That(_body.RemoveOrgan(patient, heart), Is.True);
+        Assert.That(SEntMan.HasComponent<DelayedDeathComponent>(patient), Is.EqualTo(!hasCirculation));
+
+        Assert.That(_body.RemoveOrgan(patient, brain), Is.True);
+        Assert.That(SEntMan.HasComponent<DelayedDeathComponent>(patient), Is.True);
+        Assert.That(_body.InsertOrgan(patient, brain), Is.True);
+        Assert.That(SEntMan.HasComponent<DelayedDeathComponent>(patient), Is.EqualTo(!hasCirculation));
+        Assert.That(_body.InsertOrgan(patient, heart), Is.True);
+    }
+
+    [TestCase("MobSlimeXenobioBaby")]
+    [TestCase("MobBlobPod")]
+    [RunOnSide(Side.Server)]
+    public void ExistingAnatomiesHaveWorkingCirculation(string prototype)
+    {
+        var patient = SSpawn(prototype);
+        var blood = SComp<BloodstreamComponent>(patient);
+        if (!blood.RequiresHeart)
+            return;
+
+        var circulation = new FindWorkingHeartEvent();
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref circulation);
+        Assert.That(circulation.Found || !circulation.DoEffects, Is.True,
+            "Existing mobs must not start taking missing-heart damage on spawn.");
     }
 }
 // Arcane-End

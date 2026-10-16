@@ -26,6 +26,14 @@ public sealed partial class InitialBodySystem : EntitySystem
             // </Trauma>
     }
 
+    // Arcane-Start
+    /// <summary>Whether the configured initial anatomy contains an organ, or null for a body without a template.</summary>
+    public bool? HasInitialOrgan(Entity<InitialBodyComponent?> body, ProtoId<OrganCategoryPrototype> category)
+    {
+        return Resolve(body.Owner, ref body.Comp, false) ? body.Comp.Organs.ContainsKey(category) : null;
+    }
+    // Arcane-End
+
     private void OnMapInit(Entity<InitialBodyComponent> ent, ref MapInitEvent args)
     {
         if (!TryComp<ContainerManagerComponent>(ent, out var containerComp))

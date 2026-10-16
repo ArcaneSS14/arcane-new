@@ -21,7 +21,17 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
 
     private void OnPopulate(Entity<BodyComponent> ent, ref HealthAnalyzerPopulateEvent args)
     {
-        if (_body.GetOrgan(ent, Heart) is not { } uid || !TryComp<HeartRateComponent>(uid, out var heart))
+        if (_body.GetOrgan(ent, Heart) is not { } uid)
+        {
+            if (_heartRate.RequiresHeart(ent))
+            {
+                args.Pulse.Text = Loc.GetString("health-analyzer-window-entity-bpm-stopped-text");
+                AddCondition(args, "condition-heart-missing", ent);
+            }
+            return;
+        }
+
+        if (!TryComp<HeartRateComponent>(uid, out var heart))
             return;
 
         var state = _heartRate.GetState(heart);
@@ -38,9 +48,14 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
         if (key == null)
             return;
 
+        AddCondition(args, key, ent);
+    }
+
+    private void AddCondition(HealthAnalyzerPopulateEvent args, string key, EntityUid body)
+    {
         args.Conditions.AddChild(new RichTextLabel
         {
-            Text = Loc.GetString(key, ("entity", Identity.Name(ent, EntityManager))),
+            Text = Loc.GetString(key, ("entity", Identity.Name(body, EntityManager))),
             Margin = new Thickness(0, 4),
         });
     }
