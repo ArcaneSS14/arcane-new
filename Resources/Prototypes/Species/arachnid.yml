@@ -6,6 +6,12 @@
   defaultSkinTone: "#385878"
   dollPrototype: AppearanceArachnid
   skinColoration: Hues
+  # Arcane-Start
+  averageHeight: 180
+  averageWeight: 80
+  defaultScale: 1.1
+  maxScale: 1.4
+  # Arcane-End
   maleFirstNames: NamesArachnidFirst
   femaleFirstNames: NamesArachnidFirst
   lastNames: NamesArachnidLast

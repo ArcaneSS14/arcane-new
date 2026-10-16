@@ -208,6 +208,9 @@ namespace Content.Shared.Preferences
                 other.Knowledge)
                 // </Trauma>
         {
+            // Arcane-Start: Preserve scale settings when profiles are copied
+            Scale = other.Scale;
+            // Arcane-End
         }
 
         /// <summary>
@@ -235,6 +238,9 @@ namespace Content.Shared.Preferences
                 Species = species.Value,
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
+                // Arcane-Start: Use species-specific default scale
+                Scale = IoCManager.Resolve<IPrototypeManager>().Index(species.Value).DefaultScale,
+                // Arcane-End
             };
         }
 
@@ -350,6 +356,11 @@ namespace Content.Shared.Preferences
             {
                 baseProfile.Species = RandomSpecies(ignoredSpecies);
                 config ^= RandomizeCfg.Species;
+                // Arcane-Start: Generate scale from the chosen species since its randomization is disabled
+                var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(baseProfile.Species);
+                var random = IoCManager.Resolve<IRobustRandom>();
+                baseProfile.Scale = random.NextFloat(speciesPrototype.MinScale, speciesPrototype.MaxScale);
+                // Arcane-End
             }
             var profile = Random(config, baseProfile);
             return profile;
@@ -392,6 +403,18 @@ namespace Content.Shared.Preferences
 
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
+            // Arcane-Start: Preserve or randomize scale with the species
+            if ((randomizeCfg & RandomizeCfg.Species) != 0)
+            {
+                var random = IoCManager.Resolve<IRobustRandom>();
+                profile.Scale = random.NextFloat(speciesProto.MinScale, speciesProto.MaxScale);
+            }
+            else
+            {
+                profile.Scale = baseProfile.Scale;
+            }
+            // Arcane-End
+
             return profile;
         }
 
@@ -403,11 +426,16 @@ namespace Content.Shared.Preferences
         public static HumanoidCharacterProfile RandomWithSpecies(string? species = null)
         {
             species ??= DefaultSpecies;
-
-            return Random(
+            var profile = Random( // Arcane-Edit
                 RandomizeConfigAll ^ RandomizeCfg.Species,
                 new HumanoidCharacterProfile().WithSpecies(species)
             );
+            // Arcane-Start: Randomize body scale for generated characters
+            var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
+            var random = IoCManager.Resolve<IRobustRandom>();
+            return profile
+                .WithScale(random.NextFloat(speciesPrototype.MinScale, speciesPrototype.MaxScale));
+            // Arcane-End
         }
 
         public HumanoidCharacterProfile WithName(string name)
@@ -442,7 +470,17 @@ namespace Content.Shared.Preferences
 
         public HumanoidCharacterProfile WithSpecies(string species)
         {
-            return new(this) { Species = species };
+            // Arcane-Edit-Start: Reset scale on species changes, keep it when the species is unchanged
+            if (species == Species)
+                return new(this) { Species = species };
+
+            var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index<SpeciesPrototype>(species);
+            return new(this)
+            {
+                Species = species,
+                Scale = speciesPrototype.DefaultScale,
+            };
+            // Arcane-Edit-End
         }
 
         public HumanoidCharacterProfile WithCharacterAppearance(HumanoidCharacterAppearance appearance)
@@ -633,6 +671,9 @@ namespace Content.Shared.Preferences
 
         public bool MemberwiseEquals(HumanoidCharacterProfile other)
         {
+            // Arcane-Start: Include scale in profile comparisons
+            if (Scale != other.Scale) return false;
+            // Arcane-End
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
             if (Sex != other.Sex) return false;
@@ -908,6 +949,9 @@ namespace Content.Shared.Preferences
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
             hashCode.Add(Species);
+            // Arcane-Start: Hash character scale settings
+            hashCode.Add(Scale);
+            // Arcane-End
             hashCode.Add(Age);
             hashCode.Add((int)Sex);
             hashCode.Add(Voice);

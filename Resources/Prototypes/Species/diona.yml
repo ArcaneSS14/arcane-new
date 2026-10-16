@@ -6,6 +6,11 @@
   defaultSkinTone: "#cdb369"
   dollPrototype: AppearanceDiona
   skinColoration: Hues
+  # Arcane-Start
+  averageWeight: 80
+  minScale: 0.85
+  maxScale: 1.3
+  # Arcane-End
   maleFirstNames: NamesDionaFirst
   femaleFirstNames: NamesDionaFirst
   lastNames: NamesDionaLast
