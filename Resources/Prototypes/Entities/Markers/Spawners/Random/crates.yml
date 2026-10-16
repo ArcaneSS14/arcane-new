@@ -200,10 +200,18 @@
         - id: CrateEngineeringCableMV
         - id: CrateEngineeringCableHV
         - id: CrateEngineeringCableBulk
+        # <Trauma> - die
+        #- id: CrateEngineeringSingularityContainment
+        #- id: CrateEngineeringSingularityCollector
+        #- id: CrateEngineeringTeslaCoil
+        #- id: CrateEngineeringSingularityEmitter
+        # </Trauma>
+        # Arcane-Start: Keep engine crates in random engineering spawns
         - id: CrateEngineeringSingularityContainment
         - id: CrateEngineeringSingularityCollector
         - id: CrateEngineeringTeslaCoil
         - id: CrateEngineeringSingularityEmitter
+        # Arcane-End
         - id: CrateEngineeringToolbox
         - id: CrateEngineeringSolar
         - id: CrateEmergencyRadiation

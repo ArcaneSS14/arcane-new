@@ -14,7 +14,7 @@
   id: CargoEngineeringTEGKit
   icon:
     sprite: Structures/Power/Generation/teg.rsi
-    state: teg
+    state: teg-assembled # Arcane-Edit: teg > teg-assembled
   product: CrateEngineeringTEG
   cost: 20000
   category: cargoproduct-category-name-engineering
