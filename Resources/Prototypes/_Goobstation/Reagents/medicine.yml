@@ -106,6 +106,12 @@
         - type: PainNumbness
         - type: LegsParalyzed
         guidebookText: entity-effect-guidebook-removes-disabilities
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+      # Arcane-End
 
 - type: reagent
   id: LingAdrenaline
@@ -305,6 +311,10 @@
         time: 4
       - !type:ModifyBleed
         amount: -0.25
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 3
+      # Arcane-End
 
 # Patch/microdose meds, hilariously strong due to difficulties in making and using them
 
@@ -775,6 +785,14 @@
         - !type:ReagentCondition
           reagent: SalicylicAcid
           min: 25
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 8
+        conditions:
+        - !type:ReagentCondition
+          reagent: SalicylicAcid
+          min: 25
+      # Arcane-End
 
 - type: reagent
   id: Oxandrolone
@@ -832,6 +850,14 @@
         - !type:ReagentCondition
           reagent: Oxandrolone
           min: 25
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 8
+        conditions:
+        - !type:ReagentCondition
+          reagent: Oxandrolone
+          min: 25
+      # Arcane-End
 
 - type: reagent
   id: PentenicAcid
@@ -861,6 +887,11 @@
         effectProto: StatusEffectRadiationProtection
         time: 2
         type: Add
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -1.5
+        lowerCap: 65
+      # Arcane-End
 
 - type: reagent
   id: Atropine
@@ -1095,6 +1126,11 @@
         - !type:ReagentCondition
           reagent: Tramadol
           min: 15.5
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -4
+        lowerCap: 51
+      # Arcane-End
 
 - type: reagent
   id: Oxycodone
