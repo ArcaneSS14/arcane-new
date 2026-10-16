@@ -257,6 +257,7 @@ public sealed partial class HealthAnalyzerControl
         }
     }
 
+    // Arcane-Edit-Start: empty conditions are added after every mode and extension has populated the list.
     public void PopulateOrgans(EntityUid body)
     {
         ReturnButton.Visible = false;
@@ -289,14 +290,6 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        if (ConditionsListContainer.ChildCount == 0)
-        {
-            ConditionsListContainer.AddChild(new RichTextLabel
-            {
-                Text = Loc.GetString("condition-none"),
-                Margin = new Thickness(0, 4),
-            });
-        }
     }
 
     public void PopulateChemicals(EntityUid body)
@@ -325,12 +318,8 @@ public sealed partial class HealthAnalyzerControl
 
         DrawSolutionDiagnostics(solutions);
 
-        ConditionsListContainer.AddChild(new RichTextLabel
-        {
-            Text = Loc.GetString("condition-none"),
-            Margin = new Thickness(0, 4),
-        });
     }
+    // Arcane-Edit-End
 
     #endregion
 

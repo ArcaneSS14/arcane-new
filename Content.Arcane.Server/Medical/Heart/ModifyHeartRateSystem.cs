@@ -17,15 +17,12 @@ public sealed partial class ModifyHeartRateSystem : EntityEffectSystem<BodyCompo
             || !TryComp<HeartRateComponent>(heartUid, out var heart))
             return;
 
-        // if we're above normal and we have autostabilisation multiply by -1
-        var sign = (heart.CurrentRate > heart.NormalRate) && args.Effect.AutoStabilisation ? -1 : 1;
-        var delta = sign * args.Scale * args.Effect.Amount;
-
         _heartRate.UpdateRate(heartUid,
             heart,
-            delta,
+            args.Scale * args.Effect.Amount,
             args.Effect.HeartRestart,
             args.Effect.LowerCap,
-            args.Effect.HigherCap);
+            args.Effect.HigherCap,
+            args.Effect.AutoStabilisation);
     }
 }
