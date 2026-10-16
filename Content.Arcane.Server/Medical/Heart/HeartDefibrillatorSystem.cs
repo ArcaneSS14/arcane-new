@@ -39,7 +39,6 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
             return;
         }
 
-        var sign = heart.CurrentRate > heart.NormalRate && defib.AutoStabilisation ? -1 : 1;
-        _heartRate.UpdateRate(uid, heart, sign * defib.BpmZapHeal, false);
+        _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
     }
 }

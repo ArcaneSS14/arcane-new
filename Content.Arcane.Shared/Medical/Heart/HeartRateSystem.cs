@@ -18,6 +18,7 @@ public sealed partial class HeartRateSystem : EntitySystem
     [Dependency] private AlertsSystem _alerts = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private BodySystem _body = default!;
+    [Dependency] private InitialBodySystem _initialBody = default!;
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
     [Dependency] private INetManager _net = default!;
@@ -25,6 +26,7 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     private static readonly float HeartStop = 0f;
     private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(1);
+    private static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
     private TimeSpan _nextUpdate;
 
     public override void Initialize()
@@ -34,8 +36,10 @@ public sealed partial class HeartRateSystem : EntitySystem
 
         SubscribeLocalEvent<HeartRateComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<HeartRateComponent, RejuvenateEvent>(OnRejuvenate);
-        SubscribeLocalEvent<BodyComponent, FindWorkingHeartEvent>(OnFindHeart);
+        SubscribeLocalEvent<BloodstreamComponent, FindWorkingHeartEvent>(OnFindHeart);
         SubscribeLocalEvent<HeartRateComponent, OrganRemovalDeathAttemptEvent>(OnRemovalDeathAttempt);
+        SubscribeLocalEvent<HeartRateComponent, OrganGotInsertedEvent>(OnInserted);
+        SubscribeLocalEvent<HeartRateComponent, OrganGotRemovedEvent>(OnRemoved);
     }
 
     private void OnComponentInit(EntityUid uid, HeartRateComponent heart, ComponentInit args)
@@ -68,17 +72,24 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     private void UpdateHeart(EntityUid uid, HeartRateComponent heart)
     {
+        if (heart.CurrentRate <= HeartStop)
+            return;
+
         var maybeBody = _body.GetBody(uid);
         var beyondCritical = Math.Max(0, heart.CurrentRate / heart.CriticalRate - 1);
-        if (maybeBody is null // the heart is outside a body
+        var inactive = maybeBody is null // the heart is outside a body
             || !TryComp<MobStateComponent>(maybeBody, out var mobState) // or the body is not a mob
-            || mobState.CurrentState == MobState.Dead // or the body is dead
-            || beyondCritical > 0)
+            || mobState.CurrentState == MobState.Dead; // or the body is dead
+        if (inactive || beyondCritical > 0)
         {
             var chance = heart.CriticalStopChance * (1 + beyondCritical);
             if (_random.Prob(chance))
                 SetRate(uid, heart, HeartStop, false);
         }
+
+        // Preserve the source's delayed stopping chance, without simulating circulation in a dead body.
+        if (inactive || heart.CurrentRate <= HeartStop)
+            return;
 
         if (maybeBody is { } body)
             DoBloodVolume(uid, heart, body);
@@ -96,18 +107,39 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     private void OnRemovalDeathAttempt(Entity<HeartRateComponent> ent, ref OrganRemovalDeathAttemptEvent args)
     {
-        args.Cancelled = true;
+        // BodySystem keeps the old body reference until removal events finish.
+        args.Cancelled = _body.GetBody(ent) is { } body && _blood.HasComp(body);
     }
 
-    private void OnFindHeart(Entity<BodyComponent> ent, ref FindWorkingHeartEvent args)
+    private void OnInserted(Entity<HeartRateComponent> ent, ref OrganGotInsertedEvent args)
     {
-        if (HasComp<StasisBedBuckledComponent>(ent))
+        if (!_net.IsClient && !_timing.ApplyingState)
+            UpdateAlerts(args.Target, ent.Comp);
+    }
+
+    private void OnRemoved(Entity<HeartRateComponent> ent, ref OrganGotRemovedEvent args)
+    {
+        if (!_net.IsClient && !_timing.ApplyingState && !TerminatingOrDeleted(args.Target))
+            UpdateAlerts(args.Target, ent.Comp);
+    }
+
+    public bool RequiresHeart(EntityUid body)
+    {
+        return _blood.TryComp(body, out var blood)
+            && blood.RequiresHeart
+            && HasComp<BodyComponent>(body)
+            && _initialBody.HasInitialOrgan(body, HeartCategory) != false;
+    }
+
+    private void OnFindHeart(Entity<BloodstreamComponent> ent, ref FindWorkingHeartEvent args)
+    {
+        if (!RequiresHeart(ent) || HasComp<StasisBedBuckledComponent>(ent))
         {
             args.DoEffects = false;
             return;
         }
 
-        var hearts = _body.GetOrgans<HeartRateComponent>(ent.AsType());
+        var hearts = _body.GetOrgans<HeartRateComponent>(ent.Owner);
         foreach (var heart in hearts)
             if (GetState(heart.Comp) != HeartState.Stopped)
             {
@@ -143,8 +175,11 @@ public sealed partial class HeartRateSystem : EntitySystem
         if (oldState == HeartState.Stopped && !canRestart)
             return;
 
-        // being at min or beyond just stops the heart
-        heart.CurrentRate = Math.Max(rate, HeartStop);
+        rate = Math.Max(rate, HeartStop);
+        if (heart.CurrentRate == rate)
+            return;
+
+        heart.CurrentRate = rate;
 
         var newState = GetState(heart);
         Dirty(uid, heart);
@@ -156,10 +191,30 @@ public sealed partial class HeartRateSystem : EntitySystem
         var ev = new HeartStateChangedEvent(oldState, newState);
         RaiseLocalEvent(body, ref ev);
 
-        // update alerts
+        UpdateAlerts(body, heart);
+    }
+
+    private void UpdateAlerts(EntityUid body, HeartRateComponent heart)
+    {
+        var state = HeartState.Stable;
+        if (RequiresHeart(body))
+        {
+            state = HeartState.Stopped;
+            foreach (var organ in _body.GetOrgans<HeartRateComponent>(body))
+            {
+                var organState = GetState(organ.Comp);
+                if (organState == HeartState.Stopped)
+                    continue;
+
+                state = organState;
+                if (state == HeartState.Stable)
+                    break;
+            }
+        }
+
         if (heart.FibrillationAlert is { } fibAlert)
         {
-            if (newState == HeartState.Fibrillating)
+            if (state == HeartState.Fibrillating)
                 _alerts.ShowAlert(body, fibAlert);
             else
                 _alerts.ClearAlert(body, fibAlert);
@@ -167,7 +222,7 @@ public sealed partial class HeartRateSystem : EntitySystem
 
         if (heart.HeartStopAlert is { } stopAlert)
         {
-            if (newState == HeartState.Stopped)
+            if (state == HeartState.Stopped)
                 _alerts.ShowAlert(body, stopAlert);
             else
                 _alerts.ClearAlert(body, stopAlert);
@@ -179,15 +234,25 @@ public sealed partial class HeartRateSystem : EntitySystem
         float delta,
         bool canRestart,
         float? lowCap = null,
-        float? highCap = null)
+        float? highCap = null,
+        bool autoStabilisation = false)
     {
+        var oldRate = heart.CurrentRate;
+        var stabilising = autoStabilisation && delta >= 0;
+        if (autoStabilisation)
+            delta *= oldRate > heart.NormalRate ? -1 : 1;
+
         var newRate = heart.CurrentRate + delta;
 
-        if (lowCap is { } someLowCap && newRate < someLowCap)
-            newRate = someLowCap;
+        if (stabilising && (heart.NormalRate - oldRate) * (heart.NormalRate - newRate) <= 0)
+            newRate = heart.NormalRate;
 
-        if (highCap is { } someHighCap && newRate > someHighCap)
-            newRate = someHighCap;
+        // A cap must limit an effect, never reverse it when the rate is already outside the cap.
+        if (delta < 0 && lowCap is { } someLowCap)
+            newRate = Math.Min(oldRate, Math.Max(newRate, someLowCap));
+
+        if (delta > 0 && highCap is { } someHighCap)
+            newRate = Math.Max(oldRate, Math.Min(newRate, someHighCap));
 
         SetRate(uid, heart, newRate, canRestart);
     }

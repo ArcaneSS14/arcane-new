@@ -171,6 +171,10 @@
     allowedStates:
     - Dead
   - type: Rootable
+  # Arcane-Start
+  - type: Sprinter
+    canSprint: false
+  # Arcane-End
 
 - type: entity
   parent: OrganBaseOrganic

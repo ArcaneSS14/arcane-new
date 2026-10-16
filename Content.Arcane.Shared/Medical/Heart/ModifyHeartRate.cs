@@ -42,25 +42,19 @@ public sealed partial class ModifyHeartRate : EntityEffectBase<ModifyHeartRate>
     {
         var lines = new List<string>();
 
-        if (AutoStabilisation)
+        var key = (AutoStabilisation, Amount >= 0) switch
         {
-            if (Amount >= 0)
-            {
-                lines.Add(Loc.GetString("entity-effect-guidebook-modify-heart-rate-stabilise-increase",
-                    ("amount", Math.Round(Math.Abs(Amount))),
-                    ("highCap", Math.Round(HigherCap ?? 80))));
-                lines.Add(Loc.GetString("entity-effect-guidebook-modify-heart-rate-stabilise-decrease",
-                    ("amount", Math.Round(Math.Abs(Amount))),
-                    ("lowCap", Math.Round(LowerCap ?? 80))));
-            }
-        }
-        else
-        {
-            var key = Amount >= 0
-                ? "entity-effect-guidebook-modify-heart-rate-increase"
-                : "entity-effect-guidebook-modify-heart-rate-decrease";
-            lines.Add(Loc.GetString(key, ("amount", Math.Round(Math.Abs(Amount)))));
-        }
+            (true, true) => "entity-effect-guidebook-modify-heart-rate-stabilise",
+            (true, false) => "entity-effect-guidebook-modify-heart-rate-destabilise",
+            (false, true) => "entity-effect-guidebook-modify-heart-rate-increase",
+            _ => "entity-effect-guidebook-modify-heart-rate-decrease",
+        };
+        lines.Add(Loc.GetString(key, ("amount", Math.Abs(Amount))));
+
+        if (LowerCap is { } lower)
+            lines.Add(Loc.GetString("entity-effect-guidebook-modify-heart-rate-lower-cap", ("cap", lower)));
+        if (HigherCap is { } higher)
+            lines.Add(Loc.GetString("entity-effect-guidebook-modify-heart-rate-higher-cap", ("cap", higher)));
 
         if (HeartRestart)
             lines.Add(Loc.GetString("entity-effect-guidebook-modify-heart-rate-restart"));
