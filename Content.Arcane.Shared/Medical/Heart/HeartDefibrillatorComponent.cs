@@ -13,7 +13,7 @@ public sealed partial class HeartDefibrillatorComponent : Component
     public float BpmZapHeal = 45f;
 
     /// <summary>
-    /// Pulse after restarting a stopped heart, in BPM.
+    /// Pulse after restarting a stopped heart, in BPM. Automatic shocks keep it within the heart's stable range.
     /// </summary>
     [DataField]
     public float BpmZapHealFlatline = 210f;
