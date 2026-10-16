@@ -1,5 +1,4 @@
-// Arcane-Start
-namespace Content.Medical.Common.Body;
+namespace Content.Arcane.Common.Medical.Heart;
 
 /// <summary>
 /// Raised on a removed organ before applying the default delayed death behavior.
@@ -10,4 +9,3 @@ public struct OrganRemovalDeathAttemptEvent
 {
     public bool Cancelled;
 }
-// Arcane-End

@@ -1,5 +1,5 @@
-// Arcane-Start
 #nullable enable
+using Content.Arcane.Common.Medical.Heart;
 using System.Linq;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.IntegrationTests.Fixtures;
@@ -7,7 +7,6 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
-using Content.Shared.Body.Events;
 using Content.Shared.Alert;
 using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Reagent;
@@ -58,6 +57,7 @@ public sealed class HeartRateTest : GameTest
         var heart = SComp<HeartRateComponent>(uid);
 
         var healthy = new FindWorkingHeartEvent();
+        Assert.That(healthy.DoEffects, Is.False, "The common hook must be neutral without the heart simulation.");
         SEntMan.EventBus.RaiseLocalEvent(patient, ref healthy);
         Assert.That(healthy.Found, Is.True);
 
@@ -83,8 +83,8 @@ public sealed class HeartRateTest : GameTest
     {
         Assert.That(SComp<HeartRateComponent>(SSpawn("OrganMothHeart")).NormalRate, Is.EqualTo(65f));
         Assert.That(SComp<HeartRateComponent>(SSpawn("OrganHeartSandevistan")).CriticalRate, Is.EqualTo(400f));
-        Assert.That(SComp<BloodstreamComponent>(SSpawn("MobDiona")).RequiresHeart, Is.False);
-        Assert.That(SComp<BloodstreamComponent>(SSpawn("MobSlimePerson")).RequiresHeart, Is.False);
+        Assert.That(SComp<HeartCirculationComponent>(SSpawn("MobDiona")).RequiresHeart, Is.False);
+        Assert.That(SComp<HeartCirculationComponent>(SSpawn("MobSlimePerson")).RequiresHeart, Is.False);
 
         var epinephrine = SProtoMan.Index(Epinephrine);
         var effects = epinephrine.Metabolisms!.Metabolisms["Bloodstream"].Effects;
@@ -207,8 +207,7 @@ public sealed class HeartRateTest : GameTest
     public void ExistingAnatomiesHaveWorkingCirculation(string prototype)
     {
         var patient = SSpawn(prototype);
-        var blood = SComp<BloodstreamComponent>(patient);
-        if (!blood.RequiresHeart)
+        if (!_heart.RequiresHeart(patient))
             return;
 
         var circulation = new FindWorkingHeartEvent();
@@ -217,4 +216,3 @@ public sealed class HeartRateTest : GameTest
             "Existing mobs must not start taking missing-heart damage on spawn.");
     }
 }
-// Arcane-End

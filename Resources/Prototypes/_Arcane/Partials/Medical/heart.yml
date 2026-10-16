@@ -14,7 +14,7 @@
 - type: entity
   id: MobDiona
   components:
-  - type: Bloodstream
+  - type: HeartCirculation
     requiresHeart: false
 
 - type: entity
@@ -42,7 +42,7 @@
 - type: entity
   id: MobSlimePerson
   components:
-  - type: Bloodstream
+  - type: HeartCirculation
     requiresHeart: false
 
 - type: entity
