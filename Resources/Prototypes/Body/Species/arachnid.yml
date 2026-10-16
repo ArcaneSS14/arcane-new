@@ -256,6 +256,13 @@
 - type: entity
   parent: [ OrganBaseHeart, OrganArachnidInternal, OrganArachnidMetabolizer ]
   id: OrganArachnidHeart
+  # Arcane-Start
+  components:
+  - type: HeartRate
+    normalRate: 70
+    criticalRate: 295
+    fibrillationCaps: 35,210
+  # Arcane-End
 
 - type: entity
   parent: [ OrganBaseStomach, OrganArachnidInternal, OrganAnimalMetabolizer ]

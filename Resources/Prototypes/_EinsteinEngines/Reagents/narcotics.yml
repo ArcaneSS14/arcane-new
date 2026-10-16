@@ -29,3 +29,14 @@
         damage:
           types:
             Asphyxiation: 2
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -5
+        lowerCap: 41
+      - !type:ModifyHeartRate
+        amount: -5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Morphine
+          min: 16
+      # Arcane-End
