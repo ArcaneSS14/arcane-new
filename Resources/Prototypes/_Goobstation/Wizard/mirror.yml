@@ -29,6 +29,7 @@
     - BananaMen
     - Kobold
     - Monkey
+    - Feroxi # Arcane
   - type: ActivatableUI
     key: enum.WizardMirrorUiKey.Key
     singleUser: true

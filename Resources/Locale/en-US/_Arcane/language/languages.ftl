@@ -12,3 +12,8 @@ language-Schechi-description =
     The language of Resomi, primarily featuring frontal sounds made without rounding. Fluent speakers sound quite close to birdsong.
 
 chat-language-Schechi-name = Schechi
+
+language-Nehina-name = Nēhina
+language-Nehina-description = A language spoken by the Feroxi, well adapted to speaking under the waters of ocean planets.
+
+chat-language-Nehina-name = Nēhina

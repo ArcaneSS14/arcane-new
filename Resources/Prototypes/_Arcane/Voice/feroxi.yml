@@ -1,0 +1,138 @@
+- type: speechVerb
+  id: Feroxi
+  name: chat-speech-verb-name-feroxi
+  speechVerbStrings:
+  - chat-speech-verb-feroxi-1
+  - chat-speech-verb-feroxi-2
+  - chat-speech-verb-feroxi-3
+  - chat-speech-verb-feroxi-4
+
+- type: typingIndicator
+  id: feroxi
+  spritePath: /Textures/_Arcane/Effects/speech.rsi
+  typingState: feroxi0
+  idleState: feroxi0
+  offset: 0, 0.2
+
+- type: soundCollection
+  id: FeroxiGnashes
+  files:
+  - /Audio/Effects/bite.ogg
+
+- type: emote
+  id: Gnash
+  name: chat-emote-name-gnash
+  category: Vocal
+  available: false
+  whitelist:
+    components:
+    - Vocal
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: [gnashes.]
+  chatTriggers:
+    - gnash
+    - gnashes
+    - gnashing
+    - gnashed
+    - gnash teeth
+    - gnashes teeth
+    - gnashing teeth
+    - gnashed teeth
+    - gnashes their teeth
+    - gnashes her teeth
+    - gnashes his teeth
+    - gnashes its teeth
+    - gnashing their teeth
+    - gnashing her teeth
+    - gnashing his teeth
+    - gnashing its teeth
+    - gnashed their teeth
+    - gnashed her teeth
+    - gnashed his teeth
+    - gnashed its teeth
+
+- type: emoteSounds
+  id: MaleFeroxi
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      collection: MaleScreams
+    Laugh:
+      collection: MaleLaugh
+    Sneeze:
+      collection: MaleSneezes
+    Cough:
+      collection: MaleCoughs
+    Yawn:
+      collection: MaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: BikeHorn
+    Sigh:
+      collection: MaleSigh
+    Crying:
+      collection: MaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Hiss:
+      path: /Audio/Animals/snake_hiss.ogg
+    Gasp:
+      collection: MaleGasp
+    DefaultDeathgasp:
+      collection: MothDeathGasp
+    Gnash:
+      collection: FeroxiGnashes
+    Gulp:
+      path: /Audio/_Goobstation/Voice/gulpexotic.ogg
+    Surprised:
+      path: /Audio/_Goobstation/Voice/surprised.ogg
+
+- type: emoteSounds
+  id: FemaleFeroxi
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      collection: FemaleScreams
+    Laugh:
+      collection: FemaleLaugh
+    Sneeze:
+      collection: FemaleSneezes
+    Cough:
+      collection: FemaleCoughs
+    Yawn:
+      collection: FemaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: CluwneHorn
+    Sigh:
+      collection: FemaleSigh
+    Crying:
+      collection: FemaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Hiss:
+      path: /Audio/Animals/snake_hiss.ogg
+    Gasp:
+      collection: FemaleGasp
+    DefaultDeathgasp:
+      collection: MothDeathGasp
+    Gnash:
+      collection: FeroxiGnashes
+    Gulp:
+      path: /Audio/_Goobstation/Voice/gulpexotic.ogg
+    Surprised:
+      path: /Audio/_Goobstation/Voice/surprised.ogg

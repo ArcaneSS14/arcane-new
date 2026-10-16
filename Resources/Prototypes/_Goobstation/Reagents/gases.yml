@@ -399,7 +399,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -434,7 +434,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:
