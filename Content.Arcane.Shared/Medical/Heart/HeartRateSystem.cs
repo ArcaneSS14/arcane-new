@@ -37,6 +37,7 @@ public sealed partial class HeartRateSystem : EntitySystem
         SubscribeLocalEvent<HeartRateComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<HeartRateComponent, RejuvenateEvent>(OnRejuvenate);
         SubscribeLocalEvent<BloodstreamComponent, FindWorkingHeartEvent>(OnFindHeart);
+        SubscribeLocalEvent<HeartRateComponent, BodyRelayedEvent<FindWorkingHeartEvent>>(OnRelayedFindHeart);
         SubscribeLocalEvent<HeartRateComponent, OrganRemovalDeathAttemptEvent>(OnRemovalDeathAttempt);
         SubscribeLocalEvent<HeartRateComponent, OrganGotInsertedEvent>(OnInserted);
         SubscribeLocalEvent<HeartRateComponent, OrganGotRemovedEvent>(OnRemoved);
@@ -98,9 +99,20 @@ public sealed partial class HeartRateSystem : EntitySystem
         // being stable drifts TOWARDS the normal heart rate
         var cur = heart.CurrentRate;
         var (min, max) = heart.FibrillationCaps;
+        var lowerDistance = cur - min;
+        var upperDistance = cur - max;
+        // Both bounds are stable. A one-BPM inward offset prevents extra equilibria there.
+        if (lowerDistance == 0f)
+            lowerDistance = 1f;
+        if (upperDistance == 0f)
+            upperDistance = -1f;
+
         var delta = heart.RateUpdateModifier * (float) Math.Cbrt(
-            (cur - heart.NormalRate) * (cur - min) * (cur - max)
+            (cur - heart.NormalRate) * lowerDistance * upperDistance
         );
+
+        if (cur >= min && cur <= max)
+            delta = Math.Clamp(delta, Math.Min(0f, heart.NormalRate - cur), Math.Max(0f, heart.NormalRate - cur));
 
         UpdateRate(uid, heart, delta, false);
     }
@@ -134,16 +146,17 @@ public sealed partial class HeartRateSystem : EntitySystem
     private void OnFindHeart(Entity<BloodstreamComponent> ent, ref FindWorkingHeartEvent args)
     {
         args.DoEffects = RequiresHeart(ent) && !HasComp<StasisBedBuckledComponent>(ent);
-        if (!args.DoEffects)
+        if (!args.DoEffects || !TryComp<BodyComponent>(ent, out var body))
             return;
 
-        var hearts = _body.GetOrgans<HeartRateComponent>(ent.Owner);
-        foreach (var heart in hearts)
-            if (GetState(heart.Comp) != HeartState.Stopped)
-            {
-                args.Found = true;
-                return;
-            }
+        _body.RelayEvent((ent.Owner, body), ref args);
+    }
+
+    private void OnRelayedFindHeart(Entity<HeartRateComponent> ent, ref BodyRelayedEvent<FindWorkingHeartEvent> args)
+    {
+        var result = args.Args;
+        result.Found |= GetState(ent.Comp) != HeartState.Stopped;
+        args.Args = result;
     }
 
     private void DoBloodVolume(EntityUid uid, HeartRateComponent heart, EntityUid body)
@@ -158,6 +171,7 @@ public sealed partial class HeartRateSystem : EntitySystem
             || heart.CurrentRate <= HeartStop)
             return;
 
+        // This models circulating fluid volume; oxygenation handles the reagent composition.
         // Excess blood does not lower the pulse below its resting rate.
         var bloodPart = Math.Min(1f, (solution.Volume / blood.BloodReferenceSolution.Volume).Float());
 
@@ -189,9 +203,6 @@ public sealed partial class HeartRateSystem : EntitySystem
         if (oldState == newState // nothing changed
             || _body.GetBody(uid) is not { } body)
             return;
-
-        var ev = new HeartStateChangedEvent(oldState, newState);
-        RaiseLocalEvent(body, ref ev);
 
         UpdateAlerts(body, heart);
     }
