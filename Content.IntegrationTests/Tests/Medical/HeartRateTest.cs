@@ -14,7 +14,6 @@ using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Medical;
 using Content.Shared.Interaction;
-using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
@@ -36,7 +35,6 @@ public sealed class HeartRateTest : GameTest
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
     [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
     [SidedDependency(Side.Server)] private readonly UserInterfaceSystem _ui = null!;
-    [SidedDependency(Side.Server)] private readonly SharedHandsSystem _hands = null!;
     [SidedDependency(Side.Server)] private readonly PowerCellSystem _powerCell = null!;
     [SidedDependency(Side.Server)] private readonly SharedBatterySystem _battery = null!;
 
@@ -214,7 +212,6 @@ public sealed class HeartRateTest : GameTest
     {
         var user = SSpawn("MobHuman");
         var defib = SSpawn("Defibrillator");
-        Assert.That(_hands.TryPickup(user, defib), Is.True);
         Assert.That(_powerCell.TryGetBatteryFromEntityOrSlot(defib, out var battery), Is.True);
         var cost = SComp<PowerCellDrawComponent>(defib).UseCharge;
         _battery.SetCharge(battery!.Value.AsNullable(), cost);
