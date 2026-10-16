@@ -6,6 +6,10 @@
   defaultSkinTone: "#ffda93"
   dollPrototype: AppearanceMoth
   skinColoration: Hues
+  # Arcane-Start
+  maxScale: 1.1
+  averageWeight: 55
+  # Arcane-End
   maleFirstNames: NamesMothFirstMale
   femaleFirstNames: NamesMothFirstFemale
   lastNames: NamesMothLast

@@ -43,4 +43,17 @@ public abstract partial class SharedStaminaSystem
 
         Dirty(target, stamina);
     }
+
+    // Arcane-Start
+    public void ModifyStaminaDrain(EntityUid target, string key, float drainRate)
+    {
+        if (!TryComp<StaminaComponent>(target, out var stamina)
+            || !stamina.ActiveDrains.TryGetValue(key, out var drain)
+            || drain.DrainRate == drainRate)
+            return;
+
+        stamina.ActiveDrains[key] = (drainRate, drain.ModifiesSpeed, drain.Source, drain.ApplyResistances);
+        Dirty(target, stamina);
+    }
+    // Arcane-End
 }
