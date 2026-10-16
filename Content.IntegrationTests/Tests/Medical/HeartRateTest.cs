@@ -14,6 +14,11 @@ using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Medical;
 using Content.Shared.Interaction;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Item.ItemToggle.Components;
+using Content.Shared.Power.EntitySystems;
+using Content.Shared.PowerCell;
+using Content.Shared.PowerCell.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -31,6 +36,9 @@ public sealed class HeartRateTest : GameTest
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
     [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
     [SidedDependency(Side.Server)] private readonly UserInterfaceSystem _ui = null!;
+    [SidedDependency(Side.Server)] private readonly SharedHandsSystem _hands = null!;
+    [SidedDependency(Side.Server)] private readonly PowerCellSystem _powerCell = null!;
+    [SidedDependency(Side.Server)] private readonly SharedBatterySystem _battery = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -198,6 +206,45 @@ public sealed class HeartRateTest : GameTest
             Assert.That(monitor.MonitoredBody, Is.Null);
             Assert.That(monitor.DisplayedBpm, Is.Null);
         });
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void DepletedManualDefibrillatorKeepsItsPowerSwitchInSync()
+    {
+        var user = SSpawn("MobHuman");
+        var defib = SSpawn("Defibrillator");
+        Assert.That(_hands.TryPickup(user, defib), Is.True);
+        Assert.That(_powerCell.TryGetBatteryFromEntityOrSlot(defib, out var battery), Is.True);
+        var cost = SComp<PowerCellDrawComponent>(defib).UseCharge;
+        _battery.SetCharge(battery!.Value.AsNullable(), cost);
+
+        var setting = new DefibrillatorChargeSetting { Power = true, Flips = [true, true, true, false] };
+        var enable = new DefibrillatorChargeSettingMessage(setting) { Actor = user };
+        SEntMan.EventBus.RaiseLocalEvent(defib, enable);
+        var manual = SComp<ManualDefibrillatorComponent>(defib);
+        var toggle = SComp<ItemToggleComponent>(defib);
+        Assert.That(toggle.Activated, Is.True);
+        var revision = manual.SettingsRevision;
+
+        Assert.That(_powerCell.TryUseActivatableCharge(defib), Is.True);
+        Assert.That(toggle.Activated, Is.False);
+        Assert.That(manual.ChargeSetting.Power, Is.False);
+        Assert.That(manual.SettingsRevision, Is.GreaterThan(revision));
+
+        _battery.SetCharge(battery.Value.AsNullable(), cost * 2);
+        _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, user);
+        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
+        Assert.That(state!.ChargeSetting.Power, Is.False, "Charging must not leave a stale on-switch on a disabled device.");
+        Assert.That(toggle.Activated, Is.False);
+
+        SEntMan.EventBus.RaiseLocalEvent(defib, enable);
+        Assert.That(toggle.Activated, Is.True, "The charged device must be usable after switching it back on.");
+        var noVoltage = new DefibrillatorChargeSettingMessage(new() { Power = true }) { Actor = user };
+        SEntMan.EventBus.RaiseLocalEvent(defib, noVoltage);
+        Assert.That(toggle.Activated, Is.False);
+        Assert.That(manual.ChargeSetting.Power, Is.True, "Turning off the last voltage switch must preserve the selected power-switch position.");
+        _ui.CloseUi(defib, ManualDefibrillatorUiKey.Key, user);
     }
 
     [Test]

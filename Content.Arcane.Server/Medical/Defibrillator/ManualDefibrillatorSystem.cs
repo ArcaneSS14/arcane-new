@@ -12,6 +12,8 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
     [Dependency] private ItemToggleSystem _itemToggle = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
 
+    private readonly HashSet<EntityUid> _updatingSettings = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -19,6 +21,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         SubscribeLocalEvent<ManualDefibrillatorComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ManualDefibrillatorComponent, BoundUIOpenedEvent>(OnUiOpened);
         SubscribeLocalEvent<ManualDefibrillatorComponent, DefibrillatorChargeSettingMessage>(OnSettingChanged);
+        SubscribeLocalEvent<ManualDefibrillatorComponent, ItemToggledEvent>(OnItemToggled);
     }
 
     private void OnMapInit(Entity<ManualDefibrillatorComponent> ent, ref MapInitEvent args)
@@ -42,8 +45,19 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         }
 
         var powered = args.ChargeSetting.Power && args.ChargeSetting.Flips.Any(flip => flip);
-        if (TryComp<ItemToggleComponent>(ent, out var itemToggle)
-            && !_itemToggle.TrySetActive((ent.Owner, itemToggle), powered, args.Actor, predicted: false))
+        bool accepted;
+        _updatingSettings.Add(ent.Owner);
+        try
+        {
+            accepted = !TryComp<ItemToggleComponent>(ent, out var itemToggle)
+                || _itemToggle.TrySetActive((ent.Owner, itemToggle), powered, args.Actor, predicted: false);
+        }
+        finally
+        {
+            _updatingSettings.Remove(ent.Owner);
+        }
+
+        if (!accepted)
         {
             UpdateUi(ent);
             return;
@@ -51,6 +65,18 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
 
         ent.Comp.ChargeSetting = args.ChargeSetting.Clone();
         UpdateFibCharge(ent);
+        UpdateUi(ent);
+    }
+
+    private void OnItemToggled(Entity<ManualDefibrillatorComponent> ent, ref ItemToggledEvent args)
+    {
+        // A UI setting can deliberately keep power on with all voltage switches off.
+        if (_updatingSettings.Contains(ent.Owner) || TerminatingOrDeleted(ent)
+            || ent.Comp.ChargeSetting.Power == args.Activated)
+            return;
+
+        ent.Comp.ChargeSetting.Power = args.Activated;
+        ent.Comp.SettingsRevision++;
         UpdateUi(ent);
     }
 
