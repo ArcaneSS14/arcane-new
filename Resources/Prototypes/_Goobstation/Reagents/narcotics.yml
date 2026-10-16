@@ -87,6 +87,11 @@
       - !type:Emote # Now a bunch of emotes
         emote: Scream
         probability: 0.05
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -6
+        lowerCap: 19
+      # Arcane-End
 
 - type: reagent
   id: BlindToxin
@@ -254,6 +259,10 @@
       - !type:Emote
         emote: Gasp
         probability: 0.1
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -3
+      # Arcane-End
 
 - type: reagent
   id: MouseBites
@@ -378,6 +387,11 @@
         - !type:ReagentCondition
           reagent: Heroin
           min: 10.5
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -3
+        lowerCap: 19
+      # Arcane-End
 
 - type: reagent
   id: NitrosylPlasmide
