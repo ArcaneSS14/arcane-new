@@ -126,6 +126,12 @@ public sealed partial class SprinterComponent : Component
     /// </summary>
     [DataField]
     public float StaminaPenaltyOnShove = 25f;
+
+    /// <summary>
+    ///     Minimum relative speed along the collision normal for two colliding sprinters to knock each other down.
+    /// </summary>
+    [DataField]
+    public float MinimumCollisionSpeed = 3f;
 }
 
 [Serializable, NetSerializable]

@@ -29,7 +29,7 @@
     <!-- /Trauma -->
     <!-- Arcane-Start -->
     <ProjectReference Include="../Content.Arcane.Client/Content.Arcane.Client.csproj" />
-    <ProjectReference Include="../Content.Arcane.Client/Content.Arcane.Common.csproj" />
+    <ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" />
     <ProjectReference Include="../Content.Arcane.Server/Content.Arcane.Server.csproj" />
     <ProjectReference Include="../Content.Arcane.Shared/Content.Arcane.Shared.csproj" />
     <!-- Arcane-End -->

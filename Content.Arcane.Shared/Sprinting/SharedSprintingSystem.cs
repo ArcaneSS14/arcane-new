@@ -1,3 +1,4 @@
+using System.Numerics;
 using Content.Goobstation.Common.Movement;
 using Content.Shared.Damage.Events;
 using Content.Shared.Bed.Sleep;
@@ -83,12 +84,12 @@ namespace Content.Arcane.Shared.Sprinting
                     continue;
 
                 var modifier = staminaComp.CritThreshold / staminaComp.BaseCritThreshold;
-                if (modifier <= 1f)
-                    continue;
+                var drainRate = sprinterComp.StaminaDrainRate;
 
-                _staminaSystem.ModifyStaminaDrain(uid,
-                    sprinterComp.StaminaDrainKey,
-                    sprinterComp.StaminaDrainRate * modifier * sprinterComp.StaminaDrainMultiplier);
+                if (modifier > 1f)
+                    drainRate *= modifier * sprinterComp.StaminaDrainMultiplier;
+
+                _staminaSystem.ModifyStaminaDrain(uid, sprinterComp.StaminaDrainKey, drainRate);
             }
         }
 
@@ -197,9 +198,11 @@ namespace Content.Arcane.Shared.Sprinting
         [SubscribeLocalEvent]
         private void OnBuckleSprintAttempt(EntityUid uid, BuckleComponent component, ref SprintAttemptEvent args)
         {
-            if (component.BuckledTo == null
-                || !TryComp<SprinterComponent>(component.BuckledTo, out var sprinterComponent)
-                || sprinterComponent.IsSprinting)
+            if (component.BuckledTo == null)
+                return;
+
+            if (TryComp<SprinterComponent>(component.BuckledTo, out var sprinterComponent)
+                && sprinterComponent.IsSprinting)
                 return;
 
             args.Cancel();
@@ -208,8 +211,8 @@ namespace Content.Arcane.Shared.Sprinting
         [SubscribeLocalEvent]
         private void OnMechPilotSprintAttempt(EntityUid uid, MechPilotComponent component, ref SprintAttemptEvent args)
         {
-            if (!TryComp<SprinterComponent>(component.Mech, out var sprinterComponent)
-                || sprinterComponent.IsSprinting)
+            if (TryComp<SprinterComponent>(component.Mech, out var sprinterComponent)
+                && sprinterComponent.IsSprinting)
                 return;
 
             args.Cancel();
@@ -294,6 +297,11 @@ namespace Content.Arcane.Shared.Sprinting
                 return;
 
             if (!TryComp(otherUid, out SprinterComponent? otherSprinter) || !otherSprinter.IsSprinting)
+                return;
+
+            var relativeVelocity = args.OurBody.LinearVelocity - args.OtherBody.LinearVelocity;
+            var impactSpeed = MathF.Abs(Vector2.Dot(relativeVelocity, args.WorldNormal));
+            if (impactSpeed < MathF.Max(sprinter.MinimumCollisionSpeed, otherSprinter.MinimumCollisionSpeed))
                 return;
 
             _stun.TryKnockdown(uid, sprinter.KnockdownDurationOnInterrupt, refresh: false, drop: false);
