@@ -2,7 +2,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Shared.Medical.Defibrillator;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent]
 public sealed partial class ManualDefibrillatorComponent : Component
 {
     [DataField]

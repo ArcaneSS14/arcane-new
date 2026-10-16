@@ -118,6 +118,8 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
     private void SetMonitorState(Entity<ManualDefibrillatorComponent> ent, float? bpm)
     {
         ProtoId<PulseStatePrototype> pulse = _timing.CurTime < ent.Comp.ShockUntil ? "Pulse3000" : GetPulseState(bpm ?? 0f);
+        // The heart keeps its exact rate; the monitor only transmits changes visible in its UI.
+        bpm = bpm is { } rate ? MathF.Round(rate) : null;
         if (ent.Comp.PulseState == pulse && ent.Comp.DisplayedBpm == bpm)
             return;
 
@@ -149,6 +151,7 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
             <= 260f => "Pulse260",
             <= 280f => "Pulse280",
             <= 300f => "Pulse300",
+            <= 320f => "Pulse320",
             <= 360f => "Pulse360",
             <= 400f => "Pulse400",
             <= 450f => "Pulse450",

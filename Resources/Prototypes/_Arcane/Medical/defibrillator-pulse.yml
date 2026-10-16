@@ -23,6 +23,12 @@
     state: 360
 
 - type: pulseState
+  id: Pulse320
+  sprite:
+    sprite: _Arcane/Interface/Medical/Defibrillator/pulse.rsi
+    state: 320
+
+- type: pulseState
   id: Pulse300
   sprite:
     sprite: _Arcane/Interface/Medical/Defibrillator/pulse.rsi

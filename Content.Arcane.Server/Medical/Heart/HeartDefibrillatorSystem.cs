@@ -22,23 +22,27 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
 
     private void OnDefibrillated(Entity<BodyComponent> ent, ref TargetDefibrillatedEvent args)
     {
-        if (!TryComp<HeartDefibrillatorComponent>(args.Defibrillator, out var defib)
-            || _body.GetOrgan(ent, Heart) is not { } uid
-            || !TryComp<HeartRateComponent>(uid, out var heart))
+        if (!TryComp<HeartDefibrillatorComponent>(args.Defibrillator, out var defib))
             return;
 
-        if (_heartRate.GetState(heart) == HeartState.Stopped)
+        var bpm = 0f;
+        if (_body.GetOrgan(ent, Heart) is { } uid && TryComp<HeartRateComponent>(uid, out var heart))
         {
-            var restartRate = defib.BpmZapHealFlatline;
-            if (defib.AutoStabilisation && restartRate > 0f)
-                restartRate = Math.Clamp(restartRate, heart.FibrillationCaps.X, heart.FibrillationCaps.Y);
+            if (_heartRate.GetState(heart) == HeartState.Stopped)
+            {
+                var restartRate = defib.BpmZapHealFlatline;
+                if (defib.AutoStabilisation && restartRate > 0f)
+                    restartRate = Math.Clamp(restartRate, heart.FibrillationCaps.X, heart.FibrillationCaps.Y);
 
-            _heartRate.SetRate(uid, heart, restartRate, true);
+                _heartRate.SetRate(uid, heart, restartRate, true);
+            }
+            else
+                _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
+
+            bpm = heart.CurrentRate;
         }
-        else
-            _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
 
         if (TryComp<ManualDefibrillatorComponent>(args.Defibrillator, out var manual))
-            _monitor.ShowShock((args.Defibrillator, manual), ent.Owner, heart.CurrentRate);
+            _monitor.ShowShock((args.Defibrillator, manual), ent.Owner, bpm);
     }
 }
