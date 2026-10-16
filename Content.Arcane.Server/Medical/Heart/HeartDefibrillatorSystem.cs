@@ -29,7 +29,11 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
 
         if (_heartRate.GetState(heart) == HeartState.Stopped)
         {
-            _heartRate.SetRate(uid, heart, defib.BpmZapHealFlatline, true);
+            var restartRate = defib.BpmZapHealFlatline;
+            if (defib.AutoStabilisation && restartRate > 0f)
+                restartRate = Math.Clamp(restartRate, heart.FibrillationCaps.X, heart.FibrillationCaps.Y);
+
+            _heartRate.SetRate(uid, heart, restartRate, true);
         }
         else
             _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);

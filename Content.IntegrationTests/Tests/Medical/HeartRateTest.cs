@@ -342,4 +342,58 @@ public sealed class HeartRateTest : GameTest
         Assert.That(circulation.Found || !circulation.DoEffects, Is.True,
             "Existing mobs must not start taking missing-heart damage on spawn.");
     }
+
+    [TestCase(40f)]
+    [TestCase(210f)]
+    [TestCase(80.05f)]
+    public async Task NaturalStabilisationLeavesStableBoundsAndStopsAtNormal(float initialRate)
+    {
+        EntityUid uid = default;
+        await Server.WaitPost(() =>
+        {
+            var patient = SSpawn("MobHuman");
+            uid = _body.GetOrgan(patient, "Heart")!.Value;
+            _heart.SetRate(uid, SComp<HeartRateComponent>(uid), initialRate, true);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitPost(() =>
+        {
+            var rate = SComp<HeartRateComponent>(uid).CurrentRate;
+            Assert.That(MathF.Abs(rate - 80f), Is.LessThan(MathF.Abs(initialRate - 80f)));
+            _heart.SetRate(uid, SComp<HeartRateComponent>(uid), 80.05f, true);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitPost(() => Assert.That(SComp<HeartRateComponent>(uid).CurrentRate, Is.EqualTo(80f)));
+        await RunSeconds(2.1f);
+        await Server.WaitPost(() => Assert.That(SComp<HeartRateComponent>(uid).CurrentRate, Is.EqualTo(80f)));
+    }
+
+    [TestCase("MobMoth")]
+    [TestCase("MobDwarf")]
+    [TestCase("MobVox")]
+    [TestCase("MobDecapoid")]
+    [RunOnSide(Side.Server)]
+    public void AutomaticRestartRespectsTheImplantedHeart(string prototype)
+    {
+        var patient = SSpawn(prototype);
+        var uid = _body.GetOrgan(patient, "Heart")!.Value;
+        var heart = SComp<HeartRateComponent>(uid);
+        var defib = SSpawn("DefibrillatorCompact");
+        _heart.SetRate(uid, heart, 0f, false);
+        var zap = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
+        Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stable));
+        Assert.That(heart.CurrentRate, Is.GreaterThan(0f));
+
+        var donor = SSpawn("OrganMothHeart");
+        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
+        Assert.That(_body.InsertOrgan(patient, donor), Is.True);
+        var transplanted = SComp<HeartRateComponent>(donor);
+        _heart.SetRate(donor, transplanted, 0f, false);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
+        Assert.That(_heart.GetState(transplanted), Is.EqualTo(HeartState.Stable));
+        Assert.That(transplanted.CurrentRate, Is.EqualTo(transplanted.FibrillationCaps.Y));
+    }
 }
