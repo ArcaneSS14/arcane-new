@@ -58,8 +58,8 @@ public sealed partial class ProfilePreviewSpriteView
             PreviewDummy = EntMan.SpawnEntity(_prototypeManager.Index(HumanoidCharacterProfile.DefaultSpecies).DollPrototype, MapCoordinates.Nullspace);
         }
 
-        // Arcane-Start: Apply profile visual scale after entity selection for both preview branches
-        if (humanoid is not null)
+        // Arcane-Start
+        if (humanoid is not null && EntMan.HasComponent<VisualBodyComponent>(PreviewDummy))
             EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale));
         // Arcane-End
 
