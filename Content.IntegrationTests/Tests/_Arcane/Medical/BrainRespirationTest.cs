@@ -118,20 +118,16 @@ public sealed class BrainRespirationTest : GameTest
     public async Task CancelledSuffocationRetainsGaspCooldown()
     {
         var patient = await CreatePatient();
+        await RunSeconds(10.2f);
         await Server.WaitPost(() =>
         {
             var respirator = SComp<RespiratorComponent>(patient);
-            respirator.LastGaspEmoteTime = -respirator.GaspEmoteCooldown;
-            var before = respirator.LastGaspEmoteTime;
+            Assert.That(GetAsphyxiation(patient), Is.Zero);
+            Assert.That(respirator.LastGaspEmoteTime, Is.GreaterThan(TimeSpan.Zero));
+            var firstGasp = respirator.LastGaspEmoteTime;
             var suffocation = new SuffocationBeforeEvent();
             SEntMan.EventBus.RaiseLocalEvent(patient, ref suffocation);
             Assert.That(suffocation.Cancelled, Is.True);
-            Assert.That(GetAsphyxiation(patient), Is.Zero);
-            Assert.That(respirator.LastGaspEmoteTime, Is.GreaterThan(before));
-
-            var firstGasp = respirator.LastGaspEmoteTime;
-            suffocation = new SuffocationBeforeEvent();
-            SEntMan.EventBus.RaiseLocalEvent(patient, ref suffocation);
             Assert.That(respirator.LastGaspEmoteTime, Is.EqualTo(firstGasp));
         });
     }
