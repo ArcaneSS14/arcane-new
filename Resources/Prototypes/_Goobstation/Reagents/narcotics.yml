@@ -91,6 +91,10 @@
       - !type:ModifyHeartRate
         amount: -6
         lowerCap: 19
+      - !type:ModifyStatusEffect
+        effectProto: StatusEffectOpiated
+        type: Add
+        time: 3
       # Arcane-End
 
 - type: reagent
@@ -391,6 +395,14 @@
       - !type:ModifyHeartRate
         amount: -3
         lowerCap: 19
+      - !type:ModifyStatusEffect
+        conditions:
+        - !type:ReagentCondition
+          reagent: Heroin
+          min: 3
+        effectProto: StatusEffectOpiated
+        type: Add
+        time: 20
       # Arcane-End
 
 - type: reagent
