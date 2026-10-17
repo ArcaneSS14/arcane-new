@@ -46,6 +46,7 @@
       - TauCetiBasic
       understands:
       - TauCetiBasic
+    - type: HeartDefibrillator # Arcane
 
 - type: entity
   id: Defibrillator
@@ -55,6 +56,10 @@
   - type: ToggleCellDraw
   - type: PowerCellDraw
     useCharge: 100
+  # Arcane-Start
+  - type: HeartDefibrillator
+    bpmZapHeal: 90
+  # Arcane-End
 
 - type: entity
   id: DefibrillatorEmpty

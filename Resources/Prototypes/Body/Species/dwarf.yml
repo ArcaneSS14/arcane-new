@@ -432,3 +432,10 @@
 - type: entity
   parent: [ OrganDwarfMetabolizer, OrganHumanHeart ]
   id: OrganDwarfHeart
+  # Arcane-Start
+  components:
+  - type: HeartRate
+    normalRate: 150
+    fibrillationCaps: 40,260
+    criticalRate: 370
+  # Arcane-End

@@ -76,6 +76,10 @@
         - !type:ReagentCondition
           reagent: Desoxyephedrine
           min: 20
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 5.5
+      # Arcane-End
 
 - type: reagent
   id: Ephedrine
@@ -135,6 +139,11 @@
         - !type:ReagentCondition
           reagent: Ephedrine
           min: 30
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 3
+        higherCap: 230
+      # Arcane-End
 
 - type: reagent
   id: Pax
@@ -266,6 +275,11 @@
       - !type:Satiate
         satiationType: Thirst
         factor: 1
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 2
+        autoStabilisation: true
+      # Arcane-End
 
 - type: reagent
   id: THC
@@ -289,6 +303,11 @@
         effectProto: StatusEffectSeeingRainbow
         time: 16
         type: Add
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -3
+        lowerCap: 45
+      # Arcane-End
 
 - type: reagent
   id: Nicotine
@@ -347,6 +366,11 @@
         effectProto: StatusEffectSeeingRainbow
         type: Add
         time: 5
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -2.5
+        lowerCap: 45
+      # Arcane-End
 
 - type: reagent
   id: Bananadine

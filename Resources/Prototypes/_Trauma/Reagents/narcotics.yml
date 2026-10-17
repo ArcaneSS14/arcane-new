@@ -75,6 +75,10 @@
         - !type:ReagentCondition
           reagent: Cocaine
           min: 20
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 3
+      # Arcane-End
 
 - type: reagent
   id: CrackCocaine
@@ -173,6 +177,10 @@
       - !type:Emote
         emote: Flip
         probability: 0.05
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 3.5
+      # Arcane-End
 
 - type: reagent
   id: CocaSlurry
@@ -209,3 +217,7 @@
       - !type:MovementSpeedModifier
         walkSpeedModifier: 1.05
         sprintSpeedModifier: 1.05
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -1.5
+      # Arcane-End
