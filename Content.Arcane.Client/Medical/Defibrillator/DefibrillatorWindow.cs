@@ -52,7 +52,7 @@ public sealed partial class DefibrillatorWindow : DefaultWindow
         HGH.OnPressed += _ => ToggleFlip(2);
         MAX.OnPressed += _ => ToggleFlip(3);
 
-        var transparent = new StyleBoxFlat // todo find something better
+        var transparent = new StyleBoxFlat // TODO: Find something better.
         {
             BackgroundColor = Color.Transparent,
         };
