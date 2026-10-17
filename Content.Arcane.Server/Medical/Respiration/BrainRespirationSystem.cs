@@ -129,8 +129,13 @@ public sealed partial class BrainRespirationSystem : EntitySystem
 
     private void OnBeforeSuffocation(Entity<BodyComponent> ent, ref SuffocationBeforeEvent args)
     {
-        if (_oxygen.GetBrain(ent) is not null)
-            args.Cancelled = true;
+        if (_oxygen.GetBrain(ent) is null)
+            return;
+
+        args.Cancelled = true;
+        // Cancelling the old damage model must preserve its feedback before hardcrit.
+        if (TryComp<RespiratorComponent>(ent, out var respirator))
+            _respirator.TryGasp((ent.Owner, respirator));
     }
 
     private void OnCPRCompleted(Entity<DamageableComponent> ent, ref CPRCompletedEvent args)
@@ -148,18 +153,19 @@ public sealed partial class BrainRespirationSystem : EntitySystem
 
     public void SetSaturation(Entity<BrainOxygenComponent> brain, float saturation)
     {
-        StoreSaturation(brain, saturation);
-        RefreshEffects(brain);
+        if (StoreSaturation(brain, saturation))
+            RefreshEffects(brain);
     }
 
-    private void StoreSaturation(Entity<BrainOxygenComponent> brain, float saturation)
+    private bool StoreSaturation(Entity<BrainOxygenComponent> brain, float saturation)
     {
         saturation = Math.Clamp(saturation, 0f, 1f);
         if (brain.Comp.AirSaturation == saturation)
-            return;
+            return false;
 
         brain.Comp.AirSaturation = saturation;
         Dirty(brain);
+        return true;
     }
 
     private void OnInserted(Entity<BrainOxygenComponent> ent, ref OrganGotInsertedEvent args)
