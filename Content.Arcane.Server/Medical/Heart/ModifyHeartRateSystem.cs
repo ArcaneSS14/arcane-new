@@ -7,17 +7,13 @@ namespace Content.Arcane.Server.Medical.Heart;
 public sealed partial class ModifyHeartRateSystem : EntityEffectSystem<BodyComponent, ModifyHeartRate>
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
-    [Dependency] private BodySystem _body = default!;
-
-    public static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
 
     protected override void Effect(Entity<BodyComponent> ent, ref EntityEffectEvent<ModifyHeartRate> args)
     {
-        if (_body.GetOrgan(ent, HeartCategory) is not { } heartUid
-            || !TryComp<HeartRateComponent>(heartUid, out var heart))
+        if (_heartRate.GetHeart(ent) is not { Comp: { } heart } heartEntity)
             return;
 
-        _heartRate.UpdateRate(heartUid,
+        _heartRate.UpdateRate(heartEntity.Owner,
             heart,
             args.Scale * args.Effect.Amount,
             args.Effect.HeartRestart,

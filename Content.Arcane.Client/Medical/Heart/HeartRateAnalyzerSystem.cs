@@ -7,10 +7,7 @@ namespace Content.Arcane.Client.Medical.Heart;
 
 public sealed partial class HeartRateAnalyzerSystem : EntitySystem
 {
-    [Dependency] private BodySystem _body = default!;
     [Dependency] private HeartRateSystem _heartRate = default!;
-
-    private static readonly ProtoId<OrganCategoryPrototype> Heart = "Heart";
 
     public override void Initialize()
     {
@@ -20,7 +17,7 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
 
     private void OnPopulate(Entity<BodyComponent> ent, ref HealthAnalyzerPopulateEvent args)
     {
-        if (_body.GetOrgan(ent, Heart) is not { } uid)
+        if (_heartRate.GetHeart(ent) is not { } heartEntity)
         {
             if (_heartRate.RequiresHeart(ent))
             {
@@ -30,7 +27,7 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
             return;
         }
 
-        if (!TryComp<HeartRateComponent>(uid, out var heart))
+        if (heartEntity.Comp is not { } heart)
             return;
 
         var state = _heartRate.GetState(heart);
