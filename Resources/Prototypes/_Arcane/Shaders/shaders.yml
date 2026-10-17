@@ -2,3 +2,12 @@
   id: LightingOverlay
   kind: source
   path: "/Textures/_Arcane/Shaders/light.swsl"
+
+- type: shader
+  id: LightGlow
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow.swsl"
+  params:
+    glow_brightness: 10
+    outline_width: 1.0
+    outline_alpha: 0.2

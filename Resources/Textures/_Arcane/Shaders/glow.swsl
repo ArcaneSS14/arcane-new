@@ -1,0 +1,44 @@
+light_mode unshaded;
+
+uniform highp float glow_brightness; // brightness multiplier applied to the sprite
+uniform highp float outline_width;   // reach of the copied pixel, in texels
+uniform highp float outline_alpha;   // transparency of the copied pixel
+
+highp vec4 pickPixel(highp vec4 a, highp vec4 b) {
+    return b.a > a.a ? b : a;
+}
+
+void fragment() {
+    highp vec4 sprite = zTexture(UV);
+
+    highp vec2 ps = TEXTURE_PIXEL_SIZE;
+
+    // Copy the nearest sprite pixel and paint it into the empty space around the sprite.
+    highp vec4 copy = sprite;
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width,  0.0) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width,  0.0) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( 0.0,  outline_width) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( 0.0, -outline_width) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width,  outline_width) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width,  outline_width) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width, -outline_width) * ps));
+    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width, -outline_width) * ps));
+
+    // RSI states share an unpadded atlas, so keep the copy off the frame border
+    // to avoid bleeding in the neighbouring state.
+    highp float margin = 0.03;
+    highp float guard = smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
+                      * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
+
+    // Only paint where the sprite itself is absent but a copied pixel reaches in.
+    highp float copied = clamp(copy.a - sprite.a, 0.0, 1.0) * guard;
+
+    highp vec4 glowing = vec4(min(sprite.rgb * glow_brightness, vec3(3.0)), sprite.a);
+    highp vec4 ghost = vec4(copy.rgb, copied * outline_alpha);
+
+    COLOR = mix(ghost, glowing, step(0.01, sprite.a));
+
+    if (COLOR.a < 0.004) {
+        discard;
+    }
+}

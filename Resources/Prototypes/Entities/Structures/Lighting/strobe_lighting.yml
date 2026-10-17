@@ -29,7 +29,7 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
     state: base
   - type: PointLight
     lightMask: ConeDouble

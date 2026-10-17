@@ -4,6 +4,7 @@ using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.Lighting.Shaders;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
+using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
 using Robust.Shared.GameObjects;
@@ -21,7 +22,9 @@ public sealed class LightingOverlay : Overlay
     private readonly IConfigurationManager _cfg;
     private readonly ShaderInstance _shader;
     private readonly Action<bool> _lightCvarChanged;
+    private readonly Action<float> _lightScaleChanged;
     private bool _enableGlowing;
+    private bool _useLowResMask;
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
     public override bool RequestScreenTexture => true;
@@ -36,6 +39,8 @@ public sealed class LightingOverlay : Overlay
         _cfg = IoCManager.Resolve<IConfigurationManager>();
         _lightCvarChanged = value => _enableGlowing = value;
         _cfg.OnValueChanged(ArcaneCCVars.EnableLightsGlowing, _lightCvarChanged, true);
+        _lightScaleChanged = value => _useLowResMask = value <= 0.5f;
+        _cfg.OnValueChanged(CVars.LightResolutionScale, _lightScaleChanged, true);
 
         _shader = prototypeManager.Index(LightingOverlayShader).InstanceUnique();
         ZIndex = (int) DrawDepth.Overdoors;
@@ -70,7 +75,7 @@ public sealed class LightingOverlay : Overlay
             var (_, _, worldMatrix) = _transformSystem.GetWorldPositionRotationMatrix(xform, xformQuery);
             handle.SetTransform(worldMatrix);
 
-            var mask = _spriteSystem.Frame0(component.Sprite);
+            var mask = _spriteSystem.Frame0(_useLowResMask && component.SpriteLow != null ? component.SpriteLow : component.Sprite);
             var xOffset = component.OffsetX - mask.Width / 2f / EyeManager.PixelsPerMeter;
             var yOffset = component.OffsetY - mask.Height / 2f / EyeManager.PixelsPerMeter;
             var textureVector = new Vector2(xOffset, yOffset);
@@ -85,6 +90,7 @@ public sealed class LightingOverlay : Overlay
     protected override void DisposeBehavior()
     {
         _cfg.UnsubValueChanged(ArcaneCCVars.EnableLightsGlowing, _lightCvarChanged);
+        _cfg.UnsubValueChanged(CVars.LightResolutionScale, _lightScaleChanged);
         base.DisposeBehavior();
     }
 }

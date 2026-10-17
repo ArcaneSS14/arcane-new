@@ -15,8 +15,13 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
     state: base
+  # Arcane-Start
+  - type: LightingOverlay
+    sprite: _Arcane/Effects/LightMasks/lightmask_post.png
+    spriteLow: _Arcane/Effects/LightMasks/lightmask_post_low.png
+  # Arcane-End
   - type: Fixtures
     fixtures:
       fix1:

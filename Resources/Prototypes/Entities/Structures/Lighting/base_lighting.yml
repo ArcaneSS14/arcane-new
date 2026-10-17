@@ -29,7 +29,7 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
   - type: PointLight
     color: "#c9c7c2" # 5000K color temp | Arcane-Edit: Changed color/temp
     energy: 1.5 # Arcane-Edit: 0.8 > 1.5
@@ -94,7 +94,7 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
   - type: Destructible
     thresholds:
     - trigger:
@@ -153,7 +153,10 @@
       types:
         Heat: 2
     popupText: powered-light-component-burn-hand
-  - type: LightingOverlay # Arcane
+  # Arcane-Start
+  - type: LightingOverlay
+    spriteLow: _Arcane/Effects/LightMasks/lightmask_lamp_low.png
+  # Arcane-End
 
 - type: entity
   parent: PoweredlightEmpty
@@ -307,6 +310,7 @@
     # Arcane-Start
     - type: LightingOverlay
       sprite: _Arcane/Effects/LightMasks/lightmask_bulb.png
+      spriteLow: _Arcane/Effects/LightMasks/lightmask_bulb_low.png
     # Arcane-End
 
 - type: entity

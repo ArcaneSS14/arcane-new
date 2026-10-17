@@ -22,6 +22,10 @@ highp vec4 addHaze(highp vec4 color, highp float intensity) {
     return vec4(mix(color.rgb, hazeColor, intensity), color.a);
 }
 
+highp vec3 boostBrightness(highp vec3 color, highp float amount) {
+    return min(color * amount, vec3(1.0));
+}
+
 void fragment() {
     highp vec4 sprite = zTexture(UV);
 
@@ -34,6 +38,7 @@ void fragment() {
     sprite.rgb = warmColor(sprite.rgb);
     sprite.rgb = adjustSaturation(sprite.rgb, 1.1);
     sprite = addHaze(sprite, 0.05);
+    sprite.rgb = boostBrightness(sprite.rgb, 10.0);
 
     COLOR = sprite;
 }
