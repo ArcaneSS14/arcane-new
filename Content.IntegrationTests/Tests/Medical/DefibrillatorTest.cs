@@ -33,7 +33,7 @@ public sealed class DefibrillatorTest : InteractionTest
     // We need two hands to use a defbrillator.
     protected override string PlayerPrototype => "MobHuman";
 
-    private static readonly EntProtoId DefibrillatorProtoId = "Defibrillator";
+    private static readonly EntProtoId DefibrillatorProtoId = "DefibrillatorCompact"; // Arcane-Edit: The standard defibrillator now requires manual voltage selection.
     private static readonly EntProtoId TargetProtoId = "MobHuman";
     private static readonly EntProtoId BedProtoId = "Bed";
     private static readonly ProtoId<DamageTypePrototype> BluntDamageTypeId = "Blunt";
