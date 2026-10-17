@@ -182,6 +182,16 @@ public sealed partial class HeartRateSystem : EntitySystem
 
     #region api
 
+    /// <summary>
+    /// Gets the body's installed heart, including organs without a pulse simulation.
+    /// </summary>
+    public Entity<HeartRateComponent?>? GetHeart(EntityUid body)
+    {
+        return _body.GetOrgan(body, HeartCategory) is { } uid
+            ? (uid, CompOrNull<HeartRateComponent>(uid))
+            : null;
+    }
+
     public void SetRate(EntityUid uid,
         HeartRateComponent heart,
         float rate,
