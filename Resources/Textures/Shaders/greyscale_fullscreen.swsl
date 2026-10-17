@@ -4,5 +4,5 @@ uniform highp float intensity; // Arcane
 void fragment() {
     highp vec4 color = zTextureSpec(SCREEN_TEXTURE, UV);
 
-    COLOR = vec4(mix(color.rgb, vec3(zGrayscale(color.rgb)), intensity), color.a); // Arcane-Edit: full greyscale > intensity blend
+    COLOR = vec4(mix(color.rgb, vec3(zGrayscale(color.rgb)), intensity), color.a); // Arcane-Edit: Full greyscale > intensity blend
 }

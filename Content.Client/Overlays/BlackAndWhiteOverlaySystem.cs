@@ -15,7 +15,7 @@ public sealed partial class BlackAndWhiteOverlaySystem : EquipmentHudSystem<Blac
     {
         base.Initialize();
 
-        _overlay = new() { Intensity = 0f }; // Arcane-Edit: start at full intensity > enable on demand
+        _overlay = new() { Intensity = 0f }; // Arcane-Edit: Start at full intensity > enable on demand
     }
 
     // Arcane-Start
@@ -65,13 +65,13 @@ public sealed partial class BlackAndWhiteOverlaySystem : EquipmentHudSystem<Blac
     {
         base.UpdateInternal(component);
 
-        SetIntensity(this, 1f); // Arcane-Edit: equipment owns one contribution
+        SetIntensity(this, 1f); // Arcane-Edit: Equipment owns one contribution
     }
 
     protected override void DeactivateInternal()
     {
         base.DeactivateInternal();
 
-        SetIntensity(this, 0f); // Arcane-Edit: remove only equipment's contribution
+        SetIntensity(this, 0f); // Arcane-Edit: Remove only equipment's contribution
     }
 }

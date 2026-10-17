@@ -9,7 +9,7 @@ using Content.Shared.Damage.Systems;
 using Robust.Client.Graphics;
 using Robust.Shared.GameObjects;
 
-namespace Content.IntegrationTests.Tests.Medical;
+namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
 [TestOf(typeof(BloodlossOverlaySystem))]
 public sealed class BloodlossOverlayTest : GameTest
