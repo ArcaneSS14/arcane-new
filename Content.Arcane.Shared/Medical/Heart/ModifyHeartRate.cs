@@ -6,22 +6,19 @@ namespace Content.Arcane.Shared.Medical.Heart;
 public sealed partial class ModifyHeartRate : EntityEffectBase<ModifyHeartRate>
 {
     /// <summary>
-    /// amount to add to the currentheartrate per metabolism tick
-    /// negatives values slow the heard down, positive valued speed it up
+    /// Change in beats per minute per metabolism tick. Negative values slow the heart; positive values speed it up.
     /// </summary>
     [DataField(required: true)]
     public float Amount;
 
     /// <summary>
-    /// should the reagent ignore the stopped heart?
-    /// this will restart the heart if it were at zero.
+    /// Whether this effect may restart a stopped heart.
     /// </summary>
     [DataField]
     public bool HeartRestart;
 
     /// <summary>
-    /// If true, the amount specified will try to go towards the startingheartrate
-    /// if the amount specified is negative it will try to de-stabilise it instead
+    /// Whether a positive amount moves the rate towards normal and a negative amount moves it away.
     /// </summary>
     [DataField]
     public bool AutoStabilisation;

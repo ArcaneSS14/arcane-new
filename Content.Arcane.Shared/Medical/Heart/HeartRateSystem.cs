@@ -78,9 +78,9 @@ public sealed partial class HeartRateSystem : EntitySystem
 
         var maybeBody = _body.GetBody(uid);
         var beyondCritical = Math.Max(0, heart.CurrentRate / heart.CriticalRate - 1);
-        var inactive = maybeBody is null // the heart is outside a body
-            || !TryComp<MobStateComponent>(maybeBody, out var mobState) // or the body is not a mob
-            || mobState.CurrentState == MobState.Dead; // or the body is dead
+        var inactive = maybeBody is null // The heart is outside a body
+            || !TryComp<MobStateComponent>(maybeBody, out var mobState) // Or the body is not a mob
+            || mobState.CurrentState == MobState.Dead; // Or the body is dead
         if (inactive || beyondCritical > 0)
         {
             var chance = heart.CriticalStopChance * (1 + beyondCritical);
@@ -95,8 +95,8 @@ public sealed partial class HeartRateSystem : EntitySystem
         if (maybeBody is { } body)
             DoBloodVolume(uid, heart, body);
 
-        // fibrillating drifts AWAY from the normal heart rate (towards min/max)
-        // being stable drifts TOWARDS the normal heart rate
+        // Fibrillating drifts AWAY from the normal heart rate (towards min/max)
+        // Being stable drifts TOWARDS the normal heart rate
         var cur = heart.CurrentRate;
         var (min, max) = heart.FibrillationCaps;
         var lowerDistance = cur - min;
@@ -175,7 +175,7 @@ public sealed partial class HeartRateSystem : EntitySystem
         // Excess blood does not lower the pulse below its resting rate.
         var bloodPart = Math.Min(1f, (solution.Volume / blood.BloodReferenceSolution.Volume).Float());
 
-        var newRate = heart.NormalRate * (2 - bloodPart); // i.e. 30% of bs volume = +70% to the bpm
+        var newRate = heart.NormalRate * (2 - bloodPart); // For example, 30% blood volume increases the pulse by 70%.
         if (newRate > heart.CurrentRate)
             SetRate(uid, heart, newRate, false);
     }
@@ -210,7 +210,7 @@ public sealed partial class HeartRateSystem : EntitySystem
         var newState = GetState(heart);
         Dirty(uid, heart);
 
-        if (oldState == newState // nothing changed
+        if (oldState == newState // Nothing changed
             || _body.GetBody(uid) is not { } body)
             return;
 

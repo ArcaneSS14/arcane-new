@@ -31,9 +31,7 @@ public sealed partial class HeartRateComponent : Component
     public float RateUpdateModifier = 0.02f;
 
     /// <summary>
-    /// if the current heartrate is beyond fibrillation caps,
-    /// the entity will receive a fibrillation alert and will stop stabilising on itself,
-    /// eventually reaching into a cap of the heartrate
+    /// Heart rate bounds outside which fibrillation occurs and the rate drifts away from normal.
     /// </summary>
     [DataField]
     public Vector2 FibrillationCaps = new(40f, 210f);

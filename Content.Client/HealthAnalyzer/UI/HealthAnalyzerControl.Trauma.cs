@@ -266,7 +266,7 @@ public sealed partial class HealthAnalyzerControl
         }
     }
 
-    // Arcane-Edit-Start: empty conditions are added after every mode and extension has populated the list.
+        // Arcane-Edit-Start: Empty conditions are added after every mode and extension has populated the list.
     public void PopulateOrgans(EntityUid body)
     {
         ReturnButton.Visible = false;
