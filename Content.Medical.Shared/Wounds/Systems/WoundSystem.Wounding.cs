@@ -155,8 +155,11 @@ public sealed partial class WoundSystem
 
         // Create or update wounds based on damage changes
         var part = ent.AsNullable();
-        foreach (var (damageType, damageValue) in args.Damage.DamageDict) // Arcane: Wound healing is independent of the raw damage remaining.
+        foreach (var (damageType, requested) in args.Damage.DamageDict) // Arcane-Edit: Applied changes > requested changes for residual healing.
         {
+            // Arcane-Start: Create positive wounds only from damage the part accepted.
+            var damageValue = requested < 0 ? requested : args.ModifiedDamage.DamageDict.GetValueOrDefault(damageType);
+            // Arcane-End
             if (damageValue == 0)
                 continue; // Only create wounds for damage or healing
 

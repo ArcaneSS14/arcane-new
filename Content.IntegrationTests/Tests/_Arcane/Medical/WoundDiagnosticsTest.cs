@@ -7,6 +7,8 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Shared.Wounds;
 using Content.Shared.Body;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
 using Robust.Shared.GameObjects;
 
@@ -16,6 +18,7 @@ namespace Content.IntegrationTests.Tests._Arcane.Medical;
 public sealed class WoundDiagnosticsTest : GameTest
 {
     private static readonly EntProtoId BluntWound = "Blunt";
+    private static readonly ProtoId<DamageContainerPrototype> Silicon = "Silicon";
 
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly WoundSystem _wounds = null!;
@@ -45,6 +48,20 @@ public sealed class WoundDiagnosticsTest : GameTest
 
         _damage.TryChangeDamage(torso, healing, ignoreResistances: true, ignoreBlockers: true);
         Assert.That(_wounds.GetWoundableWounds(part).Any(w => w.Comp.DamageType == type), Is.False);
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void RejectedDamageTypesDoNotCreateWounds()
+    {
+        var arm = SSpawn("OrganCyberneticArmLeft");
+        SComp<InjurableComponent>(arm).DamageContainer = Silicon;
+        _damage.TryChangeDamage(arm,
+            new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 10, ["Blunt"] = 10 } },
+            ignoreResistances: true);
+        var wounds = _wounds.GetWoundableWounds((arm, SComp<WoundableComponent>(arm)));
+        Assert.That(wounds.Any(w => w.Comp.DamageType == "Asphyxiation"), Is.False);
+        Assert.That(wounds.Single(w => w.Comp.DamageType == "Blunt").Comp.WoundSeverityPoint.Int(), Is.EqualTo(10));
     }
 
     [Test]

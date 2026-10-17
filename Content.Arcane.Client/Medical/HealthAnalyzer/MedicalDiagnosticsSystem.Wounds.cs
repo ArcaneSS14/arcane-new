@@ -1,14 +1,14 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
+using Content.Arcane.Shared.Medical.Wounds;
 using Content.Medical.Shared.Wounds;
 using Content.Shared.Body;
-using Content.Shared.Damage;
 
 namespace Content.Arcane.Client.Medical.HealthAnalyzer;
 
 public sealed partial class MedicalDiagnosticsSystem
 {
     [Dependency] private BodySystem _body = default!;
-    [Dependency] private WoundSystem _wounds = default!;
+    [Dependency] private WoundTreatmentSystem _wounds = default!;
 
     private void PopulateWounds(EntityUid body, ref HealthAnalyzerPopulateEvent args)
     {
@@ -18,23 +18,12 @@ public sealed partial class MedicalDiagnosticsSystem
         if (args.Part is { } selected)
         {
             if (TryComp<WoundableComponent>(selected, out var woundable) && _body.GetBody(selected) == body)
-                args.WoundDamage = CollectWoundDamage((selected, woundable), new DamageSpecifier());
+                args.WoundDamage = _wounds.GetDamage((selected, woundable));
             return;
         }
 
         // Parts are stored directly on the body in the current anatomy model.
         foreach (var part in _body.GetOrgans<WoundableComponent>(body))
-            args.WoundDamage = CollectWoundDamage(part, args.WoundDamage ?? new DamageSpecifier());
-    }
-
-    private DamageSpecifier CollectWoundDamage(Entity<WoundableComponent> part, DamageSpecifier damage)
-    {
-        foreach (var wound in _wounds.GetWoundableWounds(part.AsNullable()))
-        {
-            var type = wound.Comp.DamageType;
-            damage.DamageDict[type] = damage.DamageDict.GetValueOrDefault(type) + wound.Comp.WoundSeverityPoint;
-        }
-
-        return damage;
+            args.WoundDamage = _wounds.GetDamage(part, args.WoundDamage);
     }
 }
