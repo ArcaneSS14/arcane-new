@@ -22,4 +22,10 @@ public sealed partial class ArcaneCVars
         CVarDef.Create("sprint.sprint_enabled", true, CVar.SERVER | CVar.REPLICATED);
 
     #endregion
+
+    /// <summary>
+    /// Enables brain oxygen reserves and assisted respiration instead of immediate suffocation damage.
+    /// </summary>
+    public static readonly CVarDef<bool> ComplexRespiratorEnabled =
+        CVarDef.Create("arcane.med_complex_respirator_enabled", true, CVar.SERVER | CVar.REPLICATED);
 }

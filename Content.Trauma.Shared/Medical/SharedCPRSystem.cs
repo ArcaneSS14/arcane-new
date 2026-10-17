@@ -22,6 +22,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Respiration; // Arcane
 
 namespace Content.Trauma.Shared.Medical;
 
@@ -188,7 +189,12 @@ public abstract partial class SharedCPRSystem : EntitySystem
         }
 
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        if (mob.CurrentState == MobState.Dead && rand.Prob(training.ReviveChance) && CanRevive(ent))
+        // Arcane-Start: Let medical modules extend a completed CPR cycle.
+        var completed = new CPRCompletedEvent();
+        RaiseLocalEvent(ent.Owner, ref completed);
+        // Arcane-End
+
+        if (completed.AllowRevival && mob.CurrentState == MobState.Dead && rand.Prob(training.ReviveChance) && CanRevive(ent)) // Arcane-Edit: Respect the active respiration model.
             _mob.ChangeMobState(ent.Owner, MobState.Critical, origin: user);
 
         if (rand.Prob(training.InhaleChance) && HasHealthyLungs(ent))

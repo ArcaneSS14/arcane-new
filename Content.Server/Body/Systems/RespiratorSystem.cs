@@ -133,14 +133,7 @@ public sealed partial class RespiratorSystem : EntitySystem
                 if (ev.Cancelled)
                     continue;
 
-                if (_gameTiming.CurTime >= respirator.LastGaspEmoteTime + respirator.GaspEmoteCooldown)
-                {
-                    respirator.LastGaspEmoteTime = _gameTiming.CurTime;
-                    _chat.TryEmoteWithChat(uid,
-                        respirator.GaspEmote,
-                        ChatTransmitRange.HideChat,
-                        ignoreActionBlocker: true);
-                }
+                TryGasp((uid, respirator)); // Arcane-Edit: Share the existing gasp cooldown with medical consumers.
 
                 TakeSuffocationDamage((uid, respirator));
                 respirator.SuffocationCycles += 1;
@@ -301,7 +294,7 @@ public sealed partial class RespiratorSystem : EntitySystem
     /// <param name="solution">The reagents to metabolize</param>
     /// <param name="lung">The entity doing the metabolizing</param>
     /// <param name="toxic">Whether or not any of the reagents would deal damage to the entity</param>
-    private float GetSaturation(Solution solution, Entity<MetabolizerComponent?> lung, out bool toxic)
+    public float GetSaturation(Solution solution, Entity<MetabolizerComponent?> lung, out bool toxic) // Arcane-Edit: Reuse gas metabolism for brain oxygenation.
     {
         toxic = false;
         if (!Resolve(lung, ref lung.Comp))
@@ -363,6 +356,18 @@ public sealed partial class RespiratorSystem : EntitySystem
         var ev = new SuffocationEvent();
         RaiseLocalEvent(ent, ref ev);
     }
+
+    // Arcane-Start: Preserve one implementation of the gasp cooldown.
+    public void TryGasp(Entity<RespiratorComponent> ent)
+    {
+        if (_gameTiming.CurTime < ent.Comp.LastGaspEmoteTime + ent.Comp.GaspEmoteCooldown)
+            return;
+
+        ent.Comp.LastGaspEmoteTime = _gameTiming.CurTime;
+        _chat.TryEmoteWithChat(ent.Owner, ent.Comp.GaspEmote,
+            ChatTransmitRange.HideChat, ignoreActionBlocker: true);
+    }
+    // Arcane-End
 
     private void StopSuffocation(Entity<RespiratorComponent> ent)
     {
