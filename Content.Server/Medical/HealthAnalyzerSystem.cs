@@ -273,7 +273,7 @@ public sealed partial class HealthAnalyzerSystem : EntitySystem
             // <Trauma>
             FetchBleedData(entity), // was bleeding bool
             unrevivable,
-            _wound.GetDamageableStatesOnBody(entity),
+            _wound.GetWoundableStatesOnBody(entity), // Arcane: The body map follows actual wounds.
             _threshold.CheckVitalDamage(entity),
             GetNetEntity(part)
             // </Trauma>

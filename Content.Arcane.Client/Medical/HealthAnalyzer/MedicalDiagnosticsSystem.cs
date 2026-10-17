@@ -21,6 +21,7 @@ public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 
     private void OnPopulate(Entity<BodyComponent> ent, ref HealthAnalyzerPopulateEvent args)
     {
+        PopulateWounds(ent, ref args);
         PopulateRespiration(ent, ref args);
 
         if (_heartRate.GetHeart(ent) is not { } heartEntity)
