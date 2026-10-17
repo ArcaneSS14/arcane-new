@@ -1,0 +1,13 @@
+- type: entity
+  id: Bloodloss
+  parent: WoundBase
+  components:
+  - type: Wound
+    damageType: Bloodloss
+
+- type: entity
+  id: Asphyxiation
+  parent: WoundBase
+  components:
+  - type: Wound
+    damageType: Asphyxiation

@@ -98,7 +98,7 @@ public sealed class DefibrillatorTest : InteractionTest
         });
 
         // Set the damage halfway between the crit and death thresholds so that the target can be revived.
-        await Server.WaitPost(() => damageableSystem.ChangeDamage((STarget.Value, targetDamageable), critDamage, targetPart: TargetBodyPart.Chest)); // Trauma - changeDamage
+        await Server.WaitPost(() => damageableSystem.ChangeDamage((STarget.Value, targetDamageable), critDamage, targetPart: TargetBodyPart.Chest, ignoreBlockers: true)); // Arcane-Edit: Isolate revival from wound-healing blockers.
         await RunTicks(3);
 
         // Check that the target is still dead.

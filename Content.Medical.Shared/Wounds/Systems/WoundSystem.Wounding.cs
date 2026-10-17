@@ -155,7 +155,7 @@ public sealed partial class WoundSystem
 
         // Create or update wounds based on damage changes
         var part = ent.AsNullable();
-        foreach (var (damageType, damageValue) in args.ModifiedDamage.DamageDict)
+        foreach (var (damageType, damageValue) in args.Damage.DamageDict) // Arcane: Wound healing is independent of the raw damage remaining.
         {
             if (damageValue == 0)
                 continue; // Only create wounds for damage or healing
@@ -171,10 +171,9 @@ public sealed partial class WoundSystem
                 if (!IsWoundPrototypeValid(id))
                     continue;
 
-                var multiplier = args.Damage.WoundSeverityMultipliers.GetValueOrDefault(damageType, 1);
                 TryInduceWound(part,
                     args.Damage.GetWoundId(damageType),
-                    damageValue * multiplier,
+                    damageValue, // Arcane: Keep wound severity in damage units.
                     out _,
                     damageType: damageType,
                     user: args.Origin);
@@ -199,8 +198,7 @@ public sealed partial class WoundSystem
         var damage = _damageable.GetAllDamage(ent.Owner);
         foreach (var type in damage.DamageDict.Keys)
         {
-            var mul = damage.WoundSeverityMultipliers.GetValueOrDefault(type, 1);
-            TryInduceWound(part, type.Id, value * mul, out _);
+            TryInduceWound(part, type.Id, value, out _); // Arcane: Match the severity used by ordinary damage.
         }
 
         UpdateWoundableIntegrity(part);

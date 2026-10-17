@@ -16,6 +16,7 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage; // Arcane
 using Content.Shared.FixedPoint;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
@@ -133,10 +134,14 @@ public sealed partial class HealthAnalyzerControl
                             _entityManager.TryGetComponent<BloodstreamComponent>(target, out var bloodstream) &&
                             state.BloodLevel < bloodstream.BloodlossThreshold;
 
+        // Arcane-Start: Collect diagnostics for the patient before selecting a display mode.
+        var populate = new HealthAnalyzerPopulateEvent(_entityManager.GetEntity(state.Part), _mode == HealthAnalyzerMode.Body);
+        _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
+        // Arcane-End
         switch (_mode)
         {
             case HealthAnalyzerMode.Body:
-                PopulateBody(target, ref state, bloodLevelLow);
+                PopulateBody(target, ref state, bloodLevelLow, populate.WoundDamage); // Arcane
                 break;
             case HealthAnalyzerMode.Organs:
                 PopulateOrgans(target);
@@ -146,8 +151,6 @@ public sealed partial class HealthAnalyzerControl
                 break;
         }
         // Arcane-Start
-        var populate = new HealthAnalyzerPopulateEvent();
-        _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
         BpmLabel.Text = populate.Pulse ?? Loc.GetString("health-analyzer-window-entity-unknown-value-text");
         foreach (var condition in populate.Conditions)
         {
@@ -171,8 +174,10 @@ public sealed partial class HealthAnalyzerControl
 
     #region Scan state populate methods
 
-    public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false)
+    public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false,
+        DamageSpecifier? woundDamage = null) // Arcane
     {
+        var patient = target; // Arcane: Keep patient conditions separate from the selected part's damage.
         var selectedPart = _entityManager.GetEntity(state.Part);
         if (selectedPart != null)
             target = selectedPart.Value;
@@ -185,14 +190,14 @@ public sealed partial class HealthAnalyzerControl
         PartNameLabel.Visible = isPart;
         DamageLabelHeading.Visible = true;
         DamageLabel.Visible = true;
-        var damage = _damageable.GetAllDamage((target, damageable));
+        var damage = woundDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane
         DamageLabel.Text = damage.GetTotal().ToString();
 
-        var identity = Identity.Name(target, _entityManager);
+        var identity = Identity.Name(patient, _entityManager); // Arcane
         if (isPart)
-            PartNameLabel.Text = identity;
+            PartNameLabel.Text = Identity.Name(target, _entityManager); // Arcane
 
-        var damageSortedGroups = _damageable.GetDamagePerGroup((target, damageable))
+        var damageSortedGroups = damage.GetDamagePerGroup(_prototypes) // Arcane: Group the displayed damage consistently.
             .OrderByDescending(damage => damage.Value)
             .ToDictionary(x => x.Key, x => x.Value);
 
@@ -200,7 +205,7 @@ public sealed partial class HealthAnalyzerControl
 
         DrawDiagnosticGroups(damageSortedGroups, damagePerType);
 
-        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(target, out var carrier))
+        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(patient, out var carrier)) // Arcane
         {
             DrawDiseases(carrier.Diseases.ContainedEntities);
         }
@@ -233,7 +238,7 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        foreach (var part in _body.GetOrgans<WoundableComponent>(target))
+        foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane
         {
             if (isPart && part.Owner != selectedPart)
                 continue;
