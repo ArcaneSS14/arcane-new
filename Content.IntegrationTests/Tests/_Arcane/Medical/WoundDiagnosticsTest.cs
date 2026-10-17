@@ -1,3 +1,4 @@
+#nullable enable
 using System.Linq;
 using Content.Arcane.Client.Medical.HealthAnalyzer;
 using Content.Arcane.Common.Medical.HealthAnalyzer;
