@@ -24,6 +24,7 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Timing;
 using Robust.Shared.Toolshed.Syntax;
 using Robust.Shared.Utility;
+using Content.Shared.Movement.Systems; // Arcane
 
 namespace Content.Shared.Blocking;
 
@@ -40,15 +41,16 @@ public sealed partial class BlockingSystem : EntitySystem
     [Dependency] private ItemToggleSystem _toggle = default!;
     [Dependency] private SharedActionsSystem _actionsSystem = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
-    [Dependency] private SharedPhysicsSystem _physics = default!;
+    // Arcane-Edit: Shield movement no longer changes physics body types.
     [Dependency] private SharedPopupSystem _popupSystem = default!;
-    [Dependency] private SharedTransformSystem _transformSystem = default!;
+    // Arcane-Edit: Raising and lowering no longer anchor or unanchor the user.
     [Dependency] private TurfSystem _turf = default!;
 
     [Dependency] private EntityQuery<BlockingComponent> _blockQuery;
     [Dependency] private EntityQuery<BlockingUserComponent> _userQuery;
     [Dependency] private EntityQuery<HandsComponent> _handQuery;
     [Dependency] private EntityQuery<MobStateComponent> _mobQuery;
+    [Dependency] private MovementSpeedModifierSystem _movement = default!; // Arcane
 
     [SubscribeLocalEvent]
     private void OnMapInit(Entity<BlockingComponent> entity, ref MapInitEvent args)
@@ -144,7 +146,7 @@ public sealed partial class BlockingSystem : EntitySystem
     /// <summary>
     /// Called where you want the user to start blocking
     /// Creates a new hard fixture to bodyblock
-    /// Also makes the user static to prevent prediction issues
+    /// Slows movement while the shield is raised. <!-- Arcane-Edit -->
     /// </summary>
     /// <param name="entity"> The entity with the blocking component</param>
     /// <param name="user"> The entity who's using the item to block</param>
@@ -191,14 +193,9 @@ public sealed partial class BlockingSystem : EntitySystem
             }
         }
 
-        //Don't allow someone to block if they're somehow not anchored.
-        _transformSystem.AnchorEntity(user, xform);
-        if (!xform.Anchored)
-        {
-            CantBlockError(user);
-            return false;
-        }
+        // Arcane-Edit-Start: Raised shields keep the user mobile.
         _actionsSystem.SetToggled(entity.Comp.BlockingToggleActionEntity, true);
+        // Arcane-Edit-End
         _popupSystem.PopupEntity(msgUser, msgOther, user, user);
 
         if (TryComp<PhysicsComponent>(user, out var physicsComponent))
@@ -213,6 +210,12 @@ public sealed partial class BlockingSystem : EntitySystem
 
         entity.Comp.IsRaised = true;
         DirtyField(entity, entity.Comp, nameof(BlockingComponent.IsRaised));
+        // Arcane-Start: The raised shield may be in the other hand.
+        var blockingUser = EnsureComp<BlockingUserComponent>(user);
+        blockingUser.BlockingItem = entity;
+        DirtyField(user, blockingUser, nameof(BlockingUserComponent.BlockingItem));
+        _movement.RefreshMovementSpeedModifiers(user);
+        // Arcane-End
 
         return true;
     }
@@ -240,30 +243,24 @@ public sealed partial class BlockingSystem : EntitySystem
         if (!entity.Comp.IsRaised)
             return false;
 
-        var xform = Transform(user);
-
         var shieldName = Name(entity);
 
         var blockerName = Identity.Entity(user, EntityManager);
         var msgUser = Loc.GetString("action-popup-blocking-disabling-user", ("shield", shieldName));
         var msgOther = Loc.GetString("action-popup-blocking-disabling-other", ("blockerName", blockerName), ("shield", shieldName));
 
-        //If the component blocking toggle isn't null, grab the users SharedBlockingUserComponent and PhysicsComponent
-        //then toggle the action to false, unanchor the user, remove the hard fixture
-        //and set the users bodytype back to their original type
-        if (TryComp<BlockingUserComponent>(user, out var blockingUserComponent) && TryComp<PhysicsComponent>(user, out var physicsComponent))
+        // Arcane-Edit-Start: Clear the raised fixture without changing body type or anchoring.
+        if (HasComp<BlockingUserComponent>(user) && TryComp<PhysicsComponent>(user, out var physicsComponent))
         {
-            if (xform.Anchored)
-                _transformSystem.Unanchor(user, xform, false);
-
             _actionsSystem.SetToggled(entity.Comp.BlockingToggleActionEntity, false);
             _fixtureSystem.DestroyFixture(user, BlockingComponent.BlockFixtureId, body: physicsComponent);
-            _physics.SetBodyType(user, blockingUserComponent.OriginalBodyType, body: physicsComponent);
             _popupSystem.PopupEntity(msgUser, msgOther, user, user);
         }
+        // Arcane-Edit-End
 
         entity.Comp.IsRaised = false;
         DirtyField(entity, entity.Comp, nameof(BlockingComponent.IsRaised));
+        _movement.RefreshMovementSpeedModifiers(user); // Arcane
         return true;
     }
 
@@ -293,20 +290,14 @@ public sealed partial class BlockingSystem : EntitySystem
         entity.Comp.User = user;
         DirtyField(entity, entity.Comp, nameof(BlockingComponent.User));
 
-        //To make sure that this bodytype doesn't get set as anything but the original
+        // Arcane-Edit: Preserve the current active shield during state application or another equip.
         if (_timing.ApplyingState || EnsureComp<BlockingUserComponent>(user, out var userComp))
             return;
 
+        // Arcane-Edit-Start: Track the active item without changing the user's body type.
         userComp.BlockingItem = entity;
-
-        if (!TryComp<PhysicsComponent>(user, out var physicsComponent))
-        {
-            DirtyField(user, userComp, nameof(BlockingUserComponent.BlockingItem));
-            return;
-        }
-
-        userComp.OriginalBodyType = physicsComponent.BodyType;
-        DirtyFields(user, userComp, null, nameof(BlockingUserComponent.BlockingItem), nameof(BlockingUserComponent.OriginalBodyType));
+        DirtyField(user, userComp, nameof(BlockingUserComponent.BlockingItem));
+        // Arcane-Edit-End
     }
 
     /// <summary>
@@ -330,6 +321,10 @@ public sealed partial class BlockingSystem : EntitySystem
             if (HasComp<BlockingComponent>(shield) && _userQuery.TryGetComponent(user, out var blockingUserComponent))
             {
                 blockingUserComponent.BlockingItem = shield;
+                // Arcane-Start
+                DirtyField(user, blockingUserComponent, nameof(BlockingUserComponent.BlockingItem));
+                _movement.RefreshMovementSpeedModifiers(user);
+                // Arcane-End
                 return;
             }
         }
