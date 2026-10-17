@@ -11,6 +11,7 @@
 		<ProjectReference Include="../Content.Shared/Content.Shared.csproj" />
 		<ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" />
 		<ProjectReference Include="../Content.Medical.Shared/Content.Medical.Shared.csproj" />
+		<ProjectReference Include="../Content.Trauma.Shared/Content.Trauma.Shared.csproj" />
 	</ItemGroup>
 
 	<Import Project="../RobustToolbox/Imports/Shared.props" />

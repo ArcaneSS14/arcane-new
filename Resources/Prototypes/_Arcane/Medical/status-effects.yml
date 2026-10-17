@@ -20,3 +20,10 @@
   name: hypoxic speech
   components:
   - type: SlowAccent
+
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectConcussedSpeech
+  name: concussed speech
+  components:
+  - type: SlurredAccent

@@ -17,4 +17,9 @@ public sealed partial class FlashbangComponent : Component
     /// </summary>
     [DataField]
     public float MinProtectionRange;
+
+    // Arcane-Start
+    [DataField]
+    public float ConcussionDamage = 65f;
+    // Arcane-End
 }
