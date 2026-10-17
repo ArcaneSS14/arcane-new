@@ -4,6 +4,7 @@ using Content.Arcane.Server.Medical.Respiration;
 using Content.Arcane.Shared.Medical.Respiration;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
+using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Body;
@@ -111,6 +112,28 @@ public sealed class BrainRespirationTest : GameTest
             await Server.WaitPost(() => _cfg.SetCVar(ArcaneCVars.ComplexRespiratorEnabled, original));
             await RunSeconds(0.2f);
         }
+    }
+
+    [Test]
+    public async Task CancelledSuffocationRetainsGaspCooldown()
+    {
+        var patient = await CreatePatient();
+        await Server.WaitPost(() =>
+        {
+            var respirator = SComp<RespiratorComponent>(patient);
+            respirator.LastGaspEmoteTime = -respirator.GaspEmoteCooldown;
+            var before = respirator.LastGaspEmoteTime;
+            var suffocation = new SuffocationBeforeEvent();
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref suffocation);
+            Assert.That(suffocation.Cancelled, Is.True);
+            Assert.That(GetAsphyxiation(patient), Is.Zero);
+            Assert.That(respirator.LastGaspEmoteTime, Is.GreaterThan(before));
+
+            var firstGasp = respirator.LastGaspEmoteTime;
+            suffocation = new SuffocationBeforeEvent();
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref suffocation);
+            Assert.That(respirator.LastGaspEmoteTime, Is.EqualTo(firstGasp));
+        });
     }
 
     [Test]
