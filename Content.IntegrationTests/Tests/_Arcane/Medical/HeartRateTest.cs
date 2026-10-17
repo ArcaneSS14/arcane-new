@@ -14,7 +14,7 @@ using Content.Shared.Medical;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
-namespace Content.IntegrationTests.Tests.Medical;
+namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
 [TestOf(typeof(HeartRateSystem))]
 public sealed class HeartRateTest : GameTest
