@@ -1,0 +1,131 @@
+using Content.Arcane.Common.CCVar;
+using Content.Arcane.Shared.Medical.Concussion;
+using Content.Shared.GameTicking;
+using Robust.Client.Graphics;
+using Robust.Client.Player;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Configuration;
+using Robust.Shared.Player;
+
+namespace Content.Arcane.Client.Medical.Concussion;
+
+public sealed partial class ConcussionSystem : SharedConcussionSystem
+{
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IOverlayManager _overlays = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+
+    private ConcussionOverlay _overlay = default!;
+    private EntityUid? _sound;
+    private ConcussionState _lastState = ConcussionState.Sane;
+    private bool _hasOverlay;
+    private bool _refreshRequired;
+    private bool _playSound;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        _overlay = new ConcussionOverlay();
+        _cfg.OnValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged, true);
+        SubscribeLocalEvent<ConcussionThresholdComponent, AfterAutoHandleStateEvent>(OnStateHandled);
+        SubscribeLocalEvent<ConcussionThresholdComponent, ComponentShutdown>(OnThresholdShutdown);
+        SubscribeLocalEvent<LocalPlayerAttachedEvent>(OnAttached);
+        SubscribeLocalEvent<LocalPlayerDetachedEvent>(OnDetached);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
+    }
+
+    public override void FrameUpdate(float frameTime)
+    {
+        base.FrameUpdate(frameTime);
+        if (_refreshRequired)
+        {
+            _refreshRequired = false;
+            Refresh();
+        }
+        if (_hasOverlay && _overlay.TargetIntensity == 0 && _overlay.SmoothedIntensity == 0)
+        {
+            _overlays.RemoveOverlay(_overlay);
+            _hasOverlay = false;
+        }
+    }
+
+    private void OnSoundChanged(bool enabled)
+    {
+        _playSound = enabled;
+        if (!enabled)
+            _sound = _audio.Stop(_sound);
+    }
+
+    private void OnStateHandled(Entity<ConcussionThresholdComponent> ent, ref AfterAutoHandleStateEvent args)
+    {
+        if (ent.Owner == _player.LocalEntity)
+            _refreshRequired = true;
+    }
+
+    private void Refresh()
+    {
+        if (!TryComp<ConcussionThresholdComponent>(_player.LocalEntity, out var concussion))
+        {
+            Reset();
+            return;
+        }
+        _overlay.TargetIntensity = GetIntensity(concussion);
+        if (_overlay.TargetIntensity > 0 && !_hasOverlay)
+        {
+            _overlays.AddOverlay(_overlay);
+            _hasOverlay = true;
+        }
+        if (concussion.CurrentState == ConcussionState.Sane && _lastState != ConcussionState.Sane)
+            _sound = _audio.Stop(_sound);
+        else if (concussion.CurrentState > _lastState && _playSound)
+        {
+            _sound = _audio.Stop(_sound);
+            _sound = _audio.PlayGlobal(concussion.Sound, Filter.Local(), false, AudioParams.Default.WithVolume(-10f))?.Entity;
+        }
+        _lastState = concussion.CurrentState;
+    }
+
+    private void OnAttached(LocalPlayerAttachedEvent args)
+    {
+        Reset();
+        _refreshRequired = true;
+    }
+
+    private void OnDetached(LocalPlayerDetachedEvent args)
+    {
+        Reset();
+        _refreshRequired = true;
+    }
+
+    private void OnRoundRestart(RoundRestartCleanupEvent args)
+    {
+        Reset();
+    }
+
+    private void OnThresholdShutdown(Entity<ConcussionThresholdComponent> ent, ref ComponentShutdown args)
+    {
+        if (ent.Owner == _player.LocalEntity)
+            Reset();
+    }
+
+    private void Reset()
+    {
+        _refreshRequired = false;
+        _overlay.Reset();
+        if (_hasOverlay)
+            _overlays.RemoveOverlay(_overlay);
+        _hasOverlay = false;
+        _lastState = ConcussionState.Sane;
+        _sound = _audio.Stop(_sound);
+    }
+
+    public override void Shutdown()
+    {
+        _cfg.UnsubValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged);
+        Reset();
+        _overlay.Dispose();
+        base.Shutdown();
+    }
+}
