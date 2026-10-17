@@ -9,10 +9,7 @@ namespace Content.Arcane.Server.Medical.Heart;
 public sealed partial class HeartDefibrillatorSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
-    [Dependency] private BodySystem _body = default!;
     [Dependency] private ManualDefibrillatorMonitorSystem _monitor = default!;
-
-    private static readonly ProtoId<OrganCategoryPrototype> Heart = "Heart";
 
     public override void Initialize()
     {
@@ -26,7 +23,7 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
             return;
 
         var bpm = 0f;
-        if (_body.GetOrgan(ent, Heart) is { } uid && TryComp<HeartRateComponent>(uid, out var heart))
+        if (_heartRate.GetHeart(ent) is { Comp: { } heart } heartEntity)
         {
             if (_heartRate.GetState(heart) == HeartState.Stopped)
             {
@@ -34,10 +31,10 @@ public sealed partial class HeartDefibrillatorSystem : EntitySystem
                 if (defib.AutoStabilisation && restartRate > 0f)
                     restartRate = Math.Clamp(restartRate, heart.FibrillationCaps.X, heart.FibrillationCaps.Y);
 
-                _heartRate.SetRate(uid, heart, restartRate, true);
+                _heartRate.SetRate(heartEntity.Owner, heart, restartRate, true);
             }
             else
-                _heartRate.UpdateRate(uid, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
+                _heartRate.UpdateRate(heartEntity.Owner, heart, defib.BpmZapHeal, false, autoStabilisation: defib.AutoStabilisation);
 
             bpm = heart.CurrentRate;
         }

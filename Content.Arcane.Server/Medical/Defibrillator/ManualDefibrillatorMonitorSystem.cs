@@ -11,7 +11,7 @@ namespace Content.Arcane.Server.Medical.Defibrillator;
 
 public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
 {
-    [Dependency] private BodySystem _body = default!;
+    [Dependency] private HeartRateSystem _heartRate = default!;
     [Dependency] private ActivatableUISystem _activatableUi = default!;
     [Dependency] private ItemToggleSystem _itemToggle = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -19,7 +19,6 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
     [Dependency] private SharedInteractionSystem _interaction = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
 
-    public static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
     private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(1);
     private TimeSpan _nextUpdate;
 
@@ -91,10 +90,7 @@ public sealed partial class ManualDefibrillatorMonitorSystem : EntitySystem
             return;
         }
 
-        var bpm = _body.GetOrgan(body, HeartCategory) is { } heartUid
-            && TryComp<HeartRateComponent>(heartUid, out var heart)
-            ? heart.CurrentRate
-            : 0f;
+        var bpm = _heartRate.GetHeart(body)?.Comp?.CurrentRate ?? 0f;
         SetMonitorState(ent, bpm);
     }
 
