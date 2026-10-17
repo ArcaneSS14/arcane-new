@@ -471,6 +471,7 @@
   - type: Input
     context: "ghost"
   - type: Brain
+  - type: BrainOxygen # Arcane
   - type: InputMover
   - type: Examiner
   - type: BlockMovement
@@ -591,6 +592,7 @@
   - type: Organ
     category: Lungs
   - type: Lung
+  - type: LungOxygen # Arcane
   - type: Metabolizer
     stages: [ Respiration ]
   - type: SolutionManager
