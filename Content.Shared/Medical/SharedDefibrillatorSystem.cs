@@ -22,7 +22,10 @@ using Content.Shared.Timing.Systems;
 using Content.Shared.Traits.Assorted;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
-using Content.Arcane.Common.Medical.Defibrillator; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Medical.Defibrillator;
+using Robust.Shared.Network;
+// Arcane-End
 
 namespace Content.Shared.Medical;
 
@@ -46,6 +49,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
     [Dependency] private SharedInteractionSystem _interaction = default!;
+    [Dependency] private INetManager _net = default!; // Arcane
 
     private readonly HashSet<EntityUid> _interactors = new();
 
@@ -141,6 +145,10 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
     /// <param name="user">Uid of the entity using the defibrillator.</param>
     public void Zap(Entity<DefibrillatorComponent?> ent, EntityUid target, EntityUid user)
     {
+        // Arcane-Start: Resolve the shock once on the server, including its treatment and outcome.
+        if (_net.IsClient)
+            return;
+        // Arcane-End
         if (!Resolve(ent, ref ent.Comp))
             return;
 
@@ -183,7 +191,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
         var sound = failedRevive
             ? ent.Comp.FailureSound
             : ent.Comp.SuccessSound;
-        _audio.PlayPredicted(sound, ent.Owner, user);
+        _audio.PlayPvs(sound, ent.Owner); // Arcane-Edit: Include the operator in the authoritative result sound.
 
         var ev = new TargetDefibrillatedEvent(user, target, (ent.Owner, ent.Comp), _interactors);
         RaiseLocalEvent(target, ref ev);
