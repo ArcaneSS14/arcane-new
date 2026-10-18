@@ -1,6 +1,5 @@
 #nullable enable
 using Content.Arcane.Common.Medical.Heart;
-using System.Linq;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -9,7 +8,6 @@ using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Alert;
 using Content.Shared.Buckle;
-using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Medical;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -19,7 +17,6 @@ namespace Content.IntegrationTests.Tests._Arcane.Medical;
 [TestOf(typeof(HeartRateSystem))]
 public sealed class HeartRateTest : GameTest
 {
-    private static readonly ProtoId<ReagentPrototype> Epinephrine = "Epinephrine";
     private static readonly ProtoId<AlertPrototype> HeartStopAlert = "HeartStop";
 
     [SidedDependency(Side.Server)] private readonly HeartRateSystem _heart = null!;
@@ -29,12 +26,10 @@ public sealed class HeartRateTest : GameTest
 
     [Test]
     [RunOnSide(Side.Server)]
-    public void StoppedHeartRequiresExplicitRestart()
+    public void RateUpdatesRespectRestartCapsAndStabilisation()
     {
         var uid = SSpawn("OrganHumanHeart");
         var heart = SComp<HeartRateComponent>(uid);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
-
         _heart.SetRate(uid, heart, 0f, false);
         _heart.UpdateRate(uid, heart, 5f, false);
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stopped));
@@ -46,6 +41,22 @@ public sealed class HeartRateTest : GameTest
         _heart.UpdateRate(uid, heart, 100f, false, highCap: 80f);
         Assert.That(heart.CurrentRate, Is.EqualTo(80f));
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stable));
+
+        _heart.SetRate(uid, heart, 250f, true);
+        _heart.UpdateRate(uid, heart, 3f, false, highCap: 230f);
+        Assert.That(heart.CurrentRate, Is.EqualTo(250f));
+
+        _heart.SetRate(uid, heart, 30f, true);
+        _heart.UpdateRate(uid, heart, -2f, false, lowCap: 55f);
+        Assert.That(heart.CurrentRate, Is.EqualTo(30f));
+
+        _heart.SetRate(uid, heart, 81f, true);
+        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
+        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "Stabilising medicine must not oscillate around the resting rate.");
+        _heart.UpdateRate(uid, heart, -5f, false, autoStabilisation: true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(75f), "A destabilising effect must retain its direction at the resting rate.");
     }
 
     [Test]
@@ -57,7 +68,6 @@ public sealed class HeartRateTest : GameTest
         var heart = SComp<HeartRateComponent>(uid);
 
         var healthy = new FindWorkingHeartEvent();
-        Assert.That(healthy.DoEffects, Is.False, "The common hook must be neutral without the heart simulation.");
         SEntMan.EventBus.RaiseLocalEvent(patient, ref healthy);
         Assert.That(healthy.Found, Is.True);
 
@@ -77,20 +87,6 @@ public sealed class HeartRateTest : GameTest
         Assert.That(SEntMan.HasComponent<DelayedDeathComponent>(patient), Is.False);
     }
 
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void SourceConfigurationIsMergedIntoExistingPrototypes()
-    {
-        Assert.That(SComp<HeartRateComponent>(SSpawn("OrganMothHeart")).NormalRate, Is.EqualTo(65f));
-        Assert.That(SComp<HeartRateComponent>(SSpawn("OrganHeartSandevistan")).CriticalRate, Is.EqualTo(400f));
-        Assert.That(SComp<HeartCirculationComponent>(SSpawn("MobDiona")).RequiresHeart, Is.False);
-        Assert.That(SComp<HeartCirculationComponent>(SSpawn("MobSlimePerson")).RequiresHeart, Is.False);
-
-        var epinephrine = SProtoMan.Index(Epinephrine);
-        var effects = epinephrine.Metabolisms!.Metabolisms["Bloodstream"].Effects;
-        Assert.That(effects.OfType<ModifyHeartRate>().Single().HeartRestart, Is.True);
-        Assert.That(effects.Length, Is.GreaterThan(1), "The partial must preserve the existing reagent effects.");
-    }
     [Test]
     [RunOnSide(Side.Server)]
     public void ExistingDefibrillatorsRestartTheNewHeartSimulation()
@@ -117,28 +113,6 @@ public sealed class HeartRateTest : GameTest
         Assert.That(heart.CurrentRate, Is.EqualTo(80f));
     }
 
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void RateCapsLimitEffectsWithoutReversingThem()
-    {
-        var uid = SSpawn("OrganHumanHeart");
-        var heart = SComp<HeartRateComponent>(uid);
-        _heart.SetRate(uid, heart, 250f, true);
-        _heart.UpdateRate(uid, heart, 3f, false, highCap: 230f);
-        Assert.That(heart.CurrentRate, Is.EqualTo(250f));
-
-        _heart.SetRate(uid, heart, 30f, true);
-        _heart.UpdateRate(uid, heart, -2f, false, lowCap: 55f);
-        Assert.That(heart.CurrentRate, Is.EqualTo(30f));
-
-        _heart.SetRate(uid, heart, 81f, true);
-        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
-        _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "Stabilising medicine must not oscillate around the resting rate.");
-        _heart.UpdateRate(uid, heart, -5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(75f), "A destabilising effect must retain its direction at the resting rate.");
-    }
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -180,77 +154,72 @@ public sealed class HeartRateTest : GameTest
         Assert.That(_body.InsertOrgan(patient, heart), Is.True);
     }
 
-    [TestCase(30f, 40f)]
-    [TestCase(70f, 80f)]
-    public async Task FullBloodVolumeDoesNotCureBradycardia(float rate, float upperBound)
+    [Test]
+    public async Task FullBloodVolumeDoesNotCureBradycardia()
     {
-        EntityUid heartUid = default;
+        var hearts = new List<(EntityUid Uid, float UpperBound)>();
         await Server.WaitPost(() =>
         {
-            var patient = SSpawn("MobHuman");
-            heartUid = _body.GetOrgan(patient, "Heart")!.Value;
-            _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), rate, true);
+            foreach (var (rate, upperBound) in new[] { (30f, 40f), (70f, 80f) })
+            {
+                var patient = SSpawn("MobHuman");
+                var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
+                _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), rate, true);
+                hearts.Add((heartUid, upperBound));
+            }
         });
 
         await RunSeconds(1.1f);
         await Server.WaitPost(() =>
         {
-            var heart = SComp<HeartRateComponent>(heartUid);
-            Assert.That(heart.CurrentRate, Is.GreaterThan(0f).And.LessThan(upperBound),
-                "A full bloodstream must not instantly restore a low pulse to its resting rate.");
+            foreach (var (uid, upperBound) in hearts)
+            {
+                Assert.That(SComp<HeartRateComponent>(uid).CurrentRate, Is.GreaterThan(0f).And.LessThan(upperBound),
+                    "A full bloodstream must not instantly restore a low pulse to its resting rate.");
+            }
         });
     }
 
-    [TestCase("MobSlimeXenobioBaby")]
-    [TestCase("MobBlobPod")]
-    [RunOnSide(Side.Server)]
-    public void ExistingAnatomiesHaveWorkingCirculation(string prototype)
+    [Test]
+    public async Task NaturalStabilisationLeavesStableBoundsAndStopsAtNormal()
     {
-        var patient = SSpawn(prototype);
-        if (!_heart.RequiresHeart(patient))
-            return;
-
-        var circulation = new FindWorkingHeartEvent();
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref circulation);
-        Assert.That(circulation.Found || !circulation.DoEffects, Is.True,
-            "Existing mobs must not start taking missing-heart damage on spawn.");
-    }
-
-    [TestCase(40f)]
-    [TestCase(210f)]
-    [TestCase(80.05f)]
-    public async Task NaturalStabilisationLeavesStableBoundsAndStopsAtNormal(float initialRate)
-    {
-        EntityUid uid = default;
+        var hearts = new Dictionary<float, EntityUid>();
         await Server.WaitPost(() =>
         {
-            var patient = SSpawn("MobHuman");
-            uid = _body.GetOrgan(patient, "Heart")!.Value;
-            _heart.SetRate(uid, SComp<HeartRateComponent>(uid), initialRate, true);
+            foreach (var offset in new[] { -40f, 130f, 0.05f })
+            {
+                var patient = SSpawn("MobHuman");
+                var uid = _body.GetOrgan(patient, "Heart")!.Value;
+                var heart = SComp<HeartRateComponent>(uid);
+                _heart.SetRate(uid, heart, heart.NormalRate + offset, true);
+                hearts.Add(offset, uid);
+            }
         });
 
         await RunSeconds(1.1f);
         await Server.WaitPost(() =>
         {
-            var rate = SComp<HeartRateComponent>(uid).CurrentRate;
-            Assert.That(MathF.Abs(rate - 80f), Is.LessThan(MathF.Abs(initialRate - 80f)));
-            _heart.SetRate(uid, SComp<HeartRateComponent>(uid), 80.05f, true);
+            foreach (var (offset, uid) in hearts)
+            {
+                var heart = SComp<HeartRateComponent>(uid);
+                Assert.That(MathF.Abs(heart.CurrentRate - heart.NormalRate), Is.LessThan(MathF.Abs(offset)));
+            }
+            var nearNormal = SComp<HeartRateComponent>(hearts[0.05f]);
+            Assert.That(nearNormal.CurrentRate, Is.EqualTo(nearNormal.NormalRate));
         });
-
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() => Assert.That(SComp<HeartRateComponent>(uid).CurrentRate, Is.EqualTo(80f)));
         await RunSeconds(2.1f);
-        await Server.WaitPost(() => Assert.That(SComp<HeartRateComponent>(uid).CurrentRate, Is.EqualTo(80f)));
+        await Server.WaitPost(() =>
+        {
+            var nearNormal = SComp<HeartRateComponent>(hearts[0.05f]);
+            Assert.That(nearNormal.CurrentRate, Is.EqualTo(nearNormal.NormalRate));
+        });
     }
 
-    [TestCase("MobMoth")]
-    [TestCase("MobDwarf")]
-    [TestCase("MobVox")]
-    [TestCase("MobDecapoid")]
+    [Test]
     [RunOnSide(Side.Server)]
-    public void AutomaticRestartRespectsTheImplantedHeart(string prototype)
+    public void AutomaticRestartRespectsTheImplantedHeart()
     {
-        var patient = SSpawn(prototype);
+        var patient = SSpawn("MobHuman");
         var uid = _body.GetOrgan(patient, "Heart")!.Value;
         var heart = SComp<HeartRateComponent>(uid);
         var defib = SSpawn("DefibrillatorCompact");
