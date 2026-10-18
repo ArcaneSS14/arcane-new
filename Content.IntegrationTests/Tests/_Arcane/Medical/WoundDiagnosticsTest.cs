@@ -24,30 +24,31 @@ public sealed class WoundDiagnosticsTest : GameTest
     [SidedDependency(Side.Server)] private readonly WoundSystem _wounds = null!;
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
 
-    [TestCase("Blunt")]
-    [TestCase("Bloodloss")]
-    [TestCase("Asphyxiation")]
+    [Test]
     [RunOnSide(Side.Server)]
-    public void WoundsUseDamageUnitsAndCanHealAfterRawDamageIsGone(string type)
+    public void WoundsUseDamageUnitsAndCanHealAfterRawDamageIsGone()
     {
-        var patient = SSpawn("MobHuman");
-        var torso = _body.GetOrgan(patient, "Torso")!.Value;
-        var part = new Entity<WoundableComponent?>(torso, SComp<WoundableComponent>(torso));
-        var damage = new DamageSpecifier { DamageDict = { [type] = 10 } };
-        damage.WoundSeverityMultipliers[type] = 4;
-        _damage.TryChangeDamage(torso, damage, ignoreResistances: true);
-        var wound = _wounds.GetWoundableWounds(part).Single(w => w.Comp.DamageType == type);
-        Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10));
+        foreach (var type in new[] { "Blunt", "Bloodloss", "Asphyxiation" })
+        {
+            var patient = SSpawn("MobHuman");
+            var torso = _body.GetOrgan(patient, "Torso")!.Value;
+            var part = new Entity<WoundableComponent?>(torso, SComp<WoundableComponent>(torso));
+            var damage = new DamageSpecifier { DamageDict = { [type] = 10 } };
+            damage.WoundSeverityMultipliers[type] = 4;
+            _damage.TryChangeDamage(torso, damage, ignoreResistances: true);
+            var wound = _wounds.GetWoundableWounds(part).Single(w => w.Comp.DamageType == type);
+            Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10), type);
 
-        // A blocked wound can outlive the corresponding raw damage.
-        wound.Comp.CanBeHealed = false;
-        var healing = new DamageSpecifier { DamageDict = { [type] = -10 } };
-        _damage.TryChangeDamage(torso, healing, ignoreResistances: true);
-        Assert.That(_damage.GetTotalDamage(torso).Int(), Is.Zero);
-        Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10));
+            // A blocked wound can outlive the corresponding raw damage.
+            wound.Comp.CanBeHealed = false;
+            var healing = new DamageSpecifier { DamageDict = { [type] = -10 } };
+            _damage.TryChangeDamage(torso, healing, ignoreResistances: true);
+            Assert.That(_damage.GetTotalDamage(torso).Int(), Is.Zero, type);
+            Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10), type);
 
-        _damage.TryChangeDamage(torso, healing, ignoreResistances: true, ignoreBlockers: true);
-        Assert.That(_wounds.GetWoundableWounds(part).Any(w => w.Comp.DamageType == type), Is.False);
+            _damage.TryChangeDamage(torso, healing, ignoreResistances: true, ignoreBlockers: true);
+            Assert.That(_wounds.GetWoundableWounds(part).Any(w => w.Comp.DamageType == type), Is.False, type);
+        }
     }
 
     [Test]
