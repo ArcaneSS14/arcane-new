@@ -35,18 +35,18 @@ public sealed class DefibrillatorCabinetTest : InteractionTest
         await RunSeconds(1f);
         await AssertPowerLight(true);
         await Server.WaitAssertion(() =>
-            Assert.That(SEntMan.System<SharedBatterySystem>().GetCharge(battery.AsNullable()), Is.GreaterThan(0f)));
+            Assert.That(SEntMan.System<SharedBatterySystem>().GetCharge(battery.Owner).Charge, Is.GreaterThan(0f)));
 
         await Server.WaitPost(() =>
             SEntMan.System<SharedPowerReceiverSystem>().SetNeedsPower(STarget!.Value, true));
         await Pair.RunUntilSynced();
         float unpoweredCharge = 0f;
         await Server.WaitPost(() =>
-            unpoweredCharge = SEntMan.System<SharedBatterySystem>().GetCharge(battery.AsNullable()));
+            unpoweredCharge = SEntMan.System<SharedBatterySystem>().GetCharge(battery.Owner).Charge);
         await RunSeconds(1f);
         await AssertPowerLight(false);
         await Server.WaitAssertion(() =>
-            Assert.That(SEntMan.System<SharedBatterySystem>().GetCharge(battery.AsNullable()), Is.EqualTo(unpoweredCharge)));
+            Assert.That(SEntMan.System<SharedBatterySystem>().GetCharge(battery.Owner).Charge, Is.EqualTo(unpoweredCharge)));
     }
 
     private async Task AssertPowerLight(bool powered)
