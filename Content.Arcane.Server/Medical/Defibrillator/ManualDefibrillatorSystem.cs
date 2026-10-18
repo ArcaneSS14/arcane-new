@@ -1,119 +1,61 @@
-using System.Linq;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.Arcane.Shared.Medical.Defibrillator;
-using Content.Shared.Item.ItemToggle;
-using Content.Shared.Item.ItemToggle.Components;
-using Robust.Server.GameObjects;
+using Content.Shared.Examine;
+using Content.Shared.Verbs;
 
 namespace Content.Arcane.Server.Medical.Defibrillator;
 
 public sealed partial class ManualDefibrillatorSystem : EntitySystem
 {
-    [Dependency] private ItemToggleSystem _itemToggle = default!;
-    [Dependency] private UserInterfaceSystem _ui = default!;
-
-    private readonly HashSet<EntityUid> _updatingSettings = new();
-
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<ManualDefibrillatorComponent, MapInitEvent>(OnMapInit);
-        SubscribeLocalEvent<ManualDefibrillatorComponent, BoundUIOpenedEvent>(OnUiOpened);
-        SubscribeLocalEvent<ManualDefibrillatorComponent, DefibrillatorChargeSettingMessage>(OnSettingChanged);
-        SubscribeLocalEvent<ManualDefibrillatorComponent, ItemToggledEvent>(OnItemToggled);
+        SubscribeLocalEvent<ManualDefibrillatorComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<ManualDefibrillatorComponent, ExaminedEvent>(OnExamined);
     }
 
     private void OnMapInit(Entity<ManualDefibrillatorComponent> ent, ref MapInitEvent args)
     {
-        UpdateFibCharge(ent);
+        SetMode(ent, Math.Clamp(ent.Comp.Mode, 1, 4));
     }
 
-    private void OnUiOpened(Entity<ManualDefibrillatorComponent> ent, ref BoundUIOpenedEvent args)
+    private void OnGetVerbs(Entity<ManualDefibrillatorComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
     {
-        if (args.UiKey.Equals(ManualDefibrillatorUiKey.Key))
-            UpdateUi(ent);
-    }
-
-    private void OnSettingChanged(Entity<ManualDefibrillatorComponent> ent, ref DefibrillatorChargeSettingMessage args)
-    {
-        ent.Comp.SettingsRevision++;
-        if (args.ChargeSetting is not { Flips.Length: DefibrillatorChargeSetting.FlipAmount })
-        {
-            UpdateUi(ent);
-            return;
-        }
-
-        var powered = args.ChargeSetting.Power && args.ChargeSetting.Flips.Any(flip => flip);
-        bool accepted;
-        _updatingSettings.Add(ent.Owner);
-        try
-        {
-            accepted = !TryComp<ItemToggleComponent>(ent, out var itemToggle)
-                || _itemToggle.TrySetActive((ent.Owner, itemToggle), powered, args.Actor, predicted: false);
-        }
-        finally
-        {
-            _updatingSettings.Remove(ent.Owner);
-        }
-
-        if (!accepted)
-        {
-            UpdateUi(ent);
-            return;
-        }
-
-        ent.Comp.ChargeSetting = args.ChargeSetting.Clone();
-        UpdateFibCharge(ent);
-        UpdateUi(ent);
-    }
-
-    private void OnItemToggled(Entity<ManualDefibrillatorComponent> ent, ref ItemToggledEvent args)
-    {
-        // A UI setting can deliberately keep power on with all voltage switches off.
-        if (_updatingSettings.Contains(ent.Owner) || TerminatingOrDeleted(ent)
-            || ent.Comp.ChargeSetting.Power == args.Activated)
+        if (!args.CanAccess || !args.CanInteract)
             return;
 
-        ent.Comp.ChargeSetting.Power = args.Activated;
-        ent.Comp.SettingsRevision++;
-        UpdateUi(ent);
-    }
-
-    private void UpdateFibCharge(Entity<ManualDefibrillatorComponent> ent)
-    {
-        if (!TryComp<HeartDefibrillatorComponent>(ent, out var defibrillator))
-            return;
-
-        var flips = ent.Comp.ChargeSetting.Flips.Count(flip => flip);
-        defibrillator.BpmZapHeal = GetCharge(ent.Comp.BpmZapFlip, flips);
-        defibrillator.BpmZapHealFlatline = GetCharge(ent.Comp.BpmZapFlatlineFlip, flips);
-    }
-
-    private static float GetCharge(Dictionary<int, float> thresholds, int flips)
-    {
-        var selected = int.MinValue;
-        var charge = 0f;
-        foreach (var (threshold, value) in thresholds)
+        var category = new VerbCategory("arcane-defibrillator-mode-category", null);
+        for (var mode = 1; mode <= 4; mode++)
         {
-            if (threshold > flips || threshold <= selected)
-                continue;
-
-            selected = threshold;
-            charge = value;
+            var selected = mode;
+            args.Verbs.Add(new AlternativeVerb
+            {
+                Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode)),
+                Category = category,
+                Priority = -100, // Keep battery ejection as the default alternative interaction.
+                Disabled = mode == ent.Comp.Mode,
+                Act = () => SetMode(ent, selected),
+            });
         }
-        return charge;
     }
 
-    public void UpdateUi(Entity<ManualDefibrillatorComponent> ent)
+    private void OnExamined(Entity<ManualDefibrillatorComponent> ent, ref ExaminedEvent args)
     {
-        _ui.SetUiState(
-            ent.Owner,
-            ManualDefibrillatorUiKey.Key,
-            new DefibrillatorBuiState(
-                ent.Comp.ChargeSetting.Clone(),
-                ent.Comp.PulseState,
-                ent.Comp.DisplayedBpm,
-                ent.Comp.SettingsRevision));
+        args.PushMarkup(Loc.GetString("arcane-defibrillator-current-mode", ("mode", ent.Comp.Mode)));
+    }
+
+    public bool SetMode(Entity<ManualDefibrillatorComponent> ent, int mode)
+    {
+        if (mode is < 1 or > 4 || TerminatingOrDeleted(ent)
+            || !TryComp<HeartDefibrillatorComponent>(ent, out var defibrillator)
+            || !ent.Comp.BpmZapMode.TryGetValue(mode, out var change)
+            || !ent.Comp.BpmZapFlatlineMode.TryGetValue(mode, out var restart))
+            return false;
+
+        ent.Comp.Mode = mode;
+        defibrillator.BpmZapHeal = change;
+        defibrillator.BpmZapHealFlatline = restart;
+        return true;
     }
 }
