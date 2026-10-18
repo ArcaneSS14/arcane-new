@@ -1,6 +1,5 @@
 using Content.Arcane.Common.Medical.Heart;
 using Content.Medical.Common.Body;
-using Content.Medical.Shared.Body;
 using Content.Shared.Alert;
 using Content.Shared.Bed.Components;
 using Content.Shared.Body;
@@ -38,7 +37,7 @@ public sealed partial class HeartRateSystem : EntitySystem
         SubscribeLocalEvent<HeartRateComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<HeartRateComponent, RejuvenateEvent>(OnRejuvenate);
         SubscribeLocalEvent<BloodstreamComponent, FindWorkingHeartEvent>(OnFindHeart);
-        SubscribeLocalEvent<HeartComponent, BodyRelayedEvent<FindWorkingHeartEvent>>(OnRelayedFindHeart);
+        SubscribeLocalEvent<HeartRateComponent, BodyRelayedEvent<FindWorkingHeartEvent>>(OnRelayedFindHeart);
         SubscribeLocalEvent<HeartRateComponent, OrganRemovalDeathAttemptEvent>(OnRemovalDeathAttempt);
         SubscribeLocalEvent<HeartRateComponent, OrganGotInsertedEvent>(OnInserted);
         SubscribeLocalEvent<HeartRateComponent, OrganGotRemovedEvent>(OnRemoved);
@@ -150,13 +149,15 @@ public sealed partial class HeartRateSystem : EntitySystem
         if (!args.DoEffects || !TryComp<BodyComponent>(ent, out var body))
             return;
 
+        // Legacy hearts still circulate blood without participating in the pulse simulation.
+        args.Found |= GetHeart(ent) is { Comp: null };
         _body.RelayEvent((ent.Owner, body), ref args);
     }
 
-    private void OnRelayedFindHeart(Entity<HeartComponent> ent, ref BodyRelayedEvent<FindWorkingHeartEvent> args)
+    private void OnRelayedFindHeart(Entity<HeartRateComponent> ent, ref BodyRelayedEvent<FindWorkingHeartEvent> args)
     {
         var result = args.Args;
-        result.Found |= !TryComp<HeartRateComponent>(ent, out var rate) || GetState(rate) != HeartState.Stopped;
+        result.Found |= GetState(ent.Comp) != HeartState.Stopped;
         args.Args = result;
     }
 
