@@ -31,8 +31,6 @@ public sealed class HeartRateTest : GameTest
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
     [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
-    [SidedDependency(Side.Server)] private readonly PowerCellSystem _powerCell = null!;
-    [SidedDependency(Side.Server)] private readonly SharedBatterySystem _battery = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -151,10 +149,14 @@ public sealed class HeartRateTest : GameTest
         Assert.That(manual.Mode, Is.EqualTo(2));
 
         var verbs = SEntMan.System<Content.Shared.Verbs.SharedVerbSystem>()
-            .GetLocalVerbs(defib, patient, typeof(Content.Shared.Verbs.AlternativeVerb), force: true);
+            .GetLocalVerbs(defib, patient,
+                new List<Type> { typeof(Content.Shared.Verbs.Verb), typeof(Content.Shared.Verbs.AlternativeVerb) }, force: true);
         var choices = verbs.Where(verb => verb.Category?.Text == Loc.GetString("arcane-defibrillator-mode-category")).ToArray();
         Assert.That(choices, Has.Length.EqualTo(4));
-        Assert.That(verbs.Any(verb => verb.Priority > choices[0].Priority), Is.True,
+        Assert.That(choices.All(verb => verb.GetType() == typeof(Content.Shared.Verbs.Verb)), Is.True,
+            "Mode choices must not participate in activation or alternative hotkeys, even without a battery.");
+        Assert.That(verbs.Any(verb => verb is Content.Shared.Verbs.AlternativeVerb
+            && verb.CompareTo(choices[0]) < 0), Is.True,
             "Battery ejection must remain above the mode choices for Alt+Z.");
         Assert.That(SComp<ItemToggleComponent>(defib).OnUse, Is.True, "Z must retain the normal power toggle.");
     }
