@@ -146,7 +146,7 @@ public sealed partial class BlockingSystem : EntitySystem
     /// <summary>
     /// Called where you want the user to start blocking
     /// Creates a new hard fixture to bodyblock
-    /// Slows movement while the shield is raised. <!-- Arcane-Edit -->
+    /// Slows movement while the shield is raised. // Arcane-Edit
     /// </summary>
     /// <param name="entity"> The entity with the blocking component</param>
     /// <param name="user"> The entity who's using the item to block</param>
