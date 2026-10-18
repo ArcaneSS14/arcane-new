@@ -9,6 +9,9 @@ using Content.Server.Body.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Body;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Systems;
+using Content.Shared.Speech;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
 using Content.Trauma.Common.MartialArts;
@@ -27,6 +30,7 @@ public sealed class BrainRespirationTest : GameTest
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly IConfigurationManager _cfg = null!;
+    [SidedDependency(Side.Server)] private readonly MobStateSystem _mob = null!;
 
     [TestCase(Gas.Oxygen, false, true)]
     [TestCase(Gas.Nitrogen, false, false)]
@@ -158,6 +162,53 @@ public sealed class BrainRespirationTest : GameTest
             Assert.That(_body.InsertOrgan(patient, brainUid), Is.True);
             Assert.That(_oxygen.GetBrain(patient), Is.Not.Null);
             Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectOxygenDeprived", out _), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task DeadBodiesRetainOxygenWhileDetachedBrainsConsumeIt()
+    {
+        var patient = await CreatePatient();
+        EntityUid brainUid = default;
+        await Server.WaitPost(() =>
+        {
+            var brain = _oxygen.GetBrain(patient)!.Value;
+            brainUid = brain.Owner;
+            SEntMan.EnsureComponent<BlockedBreathingComponent>(patient);
+            _respiration.SetSaturation(brain, 0.85f);
+            _mob.ChangeMobState(patient, MobState.Dead);
+        });
+        await RunSeconds(8.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(_mob.IsDead(patient), Is.True);
+            Assert.That(SComp<BrainOxygenComponent>(brainUid).AirSaturation, Is.EqualTo(0.85f));
+            Assert.That(_body.RemoveOrgan(patient, brainUid), Is.True);
+        });
+        await RunSeconds(4.2f);
+        await Server.WaitPost(() =>
+            Assert.That(SComp<BrainOxygenComponent>(brainUid).AirSaturation, Is.LessThan(0.85f)));
+    }
+
+    [Test]
+    public async Task HypoxicSpeechRelaysWithoutAnAccentOnThePatientAndClearsOnRecovery()
+    {
+        var patient = await CreatePatient();
+        await Server.WaitPost(() =>
+        {
+            Assert.That(SHasComp<SlowAccentComponent>(patient), Is.False);
+            var brain = _oxygen.GetBrain(patient)!.Value;
+            _respiration.SetSaturation(brain, 0.7f);
+
+            var hypoxic = new AccentGetEvent(patient, "hello there");
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref hypoxic);
+            Assert.That(hypoxic.Message, Is.EqualTo("hello... there..."));
+
+            _respiration.SetSaturation(brain, 1f);
+            var recovered = new AccentGetEvent(patient, "hello there");
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref recovered);
+            Assert.That(recovered.Message, Is.EqualTo("hello there"));
+            Assert.That(SHasComp<SlowAccentComponent>(patient), Is.False);
         });
     }
 
