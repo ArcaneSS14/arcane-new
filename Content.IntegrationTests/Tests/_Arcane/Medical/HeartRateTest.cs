@@ -1,6 +1,8 @@
 #nullable enable
 using System.Linq;
 using Content.Arcane.Common.Medical.Heart;
+using Content.Arcane.Common.Medical.Defibrillator;
+using Content.Arcane.Server.Medical.Defibrillator;
 using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.IntegrationTests.Fixtures;
@@ -16,6 +18,15 @@ using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
 using Content.Shared.PowerCell.Components;
+using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Item.ItemToggle;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
+using Content.Medical.Common.Targeting;
+using Content.Shared.FixedPoint;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -111,7 +122,7 @@ public sealed class HeartRateTest : GameTest
         _heart.SetRate(uid, heart, 0f, false);
 
         var defib = SSpawn("DefibrillatorCompact");
-        var ev = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+        var ev = new DefibrillatorTreatmentEvent(defib, patient, true);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
         Assert.That(heart.CurrentRate, Is.EqualTo(210f));
 
@@ -138,7 +149,7 @@ public sealed class HeartRateTest : GameTest
         var manual = SComp<ManualDefibrillatorComponent>(defib);
         var modes = SEntMan.System<Content.Arcane.Server.Medical.Defibrillator.ManualDefibrillatorSystem>();
         Assert.That(manual.Mode, Is.EqualTo(3));
-        var ev = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+        var ev = new DefibrillatorTreatmentEvent(defib, patient, true);
         _heart.SetRate(heartUid, heart, 0f, false);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
         Assert.That(heart.CurrentRate, Is.EqualTo(200f));
@@ -271,7 +282,7 @@ public sealed class HeartRateTest : GameTest
         var heart = SComp<HeartRateComponent>(uid);
         var defib = SSpawn("DefibrillatorCompact");
         _heart.SetRate(uid, heart, 0f, false);
-        var zap = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+        var zap = new DefibrillatorTreatmentEvent(defib, patient, true);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stable));
         Assert.That(heart.CurrentRate, Is.GreaterThan(0f));
@@ -286,4 +297,88 @@ public sealed class HeartRateTest : GameTest
         Assert.That(transplanted.CurrentRate, Is.EqualTo(transplanted.FibrillationCaps.Y));
     }
 
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void ShockMedicineUsesTherapeuticConditionsAndDistinctReagents()
+    {
+        var patient = SSpawn("MobHuman");
+        var blood = SComp<BloodstreamComponent>(patient);
+        var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+        Assert.That(solutions.ResolveSolution(patient, blood.BloodSolutionName, ref blood.BloodSolution, out var solution), Is.True);
+        var medicine = SEntMan.System<OxygenMedicineSystem>();
+
+        Add("Dexalin", 4);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.Zero);
+        Add("Dexalin", 1);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20));
+        Add("DexalinPlus", 5);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(40));
+        solutions.RemoveReagent(blood.BloodSolution!.Value, "DexalinPlus", 5);
+        Add("Epinephrine", 5);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(40));
+        Add("Epinephrine", 20);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20), "An overdose must not qualify as critical healing.");
+        solutions.RemoveReagent(blood.BloodSolution!.Value, "Epinephrine", 25);
+        Add("Dexalin", 20);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.Zero, "Simultaneous damage must outweigh the healing branch in an overdose.");
+        solutions.RemoveReagent(blood.BloodSolution!.Value, "Dexalin", 25);
+        Add("Omnizine", 5);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20), "Airloss group healing also treats suffocation.");
+        Assert.That(SComp<MobStateComponent>(patient).CurrentState, Is.EqualTo(MobState.Alive));
+
+        void Add(string reagent, int quantity)
+            => Assert.That(solutions.TryAddReagent(blood.BloodSolution!.Value, reagent, quantity), Is.True);
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void DeliveredShockTreatsBeforeRevivalAndPenalizesAnotherDevice()
+    {
+        var patient = SSpawn("MobHuman");
+        var damage = SEntMan.System<DamageableSystem>();
+        var mob = SEntMan.System<MobStateSystem>();
+        var blood = SComp<BloodstreamComponent>(patient);
+        var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+        Assert.That(solutions.ResolveSolution(patient, blood.BloodSolutionName, ref blood.BloodSolution, out _), Is.True);
+        Assert.That(solutions.TryAddReagent(blood.BloodSolution!.Value, "Epinephrine", 5), Is.True);
+        damage.TryChangeDamage(patient, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 60 } }, true,
+            targetPart: TargetBodyPart.Vital);
+        mob.ChangeMobState(patient, MobState.Dead);
+        var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
+        var heart = SComp<HeartRateComponent>(heartUid);
+        _heart.SetRate(heartUid, heart, 0f, false);
+
+        var defib = SSpawn("DefibrillatorOneHandedUnpowered");
+        Assert.That(SEntMan.System<ItemToggleSystem>().TryActivate(defib), Is.True);
+        var system = SEntMan.System<SharedDefibrillatorSystem>();
+        Assert.That(system.CanZap(defib, patient), Is.True);
+        system.Zap(defib, patient, patient);
+        Assert.That(damage.GetAllDamage(patient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(20)));
+        Assert.That(SComp<MobStateComponent>(patient).CurrentState, Is.Not.EqualTo(MobState.Dead));
+        Assert.That(heart.CurrentRate, Is.GreaterThan(0f));
+        Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine"),
+            Is.EqualTo(FixedPoint2.New(5)));
+
+        damage.TryChangeDamage(patient, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 40 } }, true,
+            targetPart: TargetBodyPart.Vital);
+        mob.ChangeMobState(patient, MobState.Dead);
+        var heat = damage.GetAllDamage(patient).DamageDict.GetValueOrDefault("Heat");
+        var anotherDefib = SSpawn("DefibrillatorCompact");
+        var anotherShock = new DefibrillatorTreatmentEvent(anotherDefib, SSpawn("MobHuman"), true);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref anotherShock);
+        Assert.That(damage.GetAllDamage(patient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(60)));
+        Assert.That(damage.GetAllDamage(patient).DamageDict["Heat"] - heat, Is.EqualTo(FixedPoint2.New(30)));
+
+        var stoppedPatient = SSpawn("MobHuman");
+        mob.ChangeMobState(stoppedPatient, MobState.Dead);
+        var stoppedHeartUid = _body.GetOrgan(stoppedPatient, "Heart")!.Value;
+        _heart.SetRate(stoppedHeartUid, SComp<HeartRateComponent>(stoppedHeartUid), 0f, false);
+        var loweringDefib = SSpawn("DefibrillatorOneHandedUnpowered");
+        var manual = SEntMan.EnsureComponent<ManualDefibrillatorComponent>(loweringDefib);
+        Assert.That(SEntMan.System<ManualDefibrillatorSystem>().SetMode((loweringDefib, manual), 2), Is.True);
+        Assert.That(SEntMan.System<ItemToggleSystem>().TryActivate(loweringDefib), Is.True);
+        system.Zap(loweringDefib, stoppedPatient, patient);
+        Assert.That(SComp<MobStateComponent>(stoppedPatient).CurrentState, Is.EqualTo(MobState.Dead),
+            "A mode which cannot restart the required heart must not report a revival.");
+    }
 }

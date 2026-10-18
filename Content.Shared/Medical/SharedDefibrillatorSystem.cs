@@ -22,6 +22,7 @@ using Content.Shared.Timing.Systems;
 using Content.Shared.Traits.Assorted;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
+using Content.Arcane.Common.Medical.Defibrillator; // Arcane
 
 namespace Content.Shared.Medical;
 
@@ -194,6 +195,10 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
 
     private bool TryRevive(Entity<DefibrillatorComponent> ent, EntityUid user, EntityUid target, bool isOriginal)
     {
+        // Arcane-Start: Apply the delivered shock before checking whether the patient can be revived.
+        var treatment = new DefibrillatorTreatmentEvent(ent.Owner, user, isOriginal);
+        RaiseLocalEvent(target, ref treatment);
+        // Arcane-End
         bool failedRevive = true;
         string? message = null;
         if (_rotting.IsRotten(target))
@@ -211,7 +216,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
             _damageable.TryChangeDamage(target, ent.Comp.ZapHeal, true, origin: user,
                 targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAll); // Trauma
 
-            if (_mobState.IsDead(target, targetMobState) && // is the target currently dead
+            if (treatment.CanRevive && _mobState.IsDead(target, targetMobState) && // Arcane-Edit: Require the shock to restore circulation.
                 TryComp<MobThresholdsComponent>(target, out var targetThresholds) && //do they have a threshold
                 _mobThreshold.TryGetThresholdForState(target, MobState.Dead, out var threshold, targetThresholds) &&
                 _mobThreshold.CheckVitalDamage(target) < threshold) // Trauma - check vital damage instead
