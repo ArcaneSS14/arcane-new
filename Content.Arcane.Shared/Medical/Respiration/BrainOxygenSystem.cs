@@ -1,5 +1,4 @@
 using Content.Arcane.Common.CCVar;
-using Content.Arcane.Common.Medical.Respiration;
 using Content.Shared.Body;
 using Robust.Shared.Configuration;
 
@@ -13,12 +12,6 @@ public sealed partial class BrainOxygenSystem : EntitySystem
     private static readonly ProtoId<OrganCategoryPrototype> BrainCategory = "Brain";
 
     public bool Enabled => _cfg.GetCVar(ArcaneCVars.ComplexRespiratorEnabled);
-
-    public override void Initialize()
-    {
-        base.Initialize();
-        SubscribeLocalEvent<BodyComponent, CPRCompletedEvent>(OnCPRCompleted);
-    }
 
     public Entity<BrainOxygenComponent>? GetBrain(EntityUid body)
     {
@@ -39,11 +32,5 @@ public sealed partial class BrainOxygenSystem : EntitySystem
             > 0.60f => BrainOxygenLevel.Critical,
             _ => BrainOxygenLevel.Fatal,
         };
-    }
-
-    private void OnCPRCompleted(Entity<BodyComponent> ent, ref CPRCompletedEvent args)
-    {
-        if (Enabled)
-            args.AllowRevival = false;
     }
 }
