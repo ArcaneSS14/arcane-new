@@ -1,4 +1,5 @@
 #nullable enable
+using System.Linq;
 using Content.Arcane.Common.Medical.Heart;
 using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Arcane.Shared.Medical.Heart;
@@ -30,7 +31,6 @@ public sealed class HeartRateTest : GameTest
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
     [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
-    [SidedDependency(Side.Server)] private readonly UserInterfaceSystem _ui = null!;
     [SidedDependency(Side.Server)] private readonly PowerCellSystem _powerCell = null!;
     [SidedDependency(Side.Server)] private readonly SharedBatterySystem _battery = null!;
 
@@ -137,113 +137,26 @@ public sealed class HeartRateTest : GameTest
         var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
         var heart = SComp<HeartRateComponent>(heartUid);
         var defib = SSpawn("Defibrillator");
-        var config = SComp<HeartDefibrillatorComponent>(defib);
-        var zap = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
-
-        var low = new DefibrillatorChargeSettingMessage(new() { Flips = [true, false, false, false] }) { Actor = patient };
-        SEntMan.EventBus.RaiseLocalEvent(defib, low);
-        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var firstState), Is.True);
-        Assert.That(firstState!.SettingsRevision, Is.EqualTo(1));
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
-        Assert.That(heart.CurrentRate, Is.Zero, "One switch must slow the heart, without automatic stabilisation.");
-
-        var restart = new DefibrillatorChargeSettingMessage(new() { Flips = [true, true, true, false] }) { Actor = patient };
-        SEntMan.EventBus.RaiseLocalEvent(defib, restart);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
-        Assert.That(heart.CurrentRate, Is.EqualTo(200f), "Three switches must restart a flatlined heart.");
-
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref zap);
-        Assert.That(heart.CurrentRate, Is.EqualTo(350f), "A manual shock must retain its selected direction above the resting rate.");
-
-        var malformed = new DefibrillatorChargeSettingMessage(new() { Flips = [] }) { Actor = patient };
-        SEntMan.EventBus.RaiseLocalEvent(defib, malformed);
-        Assert.That(config.BpmZapHeal, Is.EqualTo(150f), "Malformed switch arrays must not change the voltage.");
-        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
-        Assert.That(state!.SettingsRevision, Is.EqualTo(3), "Rejected input must acknowledge the authoritative setting.");
-        Assert.That(firstState.ChargeSetting.Flips, Is.EqualTo(new[] { true, false, false, false }),
-            "Published UI states must not change when later settings are applied.");
-    }
-
-    [Test]
-    public async Task MonitorTracksThePatientThroughHeartReplacement()
-    {
-        await Pair.CreateTestMap();
-        EntityUid patient = default;
-        EntityUid defib = default;
-        EntityUid heart = default;
-        await Server.WaitPost(() =>
-        {
-            patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            defib = SSpawnAtPosition("Defibrillator", TestMap.GridCoords);
-            heart = _body.GetOrgan(patient, "Heart")!.Value;
-            var scan = new AfterInteractEvent(patient, defib, patient, SComp<TransformComponent>(patient).Coordinates, true);
-            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
-            Assert.That(scan.Handled, Is.False, "A defibrillator lying on the ground must not bypass the hands requirement.");
-
-            _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, patient);
-            scan = new AfterInteractEvent(patient, defib, patient, SComp<TransformComponent>(patient).Coordinates, true);
-            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
-            Assert.That(scan.Handled, Is.True);
-            Assert.That(SComp<ManualDefibrillatorComponent>(defib).DisplayedBpm, Is.EqualTo(80f));
-            _body.RemoveOrgan(patient, heart);
-        });
-
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() =>
-        {
-            var monitor = SComp<ManualDefibrillatorComponent>(defib);
-            Assert.That(monitor.DisplayedBpm, Is.Zero, "A removed heart must not keep the patient's monitor beating.");
-            Assert.That(monitor.PulseState.Id, Is.EqualTo("Pulse0"));
-            Assert.That(_body.InsertOrgan(patient, heart), Is.True);
-        });
-
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() =>
-        {
-            var monitor = SComp<ManualDefibrillatorComponent>(defib);
-            Assert.That(monitor.DisplayedBpm, Is.EqualTo(MathF.Round(SComp<HeartRateComponent>(heart).CurrentRate)));
-            _ui.CloseUi(defib, ManualDefibrillatorUiKey.Key, patient);
-            Assert.That(monitor.MonitoredBody, Is.Null);
-            Assert.That(monitor.DisplayedBpm, Is.Null);
-        });
-    }
-
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void DepletedManualDefibrillatorKeepsItsPowerSwitchInSync()
-    {
-        var user = SSpawn("MobHuman");
-        var defib = SSpawn("Defibrillator");
-        Assert.That(_powerCell.TryGetBatteryFromEntityOrSlot(defib, out var battery), Is.True);
-        var cost = SComp<PowerCellDrawComponent>(defib).UseCharge;
-        _battery.SetCharge(battery!.Value.AsNullable(), cost);
-
-        var setting = new DefibrillatorChargeSetting { Power = true, Flips = [true, true, true, false] };
-        var enable = new DefibrillatorChargeSettingMessage(setting) { Actor = user };
-        SEntMan.EventBus.RaiseLocalEvent(defib, enable);
         var manual = SComp<ManualDefibrillatorComponent>(defib);
-        var toggle = SComp<ItemToggleComponent>(defib);
-        Assert.That(toggle.Activated, Is.True);
-        var revision = manual.SettingsRevision;
+        var modes = SEntMan.System<Content.Arcane.Server.Medical.Defibrillator.ManualDefibrillatorSystem>();
+        Assert.That(manual.Mode, Is.EqualTo(3));
+        var ev = new TargetDefibrillatedEvent(patient, patient, (defib, SComp<DefibrillatorComponent>(defib)), []);
+        _heart.SetRate(heartUid, heart, 0f, false);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
+        Assert.That(heart.CurrentRate, Is.EqualTo(200f));
+        Assert.That(modes.SetMode((defib, manual), 2), Is.True);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
+        Assert.That(heart.CurrentRate, Is.EqualTo(150f));
+        Assert.That(modes.SetMode((defib, manual), 5), Is.False);
+        Assert.That(manual.Mode, Is.EqualTo(2));
 
-        Assert.That(_powerCell.TryUseActivatableCharge(defib), Is.True);
-        Assert.That(toggle.Activated, Is.False);
-        Assert.That(manual.ChargeSetting.Power, Is.False);
-        Assert.That(manual.SettingsRevision, Is.GreaterThan(revision));
-
-        _battery.SetCharge(battery.Value.AsNullable(), cost * 2);
-        _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, user);
-        Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
-        Assert.That(state!.ChargeSetting.Power, Is.False, "Charging must not leave a stale on-switch on a disabled device.");
-        Assert.That(toggle.Activated, Is.False);
-
-        SEntMan.EventBus.RaiseLocalEvent(defib, enable);
-        Assert.That(toggle.Activated, Is.True, "The charged device must be usable after switching it back on.");
-        var noVoltage = new DefibrillatorChargeSettingMessage(new() { Power = true }) { Actor = user };
-        SEntMan.EventBus.RaiseLocalEvent(defib, noVoltage);
-        Assert.That(toggle.Activated, Is.False);
-        Assert.That(manual.ChargeSetting.Power, Is.True, "Turning off the last voltage switch must preserve the selected power-switch position.");
-        _ui.CloseUi(defib, ManualDefibrillatorUiKey.Key, user);
+        var verbs = SEntMan.System<Content.Shared.Verbs.SharedVerbSystem>()
+            .GetLocalVerbs(defib, patient, typeof(Content.Shared.Verbs.AlternativeVerb), force: true);
+        var choices = verbs.Where(verb => verb.Category?.Text == Loc.GetString("arcane-defibrillator-mode-category")).ToArray();
+        Assert.That(choices, Has.Length.EqualTo(4));
+        Assert.That(verbs.Any(verb => verb.Priority > choices[0].Priority), Is.True,
+            "Battery ejection must remain above the mode choices for Alt+Z.");
+        Assert.That(SComp<ItemToggleComponent>(defib).OnUse, Is.True, "Z must retain the normal power toggle.");
     }
 
     [Test]
@@ -370,42 +283,5 @@ public sealed class HeartRateTest : GameTest
         Assert.That(_heart.GetState(transplanted), Is.EqualTo(HeartState.Stable));
         Assert.That(transplanted.CurrentRate, Is.EqualTo(transplanted.FibrillationCaps.Y));
     }
-
-    [Test]
-    public async Task ShockReplacesThePreviousPatientEvenWithoutAHeart()
-    {
-        await Pair.CreateTestMap();
-        EntityUid defib = default;
-        EntityUid second = default;
-        await Server.WaitPost(() =>
-        {
-            var first = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            second = SSpawnAtPosition("MobHuman", TestMap.GridCoords);
-            var heart = _body.GetOrgan(second, "Heart")!.Value;
-            Assert.That(_body.RemoveOrgan(second, heart), Is.True);
-            defib = SSpawnAtPosition("Defibrillator", TestMap.GridCoords);
-            _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, first);
-            var scan = new AfterInteractEvent(first, defib, first, SComp<TransformComponent>(first).Coordinates, true);
-            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
-            Assert.That(SComp<ManualDefibrillatorComponent>(defib).DisplayedBpm, Is.EqualTo(80f));
-
-            var zap = new TargetDefibrillatedEvent(first, second, (defib, SComp<DefibrillatorComponent>(defib)), []);
-            SEntMan.EventBus.RaiseLocalEvent(second, ref zap);
-            var monitor = SComp<ManualDefibrillatorComponent>(defib);
-            Assert.That(monitor.MonitoredBody, Is.EqualTo(second));
-            Assert.That(monitor.DisplayedBpm, Is.Zero);
-            Assert.That(monitor.PulseState.Id, Is.EqualTo("Pulse3000"));
-        });
-
-        await RunSeconds(2.1f);
-        await Server.WaitPost(() =>
-        {
-            var monitor = SComp<ManualDefibrillatorComponent>(defib);
-            Assert.That(monitor.MonitoredBody, Is.EqualTo(second));
-            Assert.That(monitor.DisplayedBpm, Is.Zero);
-            Assert.That(monitor.PulseState.Id, Is.EqualTo("Pulse0"));
-        });
-    }
-
 
 }
