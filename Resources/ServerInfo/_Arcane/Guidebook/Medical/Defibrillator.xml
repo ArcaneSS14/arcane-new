@@ -1,76 +1,39 @@
 <Document>
-  # Hearts
+  # Hearts and defibrillators
 
-  Most living creatures have a heart. Some species, such as dionae and slimes, do not require one.
-  A beating heart can still have a dangerous rhythm. Check the pulse and the patient's other injuries before treatment.
+  BPM means beats per minute. A standard human heart rests at 80 BPM. Its stable range is 40–210 inclusive.
+  Outside that range the rhythm becomes unstable; 0 BPM means the heart has stopped. Other hearts can have different limits.
+  Use a medical analyzer to check the pulse and distinguish a stopped heart from a missing one.
 
-  <Box>
-    <GuideEntityEmbed Entity="OrganHumanHeart" />
-  </Box>
+  ## Manual defibrillator
 
-  BPM means beats per minute. A standard human heart normally beats 80 times per minute.
-  Different species have different resting rates and fibrillation thresholds.
+  <Box><GuideEntityEmbed Entity="Defibrillator" /></Box>
 
-  For a normal human, anything more than 210 or less than 40 means that the heart is in fibrillations.
+  Use Z to switch the device on or off. Select Shock mode from its context menu; mode 3 is selected by default.
+  Mode selection is below battery removal, so Alt+Z keeps its normal battery interaction.
+  The selected mode is also shown when examining the device.
 
-  Fibrillations can be countered in many ways some are:
+  - Mode 1: subtracts 80 BPM from a beating heart; does not restart a stopped heart.
+  - Mode 2: subtracts 50 BPM from a beating heart; does not restart a stopped heart.
+  - Mode 3: adds 150 BPM, or starts a stopped heart at 200 BPM.
+  - Mode 4: adds 200 BPM, or starts a stopped heart at 300 BPM.
 
-  - if the heart is lacking BPM, then some hard drugs or using a defibrillator might work.
-  - if the heart is beating more than it needs to, some relaxing drugs or a defibrillator might work.
+  For example, 250 BPM with mode 2 becomes 200 BPM; 30 BPM with mode 3 becomes 180 BPM.
+  Recheck the patient after a shock. Repeating a raising mode keeps raising the pulse.
+  More power is not always better: mode 4 can start a dangerous rhythm, and mode 1 can stop a heart at 80 BPM.
+  The manual device has no neutral mode for an already normal pulse.
 
-  Some medicines and drugs change the pulse. Epinephrine and omnizine stabilise it and can restart a stopped heart.
-  Stimulants and sedatives can also push the pulse into a dangerous range; they are not interchangeable with a stabilising medicine.
+  ## Automatic defibrillator
 
-  ## Defibrillator usage
+  <Box><GuideEntityEmbed Entity="DefibrillatorCompact" /></Box>
 
-  <Box>
-    <GuideEntityEmbed Entity="Defibrillator" />
-  </Box>
+  Automatic shocks move a beating heart by 45 BPM towards its resting rate without overshooting.
+  A stopped standard human heart starts at 210 BPM. The device respects the installed heart's stable limits.
 
-  The defibrillators found shiftstart in medical are [bold]MANUAL DEFIBRILLATORS[/bold] and they require proper use.
+  Standard shocks also treat 40 suffocation damage. They do not replace breathing, missing blood or treatment of other injuries.
+  Continue CPR when the patient cannot breathe independently. Epinephrine and omnizine can also stabilise and restart a heart.
 
-  The ones that science can print and those found in paramedics lockers are called compact defibrillators (sometimes, an auto defibrillators or AEDs)
-
-  <Box>
-    <GuideEntityEmbed Entity="DefibrillatorCompact" Caption="compact defibrillator" />
-  </Box>
-
-  AEDs or compact defibrillators are easy in use, as they will try to change the BPM of the target by 45 closest to the standard BPM of the patient.
-
-  Manual defibrillators need to be properly used to not cause death to the patient.
-
-  # Manual Defibrillator Guide
-
-  M.E.D.s have 4 switches and one power flip, with a screen that tells the current heartrate of the patient.
-  Interact with a nearby patient while the manual defibrillator is switched off to open its monitor without shocking them.
-  The screen shows that patient's measured BPM, not a target setting. A shock also selects its recipient for monitoring.
-  A reading of 0 can mean a stopped or missing heart; use the medical analyzer to distinguish them.
-
-  The flips and switches do the following:
-
-  - IO switch (power switch) - O is Off, I is ON.
-  - Voltage flips - four identical switches. Only the number switched on matters; their positions do not select separate functions.
-    Each enabled switch represents another 500V step. These steps change the pulse effect, not the battery cost or suffocation healing.
-
-  - 0 flips - The device cannot deliver a shock.
-  - 1 flip/500V - Subtracts 80 BPM from a beating heart. Does not restart a stopped heart.
-  - 2 flips/1000V - Subtracts 50 BPM from a beating heart. Does not restart a stopped heart.
-  - 3 flips/1500V - Adds 150 BPM to a beating heart, or starts a stopped heart at 200 BPM.
-  - 4 flips/2000V - Adds 200 BPM to a beating heart, or starts a stopped heart at 300 BPM.
-
-  For example, 250 BPM with two flips becomes 200 BPM; 30 BPM with three flips becomes 180 BPM.
-  Repeating a raising setting keeps raising the pulse. One flip on a heart at 80 BPM can stop it, and four flips can create a dangerous rhythm.
-
-  A standard shock also treats 40 suffocation damage, but does not restore missing blood or replace breathing.
-  A safe pulse alone does not mean that the patient has recovered. Continue treating their injuries and assisting their breathing when needed.
-
-  <Box>
-    <GuideEntityEmbed Entity="StasisBed" Caption="stasis bed" />
-  </Box>
+  <Box><GuideEntityEmbed Entity="StasisBed" /></Box>
 
   Stasis beds suppress the new circulation penalty from a missing or stopped heart while the patient is buckled in.
-  This does not replace the missing heart or remove other injuries.
-
-
-
 </Document>

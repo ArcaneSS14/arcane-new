@@ -54,7 +54,7 @@
   parent: [ BaseDefibrillator, PowerCellSlotMediumItem ]
   # Arcane-Start
   name: manual defibrillator
-  description: A defibrillator with a pulse monitor and manually adjustable voltage. Choose the appropriate setting before shocking a patient.
+  description: A defibrillator with four shock modes. Select a mode from the context menu before shocking a patient.
   # Arcane-End
   components:
   - type: MultiHandedItem
@@ -67,18 +67,6 @@
     autoStabilisation: false
     bpmZapHealFlatline: 0
   - type: ManualDefibrillator
-  - type: ItemToggle
-    onUse: false
-    onActivate: false
-    wieldToggle: false
-  - type: ActivatableUI
-    key: enum.ManualDefibrillatorUiKey.Key
-    inHandsOnly: true
-    requireActiveHand: false
-  - type: UserInterface
-    interfaces:
-      enum.ManualDefibrillatorUiKey.Key:
-        type: ManualDefibrillatorBui
   - type: GuideHelp
     guides:
     - ArcaneDefibrillator
