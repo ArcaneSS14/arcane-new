@@ -61,9 +61,9 @@
   - type: ToggleCellDraw
   - type: PowerCellDraw
     useCharge: 100
+  - type: HeartDefibrillator # Arcane
+    bpmZapHeal: 0 # Arcane-Edit: 90 > 0
   # Arcane-Start
-  - type: HeartDefibrillator
-    bpmZapHeal: 0
     autoStabilisation: false
     bpmZapHealFlatline: 0
   - type: ManualDefibrillator
