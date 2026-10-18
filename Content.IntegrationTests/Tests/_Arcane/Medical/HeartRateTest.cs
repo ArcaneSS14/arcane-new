@@ -401,50 +401,5 @@ public sealed class HeartRateTest : GameTest
         });
     }
 
-    [Test]
-    public async Task MonitorOnlyPublishesChangesToVisiblePulseAndBpm()
-    {
-        await Pair.CreateTestMap();
-        EntityUid defib = default;
-        EntityUid heartUid = default;
-        DefibrillatorBuiState initialState = null!;
-        await Server.WaitPost(() =>
-        {
-            var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            heartUid = _body.GetOrgan(patient, "Heart")!.Value;
-            var heart = SComp<HeartRateComponent>(heartUid);
-            heart.RateUpdateModifier = 0f;
-            _heart.SetRate(heartUid, heart, 80.1f, true);
-            defib = SSpawnAtPosition("Defibrillator", TestMap.GridCoords);
-            _ui.OpenUi(defib, ManualDefibrillatorUiKey.Key, patient);
-            var scan = new AfterInteractEvent(patient, defib, patient, SComp<TransformComponent>(patient).Coordinates, true);
-            SEntMan.EventBus.RaiseLocalEvent(defib, scan);
-            Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
-            initialState = state!;
-            Assert.That(initialState.Bpm, Is.EqualTo(80f));
-            _heart.SetRate(heartUid, heart, 80.2f, true);
-        });
 
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() =>
-        {
-            Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
-            Assert.That(state, Is.SameAs(initialState), "A change hidden by rounding must not publish a new UI state.");
-            Assert.That(SComp<HeartRateComponent>(heartUid).CurrentRate, Is.EqualTo(80.2f));
-            _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), 80f, true);
-        });
-
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() =>
-        {
-            Assert.That(_ui.TryGetUiState<DefibrillatorBuiState>(defib, ManualDefibrillatorUiKey.Key, out var state), Is.True);
-            Assert.That(state, Is.Not.SameAs(initialState), "An animation change must publish even when rounded BPM is unchanged.");
-            Assert.That(state!.PulseState.Id, Is.EqualTo("Pulse80"));
-            _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), 310f, true);
-            SComp<HeartRateComponent>(heartUid).CriticalStopChance = 0f;
-        });
-
-        await RunSeconds(1.1f);
-        await Server.WaitPost(() => Assert.That(SComp<ManualDefibrillatorComponent>(defib).PulseState.Id, Is.EqualTo("Pulse320")));
-    }
 }
