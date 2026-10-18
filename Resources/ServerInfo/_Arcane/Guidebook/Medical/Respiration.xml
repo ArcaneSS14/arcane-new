@@ -1,0 +1,9 @@
+<Document>
+  <Header Color="Red">Breathing and oxygen deprivation</Header>
+  Insufficient breathing causes suffocation damage after the body's initial reserve runs out. Breathing, masks and gas exchange otherwise work as before.
+  <Bullet>Outside critical condition, sustained suffocation adds 1.5 damage per second. Adequate breathing removes 0.625 per second.</Bullet>
+  <Bullet>In either critical condition, sustained suffocation adds 0.33 damage per second. Natural breathing alone no longer removes this damage: use oxygen medicine or full CPR.</Bullet>
+  <Bullet>Suffocation causes unconsciousness at half the body's soft critical damage threshold: normally 50 for a human. Bodies without a separate soft critical threshold use half their first critical threshold.</Bullet>
+  <Bullet>This early unconsciousness does not prevent natural breathing. Restoring suitable air prevents further suffocation; treatment below the threshold removes the oxygen-related unconsciousness.</Bullet>
+  Other causes of unconsciousness, including revival recovery and sedation, can keep a patient unconscious after their oxygen damage improves.
+</Document>
