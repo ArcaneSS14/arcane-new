@@ -43,6 +43,10 @@ public sealed class CPRRecoveryTest : GameTest
 - type: entity
   parent: MobIPC
   id: TestArcaneCPRIPC
+- type: entity
+  id: TestArcaneRecoveryDummy
+  components:
+  - type: MobState
 """;
 
     [Test]
@@ -167,6 +171,12 @@ public sealed class CPRRecoveryTest : GameTest
         EntityUid recovering = default, sedated = default;
         await Server.WaitPost(() =>
         {
+            var dummy = SSpawn("TestArcaneRecoveryDummy");
+            _mob.ChangeMobState(dummy, MobState.Dead);
+            _mob.ChangeMobState(dummy, MobState.Alive);
+            Assert.That(_effects.TryGetStatusEffect(dummy, PostRevivalRecoverySystem.RecoverySleep, out _), Is.False);
+            Assert.That(_effects.TryGetStatusEffect(dummy, PostRevivalRecoverySystem.RecoveryDrowsiness, out _), Is.False);
+
             recovering = SpawnHuman();
             sedated = SpawnHuman();
             foreach (var patient in new[] { recovering, sedated })

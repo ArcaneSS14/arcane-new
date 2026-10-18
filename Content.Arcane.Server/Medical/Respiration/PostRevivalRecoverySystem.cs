@@ -1,3 +1,4 @@
+using Content.Shared.Body;
 using Content.Shared.Mobs;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
@@ -28,7 +29,7 @@ public sealed partial class PostRevivalRecoverySystem : EntitySystem
             return;
         }
 
-        if (args.OldMobState != MobState.Dead)
+        if (args.OldMobState != MobState.Dead || !HasComp<BodyComponent>(args.Target))
             return;
 
         RemoveOwnEffect(args.Target, RecoverySleep);
