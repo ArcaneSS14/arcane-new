@@ -12,15 +12,6 @@
     },
     {
       "name": "heartstop"
-    },
-    {
-      "name": "lung-oxy"
-    },
-    {
-      "name": "lung-oxy-severe"
-    },
-    {
-      "name": "lung-oxy-max"
     }
   ]
 }

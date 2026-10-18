@@ -1,6 +1,5 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Shared.Medical.Heart;
-using Content.Arcane.Shared.Medical.Respiration;
 using Content.Shared.Body;
 using Content.Shared.Damage.Systems;
 using Content.Shared.IdentityManagement;
@@ -10,7 +9,6 @@ namespace Content.Arcane.Client.Medical.HealthAnalyzer;
 public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
-    [Dependency] private BrainOxygenSystem _oxygen = default!;
     [Dependency] private DamageableSystem _damage = default!;
 
     public override void Initialize()
@@ -61,20 +59,6 @@ public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 
     private void PopulateRespiration(EntityUid body, ref HealthAnalyzerPopulateEvent args)
     {
-        if (_oxygen.GetBrain(body) is { } brain)
-        {
-            var key = BrainOxygenSystem.GetLevel(brain.Comp) switch
-            {
-                BrainOxygenLevel.Unstable => "condition-brain-oxygen-unstable",
-                BrainOxygenLevel.Dangerous => "condition-brain-oxygen-dangerous",
-                BrainOxygenLevel.Critical => "condition-brain-oxygen-critical",
-                BrainOxygenLevel.Fatal => "condition-brain-oxygen-fatal",
-                _ => null,
-            };
-            if (key is not null)
-                args.Conditions.Add(Loc.GetString(key));
-        }
-
         if (_damage.GetAllDamage(body).DamageDict.TryGetValue("Asphyxiation", out var damage) && damage > 75)
             args.Conditions.Add(Loc.GetString("condition-body-asphyxiation-severe"));
     }

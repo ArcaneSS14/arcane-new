@@ -5,18 +5,3 @@
   components:
   - type: DrowsinessStatusEffect
     timeBetweenIncidents: null
-
-- type: entity
-  parent: MobStatusEffectDebuff
-  id: StatusEffectOxygenDeprived
-  name: oxygen deprivation
-  components:
-  - type: DrowsinessStatusEffect
-    timeBetweenIncidents: null
-
-- type: entity
-  parent: MobStatusEffectDebuff
-  id: StatusEffectHypoxicSpeech
-  name: hypoxic speech
-  components:
-  - type: SlowAccent
