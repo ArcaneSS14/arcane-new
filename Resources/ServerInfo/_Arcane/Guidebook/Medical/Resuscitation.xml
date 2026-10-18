@@ -1,0 +1,40 @@
+<Document>
+  # CPR and chest compressions
+
+  Examine the body and check its injuries, pulse and blood volume before resuscitation.
+  Treat other lethal injuries and provide oxygen. Compressions do not replace missing blood or organs.
+
+  ## Performing the procedure
+
+  Use the patient's context menu. Only one person can perform either procedure on a patient at a time.
+  Stay in reach with a free hand and remove obstructing outer clothing.
+  The first cycle takes 3 seconds; uninterrupted cycles then repeat every 0.8 seconds.
+  Cancelling or changing the performer restarts the initial cycle.
+
+  Full CPR treats 3 suffocation damage per completed cycle and can provide an artificial breath.
+  Both airways must be accessible, and the performer and patient need working lungs for artificial breathing.
+  Chest compressions provide circulation and can restart a heart, but do not treat suffocation or provide artificial breaths.
+  IPCs, people without functioning lungs and people whose physiology does not breathe can perform compressions.
+  This does not make IPCs suitable CPR patients.
+
+  Both procedures support circulation after the first completed cycle, while the procedure continues.
+  Existing blood loss still needs treatment. Compressions do not restart chemical metabolism in a dead body.
+
+  ## Reviving a patient
+
+  CPR can revive a body while its examination still shows the green fresh-body message.
+  Other lethal injuries and missing necessary organs must be treated first.
+  The chance is checked after that cycle's treatment and depends on remaining suffocation damage.
+  Its limit is half the patient's softcrit threshold: normally 50 for humans, or 60 for a body with a 120 threshold.
+  At that limit or above the chance is zero; halfway to the limit it is 50%, and at zero suffocation it is 100% if the other requirements are met.
+
+  Successful CPR starts an installed stopped heart at its lowest stable pulse (normally 40 BPM), then the heart gradually recovers on its own.
+  It does not correct an already beating but fibrillating heart. Use a defibrillator or appropriate medicine to treat that rhythm.
+
+  ## After any revival
+
+  The patient spends 5 seconds in forced sleep, followed by 30 seconds of fading drowsiness.
+  This recovery does not cause yawning or further random sleep incidents.
+  Ongoing critical injuries or another cause of unconsciousness can keep the patient unconscious after those 5 seconds.
+  Recheck the pulse and breathing and continue the appropriate treatment.
+</Document>
