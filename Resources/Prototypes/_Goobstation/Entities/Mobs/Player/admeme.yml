@@ -4,7 +4,7 @@
 
 - type: randomHumanoidSettings
   id: CentcommHumanoid
-  abstract: true # Arcane-Edit: Base settings require GhostRole details from a child prototype.
+  abstract: true # Arcane: Base settings require GhostRole details from a child prototype.
   speciesWhitelist: Human
   components:
   - type: RandomHumanoidAppearance
