@@ -81,6 +81,12 @@ public sealed class HeartRateTest : GameTest
         SEntMan.EventBus.RaiseLocalEvent(patient, ref healthy);
         Assert.That(healthy.Found, Is.True);
 
+        SEntMan.RemoveComponent<HeartRateComponent>(uid);
+        var unsimulated = new FindWorkingHeartEvent();
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref unsimulated);
+        Assert.That(unsimulated.Found, Is.True, "A legacy heart must retain circulation without pulse simulation.");
+        heart = SEntMan.AddComponent<HeartRateComponent>(uid);
+
         _heart.SetRate(uid, heart, 0f, false);
         var stopped = new FindWorkingHeartEvent();
         SEntMan.EventBus.RaiseLocalEvent(patient, ref stopped);
