@@ -31,7 +31,6 @@ public sealed class ReagentDispenserTest : GameTest
 
         Assert.That(targetVolume, Is.EqualTo(FixedPoint2.New(1500.25)));
         Assert.That(sourceVolume, Is.EqualTo(FixedPoint2.Zero));
-        Assert.That(sourceVolume + targetVolume, Is.EqualTo(FixedPoint2.New(1500.25)));
     }
 
     [Test]
@@ -44,7 +43,6 @@ public sealed class ReagentDispenserTest : GameTest
 
         Assert.That(afterFirstClick.Source, Is.EqualTo(FixedPoint2.New(0.5)));
         Assert.That(afterFirstClick.Target, Is.EqualTo(FixedPoint2.New(15.25)));
-        Assert.That(afterFirstClick.Source + afterFirstClick.Target, Is.EqualTo(FixedPoint2.New(15.75)));
 
         await Dispense(fixture, ReagentDispenserDispenseAmount.Max);
         var afterSecondClick = await ReadVolumes(fixture);
