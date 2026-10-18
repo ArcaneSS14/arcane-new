@@ -205,6 +205,10 @@ public sealed class BrainRespirationTest : GameTest
             Assert.That(hypoxic.Message, Is.EqualTo("hello... there..."));
 
             _respiration.SetSaturation(brain, 1f);
+        });
+        await RunSeconds(0.2f);
+        await Server.WaitPost(() =>
+        {
             var recovered = new AccentGetEvent(patient, "hello there");
             SEntMan.EventBus.RaiseLocalEvent(patient, ref recovered);
             Assert.That(recovered.Message, Is.EqualTo("hello there"));
