@@ -16,7 +16,6 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage.Components;
-using Content.Shared.Damage; // Arcane
 using Content.Shared.FixedPoint;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
@@ -26,7 +25,10 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.Medical.HealthAnalyzer; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Medical.HealthAnalyzer;
+using Content.Shared.Damage;
+// Arcane-End
 
 namespace Content.Client.HealthAnalyzer.UI;
 
@@ -141,7 +143,7 @@ public sealed partial class HealthAnalyzerControl
         switch (_mode)
         {
             case HealthAnalyzerMode.Body:
-                PopulateBody(target, ref state, bloodLevelLow, populate.WoundDamage); // Arcane
+                PopulateBody(target, ref state, bloodLevelLow, populate.WoundDamage); // Arcane-Edit
                 break;
             case HealthAnalyzerMode.Organs:
                 PopulateOrgans(target);
@@ -174,8 +176,10 @@ public sealed partial class HealthAnalyzerControl
 
     #region Scan state populate methods
 
+    // Arcane-Edit-Start
     public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false,
-        DamageSpecifier? woundDamage = null) // Arcane
+        DamageSpecifier? woundDamage = null)
+    // Arcane-Edit-End
     {
         var patient = target; // Arcane: Keep patient conditions separate from the selected part's damage.
         var selectedPart = _entityManager.GetEntity(state.Part);
@@ -190,14 +194,14 @@ public sealed partial class HealthAnalyzerControl
         PartNameLabel.Visible = isPart;
         DamageLabelHeading.Visible = true;
         DamageLabel.Visible = true;
-        var damage = woundDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane
+        var damage = woundDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane-Edit
         DamageLabel.Text = damage.GetTotal().ToString();
 
-        var identity = Identity.Name(patient, _entityManager); // Arcane
+        var identity = Identity.Name(patient, _entityManager); // Arcane-Edit
         if (isPart)
-            PartNameLabel.Text = Identity.Name(target, _entityManager); // Arcane
+            PartNameLabel.Text = Identity.Name(target, _entityManager); // Arcane-Edit
 
-        var damageSortedGroups = damage.GetDamagePerGroup(_prototypes) // Arcane: Group the displayed damage consistently.
+        var damageSortedGroups = damage.GetDamagePerGroup(_prototypes) // Arcane-Edit: Group the displayed damage consistently.
             .OrderByDescending(damage => damage.Value)
             .ToDictionary(x => x.Key, x => x.Value);
 
@@ -205,7 +209,7 @@ public sealed partial class HealthAnalyzerControl
 
         DrawDiagnosticGroups(damageSortedGroups, damagePerType);
 
-        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(patient, out var carrier)) // Arcane
+        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(patient, out var carrier)) // Arcane-Edit
         {
             DrawDiseases(carrier.Diseases.ContainedEntities);
         }
@@ -238,7 +242,7 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane
+        foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane-Edit
         {
             if (isPart && part.Owner != selectedPart)
                 continue;

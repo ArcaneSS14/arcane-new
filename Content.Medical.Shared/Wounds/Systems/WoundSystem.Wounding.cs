@@ -155,11 +155,9 @@ public sealed partial class WoundSystem
 
         // Create or update wounds based on damage changes
         var part = ent.AsNullable();
-        foreach (var (damageType, requested) in args.Damage.DamageDict) // Arcane-Edit: Applied changes > requested changes for residual healing.
+        foreach (var (damageType, requested) in args.Damage.DamageDict) // Arcane-Edit: Include residual wound healing even when ordinary damage is already zero.
         {
-            // Arcane-Start: Create positive wounds only from damage the part accepted.
-            var damageValue = requested < 0 ? requested : args.ModifiedDamage.DamageDict.GetValueOrDefault(damageType);
-            // Arcane-End
+            var damageValue = requested < 0 ? requested : args.ModifiedDamage.DamageDict.GetValueOrDefault(damageType); // Arcane: Create positive wounds only from damage the part accepted.
             if (damageValue == 0)
                 continue; // Only create wounds for damage or healing
 
@@ -174,12 +172,15 @@ public sealed partial class WoundSystem
                 if (!IsWoundPrototypeValid(id))
                     continue;
 
+                // Arcane-Edit-Start: Keep wound severity in damage units.
+                // var multiplier = args.Damage.WoundSeverityMultipliers.GetValueOrDefault(damageType, 1);
                 TryInduceWound(part,
                     args.Damage.GetWoundId(damageType),
-                    damageValue, // Arcane: Keep wound severity in damage units.
+                    damageValue,
                     out _,
                     damageType: damageType,
                     user: args.Origin);
+                // Arcane-Edit-End
             }
         }
 
@@ -201,7 +202,10 @@ public sealed partial class WoundSystem
         var damage = _damageable.GetAllDamage(ent.Owner);
         foreach (var type in damage.DamageDict.Keys)
         {
-            TryInduceWound(part, type.Id, value, out _); // Arcane: Match the severity used by ordinary damage.
+            // Arcane-Edit-Start: Match the severity used by ordinary damage.
+            // var mul = damage.WoundSeverityMultipliers.GetValueOrDefault(type, 1);
+            TryInduceWound(part, type.Id, value, out _);
+            // Arcane-Edit-End
         }
 
         UpdateWoundableIntegrity(part);
