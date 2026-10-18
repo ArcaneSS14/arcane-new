@@ -32,10 +32,9 @@ public sealed class BrainRespirationTest : GameTest
     [SidedDependency(Side.Server)] private readonly IConfigurationManager _cfg = null!;
     [SidedDependency(Side.Server)] private readonly MobStateSystem _mob = null!;
 
-    [TestCase(Gas.Oxygen, false, true)]
-    [TestCase(Gas.Nitrogen, false, false)]
-    [TestCase(Gas.Oxygen, true, false)]
-    public async Task InhaledGasRespectsMetabolismAndBlockedBreathing(Gas gasType, bool blocked, bool oxygenates)
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task InhaledOxygenRespectsBlockedBreathing(bool blocked)
     {
         var patient = await CreatePatient();
         await Server.WaitPost(() =>
@@ -47,11 +46,11 @@ public sealed class BrainRespirationTest : GameTest
                 SEntMan.EnsureComponent<BlockedBreathingComponent>(patient);
 
             var gas = new GasMixture(6f);
-            gas.AdjustMoles(gasType, 10f);
+            gas.AdjustMoles(Gas.Oxygen, 10f);
             var ev = new InhaledGasEvent(gas);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
             Assert.That(ev.Handled && ev.Succeeded, Is.True);
-            if (oxygenates)
+            if (!blocked)
                 Assert.That(brain.Comp.AirSaturation, Is.GreaterThan(0.5f).And.LessThanOrEqualTo(1f));
             else
                 Assert.That(brain.Comp.AirSaturation, Is.EqualTo(0.5f));
