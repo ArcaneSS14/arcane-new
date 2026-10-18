@@ -194,7 +194,7 @@ public abstract partial class SharedCPRSystem : EntitySystem
         RaiseLocalEvent(ent.Owner, ref completed);
         // Arcane-End
 
-        if (completed.AllowRevival && mob.CurrentState == MobState.Dead && rand.Prob(training.ReviveChance) && CanRevive(ent)) // Arcane-Edit: Respect the active respiration model.
+        if (mob.CurrentState == MobState.Dead && rand.Prob(training.ReviveChance) && CanRevive(ent))
             _mob.ChangeMobState(ent.Owner, MobState.Critical, origin: user);
 
         if (rand.Prob(training.InhaleChance) && HasHealthyLungs(ent))

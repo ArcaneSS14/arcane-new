@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Medical.Respiration;
 using Content.Arcane.Server.Medical.Respiration;
@@ -14,6 +15,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Speech;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Verbs;
+using Content.Trauma.Shared.Medical;
 using Content.Trauma.Common.MartialArts;
 using Content.Trauma.Common.Body;
 using Robust.Shared.Configuration;
@@ -58,6 +61,32 @@ public sealed class BrainRespirationTest : GameTest
     }
 
     [Test]
+    public async Task CompletedCPRRetainsTheOriginalRevivalChance()
+    {
+        var patient = await CreatePatient();
+        await Server.WaitPost(() =>
+        {
+            var rescuer = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+            var training = SEntMan.EnsureComponent<CPRTrainingComponent>(rescuer);
+            training.Duration = TimeSpan.FromSeconds(0.1);
+            training.ReviveChance = 1f;
+            training.InhaleChance = 0f;
+            _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = 180 } },
+                targetPart: Content.Medical.Common.Targeting.TargetBodyPart.Vital, ignoreResistances: true);
+            _mob.ChangeMobState(patient, MobState.Dead);
+            var cpr = SEntMan.System<SharedVerbSystem>().GetLocalVerbs(patient, rescuer, typeof(InnateVerb))
+                .Single(verb => verb.Text == Loc.GetString("cpr-verb"));
+            cpr.Act!.Invoke();
+        });
+        await RunSeconds(0.25f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(_mob.IsDead(patient), Is.False, "The brain oxygen model must not disable CPR revival.");
+            Assert.That(GetAsphyxiation(patient), Is.LessThan(180));
+        });
+    }
+
+    [Test]
     public async Task HypoxiaUsesReservesAndCPRWhileDisablingRestoresTheOriginalModel()
     {
         var patient = await CreatePatient();
@@ -90,7 +119,6 @@ public sealed class BrainRespirationTest : GameTest
 
                 var completed = new CPRCompletedEvent();
                 SEntMan.EventBus.RaiseLocalEvent(patient, ref completed);
-                Assert.That(completed.AllowRevival, Is.False);
                 Assert.That(GetAsphyxiation(patient), Is.LessThan(before));
                 _cfg.SetCVar(ArcaneCVars.ComplexRespiratorEnabled, false);
             });
@@ -102,9 +130,6 @@ public sealed class BrainRespirationTest : GameTest
                 Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectOxygenDeprived", out _), Is.False);
                 Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectHypoxicSpeech", out _), Is.False);
                 Assert.That(SHasComp<SlowAccentComponent>(patient), Is.True);
-                var completed = new CPRCompletedEvent();
-                SEntMan.EventBus.RaiseLocalEvent(patient, ref completed);
-                Assert.That(completed.AllowRevival, Is.True);
                 var suffocation = new SuffocationBeforeEvent();
                 SEntMan.EventBus.RaiseLocalEvent(patient, ref suffocation);
                 Assert.That(suffocation.Cancelled, Is.False);
@@ -155,9 +180,6 @@ public sealed class BrainRespirationTest : GameTest
             Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectOxygenDeprived", out _), Is.False);
             Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectHypoxicSpeech", out _), Is.False);
             Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectOpiated", out _), Is.True);
-            var completed = new CPRCompletedEvent();
-            SEntMan.EventBus.RaiseLocalEvent(patient, ref completed);
-            Assert.That(completed.AllowRevival, Is.False);
             Assert.That(_body.InsertOrgan(patient, brainUid), Is.True);
             Assert.That(_oxygen.GetBrain(patient), Is.Not.Null);
             Assert.That(_effects.TryGetStatusEffect(patient, "StatusEffectOxygenDeprived", out _), Is.True);
