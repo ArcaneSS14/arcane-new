@@ -84,6 +84,8 @@ public sealed class ConcussionTest : GameTest
         var patient = SSpawn("MobHuman");
         Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadHelmetSwat"), "head", silent: true, force: true), Is.True);
         Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "ears", silent: true, force: true), Is.True);
+        Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "pocket1", silent: true, force: true), Is.True);
+        Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "pocket2", silent: true, force: true), Is.True);
         var dose = new FlashbangConcussionEvent(100);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref dose);
         var comp = SComp<ConcussionThresholdComponent>(patient);

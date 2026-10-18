@@ -20,5 +20,5 @@ public readonly record struct ConcussionStateChangedEvent(ConcussionState OldSta
 [ByRefEvent]
 public record struct BeforeConcussionDamageEvent(FixedPoint2 Damage, bool Cancelled = false) : IInventoryRelayEvent
 {
-    public SlotFlags TargetSlots => SlotFlags.All;
+    public SlotFlags TargetSlots => SlotFlags.HEAD | SlotFlags.EARS;
 }

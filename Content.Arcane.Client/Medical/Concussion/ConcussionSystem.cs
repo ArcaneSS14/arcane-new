@@ -23,6 +23,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
     private bool _hasOverlay;
     private bool _refreshRequired;
     private bool _playSound;
+    private bool _baselinePending = true;
 
     public override void Initialize()
     {
@@ -79,12 +80,13 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
         }
         if (concussion.CurrentState == ConcussionState.Sane && _lastState != ConcussionState.Sane)
             _sound = _audio.Stop(_sound);
-        else if (concussion.CurrentState > _lastState && _playSound)
+        else if (!_baselinePending && concussion.CurrentState > _lastState && _playSound)
         {
             _sound = _audio.Stop(_sound);
             _sound = _audio.PlayGlobal(concussion.Sound, Filter.Local(), false, AudioParams.Default.WithVolume(-10f))?.Entity;
         }
         _lastState = concussion.CurrentState;
+        _baselinePending = false;
     }
 
     private void OnAttached(LocalPlayerAttachedEvent args)
@@ -118,6 +120,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             _overlays.RemoveOverlay(_overlay);
         _hasOverlay = false;
         _lastState = ConcussionState.Sane;
+        _baselinePending = true;
         _sound = _audio.Stop(_sound);
     }
 
