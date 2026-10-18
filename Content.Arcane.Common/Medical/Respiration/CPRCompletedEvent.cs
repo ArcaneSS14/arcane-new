@@ -1,7 +1,13 @@
 namespace Content.Arcane.Common.Medical.Respiration;
 
 /// <summary>
-/// Raised on the patient after the existing CPR training and lung checks succeed.
+/// Applies completed compressions before the inherited revival roll and assisted breath.
 /// </summary>
 [ByRefEvent]
-public readonly record struct CPRCompletedEvent;
+public struct CPRCompletedEvent(EntityUid user, bool canVentilate, float reviveChance)
+{
+    public readonly EntityUid User = user;
+    public readonly bool CanVentilate = canVentilate;
+    public float ReviveChance = reviveChance;
+    public bool CanRevive = true;
+}

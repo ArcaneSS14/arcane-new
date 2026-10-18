@@ -1,11 +1,25 @@
+#nullable enable
 using System.Linq;
+using Content.Arcane.Common.Medical.Heart;
+using Content.Arcane.Common.Medical.Respiration;
 using Content.Arcane.Server.Medical.Respiration;
+using Content.Arcane.Shared.Medical.Heart;
+using Content.Arcane.Shared.Medical.Respiration;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
+using Content.Medical.Common.Body;
+using Content.Medical.Common.Targeting;
+using Content.Shared.Bed.Sleep;
+using Content.Shared.Body;
+using Content.Shared.Body.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.DoAfter;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.Verbs;
+using Content.Trauma.Shared.Medical;
+using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
@@ -14,52 +28,177 @@ public sealed class CPRRecoveryTest : GameTest
 {
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly MobStateSystem _mob = null!;
+    [SidedDependency(Side.Server)] private readonly SharedDoAfterSystem _doAfter = null!;
+    [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
+    [SidedDependency(Side.Server)] private readonly HeartRateSystem _heart = null!;
 
     [TestPrototypes]
-    private const string CPRRescuer = """
+    private const string Prototypes = """
 - type: entity
   parent: MobHuman
-  id: TestArcaneCPRRescuer
+  id: TestArcaneCPRHuman
   components:
-  - type: CPRTraining
-    duration: 0.1
-    reviveChance: 1
-    inhaleChance: 0
+  - type: Respirator
+    updateInterval: 1000
+- type: entity
+  parent: MobIPC
+  id: TestArcaneCPRIPC
 """;
 
     [Test]
-    public async Task CompletedCPRRetainsTheOriginalRevivalChance()
+    public async Task OneSessionOwnsTimingPerfusionAndHandoff()
     {
-        var patient = await CreatePatient();
+        await Pair.CreateTestMap();
+        EntityUid patient = default, first = default, second = default;
+        ushort oldIndex = default;
         await Server.WaitPost(() =>
         {
-            var rescuer = SSpawnAtPosition("TestArcaneCPRRescuer", TestMap!.GridCoords);
-            _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = 180 } },
-                targetPart: Content.Medical.Common.Targeting.TargetBodyPart.Vital, ignoreResistances: true);
+            patient = SpawnHuman();
+            first = SpawnHuman();
+            second = SpawnHuman();
+            Damage(patient, 180);
             _mob.ChangeMobState(patient, MobState.Dead);
-            var cpr = SEntMan.System<SharedVerbSystem>().GetLocalVerbs(patient, rescuer, typeof(InnateVerb))
-                .Single(verb => verb.Text == Loc.GetString("cpr-verb"));
-            cpr.Act!.Invoke();
+            Start(patient, first);
+            oldIndex = SComp<ActiveCPRComponent>(patient).DoAfterIndex!.Value;
+            Start(patient, second);
+            Assert.That(SComp<ActiveCPRComponent>(patient).Performer, Is.EqualTo(first));
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.False);
         });
-        await RunSeconds(0.25f);
+        await RunSeconds(2.8f);
+        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(180)));
+        await RunSeconds(0.4f);
         await Server.WaitPost(() =>
         {
-            Assert.That(_mob.IsDead(patient), Is.False, "CPR must retain its existing revival chance.");
-            Assert.That(GetAsphyxiation(patient), Is.LessThan(180));
+            Assert.That(Oxygen(patient), Is.EqualTo(177));
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.True);
         });
+        await RunSeconds(0.8f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(patient), Is.EqualTo(174));
+            _doAfter.Cancel(first, oldIndex);
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.False);
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            Start(patient, second);
+            Assert.That(SComp<ActiveCPRComponent>(patient).Performer, Is.EqualTo(second));
+        });
+        await RunSeconds(1f);
+        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(174), "A new performer starts a three-second cycle."));
     }
 
-    private float GetAsphyxiation(EntityUid patient)
-    {
-        return _damage.GetAllDamage(patient).DamageDict.GetValueOrDefault("Asphyxiation").Float();
-    }
-
-    private async Task<EntityUid> CreatePatient()
+    [Test]
+    public async Task NonBreathingPerformersCompressWithoutOxygenTreatment()
     {
         await Pair.CreateTestMap();
         EntityUid patient = default;
-        await Server.WaitPost(() => patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords));
-        await RunSeconds(0.2f);
-        return patient;
+        await Server.WaitPost(() =>
+        {
+            patient = SpawnHuman();
+            var ipc = SSpawnAtPosition("TestArcaneCPRIPC", TestMap!.GridCoords);
+            var human = SpawnHuman();
+            Damage(patient, 180);
+            _mob.ChangeMobState(patient, MobState.Dead);
+            SEntMan.AddComponent<BreathingImmunityComponent>(human);
+            var capabilities = new CPRCapabilitiesEvent(human);
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref capabilities);
+            Assert.That(capabilities.CanPerform, Is.True);
+            Assert.That(capabilities.CanVentilate, Is.False);
+            Start(patient, ipc);
+            Assert.That(SComp<ActiveCPRComponent>(patient).CanVentilate, Is.False);
+            var heart = _heart.GetHeart(patient)!.Value;
+            _heart.SetRate(heart.Owner, heart.Comp!, 0, true);
+        });
+        await RunSeconds(3.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(patient), Is.EqualTo(180));
+            var circulation = new FindWorkingHeartEvent();
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref circulation);
+            Assert.That(circulation.Found, Is.True);
+        });
     }
+
+    [Test]
+    public async Task TreatmentUsesCurrentThresholdAndRevivalRestartsOnlyStoppedHearts()
+    {
+        await Pair.CreateTestMap();
+        EntityUid patient = default;
+        await Server.WaitPost(() =>
+        {
+            patient = SpawnHuman();
+            var rescuer = SpawnHuman();
+            Damage(patient, 52);
+            _mob.ChangeMobState(patient, MobState.Dead);
+            var cycle = new CPRCompletedEvent(rescuer, true, 0.3f);
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref cycle);
+            Assert.That(Oxygen(patient), Is.EqualTo(49));
+            Assert.That(cycle.ReviveChance, Is.EqualTo(0.02f).Within(0.0001f));
+            SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
+            cycle = new CPRCompletedEvent(rescuer, false, 0.3f);
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref cycle);
+            Assert.That(cycle.ReviveChance, Is.EqualTo(1f - 49f / 60f).Within(0.0001f));
+            Damage(patient, -49);
+            var heart = _heart.GetHeart(patient)!.Value;
+            _heart.SetRate(heart.Owner, heart.Comp!, 0, true);
+            _mob.ChangeMobState(patient, MobState.Dead);
+            Start(patient, rescuer);
+        });
+        await RunSeconds(3.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(_mob.IsDead(patient), Is.False);
+            Assert.That(_heart.GetHeart(patient)!.Value.Comp!.CurrentRate, Is.GreaterThanOrEqualTo(40));
+            Assert.That(_effects.TryGetStatusEffect(patient, PostRevivalRecoverySystem.RecoverySleep, out _), Is.True);
+            var heart = _heart.GetHeart(patient)!.Value;
+            _heart.SetRate(heart.Owner, heart.Comp!, 20, true);
+            var revived = new CPRRevivedEvent(patient);
+            SEntMan.EventBus.RaiseLocalEvent(patient, ref revived);
+            Assert.That(heart.Comp!.CurrentRate, Is.EqualTo(20), "CPR must not fix a beating fibrillating heart.");
+        });
+    }
+
+    [Test]
+    public async Task RecoveryExpiresWithoutRemovingOtherSleepSources()
+    {
+        await Pair.CreateTestMap();
+        EntityUid recovering = default, sedated = default;
+        await Server.WaitPost(() =>
+        {
+            recovering = SpawnHuman();
+            sedated = SpawnHuman();
+            foreach (var patient in new[] { recovering, sedated })
+            {
+                _mob.ChangeMobState(patient, MobState.Dead);
+                _mob.ChangeMobState(patient, MobState.Alive);
+            }
+            _effects.TrySetStatusEffectDuration(sedated, SleepingSystem.StatusEffectForcedSleeping, TimeSpan.FromSeconds(20));
+        });
+        await RunSeconds(5.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(SEntMan.HasComponent<SleepingComponent>(recovering), Is.False);
+            Assert.That(SEntMan.HasComponent<SleepingComponent>(sedated), Is.True);
+            Assert.That(_effects.TryGetStatusEffect(recovering, PostRevivalRecoverySystem.RecoveryDrowsiness, out _), Is.True);
+        });
+        await RunSeconds(30.1f);
+        await Server.WaitPost(() => Assert.That(
+            _effects.TryGetStatusEffect(recovering, PostRevivalRecoverySystem.RecoveryDrowsiness, out _), Is.False));
+    }
+
+    private EntityUid SpawnHuman() => SSpawnAtPosition("TestArcaneCPRHuman", TestMap!.GridCoords);
+
+    private void Damage(EntityUid patient, int amount)
+        => _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = amount } },
+            targetPart: TargetBodyPart.Vital, ignoreResistances: true, interruptsDoAfters: false);
+
+    private float Oxygen(EntityUid patient)
+        => _damage.GetAllDamage(patient).DamageDict.GetValueOrDefault("Asphyxiation").Float();
+
+    private void Start(EntityUid patient, EntityUid performer)
+        => SEntMan.System<SharedVerbSystem>().GetLocalVerbs(patient, performer, typeof(InnateVerb))
+            .Single(verb => verb.Text == Loc.GetString("cpr-verb") || verb.Text == Loc.GetString("arcane-chest-compressions-verb"))
+            .Act!.Invoke();
 }

@@ -30,7 +30,19 @@
   Automatic shocks move a beating heart by 45 BPM towards its resting rate without overshooting.
   A stopped standard human heart starts at 210 BPM. The device respects the installed heart's stable limits.
 
-  Standard shocks also treat 40 suffocation damage. They do not replace breathing, missing blood or treatment of other injuries.
+  ## Chemical assistance
+
+  Shocks have no built-in suffocation healing. A dead patient's blood must contain at least 5u of each qualifying medicine.
+  One medicine that treats suffocation only in softcrit or hardcrit provides up to 40 healing.
+  A medicine that also treats suffocation outside crit provides 20; two different such medicines provide 40.
+  The total never exceeds 40. Medicines are not consumed by shocks. Their dose, temperature and other healing conditions still apply.
+  Overdoses that cause net suffocation damage do not qualify. Living patients do not receive this chemical bonus.
+
+  Do not coordinate repeated shocks from several devices. Each patient needs the previous device's recharge interval between shocks (normally 5 seconds).
+  An earlier shock still changes the pulse but provides no chemical healing and causes an additional 30 heat damage.
+  Every delivered shock restarts this interval, regardless of the operator or device.
+
+  Defibrillation does not replace breathing, missing blood or treatment of other injuries.
   Continue CPR when the patient cannot breathe independently. Epinephrine and omnizine can also stabilise and restart a heart.
 
   <Box><GuideEntityEmbed Entity="StasisBed" /></Box>
