@@ -41,9 +41,9 @@ public sealed partial class BlockingSystem : EntitySystem
     [Dependency] private ItemToggleSystem _toggle = default!;
     [Dependency] private SharedActionsSystem _actionsSystem = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
-    // Arcane-Edit: Shield movement no longer changes physics body types.
+    // [Dependency] private SharedPhysicsSystem _physics = default!; // Arcane-Edit: Shield movement no longer changes physics body types.
     [Dependency] private SharedPopupSystem _popupSystem = default!;
-    // Arcane-Edit: Raising and lowering no longer anchor or unanchor the user.
+    // [Dependency] private SharedTransformSystem _transformSystem = default!; // Arcane-Edit: Raising and lowering no longer anchor or unanchor the user.
     [Dependency] private TurfSystem _turf = default!;
 
     [Dependency] private EntityQuery<BlockingComponent> _blockQuery;
@@ -192,7 +192,6 @@ public sealed partial class BlockingSystem : EntitySystem
                 }
             }
         }
-
         // Arcane-Edit-Start: Raised shields keep the user mobile.
         _actionsSystem.SetToggled(entity.Comp.BlockingToggleActionEntity, true);
         // Arcane-Edit-End
@@ -243,13 +242,13 @@ public sealed partial class BlockingSystem : EntitySystem
         if (!entity.Comp.IsRaised)
             return false;
 
+        // Arcane-Edit-Start: Lowering no longer changes transform, anchoring, or body type.
         var shieldName = Name(entity);
 
         var blockerName = Identity.Entity(user, EntityManager);
         var msgUser = Loc.GetString("action-popup-blocking-disabling-user", ("shield", shieldName));
         var msgOther = Loc.GetString("action-popup-blocking-disabling-other", ("blockerName", blockerName), ("shield", shieldName));
 
-        // Arcane-Edit-Start: Clear the raised fixture without changing body type or anchoring.
         if (HasComp<BlockingUserComponent>(user) && TryComp<PhysicsComponent>(user, out var physicsComponent))
         {
             _actionsSystem.SetToggled(entity.Comp.BlockingToggleActionEntity, false);
@@ -290,11 +289,10 @@ public sealed partial class BlockingSystem : EntitySystem
         entity.Comp.User = user;
         DirtyField(entity, entity.Comp, nameof(BlockingComponent.User));
 
-        // Arcane-Edit: Preserve the current active shield during state application or another equip.
+        // Arcane-Edit-Start: Preserve the active shield without capturing body type.
         if (_timing.ApplyingState || EnsureComp<BlockingUserComponent>(user, out var userComp))
             return;
 
-        // Arcane-Edit-Start: Track the active item without changing the user's body type.
         userComp.BlockingItem = entity;
         DirtyField(user, userComp, nameof(BlockingUserComponent.BlockingItem));
         // Arcane-Edit-End
