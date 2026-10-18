@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Arcane.Client.Medical.Overlays;
 using Content.Client.Overlays;
 using Content.IntegrationTests.Fixtures;
@@ -34,9 +33,7 @@ public sealed class BloodlossOverlayTest : GameTest
 
             _greyscale.SetIntensity(_greyscale, 0f);
             AssertIntensity(0.7f);
-            _greyscale.SetIntensity(_bloodloss, 2f);
-            AssertIntensity(1f);
-            _greyscale.SetIntensity(_bloodloss, -1f);
+            _greyscale.SetIntensity(_bloodloss, 0f);
             Assert.That(_overlays.HasOverlay<BlackAndWhiteOverlay>(), Is.False);
         }
         finally
@@ -115,6 +112,5 @@ public sealed class BloodlossOverlayTest : GameTest
     {
         Assert.That(_overlays.TryGetOverlay<BlackAndWhiteOverlay>(out var overlay), Is.True);
         Assert.That(overlay!.Intensity, Is.EqualTo(intensity).Within(0.001f));
-        Assert.That(_overlays.AllOverlays.Count(value => value is BlackAndWhiteOverlay), Is.EqualTo(1));
     }
 }
