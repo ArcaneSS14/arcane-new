@@ -33,7 +33,7 @@
     - type: Defibrillator
       zapHeal:
         types:
-          Asphyxiation: -40
+          Asphyxiation: 0 # Arcane-Edit: Chemical treatment is calculated for the patient at the delivered shock.
       allowDoAfterMovement: false # Arcane
     - type: DoAfter
     - type: UseDelay
