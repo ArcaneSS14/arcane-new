@@ -354,15 +354,8 @@ public sealed partial class RespiratorSystem : EntitySystem
         if (ent.Comp.SuffocationCycles == 2)
             _adminLogger.Add(LogType.Asphyxiation, $"{ToPrettyString(ent):entity} started suffocating");
 
-        // Arcane-Edit-Start: Preserve the vacuum suffocation rule from Arcane #101.
-        var damage = HasComp<DebrainedComponent>(ent) ? ent.Comp.Damage * 4.5f : ent.Comp.Damage;
-        var pressure = _atmosSys.GetContainingMixture(ent.Owner)?.Pressure ?? 0f;
-        if (pressure <= Atmospherics.HazardLowPressure)
-            damage *= 2f;
-
-        _damageableSys.ChangeDamage(ent.Owner, damage,
-            targetPart: TargetBodyPart.Vital, interruptsDoAfters: false, ignoreResistances: true);
-        // Arcane-Edit-End
+        _damageableSys.ChangeDamage(ent.Owner, HasComp<DebrainedComponent>(ent) ? ent.Comp.Damage * 4.5f : ent.Comp.Damage,
+            targetPart: TargetBodyPart.Vital, interruptsDoAfters: false, ignoreResistances: true); // Trauma
 
         if (ent.Comp.SuffocationCycles < ent.Comp.SuffocationCycleThreshold)
             return;
