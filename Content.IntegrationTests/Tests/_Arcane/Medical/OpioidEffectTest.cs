@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Client.Drowsiness;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -26,7 +25,7 @@ public sealed class OpioidEffectTest : GameTest
             patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
             Assert.That(_effects.TryAddStatusEffectDuration(patient, "StatusEffectOpiated",
                 out var effect, TimeSpan.FromSeconds(60)), Is.True);
-            Assert.That(SComp<DrowsinessStatusEffectComponent>(effect!.Value).TimeBetweenIncidents, Is.Null);
+            SComp<DrowsinessStatusEffectComponent>(effect!.Value).NextIncidentTime = SGameTiming.CurTime;
         });
 
         await RunSeconds(0.2f);
@@ -94,6 +93,6 @@ public sealed class OpioidEffectTest : GameTest
     {
         await RunSeconds(0.2f);
         await Client.WaitPost(() =>
-            Assert.That(_overlays.AllOverlays.Count(overlay => overlay is DrowsinessOverlay), Is.EqualTo(present ? 1 : 0)));
+            Assert.That(_overlays.HasOverlay<DrowsinessOverlay>(), Is.EqualTo(present)));
     }
 }
