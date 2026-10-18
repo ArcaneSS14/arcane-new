@@ -10,6 +10,9 @@
 		<PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
 		<ProjectReference Include="../Content.Shared/Content.Shared.csproj" />
 		<ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="../Content.Trauma.Shared/Content.Trauma.Shared.csproj" />
 	</ItemGroup>
 
