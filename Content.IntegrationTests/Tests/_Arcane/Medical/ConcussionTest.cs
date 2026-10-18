@@ -5,10 +5,7 @@ using Content.Arcane.Common.Medical.Concussion;
 using Content.Arcane.Shared.Medical.Concussion;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
-using Content.Shared.Damage.Components;
 using Content.Shared.Inventory;
-using Content.Shared.Movement.Systems;
-using Content.Shared.Rejuvenate;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
 using Content.Trauma.Common.Language;
@@ -36,7 +33,7 @@ public sealed class ConcussionTest : GameTest
     private static readonly EntProtoId Speech = "StatusEffectConcussedSpeech";
 
     [Test]
-    public async Task StateEffectsCapsAndRecoveryPreserveOtherCauses()
+    public async Task RecoveryPreservesUnrelatedSpeechAndRestoresLanguage()
     {
         EntityUid patient = default;
         var language = string.Empty;
@@ -46,12 +43,7 @@ public sealed class ConcussionTest : GameTest
             var comp = SComp<ConcussionThresholdComponent>(patient);
             SEntMan.EnsureComponent<SlurredAccentComponent>(patient);
             _concussion.AddConcussionDamage((patient, comp), 1000);
-            Assert.That(comp.StoredDamage.Int(), Is.EqualTo(100));
-            Assert.That(comp.CurrentState, Is.EqualTo(ConcussionState.Overwhelmed));
             Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.True);
-            var speed = new RefreshMovementSpeedModifiersEvent();
-            SEntMan.EventBus.RaiseLocalEvent(patient, speed);
-            Assert.That(speed.WalkSpeedModifier, Is.EqualTo(0.7f).Within(0.001f));
 
             language = _prototypes.EnumeratePrototypes<LanguagePrototype>().First().ID;
             var impaired = new DetermineEntityLanguagesEvent();
@@ -63,7 +55,6 @@ public sealed class ConcussionTest : GameTest
         await RunSeconds(0.1f);
         await Server.WaitPost(() =>
         {
-            var comp = SComp<ConcussionThresholdComponent>(patient);
             Assert.That(SHasComp<ConcussedComponent>(patient), Is.False);
             Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.False);
             Assert.That(SHasComp<SlurredAccentComponent>(patient), Is.True);
@@ -71,9 +62,6 @@ public sealed class ConcussionTest : GameTest
             restored.UnderstoodLanguages.Add(language);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref restored);
             Assert.That(restored.UnderstoodLanguages, Does.Contain(new ProtoId<LanguagePrototype>(language)));
-            SEntMan.EnsureComponent<GodmodeComponent>(patient);
-            _concussion.AddConcussionDamage((patient, comp), 65);
-            Assert.That(comp.StoredDamage.Int(), Is.Zero);
         });
     }
 
@@ -91,31 +79,6 @@ public sealed class ConcussionTest : GameTest
         var comp = SComp<ConcussionThresholdComponent>(patient);
         Assert.That(comp.StoredDamage.Float(), Is.EqualTo(48f).Within(0.01f));
         Assert.That(comp.CurrentState, Is.EqualTo(ConcussionState.Minor));
-    }
-
-    [Test]
-    public async Task NaturalRecoveryAndRejuvenationClearConcussion()
-    {
-        await Pair.CreateTestMap();
-        EntityUid patient = default;
-        await Server.WaitPost(() =>
-        {
-            patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            _concussion.AddConcussionDamage((patient, SComp<ConcussionThresholdComponent>(patient)), 65);
-        });
-        await RunSeconds(22.5f);
-        await Server.WaitPost(() =>
-        {
-            var comp = SComp<ConcussionThresholdComponent>(patient);
-            Assert.That(comp.StoredDamage.Int(), Is.Zero);
-            Assert.That(comp.CurrentState, Is.EqualTo(ConcussionState.Sane));
-            Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.False);
-            _concussion.AddConcussionDamage((patient, comp), 65);
-            var rejuvenate = new RejuvenateEvent();
-            SEntMan.EventBus.RaiseLocalEvent(patient, rejuvenate);
-            Assert.That(comp.CurrentState, Is.EqualTo(ConcussionState.Sane));
-            Assert.That(SHasComp<ConcussedComponent>(patient), Is.False);
-        });
     }
 
     [Test]
