@@ -11,7 +11,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<ManualDefibrillatorComponent, MapInitEvent>(OnMapInit);
-        SubscribeLocalEvent<ManualDefibrillatorComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<ManualDefibrillatorComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
         SubscribeLocalEvent<ManualDefibrillatorComponent, ExaminedEvent>(OnExamined);
     }
 
@@ -20,7 +20,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         SetMode(ent, Math.Clamp(ent.Comp.Mode, 1, 4));
     }
 
-    private void OnGetVerbs(Entity<ManualDefibrillatorComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
+    private void OnGetVerbs(Entity<ManualDefibrillatorComponent> ent, ref GetVerbsEvent<Verb> args)
     {
         if (!args.CanAccess || !args.CanInteract)
             return;
@@ -29,11 +29,11 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         for (var mode = 1; mode <= 4; mode++)
         {
             var selected = mode;
-            args.Verbs.Add(new AlternativeVerb
+            args.Verbs.Add(new Verb
             {
                 Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode)),
                 Category = category,
-                Priority = -100, // Keep battery ejection as the default alternative interaction.
+                Priority = -100, // Context-menu actions must not replace Z or Alt+Z interactions.
                 Disabled = mode == ent.Comp.Mode,
                 Act = () => SetMode(ent, selected),
             });
