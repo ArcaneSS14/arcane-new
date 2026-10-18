@@ -143,7 +143,7 @@ public sealed partial class HealthAnalyzerControl
         switch (_mode)
         {
             case HealthAnalyzerMode.Body:
-                PopulateBody(target, ref state, bloodLevelLow, populate.WoundDamage); // Arcane-Edit
+                PopulateBody(target, ref state, bloodLevelLow, populate.DiagnosticDamage); // Arcane-Edit
                 break;
             case HealthAnalyzerMode.Organs:
                 PopulateOrgans(target);
@@ -178,7 +178,7 @@ public sealed partial class HealthAnalyzerControl
 
     // Arcane-Edit-Start
     public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false,
-        DamageSpecifier? woundDamage = null)
+        DamageSpecifier? diagnosticDamage = null)
     // Arcane-Edit-End
     {
         var patient = target; // Arcane: Keep patient conditions separate from the selected part's damage.
@@ -194,7 +194,7 @@ public sealed partial class HealthAnalyzerControl
         PartNameLabel.Visible = isPart;
         DamageLabelHeading.Visible = true;
         DamageLabel.Visible = true;
-        var damage = woundDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane-Edit
+        var damage = diagnosticDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane-Edit: Include wounds without hiding ordinary damage.
         DamageLabel.Text = damage.GetTotal().ToString();
 
         var identity = Identity.Name(patient, _entityManager); // Arcane-Edit

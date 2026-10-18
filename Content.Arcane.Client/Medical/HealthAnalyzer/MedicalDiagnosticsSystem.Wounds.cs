@@ -2,6 +2,7 @@ using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Shared.Medical.Wounds;
 using Content.Medical.Shared.Wounds;
 using Content.Shared.Body;
+using Content.Shared.Damage;
 
 namespace Content.Arcane.Client.Medical.HealthAnalyzer;
 
@@ -17,13 +18,29 @@ public sealed partial class MedicalDiagnosticsSystem
 
         if (args.Part is { } selected)
         {
-            if (TryComp<WoundableComponent>(selected, out var woundable) && _body.GetBody(selected) == body)
-                args.WoundDamage = _wounds.GetDamage((selected, woundable));
+            if (_body.GetBody(selected) == body)
+                args.DiagnosticDamage = GetDiagnosticDamage(selected);
             return;
         }
 
-        // Parts are stored directly on the body in the current anatomy model.
-        foreach (var part in _body.GetOrgans<WoundableComponent>(body))
-            args.WoundDamage = _wounds.GetDamage(part, args.WoundDamage);
+        var damage = new DamageSpecifier();
+        foreach (var part in _body.GetExternalOrgans(body))
+            damage += GetDiagnosticDamage(part);
+        args.DiagnosticDamage = damage;
+    }
+
+    private DamageSpecifier GetDiagnosticDamage(EntityUid part)
+    {
+        var damage = _damage.GetAllDamage(part);
+        if (!TryComp<WoundableComponent>(part, out var woundable))
+            return damage;
+
+        // Wounds and raw damage can represent the same injury or outlive one another.
+        foreach (var (type, amount) in _wounds.GetDamage((part, woundable)).DamageDict)
+        {
+            if (amount > damage.DamageDict.GetValueOrDefault(type))
+                damage.DamageDict[type] = amount;
+        }
+        return damage;
     }
 }
