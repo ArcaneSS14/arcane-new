@@ -83,7 +83,7 @@ public sealed class WoundDiagnosticsTest : GameTest
             torsoNet = SEntMan.GetNetEntity(torso);
             Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
         });
-        await RunSeconds(0.2f);
+        await Pair.RunUntilSynced();
         await Client.WaitPost(() =>
         {
             var patient = CEntMan.GetEntity(patientNet);
