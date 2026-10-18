@@ -1,5 +1,6 @@
 using Content.Arcane.Common.Medical.Heart;
 using Content.Medical.Common.Body;
+using Content.Medical.Shared.Body;
 using Content.Shared.Alert;
 using Content.Shared.Bed.Components;
 using Content.Shared.Body;
@@ -37,7 +38,7 @@ public sealed partial class HeartRateSystem : EntitySystem
         SubscribeLocalEvent<HeartRateComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<HeartRateComponent, RejuvenateEvent>(OnRejuvenate);
         SubscribeLocalEvent<BloodstreamComponent, FindWorkingHeartEvent>(OnFindHeart);
-        SubscribeLocalEvent<HeartRateComponent, BodyRelayedEvent<FindWorkingHeartEvent>>(OnRelayedFindHeart);
+        SubscribeLocalEvent<HeartComponent, BodyRelayedEvent<FindWorkingHeartEvent>>(OnRelayedFindHeart);
         SubscribeLocalEvent<HeartRateComponent, OrganRemovalDeathAttemptEvent>(OnRemovalDeathAttempt);
         SubscribeLocalEvent<HeartRateComponent, OrganGotInsertedEvent>(OnInserted);
         SubscribeLocalEvent<HeartRateComponent, OrganGotRemovedEvent>(OnRemoved);
@@ -152,10 +153,10 @@ public sealed partial class HeartRateSystem : EntitySystem
         _body.RelayEvent((ent.Owner, body), ref args);
     }
 
-    private void OnRelayedFindHeart(Entity<HeartRateComponent> ent, ref BodyRelayedEvent<FindWorkingHeartEvent> args)
+    private void OnRelayedFindHeart(Entity<HeartComponent> ent, ref BodyRelayedEvent<FindWorkingHeartEvent> args)
     {
         var result = args.Args;
-        result.Found |= GetState(ent.Comp) != HeartState.Stopped;
+        result.Found |= !TryComp<HeartRateComponent>(ent, out var rate) || GetState(rate) != HeartState.Stopped;
         args.Args = result;
     }
 
