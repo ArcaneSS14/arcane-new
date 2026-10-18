@@ -1,5 +1,4 @@
 using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
 
@@ -17,26 +16,26 @@ public sealed partial class PostRevivalRecoverySystem : EntitySystem
 
     public override void Initialize()
     {
-        SubscribeLocalEvent<MobStateComponent, MobStateChangedEvent>(OnMobStateChanged);
+        SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
     }
 
-    private void OnMobStateChanged(Entity<MobStateComponent> ent, ref MobStateChangedEvent args)
+    private void OnMobStateChanged(MobStateChangedEvent args)
     {
         if (args.NewMobState == MobState.Dead)
         {
-            RemoveOwnEffect(ent, RecoverySleep);
-            RemoveOwnEffect(ent, RecoveryDrowsiness);
+            RemoveOwnEffect(args.Target, RecoverySleep);
+            RemoveOwnEffect(args.Target, RecoveryDrowsiness);
             return;
         }
 
         if (args.OldMobState != MobState.Dead)
             return;
 
-        RemoveOwnEffect(ent, RecoverySleep);
-        RemoveOwnEffect(ent, RecoveryDrowsiness);
+        RemoveOwnEffect(args.Target, RecoverySleep);
+        RemoveOwnEffect(args.Target, RecoveryDrowsiness);
         var unconscious = TimeSpan.FromSeconds(5);
-        _status.TrySetStatusEffectDuration(ent, RecoverySleep, unconscious);
-        _status.TrySetStatusEffectDuration(ent, RecoveryDrowsiness, TimeSpan.FromSeconds(30), unconscious);
+        _status.TrySetStatusEffectDuration(args.Target, RecoverySleep, unconscious);
+        _status.TrySetStatusEffectDuration(args.Target, RecoveryDrowsiness, TimeSpan.FromSeconds(30), unconscious);
     }
 
     private void RemoveOwnEffect(EntityUid patient, EntProtoId prototype)

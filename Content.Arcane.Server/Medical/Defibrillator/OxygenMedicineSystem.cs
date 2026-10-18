@@ -31,9 +31,9 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
     public override void Initialize()
     {
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;
-        SubscribeLocalEvent<MobStateComponent, EntityConditionEvent<MobStateCondition>>(OnMobStateCondition,
+        SubscribeLocalEvent<OxygenMedicineEvaluationComponent, EntityConditionEvent<MobStateCondition>>(OnMobStateCondition,
             after: new[] { typeof(MobStateEntityConditionSystem) });
-        SubscribeLocalEvent<MobStateComponent, EntityConditionEvent<ReagentCondition>>(OnReagentCondition);
+        SubscribeLocalEvent<OxygenMedicineEvaluationComponent, EntityConditionEvent<ReagentCondition>>(OnReagentCondition);
     }
 
     public override void Shutdown()
@@ -44,13 +44,13 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
 
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs args) => _cache.Clear();
 
-    private void OnMobStateCondition(Entity<MobStateComponent> ent, ref EntityConditionEvent<MobStateCondition> args)
+    private void OnMobStateCondition(Entity<OxygenMedicineEvaluationComponent> ent, ref EntityConditionEvent<MobStateCondition> args)
     {
         if (_evaluation is { } evaluation && evaluation.Patient == ent.Owner)
             args.Result = evaluation.State == args.Condition.Mobstate;
     }
 
-    private void OnReagentCondition(Entity<MobStateComponent> ent, ref EntityConditionEvent<ReagentCondition> args)
+    private void OnReagentCondition(Entity<OxygenMedicineEvaluationComponent> ent, ref EntityConditionEvent<ReagentCondition> args)
     {
         if (_evaluation is { } evaluation && evaluation.Patient == ent.Owner)
             args.Result = _conditions.RaiseConditionEvent(evaluation.Solution, args.Condition, args.SourceEnt);
@@ -60,6 +60,22 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
     /// Returns a single capped bonus for distinct therapeutic reagents present at a dose of at least five units.
     /// </summary>
     public int GetShockHealing(EntityUid patient, Entity<SolutionComponent> solution)
+    {
+        var added = !HasComp<OxygenMedicineEvaluationComponent>(patient);
+        if (added)
+            AddComp<OxygenMedicineEvaluationComponent>(patient);
+        try
+        {
+            return CalculateHealing(patient, solution);
+        }
+        finally
+        {
+            if (added)
+                RemComp<OxygenMedicineEvaluationComponent>(patient);
+        }
+    }
+
+    private int CalculateHealing(EntityUid patient, Entity<SolutionComponent> solution)
     {
         var contents = solution.Comp.Solution;
         var generalMedicines = 0;
