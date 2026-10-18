@@ -16,7 +16,6 @@ using Content.Shared.Speech;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.Verbs;
-using Content.Trauma.Shared.Medical;
 using Content.Trauma.Common.MartialArts;
 using Content.Trauma.Common.Body;
 using Robust.Shared.Configuration;
@@ -34,6 +33,18 @@ public sealed class BrainRespirationTest : GameTest
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly IConfigurationManager _cfg = null!;
     [SidedDependency(Side.Server)] private readonly MobStateSystem _mob = null!;
+
+    [TestPrototypes]
+    private const string CPRRescuer = """
+- type: entity
+  parent: MobHuman
+  id: TestArcaneCPRRescuer
+  components:
+  - type: CPRTraining
+    duration: 0.1
+    reviveChance: 1
+    inhaleChance: 0
+""";
 
     [TestCase(false)]
     [TestCase(true)]
@@ -66,11 +77,7 @@ public sealed class BrainRespirationTest : GameTest
         var patient = await CreatePatient();
         await Server.WaitPost(() =>
         {
-            var rescuer = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            var training = SEntMan.EnsureComponent<CPRTrainingComponent>(rescuer);
-            training.Duration = TimeSpan.FromSeconds(0.1);
-            training.ReviveChance = 1f;
-            training.InhaleChance = 0f;
+            var rescuer = SSpawnAtPosition("TestArcaneCPRRescuer", TestMap!.GridCoords);
             _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = 180 } },
                 targetPart: Content.Medical.Common.Targeting.TargetBodyPart.Vital, ignoreResistances: true);
             _mob.ChangeMobState(patient, MobState.Dead);
