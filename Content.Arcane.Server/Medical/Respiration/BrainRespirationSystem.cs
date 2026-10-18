@@ -97,7 +97,8 @@ public sealed partial class BrainRespirationSystem : EntitySystem
             if (body is not null && !brain.Active)
                 continue;
 
-            StoreSaturation((uid, brain), brain.AirSaturation - brain.AirConsumption);
+            if (body is not { } owner || !_mob.IsDead(owner))
+                StoreSaturation((uid, brain), brain.AirSaturation - brain.AirConsumption);
             if (brain.LastBody is not { } patient)
                 continue;
 
