@@ -1,9 +1,9 @@
 <Document>
-  # Breathing and oxygen deprivation
-  Insufficient breathing causes suffocation damage after the body's initial reserve runs out. Breathing, masks and gas exchange otherwise work as before.
-  - Outside critical condition, sustained suffocation adds 1.5 damage per second. Adequate breathing removes 0.625 per second.
-  - In either critical condition, sustained suffocation adds 0.33 damage per second. Natural breathing alone no longer removes this damage: use oxygen medicine or full CPR.
-  - Suffocation causes unconsciousness at half the body's soft critical damage threshold: normally 50 for a human. Bodies without a separate soft critical threshold use half their first critical threshold.
-  - This early unconsciousness does not prevent natural breathing. Restoring suitable air prevents further suffocation; treatment below the threshold removes the oxygen-related unconsciousness.
-  Other causes of unconsciousness, including revival recovery and sedation, can keep a patient unconscious after their oxygen damage improves.
+  # Дыхание и кислородное голодание
+  При недостаточном дыхании удушье начинает наносить урон после исчерпания начального запаса организма. Остальная работа дыхания, масок и газообмена не меняется.
+  - Вне крита продолжающееся удушье добавляет 1,5 единицы урона в секунду. Достаточное дыхание снимает 0,625 единицы в секунду.
+  - В софткрите и хардкрите продолжающееся удушье добавляет 0,33 единицы урона в секунду. Обычное дыхание само по себе больше не снимает этот урон: нужны лекарства от удушья или полная СЛР.
+  - Удушье вызывает потерю сознания при достижении половины порога софткрита тела — обычно 50 у человека. Если отдельного порога софткрита нет, используется половина первого порога крита.
+  - Такой ранний обморок не мешает естественному дыханию. Доступ к пригодному для дыхания воздуху предотвращает дальнейшее удушье. Лечение, снижающее урон ниже порога, снимает кислородную причину потери сознания.
+  Другие причины, включая восстановление после оживления и действие снотворных, могут оставить пациента без сознания даже после уменьшения удушья.
 </Document>
