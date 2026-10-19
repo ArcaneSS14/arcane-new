@@ -178,7 +178,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
             _useDelay.TryResetDelay((ent.Owner, useDelay), id: ent.Comp.DelayId);
         }
 
-        _audio.PlayPredicted(ent.Comp.ZapSound, ent, user);
+        _audio.PlayPvs(ent.Comp.ZapSound, ent.Owner); // Arcane-Edit: PlayPredicted > PlayPvs
         Entity<DefibrillatorComponent> defibEnt = (ent, ent.Comp);
         var failedRevive = TryRevive(defibEnt, user, target, true);
 
