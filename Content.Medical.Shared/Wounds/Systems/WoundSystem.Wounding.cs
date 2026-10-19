@@ -474,7 +474,7 @@ public sealed partial class WoundSystem
         foreach (var wound in part.Comp.Wounds.ContainedEntities)
         {
             var woundComp = _query.Comp(wound);
-            if (woundComp.IsScar) // scars don't affect limb integrity
+            if (woundComp.IsScar || !woundComp.AffectsIntegrity) // Arcane-Edit: Scars and systemic wounds do not affect limb integrity.
                 continue;
 
             damage += woundComp.WoundSeverityPoint;

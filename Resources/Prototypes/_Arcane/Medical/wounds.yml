@@ -4,6 +4,7 @@
   components:
   - type: Wound
     damageType: Bloodloss
+    affectsIntegrity: false
 
 - type: entity
   id: Asphyxiation
@@ -11,3 +12,4 @@
   components:
   - type: Wound
     damageType: Asphyxiation
+    affectsIntegrity: false

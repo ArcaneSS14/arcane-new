@@ -33,11 +33,14 @@ public sealed class WoundDiagnosticsTest : GameTest
             var patient = SSpawn("MobHuman");
             var torso = _body.GetOrgan(patient, "Torso")!.Value;
             var part = new Entity<WoundableComponent?>(torso, SComp<WoundableComponent>(torso));
+            var initialIntegrity = part.Comp!.Integrity;
             var damage = new DamageSpecifier { DamageDict = { [type] = 10 } };
             damage.WoundSeverityMultipliers[type] = 4;
             _damage.TryChangeDamage(torso, damage, ignoreResistances: true);
             var wound = _wounds.GetWoundableWounds(part).Single(w => w.Comp.DamageType == type);
             Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10), type);
+
+            Assert.That(part.Comp.Integrity, Is.EqualTo(type == "Blunt" ? initialIntegrity - 10 : initialIntegrity), type);
 
             // A blocked wound can outlive the corresponding raw damage.
             wound.Comp.CanBeHealed = false;
