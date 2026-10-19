@@ -28,8 +28,8 @@ public sealed partial class PostmortemHypoxiaComponent : Component
     public TimeSpan NextDamage;
 
     /// <summary>
-    /// Time through which the current stasis pause has been accounted for.
+    /// Start of the stasis interval after the last treatment, to resume the remaining grace period on exit.
     /// </summary>
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
-    public TimeSpan LastUpdate;
+    public TimeSpan StasisStarted;
 }

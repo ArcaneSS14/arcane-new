@@ -2,6 +2,7 @@ using Content.Arcane.Shared.Medical.Respiration;
 using Content.Goobstation.Common.Body.Components;
 using Content.Medical.Common.Body;
 using Content.Server.Body.Components;
+using Content.Shared.Bed.Components;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
@@ -25,7 +26,6 @@ public sealed partial class OxygenKnockoutSystem : EntitySystem
 
     public override void Initialize()
     {
-        InitializePostmortem();
         SubscribeLocalEvent<RespiratorComponent, MobThresholdChecked>(OnThresholds);
         SubscribeLocalEvent<RespiratorComponent, MobStateChangedEvent>(OnStateChanged);
         SubscribeLocalEvent<RespiratorComponent, ComponentStartup>(OnRespiratorStartup);
@@ -34,6 +34,8 @@ public sealed partial class OxygenKnockoutSystem : EntitySystem
         SubscribeLocalEvent<BreathingImmunityComponent, ComponentShutdown>(OnImmunityShutdown);
         SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentStartup>(OnSpecialStartup);
         SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentShutdown>(OnSpecialShutdown);
+        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentStartup>(OnStasisStarted);
+        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentShutdown>(OnStasisStopped);
     }
 
     private void OnThresholds(Entity<RespiratorComponent> ent, ref MobThresholdChecked args) => UpdatePatient(ent);
@@ -55,9 +57,9 @@ public sealed partial class OxygenKnockoutSystem : EntitySystem
 
         RefreshPostmortem(patient);
 
-        var needsSleep = Active<RespiratorComponent>(patient) && !Active<BreathingImmunityComponent>(patient) &&
-            !Active<SpecialBreathingImmunityComponent>(patient) && TryComp<MobStateComponent>(patient, out var mob) &&
-            mob.CurrentState != MobState.Dead && HasComp<DamageableComponent>(patient) &&
+        var needsSleep = TryComp<MobStateComponent>(patient, out var mob) && mob.CurrentState != MobState.Dead &&
+            Active<RespiratorComponent>(patient) && !Active<BreathingImmunityComponent>(patient) &&
+            !Active<SpecialBreathingImmunityComponent>(patient) && HasComp<DamageableComponent>(patient) &&
             _threshold.GetThreshold(patient) is { } limit &&
             _damage.GetAllDamage(patient).DamageDict.GetValueOrDefault(Asphyxiation).Float() >= limit;
 

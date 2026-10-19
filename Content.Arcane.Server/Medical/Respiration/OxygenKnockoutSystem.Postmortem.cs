@@ -28,16 +28,10 @@ public sealed partial class OxygenKnockoutSystem
     private static readonly FixedPoint2 UpperRate = FixedPoint2.New(0.3);
     private TimeSpan _nextUpdate;
 
-    private void InitializePostmortem()
-    {
-        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentStartup>(OnStasisStarted);
-        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentShutdown>(OnStasisStopped);
-    }
-
     private void OnStasisStarted(Entity<StasisBedBuckledComponent> ent, ref ComponentStartup args)
     {
         if (TryComp<PostmortemHypoxiaComponent>(ent, out var state))
-            state.LastUpdate = _timing.CurTime;
+            state.StasisStarted = _timing.CurTime;
     }
 
     private void OnStasisStopped(Entity<StasisBedBuckledComponent> ent, ref ComponentShutdown args)
@@ -46,8 +40,7 @@ public sealed partial class OxygenKnockoutSystem
             return;
 
         var now = _timing.CurTime;
-        state.NextDamage += now - state.LastUpdate;
-        state.LastUpdate = now;
+        state.NextDamage += now - state.StasisStarted;
     }
 
     private bool Eligible(EntityUid uid)
@@ -76,12 +69,12 @@ public sealed partial class OxygenKnockoutSystem
         {
             state = AddComp<PostmortemHypoxiaComponent>(uid);
             state.NextDamage = now + TreatmentGrace;
-            state.LastUpdate = now;
+            state.StasisStarted = now;
         }
         else if (current < state.Asphyxiation)
         {
             state.NextDamage = now + TreatmentGrace;
-            state.LastUpdate = now;
+            state.StasisStarted = now;
         }
 
         state.Asphyxiation = current;
@@ -99,11 +92,7 @@ public sealed partial class OxygenKnockoutSystem
         while (query.MoveNext(out var uid, out var state))
         {
             if (HasComp<StasisBedBuckledComponent>(uid))
-            {
-                state.NextDamage += now - state.LastUpdate;
-                state.LastUpdate = now;
                 continue;
-            }
 
             if (now < state.NextDamage)
                 continue;
