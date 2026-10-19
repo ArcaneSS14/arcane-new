@@ -12,6 +12,7 @@ using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
+using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -31,6 +32,7 @@ public sealed class PressureDamageTest : GameTest
     [SidedDependency(Side.Server)] private readonly WoundSystem _wounds = null!;
     [SidedDependency(Side.Server)] private readonly BloodstreamSystem _blood = null!;
     [SidedDependency(Side.Server)] private readonly MobThresholdSystem _thresholds = null!;
+    [SidedDependency(Side.Server)] private readonly MobStateSystem _mobState = null!;
 
     [TestPrototypes]
     private const string Prototypes = """
@@ -75,7 +77,7 @@ public sealed class PressureDamageTest : GameTest
     }
 
     [Test]
-    public async Task ActualVacuumDamageStopsAtTheSharedLimitWithoutBleeding()
+    public async Task DeadPatientStopsAtDamageLimitWithoutBleeding()
     {
         await Pair.CreateTestMap();
         await Server.WaitAssertion(() =>
@@ -85,6 +87,7 @@ public sealed class PressureDamageTest : GameTest
             var seed = new DamageSpecifier { DamageDict = { ["Blunt"] = 199 } };
             seed.Flags = DamageSpecifier.DamageFlags.NoWounds | DamageSpecifier.DamageFlags.NoBleeding;
             _damage.ChangeDamage(patient, seed, ignoreResistances: true);
+            _mobState.ChangeMobState(patient, MobState.Dead);
             _pressure.Update(1f);
             Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(200f));
             for (var i = 0; i < 65; i++)
@@ -122,6 +125,29 @@ public sealed class PressureDamageTest : GameTest
 
             _damage.ChangeDamage(torso, new() { DamageDict = { ["Blunt"] = 5 } }, ignoreResistances: true);
             Assert.That(_wounds.GetWoundableWounds(part).Single().Comp.WoundSeverityPoint.Float(), Is.EqualTo(15f));
+        });
+    }
+
+    [Test]
+    public async Task PressureLimitStopsDamageAfterDeath()
+    {
+        await Pair.CreateTestMap();
+        await Server.WaitAssertion(() =>
+        {
+            var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+            var parts = _body.GetExternalOrgans(patient).ToArray();
+            for (var i = 0; i < 120; i++)
+                _pressure.Update(1f);
+
+            Assert.That(SEntMan.Deleted(patient) || SEntMan.IsQueuedForDeletion(patient), Is.False);
+            Assert.That(_mobState.IsDead(patient), Is.True);
+            var stoppedDamage = _damage.GetAllDamage(patient).GetTotal();
+            Assert.That(stoppedDamage.Float(), Is.GreaterThan(200f));
+            Assert.That(_body.GetExternalOrgans(patient).Count(), Is.EqualTo(parts.Length));
+            Assert.That(parts.All(part => !SEntMan.Deleted(part) && !SEntMan.IsQueuedForDeletion(part)), Is.True);
+            for (var i = 0; i < 5; i++)
+                _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(stoppedDamage));
         });
     }
 

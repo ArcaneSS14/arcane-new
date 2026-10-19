@@ -279,7 +279,7 @@ namespace Content.Server.Atmos.EntitySystems
                 var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
                 RaiseLocalEvent(uid, ref damageEvent);
 
-                if (totalDamage >= barotrauma.MaxDamage)
+                if (!damageEvent.IgnoreDamageLimit && totalDamage >= barotrauma.MaxDamage)
                     continue;
                 // Arcane-End
 
@@ -345,6 +345,7 @@ namespace Content.Server.Atmos.EntitySystems
     public record struct BarotraumaDamageEvent(float Pressure, float UpdateInterval, FixedPoint2 CurrentDamage)
     {
         public DamageSpecifier? Damage;
+        public bool IgnoreDamageLimit;
     }
     // Arcane-End
 }

@@ -4,7 +4,8 @@ using Content.Shared.Atmos;
 using Content.Shared.Body;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
-using Content.Shared.FixedPoint;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 
 namespace Content.Arcane.Server.Atmos;
 
@@ -12,6 +13,7 @@ public sealed partial class PressureDamageSystem : EntitySystem
 {
     [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private BodySystem _body = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
 
     private const float InitialLowDamage = 2f;
     private const float MaximumLowDamage = 5f;
@@ -28,6 +30,8 @@ public sealed partial class PressureDamageSystem : EntitySystem
 
     private void OnPressureDamage(Entity<BarotraumaComponent> ent, ref BarotraumaDamageEvent args)
     {
+        args.IgnoreDamageLimit = HasComp<MobStateComponent>(ent) && !_mobState.IsDead(ent);
+
         float rate;
         if (args.Pressure < Atmospherics.HazardLowPressure)
         {
@@ -47,13 +51,13 @@ public sealed partial class PressureDamageSystem : EntitySystem
                 : 0f;
         }
 
-        if (args.CurrentDamage >= ent.Comp.MaxDamage)
+        if (!args.IgnoreDamageLimit && args.CurrentDamage >= ent.Comp.MaxDamage)
             return;
 
         var damage = ent.Comp.Damage * (rate * args.UpdateInterval / ReferenceDamage * _body.GetVitalBodyPartRatio(ent.Owner));
         var remaining = ent.Comp.MaxDamage - args.CurrentDamage;
         var total = damage.GetTotal() * Math.Max(1f, _damage.UniversalAllDamageModifier);
-        if (total > remaining)
+        if (!args.IgnoreDamageLimit && total > remaining)
         {
             foreach (var (type, amount) in damage.DamageDict)
             {
