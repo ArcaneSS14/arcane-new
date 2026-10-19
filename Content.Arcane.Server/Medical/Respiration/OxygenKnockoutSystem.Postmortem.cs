@@ -1,4 +1,3 @@
-using Content.Arcane.Shared.Medical.Respiration;
 using Content.Goobstation.Common.Body.Components;
 using Content.Medical.Common.Body;
 using Content.Medical.Common.Targeting;
@@ -7,23 +6,19 @@ using Content.Shared.Bed.Components;
 using Content.Shared.Body;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Prototypes;
-using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Content.Shared.Mobs.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Arcane.Server.Medical.Respiration;
 
 /// <summary>
-/// Accumulates capped postmortem suffocation after a grace period without effective oxygen treatment.
+/// Accumulates capped postmortem suffocation using the common oxygen physiology notifications.
 /// </summary>
-public sealed partial class PostmortemHypoxiaSystem : EntitySystem
+public sealed partial class OxygenKnockoutSystem
 {
-    [Dependency] private DamageableSystem _damage = default!;
-    [Dependency] private OxygenThresholdSystem _threshold = default!;
     [Dependency] private IGameTiming _timing = default!;
 
     private static readonly ProtoId<DamageTypePrototype> Asphyxiation = "Asphyxiation";
@@ -33,40 +28,13 @@ public sealed partial class PostmortemHypoxiaSystem : EntitySystem
     private static readonly FixedPoint2 UpperRate = FixedPoint2.New(0.3);
     private TimeSpan _nextUpdate;
 
-    public override void Initialize()
-    {
-        SubscribeLocalEvent<RespiratorComponent, MobThresholdChecked>(OnThresholds);
-        SubscribeLocalEvent<RespiratorComponent, MobStateChangedEvent>(OnStateChanged);
-        SubscribeLocalEvent<RespiratorComponent, ComponentStartup>(OnStartup);
-        SubscribeLocalEvent<RespiratorComponent, ComponentShutdown>(OnShutdown);
-        SubscribeLocalEvent<BreathingImmunityComponent, ComponentStartup>(OnImmunityStartup);
-        SubscribeLocalEvent<BreathingImmunityComponent, ComponentShutdown>(OnImmunityShutdown);
-        SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentStartup>(OnSpecialStartup);
-        SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentShutdown>(OnSpecialShutdown);
-    }
-
-    private void OnThresholds(Entity<RespiratorComponent> ent, ref MobThresholdChecked args) => Refresh(ent);
-    private void OnStateChanged(Entity<RespiratorComponent> ent, ref MobStateChangedEvent args) => Refresh(ent);
-    private void OnStartup(Entity<RespiratorComponent> ent, ref ComponentStartup args) => Refresh(ent);
-    private void OnShutdown(Entity<RespiratorComponent> ent, ref ComponentShutdown args) => RemComp<PostmortemHypoxiaComponent>(ent);
-    private void OnImmunityStartup(Entity<BreathingImmunityComponent> ent, ref ComponentStartup args) => Refresh(ent);
-    private void OnImmunityShutdown(Entity<BreathingImmunityComponent> ent, ref ComponentShutdown args) => Refresh(ent);
-    private void OnSpecialStartup(Entity<SpecialBreathingImmunityComponent> ent, ref ComponentStartup args) => Refresh(ent);
-    private void OnSpecialShutdown(Entity<SpecialBreathingImmunityComponent> ent, ref ComponentShutdown args) => Refresh(ent);
-
-    private bool Active<T>(EntityUid uid) where T : Component
-        => TryComp<T>(uid, out var comp) && comp.LifeStage < ComponentLifeStage.Stopping;
-
     private bool Eligible(EntityUid uid)
-        => HasComp<BodyComponent>(uid) && Active<RespiratorComponent>(uid) &&
-            !Active<BreathingImmunityComponent>(uid) && !Active<SpecialBreathingImmunityComponent>(uid) &&
-            TryComp<MobStateComponent>(uid, out var mob) && mob.CurrentState == MobState.Dead;
+        => TryComp<MobStateComponent>(uid, out var mob) && mob.CurrentState == MobState.Dead &&
+            HasComp<BodyComponent>(uid) && Active<RespiratorComponent>(uid) &&
+            !Active<BreathingImmunityComponent>(uid) && !Active<SpecialBreathingImmunityComponent>(uid);
 
-    private void Refresh(EntityUid uid)
+    private void RefreshPostmortem(EntityUid uid)
     {
-        if (TerminatingOrDeleted(uid))
-            return;
-
         if (!Eligible(uid) || _threshold.GetThreshold(uid) is not { } limit)
         {
             RemComp<PostmortemHypoxiaComponent>(uid);
