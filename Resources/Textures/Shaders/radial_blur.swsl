@@ -11,6 +11,6 @@ void fragment() {
     {
         col += zTextureSpec(SCREEN_TEXTURE, UV + float(i) * Strength / float(SampleCount) * direction).xyz;
     }
-    col = col / float(SampleCount);
+    col = col / float(SampleCount + 1); // Arcane-Edit: SampleCount > SampleCount + 1
     COLOR = vec4(vec3(col), color.a);
 }
