@@ -1,4 +1,5 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
+using Content.Arcane.Common.Medical.Respiration;
 using Content.Arcane.Server.Medical.Respiration;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -30,6 +31,45 @@ public sealed class OxygenKnockoutTest : GameTest
   - type: Respirator
     updateInterval: 1000
 """;
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void RespirationRatesPreserveSpeciesModifiersAndScaleWithTheInterval()
+    {
+        var mobs = SEntMan.System<MobStateSystem>();
+        foreach (var (prototype, lossPerSecond, recoveryPerSecond) in new[]
+                 {
+                     ("MobHuman", 1.5f, -0.625f),
+                     ("MobArachnid", 2.25f, -0.3125f),
+                     ("MobDecapoid", 3f, -0.625f),
+                 })
+        {
+            var patient = SSpawn(prototype);
+            var respirator = SComp<RespiratorComponent>(patient);
+            foreach (var seconds in new[] { 1, 2 })
+            {
+                mobs.ChangeMobState(patient, MobState.Alive);
+                var loss = new RespirationDamageEvent(respirator.Damage, true, TimeSpan.FromSeconds(seconds));
+                SEntMan.EventBus.RaiseLocalEvent(patient, ref loss);
+                Assert.That(loss.Damage.DamageDict["Asphyxiation"].Float(), Is.EqualTo(lossPerSecond * seconds).Within(0.01f), prototype);
+                var recovery = new RespirationDamageEvent(respirator.DamageRecovery, false, TimeSpan.FromSeconds(seconds));
+                SEntMan.EventBus.RaiseLocalEvent(patient, ref recovery);
+                Assert.That(recovery.Damage.DamageDict["Asphyxiation"].Float(), Is.EqualTo(recoveryPerSecond * seconds).Within(0.01f), prototype);
+
+                foreach (var state in new[] { MobState.SoftCrit, MobState.Critical })
+                {
+                    mobs.ChangeMobState(patient, state);
+                    loss = new RespirationDamageEvent(respirator.Damage, true, TimeSpan.FromSeconds(seconds));
+                    SEntMan.EventBus.RaiseLocalEvent(patient, ref loss);
+                    Assert.That(loss.Damage.DamageDict["Asphyxiation"].Float(),
+                        Is.EqualTo(lossPerSecond / 1.5f * 0.33f * seconds).Within(0.01f), prototype);
+                    recovery = new RespirationDamageEvent(respirator.DamageRecovery, false, TimeSpan.FromSeconds(seconds));
+                    SEntMan.EventBus.RaiseLocalEvent(patient, ref recovery);
+                    Assert.That(recovery.Damage.DamageDict["Asphyxiation"].Float(), Is.Zero, prototype);
+                }
+            }
+        }
+    }
 
     [Test]
     [RunOnSide(Side.Server)]
