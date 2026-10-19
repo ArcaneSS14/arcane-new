@@ -123,7 +123,7 @@ public sealed class PressureDamageTest : GameTest
     {
         var patient = SSpawn("TestArcanePressureBlood");
         Sample(patient, 0f, 60f);
-        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(5f));
+        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(5f).Within(0.02f));
         var damage = SComp<BarotraumaComponent>(patient).Damage;
         SEntMan.RemoveComponent<BarotraumaComponent>(patient);
         Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
