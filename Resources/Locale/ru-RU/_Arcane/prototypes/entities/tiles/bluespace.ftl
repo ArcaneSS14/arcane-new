@@ -1,2 +1,2 @@
-ent-FloorBluespaceEntity = блюспейс пол
+ent-FloorArcaneBluespaceEntity = блюспейс пол
     .desc = { "" }
