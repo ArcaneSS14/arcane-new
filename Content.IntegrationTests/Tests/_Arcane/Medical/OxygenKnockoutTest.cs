@@ -1,3 +1,4 @@
+using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Server.Medical.Respiration;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -10,6 +11,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
+using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
@@ -45,6 +47,37 @@ public sealed class OxygenKnockoutTest : GameTest
         Damage(patient, -1);
         Assert.That(Asleep(patient), Is.False);
         Assert.That(SEntMan.HasComponent<SleepingComponent>(patient), Is.True);
+    }
+
+    [Test]
+    public async Task AnalyzerWarningUsesThePatientsReplicatedKnockoutThreshold()
+    {
+        await Pair.CreateTestMap();
+        NetEntity patientNet = default;
+        await Server.WaitPost(() =>
+        {
+            var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+            // Keep ordinary breathing from healing the boundary values during replication.
+            SComp<RespiratorComponent>(patient).NextUpdate += TimeSpan.FromHours(1);
+            SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
+            Damage(patient, 59);
+            patientNet = SEntMan.GetNetEntity(patient);
+            Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
+        });
+        await AssertWarning(false);
+        await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), 1));
+        await AssertWarning(true);
+
+        async Task AssertWarning(bool expected)
+        {
+            await Pair.RunUntilSynced();
+            await Client.WaitPost(() =>
+            {
+                var diagnostics = new HealthAnalyzerPopulateEvent();
+                CEntMan.EventBus.RaiseLocalEvent(CEntMan.GetEntity(patientNet), ref diagnostics);
+                Assert.That(diagnostics.Conditions.Contains(Loc.GetString("condition-body-asphyxiation-severe")), Is.EqualTo(expected));
+            });
+        }
     }
 
     private bool Asleep(EntityUid patient) => _effects.TryGetStatusEffect(patient, OxygenKnockoutSystem.OxygenSleep, out _);
