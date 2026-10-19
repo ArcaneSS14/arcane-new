@@ -1,0 +1,25 @@
+- type: entity
+  parent: MobCow
+  id: MobWisdomCow
+  name: wisdom cow
+  description: Known for its wisdom, shares it with all.
+  components:
+  - type: Vocalizer
+    minVocalizeInterval: 12
+    maxVocalizeInterval: 80
+    hideChat: true
+  - type: DatasetVocalizer
+    dataset: Wisdom
+#  - type: TTS
+#    voice: Dictor
+  - type: LanguageSpeaker
+    currentLanguage: TauCetiBasic
+  - type: LanguageKnowledge
+    speaks:
+    - TauCetiBasic
+    - Cow
+    understands:
+    - TauCetiBasic
+    - Cow
+  - type: Speech
+    speechSounds: Baritone
