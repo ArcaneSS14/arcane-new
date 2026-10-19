@@ -1,0 +1,15 @@
+- type: entity
+  parent: DrinkGlass
+  id: DrinkKvassGlass
+  name: kvass glass
+  description: A cool refreshing drink with a taste of socialism.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Drinks/kvass.rsi
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: Kvass
+          Quantity: 30

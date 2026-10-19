@@ -1,0 +1,12 @@
+- type: reagent
+  parent: BaseDrink
+  id: Kvass
+  name: reagent-name-kvass
+  flavor: sweet
+  color: "#BF8C3F"
+  physicalDesc: reagent-physical-desc-bubbly
+  metabolisms:
+    Drink:
+      effects:
+      - !type:SatiateThirst
+        factor: 3
