@@ -14,7 +14,6 @@
 #    voice: Dictor
   - type: LanguageSpeaker
     currentLanguage: TauCetiBasic
-  - type: LanguageKnowledge
     speaks:
     - TauCetiBasic
     - Cow
