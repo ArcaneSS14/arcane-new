@@ -135,6 +135,7 @@
   # Arcane-Start
   - FauxTileAstroIronsand
   - FauxTileAstroIronsandBorderless
+  - TileItemBluespace
   # Arcane-End
   # Goobstation R&D Console rework start
   position: 1,5

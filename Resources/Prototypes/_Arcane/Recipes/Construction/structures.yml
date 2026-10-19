@@ -124,3 +124,16 @@
   parent: Windoor
   id: SecureWindoor
   targetNode: windoorSecure
+
+- type: construction
+  id: FloorBluespace
+  graph: FloorBluespace
+  startNode: start
+  targetNode: BluespaceFloor
+  category: construction-category-structures
+  conditions:
+  - !type:TileNotBlocked
+    failIfSpace: false
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
