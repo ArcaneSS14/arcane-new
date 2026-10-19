@@ -14,6 +14,7 @@ public sealed class OpioidEffectTest : GameTest
 {
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
+    private DrowsinessOverlay _lastOverlay = null!;
 
     [Test]
     public async Task VisualEffectDoesNotCauseSleepingButDrowsinessStillDoes()
@@ -93,6 +94,17 @@ public sealed class OpioidEffectTest : GameTest
     {
         await RunSeconds(0.2f);
         await Client.WaitPost(() =>
-            Assert.That(_overlays.HasOverlay<DrowsinessOverlay>(), Is.EqualTo(present)));
+        {
+            Assert.That(_overlays.TryGetOverlay<DrowsinessOverlay>(out var overlay), Is.EqualTo(present));
+            if (present)
+            {
+                _lastOverlay = overlay!;
+                Assert.That(_lastOverlay.CurrentPower, Is.GreaterThan(0f));
+            }
+            else if (_lastOverlay != null)
+            {
+                Assert.That(_lastOverlay.CurrentPower, Is.Zero);
+            }
+        });
     }
 }
