@@ -28,10 +28,18 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         var category = new VerbCategory("arcane-defibrillator-mode-category", null);
         for (var mode = 1; mode <= 4; mode++)
         {
+            if (!ent.Comp.BpmZapMode.TryGetValue(mode, out var change) ||
+                !ent.Comp.BpmZapFlatlineMode.TryGetValue(mode, out var restart))
+                continue;
+
+            var restartText = restart > 0
+                ? Loc.GetString("arcane-defibrillator-mode-restart", ("bpm", restart))
+                : Loc.GetString("arcane-defibrillator-mode-no-restart");
             var selected = mode;
             args.Verbs.Add(new Verb
             {
-                Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode)),
+                Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode),
+                    ("sign", change > 0 ? "+" : ""), ("change", change), ("restart", restartText)),
                 Category = category,
                 Priority = -100, // Context-menu actions must not replace Z or Alt+Z interactions.
                 Disabled = mode == ent.Comp.Mode,
