@@ -28,7 +28,7 @@ public sealed partial class PostmortemHypoxiaComponent : Component
     public TimeSpan NextDamage;
 
     /// <summary>
-    /// Last evaluation time, used to suspend the grace period during stasis.
+    /// Time through which the current stasis pause has been accounted for.
     /// </summary>
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
     public TimeSpan LastUpdate;
