@@ -86,4 +86,10 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
 
     [DataField]
     public ProtoId<SinkPortPrototype> OffPort = "Off";
+
+    /// <summary>
+    /// Recharge rate of internal battery when active.
+    /// </summary>
+    [DataField]
+    public float InternalBatteryChargeRate = 100000f;
 }
