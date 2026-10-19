@@ -1,5 +1,5 @@
 - type: lobbyBackground
   id: arcane-station
   background: /Textures/_Arcane/LobbyScreens/arcane-station.webp
-  name: Ti-Julie on peaceful patrol
-  artist: Zicwi
+  title: lobby-arcane-station-title
+  artist: lobby-arcane-station-artist

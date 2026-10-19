@@ -11,8 +11,8 @@
     Ephedrine:
       amount: 1
   effects:
-    - !type:CreateEntityReactionEffect
+    - !type:SpawnEntity
       entity: FloorTileItemArcaneBluespace
       number: 2
-    - !type:CreateEntityReactionEffect
+    - !type:SpawnEntity
       entity: EffectFlashBluespace

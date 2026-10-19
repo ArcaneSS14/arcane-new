@@ -14,7 +14,6 @@
         shader: unshaded
   - type: RecruitmentScanning
     faction: InteQ
-    implant: DeathRattleImplantInteQ
     organization: organization-inteq
   - type: ActivatableUI
     key: enum.RecruitmentMemberListUiKey.Key
