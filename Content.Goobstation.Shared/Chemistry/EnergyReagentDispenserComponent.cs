@@ -48,4 +48,9 @@ public sealed partial class EnergyReagentDispenserComponent : Component
     /// </summary>
     [DataField(required: true)]
     public Dictionary<ProtoId<ReagentPrototype>, int> Reagents = default!;
+    /// <summary>
+    /// Efficiency for refunding energy when clearing container (0-1).
+    /// </summary>
+    [DataField]
+    public float RefundEnergyEfficiency = 0.5f;
 }

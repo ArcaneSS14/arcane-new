@@ -95,7 +95,7 @@ public sealed partial class EnergyReagentDispenserSystem : EntitySystem
             !_solution.TryGetFitsInDispenser(item, out var solution, out var soln))
             return;
 
-        var refundedEnergy = soln.Sum(reagent => GetEnergyCostForReagent(reagent.Reagent.Prototype, reagent.Quantity, ent));
+        var refundedEnergy = soln.Sum(reagent => GetEnergyCostForReagent(reagent.Reagent.Prototype, reagent.Quantity, ent)) * ent.Comp.RefundEnergyEfficiency;
         if (refundedEnergy > 0)
             _battery.ChangeCharge(ent.Owner, refundedEnergy);
 
