@@ -58,6 +58,7 @@ public abstract partial class SharedCPRSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CPRTrainingComponent, GetVerbsEvent<InnateVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<CPRTrainingComponent, ComponentShutdown>(OnPerformerShutdown); // Arcane
 
         SubscribeLocalEvent<ActiveCPRComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<ActiveCPRComponent, CPRDoAfterEvent>(OnDoAfter);
@@ -193,7 +194,20 @@ public abstract partial class SharedCPRSystem : EntitySystem
         // Arcane-End
     }
 
-    // Arcane-Start: Stop perfusion immediately, including when component removal is deferred.
+    // Arcane-Start: Release sessions when the performer loses training or is deleted, and stop perfusion immediately.
+    private void OnPerformerShutdown(Entity<CPRTrainingComponent> ent, ref ComponentShutdown args)
+    {
+        if (_net.IsClient)
+            return;
+
+        var query = EntityQueryEnumerator<ActiveCPRComponent>();
+        while (query.MoveNext(out var patient, out var active))
+        {
+            if (active.Performer == ent.Owner)
+                StopCPR((patient, active));
+        }
+    }
+
     private void StopCPR(Entity<ActiveCPRComponent> ent)
     {
         var stopped = new CPRStoppedEvent();
