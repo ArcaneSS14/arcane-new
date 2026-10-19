@@ -9,6 +9,7 @@ using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Bed.Sleep;
 using Content.Shared.Bed.Components;
+using Content.Shared.Buckle;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
@@ -197,10 +198,12 @@ public sealed class OxygenKnockoutTest : GameTest
     {
         await Pair.CreateTestMap();
         EntityUid patient = default;
+        EntityUid bed = default;
         TimeSpan deadline = default, pauseStart = default;
         await Server.WaitPost(() =>
         {
             patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
+            bed = SSpawnAtPosition("StasisBed", TestMap!.GridCoords);
             Damage(patient, 20);
             SEntMan.System<MobStateSystem>().ChangeMobState(patient, MobState.Dead);
         });
@@ -209,22 +212,24 @@ public sealed class OxygenKnockoutTest : GameTest
         {
             deadline = SComp<PostmortemHypoxiaComponent>(patient).NextDamage;
             pauseStart = _timing.CurTime;
-            SEntMan.AddComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SEntMan.System<SharedBuckleSystem>().TryBuckle(patient, null, bed), Is.True);
+            Assert.That(SEntMan.HasComponent<StasisBedBuckledComponent>(patient), Is.True);
         });
         await RunSeconds(0.1f);
         await Server.WaitPost(() =>
         {
-            SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SEntMan.System<SharedBuckleSystem>().TryUnbuckle(patient, null), Is.True);
+            Assert.That(SEntMan.HasComponent<StasisBedBuckledComponent>(patient), Is.False);
             Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(deadline - pauseStart),
                 "Stasis preserves the remaining grace period without restarting ten seconds.");
-            SEntMan.AddComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SEntMan.System<SharedBuckleSystem>().TryBuckle(patient, null, bed), Is.True);
         });
         await RunSeconds(0.1f);
         await Server.WaitPost(() => Damage(patient, -1));
         await RunSeconds(0.1f);
         await Server.WaitPost(() =>
         {
-            SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SEntMan.System<SharedBuckleSystem>().TryUnbuckle(patient, null), Is.True);
             Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(TimeSpan.FromSeconds(10)),
                 "Only effective oxygen treatment starts a new ten-second grace period, frozen until stasis ends.");
         });
@@ -235,17 +240,26 @@ public sealed class OxygenKnockoutTest : GameTest
     {
         await Pair.CreateTestMap();
         NetEntity patientNet = default;
-        await Server.WaitPost(() =>
+        EntityUid? previousAttachment = null;
+        try
         {
-            var patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
-            SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
-            Damage(patient, 59);
-            patientNet = SEntMan.GetNetEntity(patient);
-            Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
-        });
-        await AssertWarning(false);
-        await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), 1));
-        await AssertWarning(true);
+            await Server.WaitPost(() =>
+            {
+                previousAttachment = ServerSession!.AttachedEntity;
+                var patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
+                SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
+                Damage(patient, 59);
+                patientNet = SEntMan.GetNetEntity(patient);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
+            });
+            await AssertWarning(false);
+            await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), 1));
+            await AssertWarning(true);
+        }
+        finally
+        {
+            await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, previousAttachment));
+        }
 
         async Task AssertWarning(bool expected)
         {
