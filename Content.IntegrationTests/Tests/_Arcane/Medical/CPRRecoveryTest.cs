@@ -53,7 +53,7 @@ public sealed class CPRRecoveryTest : GameTest
     public async Task OneSessionOwnsTimingPerfusionAndHandoff()
     {
         await Pair.CreateTestMap();
-        EntityUid patient = default, first = default, second = default;
+        EntityUid patient = default, otherPatient = default, first = default, second = default;
         ushort oldIndex = default;
         await Server.WaitPost(() =>
         {
@@ -91,6 +91,31 @@ public sealed class CPRRecoveryTest : GameTest
         });
         await RunSeconds(1f);
         await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(174), "A new performer starts a three-second cycle."));
+
+        await Server.WaitPost(() =>
+        {
+            otherPatient = SpawnHuman();
+            Damage(otherPatient, 180);
+            _mob.ChangeMobState(otherPatient, MobState.Dead);
+            Start(otherPatient, second);
+        });
+        await RunSeconds(3.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.True);
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(otherPatient), Is.True);
+            SEntMan.DeleteEntity(second);
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.False);
+            Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(otherPatient), Is.False);
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(SEntMan.HasComponent<ActiveCPRComponent>(patient), Is.False);
+            Assert.That(SEntMan.HasComponent<ActiveCPRComponent>(otherPatient), Is.False);
+            Start(patient, first);
+            Assert.That(SComp<ActiveCPRComponent>(patient).Performer, Is.EqualTo(first));
+        });
     }
 
     [Test]
