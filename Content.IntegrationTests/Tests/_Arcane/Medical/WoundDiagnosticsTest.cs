@@ -87,6 +87,7 @@ public sealed class WoundDiagnosticsTest : GameTest
                 torsoNet = SEntMan.GetNetEntity(torso);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
             });
+            await Pair.RunTicksSync(1);
             await Pair.RunUntilSynced();
             await Client.WaitAssertion(() =>
             {
@@ -113,6 +114,7 @@ public sealed class WoundDiagnosticsTest : GameTest
                 _damage.TryChangeDamage(arm, new DamageSpecifier { DamageDict = { ["Blunt"] = 5 } }, ignoreResistances: true);
                 headNet = SEntMan.GetNetEntity(head);
             });
+            await Pair.RunTicksSync(1);
             await Pair.RunUntilSynced();
             await Client.WaitAssertion(() =>
             {
