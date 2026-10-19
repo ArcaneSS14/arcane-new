@@ -1,0 +1,18 @@
+[Feature] Delivery Bag
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/cargodrobe.yml
+@@ -53,4 +53,5 @@
++    ClothingBackpackDelivery: 1 # Orion
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Back/backpacks.yml
+@@ -16,2 +16,12 @@
++
++- type: entity
++  parent: ClothingBackpack
++  id: ClothingBackpackDelivery
++  name: delivery bag
++  description: A food delivery service backpack with aluminum foiling on the inside, which sustains heat.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Back/Backpacks/delivery.rsi
++  - type: AntiRottingContainer # Anti-rotting food, etc.

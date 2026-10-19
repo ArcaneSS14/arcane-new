@@ -1,0 +1,17 @@
+[Tweak] Remove NPC Food Spermamassive
+
+### Resources/Prototypes/NPCs/mob.yml
+@@ -40,7 +40,7 @@
+-    - tasks:
+-        - !type:HTNCompoundTask
+-          task: FoodCompound
++#    - tasks: # Europa-Remove
++#        - !type:HTNCompoundTask
++#          task: FoodCompound
+@@ -57,7 +57,7 @@
+-    - tasks:
+-        - !type:HTNCompoundTask
+-          task: FoodCompound
++#    - tasks: # Europa-Remove
++#        - !type:HTNCompoundTask
++#          task: FoodCompound

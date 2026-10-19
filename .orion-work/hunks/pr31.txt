@@ -1,0 +1,7 @@
+[Port] Energy Dome
+
+### Resources/Prototypes/Recipes/Lathes/Packs/security.yml
+@@ -77,4 +77,7 @@
++  # Europa-Start
++  - EnergyDomeTurtle
++  # Europa-End

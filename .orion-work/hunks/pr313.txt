@@ -1,0 +1,70 @@
+Update Content.Server/SurveillanceCamera/Systems/SurveillanceCameraSystem.cs
+
+### Content.Server/SurveillanceCamera/Systems/SurveillanceCameraSystem.cs
+@@ -56,5 +56,7 @@
++using Content.Shared.Silicons.StationAi;
++using Content.Shared.Tag;
+@@ -74,4 +76,5 @@ public sealed class SurveillanceCameraSystem : EntitySystem
++    [Dependency] private readonly SharedStationAiSystem _stationAiSystem = default!; // Orion
+@@ -107,4 +110,30 @@ public sealed class SurveillanceCameraSystem : EntitySystem
++    // Orion-Start
++    private const float AiViewerActivationRange = 7f;
++    private const float VisualRefreshInterval = 1f;
++    private float _visualRefreshAccumulator;
++
++    public override void Update(float frameTime)
++    {
++        base.Update(frameTime);
++
++        _visualRefreshAccumulator += frameTime;
++        if (_visualRefreshAccumulator < VisualRefreshInterval)
++            return;
++
++        _visualRefreshAccumulator = 0f;
++
++        var query = EntityQueryEnumerator<SurveillanceCameraComponent>();
++        while (query.MoveNext(out var uid, out var camera))
++        {
++            if (!camera.Active)
++                continue;
++
++            UpdateVisuals(uid, camera);
++        }
++    }
++    // Orion-End
++
+@@ -472,5 +501,5 @@ private void UpdateVisuals(EntityUid uid, SurveillanceCameraComponent? component
+-        if (component.ActiveViewers.Count > 0 || component.ActiveMonitors.Count > 0)
++        if (component.Active && HasActiveAiViewerInRange(uid)) // Orion-Edit
+@@ -480,4 +509,35 @@ private void UpdateVisuals(EntityUid uid, SurveillanceCameraComponent? component
++    // Orion-Start
++    private bool HasActiveAiViewerInRange(EntityUid camera)
++    {
++        if (!TryComp(camera, out TransformComponent? cameraXform))
++            return false;
++
++        var cameraMap = cameraXform.MapID;
++        var cameraPos = _transformSystem.GetWorldPosition(cameraXform);
++
++        var coreQuery = EntityQueryEnumerator<StationAiCoreComponent>();
++        while (coreQuery.MoveNext(out var coreUid, out var coreComp))
++        {
++            if (coreComp.RemoteEntity == null)
++                continue;
++
++            // Only active AI with mind should affect camera visuals
++            if (!_stationAiSystem.TryGetHeld((coreUid, coreComp), out var held) || !HasComp<ActorComponent>(held))
++                continue;
++
++            if (!TryComp(coreComp.RemoteEntity.Value, out TransformComponent? observerXform) || observerXform.MapID != cameraMap)
++                continue;
++
++            var observerPos = _transformSystem.GetWorldPosition(observerXform);
++            if ((observerPos - cameraPos).Length() <= AiViewerActivationRange)
++                return true;
++        }
++
++        return false;
++    }
++    // Orion-End
++

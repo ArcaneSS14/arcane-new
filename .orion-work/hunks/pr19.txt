@@ -1,0 +1,17 @@
+[Tweak] Hide Advertise From Chat Bool
+
+### Content.Server/Advertise/Components/AdvertiseComponent.cs
+@@ -20,4 +20,10 @@ namespace Content.Server.Advertise.Components;
++    /// <summary>
++    ///  Europa | When false - show advertise message in chat
++    /// </summary>
++    [DataField]
++    public bool HideFromChat { get; set; } = true;
++
+
+### Content.Server/Advertise/EntitySystems/AdvertiseSystem.cs
+@@ -77,6 +77,8 @@ public void SayAdvertisement(EntityUid uid, AdvertiseComponent? advert = null)
++        bool hideChat = advert.HideFromChat; // Europa
++
+-            _chat.TrySendInGameICMessage(uid, Loc.GetString(_random.Pick(advertisements.Values)), InGameICChatType.Speak, hideChat: true);
++            _chat.TrySendInGameICMessage(uid, Loc.GetString(_random.Pick(advertisements.Values)), InGameICChatType.Speak, hideChat: hideChat); // Europa-Edit | hideChat bool

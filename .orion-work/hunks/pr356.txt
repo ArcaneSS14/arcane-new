@@ -1,0 +1,434 @@
+Update migration.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/theater.yml
+@@ -129,4 +129,11 @@
++    ClothingUniformGi: 2
++    ClothingUniformKimonoBlue: 2
++    ClothingUniformKimonoPink: 2
++    ClothingUniformKimonoPurple: 2
++    ClothingUniformKimonoSky: 2
++    ClothingUniformKimonoGreen: 2
++    ClothingUniformKendoHakama: 1
+@@ -153,4 +160,6 @@
++    ClothingOuterArmorKendoBogu: 1
++    ClothingHeadHelmetKendoMen: 1
+
+### Resources/Prototypes/_Orion/Catalog/Fills/Belt/belts.yml
+@@ -8,2 +8,14 @@
++
++- type: entity
++  parent: ClothingBeltKatanaSheath
++  id: ClothingBeltKatanaSheathFilled
++  suffix: Filled
++  components:
++  - type: ContainerFill
++    containers:
++      item:
++      - Katana
++      item2:
++      - Wakizashi
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Belt/belts.yml
+@@ -93,2 +93,51 @@
++
++- type: entity
++  parent: ClothingBeltSheath
++  id: ClothingBeltKatanaSheath
++  name: katana sheaths
++  description: An ornate belt designed to hold a pair of samurai's blades, or daisho.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Belt/katanasheath.rsi
++    state: sheath
++  - type: Clothing
++    sprite: _Orion/Clothing/Belt/katanasheath.rsi
++  - type: ContainerContainer
++    containers:
++      storagebase: !type:Container
++        ents: []
++      item: !type:ContainerSlot {}
++      item2: !type:ContainerSlot {}
++  - type: ItemSlots
++    slots:
++      item:
++        name: Katana
++        insertVerbText: sheath-insert-verb
++        ejectVerbText: sheath-eject-verb
++        insertSound: /Audio/Items/sheath.ogg
++        ejectSound: /Audio/Items/unsheath.ogg
++        whitelist:
++          tags:
++          - Katana
++      item2:
++        name: Wakizashi
++        insertVerbText: sheath-insert-verb
++        ejectVerbText: sheath-eject-verb
++        insertSound: /Audio/Items/sheath.ogg
++        ejectSound: /Audio/Items/unsheath.ogg
++        whitelist:
++          tags:
++          - Wakizashi
++  - type: ItemMapper
++    mapLayers:
++      sheath-katana:
++        whitelist:
++          tags:
++          - Katana
++      sheath-wakizashi:
++        whitelist:
++          tags:
++          - Wakizashi
++  - type: Appearance
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Head/hats.yml
+@@ -232,2 +232,23 @@
++
++- type: entity
++  parent: ClothingHeadBase
++  id: ClothingHeadHelmetKendoMen
++  name: men
++  description: The quintessential head armor of the kendo practitioner.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Head/Helmets/men.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Head/Helmets/men.rsi
++  - type: Armor
++    coverage:
++    - Head
++    traumaDeductions:
++      BoneDamage: 0.8
++    modifiers:
++      coefficients:
++        Blunt: 0.6
++        Slash: 0.8
++        Piercing: 0.9
+
+### Resources/Prototypes/_Orion/Entities/Clothing/OuterClothing/armor.yml
+@@ -226,2 +226,21 @@
++
++- type: entity
++  parent: ClothingOuterArmorBasic
++  id: ClothingOuterArmorKendoBogu
++  name: bogu
++  description: A set of armor used in Kendo. It covers the waist, torso, and hands.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/OuterClothing/Armor/bogu.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/OuterClothing/Armor/bogu.rsi
++  - type: Armor
++    modifiers:
++      coefficients:
++        Blunt: 0.6
++        Slash: 0.8
++  - type: ClothingSpeedModifier
++    walkModifier: 0.95
++    sprintModifier: 0.85
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Uniforms/costumes.yml
+@@ -0,0 +1,76 @@
++- type: entity
++  parent: ClothingUniformBase
++  id: ClothingUniformGi
++  name: gi
++  description: A white top and bottom traditionally used in martial arts, often paired with a belt.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/gi.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/gi.rsi
++
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKimonoBlue
++  name: blue kimono
++  description: I'm blue da ba dee da ba da-ee!
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-blue.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-blue.rsi
++
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKimonoPink
++  name: pink kimono
++  description: Pretty in pink, isn't she?
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-pink.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-pink.rsi
++
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKimonoPurple
++  name: purple kimono
++  description: You definitely won't look like a maroon in this.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-purple.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-purple.rsi
++
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKimonoSky
++  name: sky blue kimono
++  description: Reminds you of natsu matsuri.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-sky.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-sky.rsi
++
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKimonoGreen
++  name: sea green kimono
++  description: Colors and textures reminiscent of seaweed.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-green.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/kimono-green.rsi
++    
++- type: entity
++  parent: ClothingUniformSkirtBase
++  id: ClothingUniformKendoHakama
++  name: hakama
++  description: An elegant black and blue hakama that could be worn for kendo or formal events.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Uniforms/Costume/hakama.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Uniforms/Costume/hakama.rsi
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Melee/sword.yml
+@@ -0,0 +1,50 @@
++- type: entity
++  parent: BaseKnife
++  id: Shinai
++  name: shinai
++  description: A bamboo sword, commonly used in kendo. Made some time after the realization that wooden swords hurt a lot.
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Weapons/Melee/shinai.rsi
++    state: icon
++  - type: MeleeWeapon
++    attackRate: 1.2
++    range: 1.75
++    bluntStaminaDamageFactor: 2.0
++    damage:
++      types:
++        Blunt: 4
++    soundHit:
++      collection: MetalThud
++  - type: Wieldable
++  - type: IncreaseDamageOnWield
++    damage:
++      types:
++        Blunt: 2
++  - type: StaminaDamageOnHit
++    damage: 10
++  - type: DisarmMalus
++
++- type: entity
++  parent: BaseKnife
++  id: Wakizashi
++  name: wakizashi
++  description: A short, multi-purpose sword of plasteel construction.
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Weapons/Melee/wakizashi.rsi
++    state: icon
++  - type: Item
++    size: Normal
++    sprite: _Orion/Objects/Weapons/Melee/wakizashi.rsi
++  - type: Execution
++    doAfterDuration: 14.0
++  - type: DisarmMalus
++  - type: MeleeWeapon
++    attackRate: 2
++    damage:
++      types:
++        Slash: 12
++  - type: Tag
++    tags:
++    - Wakizashi
+
+### Resources/Prototypes/_Orion/Entities/Structures/Decoration/banners.yml
+@@ -28,2 +28,12 @@
++
++- type: entity
++  parent: BannerBase
++  id: BannerSpiderClan
++  name: Spider Clan banner
++  description: A banner with a spider image. Looking at it makes you want to speak Japanese.
++  components:
++  - type: Sprite
++    sprite: _Orion/Structures/Decoration/banner.rsi
++    state: banner_spiderclan
+
+### Resources/Prototypes/_Orion/Entities/Structures/Furniture/tatami.yml
+@@ -0,0 +1,37 @@
++- type: entity
++  parent: BaseStructure
++  id: TatamiBase
++  abstract: true
++  components:
++  - type: Sprite
++    drawdepth: FloorTiles
++    sprite: _Orion/Structures/Furniture/tatami.rsi
++  - type: Tag
++    tags: [ Carpet ]
++  - type: Physics
++    canCollide: false
++  - type: Fixtures
++
++- type: entity
++  parent: TatamiBase
++  id: TatamiSingle
++  name: tatami square
++  description: It's tatami, but a square.
++  components:
++  - type: Sprite
++    state: tatami_1x1
++  - type: Construction
++    graph: tatami
++    node: tatamiSquare
++
++- type: entity
++  parent: TatamiBase
++  id: TatamiMat
++  name: tatami mat
++  description: It's a portion of a tatami mat.
++  components:
++  - type: Sprite
++    state: tatami_1x1P
++  - type: Construction
++    graph: tatami
++    node: tatamiPart
+
+### Resources/Prototypes/_Orion/Entities/Structures/Walls/walls.yml
+@@ -0,0 +1,38 @@
++- type: entity
++  parent: BaseWall
++  id: WallPaper 
++  name: paper wall
++  description: Helps to contain the repeated screams of martial artists.
++  components:
++  - type: Sprite
++    sprite: _Orion/Structures/Walls/paper.rsi
++  - type: Icon
++    sprite: _Orion/Structures/Walls/paper.rsi
++  - type: Destructible
++    thresholds:
++    - trigger:
++        !type:DamageTrigger
++        damage: 100
++      behaviors:
++      - !type:DoActsBehavior
++        acts: ["Destruction"]
++    - trigger:
++        !type:DamageTrigger
++        damage: 50
++      behaviors:
++      - !type:PlaySoundBehavior
++        sound:
++          path: /Audio/_Orion/Effects/paper_tear.ogg
++      - !type:ChangeConstructionNodeBehavior
++        node: girder
++      - !type:DoActsBehavior
++        acts: ["Destruction"]
++  - type: Damageable
++    damageContainer: Inorganic
++    damageModifierSet: Wood
++  - type: Construction
++    graph: wallPaper
++    node: wallPaper
++  - type: IconSmooth
++    key: walls
++    base: paperwall
+
+### Resources/Prototypes/_Orion/Recipes/Construction/Graph/furniture/tatami.yml
+@@ -0,0 +1,46 @@
++- type: constructionGraph
++  id: tatami
++  start: start
++  graph:
++    - node: start
++      actions:
++        - !type:DeleteEntity {}
++      edges:
++        - to: tatamiSquare
++          completed:
++            - !type:SnapToGrid { }
++          steps:
++            - material: Paper
++              amount: 10
++              doAfter: 8
++        - to: tatamiPart
++          completed:
++            - !type:SnapToGrid { }
++          steps:
++            - material: Paper
++              amount: 5
++              doAfter: 4
++
++    - node: tatamiSquare
++      entity: TatamiSingle
++      edges:
++        - to: start
++          completed:
++            - !type:SpawnPrototype
++              prototype: SheetPaper1
++              amount: 10
++          steps:
++            - tool: Anchoring
++              doAfter: 8
++
++    - node: tatamiPart
++      entity: TatamiMat
++      edges:
++        - to: start
++          completed:
++            - !type:SpawnPrototype
++              prototype: SheetPaper1
++              amount: 5
++          steps:
++            - tool: Anchoring
++              doAfter: 4
+
+### Resources/Prototypes/_Orion/Recipes/Construction/Graph/structures/wallpaper.yml
+@@ -0,0 +1,28 @@
++- type: constructionGraph
++  id: wallPaper
++  start: start
++  graph:
++    - node: start
++      actions:
++        - !type:DeleteEntity {}
++      edges:
++        - to: wallPaper
++          completed:
++            - !type:SnapToGrid
++              southRotation: true
++          steps:
++            - material: Paper
++              amount: 10
++              doAfter: 8
++
++    - node: wallPaper
++      entity: WallPaper
++      edges:
++        - to: start
+
+### Resources/Prototypes/_Orion/Recipes/Construction/furniture.yml
+
+### Resources/Prototypes/_Orion/Recipes/Construction/structures.yml
+
+### Resources/Prototypes/_Orion/tags.yml
+
+### Resources/migration.yml

@@ -1,0 +1,99 @@
+[Port] Combat Mode Sound
+
+### Content.Client/CombatMode/CombatModeSystem.cs
+@@ -29,4 +29,5 @@
++using Robust.Client.Audio;
+@@ -45,4 +46,5 @@ public sealed class CombatModeSystem : SharedCombatModeSystem
++    [Dependency] private readonly AudioSystem _audio = default!;
+@@ -50,5 +52,9 @@ public sealed class CombatModeSystem : SharedCombatModeSystem
+-    private EntityQuery<SpriteComponent> _spriteQuery; // Orion
++
++    // Orion-Start
++    private EntityQuery<SpriteComponent> _spriteQuery;
++    private bool _combatModeSoundEnabled;
++    // Orion-End
+@@ -61,5 +67,8 @@ public override void Initialize()
+-        _spriteQuery = GetEntityQuery<SpriteComponent>(); // Orion
++        // Orion-Start
++        _spriteQuery = GetEntityQuery<SpriteComponent>();
++        _cfg.OnValueChanged(CCVars.CombatModeSoundEnabled, v => _combatModeSoundEnabled = v, true);
++        // Orion-End
+@@ -105,4 +114,5 @@ private void UpdateHud(EntityUid entity)
++        TryPlayCombatModeSound(entity); // Orion
+@@ -166,4 +176,34 @@ private void UpdateCombatModeIndicator(EntityUid uid, CombatModeComponent comp,
++
++    /// <summary>
++    /// Plays sounds based on activation/deactivation of the CombatMode
++    /// </summary>
++    /// <param name="uid">uid of entity that'll play the sound</param>
++    private void TryPlayCombatModeSound(EntityUid uid)
++    {
++        if (_combatModeSoundEnabled == false)
++            return;
++
++        if (!TryComp<CombatModeComponent>(uid, out var comp))
++            return;
++
++        var inCombatMode = IsInCombatMode();
++
++        switch (inCombatMode)
++        {
++            case true:
++                if (comp.CombatActivationSound == null)
++                    return;
++                _audio.PlayLocal(comp.CombatActivationSound, uid, uid);
++                break;
++
++            case false:
++                if (comp.CombatDeactivationSound == null)
++                    return;
++                _audio.PlayLocal(comp.CombatDeactivationSound, uid, uid);
++                break;
++        }
++    }
+
+### Content.Client/Options/UI/Tabs/AudioTab.xaml.cs
+@@ -122,4 +122,5 @@ public AudioTab()
++        Control.AddOptionCheckBox(CCVars.CombatModeSoundEnabled, CombatModeSoundCheckBox); // Orion
+@@ -156,3 +157,3 @@ private void OnMasterVolumeSliderChanged(float value)
+-}
++}
+
+### Content.Shared/CombatMode/CombatModeComponent.cs
+@@ -84,4 +84,12 @@ public sealed partial class CombatModeComponent : Component
++
++        [DataField]
++        public SoundSpecifier? CombatActivationSound = new SoundPathSpecifier
++            ("/Audio/_Orion/Effects/Actions/CombatMode/combatmode-on.ogg");
++
++        [DataField]
++        public SoundSpecifier? CombatDeactivationSound = new SoundPathSpecifier
++            ("/Audio/_Orion/Effects/Actions/CombatMode/combatmode-off.ogg");
+
+### Content.Shared/_Orion/CCVar/CCVars.Sounds.cs
+@@ -0,0 +1,13 @@
++using Robust.Shared.Configuration;
++
++namespace Content.Shared.CCVar;
++
++//
++// License-Identifier: MIT
++//
++
++public sealed partial class CCVars
++{
++    public static readonly CVarDef<bool> CombatModeSoundEnabled =
++        CVarDef.Create("audio.combat_mode_sound_enabled", true, CVar.ARCHIVE | CVar.CLIENTONLY);
++}
+
+### Resources/Audio/_Orion/Effects/Actions/CombatMode/attributions.yml
+@@ -0,0 +1,9 @@
++- files: ["combatmode-on.ogg"]
++  license: "CC-BY-3.0"
++  copyright: "Taken from /TG/station 13"
++  source: "https://github.com/tgstation/tgstation/blob/master/sound/misc/ui_togglecombat.ogg"
++
++- files: ["combatmode-off.ogg"]
++  license: "CC-BY-3.0"
++  copyright: "Taken from /TG/station 13"
++  source: "https://github.com/tgstation/tgstation/blob/master/sound/misc/ui_toggleoffcombat.ogg"

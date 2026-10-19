@@ -1,0 +1,8 @@
+[Tweak] Remove Psychologist EAccess
+
+### Resources/Prototypes/Roles/Jobs/Wildcards/psychologist.yml
+@@ -111,6 +111,6 @@
+-  extendedAccess:
+-  - Chemistry
++#  extendedAccess: # Orion-Edit
++#  - Chemistry

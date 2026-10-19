@@ -1,0 +1,36 @@
+Edit FTL
+
+### Content.Client/Entry/EntryPoint.cs
+@@ -245,4 +245,5 @@ public override void Init()
++            _prototypeManager.RegisterIgnore("stationGoal"); // Europa
+
+### Content.Server/GameTicking/GameTicker.RoundFlow.cs
+@@ -518,4 +518,5 @@ public void StartRound(bool force = false)
++            RaiseLocalEvent(new RoundStartedEvent(RoundId)); // Europa
+
+### Content.Shared/Fax/Components/FaxMachineComponent.cs
+@@ -142,4 +142,18 @@ public sealed partial class FaxMachineComponent : Component
++    // Europa-Start
++    /// <summary>
++    /// Should that fax receive station goal info
++    /// </summary>
++    [DataField]
++    public bool ReceiveStationGoal { get; set; }
++
++    /// <summary>
++    /// Should that fax receive station goals from other stations
++    /// </summary>
++    [DataField]
++    public bool ReceiveAllStationGoals { get; set; }
++    // Europa-End
++
+
+### Resources/Prototypes/Entities/Stations/nanotrasen.yml
+@@ -51,4 +51,5 @@
++    - BaseStationGoal # Europa
+
+### Resources/Prototypes/Entities/Structures/Machines/fax_machine.yml
+@@ -181,4 +181,5 @@
++    receiveAllStationGoals: true # Europa
+@@ -209,4 +210,5 @@
++      receiveStationGoal: true # Europa

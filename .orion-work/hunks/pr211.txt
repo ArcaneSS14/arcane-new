@@ -1,0 +1,58 @@
+[Feature] Orio
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/discount.yml
+@@ -24,4 +24,5 @@
++    FoodSnackOrioCookies: 3 # Orion
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/trash.yml
+@@ -41,5 +41,8 @@
+-      - id: FoodPacketInteQCookiesTrash # Orion
++      # Orion-Start
++      - id: FoodPacketInteQCookiesTrash
++      - id: FoodPacketOrioCookiesTrash
++      # Orion-End
+
+### Resources/Prototypes/_Orion/Entities/Objects/Consumable/Food/snacks.yml
+@@ -25,2 +25,37 @@
++
++- type: entity
++  parent: FoodSnackBase
++  id: FoodSnackOrioCookies
++  name: Orio cookies
++  description: Orio is a cookie that many people love. It consists of two parts - a crispy base and a soft filling. Together they create a delicious combination that people all over the universe enjoy. Manufacturer Orion.
++  components:
++  - type: FlavorProfile
++    flavors:
++      - oriocookies
++  - type: Sprite
++    sprite: _Orion/Objects/Consumable/Food/orio.rsi
++    state: orio
++  - type: Food
++    trash:
++    - FoodPacketOrioCookiesTrash
++
++- type: entity
++  categories: [ HideSpawnMenu ]
++  parent: FoodPacketTrash
++  id: FoodPacketOrioCookiesTrash
++  name: Orio cookies box
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Consumable/Food/orio.rsi
++    state: orio_trash
++  - type: Item
++    sprite: Objects/Consumable/Food/snacks.rsi
++    inhandVisuals:
++      left:
++      - state: trash-inhand-left
++        color: #112b7b
++      right:
++      - state: trash-inhand-right
++        color: #112b7b
+
+### Resources/Prototypes/_Orion/Flavors/flavors.yml
+@@ -0,0 +1,4 @@
++- type: flavor
++  id: oriocookies
++  flavorType: Complex
++  description: flavor-complex-orio-cookies

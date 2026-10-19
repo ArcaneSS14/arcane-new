@@ -1,0 +1,55 @@
+Remove funny from spawner
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/posters.yml
+@@ -116,5 +116,12 @@
+-    chance: 1
++    chance: 0.99 # Europa-Edit | 1 > 0.99
++    # Europa-Start
++    rarePrototypes:
++      - FlagCoder
++      - FlagSyndicate
++      - FlagInteQ
++    rareChance: 0.01
++    # Europa-End
+@@ -201,3 +208,22 @@
+-    chance: 1
++    chance: 0.99 # Europa-Edit | 1 > 0.99
++    # Europa-Start
++    rarePrototypes:
++      - FlagAgurk
++      - FlagGermanySolfed
++      - FlagGoldRing
++      - FlagHCA
++      - FlagLizard
++      - FlagCaliforniaSolfed
++      - FlagMothic
++      - FlagNRI
++      - FlagNanoTrasen
++      - FlagShigu
++      - FlagSolfed
++      - FlagSolfedAlt
++      - FlagSovietUSSP
++      - FlagTizira
++      - FlagVulp
++    rareChance: 0.01
++    # Europa-End
+
+### Resources/Prototypes/Entities/Objects/Devices/pda.yml
+@@ -239,6 +239,7 @@
++    mask: /Textures/Effects/LightMasks/cone.png # Europa
+-    radius: 1.5
++    radius: 2 # Europa-Edit
+
+### Resources/Prototypes/Entities/Structures/Furniture/Tables/operating_table.yml
+@@ -43,3 +43,3 @@
+-  # End Shitmed Changes
++  # End Shitmed Changes
+
+### Resources/migration.yml
+@@ -147,4 +147,10 @@
++# Europa-Start
++NTFlag: FlagNanoTrasen
++SyndieFlag: FlagSyndicate
++LGBTQFlag: RandomPosterLegit
++# Europa-End
++

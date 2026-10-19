@@ -1,0 +1,21 @@
+[Tweak] One Lobby Art
+
+### Resources/Prototypes/_Orion/lobbyscreens.yml
+@@ -0,0 +1,5 @@
++- type: lobbyBackground
++  id: orion-station
++  background: /Textures/_Orion/LobbyScreens/orion-station.webp
++  name: Ti-Julie on peaceful patrol
++  artist: Zicwi
+
+### Resources/Textures/_Orion/LobbyScreens/attributions.yml
+@@ -0,0 +1,4 @@
++- files: ["orion-station.webp"]
++  license: "CC-BY-SA-4.0"
++  copyright: "Zicwi"
++  source: "https://vk.com/zicwi"
+
+### Resources/Textures/_Orion/LobbyScreens/orion-station.webp.yml
+@@ -0,0 +1,2 @@
++sample:
++  filter: true

@@ -1,0 +1,432 @@
+up4.2
+
+### Content.Client/PDA/PdaBoundUserInterface.cs
+@@ -91,4 +91,11 @@ private void CreateMenu()
++            // Orion-Start
++            _menu.PowerOffButton.OnPressed += _ =>
++            {
++                SendMessage(new PdaPowerOffMessage());
++            };
++            // Orion-End
++
+@@ -167,3 +174,3 @@ protected override void UpdateAvailablePrograms(List<(EntityUid, CartridgeCompon
+-}
++}
+
+### Content.Client/PDA/PdaMenu.xaml.cs
+@@ -80,4 +80,5 @@ public PdaMenu()
++            PowerOffButton.IconTexture = new SpriteSpecifier.Texture(new("/Textures/_Orion/Interface/power.png")); // Orion
+
+### Content.Client/PDA/PdaVisualizerSystem.cs
+@@ -7,4 +7,5 @@
++using Robust.Shared.Utility;
+@@ -21,4 +22,9 @@ protected override void OnAppearanceChange(EntityUid uid, PdaVisualsComponent co
++        // Orion-Start
++        if (AppearanceSystem.TryGetData<SpriteSpecifier>(uid, PdaVisuals.ScreenState, out var screenState, args.Component))
++            _sprite.LayerSetSprite((uid, args.Sprite), PdaVisualLayers.Screen, screenState);
++        // Orion-End
++
+@@ -31,6 +37,7 @@ public enum PdaVisualLayers : byte
++        Screen, // Orion
+-        IdLight
++        IdLight,
+-}
++}
+
+### Content.Server/CartridgeLoader/CartridgeLoaderSystem.cs
+@@ -508,4 +508,5 @@ private void UpdateUserInterfaceState(EntityUid loaderUid, CartridgeLoaderCompon
++        _pda.UpdatePdaUi(loaderUid); // Orion
+@@ -558,3 +559,3 @@ public CartridgeAfterInteractEvent(EntityUid loader, AfterInteractEvent interact
+-public record struct ProgramInstallationAttempt(EntityUid LoaderUid, string Prototype, bool Cancelled = false);
++public record struct ProgramInstallationAttempt(EntityUid LoaderUid, string Prototype, bool Cancelled = false);
+
+### Content.Server/PDA/PdaSystem.cs
+@@ -149,4 +149,5 @@ public override void Initialize()
++            SubscribeLocalEvent<PdaComponent, PdaPowerOffMessage>(OnUiMessage); // Orion
+@@ -281,4 +282,12 @@ public override void UpdatePdaUi(EntityUid uid, PdaComponent? pda = null)
++            // Orion-Start
++            var screenState = GetScreenState(uid);
++            if (screenState is SpriteSpecifier.Rsi { RsiState: "pda_screen_borders" } && _ui.IsUiOpen(uid, PdaUiKey.Key))
++                screenState = new SpriteSpecifier.Rsi(new("_Orion/Objects/Devices/pda.rsi"), "menu");
++
++            Appearance.SetData(uid, PdaVisuals.ScreenState, screenState);
++            // Orion-End
++
+@@ -365,4 +374,18 @@ private void OnUiMessage(EntityUid uid, PdaComponent pda, PdaShowMusicMessage ms
++        // Orion-Start
++        private void OnUiMessage(EntityUid uid, PdaComponent pda, PdaPowerOffMessage msg)
++        {
++            if (!PdaUiKey.Key.Equals(msg.UiKey))
++                return;
++
++            if (TryComp(uid, out CartridgeLoaderComponent? loader) && loader.ActiveProgram is { } activeProgram)
++                _cartridgeLoader.DeactivateProgram(uid, activeProgram, loader);
++
++            Appearance.SetData(uid, PdaVisuals.ScreenState, new SpriteSpecifier.Rsi(new("_Orion/Objects/Devices/pda.rsi"), "pda_screen_borders"));
++            _ui.CloseUi(uid, PdaUiKey.Key, msg.Actor);
++        }
++        // Orion-End
++
+@@ -421,3 +444,3 @@ private void UpdateAlertLevel(EntityUid uid, PdaComponent pda)
+-}
++}
+
+### Content.Shared/CartridgeLoader/CartridgeComponent.cs
+@@ -26,4 +26,9 @@ public sealed partial class CartridgeComponent : Component
++    // Orion-Start
++    [DataField]
++    public SpriteSpecifier? ScreenState;
++    // Orion-End
++
+@@ -36,3 +41,3 @@ public enum InstallationStatus
+-}
++}
+
+### Content.Shared/PDA/PdaMessagesUi.cs
+@@ -39,7 +39,15 @@ public PdaShowMusicMessage() { }
++// Orion-Start
++[Serializable, NetSerializable]
++public sealed class PdaPowerOffMessage : BoundUserInterfaceMessage
++{
++    public PdaPowerOffMessage() { }
++}
++// Orion-End
++
+-}
++}
+
+### Content.Shared/PDA/PdaVisuals.cs
+@@ -23,5 +23,6 @@ public enum PdaVisuals
+-        PdaType
++        PdaType,
++        ScreenState, // Orion
+@@ -29,6 +30,6 @@ public enum PdaVisuals
+-        Key
++        Key,
+-}
++}
+
+### Content.Shared/PDA/SharedPdaSystem.cs
+@@ -13,6 +13,8 @@
++using Content.Shared.CartridgeLoader;
++using Robust.Shared.Utility;
+@@ -23,4 +25,8 @@ public abstract class SharedPdaSystem : EntitySystem
++        // Orion-Start
++        private static readonly SpriteSpecifier.Rsi FallbackScreenSprite = new(new ResPath("_Orion/Objects/Devices/pda.rsi"), "pda_screen_borders");
++        // Orion-End
++
+@@ -79,5 +85,16 @@ private void UpdatePdaAppearance(EntityUid uid, PdaComponent pda)
++            Appearance.SetData(uid, PdaVisuals.ScreenState, GetScreenState(uid)); // Orion
++        }
++
++        // Orion-Start
++        protected SpriteSpecifier GetScreenState(EntityUid uid)
++        {
++            if (!TryComp(uid, out CartridgeLoaderComponent? loader) || !loader.ActiveProgram.HasValue || !TryComp(loader.ActiveProgram.Value, out CartridgeComponent? cartridge) || cartridge.ScreenState == null)
++                return FallbackScreenSprite;
++
++            return cartridge.ScreenState;
++        // Orion-End
+@@ -87,3 +104,3 @@ public virtual void UpdatePdaUi(EntityUid uid, PdaComponent? pda = null)
+-}
++}
+
+### Resources/Prototypes/Entities/Objects/Devices/cartridges.yml
+@@ -100,4 +100,9 @@
++    # Orion-Start
++    screenState:
++      sprite: _Orion/Objects/Devices/pda.rsi
++      state: accounting
++    # Orion-End
+@@ -117,4 +122,9 @@
++    # Orion-Start
++    screenState:
++      sprite: _Orion/Objects/Devices/pda.rsi
++      state: menu
++    # Orion-End
+@@ -137,4 +147,9 @@
++    # Orion-Start
++    screenState:
++      sprite: _Orion/Objects/Devices/pda.rsi
++      state: comm_monitor
++    # Orion-End
+@@ -155,4 +170,9 @@
++      # Orion-Start
++      screenState:
++        sprite: _Orion/Objects/Devices/pda.rsi
++        state: crew
++      # Orion-End
+@@ -173,4 +193,9 @@
++      # Orion-Start
++      screenState:
++        sprite: _Orion/Objects/Devices/pda.rsi
++        state: signal
++      # Orion-End
+@@ -194,4 +219,9 @@
++      # Orion-Start
++      screenState:
++        sprite: _Orion/Objects/Devices/pda.rsi
++        state: comm_logs
++      # Orion-End
+@@ -218,4 +248,9 @@
++    # Orion-Start
++    screenState:
++      sprite: _Orion/Objects/Devices/pda.rsi
++      state: bounty
++    # Orion-End
+@@ -239,4 +274,9 @@
++      # Orion-Start
++      screenState:
++        sprite: _Orion/Objects/Devices/pda.rsi
++        state: alert-red
++      # Orion-End
+@@ -258,3 +298,8 @@
++      # Orion-Start
++      screenState:
++        sprite: _Orion/Objects/Devices/pda.rsi
++        state: radarntos
++      # Orion-End
+
+### Resources/Prototypes/Entities/Objects/Devices/pda.yml
+@@ -185,10 +185,15 @@
+-       pda
++       pda_base # Orion-Edit
+-    sprite: Objects/Devices/pda.rsi
++    sprite: _Orion/Objects/Devices/pda.rsi # Orion-Edit
+-      state: "pda"
++      state: "pda_base" # Orion-Edit
++    # Orion-Start
++    - state: pda_buttons
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    # Orion-End
+@@ -200,6 +205,6 @@
+-    sprite: Objects/Devices/pda.rsi
+-    state: pda
++    sprite: _Orion/Objects/Devices/pda.rsi # Orion-Edit
++    state: icon # Orion-Edit
+@@ -309,22 +314,23 @@
+-- type: entity
+-  parent: BasePDA
+-  id: BaseWidePDA
+-  abstract: true
+-  components:
+-  - type: Sprite
+-    sprite: Objects/Devices/pda.rsi
+-    layers:
+-    - map: [ "enum.PdaVisualLayers.Base" ]
+-      state: "pda"
+-    - state: "light_overlay_wide"
+-      map: [ "enum.PdaVisualLayers.Flashlight" ]
+-      shader: "unshaded"
+-      visible: false
+-    - state: "id_overlay_wide"
+-      map: [ "enum.PdaVisualLayers.IdLight" ]
+-      shader: "unshaded"
+-      visible: false
++# Orion-Edit: What the fuck?!
++#- type: entity
++#  parent: BasePDA
++#  id: BaseWidePDA
++#  abstract: true
++#  components:
++#  - type: Sprite
++#    sprite: Objects/Devices/pda.rsi
++#    layers:
++#    - map: [ "enum.PdaVisualLayers.Base" ]
++#      state: "pda"
++#    - state: "light_overlay_wide"
++#      map: [ "enum.PdaVisualLayers.Flashlight" ]
++#      shader: "unshaded"
++#      visible: false
++#    - state: "id_overlay_wide"
++#      map: [ "enum.PdaVisualLayers.IdLight" ]
++#      shader: "unshaded"
++#      visible: false
+@@ -363,4 +369,22 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#717059"
++    - state: pda_buttons
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+@@ -374,16 +398,29 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#FFA500"
++    - state: pda_buttons
++    - state: pda_stripe_thick
++      color: "#FFFF00"
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+-  - type: Appearance
+-    appearanceDataInit:
+-     enum.PdaVisuals.PdaType:
+-       !type:String
+-       pda-interntech
+-    borderColor: "#717059"
+-    accentVColor: "#949137"
+-  - type: Icon
+-    state: pda-interntech
++    borderColor: "#FFA500"
++    accentVColor: "#FFFF00"
+@@ -393,16 +430,29 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#E0FFFF"
++    - state: pda_buttons
++    - state: pda_stripe_thick
++      color: "#00BFFF"
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+-  - type: Appearance
+-    appearanceDataInit:
+-     enum.PdaVisuals.PdaType:
+-       !type:String
+-       pda-internmed
+-    borderColor: "#717059"
+-    accentVColor: "#447987"
+-  - type: Icon
+-    state: pda-internmed
++    borderColor: "#E0FFFF" # Orion-Edit
++    accentVColor: "#00BFFF" # Orion-Edit
+@@ -415,16 +465,27 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#A32D26"
++    - state: pda_buttons
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+-  - type: Appearance
+-    appearanceDataInit:
+-     enum.PdaVisuals.PdaType:
+-       !type:String
+-       pda-interncadet
+-    borderColor: "#717059"
+-    accentVColor: "#A32D26"
+-  - type: Icon
+-    state: pda-interncadet
++    borderColor: "#A32D26"
++#    accentVColor: "#A32D26" # Orion-Edit
+@@ -434,16 +495,29 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#E0FFFF"
++    - state: pda_buttons
++    - state: pda_stripe_thick
++      color: "#9932CC"
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+-  - type: Appearance
+-    appearanceDataInit:
+-     enum.PdaVisuals.PdaType:
+-       !type:String
+-       pda-internsci
+-    borderColor: "#717059"
+-    accentVColor: "#8900c9"
+-  - type: Icon
+-    state: pda-internsci
++    borderColor: "#E0FFFF" # Orion-Edit
++    accentVColor: "#9932CC" # Orion-Edit
+@@ -453,16 +527,29 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
++      color: "#717059"
++    - state: pda_buttons
++    - state: pda_stripe_thick
++      color: "#00cc35"
++    - map: [ "enum.PdaVisualLayers.Screen" ]
++      state: pda_screen_borders
++    - state: light_overlay
++      map: [ "enum.PdaVisualLayers.Flashlight" ]
++      shader: unshaded
++      visible: false
++    - state: id_overlay
++      map: [ "enum.PdaVisualLayers.IdLight" ]
++      shader: unshaded
++      visible: false
++  # Orion-End
+-  - type: Appearance
+-    appearanceDataInit:
+-     enum.PdaVisuals.PdaType:
+-       !type:String
+-       pda-internservice
+-  - type: Icon
+-    state: pda-internservice
+@@ -472,15 +559,26 @@
++  # Orion-Start
++  - type: Sprite
++    layers:
++    - map: [ "enum.PdaVisualLayers.Base" ]
++      state: pda_base
+
+### Resources/Prototypes/_DV/Entities/Objects/Devices/cartridges.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Devices/pda.yml
+
+### Resources/Prototypes/_Lavaland/Entities/Objects/Devices/pda.yml
+
+### Resources/Textures/_Orion/Interface/power.png.yml

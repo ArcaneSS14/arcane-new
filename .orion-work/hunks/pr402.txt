@@ -1,0 +1,44 @@
+also fix test
+
+### Content.Goobstation.Server/Supermatter/Systems/SupermatterSystem.cs
+@@ -601,6 +601,10 @@ private void OnCollideEvent(EntityUid uid, SupermatterComponent sm, ref StartCol
+-            var isMob = HasComp<MobStateComponent>(args.OtherEntity);
+-            var impact = isMob ? LogImpact.Extreme : LogImpact.High;
++            // Orion-Edit-Start
++            var activatorIsMob = HasComp<MobStateComponent>(args.OtherEntity);
++            var impact = activatorIsMob
++                ? LogImpact.Extreme
++                : LogImpact.High;
++            // Orion-Edit-End
+@@ -615,4 +619,5 @@ private void OnCollideEvent(EntityUid uid, SupermatterComponent sm, ref StartCol
++/* // Orion-Edit
+@@ -623,4 +628,18 @@ private void OnCollideEvent(EntityUid uid, SupermatterComponent sm, ref StartCol
++*/
++
++        // Orion-Start
++        var isMob = HasComp<MobStateComponent>(target);
++        if (!isMob)
++        {
++            if (TryComp<SupermatterFoodComponent>(target, out var food))
++                sm.Power += food.Energy;
++            else if (TryComp<ProjectileComponent>(target, out var projectile))
++                sm.Power += (float) projectile.Damage.GetTotal();
++            else
++                sm.Power++;
++        }
++        // Orion-End
+@@ -644,5 +663,5 @@ private void OnHandInteract(EntityUid uid, SupermatterComponent sm, ref Interact
+-        sm.MatterPower += 200;
++//        sm.MatterPower += 200; // Orion-Edit
+@@ -687,5 +706,5 @@ private void OnGetSliver(EntityUid uid, SupermatterComponent sm, ref Supermatter
+-        
++
+
+### Content.Shared/Movement/Systems/SharedMoverController.Input.cs
+@@ -184,5 +184,9 @@ private void OnMoverGetState(Entity<InputMoverComponent> entity, ref ComponentGe
+-                RelativeEntity = GetNetEntity(entity.Comp.RelativeEntity),
++                // Orion-Edit-Start
++                RelativeEntity = entity.Comp.RelativeEntity is { } relative && Exists(relative)
++                    ? GetNetEntity(relative)
++                    : null,
++                // Orion-Edit-End

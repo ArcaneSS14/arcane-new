@@ -1,0 +1,423 @@
+Fix RSI Test
+
+### Resources/Prototypes/Catalog/Fills/Lockers/dressers.yml
+@@ -83,4 +83,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Catalog/Fills/Lockers/misc.yml
+@@ -298,5 +298,5 @@
+-    # InteQ Loot | Backmen
++    # InteQ Loot | Europa
+
+### Resources/Prototypes/Entities/Clothing/Neck/cloaks.yml
+@@ -190,4 +190,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -278,4 +279,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -287,4 +289,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -296,4 +299,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -305,4 +309,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -314,4 +319,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -323,4 +329,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -332,4 +339,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -341,4 +349,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -350,4 +359,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Entities/Clothing/Neck/pins.yml
+@@ -98,4 +98,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -109,4 +110,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -120,4 +122,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -131,4 +134,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -142,4 +146,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -153,4 +158,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -164,4 +170,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -175,4 +182,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -186,4 +194,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -197,4 +206,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -208,4 +218,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -219,4 +230,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -230,4 +242,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -241,4 +254,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -252,4 +266,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -263,4 +278,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Entities/Clothing/Neck/scarfs.yml
+@@ -219,8 +219,9 @@
+-# Pride Scarves
++# Pride Scarves | No, fuck you
++  categories: [ HideSpawnMenu ] # Europa
+@@ -234,4 +235,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -245,4 +247,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -256,4 +259,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -267,4 +271,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -278,4 +283,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -289,4 +295,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -300,4 +307,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -311,4 +319,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -322,4 +331,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -333,4 +343,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+@@ -344,4 +355,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/vending.yml
+@@ -59,6 +59,6 @@
+-    - id: VendingMachinePride
+-      weight: 10
++#    - id: VendingMachinePride # Europa-Remove
++#      weight: 10
+
+### Resources/Prototypes/Entities/Objects/Misc/handy_flags.yml
+@@ -48,4 +48,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Entities/Structures/Furniture/dresser.yml
+@@ -102,7 +102,7 @@
+-      - id: ClothingNeckLGBTPin
+-        prob: 0.06
+-        orGroup: dressermainloot
++#      - id: ClothingNeckLGBTPin # Europa-Remove
++#        prob: 0.06
++#        orGroup: dressermainloot
+
+### Resources/Prototypes/Entities/Structures/Machines/vending_machines.yml
+@@ -2553,9 +2553,10 @@
+-# Pride Vending Machine
++# Pride Vending Machine | No, fuck you
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/Signs/flags.yml
+@@ -118,4 +118,5 @@
++  categories: [ HideSpawnMenu ] # Europa
+
+### Resources/Prototypes/GameRules/events.yml
+@@ -151,4 +151,8 @@
++    # Europa-Start
++    - id: WisdomCowSpawn
++    - id: WormholesSpawn
++    # Europa-End
+@@ -163,5 +167,5 @@
+-    - id: MimicVendorRule
++#    - id: MimicVendorRule # Europa-Remove | Morph better!!!
+@@ -176,7 +180,7 @@
+-    - id: AncientXenoVentsEasy # Goobstation
+-    - id: AncientXenoVentsMedium # Goobstation
+-    - id: AncientXenoVentsHard # Goobstation
++#    - id: AncientXenoVentsEasy # Goobstation | Europa-Remove
++#    - id: AncientXenoVentsMedium # Goobstation | Europa-Remove
++#    - id: AncientXenoVentsHard # Goobstation | Europa-Remove
+@@ -185,4 +189,8 @@
++    # Europa-Start
++    - id: MorphInfestation
++    - id: CorticalBorerInfestation
++    # Europa-End
+@@ -201,5 +209,5 @@
+-    - id: AncientXenoVentsRogue # Goobstation
++#    - id: AncientXenoVentsRogue # Goobstation | Europa-Remove
+
+### Resources/Prototypes/_Goobstation/GameRules/events.yml
+@@ -50,117 +50,120 @@
+-- type: entity
+-  id: AncientXenoVentsEasy
+-  parent: BaseGameRule
+-  components:
+-  - type: StationEvent
+-    startAnnouncement: station-event-xeno-vent-start-announcement
+-    startAudio:
+-      path: /Audio/Announcements/aliens.ogg
+-    earliestStart: 20
+-    reoccurrenceDelay: 20
+-    minimumPlayers: 45
+-    weight: 3
+-    duration: 30
+-    eventType: HostilesSpawn
+-  - type: GameRule
+-    chaosScore: 200
+-  - type: VentCrittersRule
+-    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
+-      children:
+-      - id: CMMobXenoDroneSentient
+-        weight: 0.85
+-      - id: CMMobXenoWarriorSentient
+-        weight: 0.85
+-      - id: CMMobXenoRavagerSentient
+-        weight: 0.5
+-      - id: CMMobXenoCrusherSentient
+-        weight: 0.5
++# Europa-Remove | Shitass MC "xeno"
++#- type: entity
++#  id: AncientXenoVentsEasy
++#  parent: BaseGameRule
++#  components:
++#  - type: StationEvent
++#    startAnnouncement: station-event-xeno-vent-start-announcement
++#    startAudio:
++#      path: /Audio/Announcements/aliens.ogg
++#    earliestStart: 20
++#    reoccurrenceDelay: 20
++#    minimumPlayers: 45
++#    weight: 3
++#    duration: 30
++#    eventType: HostilesSpawn
++#  - type: GameRule
++#    chaosScore: 200
++#  - type: VentCrittersRule
++#    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
++#      children:
++#      - id: CMMobXenoDroneSentient
++#        weight: 0.85
++#      - id: CMMobXenoWarriorSentient
++#        weight: 0.85
++#      - id: CMMobXenoRavagerSentient
++#        weight: 0.5
++#      - id: CMMobXenoCrusherSentient
++#        weight: 0.5
+-- type: entity
+-  id: AncientXenoVentsMedium
+-  parent: BaseGameRule
+-  components:
+-  - type: StationEvent
+-    startAnnouncement: station-event-xeno-vent-start-announcement
+-    startAudio:
+-      path: /Audio/Announcements/aliens.ogg
+-    earliestStart: 20
+-    reoccurrenceDelay: 30
+-    minimumPlayers: 50
+-    weight: 3
+-    duration: 30
+-    eventType: HostilesSpawn
+-  - type: GameRule
+-    chaosScore: 300
+-  - type: VentCrittersRule
+-    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
+-      children:
+-      - id: CMMobXenoDroneSentient
+-        weight: 0.95
+-      - id: CMMobXenoWarriorSentient
+-        weight: 0.95
+-      - id: CMMobXenoRavagerSentient
+-        weight: 0.5
+-      - id: CMMobXenoCrusherSentient
+-        weight: 0.4
+-      - id: CMMobXenoKingSentient
+-        weight: 0.1
+-      - id: CMMobXenoQueenSentient
+-        weight: 0.05
++# Europa-Remove | Shitass MC "xeno"
++#- type: entity
++#  id: AncientXenoVentsMedium
++#  parent: BaseGameRule
++#  components:
++#  - type: StationEvent
++#    startAnnouncement: station-event-xeno-vent-start-announcement
++#    startAudio:
++#      path: /Audio/Announcements/aliens.ogg
++#    earliestStart: 20
++#    reoccurrenceDelay: 30
++#    minimumPlayers: 50
++#    weight: 3
++#    duration: 30
++#    eventType: HostilesSpawn
++#  - type: GameRule
++#    chaosScore: 300
++#  - type: VentCrittersRule
++#    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
++#      children:
++#      - id: CMMobXenoDroneSentient
++#        weight: 0.95
++#      - id: CMMobXenoWarriorSentient
++#        weight: 0.95
++#      - id: CMMobXenoRavagerSentient
++#        weight: 0.5
++#      - id: CMMobXenoCrusherSentient
++#        weight: 0.4
++#      - id: CMMobXenoKingSentient
++#        weight: 0.1
++#      - id: CMMobXenoQueenSentient
++#        weight: 0.05
+-- type: entity
+-  id: AncientXenoVentsHard
+-  parent: BaseGameRule
+-  components:
+-  - type: StationEvent
+-    startAnnouncement: station-event-xeno-vent-start-announcement
+-    startAudio:
+-      path: /Audio/Announcements/aliens.ogg
+-    earliestStart: 45
+-    reoccurrenceDelay: 30
+-    minimumPlayers: 60
+-    weight: 2 #This can lead to mass death so it's rarer
+-    duration: 30
+-    eventType: HostilesSpawn
+-  - type: GameRule
+-    chaosScore: 350
+-  - type: VentCrittersRule
+-    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
+-      children:
+-      - id: CMMobXenoDroneSentient
+-        weight: 0.95
+-      - id: CMMobXenoWarriorSentient
+-        weight: 0.95
+-      - id: CMMobXenoRavagerSentient
+-        weight: 0.8
+-      - id: CMMobXenoCrusherSentient
+-        weight: 0.8
+-      - id: CMMobXenoKing
+-        weight: 0.3
+-      - id: CMMobXenoQueenSentient
+-        weight: 0.3
++# Europa-Remove | Shitass MC "xeno"
++#- type: entity
++#  id: AncientXenoVentsHard
++#  parent: BaseGameRule
++#  components:
++#  - type: StationEvent
++#    startAnnouncement: station-event-xeno-vent-start-announcement
++#    startAudio:
++#      path: /Audio/Announcements/aliens.ogg
++#    earliestStart: 45
++#    reoccurrenceDelay: 30
++#    minimumPlayers: 60
++#    weight: 2 #This can lead to mass death so it's rarer
++#    duration: 30
++#    eventType: HostilesSpawn
++#  - type: GameRule
++#    chaosScore: 350
++#  - type: VentCrittersRule
++#    table: !type:GroupSelector # DeltaV: EntityTable instead of spawn entries
++#      children:
++#      - id: CMMobXenoDroneSentient
++#        weight: 0.95
++#      - id: CMMobXenoWarriorSentient
++#        weight: 0.95
++#      - id: CMMobXenoRavagerSentient
++#        weight: 0.8
++#      - id: CMMobXenoCrusherSentient
++#        weight: 0.8
++#      - id: CMMobXenoKing
++#        weight: 0.3
++#      - id: CMMobXenoQueenSentient
++#        weight: 0.3
+-- type: entity
+-  id: AncientXenoVentsRogue
+-  parent: BaseGameRule
+-  components:
+-  - type: StationEvent
+-    startAnnouncement: goob-station-event-vent-creatures-ancient-xenos-start-announcement
+-    startAudio:
+-      path: /Audio/Announcements/aliens.ogg
+-    earliestStart: 20
+-    reoccurrenceDelay: 45
+-    minimumPlayers: 60
+-    weight: 2 #This can lead to mass death so it's rarer
+-    duration: 30
+-    eventType: HostilesSpawn
+-  - type: GameRule
+-    chaosScore: 300
+-  - type: VentCrittersRule
+-    max: 1
+-    table: !type:GroupSelector
+-      children:
+-      - id: CMMobXenoRogueKingSentient
+-        weight: 1
+-        
++# Europa-Remove | Shitass MC "xeno"
++#- type: entity
++#  id: AncientXenoVentsRogue
++#  parent: BaseGameRule
++#  components:
++#  - type: StationEvent
++#    startAnnouncement: goob-station-event-vent-creatures-ancient-xenos-start-announcement
++#    startAudio:
++#      path: /Audio/Announcements/aliens.ogg
++#    earliestStart: 20
++#    reoccurrenceDelay: 45
++#    minimumPlayers: 60
++#    weight: 2 #This can lead to mass death so it's rarer
++#    duration: 30
++#    eventType: HostilesSpawn
++#  - type: GameRule
++#    chaosScore: 300
++#  - type: VentCrittersRule
++#    max: 1
++#    table: !type:GroupSelector
++#      children:
++#      - id: CMMobXenoRogueKingSentient
++#        weight: 1
+
+### Resources/Prototypes/_Goobstation/Voice/speech_emotes.yml
+@@ -15,4 +15,5 @@
++  available: false # Europa
+@@ -70,4 +71,5 @@
++  available: false # Europa
+@@ -111,4 +113,5 @@
++  available: false # Europa
+
+### Resources/migration.yml
+@@ -175,4 +175,37 @@ LGBTQFlag: RandomPosterLegit
++
++LGBTQHandyFlag: BlankHandyFlag
++ClothingNeckLGBTPin: ClothingNeckAutismPin
++ClothingNeckAromanticPin: ClothingNeckAutismPin
++ClothingNeckAsexualPin: ClothingNeckAutismPin
++ClothingNeckBisexualPin: ClothingNeckAutismPin
++ClothingNeckGayPin: ClothingNeckAutismPin
++ClothingNeckIntersexPin: ClothingNeckAutismPin
++ClothingNeckLesbianPin: ClothingNeckAutismPin
++ClothingNeckNonBinaryPin: ClothingNeckAutismPin
++ClothingNeckPansexualPin: ClothingNeckAutismPin
++ClothingNeckOmnisexualPin: ClothingNeckAutismPin
++ClothingNeckTransPin: ClothingNeckAutismPin
++ClothingNeckScarfStripedAce: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedAro: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedBiSexual: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedGay: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedInter: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedLesbian: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedPan: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedNonBinary: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedRainbow: ClothingNeckScarfStripedBlack
++ClothingNeckScarfStripedTrans: ClothingNeckScarfStripedBlack
++ClothingNeckCloakAce: ClothingNeckCloakMoth
++ClothingNeckCloakAro: ClothingNeckCloakMoth
++ClothingNeckCloakBi: ClothingNeckCloakMoth
++ClothingNeckCloakIntersex: ClothingNeckCloakMoth
++ClothingNeckCloakLesbian: ClothingNeckCloakMoth
++ClothingNeckCloakTrans: ClothingNeckCloakMoth
++ClothingNeckCloakGay: ClothingNeckCloakMoth
++ClothingNeckCloakEnby: ClothingNeckCloakMoth
++ClothingNeckCloakPan: ClothingNeckCloakMoth
++VendingMachinePride: RandomVending

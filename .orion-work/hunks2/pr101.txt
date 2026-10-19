@@ -1,0 +1,8 @@
+SUBJ: [Fix] InteQ Turrets
+MB: 447452e57e5d801b4b759b4079c5b3237b15fc55
+
+ .../ru-RU/ss14-ru/prototypes/_europa/Objects/weapons/turrets.ftl     | 3 ---
+ .../prototypes/_europa/entities/objects/weapons/guns/turrets.ftl     | 3 +++
+ .../Prototypes/_Europa/Entities/Objects/Weapons/Guns/turrets.yml     | 5 +++--
+ Resources/Prototypes/_Europa/ai_factions.yml                         | 2 +-
+ 4 files changed, 7 insertions(+), 6 deletions(-)

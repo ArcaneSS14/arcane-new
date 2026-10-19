@@ -1,0 +1,205 @@
+up1
+
+### Content.Client/_Orion/Weapons/Ranged/Overlays/Systems/TracerSystem.cs
+@@ -0,0 +1,110 @@
++using System.Numerics;
++using Content.Client._Orion.Weapons.Ranged.Overlays.Tracer;
++using Content.Shared._Orion.Weapons.Ranged.Components;
++using Robust.Client.Graphics;
++using Robust.Shared.Map;
++using Robust.Shared.Timing;
++
++namespace Content.Client._Orion.Weapons.Ranged.Overlays.Systems;
++
++public sealed class TracerSystem : EntitySystem
++{
++    [Dependency] private readonly IGameTiming _timing = default!;
++    [Dependency] private readonly IOverlayManager _overlay = default!;
++    [Dependency] private readonly SharedTransformSystem _transform = default!;
++
++    private TracerOverlay? _tracerOverlay;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++        _tracerOverlay = new TracerOverlay(this);
++        _overlay.AddOverlay(_tracerOverlay);
++
++        SubscribeLocalEvent<TracerComponent, ComponentStartup>(OnTracerStart);
++    }
++
++    public override void Shutdown()
++    {
++        base.Shutdown();
++
++        if (_tracerOverlay == null)
++            return;
++
++        _overlay.RemoveOverlay(_tracerOverlay);
++        _tracerOverlay = null;
++    }
++
++    private void OnTracerStart(Entity<TracerComponent> ent, ref ComponentStartup args)
++    {
++        var xform = Transform(ent);
++        var pos = _transform.GetWorldPosition(xform);
++
++        ent.Comp.Data = new TracerData(
++            new List<Vector2> { pos },
++            _timing.CurTime + TimeSpan.FromSeconds(ent.Comp.Lifetime)
++        );
++    }
++
++    public override void Update(float frameTime)
++    {
++        base.Update(frameTime);
++
++        var curTime = _timing.CurTime;
++        var query = EntityQueryEnumerator<TracerComponent, TransformComponent>();
++
++        while (query.MoveNext(out var uid, out var tracer, out var xform))
++        {
++            var data = tracer.Data;
++
++            if (curTime > data.EndTime)
++            {
++                RemCompDeferred<TracerComponent>(uid);
++                continue;
++            }
++
++            var currentPos = _transform.GetWorldPosition(xform);
++            data.PositionHistory.Add(currentPos);
++
++            while (data.PositionHistory.Count > 2 && GetTrailLength(data.PositionHistory) > tracer.Length)
++            {
++                data.PositionHistory.RemoveAt(0);
++            }
++        }
++    }
++
++    private static float GetTrailLength(List<Vector2> positions)
++    {
++        var length = 0f;
++        for (var i = 1; i < positions.Count; i++)
++        {
++            length += Vector2.Distance(positions[i - 1], positions[i]);
++        }
++
++        return length;
++    }
++
++    public void Draw(DrawingHandleWorld handle, MapId currentMap)
++    {
++        var query = EntityQueryEnumerator<TracerComponent, TransformComponent>();
++
++        while (query.MoveNext(out _, out var tracer, out var xform))
++        {
++            if (xform.MapID != currentMap)
++                continue;
++
++            var data = tracer.Data;
++            if (data.PositionHistory.Count < 2)
++                continue;
++
++            var positions = data.PositionHistory;
++
++            handle.SetTransform(Matrix3x2.Identity);
++
++            for (var i = 1; i < positions.Count; i++)
++            {
++                handle.DrawLine(positions[i - 1], positions[i], tracer.Color);
++            }
++        }
++    }
++}
+
+### Content.Client/_Orion/Weapons/Ranged/Overlays/Tracer/TracerOverlay.cs
+@@ -0,0 +1,22 @@
++using Content.Client._Orion.Weapons.Ranged.Overlays.Systems;
++using Robust.Client.Graphics;
++using Robust.Shared.Enums;
++
++namespace Content.Client._Orion.Weapons.Ranged.Overlays.Tracer;
++
++public sealed class TracerOverlay : Overlay
++{
++    private readonly TracerSystem _tracer;
++
++    public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
++
++    public TracerOverlay(TracerSystem tracer)
++    {
++        _tracer = tracer;
++    }
++
++    protected override void Draw(in OverlayDrawArgs args)
++    {
++        _tracer.Draw(args.WorldHandle, args.MapId);
++    }
++}
+
+### Content.Shared/_Orion/Weapons/Ranged/Components/TracerComponent.cs
+@@ -0,0 +1,36 @@
++using System.Numerics;
++
++namespace Content.Shared._Orion.Weapons.Ranged.Components;
++
++[RegisterComponent]
++public sealed partial class TracerComponent : Component
++{
++    [DataField]
++    public float Lifetime = 10f;
++
++    /// <summary>
++    /// The maximum length of the tracer trail
++    /// </summary>
++    [DataField]
++    public float Length = 2f;
++
++    /// <summary>
++    /// Color of the tracer line effect
++    /// </summary>
++    [DataField]
++    public Color Color = Color.Red;
++
++    [ViewVariables]
++    public TracerData Data = default!;
++}
++
++[DataRecord]
++public sealed partial class TracerData(List<Vector2> positionHistory, TimeSpan endTime)
++{
++    public List<Vector2> PositionHistory = positionHistory;
++
++    /// <summary>
++    /// When this tracer effect should end
++    /// </summary>
++    public TimeSpan EndTime = endTime;
++}
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Projectiles/projectiles.yml
+@@ -8,6 +8,6 @@
+-# SPDX-FileCopyrightText: 2020 V�ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
+-# SPDX-FileCopyrightText: 2020 V�ctor Aguilera Puerto <zddm@outlook.es>
++# SPDX-FileCopyrightText: 2020 V ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
++# SPDX-FileCopyrightText: 2020 V ctor Aguilera Puerto <zddm@outlook.es>
+@@ -212,4 +212,7 @@
++  - type: Tracer # Orion
++    color: "#FFFFFFFF"
++    length: 3
+@@ -251,4 +254,7 @@
++  - type: Tracer # Orion
++    color: "#CCCCCCFF"
++    length: 3
+@@ -269,4 +275,7 @@
++  - type: Tracer # Orion
++    color: "#D1B479FF"
++    length: 3
+@@ -285,4 +294,7 @@
++  - type: Tracer # Orion
++    color: "#71C978FF"
++    length: 3
+@@ -300,4 +312,7 @@
++  - type: Tracer # Orion
++    color: "#71C978FF"
++    length: 3

@@ -1,0 +1,95 @@
+[Fix] Faction Wars
+
+### Resources/Prototypes/_Goobstation/ai_factions.yml
+@@ -2,8 +2,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -17,4 +17,8 @@
++  # Orion-Start
++  - InteQ
++  - InteQHostile
++  # Orion-End
+
+### Resources/Prototypes/_Orion/ai_factions.yml
+@@ -7,8 +7,11 @@
+-  # Goob-Start-Factions
++  - Xenoborg
++  # Goob-Start
+-  # Goob-End-Factions
++  - Lavafauna
++  - Wraith
++  # Goob-End
+@@ -31,5 +34,6 @@
+-  # Goob-Start-Factions
++  - Xenoborg
++  # Goob-Start
+@@ -38,5 +42,8 @@
+-  # Goob-End-Factions
++  - Lavafauna
++  - Wraith
++  - Assistant
++  # Goob-End
+
+### Resources/Prototypes/ai_factions.yml
+@@ -40,8 +40,8 @@
+-    # Orion-Start-Factions
++    # Orion-Start
+-    # Orion-End-Factions
++    # Orion-End
+@@ -62,7 +62,7 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -92,7 +92,7 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -109,8 +109,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -138,7 +138,7 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -161,8 +161,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -186,8 +186,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -212,8 +212,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -231,8 +231,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -269,8 +269,8 @@
+-  # Orion-Start-Factions
++  # Orion-Start
+-  # Orion-End-Factions
++  # Orion-End
+@@ -291,4 +291,8 @@
++  # Orion-Start
++  - InteQ
++  - InteQHostile
++  # Orion-End
+@@ -312,4 +316,8 @@
++  # Orion-Start
++  - InteQ
++  - InteQHostile
++  # Orion-End

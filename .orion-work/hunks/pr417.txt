@@ -1,0 +1,38 @@
+up1.1
+
+### Content.Goobstation.Server/Xenobiology/SlimeLatchSystem.cs
+@@ -30,5 +30,7 @@
++using Content.Shared._EinsteinEngines.Silicon.Components;
++using Content.Shared.Silicons.Borgs.Components;
+@@ -81,9 +83,20 @@ private void UpdateHunger(Entity<SlimeDamageOvertimeComponent> ent)
+-        _damageable.TryChangeDamage(ent, ent.Comp.Damage, ignoreResistances: true, targetPart: TargetBodyPart.All);
++        // Orion-Edit-Start
++        var damage = ent.Comp.Damage;
++        if (HasComp<SiliconComponent>(ent) || HasComp<BorgChassisComponent>(ent))
++        {
++            var totalDamage = damage.GetTotal();
++            damage = new DamageSpecifier();
++            damage.DamageDict["Blunt"] = totalDamage;
++        }
++
++        _damageable.TryChangeDamage(ent, damage, ignoreResistances: true, targetPart: TargetBodyPart.All);
++        // Orion-Edit-End
++/* // Orion-Edit
+@@ -92,4 +105,5 @@ private void UpdateHunger(Entity<SlimeDamageOvertimeComponent> ent)
++*/
+@@ -113,11 +127,24 @@ private void UpdateHunger(Entity<SlimeDamageOvertimeComponent> ent)
++            var totalTransferred = FixedPoint2.Zero; // Orion
+-                var chemSolution = blood.SplitSolution(chemTransfer/FixedPoint2.New(stomachList.Count));
++                totalTransferred += bloodSolution.Volume; // Orion
++
++                var chemSolution = chem.SplitSolution(chemTransfer/FixedPoint2.New(stomachList.Count)); // Orion-Edit
++                totalTransferred += chemSolution.Volume; // Orion
++
++            // Orion-Start
++            if (totalTransferred > FixedPoint2.Zero && TryComp<HungerComponent>(source, out var hunger))
++            {
++                _hunger.ModifyHunger(source, (float) totalTransferred, hunger);
++                Dirty(source, hunger);
++            }
++            // Orion-End
++

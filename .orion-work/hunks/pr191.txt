@@ -1,0 +1,28 @@
+[Tweak] Disable Goob Patron Popup
+
+### Content.Goobstation.Client/Patron/PatronSupportSystem.cs
+@@ -18,4 +18,9 @@ public sealed class PatronSupportUIController : UIController, IOnStateEntered<Lo
++        // Orion-Start
++        if (!_cfg.GetCVar(CCVars.PatronEnabled))
++            return;
++        // Orion-End
++
+
+### Content.Shared/_Orion/CCVar/CCVars.Patron.cs
+@@ -0,0 +1,16 @@
++using Robust.Shared.Configuration;
++
++namespace Content.Shared.CCVar;
++
++//
++// License-Identifier: MIT
++//
++
++public sealed partial class CCVars
++{
++    /// <summary>
++    ///     Enable or disable Patron functions.
++    /// </summary>
++    public static readonly CVarDef<bool> PatronEnabled =
++        CVarDef.Create("support.patron_enabled", false, CVar.SERVER | CVar.REPLICATED);
++}

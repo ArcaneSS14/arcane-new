@@ -1,0 +1,355 @@
+UnInvert
+
+### Content.Client/Input/ContentContexts.cs
+@@ -163,4 +163,5 @@ public static void SetupContexts(IInputContextContainer contexts)
++            human.AddFunction(ContentKeyFunctions.TogglePosing); // Orion
+
+### Content.Client/Options/UI/Tabs/KeyRebindTab.xaml.cs
+@@ -264,4 +264,13 @@ void AddCheckBox(string checkBoxName, bool currentState, Action<BaseButton.Butto
++            // Orion-Start
++            AddButton(ContentKeyFunctions.TogglePosing);
++            AddButton(ContentKeyFunctions.PosingOffsetLeft);
++            AddButton(ContentKeyFunctions.PosingOffsetRight);
++            AddButton(ContentKeyFunctions.PosingOffsetUp);
++            AddButton(ContentKeyFunctions.PosingOffsetDown);
++            AddButton(ContentKeyFunctions.PosingRotateNegative);
++            AddButton(ContentKeyFunctions.PosingRotatePositive);
++            // Orion-End
+
+### Content.Client/_Orion/Posing/PosingSystem.cs
+@@ -0,0 +1,72 @@
++using Content.Shared._Orion.Posing;
++using Content.Shared.Input;
++using Robust.Client.GameObjects;
++using Robust.Client.Input;
++using Robust.Client.Player;
++
++namespace Content.Client._Orion.Posing;
++
++public sealed partial class PosingSystem : SharedPosingSystem
++{
++    [Dependency] private readonly IInputManager _input = default!;
++    [Dependency] private readonly IPlayerManager _playerManager = default!;
++    [Dependency] private readonly SpriteSystem _sprite = default!;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeLocalEvent<PosingComponent, AfterAutoHandleStateEvent>(OnAfterHandleState);
++
++        var posing = _input.Contexts.New("posing", "common");
++        posing.AddFunction(ContentKeyFunctions.TogglePosing);
++        posing.AddFunction(ContentKeyFunctions.PosingOffsetUp);
++        posing.AddFunction(ContentKeyFunctions.PosingOffsetDown);
++        posing.AddFunction(ContentKeyFunctions.PosingOffsetLeft);
++        posing.AddFunction(ContentKeyFunctions.PosingOffsetRight);
++        posing.AddFunction(ContentKeyFunctions.PosingRotatePositive);
++        posing.AddFunction(ContentKeyFunctions.PosingRotateNegative);
++    }
++
++    public override void Shutdown()
++    {
++        base.Shutdown();
++        _input.Contexts.Remove("posing");
++    }
++
++    private void OnAfterHandleState(EntityUid uid, PosingComponent component, ref AfterAutoHandleStateEvent args)
++    {
++        if (_playerManager.LocalEntity == uid)
++            return;
++
++        if (component.Posing)
++            return;
++
++        _sprite.SetOffset(uid, component.DefaultOffset);
++        _sprite.SetRotation(uid, Angle.FromDegrees(component.DefaultAngle));
++    }
++
++    protected override void ClientTogglePosing(EntityUid uid, PosingComponent posing)
++    {
++        base.ClientTogglePosing(uid, posing);
++
++        _input.Contexts.SetActiveContext(posing.Posing ? "posing" : posing.DefaultInputContext);
++        _sprite.SetOffset(uid, posing.DefaultOffset);
++        _sprite.SetRotation(uid, Angle.FromDegrees(posing.DefaultAngle));
++    }
++
++    public override void FrameUpdate(float frameTime)
++    {
++        base.FrameUpdate(frameTime);
++
++        var query = EntityQueryEnumerator<PosingComponent>();
++        while (query.MoveNext(out var uid, out var posing))
++        {
++            if (!posing.Posing)
++                continue;
++
++            _sprite.SetOffset(uid, posing.DefaultOffset + posing.CurrentOffset);
++            _sprite.SetRotation(uid, posing.CurrentAngle);
++        }
++    }
++}
+
+### Content.Server/_Orion/Posing/PosingSystem.cs
+@@ -0,0 +1,5 @@
++using Content.Shared._Orion.Posing;
++
++namespace Content.Server._Orion.Posing;
++
++public sealed partial class PosingSystem : SharedPosingSystem;
+
+### Content.Shared/Input/ContentKeyFunctions.cs
+@@ -190,4 +190,13 @@ public static class ContentKeyFunctions
++        // Orion-Start
++        public static readonly BoundKeyFunction TogglePosing = "TogglePosing";
++        public static readonly BoundKeyFunction PosingOffsetLeft = "PosingOffsetLeft";
++        public static readonly BoundKeyFunction PosingOffsetRight = "PosingOffsetRight";
++        public static readonly BoundKeyFunction PosingOffsetUp = "PosingOffsetUp";
++        public static readonly BoundKeyFunction PosingOffsetDown = "PosingOffsetDown";
++        public static readonly BoundKeyFunction PosingRotateNegative = "PosingRotateNegative";
++        public static readonly BoundKeyFunction PosingRotatePositive = "PosingRotatePositive";
++        // Orion-End
+
+### Content.Shared/_Orion/Posing/PosingComponent.cs
+@@ -0,0 +1,32 @@
++using System.Numerics;
++using Robust.Shared.GameStates;
++
++namespace Content.Shared._Orion.Posing;
++
++[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
++public sealed partial class PosingComponent : Component
++{
++    [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
++    public Vector2 CurrentOffset = Vector2.Zero;
++
++    [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
++    public Angle CurrentAngle = Angle.Zero;
++
++    [DataField, AutoNetworkedField]
++    public Vector2 OffsetLimits = new(0.3f, 0.3f);
++
++    [DataField, AutoNetworkedField]
++    public float AngleLimits = 180f;
++
++    [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
++    public bool Posing = false;
++
++    [DataField]
++    public string DefaultInputContext = "human";
++
++    [DataField]
++    public Vector2 DefaultOffset = Vector2.Zero;
++
++    [DataField]
++    public float DefaultAngle;
++}
+
+### Content.Shared/_Orion/Posing/SharedPosingSystem.cs
+@@ -0,0 +1,170 @@
++using System.Numerics;
++using Content.Shared.ActionBlocker;
++using Content.Shared.Damage.Components;
++using Content.Shared.Input;
++using Content.Shared.Mobs;
++using Content.Shared.Movement.Events;
++using Content.Shared.Standing;
++using Content.Shared.Stunnable;
++using Robust.Shared.Input.Binding;
++
++namespace Content.Shared._Orion.Posing;
++
++public abstract partial class SharedPosingSystem : EntitySystem
++{
++    [Dependency] private readonly StandingStateSystem _standing = default!;
++    [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeLocalEvent<PosingComponent, UpdateCanMoveEvent>(OnUpdateCanMove);
++        SubscribeLocalEvent<PosingComponent, DownedEvent>(OnDowned);
++        SubscribeLocalEvent<PosingComponent, MobStateChangedEvent>(OnMobStateChanged);
++
++        CommandBinds.Builder
++            .Bind(ContentKeyFunctions.TogglePosing,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid && CanTogglePosing(userUid))
++                            TogglePosing(userUid);
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingOffsetRight,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingOffset(userUid, new(0.05f, 0f));
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingOffsetLeft,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingOffset(userUid, new(-0.05f, 0f));
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingOffsetUp,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingOffset(userUid, new(0f, 0.05f));
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingOffsetDown,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingOffset(userUid, new(0f, -0.05f));
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingRotatePositive,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingAngle(userUid, -5f);
++                    },
++                    handle: false))
++            .Bind(ContentKeyFunctions.PosingRotateNegative,
++                InputCmdHandler.FromDelegate(session =>
++                    {
++                        if (session?.AttachedEntity is { } userUid)
++                            TryAdjustPosingAngle(userUid, 5f);
++                    },
++                    handle: false))
++            .Register<SharedPosingSystem>();
++    }
++
++    public override void Shutdown()
++    {
++        base.Shutdown();
++        CommandBinds.Unregister<SharedPosingSystem>();
++    }
++
++    private static void OnUpdateCanMove(EntityUid uid, PosingComponent component, UpdateCanMoveEvent args)
++    {
++        if (component.Posing)
++            args.Cancel();
++    }
++
++    private void OnDowned(EntityUid uid, PosingComponent component, EntityEventArgs args)
++    {
++        if (component.Posing)
++            TogglePosing(uid, component);
++    }
++
++    private void OnMobStateChanged(EntityUid uid, PosingComponent component, ref MobStateChangedEvent args)
++    {
++        if (component.Posing)
++            TogglePosing(uid, component);
++    }
++
++    private void TogglePosing(EntityUid uid, PosingComponent? posingComp = null)
++    {
++        if (!Resolve(uid, ref posingComp, false))
++            return;
++
++        posingComp.Posing = !posingComp.Posing;
++        _actionBlocker.UpdateCanMove(uid);
++
++        posingComp.CurrentAngle = Angle.Zero;
++        posingComp.CurrentOffset = Vector2.Zero;
++
++        ClientTogglePosing(uid, posingComp);
++        Dirty(uid, posingComp);
++    }
++
++    private void TryAdjustPosingOffset(EntityUid uid, Vector2 offset, PosingComponent? posingComp = null)
++    {
++        if (!Resolve(uid, ref posingComp, false) || !posingComp.Posing)
++            return;
++
++        var previousOffset = posingComp.CurrentOffset;
++
++        posingComp.CurrentOffset += offset;
++        posingComp.CurrentOffset = Vector2.Clamp(posingComp.CurrentOffset, -posingComp.OffsetLimits, posingComp.OffsetLimits);
++
++        if (posingComp.CurrentOffset.Equals(previousOffset))
++            return;
++
++        Dirty(uid, posingComp);
++    }
++
++    private void TryAdjustPosingAngle(EntityUid uid, float angle, PosingComponent? posingComp = null)
++    {
++        if (!Resolve(uid, ref posingComp, false) || !posingComp.Posing)
++            return;
++
++        var previousAngle = posingComp.CurrentAngle;
++
++        var newAngle = posingComp.CurrentAngle.Degrees + angle;
++        posingComp.CurrentAngle = Angle.FromDegrees(Math.Clamp(newAngle, -posingComp.AngleLimits, posingComp.AngleLimits));
++
++        if (posingComp.CurrentAngle.Equals(previousAngle))
++            return;
++
++        Dirty(uid, posingComp);
++    }
++
++    protected virtual void ClientTogglePosing(EntityUid uid, PosingComponent posing)
++    {
++    }
++
++    private bool CanTogglePosing(EntityUid uid)
++    {
++        if (!_actionBlocker.CanConsciouslyPerformAction(uid))
++            return false;
++
++        if (TryComp<StaminaComponent>(uid, out var stamina) && stamina.Critical)
++            return false;
++
++        if (HasComp<StunnedComponent>(uid))
++            return false;
++
++        if (_standing.IsDown(uid))
++            return false;
++
++        return true;
++    }
++}
+
+### Resources/Prototypes/Entities/Mobs/Species/base.yml
+@@ -511,4 +511,5 @@
++  - type: Posing # Orion
+
+### Resources/Prototypes/Entities/Mobs/base.yml
+@@ -139,4 +139,5 @@
++  - type: Posing # Orion
+
+### Resources/keybinds.yml
+@@ -777,2 +777,26 @@ binds:
++# Orion-Start
++- function: TogglePosing
++  type: State
++  key: R
++  mod1: Control
++- function: PosingOffsetLeft
++  type: State
++  key: A
++- function: PosingOffsetRight
++  type: State
++  key: D
++- function: PosingOffsetUp
++  type: State
++  key: W
++- function: PosingOffsetDown
++  type: State
++  key: S
++- function: PosingRotateNegative
++  type: State
++  key: Q
++- function: PosingRotatePositive
++  type: State
++  key: E
++# Orion-End

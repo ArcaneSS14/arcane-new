@@ -1,0 +1,27 @@
+[Tweak] Remove Fart Category
+
+### Content.Client/UserInterface/Systems/Emotes/EmotesUIController.cs
+@@ -39,5 +39,5 @@ public sealed class EmotesUIController : UIController, IOnStateChanged<GameplayS
+-        [EmoteCategory.Farts] = ("emote-menu-category-farts", new SpriteSpecifier.Texture(new ResPath("/Textures/_Goobstation/Interface/Emotes/fart.png"))), // Goobstation (obviously)
++//        [EmoteCategory.Farts] = ("emote-menu-category-farts", new SpriteSpecifier.Texture(new ResPath("/Textures/_Goobstation/Interface/Emotes/fart.png"))), // Goobstation (obviously) | Europa-Remove (So dirty)
+
+### Content.Goobstation.Server/MisandryBox/CatEmoteSpamCountermeasureSystem.cs
+@@ -92,5 +92,5 @@ public override void Update(float frameTime)
+-        if (args.Emote.Category is EmoteCategory.Vocal or EmoteCategory.Farts && args.Voluntary)
++        if (args.Emote.Category is EmoteCategory.Vocal && args.Voluntary) // Europa-Edit | Removed Fart category
+
+### Content.Shared/Chat/Prototypes/EmotePrototype.cs
+@@ -100,5 +100,5 @@ public enum EmoteCategory : byte
+-    Farts = 1 << 2, // Goobstation - Fart Emotes
++//    Farts = 1 << 2, // Goobstation - Fart Emotes | Europa-Remove
+
+### Resources/Prototypes/_Goobstation/Voice/speech_emotes.yml
+@@ -14,5 +14,5 @@
+-  category: Farts
++#  category: Farts # Europa-Remove
+@@ -69,5 +69,5 @@
+-  category: Farts
++#  category: Farts # Europa-Remove
+@@ -110,5 +110,5 @@
+-  category: Farts
++#  category: Farts # Europa-Remove

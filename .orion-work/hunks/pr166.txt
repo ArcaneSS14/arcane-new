@@ -1,0 +1,85 @@
+Fix Test
+
+### Content.Client/PDA/PdaMenu.xaml.cs
+@@ -62,5 +62,5 @@ public sealed partial class PdaMenu : PdaWindow
+-        private TimeSystem _timeSystem = default!; // Orion
++        private readonly TimeSystem _timeSystem; // Orion
+@@ -145,15 +145,17 @@ public PdaMenu()
+-                // Orion-Edit-Start
+-                var stationTime = _timeSystem.GetStationTime();
+-                _clipboard.SetText(stationTime.Time.ToString("hh\\:mm\\:ss"));
+-                // Orion-Edit-End
++                var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
++                _clipboard.SetText((stationTime.ToString(@"hh\:mm\:ss")));
++            StationRealTimeButton.OnPressed += _ =>
++            {
++                _clipboard.SetText(_timeSystem.GetStationTime().ToString("hh\\:mm"));
++            };
++
+-                var stationDate = _timeSystem.GetStationTime().Date;
+-                _clipboard.SetText(stationDate.ToString("dd.MM.yyyy"));
++                _clipboard.SetText(_timeSystem.GetStationDate().ToString("dd.MM.yyyy"));
+@@ -382,13 +384,14 @@ protected override void Draw(DrawingHandleScreen handle)
+-            // Orion-Edit-Start
+-            var stationTime = _timeSystem.GetStationTime();
+-            var stationDate = stationTime.Date;
++            var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
+-                ("time", stationTime.Time.ToString("hh\\:mm\\:ss"))));
++                ("time", stationTime.ToString(@"hh\:mm\:ss"))));
++            // Orion-Start
++            StationRealTimeLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-real-time",
++                ("time", _timeSystem.GetStationTime().ToString(@"hh\:mm"))));
+-                ("date", stationDate.ToString("dd.MM.yyyy"))));
+-            // Orion-Edit-End
++                ("date", _timeSystem.GetStationDate().ToString("dd.MM.yyyy"))));
++            // Orion-End
+
+### Content.Server/GameTicking/GameTicker.Lobby.cs
+@@ -135,8 +135,4 @@ private string GetInfoText(bool isInGameInfo = false)
+-            // Orion-Start
+-            var stationTime = _timeSystem.GetStationTime();
+-            // Orion-End
+-
+@@ -154,6 +150,5 @@ private string GetInfoText(bool isInGameInfo = false)
+-                ("stationTime", stationTime.Time.ToString(@"hh\:mm")), // Orion
+-                ("stationDate", stationTime.Date.ToString("dd.MM.yyyy"))); // Orion
++                ("stationDate", _timeSystem.GetStationDate().ToString("dd.MM.yyyy"))); // Orion
+
+### Content.Shared/_Orion/Time/TimeSystem.cs
+@@ -1,5 +1,2 @@
+-using Content.Shared.GameTicking;
+-using Robust.Shared.Timing;
+-
+@@ -10,28 +7,6 @@ namespace Content.Shared._Orion.Time;
+-    [Dependency] private readonly IGameTiming _timing = default!;
+-
+-    private TimeSpan _roundStart = TimeSpan.Zero;
+-
+-    public override void Initialize()
+-    {
+-        base.Initialize();
+-
+-        SubscribeNetworkEvent<TickerLobbyStatusEvent>(OnLobbyStatus);
+-    }
+-
+-    private void OnLobbyStatus(TickerLobbyStatusEvent ev)
++    public DateTime GetStationDate()
+-        _roundStart = ev.RoundStartTimeSpan;
+-    }
+-
+-    public (TimeSpan Time, DateTime Date) GetStationTime()
+-    {
+-        var elapsed = _timing.CurTime - _roundStart;
+-        if (elapsed < TimeSpan.Zero)
+-            elapsed = TimeSpan.Zero;
+-
+-        var timeOfDay = TimeSpan.FromTicks(elapsed.Ticks % TimeSpan.TicksPerDay);
+-
+@@ -39,5 +14,10 @@ private void OnLobbyStatus(TickerLobbyStatusEvent ev)
+-        return (timeOfDay, stationDate);
++        return stationDate;
++    }
++
++    public TimeSpan GetStationTime() // TODO: Randomize this?
++    {
++        return DateTime.UtcNow.TimeOfDay;

@@ -1,0 +1,884 @@
+[
+{
+"pr": 6,
+"v": "CUT",
+"r": "1592/2490 ids уже в базе (Orion-ветка форка)",
+"t": "Fixiki"
+},
+{
+"pr": 14,
+"v": "CUT",
+"r": "",
+"t": "Remove funny from spawner"
+},
+{
+"pr": 17,
+"v": "KEEP",
+"r": "Orion-контент (мудрости/события), в базе нет",
+"t": "3 > 1"
+},
+{
+"pr": 19,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Hide Advertise From Chat Bool"
+},
+{
+"pr": 20,
+"v": "CUT",
+"r": "",
+"t": "[Feature] Lavaland Hermit Ghost Role"
+},
+{
+"pr": 21,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove Fart Category"
+},
+{
+"pr": 23,
+"v": "KEEP",
+"r": "",
+"t": "Fixiki"
+},
+{
+"pr": 25,
+"v": "KEEP",
+"r": "фикс спрайтов modsuit (_Europa)",
+"t": "Fix Sprite"
+},
+{
+"pr": 26,
+"v": "CUT",
+"r": "",
+"t": "[Port] CaptainDrobe"
+},
+{
+"pr": 27,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Macrobomb Buff"
+},
+{
+"pr": 29,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Music Slider"
+},
+{
+"pr": 30,
+"v": "CUT",
+"r": "id уже в базе",
+"t": "Fix walking dead gone postal"
+},
+{
+"pr": 31,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Energy Dome"
+},
+{
+"pr": 34,
+"v": "CUT",
+"r": "",
+"t": "Revert \"[Tweak] Role By Priority (#32)\""
+},
+{
+"pr": 35,
+"v": "UNCERTAIN",
+"r": "пустой дифф (+4 hair)",
+"t": "+4 hair"
+},
+{
+"pr": 37,
+"v": "CUT",
+"r": "",
+"t": "Edit FTL"
+},
+{
+"pr": 38,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Cyrillic Crayons"
+},
+{
+"pr": 39,
+"v": "CUT",
+"r": "",
+"t": "[Port] Russian Announcement"
+},
+{
+"pr": 40,
+"v": "KEEP",
+"r": "",
+"t": "HideContextMenu"
+},
+{
+"pr": 41,
+"v": "CUT",
+"r": "",
+"t": "remove recipe"
+},
+{
+"pr": 42,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove Remove Tider Main Syndrome"
+},
+{
+"pr": 52,
+"v": "CUT",
+"r": "",
+"t": "Update"
+},
+{
+"pr": 55,
+"v": "KEEP",
+"r": "",
+"t": "Skibob in my mind"
+},
+{
+"pr": 57,
+"v": "KEEP",
+"r": "обновление карты InteQ_Sizo (_Europa)",
+"t": "[Tweak] Update Map Sizo-73"
+},
+{
+"pr": 60,
+"v": "CUT",
+"r": "",
+"t": "[Port] Make Theobromine Gud"
+},
+{
+"pr": 61,
+"v": "KEEP",
+"r": "",
+"t": "Huh"
+},
+{
+"pr": 63,
+"v": "KEEP",
+"r": "",
+"t": "Uh huh fix"
+},
+{
+"pr": 64,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Remove NPC Food Spermamassive"
+},
+{
+"pr": 66,
+"v": "UNCERTAIN",
+"r": "пустой дифф",
+"t": "Ruuaaahhhh!!!"
+},
+{
+"pr": 74,
+"v": "KEEP",
+"r": "",
+"t": "Merge branch 'StationAlertAttention' of https://github.com/AtaraxiaSpaceFoundation/Europa-Station-14 into StationAlertAttention"
+},
+{
+"pr": 76,
+"v": "KEEP",
+"r": "",
+"t": "Sponsor text"
+},
+{
+"pr": 79,
+"v": "CUT",
+"r": "",
+"t": "Fix RSI Test"
+},
+{
+"pr": 85,
+"v": "CUT",
+"r": "",
+"t": "Fix Test"
+},
+{
+"pr": 87,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove RND Console Access"
+},
+{
+"pr": 93,
+"v": "CUT",
+"r": "",
+"t": "Fix YAML Test"
+},
+{
+"pr": 97,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Atmos Burning"
+},
+{
+"pr": 99,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Game Rules Edits"
+},
+{
+"pr": 100,
+"v": "CUT",
+"r": "",
+"t": "Merge branch 'master' into SeparatedSupermancy"
+},
+{
+"pr": 106,
+"v": "CUT",
+"r": "",
+"t": "like nuhh uhhh"
+},
+{
+"pr": 110,
+"v": "KEEP",
+"r": "",
+"t": "[Feature] Anti Spam AHelp"
+},
+{
+"pr": 113,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Nerf Blob Pod"
+},
+{
+"pr": 116,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove Mail Time Penalty"
+},
+{
+"pr": 117,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Smooth Light"
+},
+{
+"pr": 118,
+"v": "CUT",
+"r": "",
+"t": "Fix Test"
+},
+{
+"pr": 138,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Adaptation ScannableForPoints"
+},
+{
+"pr": 143,
+"v": "KEEP",
+"r": "",
+"t": "Unshitcode"
+},
+{
+"pr": 144,
+"v": "CUT",
+"r": "",
+"t": "Up2"
+},
+{
+"pr": 148,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Main Menu Borders"
+},
+{
+"pr": 152,
+"v": "CUT",
+"r": "",
+"t": "Update Resources/Locale/en-US/ss14-ru/prototypes/_orion/catalog/fills/lockers/security.ftl"
+},
+{
+"pr": 153,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove Psychologist EAccess"
+},
+{
+"pr": 154,
+"v": "CUT",
+"r": "id уже в базе",
+"t": "[Port] Combat Mode Sound"
+},
+{
+"pr": 157,
+"v": "CUT",
+"r": "",
+"t": "yip yip"
+},
+{
+"pr": 160,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Station Time In Ingame Info"
+},
+{
+"pr": 162,
+"v": "KEEP",
+"r": "",
+"t": "[Fix] Energy Dome"
+},
+{
+"pr": 166,
+"v": "CUT",
+"r": "",
+"t": "Fix Test"
+},
+{
+"pr": 176,
+"v": "CUT",
+"r": "id уже в базе",
+"t": "[Tweak] Unchudify Time System"
+},
+{
+"pr": 177,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Interdyne Freezer Broke Test"
+},
+{
+"pr": 178,
+"v": "CUT",
+"r": "",
+"t": "Fix Test 2"
+},
+{
+"pr": 181,
+"v": "KEEP",
+"r": "",
+"t": "Lan poxyu"
+},
+{
+"pr": 182,
+"v": "CUT",
+"r": "",
+"t": "remove unused FTL"
+},
+{
+"pr": 183,
+"v": "KEEP",
+"r": "",
+"t": "Merge branch 'master' into FlavorNSFWUpdate"
+},
+{
+"pr": 186,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Better Secret Door Recipe"
+},
+{
+"pr": 187,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Better Window Recipe"
+},
+{
+"pr": 188,
+"v": "CUT",
+"r": "",
+"t": "[Fix] SDoorAssembly Test Fail"
+},
+{
+"pr": 191,
+"v": "CUT",
+"r": "id уже в базе",
+"t": "[Tweak] Disable Goob Patron Popup"
+},
+{
+"pr": 207,
+"v": "CUT",
+"r": "",
+"t": "Oh, cool"
+},
+{
+"pr": 208,
+"v": "KEEP",
+"r": "",
+"t": "Fix Test"
+},
+{
+"pr": 210,
+"v": "KEEP",
+"r": "",
+"t": "[Fix] All Access"
+},
+{
+"pr": 211,
+"v": "KEEP",
+"r": "",
+"t": "[Feature] Orio"
+},
+{
+"pr": 216,
+"v": "KEEP",
+"r": "",
+"t": "UnInvert"
+},
+{
+"pr": 220,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Gamemode Display for Discord Webhook"
+},
+{
+"pr": 227,
+"v": "CUT",
+"r": "",
+"t": "smaller ghost button"
+},
+{
+"pr": 232,
+"v": "KEEP",
+"r": "",
+"t": "up3"
+},
+{
+"pr": 233,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Emergency Light Alerts"
+},
+{
+"pr": 239,
+"v": "KEEP",
+"r": "",
+"t": "IT WORKS"
+},
+{
+"pr": 245,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] AdminWho for Everyone"
+},
+{
+"pr": 248,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Change Bleed Alert Sprite"
+},
+{
+"pr": 256,
+"v": "KEEP",
+"r": "",
+"t": "mf"
+},
+{
+"pr": 258,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] Remove Salvage Vendor Access"
+},
+{
+"pr": 259,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Faction Wars"
+},
+{
+"pr": 265,
+"v": "CUT",
+"r": "",
+"t": "up4"
+},
+{
+"pr": 267,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Unknown Death Summary"
+},
+{
+"pr": 271,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Larva Burst Death"
+},
+{
+"pr": 275,
+"v": "KEEP",
+"r": "",
+"t": "up6"
+},
+{
+"pr": 276,
+"v": "CUT",
+"r": "",
+"t": "[Fix] License Test Fail"
+},
+{
+"pr": 279,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Attribution Test Fail"
+},
+{
+"pr": 282,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Add Manuals to Hermits"
+},
+{
+"pr": 283,
+"v": "KEEP",
+"r": "",
+"t": "up6.1"
+},
+{
+"pr": 284,
+"v": "UNCERTAIN",
+"r": "пустой дифф (TG Banners)",
+"t": "[Tweak] TG Banners"
+},
+{
+"pr": 287,
+"v": "UNCERTAIN",
+"r": "пустой дифф",
+"t": "b;e"
+},
+{
+"pr": 298,
+"v": "CUT",
+"r": "",
+"t": "up2"
+},
+{
+"pr": 302,
+"v": "KEEP",
+"r": "",
+"t": "up4.2"
+},
+{
+"pr": 305,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Unequip EarsRight on Zombify"
+},
+{
+"pr": 307,
+"v": "CUT",
+"r": "",
+"t": "up6"
+},
+{
+"pr": 311,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Remove Orion CL"
+},
+{
+"pr": 312,
+"v": "UNCERTAIN",
+"r": "пустой дифф (Lobby Server Info)",
+"t": "[Fix] Lobby Server Info Panel"
+},
+{
+"pr": 313,
+"v": "CUT",
+"r": "",
+"t": "Update Content.Server/SurveillanceCamera/Systems/SurveillanceCameraSystem.cs"
+},
+{
+"pr": 322,
+"v": "CUT",
+"r": "",
+"t": "also fix chemical test"
+},
+{
+"pr": 324,
+"v": "CUT",
+"r": "",
+"t": "up2"
+},
+{
+"pr": 325,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Missing Command Roles"
+},
+{
+"pr": 327,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Incapacitated Grab Release"
+},
+{
+"pr": 328,
+"v": "KEEP",
+"r": "",
+"t": "[Fix] Dispenser Energy Dupe"
+},
+{
+"pr": 331,
+"v": "UNCERTAIN",
+"r": "пустой дифф (fixsecretdoor)",
+"t": "fixsecretdoorbutiforgotaboutmeta"
+},
+{
+"pr": 341,
+"v": "CUT",
+"r": "",
+"t": "Merge branch 'shot-in-head' of https://github.com/OSAS-corp/Local-OS-14 into shot-in-head"
+},
+{
+"pr": 343,
+"v": "CUT",
+"r": "",
+"t": "NTR fix"
+},
+{
+"pr": 345,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Link Wormholes"
+},
+{
+"pr": 349,
+"v": "KEEP",
+"r": "",
+"t": "[Feature] Delivery Bag"
+},
+{
+"pr": 350,
+"v": "KEEP",
+"r": "",
+"t": "up2"
+},
+{
+"pr": 351,
+"v": "KEEP",
+"r": "",
+"t": "up1"
+},
+{
+"pr": 353,
+"v": "KEEP",
+"r": "",
+"t": "up1"
+},
+{
+"pr": 354,
+"v": "KEEP",
+"r": "",
+"t": "Merge branch 'master' into kvas"
+},
+{
+"pr": 355,
+"v": "CUT",
+"r": "2/2 id уже в базе",
+"t": "locker"
+},
+{
+"pr": 356,
+"v": "KEEP",
+"r": "",
+"t": "Update migration.yml"
+},
+{
+"pr": 357,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Ebloid Links Support"
+},
+{
+"pr": 359,
+"v": "KEEP",
+"r": "",
+"t": "[Tweak] One Lobby Art"
+},
+{
+"pr": 363,
+"v": "KEEP",
+"r": "",
+"t": "up7"
+},
+{
+"pr": 365,
+"v": "CUT",
+"r": "",
+"t": "Update migration.yml"
+},
+{
+"pr": 366,
+"v": "CUT",
+"r": "",
+"t": "2"
+},
+{
+"pr": 367,
+"v": "KEEP",
+"r": "",
+"t": "up2"
+},
+{
+"pr": 370,
+"v": "KEEP",
+"r": "",
+"t": "Create borg_chassis.ftl"
+},
+{
+"pr": 372,
+"v": "KEEP",
+"r": "",
+"t": "up3"
+},
+{
+"pr": 373,
+"v": "CUT",
+"r": "",
+"t": "1.9.1"
+},
+{
+"pr": 375,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Ninja Protect Objective"
+},
+{
+"pr": 376,
+"v": "KEEP",
+"r": "",
+"t": "up1"
+},
+{
+"pr": 380,
+"v": "CUT",
+"r": "",
+"t": "[Tweak] Cutter Silo Link"
+},
+{
+"pr": 381,
+"v": "KEEP",
+"r": "",
+"t": "up1.1"
+},
+{
+"pr": 382,
+"v": "KEEP",
+"r": "",
+"t": "[Port] Pathfinding Decals"
+},
+{
+"pr": 383,
+"v": "KEEP",
+"r": "",
+"t": "start"
+},
+{
+"pr": 402,
+"v": "KEEP",
+"r": "",
+"t": "also fix test"
+},
+{
+"pr": 406,
+"v": "CUT",
+"r": "",
+"t": "ru-RU Update"
+},
+{
+"pr": 412,
+"v": "CUT",
+"r": "",
+"t": "also"
+},
+{
+"pr": 417,
+"v": "CUT",
+"r": "",
+"t": "up1.1"
+},
+{
+"pr": 420,
+"v": "KEEP",
+"r": "",
+"t": "up1.1"
+},
+{
+"pr": 427,
+"v": "CUT",
+"r": "",
+"t": "Merge branch 'master' into wizport"
+},
+{
+"pr": 429,
+"v": "KEEP",
+"r": "аудио reptilian_hiss (бинарь)",
+"t": "[Fix] Convert Hiss to Mono"
+},
+{
+"pr": 434,
+"v": "KEEP",
+"r": "",
+"t": "One more comment"
+},
+{
+"pr": 436,
+"v": "CUT",
+"r": "",
+"t": "edit"
+},
+{
+"pr": 438,
+"v": "KEEP",
+"r": "",
+"t": "Update SharedSurgerySystem.Steps.cs"
+},
+{
+"pr": 439,
+"v": "UNCERTAIN",
+"r": "пустой дифф (start)",
+"t": "start"
+},
+{
+"pr": 442,
+"v": "CUT",
+"r": "36/49 ids уже в базе",
+"t": "up 3.3"
+},
+{
+"pr": 444,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Fatal Surveillance Networking"
+},
+{
+"pr": 445,
+"v": "KEEP",
+"r": "",
+"t": "[Fix] Fatal Arrythmic Knife"
+},
+{
+"pr": 447,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Terminating ToggleableClothing"
+},
+{
+"pr": 448,
+"v": "CUT",
+"r": "",
+"t": "[Fix] Major Unshitcode Sandevistan"
+},
+{
+"pr": 450,
+"v": "KEEP",
+"r": "",
+"t": "Merge branch 'master' into new-problems"
+},
+{
+"pr": 458,
+"v": "KEEP",
+"r": "",
+"t": "Update surgery.yml"
+},
+{
+"pr": 466,
+"v": "CUT",
+"r": "",
+"t": "Merge branch 'master' into airloooooks"
+}
+]

@@ -1,0 +1,580 @@
+Fix Test
+
+### Content.Client/Clothing/ClientClothingSystem.cs
+@@ -82,4 +82,11 @@ public sealed class ClientClothingSystem : ClothingSystem
++        // Orion-Start
++        {"earsright", "EARSRIGHT"},
++        {"underwear", "UNDERWEAR"},
++        {"undershirt", "UNDERSHIRT"},
++        {"socks", "SOCKS"},
++        {"wrists", "WRISTS"},
++        // Orion-End
+
+### Content.Client/Inventory/ClientInventorySystem.cs
+@@ -292,4 +292,5 @@ public sealed class SlotData
++            public bool HasExtraSlotGroup => SlotDef.SlotGroup == "Extra"; // Orion
+@@ -335,3 +336,3 @@ bool ShowStorage
+-}
++}
+
+### Content.Client/Inventory/StrippableBoundUserInterface.cs
+@@ -88,4 +88,9 @@ public sealed class StrippableBoundUserInterface : BoundUserInterface
++        // Orion-Start
++        [ViewVariables]
++        public const string BlockedSlotEntityId = "BlockedSlotEntity";
++        // Orion-End
++
+@@ -94,4 +99,9 @@ public sealed class StrippableBoundUserInterface : BoundUserInterface
++        // Orion-Start
++        [ViewVariables]
++        private readonly EntityUid _virtualBlockedEntity;
++        // Orion-End
++
+@@ -115,4 +125,5 @@ public StrippableBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, u
++            _virtualBlockedEntity = EntMan.SpawnEntity(BlockedSlotEntityId, MapCoordinates.Nullspace); // Orion
+@@ -135,4 +146,5 @@ protected override void Dispose(bool disposing)
++            EntMan.DeleteEntity(_virtualBlockedEntity); // Orion
+@@ -239,5 +251,5 @@ private void AddHandButton(Entity<HandsComponent> ent, string handId, Hand hand)
+-            
++
+@@ -298,4 +310,18 @@ private void AddInventoryButton(EntityUid invUid, string slotId, InventoryCompon
++            // Orion-Start
++            var (ignoreBlock, showAllItems) = _strippable.IsInventoryIgnored(_player.LocalEntity);
++            if (!ignoreBlock && inv.BlockList.Contains(slotDef.SlotFlags))
++            {
++                entity = _virtualBlockedEntity;
++                button.Blocked = true;
++            }
++
++            if (!showAllItems && inv.HideList.Contains(slotDef.SlotFlags))
++            {
++                entity = _virtualBlockedEntity;
++            }
++            // Orion-End
++
+@@ -332,3 +358,3 @@ private void UpdateEntityIcon(SlotControl button, EntityUid? entity)
+-}
++}
+
+### Content.Client/Lobby/LobbyUIController.cs
+@@ -84,4 +84,5 @@
++using Content.Client._Orion.Lobby.UI;
+@@ -132,4 +133,6 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
++    private static readonly string[] UnderwearSlots = ["underwear", "undershirt", "socks"]; // Orion
++
+@@ -271,5 +274,5 @@ private void RefreshLobbyPreview()
+-        var dummy = LoadProfileEntity(humanoid, null, true);
++        var dummy = LoadProfileEntity(humanoid, null, ClothingDisplayMode.ShowAll); // Orion-Edit
+@@ -415,13 +418,13 @@ private void OpenSavePanel()
+-    public void GiveDummyJobClothesLoadout(EntityUid dummy, JobPrototype? jobProto, HumanoidCharacterProfile profile)
++    public void GiveDummyJobClothesLoadout(EntityUid dummy, JobPrototype? jobProto, HumanoidCharacterProfile profile, ClothingDisplayMode clothingMode = ClothingDisplayMode.ShowAll) // Orion-Edit
+-        GiveDummyJobClothes(dummy, profile, job);
++        GiveDummyJobClothes(dummy, profile, job, clothingMode); // Orion-Edit
+-            GiveDummyLoadout(dummy, loadout);
++            GiveDummyLoadout(dummy, loadout, clothingMode); // Orion-Edit
+@@ -437,7 +440,7 @@ public JobPrototype GetPreferredJob(HumanoidCharacterProfile profile)
+-    public void GiveDummyLoadout(EntityUid uid, RoleLoadout? roleLoadout)
++    public void GiveDummyLoadout(EntityUid uid, RoleLoadout? roleLoadout, ClothingDisplayMode clothingMode = ClothingDisplayMode.ShowAll) // Orion-Edit
+-        if (roleLoadout == null)
++        if (roleLoadout is null)
+@@ -449,5 +452,30 @@ public void GiveDummyLoadout(EntityUid uid, RoleLoadout? roleLoadout)
+-                _spawn.EquipStartingGear(uid, loadoutProto);
++                // Orion-Start
++                if (clothingMode == ClothingDisplayMode.ShowUnderwearOnly)
++                {
++                    if (!_prototypeManager.TryIndex(loadoutProto.StartingGear, out var gear))
++                        continue;
++
++                    if (gear is not IEquipmentLoadout equipGear)
++                        continue;
++
++                    foreach (var slotName in UnderwearSlots)
++                    {
++                        var itemType = equipGear.GetGear(slotName);
++                        if (string.IsNullOrEmpty(itemType))
++                            continue;
++
++                        var item = EntityManager.SpawnEntity(itemType, MapCoordinates.Nullspace);
++                        _inventory.TryEquip(uid, item, slotName, true, true);
++                    }
++                }
++                // Orion-End
++                // Orion-Edit-Start
++                else
++                {
++                    _spawn.EquipStartingGear(uid, loadoutProto);
++                }
++                // Orion-Edit-End
+@@ -457,7 +485,7 @@ public void GiveDummyLoadout(EntityUid uid, RoleLoadout? roleLoadout)
+-    public void GiveDummyJobClothes(EntityUid dummy, HumanoidCharacterProfile profile, JobPrototype job)
++    private void GiveDummyJobClothes(EntityUid dummy, HumanoidCharacterProfile profile, JobPrototype job, ClothingDisplayMode clothingMode = ClothingDisplayMode.ShowAll) // Orion-Edit
+-        if (!_inventory.TryGetSlots(dummy, out var slots))
++        if (!_inventory.TryGetSlots(dummy, out var slots)) // Orion-Edit
+@@ -472,7 +500,12 @@ public void GiveDummyJobClothes(EntityUid dummy, HumanoidCharacterProfile profil
+-                    // TODO: Need some way to apply starting gear to an entity and replace existing stuff coz holy fucking shit dude.
++                        // Orion-Start
++                        if (clothingMode == ClothingDisplayMode.ShowUnderwearOnly &&
++                            !UnderwearSlots.Contains(slot.Name))
++                            continue;
++                        // Orion-End
++
+@@ -511,4 +544,9 @@ public void GiveDummyJobClothes(EntityUid dummy, HumanoidCharacterProfile profil
++        // Orion-Start
++        if (clothingMode == ClothingDisplayMode.ShowUnderwearOnly)
++            return;
++        // Orion-End
++
+@@ -534,10 +572,10 @@ public void GiveDummyJobClothes(EntityUid dummy, HumanoidCharacterProfile profil
+-    public EntityUid LoadProfileEntity(HumanoidCharacterProfile? humanoid, JobPrototype? job, bool jobClothes)
++    public EntityUid LoadProfileEntity(HumanoidCharacterProfile? humanoid, JobPrototype? job, ClothingDisplayMode clothingMode) // Orion-Edit
+-        if (humanoid != null && jobClothes)
++        if (humanoid != null && clothingMode != ClothingDisplayMode.HideAll) // Orion-Edit
+@@ -564,16 +602,18 @@ public EntityUid LoadProfileEntity(HumanoidCharacterProfile? humanoid, JobProtot
+-        if (humanoid != null && jobClothes)
+-        {
+-            DebugTools.Assert(job != null);
++        // Orion-Edit-Start
++        if (humanoid == null || clothingMode == ClothingDisplayMode.HideAll)
++            return dummyEnt;
+-            GiveDummyJobClothes(dummyEnt, humanoid, job);
++        DebugTools.Assert(job != null);
+-            if (_prototypeManager.HasIndex<RoleLoadoutPrototype>(LoadoutSystem.GetJobPrototype(job.ID)))
+-            {
+-                var loadout = humanoid.GetLoadoutOrDefault(LoadoutSystem.GetJobPrototype(job.ID), _playerManager.LocalSession, humanoid.Species, EntityManager, _prototypeManager);
+-                GiveDummyLoadout(dummyEnt, loadout);
+-            }
+-        }
++        GiveDummyJobClothes(dummyEnt, humanoid, job, clothingMode);
++
++        if (!_prototypeManager.HasIndex<RoleLoadoutPrototype>(LoadoutSystem.GetJobPrototype(job.ID)))
++            return dummyEnt;
++
++        var loadout = humanoid.GetLoadoutOrDefault(LoadoutSystem.GetJobPrototype(job.ID), _playerManager.LocalSession, humanoid.Species, EntityManager, _prototypeManager);
++        GiveDummyLoadout(dummyEnt, loadout, clothingMode);
++        // Orion-Edit-End
+
+### Content.Client/Lobby/UI/CharacterPickerButton.xaml.cs
+@@ -7,4 +7,5 @@
++using Content.Client._Orion.Lobby.UI;
+@@ -54,5 +55,5 @@ public CharacterPickerButton(
+-                .LoadProfileEntity(humanoid, null, true);
++                .LoadProfileEntity(humanoid, null, ClothingDisplayMode.ShowAll); // Orion-Edit
+@@ -93,3 +94,3 @@ protected override void Dispose(bool disposing)
+-}
++}
+
+### Content.Client/Lobby/UI/HumanoidProfileEditor.xaml.cs
+@@ -289,4 +289,6 @@ public sealed partial class HumanoidProfileEditor : BoxContainer
++        private ClothingDisplayMode _clothingDisplayMode = ClothingDisplayMode.ShowAll; // Orion
++
+@@ -704,8 +706,26 @@ public HumanoidProfileEditor(
++/* // Orion-Edit: Replaced
++*/
++
++            // Orion-Start
++            _clothingDisplayMode = ClothingDisplayMode.ShowAll;
++
++            ClothingDisplayButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-show-all"), (int)ClothingDisplayMode.ShowAll);
++            ClothingDisplayButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-show-underwear"), (int)ClothingDisplayMode.ShowUnderwearOnly);
++            ClothingDisplayButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-hide-all"), (int)ClothingDisplayMode.HideAll);
++            ClothingDisplayButton.SelectId((int)ClothingDisplayMode.ShowAll);
++
++            ClothingDisplayButton.OnItemSelected += args =>
++            {
++                ClothingDisplayButton.SelectId(args.Id);
++                _clothingDisplayMode = (ClothingDisplayMode)args.Id;
++                ReloadPreview();
++            };
++            // Orion-End
+@@ -1265,5 +1285,5 @@ private void ReloadPreview()
+-            PreviewDummy = _controller.LoadProfileEntity(Profile, JobOverride, ShowClothes.Pressed);
++            PreviewDummy = _controller.LoadProfileEntity(Profile, JobOverride, _clothingDisplayMode); // Orion-Edit: Clothing display mode
+
+### Content.Client/PDA/PdaMenu.xaml.cs
+@@ -29,5 +29,5 @@
+-using Content.Shared._Orion.Time;
++using Content.Shared._Orion.Time.Components;
+@@ -45,4 +45,5 @@ public sealed partial class PdaMenu : PdaWindow
++        [Dependency] private readonly IEntityManager _entityManager = default!; // Orion
+@@ -62,5 +63,4 @@ public sealed partial class PdaMenu : PdaWindow
+-        private readonly TimeSystem _timeSystem; // Orion
+@@ -70,5 +70,4 @@ public PdaMenu()
+-            _timeSystem = _entitySystem.GetEntitySystem<TimeSystem>(); // Orion
+@@ -152,10 +151,12 @@ public PdaMenu()
+-                _clipboard.SetText(_timeSystem.GetStationTime().ToString("hh\\:mm"));
++                if (TryGetStationTime(out var time))
++                    _clipboard.SetText(time.ToString("hh\\:mm"));
+-                _clipboard.SetText(_timeSystem.GetStationDate().ToString("dd.MM.yyyy"));
++                if (TryGetStationDate(out var date))
++                    _clipboard.SetText(date.ToString("dd.MM.yyyy"));
+@@ -208,10 +209,10 @@ public void UpdateState(PdaUpdateState state)
+-/*            // Orion-Edit-Start | Optimization
++/* // Orion-Edit: Optimization
+-*/            // Orion-Edit-End
++*/
+@@ -388,11 +389,49 @@ protected override void Draw(DrawingHandleScreen handle)
++
+-            StationRealTimeLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-real-time",
+-                ("time", _timeSystem.GetStationTime().ToString(@"hh\:mm"))));
+-            StationDateLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-date",
+-                ("date", _timeSystem.GetStationDate().ToString("dd.MM.yyyy"))));
++            if (TryGetStationTime(out var orionTime))
++            {
++                StationRealTimeLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-real-time",
++                    ("time", orionTime.ToString(@"hh\:mm"))));
++            }
++
++            if (TryGetStationDate(out var orionDate))
++            {
++                StationDateLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-date",
++                    ("date", orionDate.ToString("dd.MM.yyyy"))));
++            }
++
++        // Orion-Start
++        private bool TryGetStationTime(out TimeSpan time)
++        {
++            time = TimeSpan.Zero;
++
++            var query = _entityManager.EntityQueryEnumerator<StationTimeManagerComponent>();
++            while (query.MoveNext(out _, out var comp))
++            {
++                time = comp.StationTime;
++                return true;
++            }
++
++            return false;
++        }
++
++        private bool TryGetStationDate(out DateTime date)
++        {
++            date = DateTime.UtcNow;
++
++            var query = _entityManager.EntityQueryEnumerator<StationTimeManagerComponent>();
++            while (query.MoveNext(out _, out var comp))
++            {
++                date = comp.StationDate;
++                return true;
++            }
++
++            return false;
++        }
++        // Orion-End
+
+### Content.Client/UserInterface/Systems/Hotbar/Widgets/HotbarGui.xaml.cs
+@@ -57,3 +57,3 @@ public void UpdateStatusVisibility(bool left, bool right)
+-}
++}
+
+### Content.Client/UserInterface/Systems/Inventory/InventoryUIController.cs
+@@ -64,4 +64,8 @@ public sealed class InventoryUIController : UIController, IOnStateEntered<Gamepl
++    // Orion-Start
++    private ItemSlotButtonContainer? _extraHotbar;
++    private SlotButton? _extraHotbarButton;
++    // Orion-End
+@@ -81,5 +85,10 @@ private void OnScreenLoad()
++        {
++            // Orion-Start
++            RegisterExtraButton(inventoryGui.ExtraButton);
++            // Orion-End
++        }
+@@ -105,7 +114,10 @@ public void OnStateExited(GameplayState state)
+-        {
+-        }
++
++        // Orion-Start
++        if (_extraHotbar != null)
++            _extraHotbar.Visible = false;
++        // Orion-End
+@@ -127,4 +139,11 @@ public void RegisterInventoryBarContainer(ItemSlotButtonContainer inventoryHotba
++    // Orion-Start
++    public void RegisterExtraHotbarContainer(ItemSlotButtonContainer extraHotbar)
++    {
++        _extraHotbar = extraHotbar;
++    }
++    // Orion-End
++
+@@ -134,9 +153,11 @@ public void RegisterInventoryButton(SlotButton? button)
+-        if (button != null)
+-        {
+-            _inventoryButton = button;
+-            _inventoryButton.Pressed += InventoryButtonPressed;
+-        }
++        // Orion-Edit-Start
++        if (button == null)
++            return;
++
++        _inventoryButton = button;
++        _inventoryButton.Pressed += InventoryButtonPressed;
++        // Orion-Edit-End
+@@ -157,4 +178,11 @@ private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
++            // Orion-Start
++            if (_extraHotbarButton != null)
++            {
++                _extraHotbarButton.Visible = false;
++            }
++            // Orion-End
++
+@@ -183,4 +211,11 @@ private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
++
++        // Orion-Start
++        var extraHotbarSlots = clientInv.SlotData.Where(p => p.Value.HasExtraSlotGroup).ToList();
++        if (_extraHotbarButton != null)
++            _extraHotbarButton.Visible = extraHotbarSlots.Count != 0 && _inventoryHotbar.Visible;
++        // Orion-End
++
+@@ -193,5 +228,5 @@ private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
+-        var maxIndex = clothing.Select(p => GetIndex(p.Value.ButtonOffset)).Max();
++        var maxIndex = clothing.Select(p => GetIndex(p.Value.ButtonOffset, maxWidth)).Max(); // Orion-Edit: maxWidth
+@@ -201,5 +236,5 @@ private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
+-            if (clothing.FirstOrNull(p => GetIndex(p.Value.ButtonOffset) == index) is { } pair)
++            if (clothing.FirstOrNull(p => GetIndex(p.Value.ButtonOffset, maxWidth) == index) is { } pair) // Orion-Edit: maxWidth
+@@ -210,16 +245,93 @@ private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
+-                    MinSize = new Vector2(64, 64)
++                    MinSize = new Vector2(64, 64),
++    }
+-        return;
++    // Orion-Start
++    private void UpdateExtraHotbar(InventorySlotsComponent? clientInv)
++    {
++        if (clientInv == null || _extraHotbar == null)
++        {
++            _extraHotbar?.ClearButtons();
++            return;
++        }
+-        int GetIndex(Vector2i position)
++        var extraSlots = clientInv.SlotData.Where(p => p.Value.HasExtraSlotGroup).ToList();
++        if (extraSlots.Count != 0)
+-            return position.Y * maxWidth + position.X;
++            foreach (var child in new List<Control>(_extraHotbar.Children))
++            {
++                if (child is not SlotControl)
++                    _extraHotbar.RemoveChild(child);
++            }
++
++            var maxWidth = extraSlots.Max(p => p.Value.ButtonOffset.X) + 1;
++            var maxIndex = extraSlots.Select(p => GetIndex(p.Value.ButtonOffset, maxWidth)).Max();
++
++            _extraHotbar.MaxColumns = maxWidth;
++            _extraHotbar.Columns = maxWidth;
++
++            for (var i = 0; i <= maxIndex; i++)
++            {
++                var index = i;
++                if (extraSlots.FirstOrNull(p => GetIndex(p.Value.ButtonOffset, maxWidth) == index) is { } pair)
++                {
++                    if (_extraHotbar.TryGetButton(pair.Key, out var slot))
++                        slot.SetPositionLast();
++                }
++                else
++                {
++                    _extraHotbar.AddChild(new Control
++                    {
++                        MinSize = new Vector2(64, 64),
++                    });
++                }
++            }
++        else
++        {
++            _extraHotbar.ClearButtons();
++        }
++    }
++
++    private int GetIndex(Vector2i position, int maxWidth) => position.Y * maxWidth + position.X;
++
++    public void RegisterExtraButton(SlotButton? button)
++    {
++        if (_extraHotbarButton != null)
++            _extraHotbarButton.Pressed -= ExtraButtonPressed;
++
++        if (button == null)
++            return;
++
++        _extraHotbarButton = button;
++        _extraHotbarButton.Pressed += ExtraButtonPressed;
++    }
++
++    private void ExtraButtonPressed(GUIBoundKeyEventArgs args, SlotControl control)
++    {
++        if (args.Function != EngineKeyFunctions.UIClick)
++            return;
++
++        ToggleExtraHotbar();
++        args.Handle();
++    }
++
++    private void ToggleExtraHotbar()
++    {
++        if (_inventoryHotbar is not { Visible: true })
++            return;
++
++        var inventoryGui = UIManager.GetActiveUIWidgetOrNull<InventoryGui>();
++        if (inventoryGui == null)
++            return;
++
++        inventoryGui.ToggleExtraHotbarVisibility();
++        UpdateExtraHotbar(_playerInventory);
++    // Orion-End
+@@ -268,8 +380,19 @@ public void ToggleInventoryBar()
+-        UpdateInventoryHotbar(_playerInventory);
++        // Orion-Start
++        if (!shouldBeVisible)
+
+### Content.Client/UserInterface/Systems/Inventory/Widgets/InventoryGui.xaml.cs
+
+### Content.Client/_Orion/Lobby/UI/ClothingDisplayMode.cs
+
+### Content.Client/_Orion/Lobby/UI/SpeciesWindow.xaml.cs
+
+### Content.Client/_Shitcode/Heretic/UI/LivingHeartMenu.xaml.cs
+
+### Content.Client/_Shitcode/Wizard/MagicMirror/WizardMirrorWindow.xaml.cs
+
+### Content.Server/Clock/ClockSystem.cs
+
+### Content.Server/GameTicking/GameTicker.Lobby.cs
+
+### Content.Server/Radio/EntitySystems/HeadsetSystem.cs
+
+### Content.Server/_Orion/Time/TimeSystem.cs
+
+### Content.Shared/Clock/GlobalTimeManagerComponent.cs
+
+### Content.Shared/Clock/SharedClockSystem.cs
+
+### Content.Shared/Humanoid/HumanoidVisualLayers.cs
+
+### Content.Shared/Humanoid/Markings/MarkingCategories.cs
+
+### Content.Shared/Inventory/InventoryComponent.cs
+
+### Content.Shared/Inventory/InventorySystem.Equip.cs
+
+### Content.Shared/Inventory/SlotBlockComponent.cs
+
+### Content.Shared/Inventory/SlotFlags.cs
+
+### Content.Shared/Radio/Components/HeadsetComponent.cs
+
+### Content.Shared/Radio/EntitySystems/SharedHeadsetSystem.cs
+
+### Content.Shared/Strip/SharedStrippableSystem.cs
+
+### Content.Shared/_Orion/Ghosts/IgnoreInventoryBlockComponent.cs
+
+### Content.Shared/_Orion/Time/Components/StationTimeManagerComponent.cs
+
+### Content.Shared/_Orion/Time/TimeSystem.cs
+
+### Resources/Prototypes/Entities/Clothing/Ears/headsets.yml
+
+### Resources/Prototypes/Entities/Clothing/Hands/base_clothinghands.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/base_clothingshoes.yml
+
+### Resources/Prototypes/Entities/Clothing/Under/under.yml
+
+### Resources/Prototypes/Entities/Clothing/Uniforms/base_clothinguniforms.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/undershirt.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/underwear.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/wrist.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/admin_ghost.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/arachnid.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/base.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/moth.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/reptilian.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/vox.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/wristwatch.yml
+
+### Resources/Prototypes/InventoryTemplates/aghost_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/human_inventory_template.yml
+
+### Resources/Prototypes/Loadouts/role_loadouts.yml
+
+### Resources/Prototypes/Species/arachnid.yml
+
+### Resources/Prototypes/Species/diona.yml
+
+### Resources/Prototypes/Species/gingerbread.yml
+
+### Resources/Prototypes/Species/human.yml
+
+### Resources/Prototypes/Species/moth.yml
+
+### Resources/Prototypes/Species/reptilian.yml
+
+### Resources/Prototypes/Species/slime.yml
+
+### Resources/Prototypes/_DV/Entities/Mobs/Species/chitinid.yml
+
+### Resources/Prototypes/_DV/Entities/Mobs/Species/feroxi.yml
+
+### Resources/Prototypes/_DV/Entities/Mobs/Species/harpy.yml
+
+### Resources/Prototypes/_DV/Entities/Mobs/Species/rodentia.yml
+
+### Resources/Prototypes/_DV/Entities/Mobs/Species/vulpkanin.yml
+
+### Resources/Prototypes/_DV/Loadouts/Miscellaneous/trinkets.yml
+
+### Resources/Prototypes/_DV/Species/harpy.yml
+
+### Resources/Prototypes/_DV/Species/rodentia.yml
+
+### Resources/Prototypes/_EinsteinEngines/Entities/Mobs/Player/silicon_base.yml
+
+### Resources/Prototypes/_EinsteinEngines/Entities/Mobs/Species/plasmaman.yml
+
+### Resources/Prototypes/_EinsteinEngines/Entities/Mobs/Species/shadowkin.yml
+
+### Resources/Prototypes/_Floofstation/Entities/Mobs/Species/resomi.yml
+
+### Resources/Prototypes/_Floofstation/Species/resomi.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Mobs/Species/tajaran.yml
+
+### Resources/Prototypes/_Goobstation/Loadouts/role_loadouts.yml
+
+### Resources/Prototypes/_Goobstation/Species/tajaran.yml
+
+### Resources/Prototypes/_Goobstation/Species/yowie.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Hands/base_clothingwrists.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Hands/wrists.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/base_clothingsocks.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/base_clothingundershirt.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/base_clothingunderwear.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/socks.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/undershirt.yml
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Underwear/underwear.yml
+
+### Resources/Prototypes/_Orion/Entities/Virtual/stripping_hidden.yml
+
+### Resources/Prototypes/_Orion/Loadouts/Miscellaneous/socks.yml
+
+### Resources/Prototypes/_Orion/Loadouts/Miscellaneous/undershirt.yml
+
+### Resources/Prototypes/_Orion/Loadouts/Miscellaneous/underwear.yml
+
+### Resources/Prototypes/_Orion/Loadouts/Miscellaneous/wrists.yml
+
+### Resources/Prototypes/_Orion/Loadouts/loadout_groups.yml
+
+### Resources/migration.yml

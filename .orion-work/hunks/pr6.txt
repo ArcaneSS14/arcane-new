@@ -1,0 +1,6010 @@
+Fixiki
+
+### .github/labeler.yml
+@@ -1,7 +1,11 @@
+-﻿"Changes: Sprites":
++﻿"Изменения: Спрайты":
+-"Changes: Map":
++"Изменения: Локализация":
++- changed-files:
++  - any-glob-to-any-file: '**/*.ftl'
++
++"Изменения: Карты":
+@@ -9,17 +13,17 @@
+-"Changes: UI":
++"Изменения: Интерфейс":
+-"Changes: Shaders":
++"Изменения: Шейдеры":
+-"Changes: Audio":
++"Изменения: Аудио":
+-"Changes: No C#":
++"Изменения: Нет C#":
+
+### .github/workflows/build-docfx.yml
+@@ -28,5 +28,5 @@ jobs:
+-      run: dotnet build --no-restore /p:WarningsAsErrors=nullable
++      run: dotnet build --no-restore
+
+### .github/workflows/build-map-renderer.yml
+@@ -43,5 +43,5 @@ jobs:
+-        run: dotnet build Content.MapRenderer --configuration Release --no-restore /p:WarningsAsErrors=nullable /m
++        run: dotnet build Content.MapRenderer --configuration Release --no-restore /m
+
+### .github/workflows/build-test-debug.yml
+@@ -43,5 +43,5 @@ jobs:
+-      run: dotnet build --configuration DebugOpt --no-restore /p:WarningsAsErrors=nullable /m
++      run: dotnet build --configuration DebugOpt --no-restore /m
+
+### .github/workflows/labeler-needsreview.yml
+@@ -3,5 +3,5 @@
+-    types: [review_requested]
++    types: [review_requested, opened]
+@@ -11,6 +11,6 @@ jobs:
+-        labels: "S: Needs Review"
++        labels: "S: Требуется ревью"
+-        labels: "S: Awaiting Changes"
++        labels: "S: Ожидание изменений"
+
+### .github/workflows/labeler-pr.yml
+@@ -10,4 +10,5 @@ jobs:
++      issues: write
+
+### .github/workflows/labeler-untriaged.yml
+@@ -14,3 +14,3 @@ jobs:
+-        labels: "S: Untriaged"
++        labels: "S: Неотсортированный"
+
+### .github/workflows/publish.yml
+@@ -15,4 +15,8 @@ jobs:
++    - name: Fail if we are attempting to run on the master branch
++      if: ${{GITHUB.REF_NAME == 'master' && github.repository == 'space-wizards/space-station-14'}}
++      run: exit 1
++
+
+### Content.Benchmarks/ComponentQueryBenchmark.cs
+@@ -30,5 +30,5 @@ namespace Content.Benchmarks;
+-    public const string Map = "Maps/atlas.yml";
++    public const string Map = "Maps/saltern.yml";
+
+### Content.Benchmarks/MapLoadBenchmark.cs
+@@ -48,5 +48,5 @@ public async Task Cleanup()
+-    public static readonly string[] MapsSource = { "Empty", "Satlern", "Box", "Bagel", "Dev", "CentComm", "Core", "TestTeg", "Packed", "Omega", "Reach", "Meta", "Marathon", "MeteorArena", "Fland", "Oasis", "Convex"};
++    public static readonly string[] MapsSource = { "Empty", "Saltern", "Box", "Bagel", "Dev", "CentComm", "Core", "TestTeg", "Packed", "Omega", "Reach", "Meta", "Marathon", "MeteorArena", "Fland", "Oasis", "Convex"};
+
+### Content.Benchmarks/Program.cs
+@@ -1,14 +1,6 @@
+-using System.Linq;
+-using System.Threading.Tasks;
+-using Content.IntegrationTests;
+-using Content.Server.Maps;
+-#if DEBUG
+-#else
+-#endif
+-using Robust.Shared.Prototypes;
+@@ -23,9 +15,13 @@ public static void Main(string[] args)
+-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
++            var baseConfig = new DebugInProcessConfig();
+-            var config = Environment.GetEnvironmentVariable("ROBUST_BENCHMARKS_ENABLE_SQL") != null ? DefaultSQLConfig.Instance : null;
+-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
++            var baseConfig = Environment.GetEnvironmentVariable("ROBUST_BENCHMARKS_ENABLE_SQL") != null
++                ? DefaultSQLConfig.Instance
++                : DefaultConfig.Instance;
++            var config = ManualConfig.Create(baseConfig);
++            config.BuildTimeout = TimeSpan.FromMinutes(5);
++            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
+
+### Content.Benchmarks/RaiseEventBenchmark.cs
+@@ -0,0 +1,126 @@
++﻿#nullable enable
++using System.Runtime.CompilerServices;
++using System.Threading.Tasks;
++using BenchmarkDotNet.Attributes;
++using Content.IntegrationTests;
++using Content.IntegrationTests.Pair;
++using Robust.Shared;
++using Robust.Shared.Analyzers;
++using Robust.Shared.GameObjects;
++
++namespace Content.Benchmarks;
++
++[Virtual]
++public class RaiseEventBenchmark
++{
++    private TestPair _pair = default!;
++    private BenchSystem _sys = default!;
++
++    [GlobalSetup]
++    public void Setup()
++    {
++        ProgramShared.PathOffset = "../../../../";
++        PoolManager.Startup(typeof(BenchSystem).Assembly);
++        _pair = PoolManager.GetServerClient().GetAwaiter().GetResult();
++        var entMan = _pair.Server.EntMan;
++        _sys = entMan.System<BenchSystem>();
++
++        _pair.Server.WaitPost(() =>
++        {
++            var uid = entMan.Spawn();
++            _sys.Ent = new(uid, entMan.GetComponent<TransformComponent>(uid));
++            _sys.Ent2 = new(_sys.Ent.Owner, _sys.Ent.Comp);
++        })
++            .GetAwaiter()
++            .GetResult();
++    }
++
++    [GlobalCleanup]
++    public async Task Cleanup()
++    {
++        await _pair.DisposeAsync();
++        PoolManager.Shutdown();
++    }
++
++    [Benchmark(Baseline = true)]
++    public int RaiseEvent()
++    {
++        return _sys.RaiseEvent();
++    }
++
++    [Benchmark]
++    public int RaiseCompEvent()
++    {
++        return _sys.RaiseCompEvent();
++    }
++
++    [Benchmark]
++    public int RaiseICompEvent()
++    {
++        return _sys.RaiseICompEvent();
++    }
++
++    [Benchmark]
++    public int RaiseCSharpEvent()
++    {
++        return _sys.CSharpEvent();
++    }
++
++    public sealed class BenchSystem : EntitySystem
++    {
++        public Entity<TransformComponent> Ent;
++        public Entity<IComponent> Ent2;
++
++        public delegate void EntityEventHandler(EntityUid uid, TransformComponent comp, ref BenchEv ev);
++
++        public event EntityEventHandler? OnCSharpEvent;
++
++        public override void Initialize()
++        {
++            base.Initialize();
++            SubscribeLocalEvent<TransformComponent, BenchEv>(OnEvent);
++            OnCSharpEvent += OnEvent;
++        }
++
++        public int RaiseEvent()
++        {
++            var ev = new BenchEv();
++            RaiseLocalEvent(Ent.Owner, ref ev);
++            return ev.N;
++        }
++
++        public int RaiseCompEvent()
++        {
++            var ev = new BenchEv();
++            EntityManager.EventBus.RaiseComponentEvent(Ent.Owner, Ent.Comp, ref ev);
++            return ev.N;
++        }
++
++        public int RaiseICompEvent()
++        {
++            // Raise with an IComponent instead of concrete type
++            var ev = new BenchEv();
++            EntityManager.EventBus.RaiseComponentEvent(Ent2.Owner, Ent2.Comp, ref ev);
++            return ev.N;
++        }
++
++        public int CSharpEvent()
++        {
++            var ev = new BenchEv();
++            OnCSharpEvent?.Invoke(Ent.Owner, Ent.Comp, ref ev);
++            return ev.N;
++        }
++
++        [MethodImpl(MethodImplOptions.NoInlining)]
++        private void OnEvent(EntityUid uid, TransformComponent component, ref BenchEv args)
++        {
++            args.N += uid.Id;
++        }
++
++        [ByRefEvent]
++        public struct BenchEv
++        {
++            public int N;
++        }
++    }
++}
+
+### Content.Benchmarks/SpawnEquipDeleteBenchmark.cs
+@@ -9,4 +9,5 @@
++using Robust.Shared.Prototypes;
+@@ -19,7 +20,9 @@ namespace Content.Benchmarks;
++    private static readonly EntProtoId Mob = "MobHuman";
++    private static readonly ProtoId<StartingGearPrototype> CaptainStartingGear = "CaptainGear";
++
+-    private const string Mob = "MobHuman";
+@@ -40,5 +43,5 @@ public async Task SetupAsync()
+-        _gear = server.ProtoMan.Index<StartingGearPrototype>("CaptainGear");
++        _gear = server.ProtoMan.Index(CaptainStartingGear);
+
+### Content.Client/Access/Commands/ShowAccessReadersCommand.cs
+@@ -5,38 +5,19 @@
+-public sealed class ShowAccessReadersCommand : IConsoleCommand
++public sealed class ShowAccessReadersCommand : LocalizedEntityCommands
+-    public string Command => "showaccessreaders";
++    [Dependency] private readonly IOverlayManager _overlay = default!;
++    [Dependency] private readonly IResourceCache _cache = default!;
++    [Dependency] private readonly SharedTransformSystem _xform = default!;
+-    public string Description => "Toggles showing access reader permissions on the map";
+-    public string Help => """
+-        Overlay Info:
+-        -Disabled | The access reader is disabled
+-        +Unrestricted | The access reader has no restrictions
+-        +Set [Index]: [Tag Name]| A tag in an access set (accessor needs all tags in the set to be allowed by the set)
+-        +Key [StationUid]: [StationRecordKeyId] | A StationRecordKey that is allowed
+-        -Tag [Tag Name] | A tag that is not allowed (takes priority over other allows)
+-        """;
+-    public void Execute(IConsoleShell shell, string argStr, string[] args)
+-    {
+-        var collection = IoCManager.Instance;
+-
+-        if (collection == null)
+-            return;
+-
+-        var overlay = collection.Resolve<IOverlayManager>();
++    public override string Command => "showaccessreaders";
+-        if (overlay.RemoveOverlay<AccessOverlay>())
+-        {
+-            shell.WriteLine($"Set access reader debug overlay to false");
+-            return;
+-        }
+-
+-        var entManager = collection.Resolve<IEntityManager>();
+-        var cache = collection.Resolve<IResourceCache>();
+-        var xform = entManager.System<SharedTransformSystem>();
++    public override void Execute(IConsoleShell shell, string argStr, string[] args)
++    {
++        var existing = _overlay.RemoveOverlay<AccessOverlay>();
++        if (!existing)
++            _overlay.AddOverlay(new AccessOverlay(EntityManager, _cache, _xform));
+-        overlay.AddOverlay(new AccessOverlay(entManager, cache, xform));
+-        shell.WriteLine($"Set access reader debug overlay to true");
++        shell.WriteLine(Loc.GetString($"cmd-showaccessreaders-status", ("status", !existing)));
+
+### Content.Client/Access/UI/GroupedAccessLevelChecklist.xaml.cs
+@@ -0,0 +1,451 @@
++using Content.Client.Stylesheets;
++using Content.Client.UserInterface.Controls;
++using Content.Shared.Access;
++using Robust.Client.AutoGenerated;
++using Robust.Client.Graphics;
++using Robust.Client.UserInterface;
++using Robust.Client.UserInterface.Controls;
++using Robust.Client.UserInterface.XAML;
++using Robust.Shared.Prototypes;
++using System.Linq;
++using System.Numerics;
++
++namespace Content.Client.Access.UI;
++
++[GenerateTypedNameReferences]
++public sealed partial class GroupedAccessLevelChecklist : BoxContainer
++{
++    private static readonly ProtoId<AccessGroupPrototype> GeneralAccessGroup = "General";
++
++    [Dependency] private readonly IPrototypeManager _protoManager = default!;
++
++    private bool _isMonotone;
++    private string? _labelStyleClass;
++
++    // Access data
++    private HashSet<ProtoId<AccessGroupPrototype>> _accessGroups = new();
++    private HashSet<ProtoId<AccessLevelPrototype>> _accessLevels = new();
++    private HashSet<ProtoId<AccessLevelPrototype>> _activeAccessLevels = new();
++
++    // Button groups
++    private readonly ButtonGroup _accessGroupsButtons = new();
++
++    // Temp values
++    private int _accessGroupTabIndex = 0;
++    private bool _canInteract = false;
++    private List<AccessLevelPrototype> _accessLevelsForTab = new();
++    private readonly List<AccessLevelEntry> _accessLevelEntries = new();
++    private readonly Dictionary<AccessGroupPrototype, List<AccessLevelPrototype>> _groupedAccessLevels = new();
++
++    // Events
++    public event Action<HashSet<ProtoId<AccessLevelPrototype>>, bool>? OnAccessLevelsChangedEvent;
++
++    /// <summary>
++    /// Creates a UI control for changing access levels.
++    /// Access levels are organized under a list of tabs by their associated access group.
++    /// </summary>
++    public GroupedAccessLevelChecklist()
++    {
++        RobustXamlLoader.Load(this);
++        IoCManager.InjectDependencies(this);
++    }
++
++    private void ArrangeAccessControls()
++    {
++        // Create a list of known access groups with which to populate the UI
++        _groupedAccessLevels.Clear();
++
++        foreach (var accessGroup in _accessGroups)
++        {
++            if (!_protoManager.TryIndex(accessGroup, out var accessGroupProto))
++                continue;
++
++            _groupedAccessLevels.Add(accessGroupProto, new());
++        }
++
++        // Ensure that the 'general' access group is added to handle
++        // misc. access levels that aren't associated with any group
++        if (_protoManager.TryIndex(GeneralAccessGroup, out var generalAccessProto))
++            _groupedAccessLevels.TryAdd(generalAccessProto, new());
++
++        // Assign known access levels with their associated groups
++        foreach (var accessLevel in _accessLevels)
++        {
++            if (!_protoManager.TryIndex(accessLevel, out var accessLevelProto))
++                continue;
++
++            var assigned = false;
++
++            foreach (var (accessGroup, accessLevels) in _groupedAccessLevels)
++            {
++                if (!accessGroup.Tags.Contains(accessLevelProto.ID))
++                    continue;
++
++                assigned = true;
++                _groupedAccessLevels[accessGroup].Add(accessLevelProto);
++            }
++
++            if (!assigned && generalAccessProto != null)
++                _groupedAccessLevels[generalAccessProto].Add(accessLevelProto);
++        }
++
++        // Remove access groups that have no assigned access levels
++        foreach (var (group, accessLevels) in _groupedAccessLevels)
++        {
++            if (accessLevels.Count == 0)
++                _groupedAccessLevels.Remove(group);
++        }
++    }
++
++    private bool TryRebuildAccessGroupControls()
++    {
++        AccessGroupList.DisposeAllChildren();
++        AccessLevelChecklist.DisposeAllChildren();
++
++        // No access level prototypes were assigned to any of the access level groups.
++        // Either the turret controller has no assigned access levels or their names were invalid.
++        if (_groupedAccessLevels.Count == 0)
++            return false;
++
++        // Reorder the access groups alphabetically
++        var orderedAccessGroups = _groupedAccessLevels.Keys.OrderBy(x => x.GetAccessGroupName()).ToList();
++
++        // Add group access buttons to the UI
++        foreach (var accessGroup in orderedAccessGroups)
++        {
++            var accessGroupButton = CreateAccessGroupButton();
++
++            // Button styling
++            if (_groupedAccessLevels.Count > 1)
++            {
++                if (AccessGroupList.ChildCount == 0)
++                    accessGroupButton.AddStyleClass(StyleBase.ButtonOpenLeft);
++                else if (_groupedAccessLevels.Count > 1 && AccessGroupList.ChildCount == (_groupedAccessLevels.Count - 1))
++                    accessGroupButton.AddStyleClass(StyleBase.ButtonOpenRight);
++                else
++                    accessGroupButton.AddStyleClass(StyleBase.ButtonOpenBoth);
++            }
++
++            accessGroupButton.Pressed = _accessGroupTabIndex == orderedAccessGroups.IndexOf(accessGroup);
++
++            // Label text and styling
++            if (_labelStyleClass != null)
++                accessGroupButton.Label.SetOnlyStyleClass(_labelStyleClass);
++
++            var accessLevelPrototypes = _groupedAccessLevels[accessGroup];
++            var prefix = accessLevelPrototypes.All(x => _activeAccessLevels.Contains(x))
++                ? "»"
++                : accessLevelPrototypes.Any(x => _activeAccessLevels.Contains(x))
++                    ? "›"
++                    : " ";
++
++            var text = Loc.GetString(
++                "turret-controls-window-access-group-label",
++                ("prefix", prefix),
++                ("label", accessGroup.GetAccessGroupName())
++            );
++
++            accessGroupButton.Text = text;
++
++            // Button events
+
+### Content.Client/Access/UI/IdCardConsoleBoundUserInterface.cs
+
+### Content.Client/Access/UI/IdCardConsoleWindow.xaml.cs
+
+### Content.Client/Actions/ActionEvents.cs
+
+### Content.Client/Actions/ActionsSystem.cs
+
+### Content.Client/Administration/AdminNameOverlay.cs
+
+### Content.Client/Administration/Systems/AdminSystem.Overlay.cs
+
+### Content.Client/Administration/Systems/KillSignSystem.cs
+
+### Content.Client/Administration/UI/BanPanel/BanPanel.xaml.cs
+
+### Content.Client/Administration/UI/Logs/AdminLogsEui.cs
+
+### Content.Client/Administration/UI/ManageSolutions/EditSolutionsWindow.xaml.cs
+
+### Content.Client/Administration/UI/SpawnExplosion/SpawnExplosionWindow.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/AdminbusTab/LoadBlueprintsWindow.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/ObjectsTab/ObjectsTab.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/PlayerTab/PlayerTab.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/PlayerTab/PlayerTabEntry.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/RoundTab.xaml.cs
+
+### Content.Client/Administration/UI/Tabs/ServerTab.xaml.cs
+
+### Content.Client/AlertLevel/AlertLevelDisplaySystem.cs
+
+### Content.Client/Alerts/GenericCounterAlertSystem.cs
+
+### Content.Client/Alerts/UpdateAlertSpriteEvent.cs
+
+### Content.Client/Animations/EntityPickupAnimationSystem.cs
+
+### Content.Client/Anomaly/AnomalySystem.cs
+
+### Content.Client/Anomaly/Effects/ClientInnerBodySystem.cs
+
+### Content.Client/Anomaly/Ui/AnomalyScannerBoundUserInterface.cs
+
+### Content.Client/Atmos/AlignAtmosPipeLayers.cs
+
+### Content.Client/Atmos/Consoles/AtmosMonitoringConsoleNavMapControl.cs
+
+### Content.Client/Atmos/Consoles/AtmosMonitoringConsoleSystem.cs
+
+### Content.Client/Atmos/Consoles/AtmosMonitoringConsoleWindow.xaml.cs
+
+### Content.Client/Atmos/EntitySystems/AtmosPipeAppearanceSystem.cs
+
+### Content.Client/Atmos/EntitySystems/AtmosPipeLayersSystem.cs
+
+### Content.Client/Atmos/EntitySystems/FireVisualizerSystem.cs
+
+### Content.Client/Atmos/EntitySystems/GasCanisterAppearanceSystem.cs
+
+### Content.Client/Atmos/EntitySystems/GasPressureRegulatorSystem.cs
+
+### Content.Client/Atmos/EntitySystems/PipeColorVisualizerSystem.cs
+
+### Content.Client/Atmos/Monitor/AtmosAlarmableVisualsSystem.cs
+
+### Content.Client/Atmos/Monitor/UI/AirAlarmWindow.xaml.cs
+
+### Content.Client/Atmos/Monitor/UI/Widgets/ScrubberControl.xaml.cs
+
+### Content.Client/Atmos/Overlays/GasTileOverlay.cs
+
+### Content.Client/Atmos/Piping/Binary/Systems/GasValveSystem.cs
+
+### Content.Client/Atmos/Piping/Unary/Systems/GasThermoMachineSystem.cs
+
+### Content.Client/Atmos/UI/GasAnalyzerBoundUserInterface.cs
+
+### Content.Client/Atmos/UI/GasAnalyzerWindow.xaml.cs
+
+### Content.Client/Atmos/UI/GasPressureRegulatorBoundUserInterface.cs
+
+### Content.Client/Atmos/UI/GasPressureRegulatorWindow.xaml.cs
+
+### Content.Client/Atmos/UI/GasThermomachineBoundUserInterface.cs
+
+### Content.Client/Atmos/UI/GasThermomachineWindow.xaml.cs
+
+### Content.Client/Atmos/Visualizers/PortableScrubberVisualsSystem.cs
+
+### Content.Client/Audio/AmbientOverlayCommand.cs
+
+### Content.Client/Audio/AmbientSoundSystem.cs
+
+### Content.Client/Audio/Jukebox/JukeboxSystem.cs
+
+### Content.Client/BarSign/BarSignSystem.cs
+
+### Content.Client/Beam/BeamSystem.cs
+
+### Content.Client/Bed/BedSystem.cs
+
+### Content.Client/Bed/StasisBedSystem.cs
+
+### Content.Client/Body/Systems/BloodStreamSystem.cs
+
+### Content.Client/Body/Systems/MetabolizerSystem.cs
+
+### Content.Client/Botany/PlantHolderVisualizerSystem.cs
+
+### Content.Client/Botany/PotencyVisualsSystem.cs
+
+### Content.Client/Buckle/BuckleSystem.cs
+
+### Content.Client/CardboardBox/CardboardBoxSystem.cs
+
+### Content.Client/Cargo/BUI/CargoOrderConsoleBoundUserInterface.cs
+
+### Content.Client/Cargo/Systems/CargoSystem.Telepad.cs
+
+### Content.Client/Cargo/UI/CargoConsoleMenu.xaml.cs
+
+### Content.Client/Cargo/UI/CargoOrderRow.xaml.cs
+
+### Content.Client/Changelog/ChangelogWindow.xaml.cs
+
+### Content.Client/Charges/ChargesSystem.cs
+
+### Content.Client/Chasm/ChasmFallingVisualsSystem.cs
+
+### Content.Client/Chat/TypingIndicator/TypingIndicatorSystem.cs
+
+### Content.Client/Chat/TypingIndicator/TypingIndicatorVisualizerSystem.cs
+
+### Content.Client/Chat/UI/SpeechBubble.cs
+
+### Content.Client/Chemistry/EntitySystems/ChemistryGuideDataSystem.cs
+
+### Content.Client/Chemistry/EntitySystems/HyposprayStatusControlSystem.cs
+
+### Content.Client/Chemistry/EntitySystems/HypospraySystem.cs
+
+### Content.Client/Chemistry/EntitySystems/PillSystem.cs
+
+### Content.Client/Chemistry/UI/ReagentCardControl.xaml.cs
+
+### Content.Client/Chemistry/UI/ReagentDispenserBoundUserInterface.cs
+
+### Content.Client/Chemistry/UI/ReagentDispenserWindow.xaml.cs
+
+### Content.Client/Chemistry/Visualizers/FoamVisualizerSystem.cs
+
+### Content.Client/Chemistry/Visualizers/SmokeVisualizerSystem.cs
+
+### Content.Client/Chemistry/Visualizers/SolutionContainerVisualsSystem.cs
+
+### Content.Client/Chemistry/Visualizers/VaporVisualizerSystem.cs
+
+### Content.Client/Clickable/ClickableSystem.cs
+
+### Content.Client/Clock/ClockSystem.cs
+
+### Content.Client/Clothing/ClientClothingSystem.cs
+
+### Content.Client/Clothing/FlippableClothingVisualizerSystem.cs
+
+### Content.Client/Clothing/Systems/ChameleonClothingSystem.cs
+
+### Content.Client/Clothing/UI/ChameleonBoundUserInterface.cs
+
+### Content.Client/Clothing/UI/ChameleonMenu.xaml.cs
+
+### Content.Client/CombatMode/ColoredScreenBorderOverlay.cs
+
+### Content.Client/Commands/HideMechanismsCommand.cs
+
+### Content.Client/Commands/ShowHealthBarsCommand.cs
+
+### Content.Client/Commands/ShowMechanismsCommand.cs
+
+### Content.Client/Construction/ConstructionPlacementHijack.cs
+
+### Content.Client/Construction/ConstructionSystem.cs
+
+### Content.Client/Construction/FlatpackSystem.cs
+
+### Content.Client/Construction/UI/ConstructionMenuPresenter.cs
+
+### Content.Client/Construction/UI/FlatpackCreatorMenu.xaml.cs
+
+### Content.Client/ContextMenu/UI/ContextMenuUIController.cs
+
+### Content.Client/ContextMenu/UI/EntityMenuUIController.cs
+
+### Content.Client/Cooldown/CooldownGraphic.cs
+
+### Content.Client/CriminalRecords/CriminalRecordsConsoleWindow.xaml.cs
+
+### Content.Client/Cuffs/CuffableSystem.cs
+
+### Content.Client/Damage/DamageVisualsSystem.cs
+
+### Content.Client/Damage/Systems/StaminaSystem.cs
+
+### Content.Client/DamageState/DamageStateVisualizerSystem.cs
+
+### Content.Client/Decals/DecalPlacementSystem.cs
+
+### Content.Client/Decals/ToggleDecalCommand.cs
+
+### Content.Client/Delivery/DeliveryVisualizerSystem.cs
+
+### Content.Client/Devour/DevourSystem.cs
+
+### Content.Client/Dice/DiceSystem.cs
+
+### Content.Client/DisplacementMap/DisplacementMapSystem.cs
+
+### Content.Client/Disposal/PressureBar.cs
+
+### Content.Client/Disposal/Unit/DisposalUnitSystem.cs
+
+### Content.Client/DoAfter/DoAfterOverlay.cs
+
+### Content.Client/Doors/AirlockSystem.cs
+
+### Content.Client/Doors/DoorSystem.cs
+
+### Content.Client/Doors/FirelockSystem.cs
+
+### Content.Client/Doors/TurnstileSystem.cs
+
+### Content.Client/Dragon/DragonSystem.cs
+
+### Content.Client/Drowsiness/DrowsinessOverlay.cs
+
+### Content.Client/Drowsiness/DrowsinessSystem.cs
+
+### Content.Client/Drugs/DrugOverlaySystem.cs
+
+### Content.Client/Drugs/RainbowOverlay.cs
+
+### Content.Client/Drunk/DrunkOverlay.cs
+
+### Content.Client/Effects/ColorFlashEffectSystem.cs
+
+### Content.Client/Electrocution/ElectrocutionHUDVisualizerSystem.cs
+
+### Content.Client/Ensnaring/Components/EnsnaringComponent.cs
+
+### Content.Client/Ensnaring/EnsnareableSystem.cs
+
+### Content.Client/Entry/EntryPoint.cs
+
+### Content.Client/Examine/ExamineSystem.cs
+
+### Content.Client/Explosion/ClusterGrenadeVisualizerSystem.cs
+
+### Content.Client/Explosion/ExplosionOverlay.cs
+
+### Content.Client/Explosion/ExplosionOverlaySystem.cs
+
+### Content.Client/Explosion/TriggerSystem.Proximity.cs
+
+### Content.Client/Eye/Blinding/BlindOverlay.cs
+
+### Content.Client/Eye/Blinding/BlurryVisionOverlay.cs
+
+### Content.Client/Flash/FlashOverlay.cs
+
+### Content.Client/Flash/FlashSystem.cs
+
+### Content.Client/Fluids/PuddleSystem.cs
+
+### Content.Client/Ghost/Commands/ToggleGhostVisibilityCommand.cs
+
+### Content.Client/Ghost/GhostSystem.cs
+
+### Content.Client/Ghost/GhostToggleSelfVisibility.cs
+
+### Content.Client/Gravity/GravitySystem.cs
+
+### Content.Client/Guidebook/Controls/GuideEntityEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideMicrowaveEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideMicrowaveGroupEmbed.cs
+
+### Content.Client/Guidebook/Controls/GuideReagentEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideReagentGroupEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideReagentReaction.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideTechDisciplineEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuideTechnologyEmbed.xaml.cs
+
+### Content.Client/Guidebook/Controls/GuidebookRichPrototypeLink.cs
+
+### Content.Client/Guidebook/Controls/GuidebookWindow.xaml.cs
+
+### Content.Client/Guidebook/Controls/IPrototypeLinkControl.cs
+
+### Content.Client/Guidebook/Richtext/KeyBindTag.cs
+
+### Content.Client/Guidebook/Richtext/ProtodataTag.cs
+
+### Content.Client/Guidebook/Richtext/TextLinkTag.cs
+
+### Content.Client/Hands/Systems/HandsSystem.cs
+
+### Content.Client/Holiday/HolidaySystem.cs
+
+### Content.Client/Holopad/HolopadSystem.cs
+
+### Content.Client/Humanoid/EyeColorPicker.cs
+
+### Content.Client/Humanoid/HumanoidAppearanceSystem.cs
+
+### Content.Client/Humanoid/MarkingPicker.xaml.cs
+
+### Content.Client/Humanoid/SingleMarkingPicker.xaml.cs
+
+### Content.Client/IconSmoothing/IconSmoothSystem.Edge.cs
+
+### Content.Client/IconSmoothing/IconSmoothSystem.cs
+
+### Content.Client/Implants/ChameleonControllerSystem.cs
+
+### Content.Client/Implants/UI/ChameleonControllerBoundUserInterface.cs
+
+### Content.Client/Implants/UI/ChameleonControllerMenu.xaml.cs
+
+### Content.Client/Input/ContentContexts.cs
+
+### Content.Client/Instruments/InstrumentSystem.MidiParsing.cs
+
+### Content.Client/Instruments/InstrumentSystem.cs
+
+### Content.Client/Instruments/MidiParser/MidiInstrument.cs
+
+### Content.Client/Instruments/MidiParser/MidiParser.cs
+
+### Content.Client/Instruments/MidiParser/MidiStreamWrapper.cs
+
+### Content.Client/Instruments/UI/ChannelsMenu.xaml.cs
+
+### Content.Client/Instruments/UI/InstrumentBoundUserInterface.cs
+
+### Content.Client/Instruments/UI/InstrumentMenu.xaml.cs
+
+### Content.Client/Interactable/Components/InteractionOutlineComponent.cs
+
+### Content.Client/Interaction/DragDropSystem.cs
+
+### Content.Client/Inventory/ClientInventorySystem.cs
+
+### Content.Client/Inventory/StrippableBoundUserInterface.cs
+
+### Content.Client/IoC/ClientContentIoC.cs
+
+### Content.Client/Items/Systems/ItemSystem.cs
+
+### Content.Client/Jittering/JitteringSystem.cs
+
+### Content.Client/Kudzu/KudzuVisualizerSystem.cs
+
+### Content.Client/LateJoin/LateJoinGui.cs
+
+### Content.Client/Lathe/LatheSystem.cs
+
+### Content.Client/Lathe/UI/LatheMenu.xaml.cs
+
+### Content.Client/Light/AmbientOcclusionOverlay.cs
+
+### Content.Client/Light/Components/LightBehaviourComponent.cs
+
+### Content.Client/Light/EntitySystems/EmergencyLightSystem.cs
+
+### Content.Client/Light/EntitySystems/ExpendableLightSystem.cs
+
+### Content.Client/Light/EntitySystems/LightBehaviorSystem.cs
+
+### Content.Client/Light/EntitySystems/LightBulbSystem.cs
+
+### Content.Client/Light/EntitySystems/PlanetLightSystem.cs
+
+### Content.Client/Light/HandheldLightSystem.cs
+
+### Content.Client/Light/RgbLightControllerSystem.cs
+
+### Content.Client/Light/RoofOverlay.cs
+
+### Content.Client/Light/SunShadowOverlay.cs
+
+### Content.Client/Light/Visualizers/PoweredLightVisualizerSystem.cs
+
+### Content.Client/Lobby/ClientPreferencesManager.cs
+
+### Content.Client/Lobby/IClientPreferencesManager.cs
+
+### Content.Client/Lobby/LobbyState.cs
+
+### Content.Client/Lobby/LobbyUIController.cs
+
+### Content.Client/Lobby/UI/HumanoidProfileEditor.xaml.cs
+
+### Content.Client/Lobby/UI/Loadouts/LoadoutContainer.xaml.cs
+
+### Content.Client/Lobby/UI/Loadouts/LoadoutGroupContainer.xaml.cs
+
+### Content.Client/Lobby/UI/Loadouts/LoadoutWindow.xaml.cs
+
+### Content.Client/Lobby/UI/Loadouts/SubLoadoutContainer.xaml.cs
+
+### Content.Client/Lobby/UI/Loadouts/ToggleLoadoutButton.xaml.cs
+
+### Content.Client/Lock/Visualizers/LockVisualizerSystem.cs
+
+### Content.Client/Machines/Components/MultipartMachineGhostComponent.cs
+
+### Content.Client/Machines/EntitySystems/MultipartMachineSystem.cs
+
+### Content.Client/Mapping/MappingOverlay.cs
+
+### Content.Client/Mapping/MappingState.cs
+
+### Content.Client/Mapping/MappingSystem.cs
+
+### Content.Client/Markers/MarkerSystem.cs
+
+### Content.Client/Materials/MaterialStorageSystem.cs
+
+### Content.Client/Materials/RecyclerVisualizerSystem.cs
+
+### Content.Client/Mech/MechAssemblyVisualizerSystem.cs
+
+### Content.Client/Mech/MechSystem.cs
+
+### Content.Client/Medical/Cryogenics/CryoPodSystem.cs
+
+### Content.Client/Mining/MiningOverlay.cs
+
+### Content.Client/MouseRotator/MouseRotatorSystem.cs
+
+### Content.Client/Movement/Systems/ClientSpriteMovementSystem.cs
+
+### Content.Client/Movement/Systems/FloorOcclusionSystem.cs
+
+### Content.Client/Movement/Systems/JetpackSystem.cs
+
+### Content.Client/NPC/ShowHTNCommand.cs
+
+### Content.Client/NetworkConfigurator/NetworkConfiguratorLinkMenu.xaml.cs
+
+### Content.Client/NetworkConfigurator/Systems/NetworkConfiguratorSystem.cs
+
+### Content.Client/NodeContainer/NodeContainerSystem.cs
+
+### Content.Client/NodeContainer/NodeVisCommand.cs
+
+### Content.Client/NodeContainer/NodeVisualizationOverlay.cs
+
+### Content.Client/Nutrition/EntitySystems/ClientFoodSequenceSystem.cs
+
+### Content.Client/Nutrition/EntitySystems/InfantSystem.cs
+
+### Content.Client/Options/OptionsVisualizerSystem.cs
+
+### Content.Client/Options/UI/OptionColorSlider.xaml.cs
+
+### Content.Client/Options/UI/OptionsTabControlRow.xaml.cs
+
+### Content.Client/Options/UI/Tabs/AccessibilityTab.xaml.cs
+
+### Content.Client/Options/UI/Tabs/GraphicsTab.xaml.cs
+
+### Content.Client/Options/UI/Tabs/KeyRebindTab.xaml.cs
+
+### Content.Client/Orbit/OrbitVisualsSystem.cs
+
+### Content.Client/Outline/TargetOutlineSystem.cs
+
+### Content.Client/Overlays/BlackAndWhiteOverlay.cs
+
+### Content.Client/Overlays/BlackAndWhiteOverlaySystem.cs
+
+### Content.Client/Overlays/EntityHealthBarOverlay.cs
+
+### Content.Client/Overlays/NoirOverlay.cs
+
+### Content.Client/Overlays/NoirOverlaySystem.cs
+
+### Content.Client/Overlays/ShowJobIconsSystem.cs
+
+### Content.Client/Overlays/StencilOverlay.RestrictedRange.cs
+
+### Content.Client/Overlays/StencilOverlay.Weather.cs
+
+### Content.Client/Overlays/StencilOverlay.cs
+
+### Content.Client/PDA/PdaVisualizerSystem.cs
+
+### Content.Client/Paper/EnvelopeSystem.cs
+
+### Content.Client/Paper/UI/PaperVisualizerSystem.cs
+
+### Content.Client/Paper/UI/StampLabel.xaml.cs
+
+### Content.Client/Paper/UI/StampWidget.xaml.cs
+
+### Content.Client/Parallax/BiomeDebugOverlay.cs
+
+### Content.Client/Parallax/Data/GeneratedParallaxTextureSource.cs
+
+### Content.Client/Parallax/Data/IParallaxTextureSource.cs
+
+### Content.Client/Parallax/Managers/GeneratedParallaxCache.cs
+
+### Content.Client/Parallax/Managers/ParallaxManager.cs
+
+### Content.Client/Parallax/ParallaxOverlay.cs
+
+### Content.Client/Parallax/ParallaxSystem.cs
+
+### Content.Client/ParticleAccelerator/ParticleAcceleratorPartVisualizerSystem.cs
+
+### Content.Client/ParticleAccelerator/UI/ParticleAcceleratorControlMenu.xaml.cs
+
+### Content.Client/Physics/Controllers/MoverController.cs
+
+### Content.Client/Pinpointer/PinpointerSystem.cs
+
+### Content.Client/Pinpointer/UI/NavMapBeaconWindow.xaml.cs
+
+### Content.Client/Playtime/ClientsidePlaytimeTrackingManager.cs
+
+### Content.Client/Pointing/PointingSystem.cs
+
+### Content.Client/Polymorph/Systems/ChameleonProjectorSystem.cs
+
+### Content.Client/Popups/PopupOverlay.cs
+
+### Content.Client/Power/APC/ApcVisualizerSystem.cs
+
+### Content.Client/Power/APC/UI/ApcMenu.xaml.cs
+
+### Content.Client/Power/EntitySystems/PowerNetSystem.cs
+
+### Content.Client/Power/EntitySystems/StaticPowerSystem.cs
+
+### Content.Client/Power/Generation/Teg/TegSystem.cs
+
+### Content.Client/Power/PowerMonitoringWindow.xaml.Widgets.cs
+
+### Content.Client/Power/SMES/SmesSystem.cs
+
+### Content.Client/Power/Visualizers/CableVisualizerSystem.cs
+
+### Content.Client/PowerCell/PowerCellSystem.cs
+
+### Content.Client/PowerCell/PowerChargerVisualizerSystem.cs
+
+### Content.Client/Projectiles/ProjectileSystem.cs
+
+### Content.Client/RCD/AlignRCDConstruction.cs
+
+### Content.Client/RCD/RCDConstructionGhostSystem.cs
+
+### Content.Client/Radiation/Overlays/RadiationPulseOverlay.cs
+
+### Content.Client/Revenant/RevenantSystem.cs
+
+### Content.Client/Rootable/RootableSystem.cs
+
+### Content.Client/Salvage/FultonSystem.cs
+
+### Content.Client/Salvage/UI/JobEntry.xaml.cs
+
+### Content.Client/Salvage/UI/SalvageExpeditionConsoleBoundUserInterface.cs
+
+### Content.Client/Salvage/UI/SalvageJobBoardBoundUserInterface.cs
+
+### Content.Client/Salvage/UI/SalvageJobBoardMenu.xaml.cs
+
+### Content.Client/Sandbox/SandboxSystem.cs
+
+### Content.Client/Security/Ui/GenpopLockerMenu.xaml.cs
+
+### Content.Client/SensorMonitoring/SensorMonitoringWindow.xaml.cs
+
+### Content.Client/Shuttles/Commands/ShowEmergencyShuttleCommand.cs
+
+### Content.Client/Shuttles/FtlArrivalOverlay.cs
+
+### Content.Client/Shuttles/ThrusterSystem.cs
+
+### Content.Client/Shuttles/UI/BaseShuttleControl.xaml.cs
+
+### Content.Client/Shuttles/UI/ShuttleMapControl.xaml.cs
+
+### Content.Client/Shuttles/UI/ShuttleNavControl.xaml.cs
+
+### Content.Client/Silicons/Borgs/BorgMenu.xaml.cs
+
+### Content.Client/Silicons/Borgs/BorgSelectTypeMenu.xaml.cs
+
+### Content.Client/Silicons/Borgs/BorgSwitchableTypeSystem.cs
+
+### Content.Client/Silicons/Borgs/BorgSystem.cs
+
+### Content.Client/Silicons/Laws/Ui/LawDisplay.xaml.cs
+
+### Content.Client/Silicons/StationAi/StationAiCustomizationBoundUserInterface.cs
+
+### Content.Client/Silicons/StationAi/StationAiCustomizationMenu.xaml.cs
+
+### Content.Client/Silicons/StationAi/StationAiOverlay.cs
+
+### Content.Client/Silicons/StationAi/StationAiSystem.cs
+
+### Content.Client/Singularity/SingularityOverlay.cs
+
+### Content.Client/Singularity/Systems/EmitterSystem.cs
+
+### Content.Client/Singularity/Visualizers/RadiationCollectorSystem.cs
+
+### Content.Client/SmartFridge/SmartFridgeBoundUserInterface.cs
+
+### Content.Client/SmartFridge/SmartFridgeItem.xaml.cs
+
+### Content.Client/SmartFridge/SmartFridgeMenu.xaml.cs
+
+### Content.Client/SmartFridge/SmartFridgeUISystem.cs
+
+### Content.Client/Smoking/BurnStateVisualizerSystem.cs
+
+### Content.Client/SprayPainter/SprayPainterSystem.cs
+
+### Content.Client/SprayPainter/UI/SprayPainterBoundUserInterface.cs
+
+### Content.Client/SprayPainter/UI/SprayPainterDecals.xaml.cs
+
+### Content.Client/SprayPainter/UI/SprayPainterGroup.xaml.cs
+
+### Content.Client/SprayPainter/UI/SprayPainterWindow.xaml.cs
+
+### Content.Client/Sprite/RandomSpriteSystem.cs
+
+### Content.Client/Sprite/SpriteFadeSystem.cs
+
+### Content.Client/Stack/StackSystem.cs
+
+### Content.Client/StatusIcon/StatusIconOverlay.cs
+
+### Content.Client/Stealth/StealthSystem.cs
+
+### Content.Client/Sticky/Visualizers/StickyVisualizerSystem.cs
+
+### Content.Client/Storage/Systems/ItemCounterSystem.cs
+
+### Content.Client/Storage/Systems/ItemMapperSystem.cs
+
+### Content.Client/Storage/Systems/StorageContainerVisualsSystem.cs
+
+### Content.Client/Storage/Systems/StorageSystem.cs
+
+### Content.Client/Storage/Visualizers/EntityStorageVisualizerSystem.cs
+
+### Content.Client/Storage/Visualizers/StorageFillVisualizerSystem.cs
+
+### Content.Client/Store/Ui/StoreMenu.xaml.cs
+
+### Content.Client/Strip/StrippingMenu.cs
+
+### Content.Client/Stunnable/StunSystem.cs
+
+### Content.Client/Stylesheets/StyleNano.cs
+
+### Content.Client/SubFloor/SubFloorHideSystem.cs
+
+### Content.Client/SubFloor/TrayScannerSystem.cs
+
+### Content.Client/SurveillanceCamera/SurveillanceCameraVisualsSystem.cs
+
+### Content.Client/SurveillanceCamera/UI/SurveillanceCameraMonitorWindow.xaml.cs
+
+### Content.Client/SurveillanceCamera/UI/SurveillanceCameraSetupWindow.xaml.cs
+
+### Content.Client/Tabletop/TabletopSystem.cs
+
+### Content.Client/TextScreen/TextScreenSystem.cs
+
+### Content.Client/Throwing/ThrownItemVisualizerSystem.cs
+
+### Content.Client/Tips/TippyUIController.cs
+
+### Content.Client/Toggleable/ToggleableLightVisualsComponent.cs
+
+### Content.Client/Toggleable/ToggleableLightVisualsSystem.cs
+
+### Content.Client/Toggleable/ToggleableVisualsComponent.cs
+
+### Content.Client/Toggleable/ToggleableVisualsSystem.cs
+
+### Content.Client/Tools/ToolSystem.cs
+
+### Content.Client/Tools/Visualizers/WeldableVisualizerSystem.cs
+
+### Content.Client/Trigger/TimerTriggerVisualizerSystem.cs
+
+### Content.Client/TurretController/DeployableTurretControllerSystem.cs
+
+### Content.Client/TurretController/TurretControllerWindow.xaml.cs
+
+### Content.Client/TurretController/TurretControllerWindowBoundUserInterface.cs
+
+### Content.Client/Turrets/DeployableTurretSystem.cs
+
+### Content.Client/UserInterface/ControlExtensions/ControlExtension.cs
+
+### Content.Client/UserInterface/Controls/MonotoneButton.cs
+
+### Content.Client/UserInterface/RichText/MonoTag.cs
+
+### Content.Client/UserInterface/Systems/Actions/ActionUIController.cs
+
+### Content.Client/UserInterface/Systems/Actions/Controls/ActionButton.cs
+
+### Content.Client/UserInterface/Systems/Alerts/AlertsUIController.cs
+
+### Content.Client/UserInterface/Systems/Alerts/Controls/AlertControl.cs
+
+### Content.Client/UserInterface/Systems/Atmos/GasTank/GasTankWindow.cs
+
+### Content.Client/UserInterface/Systems/Bwoink/AHelpUIController.cs
+
+### Content.Client/UserInterface/Systems/Character/CharacterUIController.cs
+
+### Content.Client/UserInterface/Systems/Chat/ChatUIController.Highlighting.cs
+
+### Content.Client/UserInterface/Systems/Chat/ChatUIController.cs
+
+### Content.Client/UserInterface/Systems/Chat/Controls/ChannelFilterPopup.xaml.cs
+
+### Content.Client/UserInterface/Systems/Chat/Widgets/ChatBox.xaml.cs
+
+### Content.Client/UserInterface/Systems/DamageOverlays/Overlays/DamageOverlay.cs
+
+### Content.Client/UserInterface/Systems/EscapeMenu/OptionsUIController.cs
+
+### Content.Client/UserInterface/Systems/Ghost/Controls/Roles/MakeGhostRoleEui.cs
+
+### Content.Client/UserInterface/Systems/Ghost/Controls/Roles/MakeGhostRoleWindow.xaml.cs
+
+### Content.Client/UserInterface/Systems/Guidebook/GuidebookUIController.cs
+
+### Content.Client/UserInterface/Systems/Hands/HandsUIController.cs
+
+### Content.Client/UserInterface/Systems/Info/InfoUIController.cs
+
+### Content.Client/UserInterface/Systems/Inventory/InventoryUIController.cs
+
+### Content.Client/UserInterface/Systems/ProgressColorSystem.cs
+
+### Content.Client/UserInterface/Systems/Storage/Controls/ItemGridPiece.cs
+
+### Content.Client/UserInterface/Systems/Storage/Controls/StorageWindow.cs
+
+### Content.Client/UserInterface/Systems/Storage/StorageUIController.cs
+
+### Content.Client/UserInterface/Systems/Viewport/ViewportUIController.cs
+
+### Content.Client/VendingMachines/VendingMachineSystem.cs
+
+### Content.Client/Verbs/VerbSystem.cs
+
+### Content.Client/Voting/UI/VoteCallMenu.xaml.cs
+
+### Content.Client/Weapons/Marker/DamageMarkerSystem.cs
+
+### Content.Client/Weapons/Melee/MeleeSpreadCommand.cs
+
+### Content.Client/Weapons/Melee/MeleeWeaponSystem.Effects.cs
+
+### Content.Client/Weapons/Melee/MeleeWeaponSystem.cs
+
+### Content.Client/Weapons/Misc/TetherGunSystem.cs
+
+### Content.Client/Weapons/Ranged/Commands/ShowSpreadCommand.cs
+
+### Content.Client/Weapons/Ranged/Systems/GunSystem.ChamberMagazine.cs
+
+### Content.Client/Weapons/Ranged/Systems/GunSystem.MagazineVisuals.cs
+
+### Content.Client/Weapons/Ranged/Systems/GunSystem.SpentAmmo.cs
+
+### Content.Client/Weapons/Ranged/Systems/GunSystem.cs
+
+### Content.Client/Wires/Visualizers/WiresVisualizerSystem.cs
+
+### Content.Client/Xenoarchaeology/XenoArtifacts/RandomArtifactSpriteSystem.cs
+
+### Content.Client/Zombies/ZombieSystem.cs
+
+### Content.Europa.AGPL.Client/GlobalUsings.cs
+
+### Content.Europa.AGPL.Client/Program.cs
+
+### Content.Europa.AGPL.Server/AssemblyInfo.cs
+
+### Content.Europa.AGPL.Server/GlobalUsings.cs
+
+### Content.Europa.AGPL.Server/Program.cs
+
+### Content.Europa.AGPL.Shared/GlobalUsings.cs
+
+### Content.Europa.MIT.Client/GlobalUsings.cs
+
+### Content.Europa.MIT.Client/Program.cs
+
+### Content.Europa.MIT.Server/AssemblyInfo.cs
+
+### Content.Europa.MIT.Server/GlobalUsings.cs
+
+### Content.Europa.MIT.Server/Program.cs
+
+### Content.Europa.MIT.Shared/GlobalUsings.cs
+
+### Content.IntegrationTests/ExternalTestContext.cs
+
+### Content.IntegrationTests/ITestContextLike.cs
+
+### Content.IntegrationTests/NUnitTestContextWrap.cs
+
+### Content.IntegrationTests/Pair/TestPair.Helpers.cs
+
+### Content.IntegrationTests/Pair/TestPair.Recycle.cs
+
+### Content.IntegrationTests/PoolManager.cs
+
+### Content.IntegrationTests/Tests/Access/AccessReaderTest.cs
+
+### Content.IntegrationTests/Tests/Actions/ActionsAddedTest.cs
+
+### Content.IntegrationTests/Tests/Actions/RetractableItemActionTest.cs
+
+### Content.IntegrationTests/Tests/Atmos/AlarmThresholdTest.cs
+
+### Content.IntegrationTests/Tests/Atmos/ConstantsTest.cs
+
+### Content.IntegrationTests/Tests/Buckle/BuckleTest.cs
+
+### Content.IntegrationTests/Tests/Chameleon/ChameleonJobLoadoutTest.cs
+
+### Content.IntegrationTests/Tests/Chemistry/DispenserTest.cs
+
+### Content.IntegrationTests/Tests/Chemistry/TryAllReactionsTest.cs
+
+### Content.IntegrationTests/Tests/ClickableTest.cs
+
+### Content.IntegrationTests/Tests/Cloning/CloningSettingsPrototypeTest.cs
+
+### Content.IntegrationTests/Tests/Commands/ObjectiveCommandsTest.cs
+
+### Content.IntegrationTests/Tests/Commands/RejuvenateTest.cs
+
+### Content.IntegrationTests/Tests/Commands/SuicideCommandTests.cs
+
+### Content.IntegrationTests/Tests/Construction/ConstructionPrototypeTest.cs
+
+### Content.IntegrationTests/Tests/Construction/Interaction/MachineConstruction.cs
+
+### Content.IntegrationTests/Tests/Construction/Interaction/WallConstruction.cs
+
+### Content.IntegrationTests/Tests/Construction/Interaction/WindowRepair.cs
+
+### Content.IntegrationTests/Tests/Damageable/DamageableTest.cs
+
+### Content.IntegrationTests/Tests/Damageable/MobThresholdsTest.cs
+
+### Content.IntegrationTests/Tests/Destructible/DestructibleDamageGroupTest.cs
+
+### Content.IntegrationTests/Tests/Destructible/DestructibleDamageTypeTest.cs
+
+### Content.IntegrationTests/Tests/Destructible/DestructibleDestructionTest.cs
+
+### Content.IntegrationTests/Tests/Destructible/DestructibleTestPrototypes.cs
+
+### Content.IntegrationTests/Tests/Destructible/DestructibleThresholdActivationTest.cs
+
+### Content.IntegrationTests/Tests/Disposal/DisposalUnitTest.cs
+
+### Content.IntegrationTests/Tests/DummyIconTest.cs
+
+### Content.IntegrationTests/Tests/EntityTest.cs
+
+### Content.IntegrationTests/Tests/Explosion/ExplosionPrototypeTest.cs
+
+### Content.IntegrationTests/Tests/Fluids/AbsorbentTest.cs
+
+### Content.IntegrationTests/Tests/GameRules/NukeOpsTest.cs
+
+### Content.IntegrationTests/Tests/GameRules/TraitorRuleTest.cs
+
+### Content.IntegrationTests/Tests/Hands/HandTests.cs
+
+### Content.IntegrationTests/Tests/Interaction/InteractionTest.Constants.cs
+
+### Content.IntegrationTests/Tests/Interaction/InteractionTest.EntitySpecifier.cs
+
+### Content.IntegrationTests/Tests/Interaction/InteractionTest.EntitySpecifierCollection.cs
+
+### Content.IntegrationTests/Tests/Interaction/InteractionTest.Helpers.cs
+
+### Content.IntegrationTests/Tests/Interaction/InteractionTest.cs
+
+### Content.IntegrationTests/Tests/InventoryHelpersTest.cs
+
+### Content.IntegrationTests/Tests/Linter/StaticFieldValidationTest.cs
+
+### Content.IntegrationTests/Tests/Localization/EntityPrototypeLocalizationTest.cs
+
+### Content.IntegrationTests/Tests/MagazineVisualsSpriteTest.cs
+
+### Content.IntegrationTests/Tests/MaterialArbitrageTest.cs
+
+### Content.IntegrationTests/Tests/Minds/GhostRoleTests.cs
+
+### Content.IntegrationTests/Tests/Minds/MindTests.cs
+
+### Content.IntegrationTests/Tests/Minds/RoleTests.cs
+
+### Content.IntegrationTests/Tests/Networking/SimplePredictReconcileTest.cs
+
+### Content.IntegrationTests/Tests/PostMapInitTest.cs
+
+### Content.IntegrationTests/Tests/Power/StationPowerTests.cs
+
+### Content.IntegrationTests/Tests/RoundEndTest.cs
+
+### Content.IntegrationTests/Tests/SmartFridge/SmartFridgeInteractionTest.cs
+
+### Content.IntegrationTests/Tests/Station/StationJobsTest.cs
+
+### Content.IntegrationTests/Tests/StorageTest.cs
+
+### Content.IntegrationTests/Tests/Tiles/TileConstructionTests.cs
+
+### Content.IntegrationTests/Tests/Vending/VendingInteractionTest.cs
+
+### Content.IntegrationTests/Tests/VendingMachineRestockTest.cs
+
+### Content.MapRenderer/CommandLineArguments.cs
+
+### Content.MapRenderer/MapViewerData.cs
+
+### Content.MapRenderer/Painters/DecalPainter.cs
+
+### Content.MapRenderer/Painters/EntityPainter.cs
+
+### Content.MapRenderer/Painters/GridPainter.cs
+
+### Content.MapRenderer/Painters/MapPainter.cs
+
+### Content.MapRenderer/Painters/TilePainter.cs
+
+### Content.MapRenderer/ParallaxOutput.cs
+
+### Content.MapRenderer/Program.cs
+
+### Content.MapRenderer/RenderMap.cs
+
+### Content.Packaging/ServerPackaging.cs
+
+### Content.Server.Database/Migrations/Postgres/20250314222016_ConstructionFavorites.Designer.cs
+
+### Content.Server.Database/Migrations/Postgres/20250314222016_ConstructionFavorites.cs
+
+### Content.Server.Database/Migrations/Postgres/PostgresServerDbContextModelSnapshot.cs
+
+### Content.Server.Database/Migrations/Sqlite/20250314222717_ConstructionFavorites.Designer.cs
+
+### Content.Server.Database/Migrations/Sqlite/20250314222717_ConstructionFavorites.cs
+
+### Content.Server.Database/Migrations/Sqlite/SqliteServerDbContextModelSnapshot.cs
+
+### Content.Server.Database/Model.cs
+
+### Content.Server/Abilities/Mime/MimePowersSystem.cs
+
+### Content.Server/Access/AccessWireAction.cs
+
+### Content.Server/Access/AddAccessLogCommand.cs
+
+### Content.Server/Access/LogWireAction.cs
+
+### Content.Server/Access/Systems/AccessOverriderSystem.cs
+
+### Content.Server/Access/Systems/AgentIDCardSystem.cs
+
+### Content.Server/Access/Systems/IdBindSystem.cs
+
+### Content.Server/Access/Systems/IdCardConsoleSystem.cs
+
+### Content.Server/Access/Systems/IdCardSystem.cs
+
+### Content.Server/Actions/ActionOnInteractSystem.cs
+
+### Content.Server/Actions/Commands/AddActionCommand.cs
+
+### Content.Server/Actions/Commands/RemoveActionCommand.cs
+
+### Content.Server/Administration/BanPanelEui.cs
+
+### Content.Server/Administration/Commands/AddBodyPartCommand.cs
+
+### Content.Server/Administration/Commands/AdminWhoCommand.cs
+
+### Content.Server/Administration/Commands/AnnounceUiCommand.cs
+
+### Content.Server/Administration/Commands/BanListCommand.cs
+
+### Content.Server/Administration/Commands/DSay.cs
+
+### Content.Server/Administration/Commands/DeAdminCommand.cs
+
+### Content.Server/Administration/Commands/DeleteComponent.cs
+
+### Content.Server/Administration/Commands/DepartmentBanCommand.cs
+
+### Content.Server/Administration/Commands/DirtyCommand.cs
+
+### Content.Server/Administration/Commands/ExplosionCommand.cs
+
+### Content.Server/Administration/Commands/FaxUiCommand.cs
+
+### Content.Server/Administration/Commands/FollowCommand.cs
+
+### Content.Server/Administration/Commands/LoadGameMapCommand.cs
+
+### Content.Server/Administration/Commands/OpenAdminLogsCommand.cs
+
+### Content.Server/Administration/Commands/OpenAdminNotesCommand.cs
+
+### Content.Server/Administration/Commands/OpenPermissionsCommand.cs
+
+### Content.Server/Administration/Commands/PanicBunkerCommand.cs
+
+### Content.Server/Administration/Commands/PardonCommand.cs
+
+### Content.Server/Administration/Commands/PersistenceSaveCommand.cs
+
+### Content.Server/Administration/Commands/PromoteHostCommand.cs
+
+### Content.Server/Administration/Commands/ReAdminCommand.cs
+
+### Content.Server/Administration/Commands/RemoveExtraComponents.cs
+
+### Content.Server/Administration/Commands/RoleBanCommand.cs
+
+### Content.Server/Administration/Commands/RoleUnbanCommand.cs
+
+### Content.Server/Administration/Commands/SetAdminOOC.cs
+
+### Content.Server/Administration/Commands/SetMindCommand.cs
+
+### Content.Server/Administration/Commands/SetOutfitCommand.cs
+
+### Content.Server/Administration/Commands/ShuttleCommands.cs
+
+### Content.Server/Administration/Commands/StealthminCommand.cs
+
+### Content.Server/Administration/Commands/StripAllCommand.cs
+
+### Content.Server/Administration/Commands/VariantizeCommand.cs
+
+### Content.Server/Administration/Logs/AdminLogManager.cs
+
+### Content.Server/Administration/Notes/UserNotesEui.cs
+
+### Content.Server/Administration/Systems/AdminSystem.cs
+
+### Content.Server/Administration/Systems/AdminVerbSystem.Antags.cs
+
+### Content.Server/Administration/Systems/AdminVerbSystem.Smites.cs
+
+### Content.Server/Administration/Systems/AdminVerbSystem.Tools.cs
+
+### Content.Server/Administration/Systems/AdminVerbSystem.cs
+
+### Content.Server/Administration/Toolshed/SolutionCommand.cs
+
+### Content.Server/Advertise/Components/AdvertiseComponent.cs
+
+### Content.Server/Advertise/EntitySystems/AdvertiseSystem.cs
+
+### Content.Server/Afk/IsAfkCommand.cs
+
+### Content.Server/AlertLevel/Commands/SetAlertLevelCommand.cs
+
+### Content.Server/Ame/EntitySystems/AmeControllerSystem.cs
+
+### Content.Server/Animals/Components/ParrotListenerComponent.cs
+
+### Content.Server/Animals/Components/ParrotMemoryComponent.cs
+
+### Content.Server/Animals/Systems/ParrotMemorySystem.cs
+
+### Content.Server/Anomaly/AnomalySystem.cs
+
+### Content.Server/Anomaly/Effects/AnomalyCoreSystem.cs
+
+### Content.Server/Anomaly/Effects/InnerBodyAnomalySystem.cs
+
+### Content.Server/Anomaly/Effects/ProjectileAnomalySystem.cs
+
+### Content.Server/Arcade/BlockGame/BlockGameArcadeSystem.cs
+
+### Content.Server/Arcade/SpaceVillainGame/SpaceVillainArcadeComponent.cs
+
+### Content.Server/Arcade/SpaceVillainGame/SpaceVillainArcadeSystem.cs
+
+### Content.Server/Armor/ArmorSystem.cs
+
+### Content.Server/Atmos/Commands/SetMapAtmosCommand.cs
+
+### Content.Server/Atmos/Components/AtmosPlaqueComponent.cs
+
+### Content.Server/Atmos/Consoles/AtmosMonitoringConsoleSystem.cs
+
+### Content.Server/Atmos/EntitySystems/AirtightSystem.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosPipeLayersSystem.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosPlaqueSystem.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.API.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.Gases.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.HighPressureDelta.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.Hotspot.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.Monstermos.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.Processing.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.Utils.cs
+
+### Content.Server/Atmos/EntitySystems/AtmosphereSystem.cs
+
+### Content.Server/Atmos/EntitySystems/AutomaticAtmosSystem.cs
+
+### Content.Server/Atmos/EntitySystems/FlammableSystem.cs
+
+### Content.Server/Atmos/EntitySystems/GasAnalyzerSystem.cs
+
+### Content.Server/Atmos/EntitySystems/GasTankSystem.cs
+
+### Content.Server/Atmos/EntitySystems/PipeRestrictOverlapSystem.cs
+
+### Content.Server/Atmos/Monitor/Components/AirAlarmComponent.cs
+
+### Content.Server/Atmos/Monitor/Systems/AirAlarmSystem.cs
+
+### Content.Server/Atmos/Monitor/Systems/AtmosAlarmableSystem.cs
+
+### Content.Server/Atmos/Monitor/WireActions/AirAlarmPanicWire.cs
+
+### Content.Server/Atmos/Piping/Binary/Components/GasValveComponent.cs
+
+### Content.Server/Atmos/Piping/Binary/EntitySystems/GasPressureRegulatorSystem.cs
+
+### Content.Server/Atmos/Piping/Binary/EntitySystems/GasRecyclerSystem.cs
+
+### Content.Server/Atmos/Piping/Binary/EntitySystems/GasValveSystem.cs
+
+### Content.Server/Atmos/Piping/Binary/EntitySystems/SignalControlledValveSystem.cs
+
+### Content.Server/Atmos/Piping/Components/AtmosPipeColorComponent.cs
+
+### Content.Server/Atmos/Piping/Components/GasPipeManifoldComponent.cs
+
+### Content.Server/Atmos/Piping/EntitySystems/AtmosPipeAppearanceSystem.cs
+
+### Content.Server/Atmos/Piping/EntitySystems/AtmosPipeColorSystem.cs
+
+### Content.Server/Atmos/Piping/EntitySystems/AtmosUnsafeUnanchorSystem.cs
+
+### Content.Server/Atmos/Piping/EntitySystems/GasPipeManifoldSystem.cs
+
+### Content.Server/Atmos/Piping/Trinary/EntitySystems/GasFilterSystem.cs
+
+### Content.Server/Atmos/Piping/Trinary/EntitySystems/GasMixerSystem.cs
+
+### Content.Server/Atmos/Piping/Unary/Components/GasOutletInjectorComponent.cs
+
+### Content.Server/Atmos/Piping/Unary/EntitySystems/GasCanisterSystem.cs
+
+### Content.Server/Atmos/Piping/Unary/EntitySystems/GasPortableSystem.cs
+
+### Content.Server/Atmos/Piping/Unary/EntitySystems/GasThermoMachineSystem.cs
+
+### Content.Server/Atmos/Piping/Unary/EntitySystems/GasVentPumpSystem.cs
+
+### Content.Server/Atmos/Piping/Unary/EntitySystems/GasVentScrubberSystem.cs
+
+### Content.Server/Atmos/Portable/SpaceHeaterSystem.cs
+
+### Content.Server/Atmos/PressureEvent.cs
+
+### Content.Server/Atmos/Rotting/RottingSystem.cs
+
+### Content.Server/Atmos/Serialization/TileAtmosCollectionSerializer.cs
+
+### Content.Server/Audio/ContentAudioSystem.cs
+
+### Content.Server/Bed/BedSystem.cs
+
+### Content.Server/Bed/Components/HealOnBuckleComponent.cs
+
+### Content.Server/Bed/Components/HealOnBuckleHealing.cs
+
+### Content.Server/Bed/Components/StasisBedComponent.cs
+
+### Content.Server/Bed/Cryostorage/CryostorageSystem.cs
+
+### Content.Server/Bible/BibleSystem.cs
+
+### Content.Server/Body/Commands/AddHandCommand.cs
+
+### Content.Server/Body/Commands/DestroyMechanismCommand.cs
+
+### Content.Server/Body/Components/BloodstreamComponent.cs
+
+### Content.Server/Body/Components/MetabolizerComponent.cs
+
+### Content.Server/Body/Components/RespiratorComponent.cs
+
+### Content.Server/Body/Components/StomachComponent.cs
+
+### Content.Server/Body/Systems/BloodstreamSystem.cs
+
+### Content.Server/Body/Systems/BodySystem.cs
+
+### Content.Server/Body/Systems/InternalsSystem.cs
+
+### Content.Server/Body/Systems/LungSystem.cs
+
+### Content.Server/Body/Systems/MetabolizerSystem.cs
+
+### Content.Server/Body/Systems/RespiratorSystem.cs
+
+### Content.Server/Botany/SeedPrototype.cs
+
+### Content.Server/Botany/Systems/MutationSystem.cs
+
+### Content.Server/Botany/Systems/PlantHolderSystem.cs
+
+### Content.Server/Cargo/Components/StationCargoBountyDatabaseComponent.cs
+
+### Content.Server/Cargo/Components/StationCargoOrderDatabaseComponent.cs
+
+### Content.Server/Cargo/Systems/CargoSystem.Bounty.cs
+
+### Content.Server/Cargo/Systems/CargoSystem.Orders.cs
+
+### Content.Server/Cargo/Systems/CargoSystem.Shuttle.cs
+
+### Content.Server/Cargo/Systems/CargoSystem.cs
+
+### Content.Server/Cargo/Systems/PriceGunSystem.cs
+
+### Content.Server/Cargo/Systems/PricingSystem.cs
+
+### Content.Server/CartridgeLoader/Cartridges/CrewManifestCartridgeSystem.cs
+
+### Content.Server/CartridgeLoader/Cartridges/NanoTaskCartridgeSystem.cs
+
+### Content.Server/Chat/Commands/AdminChatCommand.cs
+
+### Content.Server/Chat/Commands/MeCommand.cs
+
+### Content.Server/Chat/Commands/OOCCommand.cs
+
+### Content.Server/Chat/Commands/SayCommand.cs
+
+### Content.Server/Chat/Commands/SetLOOCCommand.cs
+
+### Content.Server/Chat/Commands/SetOOCCommand.cs
+
+### Content.Server/Chat/Commands/WhisperCommand.cs
+
+### Content.Server/Chat/Managers/ChatManager.cs
+
+### Content.Server/Chat/Managers/IChatManager.cs
+
+### Content.Server/Chat/SuicideSystem.cs
+
+### Content.Server/Chat/Systems/ChatSystem.Emote.cs
+
+### Content.Server/Chat/Systems/ChatSystem.cs
+
+### Content.Server/Chemistry/Commands/DumpReagentGuideText.cs
+
+### Content.Server/Chemistry/Components/ReagentDispenserComponent.cs
+
+### Content.Server/Chemistry/Components/SolutionPurgeComponent.cs
+
+### Content.Server/Chemistry/Components/TransformableContainerComponent.cs
+
+### Content.Server/Chemistry/EntitySystems/ChemMasterSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/DeleteOnSolutionEmptySystem.cs
+
+### Content.Server/Chemistry/EntitySystems/HypospraySystem.cs
+
+### Content.Server/Chemistry/EntitySystems/InjectorSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/ReagentDispenserSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/SolutionInjectOnEventSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/SolutionPurgeSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/SolutionRegenerationSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/TransformableContainerSystem.cs
+
+### Content.Server/Chemistry/EntitySystems/VaporSystem.cs
+
+### Content.Server/Chemistry/TileReactions/CreateEntityTileReaction.cs
+
+### Content.Server/Cloning/CloningPodSystem.cs
+
+### Content.Server/Cloning/CloningSystem.cs
+
+### Content.Server/Clothing/Systems/ChameleonClothingSystem.cs
+
+### Content.Server/Clothing/Systems/OutfitSystem.cs
+
+### Content.Server/Cluwne/CluwneSystem.cs
+
+### Content.Server/Codewords/CodewordComponent.cs
+
+### Content.Server/Codewords/CodewordFactionPrototype.cs
+
+### Content.Server/Codewords/CodewordGeneratorPrototype.cs
+
+### Content.Server/Codewords/CodewordManagerComponent.cs
+
+### Content.Server/Codewords/CodewordSystem.cs
+
+### Content.Server/Commands/ActionCommands.cs
+
+### Content.Server/Communications/CommunicationsConsoleComponent.cs
+
+### Content.Server/Communications/CommunicationsConsoleSystem.cs
+
+### Content.Server/Connection/ConnectionManager.cs
+
+### Content.Server/Construction/Commands/TileWallsCommand.cs
+
+### Content.Server/Construction/Conditions/ComponentInTile.cs
+
+### Content.Server/Construction/ConstructionSystem.Computer.cs
+
+### Content.Server/Construction/ConstructionSystem.Graph.cs
+
+### Content.Server/Construction/ConstructionSystem.Initial.cs
+
+### Content.Server/Construction/ConstructionSystem.Interactions.cs
+
+### Content.Server/Construction/ConstructionSystem.cs
+
+### Content.Server/Construction/MachineFrameSystem.cs
+
+### Content.Server/Crayon/CrayonSystem.cs
+
+### Content.Server/CrewManifest/CrewManifestSystem.cs
+
+### Content.Server/Damage/Components/ExaminableDamageComponent.cs
+
+### Content.Server/Damage/Systems/DamageOnToolInteractSystem.cs
+
+### Content.Server/Damage/Systems/DamageUserOnTriggerSystem.cs
+
+### Content.Server/Damage/Systems/ExaminableDamageSystem.cs
+
+### Content.Server/Database/ServerDbBase.cs
+
+### Content.Server/Database/ServerDbManager.cs
+
+### Content.Server/Decals/Commands/AddDecalCommand.cs
+
+### Content.Server/Decals/DecalSystem.cs
+
+### Content.Server/Destructible/DestructibleSystem.cs
+
+### Content.Server/Destructible/Thresholds/Behaviors/DumpRestockInventory.cs
+
+### Content.Server/Destructible/Thresholds/Behaviors/SpawnEntitiesBehavior.cs
+
+### Content.Server/Destructible/Thresholds/Behaviors/WeightedSpawnEntityBehavior.cs
+
+### Content.Server/DeviceLinking/Components/LogicGateComponent.cs
+
+### Content.Server/DeviceLinking/Systems/DoorSignalControlSystem.cs
+
+### Content.Server/DeviceLinking/Systems/EdgeDetectorSystem.cs
+
+### Content.Server/DeviceLinking/Systems/SignalSwitchSystem.cs
+
+### Content.Server/DeviceNetwork/Systems/ApcNetworkSystem.cs
+
+### Content.Server/DeviceNetwork/Systems/Devices/ApcNetSwitchSystem.cs
+
+### Content.Server/DeviceNetwork/Systems/NetworkConfiguratorSystem.cs
+
+### Content.Server/Devour/DevourSystem.cs
+
+### Content.Server/Discord/DiscordLink/DiscordChatLink.cs
+
+### Content.Server/Discord/DiscordLink/DiscordLink.cs
+
+### Content.Server/Discord/DiscordLink/DiscordSawmillLogger.cs
+
+### Content.Server/Disposal/Tube/DisposalSignallerComponent.cs
+
+### Content.Server/Disposal/Tube/DisposalSignallerSystem.cs
+
+### Content.Server/Disposal/Tube/DisposalTubeSystem.cs
+
+### Content.Server/Disposal/Unit/DisposableSystem.cs
+
+### Content.Server/Doors/Electronics/Systems/DoorElectronicsSystem.cs
+
+### Content.Server/Dragon/DragonSystem.cs
+
+### Content.Server/Drowsiness/DrowsinessSystem.cs
+
+### Content.Server/EUI/EuiManager.cs
+
+### Content.Server/Electrocution/ElectrocuteCommand.cs
+
+### Content.Server/Electrocution/ElectrocutionSystem.cs
+
+### Content.Server/Engineering/EntitySystems/SpawnAfterInteractSystem.cs
+
+### Content.Server/Ensnaring/Components/EnsnaringComponent.cs
+
+### Content.Server/EntityEffects/EffectConditions/BodyTemperature.cs
+
+### Content.Server/EntityEffects/EffectConditions/OrganType.cs
+
+### Content.Server/EntityEffects/Effects/AdjustTemperature.cs
+
+### Content.Server/EntityEffects/Effects/AreaReactionEffect.cs
+
+### Content.Server/EntityEffects/Effects/CauseZombieInfection.cs
+
+### Content.Server/EntityEffects/Effects/ChemCleanBloodstream.cs
+
+### Content.Server/EntityEffects/Effects/ChemVomit.cs
+
+### Content.Server/EntityEffects/Effects/CreateEntityReactionEffect.cs
+
+### Content.Server/EntityEffects/Effects/CreateGas.cs
+
+### Content.Server/EntityEffects/Effects/CureZombieInfection.cs
+
+### Content.Server/EntityEffects/Effects/Emote.cs
+
+### Content.Server/EntityEffects/Effects/EmpReactionEffect.cs
+
+### Content.Server/EntityEffects/Effects/ExplosionReactionEffect.cs
+
+### Content.Server/EntityEffects/Effects/FlammableReaction.cs
+
+### Content.Server/EntityEffects/Effects/FlashReactionEffect.cs
+
+### Content.Server/EntityEffects/Effects/HealthChange.cs
+
+### Content.Server/EntityEffects/Effects/Ignite.cs
+
+### Content.Server/EntityEffects/Effects/MakeSentient.cs
+
+### Content.Server/EntityEffects/Effects/ModifyBleedAmount.cs
+
+### Content.Server/EntityEffects/Effects/ModifyBloodLevel.cs
+
+### Content.Server/EntityEffects/Effects/ModifyLungGas.cs
+
+### Content.Server/EntityEffects/Effects/Oxygenate.cs
+
+### Content.Server/EntityEffects/Effects/Paralyze.cs
+
+### Content.Server/EntityEffects/Effects/PlantChangeStat.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustAttribute.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustHealth.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustMutationLevel.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustMutationMod.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustNutrition.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustPests.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustPotency.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustToxins.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustWater.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAdjustWeeds.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantAffectGrowth.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantCryoxadone.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantDestroySeeds.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantDiethylamine.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantPhalanximine.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/PlantRestoreSeeds.cs
+
+### Content.Server/EntityEffects/Effects/PlantMetabolism/RobustHarvest.cs
+
+### Content.Server/EntityEffects/Effects/PlantMutateChemicals.cs
+
+### Content.Server/EntityEffects/Effects/PlantMutateGases.cs
+
+### Content.Server/EntityEffects/Effects/PlantMutateHarvest.cs
+
+### Content.Server/EntityEffects/Effects/PlantSpeciesChange.cs
+
+### Content.Server/EntityEffects/Effects/Polymorph.cs
+
+### Content.Server/EntityEffects/Effects/ReduceRotting.cs
+
+### Content.Server/EntityEffects/Effects/ResetNarcolepsy.cs
+
+### Content.Server/EntityEffects/Effects/SatiateHunger.cs
+
+### Content.Server/EntityEffects/Effects/WashCreamPieReaction.cs
+
+### Content.Server/EntityEffects/EntityEffectSystem.cs
+
+### Content.Server/EntityList/SpawnEntityListCommand.cs
+
+### Content.Server/Entry/EntryPoint.cs
+
+### Content.Server/Entry/IgnoredComponents.cs
+
+### Content.Server/Examine/ExamineSystem.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionGridTileFlood.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionSystem.Airtight.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionSystem.GridMap.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionSystem.Processing.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionSystem.TileFill.cs
+
+### Content.Server/Explosion/EntitySystems/ExplosionSystem.cs
+
+### Content.Server/Explosion/EntitySystems/ProjectileGrenadeSystem.cs
+
+### Content.Server/Explosion/EntitySystems/ReleaseGasOnTriggerSystem.cs
+
+### Content.Server/Explosion/EntitySystems/SmokeOnTriggerSystem.cs
+
+### Content.Server/Explosion/EntitySystems/TriggerSystem.Proximity.cs
+
+### Content.Server/Explosion/EntitySystems/TriggerSystem.cs
+
+### Content.Server/Explosion/EntitySystems/TwoStageTriggerSystem.cs
+
+### Content.Server/Fax/FaxSystem.cs
+
+### Content.Server/Flash/Components/DamagedByFlashingComponent.cs
+
+### Content.Server/Flash/Components/FlashImmunityComponent.cs
+
+### Content.Server/Flash/DamagedByFlashingSystem.cs
+
+### Content.Server/Flash/FlashSystem.cs
+
+### Content.Server/Fluids/EntitySystems/AbsorbentSystem.cs
+
+### Content.Server/Fluids/EntitySystems/DrainSystem.cs
+
+### Content.Server/Fluids/EntitySystems/PuddleDebugDebugOverlaySystem.cs
+
+### Content.Server/Fluids/EntitySystems/PuddleSystem.Evaporation.cs
+
+### Content.Server/Fluids/EntitySystems/PuddleSystem.Spillable.cs
+
+### Content.Server/Fluids/EntitySystems/PuddleSystem.cs
+
+### Content.Server/Fluids/EntitySystems/SmokeSystem.cs
+
+### Content.Server/Forensics/Systems/ForensicScannerSystem.cs
+
+### Content.Server/Forensics/Systems/ForensicsSystem.cs
+
+### Content.Server/GameTicking/Commands/ForceMapCommand.cs
+
+### Content.Server/GameTicking/Commands/ForcePresetCommand.cs
+
+### Content.Server/GameTicking/Commands/GoLobbyCommand.cs
+
+### Content.Server/GameTicking/Commands/ToggleDisallowLateJoinCommand.cs
+
+### Content.Server/GameTicking/GameTicker.RoundFlow.cs
+
+### Content.Server/GameTicking/GameTicker.Spawning.cs
+
+### Content.Server/GameTicking/GameTicker.cs
+
+### Content.Server/GameTicking/Presets/GamePresetPrototype.cs
+
+### Content.Server/GameTicking/Rules/Components/TraitorRuleComponent.cs
+
+### Content.Server/GameTicking/Rules/DeathMatchRuleSystem.cs
+
+### Content.Server/GameTicking/Rules/DragonRuleSystem.cs
+
+### Content.Server/GameTicking/Rules/NukeopsRuleSystem.cs
+
+### Content.Server/GameTicking/Rules/RevolutionaryRuleSystem.cs
+
+### Content.Server/GameTicking/Rules/SecretRuleSystem.cs
+
+### Content.Server/GameTicking/Rules/TraitorRuleSystem.cs
+
+### Content.Server/Gateway/Systems/GatewayGeneratorSystem.cs
+
+### Content.Server/Gatherable/Components/GatherableComponent.cs
+
+### Content.Server/Gatherable/GatherableSystem.cs
+
+### Content.Server/Ghost/GhostSystem.cs
+
+### Content.Server/Ghost/Roles/GhostRoleSystem.cs
+
+### Content.Server/GhostKick/GhostKickManager.cs
+
+### Content.Server/Glue/GlueSystem.cs
+
+### Content.Server/Guardian/GuardianSystem.cs
+
+### Content.Server/Hands/Systems/HandsSystem.cs
+
+### Content.Server/Holiday/Christmas/RandomGiftSystem.cs
+
+### Content.Server/Holosign/HolosignSystem.cs
+
+### Content.Server/HotPotato/HotPotatoSystem.cs
+
+### Content.Server/Humanoid/Systems/RandomHumanoidSystem.cs
+
+### Content.Server/IgnitionSource/IgnitionSourceSystem.cs
+
+### Content.Server/ImmovableRod/ImmovableRodSystem.cs
+
+### Content.Server/Implants/ChameleonControllerSystem.cs
+
+### Content.Server/Implants/Components/AutoImplantComponent.cs
+
+### Content.Server/Implants/ImplantedSystem.cs
+
+### Content.Server/Info/ShowRulesCommand.cs
+
+### Content.Server/Instruments/InstrumentSystem.cs
+
+### Content.Server/Interaction/TilePryCommand.cs
+
+### Content.Server/IoC/ServerContentIoC.cs
+
+### Content.Server/Jobs/AddImplantSpecial.cs
+
+### Content.Server/Kitchen/EntitySystems/MicrowaveSystem.cs
+
+### Content.Server/Kitchen/EntitySystems/ReagentGrinderSystem.cs
+
+### Content.Server/Kitchen/EntitySystems/SharpSystem.cs
+
+### Content.Server/Lathe/LatheSystem.cs
+
+### Content.Server/Light/EntitySystems/ExpendableLightSystem.cs
+
+### Content.Server/Light/EntitySystems/PoweredLightSystem.cs
+
+### Content.Server/Machines/EntitySystems/MultipartMachineSystem.cs
+
+### Content.Server/MagicMirror/MagicMirrorSystem.cs
+
+### Content.Server/Mapping/MappingCommand.cs
+
+### Content.Server/Maps/GridDraggingCommand.cs
+
+### Content.Server/Maps/PlanetCommand.cs
+
+### Content.Server/MassMedia/Systems/NewsSystem.cs
+
+### Content.Server/Materials/MaterialReclaimerSystem.cs
+
+### Content.Server/Materials/ProduceMaterialExtractorSystem.cs
+
+### Content.Server/Mech/Systems/MechAssemblySystem.cs
+
+### Content.Server/Mech/Systems/MechSystem.cs
+
+### Content.Server/Medical/BiomassReclaimer/BiomassReclaimerSystem.cs
+
+### Content.Server/Medical/Components/HealingComponent.cs
+
+### Content.Server/Medical/CryoPodSystem.cs
+
+### Content.Server/Medical/HealingSystem.cs
+
+### Content.Server/Medical/HealthAnalyzerSystem.cs
+
+### Content.Server/Medical/SuitSensors/SuitSensorSystem.cs
+
+### Content.Server/Medical/VomitSystem.cs
+
+### Content.Server/Mind/Commands/MakeSentientCommand.cs
+
+### Content.Server/Mind/Commands/MindInfoCommand.cs
+
+### Content.Server/Mind/Commands/RenameCommand.cs
+
+### Content.Server/Mind/MindSystem.cs
+
+### Content.Server/Mind/TransferMindOnGibSystem.cs
+
+### Content.Server/Mindshield/MindShieldSystem.cs
+
+### Content.Server/MoMMI/IMoMMILink.cs
+
+### Content.Server/MoMMI/MoMMILink.cs
+
+### Content.Server/Morgue/CrematoriumSystem.cs
+
+### Content.Server/Movement/LockEyesCommand.cs
+
+### Content.Server/Movement/RotateEyesCommand.cs
+
+### Content.Server/Movement/Systems/PullController.cs
+
+### Content.Server/NPC/Commands/NPCCommand.cs
+
+### Content.Server/NPC/Components/NPCUseActionOnTargetComponent.cs
+
+### Content.Server/NPC/HTN/Preconditions/ActiveHandComponentPrecondition.cs
+
+### Content.Server/NPC/HTN/Preconditions/ActiveHandEntityPrecondition.cs
+
+### Content.Server/NPC/HTN/PrimitiveTasks/Operators/Interactions/DropOperator.cs
+
+### Content.Server/NPC/HTN/PrimitiveTasks/Operators/PickAccessibleComponentOperator.cs
+
+### Content.Server/NPC/NPCBlackboard.cs
+
+### Content.Server/NPC/Pathfinding/PathfindingSystem.Grid.cs
+
+### Content.Server/NPC/Queries/Considerations/TargetLowTempCon.cs
+
+### Content.Server/NPC/Systems/NPCCombatSystem.Ranged.cs
+
+### Content.Server/NPC/Systems/NPCCombatSystem.cs
+
+### Content.Server/NPC/Systems/NPCSteeringSystem.cs
+
+### Content.Server/NPC/Systems/NPCUseActionOnTargetSystem.cs
+
+### Content.Server/NPC/Systems/NPCUtilitySystem.cs
+
+### Content.Server/NameIdentifier/NameIdentifierSystem.cs
+
+### Content.Server/Ninja/Systems/StunProviderSystem.cs
+
+### Content.Server/NodeContainer/EntitySystems/NodeContainerSystem.cs
+
+### Content.Server/NodeContainer/Nodes/PipeNode.cs
+
+### Content.Server/Nuke/Commands/SendNukeCodesCommand.cs
+
+### Content.Server/Nuke/NukeComponent.cs
+
+### Content.Server/Nuke/NukeSystem.cs
+
+### Content.Server/Nutrition/Components/BadFoodComponent.cs
+
+### Content.Server/Nutrition/Components/FlavorProfileComponent.cs
+
+### Content.Server/Nutrition/Components/IgnoreBadFoodComponent.cs
+
+### Content.Server/Nutrition/EntitySystems/CreamPieSystem.cs
+
+### Content.Server/Nutrition/EntitySystems/DrinkSystem.cs
+
+### Content.Server/Nutrition/EntitySystems/SmokingSystem.Cigar.cs
+
+### Content.Server/Nutrition/EntitySystems/SmokingSystem.SmokingPipe.cs
+
+### Content.Server/Nutrition/EntitySystems/SmokingSystem.Vape.cs
+
+### Content.Server/Nutrition/EntitySystems/SmokingSystem.cs
+
+### Content.Server/Nutrition/EntitySystems/TrashOnSolutionEmptySystem.cs
+
+### Content.Server/Nutrition/EntitySystems/UtensilSystem.cs
+
+### Content.Server/Objectives/ObjectivesSystem.cs
+
+### Content.Server/Objectives/Systems/EscapeShuttleConditionSystem.cs
+
+### Content.Server/Objectives/Systems/HelpProgressConditionSystem.cs
+
+### Content.Server/Objectives/Systems/StealConditionSystem.cs
+
+### Content.Server/PDA/PdaSystem.cs
+
+### Content.Server/Parallax/BiomeSystem.cs
+
+### Content.Server/ParticleAccelerator/Components/ParticleAcceleratorControlBoxComponent.cs
+
+### Content.Server/ParticleAccelerator/Components/ParticleAcceleratorEndCapComponent.cs
+
+### Content.Server/ParticleAccelerator/Components/ParticleAcceleratorFuelChamberComponent.cs
+
+### Content.Server/ParticleAccelerator/Components/ParticleAcceleratorPartComponent.cs
+
+### Content.Server/ParticleAccelerator/Components/ParticleAcceleratorPowerBoxComponent.cs
+
+### Content.Server/ParticleAccelerator/EntitySystems/ParticleAcceleratorSystem.ControlBox.cs
+
+### Content.Server/ParticleAccelerator/EntitySystems/ParticleAcceleratorSystem.Emitter.cs
+
+### Content.Server/ParticleAccelerator/EntitySystems/ParticleAcceleratorSystem.Parts.cs
+
+### Content.Server/ParticleAccelerator/EntitySystems/ParticleAcceleratorSystem.PowerBox.cs
+
+### Content.Server/ParticleAccelerator/EntitySystems/ParticleAcceleratorSystem.cs
+
+### Content.Server/ParticleAccelerator/Wires/ParticleAcceleratorToggleWireAction.cs
+
+### Content.Server/Payload/EntitySystems/PayloadSystem.cs
+
+### Content.Server/Physics/Controllers/ConveyorController.cs
+
+### Content.Server/Physics/Controllers/MoverController.cs
+
+### Content.Server/Physics/Controllers/RandomWalkController.cs
+
+### Content.Server/Pinpointer/NavMapSystem.cs
+
+### Content.Server/Pinpointer/PinpointerSystem.cs
+
+### Content.Server/PneumaticCannon/PneumaticCannonSystem.cs
+
+### Content.Server/Pointing/EntitySystems/PointingSystem.cs
+
+### Content.Server/Pointing/EntitySystems/RoguePointingSystem.cs
+
+### Content.Server/Polymorph/Systems/PolymorphSystem.cs
+
+### Content.Server/Power/Commands/PowerStatCommand.cs
+
+### Content.Server/Power/Components/BaseNetConnectorComponent.cs
+
+### Content.Server/Power/EntitySystems/BatterySystem.cs
+
+### Content.Server/Power/EntitySystems/CableSystem.Placer.cs
+
+### Content.Server/Power/EntitySystems/CableVisSystem.cs
+
+### Content.Server/Power/EntitySystems/ExtensionCableSystem.cs
+
+### Content.Server/Power/EntitySystems/PowerChargeSystem.cs
+
+### Content.Server/Power/EntitySystems/PowerMonitoringConsoleSystem.cs
+
+### Content.Server/Power/EntitySystems/PowerNetSystem.cs
+
+### Content.Server/Power/Generation/Teg/TegGeneratorComponent.cs
+
+### Content.Server/Power/Generation/Teg/TegSystem.cs
+
+### Content.Server/Power/Generator/PowerSwitchableSystem.cs
+
+### Content.Server/Power/Nodes/CableNode.cs
+
+### Content.Server/Power/Nodes/CableTerminalPortNode.cs
+
+### Content.Server/Power/SetBatteryPercentCommand.cs
+
+### Content.Server/PowerCell/PowerCellSystem.Draw.cs
+
+### Content.Server/PowerSink/PowerSinkSystem.cs
+
+### Content.Server/Prayer/PrayerSystem.cs
+
+### Content.Server/Preferences/Managers/IServerPreferencesManager.cs
+
+### Content.Server/Preferences/Managers/ServerPreferencesManager.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.AutoCabling.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Biome.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.BiomeMarkerLayer.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.BoundaryWall.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.CornerClutter.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Corridor.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.CorridorClutter.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.CorridorDecalSkirting.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.DunGenExterior.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.DunGenFill.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.DunGenPrefab.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.DunGenReplaceTile.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.DungeonEntrance.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.EntityTableDunGen.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.EntranceFlank.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Exterior.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.ExternalWindow.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Fill.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Helpers.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.InternalWindow.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Junction.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.MiddleConnection.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.MobDunGen.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Mobs.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Noise.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Ore.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.OreDunGen.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGen.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenAutoCabling.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenBiome.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenBiomeMarkerLayer.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenBoundaryWall.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenCornerClutter.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenCorridor.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenCorridorClutter.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenCorridorDecalSkirting.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenDungeonConnector.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenDungeonEntrance.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenEntranceFlank.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenExternalWindow.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenInternalWindow.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenJunction.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenMiddleConnection.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenRoomEntrance.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenSplineDungeonConnector.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenWallMount.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.PostGenWorm.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.RoomEntrance.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.SplineDungeonConnector.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.WallMount.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.Worm.cs
+
+### Content.Server/Procedural/DungeonJob/DungeonJob.cs
+
+### Content.Server/Procedural/DungeonSystem.Commands.cs
+
+### Content.Server/Procedural/DungeonSystem.Rooms.cs
+
+### Content.Server/Procedural/DungeonSystem.cs
+
+### Content.Server/Projectiles/ProjectileSystem.cs
+
+### Content.Server/Radiation/Systems/GeigerSystem.cs
+
+### Content.Server/Radiation/Systems/RadiationSystem.Blockers.cs
+
+### Content.Server/Radiation/Systems/RadiationSystem.Debug.cs
+
+### Content.Server/Radiation/Systems/RadiationSystem.GridCast.cs
+
+### Content.Server/Radiation/Systems/RadiationSystem.cs
+
+### Content.Server/Radio/EntitySystems/HeadsetSystem.cs
+
+### Content.Server/Radio/RadioEvent.cs
+
+### Content.Server/Remotes/DoorRemoteSystem.cs
+
+### Content.Server/Repairable/RepairableComponent.cs
+
+### Content.Server/Repairable/RepairableSystem.cs
+
+### Content.Server/Research/Disk/ResearchDiskSystem.cs
+
+### Content.Server/Research/Systems/ResearchSystem.Client.cs
+
+### Content.Server/Research/Systems/ResearchSystem.Server.cs
+
+### Content.Server/Research/Systems/ResearchSystem.Technology.cs
+
+### Content.Server/Research/Systems/ResearchSystem.cs
+
+### Content.Server/Respawn/SpecialRespawnSystem.cs
+
+### Content.Server/Revenant/EntitySystems/RevenantSystem.Abilities.cs
+
+### Content.Server/Revenant/EntitySystems/RevenantSystem.cs
+
+### Content.Server/Roles/AddRoleCommand.cs
+
+### Content.Server/Roles/ListRolesCommand.cs
+
+### Content.Server/Roles/RemoveRoleCommand.cs
+
+### Content.Server/Rootable/RootableSystem.cs
+
+### Content.Server/Rotatable/RotatableSystem.cs
+
+### Content.Server/RoundEnd/RoundEndSystem.cs
+
+### Content.Server/Salvage/JobBoard/JobBoardCommands.cs
+
+### Content.Server/Salvage/JobBoard/JobBoardLabelComponent.cs
+
+### Content.Server/Salvage/JobBoard/SalvageJobBoardSystem.cs
+
+### Content.Server/Salvage/JobBoard/SalvageJobsDataComponent.cs
+
+### Content.Server/Salvage/SalvageSystem.ExpeditionConsole.cs
+
+### Content.Server/Salvage/SalvageSystem.Expeditions.cs
+
+### Content.Server/Salvage/SalvageSystem.Magnet.cs
+
+### Content.Server/Salvage/SalvageSystem.Runner.cs
+
+### Content.Server/Salvage/SpawnSalvageMissionJob.cs
+
+### Content.Server/Sandbox/Commands/ColorNetworkCommand.cs
+
+### Content.Server/Security/GenpopSystem.cs
+
+### Content.Server/Shuttles/Commands/DelayShuttleRoundEndCommand.cs
+
+### Content.Server/Shuttles/Commands/DockCommand.cs
+
+### Content.Server/Shuttles/Commands/DockEmergencyShuttleCommand.cs
+
+### Content.Server/Shuttles/Commands/FTLDiskCommand.cs
+
+### Content.Server/Shuttles/Commands/LaunchEmergencyShuttleCommand.cs
+
+### Content.Server/Shuttles/Components/ShuttleComponent.cs
+
+### Content.Server/Shuttles/Components/StationEmergencyShuttleComponent.cs
+
+### Content.Server/Shuttles/Systems/DockingSystem.cs
+
+### Content.Server/Shuttles/Systems/EmergencyShuttleSystem.Console.cs
+
+### Content.Server/Shuttles/Systems/EmergencyShuttleSystem.cs
+
+### Content.Server/Shuttles/Systems/ShuttleConsoleSystem.cs
+
+### Content.Server/Shuttles/Systems/ShuttleSystem.FasterThanLight.cs
+
+### Content.Server/Shuttles/Systems/ShuttleSystem.GridFill.cs
+
+### Content.Server/Shuttles/Systems/ShuttleSystem.Impact.cs
+
+### Content.Server/Shuttles/Systems/ShuttleSystem.cs
+
+### Content.Server/Shuttles/Systems/ThrusterSystem.cs
+
+### Content.Server/Silicons/Borgs/BorgSystem.Modules.cs
+
+### Content.Server/Silicons/Borgs/BorgSystem.Ui.cs
+
+### Content.Server/Silicons/Borgs/BorgSystem.cs
+
+### Content.Server/Silicons/Laws/IonStormSystem.cs
+
+### Content.Server/Silicons/Laws/SiliconLawSystem.cs
+
+### Content.Server/Silicons/StationAi/AiInteractWireAction.cs
+
+### Content.Server/Silicons/StationAi/AiVisionWireAction.cs
+
+### Content.Server/Silicons/StationAi/StationAiSystem.cs
+
+### Content.Server/Singularity/EntitySystems/EmitterSystem.cs
+
+### Content.Server/Singularity/EntitySystems/EventHorizonSystem.cs
+
+### Content.Server/Singularity/EntitySystems/RadiationCollectorSystem.cs
+
+### Content.Server/Singularity/EntitySystems/SingularityGeneratorSystem.cs
+
+### Content.Server/Singularity/EntitySystems/SingularitySystem.cs
+
+### Content.Server/Singularity/StartSingularityEngineCommand.cs
+
+### Content.Server/Solar/EntitySystems/PowerSolarSystem.cs
+
+### Content.Server/Spawners/Components/RandomDecalSpawnerComponent.cs
+
+### Content.Server/Spawners/Components/TimedSpawnerComponent.cs
+
+### Content.Server/Spawners/EntitySystems/ConditionalSpawnerSystem.cs
+
+### Content.Server/Spawners/EntitySystems/RandomDecalSpawnerSystem.cs
+
+### Content.Server/Spawners/EntitySystems/SpawnerSystem.cs
+
+### Content.Server/Species/Systems/NymphSystem.cs
+
+### Content.Server/Speech/AccentSystem.cs
+
+### Content.Server/Speech/Components/EmoteBlockerComponent.cs
+
+### Content.Server/Speech/Components/MumbleAccentComponent.cs
+
+### Content.Server/Speech/Components/SlowAccentComponent.cs
+
+### Content.Server/Speech/EntitySystems/AddAccentClothingSystem.cs
+
+### Content.Server/Speech/EntitySystems/BackwardsAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/BarkAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/BleatingAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/DamagedSiliconAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/EmoteBlockerSystem.cs
+
+### Content.Server/Speech/EntitySystems/FrenchAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/FrontalLispSystem.cs
+
+### Content.Server/Speech/EntitySystems/GermanAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/LizardAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/MobsterAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/MonkeyAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/MothAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/MumbleAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/OwOAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/ParrotAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/PirateAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/RatvarianLanguageSystem.cs
+
+### Content.Server/Speech/EntitySystems/ReplacementAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/RussianAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/ScrambledAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/SkeletonAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/SlowAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/SlurredSystem.cs
+
+### Content.Server/Speech/EntitySystems/SouthernAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/SpanishAccentSystem.cs
+
+### Content.Server/Speech/EntitySystems/StutteringSystem.cs
+
+### Content.Server/Speech/EntitySystems/VocalSystem.cs
+
+### Content.Server/Speech/Muting/MutingSystem.cs
+
+### Content.Server/Spider/SpiderSystem.cs
+
+### Content.Server/SprayPainter/SprayPainterSystem.cs
+
+### Content.Server/Spreader/KudzuSystem.cs
+
+### Content.Server/Spreader/SpreaderSystem.cs
+
+### Content.Server/Station/Systems/StationBiomeSystem.cs
+
+### Content.Server/Station/Systems/StationSpawningSystem.cs
+
+### Content.Server/StationEvents/BasicStationEventSchedulerSystem.cs
+
+### Content.Server/StationEvents/Components/SolarFlareRuleComponent.cs
+
+### Content.Server/StationEvents/Components/VentClogRuleComponent.cs
+
+### Content.Server/StationEvents/Events/BluespaceLockerRule.cs
+
+### Content.Server/StationEvents/Events/CargoGiftsRule.cs
+
+### Content.Server/StationEvents/Events/RandomSentienceRule.cs
+
+### Content.Server/StationEvents/Events/VentClogRule.cs
+
+### Content.Server/Storage/EntitySystems/BluespaceLockerSystem.cs
+
+### Content.Server/Storage/EntitySystems/ItemCounterSystem.cs
+
+### Content.Server/Storage/EntitySystems/SpawnItemsOnUseSystem.cs
+
+### Content.Server/Store/Systems/StoreSystem.Ui.cs
+
+### Content.Server/StoreDiscount/Systems/StoreDiscountSystem.cs
+
+### Content.Server/Stunnable/Components/StunOnCollideComponent.cs
+
+### Content.Server/Stunnable/StunSystem.cs
+
+### Content.Server/Stunnable/Systems/StunOnCollideSystem.cs
+
+### Content.Server/Stunnable/Systems/StunSystem.cs
+
+### Content.Server/Stunnable/Systems/StunbatonSystem.cs
+
+### Content.Server/SurveillanceCamera/Components/SurveillanceCameraComponent.cs
+
+### Content.Server/SurveillanceCamera/Components/SurveillanceCameraRouterComponent.cs
+
+### Content.Server/SurveillanceCamera/Systems/SurveillanceCameraMonitorSystem.cs
+
+### Content.Server/SurveillanceCamera/Systems/SurveillanceCameraRouterSystem.cs
+
+### Content.Server/SurveillanceCamera/Systems/SurveillanceCameraSystem.cs
+
+### Content.Server/Tabletop/TabletopSystem.Map.cs
+
+### Content.Server/Tabletop/TabletopSystem.Session.cs
+
+### Content.Server/Tabletop/TabletopSystem.cs
+
+### Content.Server/Telephone/TelephoneSystem.cs
+
+### Content.Server/Temperature/Systems/TemperatureSystem.cs
+
+### Content.Server/Tiles/RequiresTileSystem.cs
+
+### Content.Server/Tools/Innate/InnateToolSystem.cs
+
+### Content.Server/Tools/ToolSystem.cs
+
+### Content.Server/Toolshed/Commands/Verbs/RunVerbAsCommand.cs
+
+### Content.Server/Traitor/Components/TraitorCodePaperComponent.cs
+
+### Content.Server/Traitor/Systems/TraitorCodePaperSystem.cs
+
+### Content.Server/Traitor/Uplink/Commands/AddUplinkCommand.cs
+
+### Content.Server/Traitor/Uplink/UplinkSystem.cs
+
+### Content.Server/Traits/Assorted/NarcolepsySystem.cs
+
+### Content.Server/Traits/TraitSystem.cs
+
+### Content.Server/TurretController/DeployableTurretControllerSystem.cs
+
+### Content.Server/Turrets/DeployableTurretSystem.cs
+
+### Content.Server/UserInterface/StatValuesCommand.cs
+
+### Content.Server/VendingMachines/VendingMachineSystem.cs
+
+### Content.Server/Verbs/VerbSystem.cs
+
+### Content.Server/Vocalization/Components/DatasetVocalizerComponent.cs
+
+### Content.Server/Vocalization/Components/RadioVocalizerComponent.cs
+
+### Content.Server/Vocalization/Components/VocalizerComponent.cs
+
+### Content.Server/Vocalization/Components/VocalizerRequiresPowerComponent.cs
+
+### Content.Server/Vocalization/Systems/DatasetVocalizationSystem.cs
+
+### Content.Server/Vocalization/Systems/RadioVocalizationSystem.cs
+
+### Content.Server/Vocalization/Systems/VocalizationSystem.cs
+
+### Content.Server/VoiceMask/VoiceMaskSystem.cs
+
+### Content.Server/VoiceTrigger/StorageVoiceControlSystem.cs
+
+### Content.Server/Voting/VoteCommands.cs
+
+### Content.Server/Weapons/Ranged/Systems/GunSystem.Battery.cs
+
+### Content.Server/Weapons/Ranged/Systems/GunSystem.Cartridges.cs
+
+### Content.Server/Weapons/Ranged/Systems/GunSystem.cs
+
+### Content.Server/Weather/WeatherSystem.cs
+
+### Content.Server/Whitelist/WhitelistCommands.cs
+
+### Content.Server/Wires/WiresSystem.cs
+
+### Content.Server/Worldgen/Components/BiomeSelectionComponent.cs
+
+### Content.Server/Worldgen/Components/Debris/BlobFloorPlanBuilderComponent.cs
+
+### Content.Server/Worldgen/Systems/Debris/SimpleFloorPlanPopulatorSystem.cs
+
+### Content.Server/Xenoarchaeology/Artifact/UnlockNodeCommand.cs
+
+### Content.Server/Xenoarchaeology/Artifact/XenoArtifactCommands.cs
+
+### Content.Server/Xenoarchaeology/Artifact/XenoArtifactSystem.cs
+
+### Content.Server/Xenoarchaeology/Artifact/XenoArtifactUnlockNodeCommand.cs
+
+### Content.Server/Zombies/ZombieSystem.Transform.cs
+
+### Content.Server/Zombies/ZombieSystem.cs
+
+### Content.Shared.Database/LogType.cs
+
+### Content.Shared/Abilities/Goliath/GoliathSummonTentacleAction.cs
+
+### Content.Shared/Abilities/Goliath/GoliathTentacleSystem.cs
+
+### Content.Shared/Access/AccessGroupPrototype.cs
+
+### Content.Shared/Access/Components/AccessReaderComponent.cs
+
+### Content.Shared/Access/Components/IdCardConsoleComponent.cs
+
+### Content.Shared/Access/Systems/AccessReaderSystem.cs
+
+### Content.Shared/Access/Systems/IdExaminableSystem.cs
+
+### Content.Shared/Access/Systems/SharedIdCardSystem.cs
+
+### Content.Shared/Actions/ActionContainerComponent.cs
+
+### Content.Shared/Actions/ActionContainerSystem.cs
+
+### Content.Shared/Actions/ActionEvents.cs
+
+### Content.Shared/Actions/ActionGrantSystem.cs
+
+### Content.Shared/Actions/ActionUpgradeComponent.cs
+
+### Content.Shared/Actions/ActionUpgradeSystem.cs
+
+### Content.Shared/Actions/BaseActionComponent.cs
+
+### Content.Shared/Actions/BaseTargetActionComponent.cs
+
+### Content.Shared/Actions/Components/ActionComponent.cs
+
+### Content.Shared/Actions/Components/ActionContainerComponent.cs
+
+### Content.Shared/Actions/Components/ActionUpgradeComponent.cs
+
+### Content.Shared/Actions/Components/ActionsComponent.cs
+
+### Content.Shared/Actions/Components/ConfirmableActionComponent.cs
+
+### Content.Shared/Actions/Components/EntityTargetActionComponent.cs
+
+### Content.Shared/Actions/Components/InstantActionComponent.cs
+
+### Content.Shared/Actions/Components/TargetActionComponent.cs
+
+### Content.Shared/Actions/Components/WorldTargetActionComponent.cs
+
+### Content.Shared/Actions/ConfirmableActionSystem.cs
+
+### Content.Shared/Actions/EntityTargetActionComponent.cs
+
+### Content.Shared/Actions/EntityWorldTargetActionComponent.cs
+
+### Content.Shared/Actions/Events/ActionAttemptEvent.cs
+
+### Content.Shared/Actions/Events/ActionGetEventEvent.cs
+
+### Content.Shared/Actions/Events/ActionSetEventEvent.cs
+
+### Content.Shared/Actions/Events/ActionSetTargetEvent.cs
+
+### Content.Shared/Actions/Events/ActionValidateEvent.cs
+
+### Content.Shared/Actions/Events/GetActionDataEvent.cs
+
+### Content.Shared/Actions/Events/ValidateActionEntityTargetEvent.cs
+
+### Content.Shared/Actions/Events/ValidateActionEntityWorldTargetEvent.cs
+
+### Content.Shared/Actions/Events/ValidateActionWorldTargetEvent.cs
+
+### Content.Shared/Actions/InstantActionComponent.cs
+
+### Content.Shared/Actions/ItemActionGrantComponent.cs
+
+### Content.Shared/Actions/SharedActionsSystem.cs
+
+### Content.Shared/Actions/WorldTargetActionComponent.cs
+
+### Content.Shared/Administration/PlayerInfo.cs
+
+### Content.Shared/Alert/AlertsSystem.cs
+
+### Content.Shared/Alert/Components/GenericCounterAlertComponent.cs
+
+### Content.Shared/Ame/Components/AmeFuelContainerComponent.cs
+
+### Content.Shared/Animals/UdderSystem.cs
+
+### Content.Shared/Animals/WoolySystem.cs
+
+### Content.Shared/Anomaly/Components/AnomalyComponent.cs
+
+### Content.Shared/Anomaly/Components/AnomalySupercriticalComponent.cs
+
+### Content.Shared/Anomaly/SharedAnomalySystem.cs
+
+### Content.Shared/Atmos/Atmospherics.cs
+
+### Content.Shared/Atmos/Components/AtmosPipeColorComponent.cs
+
+### Content.Shared/Atmos/Components/AtmosPipeLayersComponent.cs
+
+### Content.Shared/Atmos/Components/GasAnalyzerComponent.cs
+
+### Content.Shared/Atmos/Components/GasTankComponent.cs
+
+### Content.Shared/Atmos/Components/PipeAppearanceComponent.cs
+
+### Content.Shared/Atmos/Consoles/Components/AtmosMonitoringConsoleComponent.cs
+
+### Content.Shared/Atmos/Consoles/Components/AtmosMonitoringConsoleDeviceComponent.cs
+
+### Content.Shared/Atmos/Consoles/SharedAtmosMonitoringConsoleSystem.cs
+
+### Content.Shared/Atmos/EntitySystems/AtmosPipeColorSystem.cs
+
+### Content.Shared/Atmos/EntitySystems/SharedAtmosPipeAppearanceSystem.cs
+
+### Content.Shared/Atmos/EntitySystems/SharedAtmosPipeLayersSystem.cs
+
+### Content.Shared/Atmos/EntitySystems/SharedGasPressureRegulatorSystem.cs
+
+### Content.Shared/Atmos/EntitySystems/SharedGasTankSystem.cs
+
+### Content.Shared/Atmos/Monitor/AtmosAlarmThreshold.cs
+
+### Content.Shared/Atmos/Monitor/Components/SharedAirAlarmComponent.cs
+
+### Content.Shared/Atmos/Piping/Binary/Components/GasPressureRegulatorComponent.cs
+
+### Content.Shared/Atmos/Piping/Binary/Components/GasValveComponent.cs
+
+### Content.Shared/Atmos/Piping/Binary/Components/SharedGasPressureRegulatorComponent.cs
+
+### Content.Shared/Atmos/Piping/Binary/Systems/SharedGasValveSystem.cs
+
+### Content.Shared/Atmos/Piping/EnabledAtmosDeviceVisuals.cs
+
+### Content.Shared/Atmos/Piping/Unary/Components/GasThermoMachineComponent.cs
+
+### Content.Shared/Atmos/Piping/Unary/Components/SharedGasThermomachineComponent.cs
+
+### Content.Shared/Atmos/Piping/Unary/Components/SharedVentScrubberComponent.cs
+
+### Content.Shared/Atmos/Piping/Unary/Systems/SharedGasThermoMachineSystem.cs
+
+### Content.Shared/Atmos/Visuals/AtmosPlaqueVisuals.cs
+
+### Content.Shared/Bed/Components/HealOnBuckleComponent.cs
+
+### Content.Shared/Bed/Components/HealOnBuckleHealing.cs
+
+### Content.Shared/Bed/Components/StasisBedBuckledComponent.cs
+
+### Content.Shared/Bed/Components/StasisBedComponent.cs
+
+### Content.Shared/Bed/Cryostorage/SharedCryostorageSystem.cs
+
+### Content.Shared/Bed/SharedBedSystem.cs
+
+### Content.Shared/Bed/Sleep/ForcedSleepingComponent.cs
+
+### Content.Shared/Bed/Sleep/ForcedSleepingStatusEffectComponent.cs
+
+### Content.Shared/Bed/Sleep/SleepingSystem.cs
+
+### Content.Shared/Bed/StasisBedVisuals.cs
+
+### Content.Shared/Beeper/Systems/ProximityBeeperSystem.cs
+
+### Content.Shared/Blocking/BlockingSystem.cs
+
+### Content.Shared/Body/Components/BloodstreamComponent.cs
+
+### Content.Shared/Body/Components/StomachComponent.cs
+
+### Content.Shared/Body/Events/BeingGibbedEvent.cs
+
+### Content.Shared/Body/Events/MetabolizerEvents.cs
+
+### Content.Shared/Body/Systems/SharedBloodstreamSystem.cs
+
+### Content.Shared/Body/Systems/SharedBodySystem.Parts.cs
+
+### Content.Shared/Body/Systems/SharedInternalsSystem.cs
+
+### Content.Shared/Body/Systems/SharedMetabolizerSystem.cs
+
+### Content.Shared/Body/Systems/StomachSystem.cs
+
+### Content.Shared/Buckle/SharedBuckleSystem.Buckle.cs
+
+### Content.Shared/Buckle/SharedBuckleSystem.Interaction.cs
+
+### Content.Shared/Burial/BurialSystem.cs
+
+### Content.Shared/CCVar/CCVars.Audio.cs
+
+### Content.Shared/CCVar/CCVars.Chat.Admin.cs
+
+### Content.Shared/CCVar/CCVars.Chat.Ooc.cs
+
+### Content.Shared/CCVar/CCVars.Chat.cs
+
+### Content.Shared/CCVar/CCVars.Discord.cs
+
+### Content.Shared/CCVar/CCVars.Ic.cs
+
+### Content.Shared/CCVar/CCVars.Lighting.cs
+
+### Content.Shared/CCVar/CCVars.Midi.cs
+
+### Content.Shared/CCVar/CCVars.Misc.cs
+
+### Content.Shared/CCVar/CCVars.Shuttle.cs
+
+### Content.Shared/CCVar/CCVars.Status.cs
+
+### Content.Shared/Camera/GetEyeOffsetEvent.cs
+
+### Content.Shared/Camera/GetEyePvsScaleEvent.cs
+
+### Content.Shared/Cargo/BUI/CargoConsoleInterfaceState.cs
+
+### Content.Shared/Cargo/Components/CargoOrderConsoleComponent.cs
+
+### Content.Shared/Cargo/PriceCalculationEvent.cs
+
+### Content.Shared/Cargo/Prototypes/CargoAccountPrototype.cs
+
+### Content.Shared/Cargo/Prototypes/CargoBountyGroupPrototype.cs
+
+### Content.Shared/Cargo/Prototypes/CargoBountyPrototype.cs
+
+### Content.Shared/Cargo/Prototypes/CargoMarketPrototype.cs
+
+### Content.Shared/Cargo/Prototypes/CargoProductPrototype.cs
+
+### Content.Shared/CartridgeLoader/Cartridges/NanoTaskUiMessageEvent.cs
+
+### Content.Shared/CartridgeLoader/Cartridges/NanoTaskUiState.cs
+
+### Content.Shared/Chat/ChatChannel.cs
+
+### Content.Shared/Chat/Prototypes/EmoteSoundsPrototype.cs
+
+### Content.Shared/Chat/SharedChatSystem.cs
+
+### Content.Shared/Chat/SharedSuicideSystem.cs
+
+### Content.Shared/Chat/TypingIndicator/SharedTypingIndicatorSystem.cs
+
+### Content.Shared/Chemistry/Components/HyposprayComponent.cs
+
+### Content.Shared/Chemistry/Components/SlotBasedConnectedContainerComponent.cs
+
+### Content.Shared/Chemistry/Components/Solution.cs
+
+### Content.Shared/Chemistry/Components/SolutionPurgeComponent.cs
+
+### Content.Shared/Chemistry/Components/SolutionRegenerationComponent.cs
+
+### Content.Shared/Chemistry/Components/SolutionScannerComponent.cs
+
+### Content.Shared/Chemistry/Dispenser/ReagentDispenserInventoryPrototype.cs
+
+### Content.Shared/Chemistry/EntitySystems/HypospraySystem.cs
+
+### Content.Shared/Chemistry/EntitySystems/SharedHypospraySystem.cs
+
+### Content.Shared/Chemistry/EntitySystems/SharedSolutionContainerSystem.cs
+
+### Content.Shared/Chemistry/EntitySystems/SolutionPurgeSystem.cs
+
+### Content.Shared/Chemistry/EntitySystems/SolutionRegenerationSystem.cs
+
+### Content.Shared/Chemistry/MetabolismMovespeedModifierSystem.cs
+
+### Content.Shared/Chemistry/Reaction/ChemicalReactionSystem.cs
+
+### Content.Shared/Chemistry/Reaction/ReactionPrototype.cs
+
+### Content.Shared/Chemistry/Reagent/ReagentPrototype.cs
+
+### Content.Shared/Chemistry/SharedReagentDispenser.cs
+
+### Content.Shared/Climbing/Systems/ClimbSystem.cs
+
+### Content.Shared/Cloning/CloningSettingsPrototype.cs
+
+### Content.Shared/Clothing/Components/ChameleonClothingComponent.cs
+
+### Content.Shared/Clothing/Components/ClothingComponent.cs
+
+### Content.Shared/Clothing/Components/ToggleClothingComponent.cs
+
+### Content.Shared/Clothing/EntitySystems/ClothingSystem.cs
+
+### Content.Shared/Clothing/EntitySystems/MaskSystem.cs
+
+### Content.Shared/Clothing/EntitySystems/SharedChameleonClothingSystem.cs
+
+### Content.Shared/Clothing/EntitySystems/ToggleableClothingSystem.cs
+
+### Content.Shared/Clumsy/ClumsyComponent.cs
+
+### Content.Shared/Clumsy/ClumsySystem.cs
+
+### Content.Shared/CombatMode/Pacification/PacifiedComponent.cs
+
+### Content.Shared/Construction/Conditions/EmptyOrWindowValidInTile.cs
+
+### Content.Shared/Construction/Conditions/TileNotBlocked.cs
+
+### Content.Shared/Construction/Conditions/TileType.cs
+
+### Content.Shared/Construction/EntitySystems/AnchorableSystem.cs
+
+### Content.Shared/Construction/Prototypes/ConstructionPrototype.cs
+
+### Content.Shared/Construction/SharedConstructionSystem.cs
+
+### Content.Shared/ContainerHeld/ContainerHeldComponent.cs
+
+### Content.Shared/ContainerHeld/ContainerHeldSystem.cs
+
+### Content.Shared/Containers/ContainerFillSystem.cs
+
+### Content.Shared/Containers/ItemSlot/ItemSlotsSystem.cs
+
+### Content.Shared/Containers/SlotBasedConnectedContainerSystem.cs
+
+### Content.Shared/Cuffs/Components/HandcuffComponent.cs
+
+### Content.Shared/Cuffs/SharedCuffableSystem.cs
+
+### Content.Shared/Damage/Components/DamageUserOnTriggerComponent.cs
+
+### Content.Shared/Damage/Components/StaminaComponent.cs
+
+### Content.Shared/Damage/DamageSpecifier.cs
+
+### Content.Shared/Damage/Prototypes/DamageContainerPrototype.cs
+
+### Content.Shared/Damage/Prototypes/DamageGroupPrototype.cs
+
+### Content.Shared/Damage/Prototypes/ExaminableDamagePrototype.cs
+
+### Content.Shared/Damage/Systems/DamageOnHighSpeedImpactSystem.cs
+
+### Content.Shared/Damage/Systems/DamageOnInteractSystem.cs
+
+### Content.Shared/Damage/Systems/DamageableSystem.cs
+
+### Content.Shared/Damage/Systems/SharedGodmodeSystem.cs
+
+### Content.Shared/Damage/Systems/SharedStaminaSystem.cs
+
+### Content.Shared/Damage/Systems/SlowOnDamageSystem.cs
+
+### Content.Shared/Delivery/DeliveryBombComponent.cs
+
+### Content.Shared/Delivery/DeliveryModifierSystem.cs
+
+### Content.Shared/Delivery/DeliveryPriorityComponent.cs
+
+### Content.Shared/Delivery/DeliveryVisuals.cs
+
+### Content.Shared/Delivery/PrimedDeliveryBombComponent.cs
+
+### Content.Shared/Delivery/SharedDeliverySystem.cs
+
+### Content.Shared/Destructible/SharedDestructibleSystem.cs
+
+### Content.Shared/DeviceLinking/DevicePortPrototype.cs
+
+### Content.Shared/DeviceLinking/SharedDeviceLinkSystem.cs
+
+### Content.Shared/DeviceLinking/SharedLogicGate.cs
+
+### Content.Shared/DeviceNetwork/DeviceFrequencyPrototype.cs
+
+### Content.Shared/DeviceNetwork/NetworkConfiguratorUserInterfaceState.cs
+
+### Content.Shared/Devour/Components/DevourerComponent.cs
+
+### Content.Shared/Devour/DevourSystem.cs
+
+### Content.Shared/Devour/SharedDevourSystem.cs
+
+### Content.Shared/DisplacementMap/DisplacementData.cs
+
+### Content.Shared/Disposal/Mailing/SharedMailingUnitSystem.cs
+
+### Content.Shared/Disposal/Unit/SharedDisposalUnitSystem.cs
+
+### Content.Shared/DoAfter/SharedDoAfterSystem.Update.cs
+
+### Content.Shared/DoAfter/SharedDoAfterSystem.cs
+
+### Content.Shared/Doors/Components/DoorComponent.cs
+
+### Content.Shared/Doors/Systems/SharedDoorSystem.cs
+
+### Content.Shared/DrawDepth/DrawDepth.cs
+
+### Content.Shared/Drowsiness/DrowsinessComponent.cs
+
+### Content.Shared/Drowsiness/DrowsinessStatusEffectComponent.cs
+
+### Content.Shared/Drowsiness/DrowsinessSystem.cs
+
+### Content.Shared/Drugs/SeeingRainbowsComponent.cs
+
+### Content.Shared/Drunk/DrunkSystem.cs
+
+### Content.Shared/Emag/Systems/EmagSystem.cs
+
+### Content.Shared/Emoting/EmoteAttemptEvent.cs
+
+### Content.Shared/Emoting/EmoteEvents.cs
+
+### Content.Shared/EntityEffects/EffectConditions/BodyTemperature.cs
+
+### Content.Shared/EntityEffects/EffectConditions/BreathingCondition.cs
+
+### Content.Shared/EntityEffects/EffectConditions/HasTagCondition.cs
+
+### Content.Shared/EntityEffects/EffectConditions/InternalsCondition.cs
+
+### Content.Shared/EntityEffects/EffectConditions/JobCondition.cs
+
+### Content.Shared/EntityEffects/EffectConditions/MobStateCondition.cs
+
+### Content.Shared/EntityEffects/EffectConditions/OrganType.cs
+
+### Content.Shared/EntityEffects/EffectConditions/ReagentThreshold.cs
+
+### Content.Shared/EntityEffects/EffectConditions/SolutionTemperature.cs
+
+### Content.Shared/EntityEffects/EffectConditions/TotalDamage.cs
+
+### Content.Shared/EntityEffects/EffectConditions/TotalHunger.cs
+
+### Content.Shared/EntityEffects/Effects/AddToSolutionReaction.cs
+
+### Content.Shared/EntityEffects/Effects/AdjustAlert.cs
+
+### Content.Shared/EntityEffects/Effects/AdjustReagent.cs
+
+### Content.Shared/EntityEffects/Effects/AdjustTemperature.cs
+
+### Content.Shared/EntityEffects/Effects/AreaReactionEffect.cs
+
+### Content.Shared/EntityEffects/Effects/ArtifactDurabilityRestore.cs
+
+### Content.Shared/EntityEffects/Effects/ArtifactUnlock.cs
+
+### Content.Shared/EntityEffects/Effects/CauseZombieInfection.cs
+
+### Content.Shared/EntityEffects/Effects/ChemCleanBloodstream.cs
+
+### Content.Shared/EntityEffects/Effects/ChemHealEyeDamage.cs
+
+### Content.Shared/EntityEffects/Effects/ChemVomit.cs
+
+### Content.Shared/EntityEffects/Effects/CreateEntityReactionEffect.cs
+
+### Content.Shared/EntityEffects/Effects/CreateGas.cs
+
+### Content.Shared/EntityEffects/Effects/CureZombieInfection.cs
+
+### Content.Shared/EntityEffects/Effects/Drunk.cs
+
+### Content.Shared/EntityEffects/Effects/Electrocute.cs
+
+### Content.Shared/EntityEffects/Effects/Emote.cs
+
+### Content.Shared/EntityEffects/Effects/EmpReactionEffect.cs
+
+### Content.Shared/EntityEffects/Effects/EvenHealthChange.cs
+
+### Content.Shared/EntityEffects/Effects/ExplosionReactionEffect.cs
+
+### Content.Shared/EntityEffects/Effects/ExtinguishReaction.cs
+
+### Content.Shared/EntityEffects/Effects/FlammableReaction.cs
+
+### Content.Shared/EntityEffects/Effects/FlashReactionEffect.cs
+
+### Content.Shared/EntityEffects/Effects/Glow.cs
+
+### Content.Shared/EntityEffects/Effects/HealthChange.cs
+
+### Content.Shared/EntityEffects/Effects/Ignite.cs
+
+### Content.Shared/EntityEffects/Effects/MakeSentient.cs
+
+### Content.Shared/EntityEffects/Effects/ModifyBleedAmount.cs
+
+### Content.Shared/EntityEffects/Effects/ModifyBloodLevel.cs
+
+### Content.Shared/EntityEffects/Effects/ModifyLungGas.cs
+
+### Content.Shared/EntityEffects/Effects/MovespeedModifier.cs
+
+### Content.Shared/EntityEffects/Effects/Oxygenate.cs
+
+### Content.Shared/EntityEffects/Effects/Paralyze.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustAttribute.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustHealth.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustMutationLevel.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustMutationMod.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustNutrition.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustPests.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustPotency.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustToxins.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustWater.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAdjustWeeds.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantAffectGrowth.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantChangeStat.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantCryoxadone.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantDestroySeeds.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantDiethylamine.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantPhalanximine.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/PlantRestoreSeeds.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMetabolism/RobustHarvest.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMutateChemicals.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMutateGases.cs
+
+### Content.Shared/EntityEffects/Effects/PlantMutateHarvest.cs
+
+### Content.Shared/EntityEffects/Effects/PlantSpeciesChange.cs
+
+### Content.Shared/EntityEffects/Effects/Polymorph.cs
+
+### Content.Shared/EntityEffects/Effects/PopupMessage.cs
+
+### Content.Shared/EntityEffects/Effects/ReduceRotting.cs
+
+### Content.Shared/EntityEffects/Effects/ResetNarcolepsy.cs
+
+### Content.Shared/EntityEffects/Effects/SatiateHunger.cs
+
+### Content.Shared/EntityEffects/Effects/SatiateThirst.cs
+
+### Content.Shared/EntityEffects/Effects/Slipify.cs
+
+### Content.Shared/EntityEffects/Effects/SolutionTemperatureEffects.cs
+
+### Content.Shared/EntityEffects/Effects/StatusEffects/GenericStatusEffect.cs
+
+### Content.Shared/EntityEffects/Effects/StatusEffects/Jitter.cs
+
+### Content.Shared/EntityEffects/Effects/StatusEffects/ModifyStatusEffect.cs
+
+### Content.Shared/EntityEffects/Effects/WashCreamPieReaction.cs
+
+### Content.Shared/EntityEffects/Effects/WearableReaction.cs
+
+### Content.Shared/EntityEffects/EntityEffect.cs
+
+### Content.Shared/EntityEffects/EntityEffectCondition.cs
+
+### Content.Shared/EntityEffects/EventEntityEffect.cs
+
+### Content.Shared/EntityEffects/EventEntityEffectCondition.cs
+
+### Content.Shared/EntityList/EntityListPrototype.cs
+
+### Content.Shared/EntityList/EntityLootTablePrototype.cs
+
+### Content.Shared/EntityTable/Conditions/EntityTableCondition.cs
+
+### Content.Shared/EntityTable/Conditions/PlayerCountCondition.cs
+
+### Content.Shared/EntityTable/EntitySelectors/AllSelector.cs
+
+### Content.Shared/EntityTable/EntitySelectors/EntSelector.cs
+
+### Content.Shared/EntityTable/EntitySelectors/EntityTableSelector.cs
+
+### Content.Shared/EntityTable/EntitySelectors/GroupSelector.cs
+
+### Content.Shared/EntityTable/EntitySelectors/NestedSelector.cs
+
+### Content.Shared/EntityTable/EntitySelectors/NoneSelector.cs
+
+### Content.Shared/EntityTable/EntityTableSystem.cs
+
+### Content.Shared/EntityTable/ValueSelector/NumberSelectorTypeSerializer.cs
+
+### Content.Shared/EntityTable/ValueSelector/RangeNumberSelector.cs
+
+### Content.Shared/Examine/ExamineSystemShared.Group.cs
+
+### Content.Shared/Examine/ExamineSystemShared.cs
+
+### Content.Shared/Explosion/Components/ActiveTimerTriggerComponent.cs
+
+### Content.Shared/Explosion/Components/OnTrigger/ReleaseGasOnTriggerComponent.cs
+
+### Content.Shared/Explosion/EntitySystems/SharedReleaseGasOnTriggerSystem.cs
+
+### Content.Shared/Explosion/ExplosionPrototype.cs
+
+### Content.Shared/Eye/Blinding/Systems/BlindableSystem.cs
+
+### Content.Shared/Eye/Blinding/Systems/EyeClosingSystem.cs
+
+### Content.Shared/Eye/Blinding/Systems/TemporaryBlindnessSystem.cs
+
+### Content.Shared/FixedPoint/FixedPoint2.cs
+
+### Content.Shared/Flash/Components/ActiveFlashComponent.cs
+
+### Content.Shared/Flash/Components/DamagedByFlashingComponent.cs
+
+### Content.Shared/Flash/Components/FlashComponent.cs
+
+### Content.Shared/Flash/Components/FlashImmunityComponent.cs
+
+### Content.Shared/Flash/Components/FlashOnTriggerComponent.cs
+
+### Content.Shared/Flash/Components/FlashedComponent.cs
+
+### Content.Shared/Flash/DamagedByFlashingSystem.cs
+
+### Content.Shared/Flash/FlashEvents.cs
+
+### Content.Shared/Flash/FlashVisuals.cs
+
+### Content.Shared/Flash/SharedFlashSystem.cs
+
+### Content.Shared/Fluids/AbsorbentComponent.cs
+
+### Content.Shared/Fluids/Components/DrainComponent.cs
+
+### Content.Shared/Fluids/Components/EvaporationComponent.cs
+
+### Content.Shared/Fluids/Components/SpillableComponent.cs
+
+### Content.Shared/Fluids/SharedAbsorbentSystem.cs
+
+### Content.Shared/Fluids/SharedPuddleSystem.cs
+
+### Content.Shared/Foldable/DeployFoldableSystem.cs
+
+### Content.Shared/Friction/TileFrictionController.cs
+
+### Content.Shared/GameTicking/SharedGameTicker.cs
+
+### Content.Shared/Ghost/Roles/Raffles/GhostRoleRaffleSettings.cs
+
+### Content.Shared/Ghost/Roles/Raffles/GhostRoleRaffleSettingsPrototype.cs
+
+### Content.Shared/Gibbing/Systems/GibbingSystem.cs
+
+### Content.Shared/Gravity/SharedGravitySystem.cs
+
+### Content.Shared/Guardian/GuardianCreatorDoAfterEvent.cs
+
+### Content.Shared/Hands/Components/ExtraHandsEquipmentComponent.cs
+
+### Content.Shared/Hands/Components/HandHelpers.cs
+
+### Content.Shared/Hands/Components/HandsComponent.cs
+
+### Content.Shared/Hands/EntitySystems/ExtraHandsEquipmentSystem.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.AI.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.Drop.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.EventListeners.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.Interactions.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.Pickup.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.Relay.cs
+
+### Content.Shared/Hands/EntitySystems/SharedHandsSystem.cs
+
+### Content.Shared/HealthExaminable/HealthExaminableComponent.cs
+
+### Content.Shared/Holopad/HolographicAvatarComponent.cs
+
+### Content.Shared/Humanoid/HairStyles.cs
+
+### Content.Shared/Humanoid/HumanoidCharacterAppearance.cs
+
+### Content.Shared/Humanoid/HumanoidVisualLayers.cs
+
+### Content.Shared/Humanoid/Markings/MarkingCategories.cs
+
+### Content.Shared/Humanoid/NamingSystem.cs
+
+### Content.Shared/Humanoid/SharedHumanoidAppearanceSystem.cs
+
+### Content.Shared/Humanoid/SkinColor.cs
+
+### Content.Shared/Implants/ChameleonControllerImplantComponent.cs
+
+### Content.Shared/Implants/ChameleonOutfitPrototype.cs
+
+### Content.Shared/Implants/SharedChameleonControllerSystem.cs
+
+### Content.Shared/Implants/SharedImplanterSystem.cs
+
+### Content.Shared/Implants/SharedSubdermalImplantSystem.cs
+
+### Content.Shared/Input/ContentKeyFunctions.cs
+
+### Content.Shared/Instruments/SharedInstrumentComponent.cs
+
+### Content.Shared/Interaction/SharedInteractionSystem.cs
+
+### Content.Shared/Interaction/SmartEquipSystem.cs
+
+### Content.Shared/Internals/InternalsDoAfterEvent.cs
+
+### Content.Shared/Inventory/Events/EquipAttemptEvents.cs
+
+### Content.Shared/Inventory/Events/UnequipAttemptEvent.cs
+
+### Content.Shared/Inventory/InventorySystem.Equip.cs
+
+### Content.Shared/Inventory/InventorySystem.Helpers.cs
+
+### Content.Shared/Inventory/InventorySystem.Relay.cs
+
+### Content.Shared/Inventory/SlotBlockComponent.cs
+
+### Content.Shared/Inventory/SlotBlockSystem.cs
+
+### Content.Shared/Inventory/VirtualItem/SharedVirtualItemSystem.cs
+
+### Content.Shared/Item/ItemToggle/ComponentTogglerSystem.cs
+
+### Content.Shared/Item/ItemToggle/Components/ComponentTogglerComponent.cs
+
+### Content.Shared/Item/ItemToggle/ItemToggleSystem.cs
+
+### Content.Shared/Item/MultiHandedItemSystem.cs
+
+### Content.Shared/Item/SharedItemSystem.cs
+
+### Content.Shared/ItemRecall/SharedItemRecallSystem.cs
+
+### Content.Shared/Jittering/SharedJitteringSystem.cs
+
+### Content.Shared/Labels/EntitySystems/LabelSystem.cs
+
+### Content.Shared/Lathe/LatheComponent.cs
+
+### Content.Shared/Lathe/LatheMessages.cs
+
+### Content.Shared/Light/Components/ImplicitRoofComponent.cs
+
+### Content.Shared/Light/Components/ItemTogglePointLightComponent.cs
+
+### Content.Shared/Light/Components/LightReplacerComponent.cs
+
+### Content.Shared/Light/Components/SunShadowCycleComponent.cs
+
+### Content.Shared/Light/EntitySystems/ItemTogglePointLightSystem.cs
+
+### Content.Shared/Light/SharedHandheldLightSystem.cs
+
+### Content.Shared/Localizations/ContentLocalizationManager.cs
+
+### Content.Shared/Lock/ItemToggleRequiresLockComponent.cs
+
+### Content.Shared/Lock/LockSystem.cs
+
+### Content.Shared/Machines/Components/MultipartMachineComponent.cs
+
+### Content.Shared/Machines/Components/MultipartMachinePartComponent.cs
+
+### Content.Shared/Machines/EntitySystems/SharedMultipartMachineSystem.cs
+
+### Content.Shared/Machines/Events/MultipartMachineEvents.cs
+
+### Content.Shared/Magic/Components/SpellbookComponent.cs
+
+### Content.Shared/Magic/SharedMagicSystem.cs
+
+### Content.Shared/Magic/SpellbookSystem.cs
+
+### Content.Shared/Mapping/StartPlacementActionEvent.cs
+
+### Content.Shared/Maps/ContentTileDefinition.cs
+
+### Content.Shared/Maps/TurfHelpers.cs
+
+### Content.Shared/Maps/TurfSystem.cs
+
+### Content.Shared/Mech/EntitySystems/SharedMechSystem.Relay.cs
+
+### Content.Shared/Mech/EntitySystems/SharedMechSystem.cs
+
+### Content.Shared/Medical/Cryogenics/ActiveCryoPodComponent.cs
+
+### Content.Shared/Medical/Cryogenics/SharedCryoPodSystem.cs
+
+### Content.Shared/Medical/Healing/HealingComponent.cs
+
+### Content.Shared/Medical/Healing/HealingSystem.cs
+
+### Content.Shared/Mind/MindComponent.cs
+
+### Content.Shared/Mind/RoleTypePrototype.cs
+
+### Content.Shared/Mind/SharedMindSystem.cs
+
+### Content.Shared/Mindshield/FakeMindShield/SharedFakeMindShieldImplantSystem.cs
+
+### Content.Shared/Mindshield/FakeMindShield/SharedFakeMindshieldSystem.cs
+
+### Content.Shared/Mobs/Systems/MobStateActionsSystem.cs
+
+### Content.Shared/MouseRotator/MouseRotatorComponent.cs
+
+### Content.Shared/MouseRotator/SharedMouseRotatorSystem.cs
+
+### Content.Shared/Movement/Components/FrictionStatusEffectComponent.cs
+
+### Content.Shared/Movement/Components/InputMoverComponent.cs
+
+### Content.Shared/Movement/Components/JumpAbilityComponent.cs
+
+### Content.Shared/Movement/Components/MovementModStatusEffectComponent.cs
+
+### Content.Shared/Movement/Components/WormComponent.cs
+
+### Content.Shared/Movement/Pulling/Systems/PullingSystem.cs
+
+### Content.Shared/Movement/Systems/FrictionContactsSystem.cs
+
+### Content.Shared/Movement/Systems/MovementModStatusSystem.cs
+
+### Content.Shared/Movement/Systems/MovementSpeedModifierSystem.cs
+
+### Content.Shared/Movement/Systems/SharedContentEyeSystem.cs
+
+### Content.Shared/Movement/Systems/SharedJetpackSystem.cs
+
+### Content.Shared/Movement/Systems/SharedJumpAbilitySystem.cs
+
+### Content.Shared/Movement/Systems/SharedMoverController.Input.cs
+
+### Content.Shared/Movement/Systems/SharedMoverController.cs
+
+### Content.Shared/Movement/Systems/SpeedModifierContactsSystem.cs
+
+### Content.Shared/Movement/Systems/WormSystem.cs
+
+### Content.Shared/NPC/Systems/NpcFactionSystem.cs
+
+### Content.Shared/NameIdentifier/NameIdentifierComponent.cs
+
+### Content.Shared/NameIdentifier/NameIdentifierGroupPrototype.cs
+
+### Content.Shared/Ninja/Components/DashAbilityComponent.cs
+
+### Content.Shared/Ninja/Components/ItemCreatorComponent.cs
+
+### Content.Shared/Ninja/Systems/SharedNinjaGlovesSystem.cs
+
+### Content.Shared/NodeContainer/SharedNodeContainerSystem.cs
+
+### Content.Shared/Nuke/NukeDiskComponent.cs
+
+### Content.Shared/Nutrition/Components/FlavorProfileComponent.cs
+
+### Content.Shared/Nutrition/Components/FoodComponent.cs
+
+### Content.Shared/Nutrition/Components/IngestionBlockerComponent.cs
+
+### Content.Shared/Nutrition/Components/UtensilComponent.cs
+
+### Content.Shared/Nutrition/EntitySystems/FlavorProfileSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/FoodSequenceSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/FoodSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/HungerSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/IngestionBlockerSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/OpenableSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/SharedCreamPieSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/SharedDrinkSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/SharedUtensilSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/ThirstSystem.cs
+
+### Content.Shared/Nutrition/EntitySystems/UtensilSystem.cs
+
+### Content.Shared/Overlays/NoirOverlayComponent.cs
+
+### Content.Shared/PAI/SharedPAISystem.cs
+
+### Content.Shared/PDA/SharedRingerSystem.cs
+
+### Content.Shared/Paper/PaperComponent.cs
+
+### Content.Shared/Paper/PaperSystem.cs
+
+### Content.Shared/Parallax/Biomes/Layers/BiomeDecalLayer.cs
+
+### Content.Shared/Parallax/Biomes/Layers/BiomeEntityLayer.cs
+
+### Content.Shared/Parallax/Biomes/Layers/IBiomeWorldLayer.cs
+
+### Content.Shared/Parallax/Biomes/SharedBiomeSystem.cs
+
+### Content.Shared/Parallax/ParallaxComponent.cs
+
+### Content.Shared/ParticleAccelerator/AcceleratorParts.cs
+
+### Content.Shared/ParticleAccelerator/Components/ParticleAcceleratorEmitterComponent.cs
+
+### Content.Shared/ParticleAccelerator/Components/ParticleAcceleratorEndCapComponent.cs
+
+### Content.Shared/ParticleAccelerator/Components/ParticleAcceleratorFuelChamberComponent.cs
+
+### Content.Shared/ParticleAccelerator/Components/ParticleAcceleratorPowerBoxComponent.cs
+
+### Content.Shared/Physics/CollisionGroup.cs
+
+### Content.Shared/Physics/Controllers/SharedConveyorController.cs
+
+### Content.Shared/Placeable/PlaceableSurfaceSystem.cs
+
+### Content.Shared/Players/PlayTimeTracking/PlayTimeTrackingShared.cs
+
+### Content.Shared/Power/EntitySystems/SharedPowerNetSystem.cs
+
+### Content.Shared/Power/EntitySystems/SharedPowerReceiverSystem.cs
+
+### Content.Shared/Power/SharedPower.cs
+
+### Content.Shared/PowerCell/PowerCellDrawComponent.cs
+
+### Content.Shared/PowerCell/SharedPowerCellSystem.cs
+
+### Content.Shared/PowerCell/ToggleCellDrawSystem.cs
+
+### Content.Shared/Preferences/HumanoidCharacterProfile.cs
+
+### Content.Shared/Preferences/Loadouts/LoadoutPrototype.cs
+
+### Content.Shared/Preferences/Loadouts/RoleLoadout.cs
+
+### Content.Shared/Preferences/MsgUpdateConstructionFavorites.cs
+
+### Content.Shared/Preferences/PlayerPreferences.cs
+
+### Content.Shared/Procedural/DungeonConfig.cs
+
+### Content.Shared/Procedural/DungeonData.cs
+
+### Content.Shared/Procedural/DungeonGenerators/PrefabDunGen.cs
+
+### Content.Shared/Procedural/DungeonGenerators/PrototypeDunGen.cs
+
+### Content.Shared/Procedural/DungeonLayers/EntityTableDunGen.cs
+
+### Content.Shared/Procedural/DungeonLayers/FillGridDunGen.cs
+
+### Content.Shared/Procedural/DungeonLayers/MobsDunGen.cs
+
+### Content.Shared/Procedural/Loot/BiomeTemplateLoot.cs
+
+### Content.Shared/Procedural/PostGeneration/AutoCablingDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/BoundaryWallDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/CornerClutterDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/CorridorClutterDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/CorridorDecalSkirtingDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/CorridorDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/DungeonEntranceDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/EntranceFlankDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/ExternalWindowDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/InternalWindowDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/JunctionDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/MiddleConnectionDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/RoomEntranceDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/SplineDungeonConnectorDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/WallMountDunGen.cs
+
+### Content.Shared/Procedural/PostGeneration/WormCorridorDunGen.cs
+
+### Content.Shared/Prototypes/NavMapBlipPrototype.cs
+
+### Content.Shared/ProximityDetection/Components/ProximityDetectorComponent.cs
+
+### Content.Shared/ProximityDetection/ProximityDetectionEvents.cs
+
+### Content.Shared/ProximityDetection/Systems/ProximityDetectionSystem.cs
+
+### Content.Shared/RCD/RCDPrototype.cs
+
+### Content.Shared/RCD/Systems/RCDSystem.cs
+
+### Content.Shared/Random/Helpers/SharedRandomExtensions.cs
+
+### Content.Shared/Random/RandomFillSolution.cs
+
+### Content.Shared/Random/Rules/GridInRange.cs
+
+### Content.Shared/Random/Rules/NearbyTilesPercent.cs
+
+### Content.Shared/RatKing/SharedRatKingSystem.cs
+
+### Content.Shared/Remotes/Components/DoorRemoteComponent.cs
+
+### Content.Shared/Repairable/RepairableComponent.cs
+
+### Content.Shared/Repairable/RepairableSystem.cs
+
+### Content.Shared/Repairable/SharedRepairableSystem.cs
+
+### Content.Shared/Research/Components/TechnologyDatabaseComponent.cs
+
+### Content.Shared/Research/Prototypes/LatheRecipePrototype.cs
+
+### Content.Shared/Research/TechnologyDisk/Systems/TechnologyDiskSystem.cs
+
+### Content.Shared/RetractableItemAction/ActionRetractableItemComponent.cs
+
+### Content.Shared/RetractableItemAction/ItemActionEvents.cs
+
+### Content.Shared/RetractableItemAction/RetractableItemActionComponent.cs
+
+### Content.Shared/RetractableItemAction/RetractableItemActionSystem.cs
+
+### Content.Shared/Revenant/SharedRevenant.cs
+
+### Content.Shared/Revolutionary/SharedRevolutionarySystem.cs
+
+### Content.Shared/Roles/AntagPrototype.cs
+
+### Content.Shared/Roles/Jobs/SharedJobSystem.cs
+
+### Content.Shared/Roles/RoleCodeword/RoleCodewordComponent.cs
+
+### Content.Shared/Roles/RoleCodeword/SharedRoleCodewordSystem.cs
+
+### Content.Shared/Roles/SharedRoleSystem.cs
+
+### Content.Shared/Rootable/RootableComponent.cs
+
+### Content.Shared/Rootable/SharedRootableSystem.cs
+
+### Content.Shared/SSDIndicator/SSDIndicatorComponent.cs
+
+### Content.Shared/SSDIndicator/SSDIndicatorSystem.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/IBiomeSpecificMod.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/SalvageAirMod.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/SalvageDungeonModPrototype.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/SalvageLightMod.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/SalvageTemperatureMod.cs
+
+### Content.Shared/Salvage/Expeditions/Modifiers/SalvageWeatherMod.cs
+
+### Content.Shared/Salvage/Fulton/SharedFultonSystem.cs
+
+### Content.Shared/Salvage/JobBoard/SalvageJobBoardConsoleComponent.cs
+
+### Content.Shared/Salvage/SharedSalvageSystem.Magnet.cs
+
+### Content.Shared/Salvage/SharedSalvageSystem.cs
+
+### Content.Shared/Security/Systems/SharedGenpopSystem.cs
+
+### Content.Shared/Sericulture/SericultureComponent.cs
+
+### Content.Shared/Sericulture/SericultureSystem.cs
+
+### Content.Shared/Shuttles/Systems/SharedShuttleSystem.cs
+
+### Content.Shared/Silicons/Borgs/BorgTypePrototype.cs
+
+### Content.Shared/Silicons/Borgs/Components/ItemBorgModuleComponent.cs
+
+### Content.Shared/Silicons/Borgs/SharedBorgSwitchableTypeSystem.cs
+
+### Content.Shared/Silicons/Laws/SharedSiliconLawSystem.cs
+
+### Content.Shared/Silicons/Laws/SiliconLawPrototype.cs
+
+### Content.Shared/Silicons/Laws/SiliconLawsetPrototype.cs
+
+### Content.Shared/Silicons/StationAi/SharedStationAiSystem.Customization.cs
+
+### Content.Shared/Silicons/StationAi/SharedStationAiSystem.cs
+
+### Content.Shared/Silicons/StationAi/StationAiCustomizationComponent.cs
+
+### Content.Shared/Silicons/StationAi/StationAiCustomizationGroupPrototype.cs
+
+### Content.Shared/Silicons/StationAi/StationAiCustomizationPrototype.cs
+
+### Content.Shared/Silicons/StationAi/StationAiVisionComponent.cs
+
+### Content.Shared/Silicons/StationAi/StationAiVisionSystem.cs
+
+### Content.Shared/Singularity/Components/SharedEmitterComponent.cs
+
+### Content.Shared/Singularity/EntitySystems/SharedEventHorizonSystem.cs
+
+### Content.Shared/Singularity/EntitySystems/SharedSingularitySystem.cs
+
+### Content.Shared/Slippery/SlidingComponent.cs
+
+### Content.Shared/Slippery/SlidingSystem.cs
+
+### Content.Shared/Slippery/SlipperyComponent.cs
+
+### Content.Shared/Slippery/SlipperySystem.cs
+
+### Content.Shared/SmartFridge/SmartFridgeComponent.cs
+
+### Content.Shared/SmartFridge/SmartFridgeSystem.cs
+
+### Content.Shared/Sound/Components/BaseEmitSoundComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnActivateComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnCollideComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnDropComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnInteractUsingComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnLandComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnPickupComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnSpawnComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnThrowComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnUIOpenComponent.cs
+
+### Content.Shared/Sound/Components/EmitSoundOnUseComponent.cs
+
+### Content.Shared/Sound/SharedEmitSoundSystem.cs
+
+### Content.Shared/Species/Systems/ReformSystem.cs
+
+### Content.Shared/Speech/AccentEvent.cs
+
+### Content.Shared/Speech/Components/VocalComponent.cs
+
+### Content.Shared/Speech/EntitySystems/SharedStutteringSystem.cs
+
+### Content.Shared/Spider/SharedSpiderSystem.cs
+
+### Content.Shared/Spider/SpiderComponent.cs
+
+### Content.Shared/Spider/SpiderWebVisualsComponent.cs
+
+### Content.Shared/SprayPainter/Components/PaintableAirlockComponent.cs
+
+### Content.Shared/SprayPainter/Components/PaintableComponent.cs
+
+### Content.Shared/SprayPainter/Components/PaintedComponent.cs
+
+### Content.Shared/SprayPainter/Components/SprayPainterAmmo.cs
+
+### Content.Shared/SprayPainter/Components/SprayPainterComponent.cs
+
+### Content.Shared/SprayPainter/Prototypes/AirlockDepartmentsPrototype.cs
+
+### Content.Shared/SprayPainter/Prototypes/AirlockGroupPrototype.cs
+
+### Content.Shared/SprayPainter/Prototypes/PaintableGroupCategoryPrototype.cs
+
+### Content.Shared/SprayPainter/Prototypes/PaintableGroupPrototype.cs
+
+### Content.Shared/SprayPainter/SharedSprayPainterSystem.cs
+
+### Content.Shared/SprayPainter/SprayPainterAmmoSystem.cs
+
+### Content.Shared/SprayPainter/SprayPainterEvents.cs
+
+### Content.Shared/Stacks/SharedStackSystem.cs
+
+### Content.Shared/Standing/StandingStateComponent.cs
+
+### Content.Shared/Standing/StandingStateSystem.cs
+
+### Content.Shared/Station/SharedStationSpawningSystem.cs
+
+### Content.Shared/StatusEffect/StatusEffectsSystem.cs
+
+### Content.Shared/StatusEffectNew/Components/RejuvenateRemovedStatusEffectComponent.cs
+
+### Content.Shared/StatusEffectNew/Components/StatusEffectAlertComponent.cs
+
+### Content.Shared/StatusEffectNew/Components/StatusEffectComponent.cs
+
+### Content.Shared/StatusEffectNew/Components/StatusEffectContainerComponent.cs
+
+### Content.Shared/StatusEffectNew/StatusEffectAlertSystem.cs
+
+### Content.Shared/StatusEffectNew/StatusEffectSystem.API.cs
+
+### Content.Shared/StatusEffectNew/StatusEffectSystem.Relay.cs
+
+### Content.Shared/StatusEffectNew/StatusEffectsSystem.cs
+
+### Content.Shared/Storage/Components/BinComponent.cs
+
+### Content.Shared/Storage/Components/DumpableComponent.cs
+
+### Content.Shared/Storage/Components/MagnetPickupComponent.cs
+
+### Content.Shared/Storage/EntitySpawnEntry.cs
+
+### Content.Shared/Storage/EntitySystems/BinSystem.cs
+
+### Content.Shared/Storage/EntitySystems/DumpableSystem.cs
+
+### Content.Shared/Storage/EntitySystems/MagnetPickupSystem.cs
+
+### Content.Shared/Storage/EntitySystems/SharedItemCounterSystem.cs
+
+### Content.Shared/Storage/EntitySystems/SharedItemMapperSystem.cs
+
+### Content.Shared/Storage/EntitySystems/SharedStorageSystem.cs
+
+### Content.Shared/Storage/StorageComponent.cs
+
+### Content.Shared/Store/CurrencyPrototype.cs
+
+### Content.Shared/Store/ListingPrototype.cs
+
+### Content.Shared/Store/StoreCategoryPrototype.cs
+
+### Content.Shared/StoreDiscount/Components/StoreDiscountComponent.cs
+
+### Content.Shared/StoryGen/Prototypes/StoryTemplatePrototype.cs
+
+### Content.Shared/Strip/Components/ThievingComponent.cs
+
+### Content.Shared/Strip/SharedStrippableSystem.cs
+
+### Content.Shared/Strip/ThievingSystem.cs
+
+### Content.Shared/Stunnable/KnockdownStatusEffectComponent.cs
+
+### Content.Shared/Stunnable/KnockedDownComponent.cs
+
+### Content.Shared/Stunnable/SharedStunSystem.Knockdown.cs
+
+### Content.Shared/Stunnable/SharedStunSystem.Visualizer.cs
+
+### Content.Shared/Stunnable/SharedStunSystem.cs
+
+### Content.Shared/Stunnable/SharedStunbatonSystem.cs
+
+### Content.Shared/Stunnable/SlowedDownComponent.cs
+
+### Content.Shared/Stunnable/StunOnContactComponent.cs
+
+### Content.Shared/Stunnable/StunVisualsComponent.cs
+
+### Content.Shared/Stunnable/StunnableEvents.cs
+
+### Content.Shared/Stunnable/StunnedComponent.cs
+
+### Content.Shared/Stunnable/StunnedStatusEffectComponent.cs
+
+### Content.Shared/SubFloor/SharedSubFloorHideSystem.cs
+
+### Content.Shared/SurveillanceCamera/SharedSurveillanceCameraMonitorSystem.cs
+
+### Content.Shared/Tabletop/SharedTabletopSystem.cs
+
+### Content.Shared/Telephone/TelephoneComponent.cs
+
+### Content.Shared/Throwing/CatchAttemptEvent.cs
+
+### Content.Shared/Throwing/CatchableComponent.cs
+
+### Content.Shared/Throwing/CatchableSystem.cs
+
+### Content.Shared/Throwing/ThrowAttemptEvent.cs
+
+### Content.Shared/Throwing/ThrowingSystem.cs
+
+### Content.Shared/Throwing/ThrownItemSystem.cs
+
+### Content.Shared/Tiles/FloorTileAttemptEvent.cs
+
+### Content.Shared/Tiles/FloorTileComponent.cs
+
+### Content.Shared/Tiles/FloorTileSystem.cs
+
+### Content.Shared/Tiles/ProtectedGridComponent.cs
+
+### Content.Shared/Tiles/ProtectedGridSystem.cs
+
+### Content.Shared/Toggleable/ToggleActionEvent.cs
+
+### Content.Shared/Toggleable/ToggleableLightVisuals.cs
+
+### Content.Shared/Tools/Systems/SharedToolSystem.MultipleTool.cs
+
+### Content.Shared/Tools/Systems/SharedToolSystem.Welder.cs
+
+### Content.Shared/Tools/Systems/SharedToolSystem.cs
+
+### Content.Shared/Toolshed/TypeParsers/FixedPoint2TypeParser.cs
+
+### Content.Shared/TurretController/DeployableTurretControllerComponent.cs
+
+### Content.Shared/TurretController/SharedDeployableTurretControllerSystem.cs
+
+### Content.Shared/Turrets/TurretTargetSettingsSystem.cs
+
+### Content.Shared/UserInterface/ActivatableUISystem.cs
+
+### Content.Shared/VendingMachines/VendingMachineInventoryPrototype.cs
+
+### Content.Shared/Verbs/VerbCategory.cs
+
+### Content.Shared/Weapons/Melee/Components/MeleeThrowOnHitComponent.cs
+
+### Content.Shared/Weapons/Melee/EnergySword/EnergySwordSystem.cs
+
+### Content.Shared/Weapons/Melee/MeleeThrowOnHitSystem.cs
+
+### Content.Shared/Weapons/Melee/SharedMeleeWeaponSystem.cs
+
+### Content.Shared/Weapons/Misc/ForceGunComponent.cs
+
+### Content.Shared/Weapons/Misc/SharedGrapplingGunSystem.cs
+
+### Content.Shared/Weapons/Misc/SharedTetherGunSystem.cs
+
+### Content.Shared/Weapons/Misc/TetherGunComponent.cs
+
+### Content.Shared/Weapons/Ranged/Components/AmmoProviderComponent.cs
+
+### Content.Shared/Weapons/Ranged/Components/ClothingSlotAmmoProviderComponent.cs
+
+### Content.Shared/Weapons/Ranged/Components/GunSpreadModifierComponent.cs
+
+### Content.Shared/Weapons/Ranged/Systems/GunSpreadModifierSystem.cs
+
+### Content.Shared/Weapons/Ranged/Systems/SharedGunSystem.ChamberMagazine.cs
+
+### Content.Shared/Weapons/Ranged/Systems/SharedGunSystem.Clothing.cs
+
+### Content.Shared/Weapons/Ranged/Systems/SharedGunSystem.Interactions.cs
+
+### Content.Shared/Weapons/Ranged/Systems/SharedGunSystem.Revolver.cs
+
+### Content.Shared/Weapons/Ranged/Systems/SharedGunSystem.cs
+
+### Content.Shared/Weapons/Reflect/ReflectSystem.cs
+
+### Content.Shared/Weather/SharedWeatherSystem.cs
+
+### Content.Shared/Whitelist/EntityWhitelistSystem.cs
+
+### Content.Shared/Wieldable/Components/WieldingBlockerComponent.cs
+
+### Content.Shared/Wieldable/Events.cs
+
+### Content.Shared/Wieldable/SharedWieldableSystem.cs
+
+### Content.Shared/Xenoarchaeology/Artifact/Components/XenoArtifactComponent.cs
+
+### Content.Shared/Xenoarchaeology/Artifact/Prototypes/XenoArchTriggerPrototype.cs
+
+### Content.Shared/Xenoarchaeology/Artifact/XAE/XAEApplyComponentsSystem.cs
+
+### Content.Shared/Zombies/ZombieComponent.cs
+
+### Content.Tests/Shared/DamageTest.cs
+
+### Content.Tests/Shared/LocalizedDatasetPrototypeTest.cs
+
+### Content.YAMLLinter/Program.cs
+
+### Resources/Audio/Ambience/Antag/attributions.yml
+
+### Resources/Audio/Animals/attributions.yml
+
+### Resources/Audio/Effects/Fluids/attributions.yml
+
+### Resources/Audio/Effects/Footsteps/attributions.yml
+
+### Resources/Audio/Effects/attributions.yml
+
+### Resources/Audio/Items/Anomaly/attributions.yml
+
+### Resources/Audio/Items/attributions.yml
+
+### Resources/Audio/Machines/attributions.yml
+
+### Resources/Audio/StationEvents/attributions.yml
+
+### Resources/Audio/Voice/Xenoborg/attributions.yml
+
+### Resources/Audio/Weapons/Guns/Gunshots/attributions.yml
+
+### Resources/Changelog/Admin.yml
+
+### Resources/Changelog/Changelog.yml
+
+### Resources/Changelog/Maps.yml
+
+### Resources/Credits/Patrons.yml
+
+### Resources/Maps/Dungeon/experiment.yml
+
+### Resources/Maps/Dungeon/haunted.yml
+
+### Resources/Maps/Dungeon/lava_brig.yml
+
+### Resources/Maps/Dungeon/maints.yml
+
+### Resources/Maps/Dungeon/mineshaft.yml
+
+### Resources/Maps/Dungeon/snowy_labs.yml
+
+### Resources/Maps/Dungeon/template.yml
+
+### Resources/Maps/Dungeon/vgroidinterior.yml
+
+### Resources/Maps/Lavaland/basalt_ruin.yml
+
+### Resources/Maps/Lavaland/catwalk_crossroad.yml
+
+### Resources/Maps/Lavaland/crashedsyndiepod.yml
+
+### Resources/Maps/Lavaland/lava_farm.yml
+
+### Resources/Maps/Lavaland/wrecked_outpost.yml
+
+### Resources/Maps/Nonstations/dm01-entryway.yml
+
+### Resources/Maps/Nonstations/meteor-arena.yml
+
+### Resources/Maps/Nonstations/nukieplanet.yml
+
+### Resources/Maps/Ruins/displaced_telescience.yml
+
+### Resources/Maps/Ruins/ruined_prison_ship.yml
+
+### Resources/Maps/Shuttles/ShuttleEvent/instigator.yml
+
+### Resources/Maps/Shuttles/arrivals_relic.yml
+
+### Resources/Maps/Shuttles/cargo_exo.yml
+
+### Resources/Maps/Shuttles/emergency.yml
+
+### Resources/Maps/Shuttles/emergency_accordia.yml
+
+### Resources/Maps/Shuttles/emergency_amber.yml
+
+### Resources/Maps/Shuttles/emergency_box.yml
+
+### Resources/Maps/Shuttles/emergency_courser.yml
+
+### Resources/Maps/Shuttles/emergency_crimson.yml
+
+### Resources/Maps/Shuttles/emergency_delta.yml
+
+### Resources/Maps/Shuttles/emergency_elkridge.yml
+
+### Resources/Maps/Shuttles/emergency_exo.yml
+
+### Resources/Maps/Shuttles/emergency_lox.yml
+
+### Resources/Maps/Shuttles/emergency_meta.yml
+
+### Resources/Maps/Shuttles/emergency_omega.yml
+
+### Resources/Maps/Shuttles/emergency_plasma.yml
+
+### Resources/Maps/Shuttles/emergency_rod.yml
+
+### Resources/Maps/Shuttles/emergency_wode.yml
+
+### Resources/Maps/Shuttles/trading_outpost.yml
+
+### Resources/Maps/Test/dev_map.yml
+
+### Resources/Maps/Test/empty.yml
+
+### Resources/Maps/Test/npc_test_map.yml
+
+### Resources/Maps/Test/test_teg.yml
+
+### Resources/Maps/amber.yml
+
+### Resources/Maps/bagel.yml
+
+### Resources/Maps/box.yml
+
+### Resources/Maps/centcomm.yml
+
+### Resources/Maps/convex.yml
+
+### Resources/Maps/core.yml
+
+### Resources/Maps/elkridge.yml
+
+### Resources/Maps/exo.yml
+
+### Resources/Maps/fland.yml
+
+### Resources/Maps/gate.yml
+
+### Resources/Maps/loop.yml
+
+### Resources/Maps/marathon.yml
+
+### Resources/Maps/meta.yml
+
+### Resources/Maps/oasis.yml
+
+### Resources/Maps/omega.yml
+
+### Resources/Maps/packed.yml
+
+### Resources/Maps/plasma.yml
+
+### Resources/Maps/reach.yml
+
+### Resources/Maps/relic.yml
+
+### Resources/Maps/saltern.yml
+
+### Resources/Maps/train.yml
+
+### Resources/Prototypes/Accents/full_replacements.yml
+
+### Resources/Prototypes/Access/misc.yml
+
+### Resources/Prototypes/Actions/anomaly.yml
+
+### Resources/Prototypes/Actions/borgs.yml
+
+### Resources/Prototypes/Actions/changeling.yml
+
+### Resources/Prototypes/Actions/crit.yml
+
+### Resources/Prototypes/Actions/diona.yml
+
+### Resources/Prototypes/Actions/internals.yml
+
+### Resources/Prototypes/Actions/mapping.yml
+
+### Resources/Prototypes/Actions/mech.yml
+
+### Resources/Prototypes/Actions/ninja.yml
+
+### Resources/Prototypes/Actions/polymorph.yml
+
+### Resources/Prototypes/Actions/revenant.yml
+
+### Resources/Prototypes/Actions/security.yml
+
+### Resources/Prototypes/Actions/speech.yml
+
+### Resources/Prototypes/Actions/spider.yml
+
+### Resources/Prototypes/Actions/station_ai.yml
+
+### Resources/Prototypes/Actions/types.yml
+
+### Resources/Prototypes/Alerts/alerts.yml
+
+### Resources/Prototypes/Alerts/revenant.yml
+
+### Resources/Prototypes/Alerts/rooted.yml
+
+### Resources/Prototypes/AppearanceCustomization/station_ai.yml
+
+### Resources/Prototypes/Body/Organs/reptilian.yml
+
+### Resources/Prototypes/Body/Organs/vox.yml
+
+### Resources/Prototypes/Body/Parts/animal.yml
+
+### Resources/Prototypes/Body/Prototypes/Specific/smartcorgi.yml
+
+### Resources/Prototypes/Body/Prototypes/a_ghost.yml
+
+### Resources/Prototypes/Body/Prototypes/reptilian.yml
+
+### Resources/Prototypes/Catalog/Bounties/bounties.yml
+
+### Resources/Prototypes/Catalog/Bounties/groups.yml
+
+### Resources/Prototypes/Catalog/Bounties/salvage_jobs.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_armory.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_atmospherics.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_cargo.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_food.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_fun.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_livestock.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_materials.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_service.yml
+
+### Resources/Prototypes/Catalog/Cargo/cargo_vending.yml
+
+### Resources/Prototypes/Catalog/Cargo/markets.yml
+
+### Resources/Prototypes/Catalog/Cargo/salvage_rewards.yml
+
+### Resources/Prototypes/Catalog/Fills/Backpacks/duffelbag.yml
+
+### Resources/Prototypes/Catalog/Fills/Books/bookshelf.yml
+
+### Resources/Prototypes/Catalog/Fills/Boxes/ammunition.yml
+
+### Resources/Prototypes/Catalog/Fills/Boxes/emergency.yml
+
+### Resources/Prototypes/Catalog/Fills/Boxes/general.yml
+
+### Resources/Prototypes/Catalog/Fills/Boxes/medical.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/armory.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/cargo.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/engineering.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/food.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/fun.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/materials.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/salvage.yml
+
+### Resources/Prototypes/Catalog/Fills/Crates/service.yml
+
+### Resources/Prototypes/Catalog/Fills/Items/belt.yml
+
+### Resources/Prototypes/Catalog/Fills/Items/toolboxes.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/biohazard.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/dressers.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/engineer.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/heads.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/science.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/security.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/service.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/space_ruin.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/suit_storage.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/wardrobe_colors.yml
+
+### Resources/Prototypes/Catalog/Fills/Lockers/wardrobe_job.yml
+
+### Resources/Prototypes/Catalog/ReagentDispensers/beverage.yml
+
+### Resources/Prototypes/Catalog/ReagentDispensers/chemical.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/boozeomat.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/chapel.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/chemvend.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/cigs.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/clothesmate.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/coffee.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/cola.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/discount.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/donut.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/gib.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/happyhonk.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/lawdrobe.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/nutri.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/pride.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/pwrgame.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/sec.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/secdrobe.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/seeds.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/smite.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/snack.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/soda.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/spaceup.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/starkist.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/sustenance.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/syndiedrobe.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/theater.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/vendomat.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/winterdrobe.yml
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/youtool.yml
+
+### Resources/Prototypes/Catalog/thief_toolbox_sets.yml
+
+### Resources/Prototypes/Catalog/uplink_catalog.yml
+
+### Resources/Prototypes/Codewords/codeword_factions.yml
+
+### Resources/Prototypes/Codewords/codeword_generators.yml
+
+### Resources/Prototypes/Damage/examine_messages.yml
+
+### Resources/Prototypes/Damage/modifier_sets.yml
+
+### Resources/Prototypes/Datasets/Names/scurret.yml
+
+### Resources/Prototypes/Datasets/Names/wizard.yml
+
+### Resources/Prototypes/Decals/Overlays/grayscale.yml
+
+### Resources/Prototypes/DeviceLinking/source_ports.yml
+
+### Resources/Prototypes/Entities/Clothing/Back/backpacks.yml
+
+### Resources/Prototypes/Entities/Clothing/Back/duffel.yml
+
+### Resources/Prototypes/Entities/Clothing/Back/satchel.yml
+
+### Resources/Prototypes/Entities/Clothing/Back/specific.yml
+
+### Resources/Prototypes/Entities/Clothing/Belt/belts.yml
+
+### Resources/Prototypes/Entities/Clothing/Eyes/glasses.yml
+
+### Resources/Prototypes/Entities/Clothing/Eyes/hud.yml
+
+### Resources/Prototypes/Entities/Clothing/Eyes/specific.yml
+
+### Resources/Prototypes/Entities/Clothing/Hands/base_clothinghands.yml
+
+### Resources/Prototypes/Entities/Clothing/Hands/gloves.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/bandanas.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/base_clothinghead.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/eva-helmets.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/hardhats.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/hardsuit-helmets.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/hats.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/helmets.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/hoods.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/misc.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/scraphelmet.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/soft.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/specific.yml
+
+### Resources/Prototypes/Entities/Clothing/Head/welding.yml
+
+### Resources/Prototypes/Entities/Clothing/Masks/bandanas.yml
+
+### Resources/Prototypes/Entities/Clothing/Masks/base_clothingmask.yml
+
+### Resources/Prototypes/Entities/Clothing/Masks/masks.yml
+
+### Resources/Prototypes/Entities/Clothing/Masks/specific.yml
+
+### Resources/Prototypes/Entities/Clothing/Multiple/misc.yml
+
+### Resources/Prototypes/Entities/Clothing/Multiple/towel.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/base_clothingneck.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/cloaks.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/medals.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/misc.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/pins.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/scarfs.yml
+
+### Resources/Prototypes/Entities/Clothing/Neck/ties.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/armor.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/base_clothingouter.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/bio.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/hardsuits.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/misc.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/scraparmor.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/softsuits.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/suits.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/vests.yml
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/wintercoats.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/base_clothingshoes.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/boots.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/magboots.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/misc.yml
+
+### Resources/Prototypes/Entities/Clothing/Shoes/specific.yml
+
+### Resources/Prototypes/Entities/Clothing/Uniforms/base_clothinguniforms.yml
+
+### Resources/Prototypes/Entities/Clothing/Uniforms/color_jumpskirts.yml
+
+### Resources/Prototypes/Entities/Clothing/Uniforms/jumpskirts.yml
+
+### Resources/Prototypes/Entities/Clothing/Uniforms/jumpsuits.yml
+
+### Resources/Prototypes/Entities/Effects/chemistry_effects.yml
+
+### Resources/Prototypes/Entities/Effects/mobspawn.yml
+
+### Resources/Prototypes/Entities/Effects/puddle.yml
+
+### Resources/Prototypes/Entities/Effects/wallspawn.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Conditional/nukies.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/animals.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/carp.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/hostile.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/misc.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/pets.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/slimes.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Mobs/xenos.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Decals/base.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Decals/dirt.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Decals/flora.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Decals/splatters.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Department/science.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Food_Drinks/food_breakfast.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Food_Drinks/food_snacks.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Mobs/xenos.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Salvage/spawners.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/Salvage/tables_loot.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/anomaly.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/industrial.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/maintenance.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/posters.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/smokables.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/toy.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/bots.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/ghost_roles.yml
+
+### Resources/Prototypes/Entities/Markers/Spawners/mobs.yml
+
+### Resources/Prototypes/Entities/Markers/pointing.yml
+
+### Resources/Prototypes/Entities/Markers/tile.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/human_hair.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/reptilian.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/scars.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/tattoos.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/vox_hair.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/vox_parts.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/vox_scars.yml
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/vox_tattoos.yml
+
+### Resources/Prototypes/Entities/Mobs/Cyborgs/base_borg_chassis.yml
+
+### Resources/Prototypes/Entities/Mobs/Cyborgs/xenoborgs.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/animals.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/asteroid.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/carp.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/elemental.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/hivebot.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/living_light.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/miscellaneous.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/moproach.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/pets.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/regalrat.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/revenant.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/scurret.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/silicon.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/simplemob.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/slimes.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/space.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/spacetick.yml
+
+### Resources/Prototypes/Entities/Mobs/NPCs/xeno.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/ShuttleRoles/roles.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/ShuttleRoles/settings.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/admin_ghost.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/clone.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/dragon.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/guardian.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/humanoid.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/observer.yml
+
+### Resources/Prototypes/Entities/Mobs/Player/silicon.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/arachnid.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/base.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/diona.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/moth.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/reptilian.yml
+
+### Resources/Prototypes/Entities/Mobs/Species/slime.yml
+
+### Resources/Prototypes/Entities/Mobs/base.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks_bottles.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks_cups.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks_flasks.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks_fun.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Drinks/drinks_special.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/bagel.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/bread.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/cake.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/donkpocket.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/donut.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/misc.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/pie.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Baked/pizza.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Containers/box.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/Containers/plate.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/breakfast.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/burger.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/ingredients.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/meals.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/meat.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/noodles.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/produce.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/snacks.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/soup.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/taco.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Smokeables/Cigarettes/cartons.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Smokeables/Cigarettes/cigarette.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Smokeables/Cigarettes/packs.yml
+
+### Resources/Prototypes/Entities/Objects/Consumable/Smokeables/base_smokeables.yml
+
+### Resources/Prototypes/Entities/Objects/Decoration/mining.yml
+
+### Resources/Prototypes/Entities/Objects/Decoration/present.yml
+
+### Resources/Prototypes/Entities/Objects/Deliveries/deliveries.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/Machine/cannons.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/Machine/holopad.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/Machine/production.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/Machine/turrets.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/computer.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Circuitboards/law_boards.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Electronics/signaller.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Electronics/triggers.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Syndicate_Gadgets/camera_bug.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Syndicate_Gadgets/singularity_beacon.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/Syndicate_Gadgets/war_declarator.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/chameleon_projector.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/door_remote.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/encryption_keys.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/forensic_scanner.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/holoprojectors.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/payload.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/pda.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/pinpointer.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/station_beacon.yml
+
+### Resources/Prototypes/Entities/Objects/Devices/station_map.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/Instruments/instruments_wind.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/bike_horn.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/candy_bucket.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/error.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/figurine_boxes.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/immovable_rod.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/mech_figurines.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/pai.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/plushies.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/snap_pops.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/spectral_locator.yml
+
+### Resources/Prototypes/Entities/Objects/Fun/toys.yml
+
+### Resources/Prototypes/Entities/Objects/Magic/books.yml
+
+### Resources/Prototypes/Entities/Objects/Materials/materials.yml
+
+### Resources/Prototypes/Entities/Objects/Materials/ore.yml
+
+### Resources/Prototypes/Entities/Objects/Materials/scrap.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/acquisition_slips.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/arabianlamp.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/business_card.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/candles.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/fire_extinguisher.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/fluff_lights.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/identification_cards.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/implanters.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/intermediate_parts.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/land_mine.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/machine_parts.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/paper.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/pen.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/rubber_stamp.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/spaceshroom.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/spider_web.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/subdermal_implants.yml
+
+### Resources/Prototypes/Entities/Objects/Misc/tiles.yml
+
+### Resources/Prototypes/Entities/Objects/Power/powercells.yml
+
+### Resources/Prototypes/Entities/Objects/Power/powersink.yml
+
+### Resources/Prototypes/Entities/Objects/Shields/shields.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Chapel/bibles.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Janitorial/janitor.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Janitorial/soap.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Kitchen/foodcarts.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Mech/mecha_equipment.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Medical/defib.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Medical/healing.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Medical/healthanalyzer.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Medical/hypospray.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Research/anomaly.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Robotics/borg_modules.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Salvage/scanner.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Xenoarchaeology/artifact_equipment.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/Xenoarchaeology/xenoartifacts.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/chemistry.yml
+
+### Resources/Prototypes/Entities/Objects/Specific/rehydrateable.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/access_breaker.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/access_configurator.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/cowtools.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/decoys.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/emag.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/flashlights.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/fulton.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/gas_tanks.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/glowstick.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/jammer.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/jaws_of_life.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/jetpacks.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/lantern.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/lighters.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/matches.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/spray_painter.yml
+
+### Resources/Prototypes/Entities/Objects/Tools/welders.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/firebomb.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/funny.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/pen.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/pipebomb.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/plastic.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Cartridges/pistol.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/caseless_rifle.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/light_rifle.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/magnum.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/pistol.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/rifle.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Magazines/shotgun.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/grenade.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/toy.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Basic/spraynozzle.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Basic/staves.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Battery/battery_guns.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/HMGs/hmgs.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/LMGs/lmgs.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Launchers/launchers.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Pistols/pistols.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Projectiles/arrows.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Projectiles/meteors.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Projectiles/projectiles.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Revolvers/revolvers.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Rifles/rifles.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/SMGs/smgs.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Shotguns/shotguns.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Snipers/snipers.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Turrets/turrets_base.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Turrets/turrets_broken.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Turrets/turrets_energy.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/armblade.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/e_sword.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/fireaxe.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/knife.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/mining.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/stunprod.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Throwable/bola.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Throwable/grenades.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Throwable/projectile_grenades.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/Throwable/scattering_grenades.yml
+
+### Resources/Prototypes/Entities/Objects/Weapons/security.yml
+
+### Resources/Prototypes/Entities/Stations/base.yml
+
+### Resources/Prototypes/Entities/Stations/nanotrasen.yml
+
+### Resources/Prototypes/Entities/StatusEffects/misc.yml
+
+### Resources/Prototypes/Entities/StatusEffects/movement.yml
+
+### Resources/Prototypes/Entities/Structures/Decoration/curtains.yml
+
+### Resources/Prototypes/Entities/Structures/Dispensers/base_structuredispensers.yml
+
+### Resources/Prototypes/Entities/Structures/Dispensers/booze.yml
+
+### Resources/Prototypes/Entities/Structures/Dispensers/chem.yml
+
+### Resources/Prototypes/Entities/Structures/Dispensers/soda.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/access.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/airlocks.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/base_structureairlocks.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/clockwork.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/external.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/highsec.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/shuttle.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/MaterialDoors/material_doors.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/SecretDoor/secret_door.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Shutter/blast_door.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Shutter/shutters.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Windoors/clockwork.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/airlock_groups.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/Tables/tables.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/beds.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/bookshelf.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/chairs.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/dresser.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/potted_plants.yml
+
+### Resources/Prototypes/Entities/Structures/Furniture/rollerbeds.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/arcades.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/computers.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/nav_map_blips.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/Medical/chemistry_machines.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/Medical/cryo_pod.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/bombs.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/crew_monitor_server.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/fatextractor.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/frame.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/holopad.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/lathe.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/microwave.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/multipart.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/research.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/silo.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/smartfridge.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/stasisbed.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/surveillance_camera_routers.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/telecomms.yml
+
+### Resources/Prototypes/Entities/Structures/Machines/vending_machines.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Atmospherics/alt_layers.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Atmospherics/binary.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Atmospherics/gas_pipe_sensor.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Atmospherics/pipes.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Atmospherics/unary.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Disposal/pipes.yml
+
+### Resources/Prototypes/Entities/Structures/Piping/Disposal/units.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/base_particleaccelerator.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/control_box.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/emitter.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/end_cap.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/fuel_chamber.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/PA/power_box.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/Singularity/collector.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/Singularity/singularity.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/Tesla/coil.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/Tesla/energyball.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/ame.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/solar.yml
+
+### Resources/Prototypes/Entities/Structures/Power/Generation/teg.yml
+
+### Resources/Prototypes/Entities/Structures/Power/apc.yml
+
+### Resources/Prototypes/Entities/Structures/Power/cables.yml
+
+### Resources/Prototypes/Entities/Structures/Power/substation.yml
+
+### Resources/Prototypes/Entities/Structures/Shuttles/cannons.yml
+
+### Resources/Prototypes/Entities/Structures/Shuttles/thrusters.yml
+
+### Resources/Prototypes/Entities/Structures/Specific/Anomaly/anomalies.yml
+
+### Resources/Prototypes/Entities/Structures/Specific/Anomaly/anomaly_injectors.yml
+
+### Resources/Prototypes/Entities/Structures/Specific/Janitor/janicart.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Canisters/gas_canisters.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/Lockers/base_structurelockers.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/Lockers/lockers.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/base_structureclosets.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/wall_lockers.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Crates/base_structurecrates.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/Crates/crates.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/barrels.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/filing_cabinets.yml
+
+### Resources/Prototypes/Entities/Structures/Storage/glass_box.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/Signs/atmos_plaque.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/Signs/posters.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/Signs/signs.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/air_alarm.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/fire_alarm.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/mirror.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/shelfs.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/station_map.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/timer.yml
+
+### Resources/Prototypes/Entities/Structures/Wallmounts/turret_controls.yml
+
+### Resources/Prototypes/Entities/Structures/Walls/asteroid.yml
+
+### Resources/Prototypes/Entities/Structures/Walls/fence_wood.yml
+
+### Resources/Prototypes/Entities/Structures/Walls/walls.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/plastitanium.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/rplasma.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/ruranium.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/uranium.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/window.yml
+
+### Resources/Prototypes/Entities/Structures/Windows/xenoresin.yml
+
+### Resources/Prototypes/Entities/Structures/barricades.yml
+
+### Resources/Prototypes/Entities/Structures/cryogenic_sleep_unit.yml
+
+### Resources/Prototypes/Entities/Structures/plastic_flaps.yml
+
+### Resources/Prototypes/Entities/Structures/soil.yml
+
+### Resources/Prototypes/Entities/Structures/spider_web.yml
+
+### Resources/Prototypes/Entities/categories.yml
+
+### Resources/Prototypes/Flavors/flavors.yml
+
+### Resources/Prototypes/GameRules/cargo_gifts.yml
+
+### Resources/Prototypes/GameRules/events.yml
+
+### Resources/Prototypes/GameRules/meteorswarms.yml
+
+### Resources/Prototypes/GameRules/pests.yml
+
+### Resources/Prototypes/GameRules/roundstart.yml
+
+### Resources/Prototypes/GameRules/subgamemodes.yml
+
+### Resources/Prototypes/GameRules/variation.yml
+
+### Resources/Prototypes/Guidebook/engineering.yml
+
+### Resources/Prototypes/Guidebook/medical.yml
+
+### Resources/Prototypes/InventoryTemplates/arachnid_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/diona_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/human_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/parrot_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/pet_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/scurret_inventory_template.yml
+
+### Resources/Prototypes/InventoryTemplates/smartcorgi_inventory_template.yml
+
+### Resources/Prototypes/Loadouts/Jobs/Civilian/chaplain.yml
+
+### Resources/Prototypes/Loadouts/Jobs/Civilian/passenger.yml
+
+### Resources/Prototypes/Loadouts/Jobs/Security/head_of_security.yml
+
+### Resources/Prototypes/Loadouts/Miscellaneous/survival.yml
+
+### Resources/Prototypes/Loadouts/Miscellaneous/trinkets.yml
+
+### Resources/Prototypes/Loadouts/loadout_groups.yml
+
+### Resources/Prototypes/Loadouts/loadouts_chameleon.yml
+
+### Resources/Prototypes/Loadouts/role_loadouts.yml
+
+### Resources/Prototypes/LootTables/suspicion_loot_table.yml
+
+### Resources/Prototypes/Magic/animate_spell.yml
+
+### Resources/Prototypes/Magic/event_spells.yml
+
+### Resources/Prototypes/Magic/forcewall_spells.yml
+
+### Resources/Prototypes/Magic/knock_spell.yml
+
+### Resources/Prototypes/Magic/mindswap_spell.yml
+
+### Resources/Prototypes/Magic/projectile_spells.yml
+
+### Resources/Prototypes/Magic/recall_spell.yml
+
+### Resources/Prototypes/Magic/repulse_spell.yml
+
+### Resources/Prototypes/Magic/rune_spells.yml
+
+### Resources/Prototypes/Magic/smoke_spell.yml
+
+### Resources/Prototypes/Magic/spawn_spells.yml
+
+### Resources/Prototypes/Magic/staves.yml
+
+### Resources/Prototypes/Magic/teleport_spells.yml
+
+### Resources/Prototypes/Magic/touch_spells.yml
+
+### Resources/Prototypes/Magic/utility_spells.yml
+
+### Resources/Prototypes/Maps/Pools/default.yml
+
+### Resources/Prototypes/Maps/convex.yml
+
+### Resources/Prototypes/Maps/core.yml
+
+### Resources/Prototypes/Maps/exo.yml
+
+### Resources/Prototypes/Maps/gate.yml
+
+### Resources/Prototypes/Maps/loop.yml
+
+### Resources/Prototypes/Maps/meta.yml
+
+### Resources/Prototypes/Maps/omega.yml
+
+### Resources/Prototypes/Maps/relic.yml
+
+### Resources/Prototypes/Maps/train.yml
+
+### Resources/Prototypes/NPCs/basilisk.yml
+
+### Resources/Prototypes/NPCs/mob.yml
+
+### Resources/Prototypes/NPCs/utility_queries.yml
+
+### Resources/Prototypes/Objectives/objectiveGroups.yml
+
+### Resources/Prototypes/Objectives/stealTargetGroups.yml
+
+### Resources/Prototypes/Objectives/thief.yml
+
+### Resources/Prototypes/Paintables/airlock_groups.yml
+
+### Resources/Prototypes/Paintables/canister_groups.yml
+
+### Resources/Prototypes/Paintables/categories.yml
+
+### Resources/Prototypes/Paintables/crate_groups.yml
+
+### Resources/Prototypes/Paintables/locker_groups.yml
+
+### Resources/Prototypes/Palettes/critters.yml
+
+### Resources/Prototypes/Parallaxes/amber.yml
+
+### Resources/Prototypes/Parallaxes/aspid.yml
+
+### Resources/Prototypes/Parallaxes/bagel.yml
+
+### Resources/Prototypes/Parallaxes/core.yml
+
+### Resources/Prototypes/Parallaxes/default.yml
+
+### Resources/Prototypes/Parallaxes/exo.yml
+
+### Resources/Prototypes/Parallaxes/kettle.yml
+
+### Resources/Prototypes/Parallaxes/origin.yml
+
+### Resources/Prototypes/Parallaxes/plasma.yml
+
+### Resources/Prototypes/Parallaxes/train.yml
+
+### Resources/Prototypes/Polymorphs/polymorph.yml
+
+### Resources/Prototypes/Procedural/Magnet/space_debris_templates.yml
+
+### Resources/Prototypes/Procedural/dungeon_configs.yml
+
+### Resources/Prototypes/Procedural/salvage_rewards.yml
+
+### Resources/Prototypes/Procedural/vgroid.yml
+
+### Resources/Prototypes/Reagents/Consumable/Drink/alcohol.yml
+
+### Resources/Prototypes/Reagents/Consumable/Drink/base_drink.yml
+
+### Resources/Prototypes/Reagents/Consumable/Drink/drinks.yml
+
+### Resources/Prototypes/Reagents/Consumable/Drink/soda.yml
+
+### Resources/Prototypes/Reagents/Consumable/Food/condiments.yml
+
+### Resources/Prototypes/Reagents/Consumable/Food/ingredients.yml
+
+### Resources/Prototypes/Reagents/Materials/materials.yml
+
+### Resources/Prototypes/Reagents/biological.yml
+
+### Resources/Prototypes/Reagents/chemicals.yml
+
+### Resources/Prototypes/Reagents/cleaning.yml
+
+### Resources/Prototypes/Reagents/fun.yml
+
+### Resources/Prototypes/Reagents/gases.yml
+
+### Resources/Prototypes/Reagents/medicine.yml
+
+### Resources/Prototypes/Reagents/narcotics.yml
+
+### Resources/Prototypes/Reagents/toxins.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/clothing/lizard_slippers.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/clothing/medsec_hud.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/furniture/curtains.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/furniture/noticeboard.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/furniture/shelfs.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/furniture/tables.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/machines/switching.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/girder.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/soil.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/window.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/window_diagonal.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/windowdirectional.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/tools/logic_gate.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/APC.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/atmos_binary.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/atmos_pipes.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/cameras.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/disposal_pipes.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/gas_pipe_sensor.yml
+
+### Resources/Prototypes/Recipes/Construction/Graphs/utilities/wallmount_substation.yml
+
+### Resources/Prototypes/Recipes/Construction/furniture.yml
+
+### Resources/Prototypes/Recipes/Construction/machines.yml
+
+### Resources/Prototypes/Recipes/Construction/structures.yml
+
+### Resources/Prototypes/Recipes/Construction/utilities.yml
+
+### Resources/Prototypes/Recipes/Cooking/food_sequence_element.yml
+
+### Resources/Prototypes/Recipes/Cooking/meal_recipes.yml
+
+### Resources/Prototypes/Recipes/Crafting/Graphs/improvised/petbag.yml
+
+### Resources/Prototypes/Recipes/Crafting/Graphs/improvised/potato.yml
+
+### Resources/Prototypes/Recipes/Crafting/Graphs/improvised/scraparmor.yml
+
+### Resources/Prototypes/Recipes/Crafting/Graphs/improvised/scraphelmet.yml
+
+### Resources/Prototypes/Recipes/Crafting/Graphs/toys.yml
+
+### Resources/Prototypes/Recipes/Crafting/crates.yml
+
+### Resources/Prototypes/Recipes/Crafting/improvised.yml
+
+### Resources/Prototypes/Recipes/Crafting/smokeables.yml
+
+### Resources/Prototypes/Recipes/Crafting/tallbox.yml
+
+### Resources/Prototypes/Recipes/Crafting/toys.yml
+
+### Resources/Prototypes/Recipes/Crafting/web.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/engineering.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/medical.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/robotics.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/science.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/security.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/service.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/shared.yml
+
+### Resources/Prototypes/Recipes/Lathes/Packs/tiles.yml
+
+### Resources/Prototypes/Recipes/Lathes/Parts.yml
+
+### Resources/Prototypes/Recipes/Lathes/ammo.yml
+
+### Resources/Prototypes/Recipes/Lathes/categories.yml
+
+### Resources/Prototypes/Recipes/Lathes/janitorial.yml
+
+### Resources/Prototypes/Recipes/Lathes/mech_equipment.yml
+
+### Resources/Prototypes/Recipes/Lathes/mech_parts.yml
+
+### Resources/Prototypes/Recipes/Lathes/medical.yml
+
+### Resources/Prototypes/Recipes/Lathes/misc.yml
+
+### Resources/Prototypes/Recipes/Lathes/powercells.yml
+
+### Resources/Prototypes/Recipes/Lathes/robot_modules.yml
+
+### Resources/Prototypes/Recipes/Lathes/robot_parts.yml
+
+### Resources/Prototypes/Recipes/Lathes/robotics.yml
+
+### Resources/Prototypes/Recipes/Lathes/security.yml
+
+### Resources/Prototypes/Recipes/Lathes/tiles.yml
+
+### Resources/Prototypes/Recipes/Lathes/tools.yml
+
+### Resources/Prototypes/Recipes/Reactions/chemicals.yml
+
+### Resources/Prototypes/Recipes/Reactions/fun.yml
+
+### Resources/Prototypes/Recipes/Reactions/medicine.yml
+
+### Resources/Prototypes/Research/arsenal.yml
+
+### Resources/Prototypes/Research/civilianservices.yml
+
+### Resources/Prototypes/Research/industrial.yml
+
+### Resources/Prototypes/Roles/Antags/ninja.yml
+
+### Resources/Prototypes/Roles/Antags/nukeops.yml
+
+### Resources/Prototypes/Roles/Antags/thief.yml
+
+### Resources/Prototypes/Roles/Jobs/Cargo/cargo_technician.yml
+
+### Resources/Prototypes/Roles/Jobs/Cargo/quartermaster.yml
+
+### Resources/Prototypes/Roles/Jobs/Cargo/salvage_specialist.yml
+
+### Resources/Prototypes/Roles/Jobs/CentComm/cburn.yml
+
+### Resources/Prototypes/Roles/Jobs/CentComm/deathsquad.yml
+
+### Resources/Prototypes/Roles/Jobs/CentComm/emergencyresponseteam.yml
+
+### Resources/Prototypes/Roles/Jobs/CentComm/official.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/assistant.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/bartender.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/botanist.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/chaplain.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/chef.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/clown.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/janitor.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/lawyer.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/librarian.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/mime.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/musician.yml
+
+### Resources/Prototypes/Roles/Jobs/Civilian/service_worker.yml
+
+### Resources/Prototypes/Roles/Jobs/Command/captain.yml
+
+### Resources/Prototypes/Roles/Jobs/Command/head_of_personnel.yml
+
+### Resources/Prototypes/Roles/Jobs/Engineering/atmospheric_technician.yml
+
+### Resources/Prototypes/Roles/Jobs/Engineering/chief_engineer.yml
+
+### Resources/Prototypes/Roles/Jobs/Engineering/station_engineer.yml
+
+### Resources/Prototypes/Roles/Jobs/Engineering/technical_assistant.yml
+
+### Resources/Prototypes/Roles/Jobs/Fun/cluwne.yml
+
+### Resources/Prototypes/Roles/Jobs/Fun/misc_startinggear.yml
+
+### Resources/Prototypes/Roles/Jobs/Fun/sus.yml
+
+### Resources/Prototypes/Roles/Jobs/Fun/visitors_startinggear.yml
+
+### Resources/Prototypes/Roles/Jobs/Fun/wizard_startinggear.yml
+
+### Resources/Prototypes/Roles/Jobs/Medical/chemist.yml
+
+### Resources/Prototypes/Roles/Jobs/Medical/chief_medical_officer.yml
+
+### Resources/Prototypes/Roles/Jobs/Medical/medical_doctor.yml
+
+### Resources/Prototypes/Roles/Jobs/Medical/medical_intern.yml
+
+### Resources/Prototypes/Roles/Jobs/Medical/paramedic.yml
+
+### Resources/Prototypes/Roles/Jobs/Science/research_assistant.yml
+
+### Resources/Prototypes/Roles/Jobs/Science/research_director.yml
+
+### Resources/Prototypes/Roles/Jobs/Science/scientist.yml
+
+### Resources/Prototypes/Roles/Jobs/Security/detective.yml
+
+### Resources/Prototypes/Roles/Jobs/Security/head_of_security.yml
+
+### Resources/Prototypes/Roles/Jobs/Security/security_cadet.yml
+
+### Resources/Prototypes/Roles/Jobs/Security/security_officer.yml
+
+### Resources/Prototypes/Roles/Jobs/Security/warden.yml
+
+### Resources/Prototypes/Roles/Jobs/Wildcards/boxer.yml
+
+### Resources/Prototypes/Roles/Jobs/Wildcards/psychologist.yml
+
+### Resources/Prototypes/Roles/Jobs/Wildcards/reporter.yml
+
+### Resources/Prototypes/Roles/Jobs/Wildcards/zookeeper.yml
+
+### Resources/Prototypes/Roles/MindRoles/mind_roles.yml
+
+### Resources/Prototypes/Shaders/Stencils.yml
+
+### Resources/Prototypes/Shaders/displacement.yml
+
+### Resources/Prototypes/Shaders/shaders.yml
+
+### Resources/Prototypes/SoundCollections/NukeMusic.yml
+
+### Resources/Prototypes/SoundCollections/anomaly.yml
+
+### Resources/Prototypes/SoundCollections/atmospherics.yml
+
+### Resources/Prototypes/SoundCollections/drink_close_sounds.yml
+
+### Resources/Prototypes/SoundCollections/drink_open_sounds.yml
+
+### Resources/Prototypes/SoundCollections/emotes.yml
+
+### Resources/Prototypes/SoundCollections/footsteps.yml
+
+### Resources/Prototypes/SoundCollections/machines.yml
+
+### Resources/Prototypes/SoundCollections/screams.yml
+
+### Resources/Prototypes/SoundCollections/scurret.yml
+
+### Resources/Prototypes/Species/reptilian.yml
+
+### Resources/Prototypes/Stacks/floor_tile_stacks.yml
+
+### Resources/Prototypes/Stacks/science_stacks.yml
+
+### Resources/Prototypes/StatusIcon/job.yml
+
+### Resources/Prototypes/Tiles/floors.yml
+
+### Resources/Prototypes/Tiles/planet.yml
+
+### Resources/Prototypes/Tiles/plating.yml
+
+### Resources/Prototypes/Traits/disabilities.yml
+
+### Resources/Prototypes/Voice/speech_emote_sounds.yml
+
+### Resources/Prototypes/Voice/speech_emotes.yml
+
+### Resources/Prototypes/Voice/speech_sounds.yml
+
+### Resources/Prototypes/Voice/speech_verbs.yml
+
+### Resources/Prototypes/Wires/layouts.yml
+
+### Resources/Prototypes/name_identifier_groups.yml
+
+### Resources/Prototypes/ore.yml
+
+### Resources/Prototypes/status_effects.yml
+
+### Resources/Prototypes/tags.yml
+
+### Resources/Prototypes/tool_qualities.yml
+
+### Resources/Prototypes/typing_indicator.yml
+
+### Resources/Textures/Interface/Emotes/attributions.yml
+
+### Resources/Textures/Interface/Nano/circular_arrow.svg.96dpi.png.yml
+
+### Resources/Textures/Interface/NavMap/attributions.yml
+
+### Resources/Textures/Interface/NavMap/beveled_rectangle_east_west.png.yml
+
+### Resources/Textures/Interface/NavMap/beveled_rectangle_north_south.png.yml
+
+### Resources/Textures/Interface/Paper/attributions.yml
+
+### Resources/Textures/Interface/Paper/paper_background_blood_red.svg.96dpi.png.yml
+
+### Resources/Textures/Interface/VerbIcons/screwdriver.png.yml
+
+### Resources/Textures/Parallaxes/AspidParallaxBG.png.yml
+
+### Resources/Textures/Parallaxes/AspidParallaxNeb.png.yml
+
+### Resources/Textures/Parallaxes/Asteroids.png.yml
+
+### Resources/Textures/Parallaxes/KettleParallaxBG.png.yml
+
+### Resources/Textures/Parallaxes/KettleParallaxNeb.png.yml
+
+### Resources/Textures/Parallaxes/XenoParallaxNeb.png.yml
+
+### Resources/Textures/Parallaxes/attributions.yml
+
+### Resources/Textures/Parallaxes/core_planet.png.yml
+
+### Resources/Textures/Parallaxes/debris_large.png.yml
+
+### Resources/Textures/Parallaxes/debris_small.png.yml
+
+### Resources/Textures/Parallaxes/gas_giant.png.yml
+
+### Resources/Textures/Parallaxes/land.png.yml
+
+### Resources/Textures/Parallaxes/layer1.png.yml
+
+### Resources/Textures/Parallaxes/layer2.png.yml
+
+### Resources/Textures/Parallaxes/layer3.png.yml
+
+### Resources/Textures/Parallaxes/noise.png.yml
+
+### Resources/Textures/Parallaxes/planet.png.yml
+
+### Resources/Textures/Parallaxes/space_map2.png.yml
+
+### Resources/Textures/Parallaxes/space_map3.png.yml
+
+### Resources/Textures/Tiles/attributions.yml
+
+### Resources/clientCommandPerms.yml
+
+### Resources/engineCommandPerms.yml
+
+### Resources/keybinds.yml
+
+### Resources/mapping_actions.yml
+
+### Resources/migration.yml

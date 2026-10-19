@@ -1,0 +1,432 @@
+up2
+
+### Content.Shared/Bed/SharedBedSystem.cs
+@@ -52,5 +52,5 @@ private void OnStrapped(Entity<HealOnBuckleComponent> bed, ref StrappedEvent arg
+-        DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
++//        DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1); // Orion-Edit: DoubleBed
+@@ -63,6 +63,9 @@ private void OnUnstrapped(Entity<HealOnBuckleComponent> bed, ref UnstrappedEvent
+-        
+-        RemComp<HealOnBuckleHealingComponent>(bed);
++
++        // Orion-Edit-Start: Check for double bed
++        if (args.Strap.Comp.BuckledEntities.Count == 0)
++            RemComp<HealOnBuckleHealingComponent>(bed);
++        // Orion-Edit-End
+
+### Content.Shared/Buckle/Components/StrapComponent.cs
+@@ -114,4 +114,5 @@
++using Content.Shared._Orion.Bed.Systems;
+@@ -124,5 +125,5 @@ namespace Content.Shared.Buckle.Components;
+-[Access(typeof(SharedBuckleSystem))]
++[Access(typeof(SharedBuckleSystem), typeof(DoubleBedSystem))] // Orion-Edit: DoubleBedSystem
+@@ -158,4 +159,12 @@ public sealed partial class StrapComponent : Component
++    // Orion-Start
++    /// <summary>
++    /// Per-entity buckle offsets keyed by buckled entity.
++    /// </summary>
++    [DataField, AutoNetworkedField]
++    public Dictionary<EntityUid, Vector2> BuckleOffsets = new();
++    // Orion-End
++
+
+### Content.Shared/Buckle/SharedBuckleSystem.Buckle.cs
+@@ -260,5 +260,14 @@ private void BuckleTransformCheck(Entity<BuckleComponent> buckle, TransformCompo
+-        var delta = (xform.LocalPosition - strapComp.BuckleOffset).LengthSquared();
++        // Orion-Start
++        if (!strapComp.BuckleOffsets.TryGetValue(buckle.Owner, out var buckleOffset))
++        {
++            buckleOffset = xform.LocalPosition;
++            strapComp.BuckleOffsets[buckle.Owner] = buckleOffset;
++            Dirty(strapUid, strapComp);
++        }
++        // Orion-End
++
++        var delta = (xform.LocalPosition - buckleOffset).LengthSquared(); // Orion-Edit
+@@ -323,4 +332,5 @@ protected void SetBuckledTo(Entity<BuckleComponent> buckle, Entity<StrapComponen
++            old.BuckleOffsets.Remove(buckle); // Orion
+@@ -329,4 +339,5 @@ protected void SetBuckledTo(Entity<BuckleComponent> buckle, Entity<StrapComponen
++            strapEnt.Comp.BuckleOffsets[buckle] = strapEnt.Comp.BuckleOffset; // Orion
+@@ -501,5 +512,5 @@ private void Buckle(Entity<BuckleComponent> buckle, Entity<StrapComponent> strap
+-        var coords = new EntityCoordinates(strap, strap.Comp.BuckleOffset);
++        var coords = new EntityCoordinates(strap, GetBuckleOffset(strap.Comp, buckle.Owner)); // Orion-Edit
+@@ -605,4 +616,5 @@ private void Unbuckle(Entity<BuckleComponent> buckle, Entity<StrapComponent> str
++        var buckleOffset = GetBuckleOffset(strap.Comp, buckle.Owner); // Orion
+@@ -619,8 +631,10 @@ private void Unbuckle(Entity<BuckleComponent> buckle, Entity<StrapComponent> str
+-            if (strap.Comp.BuckleOffset != Vector2.Zero)
++            // Orion-Edit-Start
++            if (buckleOffset != Vector2.Zero)
+-                buckleXform.Coordinates = oldBuckledXform.Coordinates.Offset(strap.Comp.BuckleOffset);
++                _transform.SetCoordinates(buckle, buckleXform, oldBuckledXform.Coordinates.Offset(buckleOffset));
++            // Orion-Edit-End
+@@ -643,4 +657,11 @@ private void Unbuckle(Entity<BuckleComponent> buckle, Entity<StrapComponent> str
++    // Orion-Start
++    private static Vector2 GetBuckleOffset(StrapComponent strap, EntityUid buckle)
++    {
++        return strap.BuckleOffsets.GetValueOrDefault(buckle, strap.BuckleOffset);
++    }
++    // Orion-End
++
+
+### Content.Shared/Rotation/RotationVisualsComponent.cs
+@@ -16,5 +16,5 @@ public sealed partial class RotationVisualsComponent : Component
+-    public Angle DefaultRotation = Angle.FromDegrees(90);
++    public Angle DefaultRotation = Angle.FromDegrees(-90); // Orion-Edit
+@@ -22,5 +22,5 @@ public sealed partial class RotationVisualsComponent : Component
+-    public Angle HorizontalRotation = Angle.FromDegrees(90);
++    public Angle HorizontalRotation = Angle.FromDegrees(-90); // Orion-Edit
+@@ -31,5 +31,5 @@ public sealed partial class RotationVisualsComponent : Component
+-    RotationState
++    RotationState,
+@@ -46,3 +46,3 @@ public enum RotationState
+-}
++}
+
+### Content.Shared/_Orion/Bed/Components/DoubleBedComponent.cs
+@@ -0,0 +1,20 @@
++using System.Numerics;
++using Robust.Shared.GameStates;
++
++namespace Content.Shared._Orion.Bed.Components;
++
++[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
++public sealed partial class DoubleBedComponent : Component
++{
++    [DataField, AutoNetworkedField]
++    public Vector2 LeftOffset = new(0f, -0.25f);
++
++    [DataField, AutoNetworkedField]
++    public Vector2 RightOffset = new(0f, 0.25f);
++
++    [DataField, AutoNetworkedField]
++    public Vector2 LeftBedsheetOffset = new(0f, 0.5f);
++
++    [DataField, AutoNetworkedField]
++    public Vector2 RightBedsheetOffset = new(0f, 0f);
++}
+
+### Content.Shared/_Orion/Bed/Components/DoubleBedSheetComponent.cs
+@@ -0,0 +1,6 @@
++using Content.Shared._Orion.Bed.Systems;
++
++namespace Content.Shared._Orion.Bed.Components;
++
++[RegisterComponent, Access(typeof(DoubleBedSystem))]
++public sealed partial class DoubleBedSheetComponent : Component;
+
+### Content.Shared/_Orion/Bed/Systems/DoubleBedSystem.cs
+@@ -0,0 +1,130 @@
++using System.Numerics;
++using Content.Shared._Orion.Bed.Components;
++using Content.Shared.Buckle;
++using Content.Shared.Buckle.Components;
++using Content.Shared.Interaction;
++using Content.Shared.Placeable;
++using Content.Shared.Tag;
++
++namespace Content.Shared._Orion.Bed.Systems;
++
++public sealed class DoubleBedSystem : EntitySystem
++{
++    [Dependency] private readonly TagSystem _tagSystem = default!;
++    [Dependency] private readonly PlaceableSurfaceSystem _placeableSurface = default!;
++    [Dependency] private readonly SharedTransformSystem _transform = default!;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeLocalEvent<DoubleBedComponent, ComponentStartup>(OnDoubleBedStartup);
++        SubscribeLocalEvent<DoubleBedComponent, StrapAttemptEvent>(OnStrapAttempt, before: new[] { typeof(SharedBuckleSystem) });
++        SubscribeLocalEvent<DoubleBedComponent, UnstrappedEvent>(OnUnstrapped, after: new[] { typeof(SharedBuckleSystem) });
++        SubscribeLocalEvent<DoubleBedComponent, AfterInteractUsingEvent>(OnAfterInteractUsing, before: new[] { typeof(PlaceableSurfaceSystem) });
++        SubscribeLocalEvent<DoubleBedComponent, InteractHandEvent>(OnInteractHand);
++    }
++
++    private void OnInteractHand(Entity<DoubleBedComponent> ent, ref InteractHandEvent args)
++    {
++        var query = EntityQueryEnumerator<DoubleBedSheetComponent, TransformComponent>();
++        while (query.MoveNext(out var bedsheetUid, out _, out var bedsheetXform))
++        {
++            if (bedsheetXform.ParentUid != ent.Owner)
++                continue;
++
++            args.Handled = true;
++            _transform.SetCoordinates(bedsheetUid, Transform(args.User).Coordinates);
++            return;
++        }
++    }
++
++    private void OnDoubleBedStartup(Entity<DoubleBedComponent> ent, ref ComponentStartup args)
++    {
++        if (!TryComp<StrapComponent>(ent, out var strap))
++            return;
++
++        if (strap.BuckleOffset != Vector2.Zero)
++            return;
++
++        strap.BuckleOffset = ent.Comp.LeftOffset;
++        Dirty(ent, strap);
++    }
++
++    private void OnStrapAttempt(Entity<DoubleBedComponent> ent, ref StrapAttemptEvent args)
++    {
++        if (!TryComp<StrapComponent>(ent, out var strap))
++            return;
++
++        var offset = strap.BuckledEntities.Count == 0 ? ent.Comp.LeftOffset : ent.Comp.RightOffset;
++        strap.BuckleOffsets[args.Buckle.Owner] = offset;
++        strap.BuckleOffset = offset;
++        Dirty(ent, strap);
++    }
++
++    private void OnUnstrapped(Entity<DoubleBedComponent> ent, ref UnstrappedEvent args)
++    {
++        if (!TryComp<StrapComponent>(ent, out var strap))
++            return;
++
++        strap.BuckleOffsets.Remove(args.Buckle.Owner);
++
++        strap.BuckleOffset = ent.Comp.LeftOffset;
++        foreach (var buckledEntity in strap.BuckledEntities)
++        {
++            strap.BuckleOffset = strap.BuckleOffsets.GetValueOrDefault(buckledEntity, ent.Comp.LeftOffset);
++            break;
++        }
++
++        Dirty(ent, strap);
++    }
++
++    private void OnAfterInteractUsing(Entity<DoubleBedComponent> ent, ref AfterInteractUsingEvent args)
++    {
++        if (!TryComp<PlaceableSurfaceComponent>(ent, out var surface))
++            return;
++
++        const string bedsheetTag = "Bedsheet";
++        if (!_tagSystem.HasTag(args.Used, bedsheetTag))
++            return;
++
++        var isDoubleBedsheet = HasComp<DoubleBedSheetComponent>(args.Used);
++
++        var bedCoords = Transform(ent).Coordinates;
++        var bedsheetCount = 0;
++        var hasDoubleBedsheet = false;
++
++        var doubleBedsheetQuery = EntityQueryEnumerator<DoubleBedSheetComponent, TransformComponent>();
++        while (doubleBedsheetQuery.MoveNext(out _, out _, out var doubleBedsheetXform))
++        {
++            if (doubleBedsheetXform.ParentUid != ent.Owner)
++                continue;
++
++            hasDoubleBedsheet = true;
++            break;
++        }
++
++        var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
++        while (query.MoveNext(out var uid, out _, out var xform))
++        {
++            if (uid == args.Used)
++                continue;
++
++            if (!_tagSystem.HasTag(uid, bedsheetTag))
++                continue;
++
++            var bedsheetCoords = xform.Coordinates;
++            if (bedsheetCoords.TryDistance(EntityManager, bedCoords, out var distance) && distance < 0.5f)
++                bedsheetCount++;
++        }
++
++        if (isDoubleBedsheet || hasDoubleBedsheet)
++            return;
++
++        var offset = bedsheetCount == 0
++            ? ent.Comp.RightBedsheetOffset
++            : ent.Comp.LeftBedsheetOffset;
++
++        _placeableSurface.SetPositionOffset(ent, offset, surface);
++    }
++}
+
+### Resources/Prototypes/Entities/Mobs/Species/base.yml
+@@ -343,6 +343,6 @@
+-    defaultRotation: 90
+-    horizontalRotation: 90
++    defaultRotation: -90 # Orion-Edit
++    horizontalRotation: -90 # Orion-Edit
+
+### Resources/Prototypes/Entities/Structures/Machines/lathe.yml
+@@ -950,4 +950,5 @@
++    - DoubleBedsheets # Orion
+
+### Resources/Prototypes/Recipes/Construction/Graphs/furniture/bed.yml
+@@ -54,4 +54,43 @@
++        # Orion-Start
++        - to: double_bed_complete
++          completed:
++            - !type:SnapToGrid { }
++          steps:
++            - material: Steel
++              amount: 2
++              doAfter: 1
++            - material: Cloth
++              amount: 2
++              doAfter: 1
++        # Orion-End
++    # Orion-Start
++    - node: double_bed_complete
++      entity: DoubleBed
++      edges:
++        - to: bed
++          completed:
++            - !type:SpawnPrototype
++              prototype: SheetSteel1
++              amount: 2
++            - !type:SpawnPrototype
++              prototype: MaterialCloth1
++              amount: 2
++          steps:
++            - tool: Screwing
++              doAfter: 1
++        - to: start
++          completed:
++            - !type:SpawnPrototype
++              prototype: SheetSteel1
++              amount: 4
++            - !type:SpawnPrototype
++              prototype: MaterialCloth1
++              amount: 4
++          steps:
++            - tool: Screwing
++              doAfter: 1
++    # Orion-End
+
+### Resources/Prototypes/_Orion/Entities/Objects/Misc/bedsheets.yml
+@@ -10,2 +10,288 @@
++
++- type: entity
++  parent: BaseItem
++  id: DoubleBedsheetBase
++  name: DoubleBedsheetBase
++  description: Large soft bedsheet for double bed.
++  abstract: true
++  placement:
++    mode: SnapgridCenter
++    snap:
++    - Bed
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Misc/bedsheets_double.rsi
++    noRot: true
++  - type: Item
++    size: Small
++  - type: StaticPrice
++    price: 24
++  - type: Tag
++    tags:
++    - Bedsheet
++  - type: DoubleBedSheet
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetBlack
++  name: black double bedsheet
++  components:
++  - type: Sprite
++    state: double_sheetblack
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetBlue
++  name: blue double bedsheet
++  components:
++  - type: Sprite
++    state: double_sheetblue
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetBrown
++  name: brown double bedsheet
++  components:
++  - type: Sprite
++    state: double_sheetbrown
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCaptain
++  name: captain's double bedsheet
++  description: A large bedsheet with Nanotrasen emblem, woven from revolutionary thread with 0.01% permeability.
++  components:
++  - type: Sprite
++    state: double_sheetcaptain
++  - type: StealTarget
++    stealGroup: HeadBedsheet
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCE
++  name: CE's double bedsheet
++  description: Decorated with a wrench emblem. Highly reflective and stain resistant.
++  components:
++  - type: Sprite
++    state: double_sheetce
++  - type: StealTarget
++    stealGroup: HeadBedsheet
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCentcom
++  name: CentComm double bedsheet
++  description: Woven with advanced nanothread for warmth, essential for all officials.
++  components:
++  - type: Sprite
++    state: double_sheetcentcom
++  - type: StealTarget
++    stealGroup: HeadBedsheet
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetClown
++  name: clown's double bedsheet
++  description: A large rainbow bedsheet with a clown mask. Smells faintly of bananas.
++  components:
++  - type: Sprite
++    state: double_sheetclown
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCMO
++  name: CMO's double bedsheet
++  description: A sterilized bedsheet with a cross emblem.
++  components:
++  - type: Sprite
++    state: double_sheetcmo
++  - type: StealTarget
++    stealGroup: HeadBedsheet
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCosmos
++  name: cosmos double bedsheet
++  description: Made from the dreams of those who wonder at the stars.
++  components:
++  - type: Sprite
++    state: double_sheetcosmos
++
++- type: entity
++  parent: DoubleBedsheetBase
++  id: DoubleBedsheetCult
++  name: cult double bedsheet
++  description: Glows with an eldritch presence.
++  components:
++  - type: Sprite
++    state: double_sheetcult
++
++- type: entity
++  parent: DoubleBedsheetBase
+
+### Resources/Prototypes/_Orion/Entities/Structures/Furniture/beds.yml
+
+### Resources/Prototypes/_Orion/Recipes/Construction/Graph/furniture/bed.yml
+
+### Resources/Prototypes/_Orion/Recipes/Construction/furniture.yml
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/bedsheets.yml

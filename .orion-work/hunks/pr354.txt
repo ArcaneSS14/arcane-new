@@ -1,0 +1,69 @@
+Merge branch 'master' into kvas
+
+### Resources/Prototypes/_Orion/Catalog/Cargo/cargo_food.yml
+@@ -0,0 +1,9 @@
++- type: cargoProduct
++  id: FoodCrateKvassTank
++  icon:
++    sprite: _Orion/Structures/Storage/kvass.rsi
++    state: kvass
++  product: KvassTankFull
++  cost: 2000
++  category: Food
++  group: market
+
+### Resources/Prototypes/_Orion/Entities/Objects/Consumable/Drinks/drinks.yml
+@@ -0,0 +1,15 @@
++- type: entity
++  parent: DrinkGlassBase
++  id: DrinkKvassGlass
++  name: kvass glass
++  description: A cool refreshing drink with a taste of socialism.
++  components:
++    - type: Sprite
++      sprite: _Orion/Objects/Consumable/Drinks/kvass.rsi
++    - type: SolutionContainerManager
++      solutions:
++        drink:
++          maxVol: 30
++          reagents:
++            - ReagentId: Kvass
++              Quantity: 30
+
+### Resources/Prototypes/_Orion/Entities/Structures/Storage/Tanks/tanks.yml
+@@ -0,0 +1,21 @@
++# Kvass
++- type: entity
++  parent: StorageTank
++  id: KvassTank
++  suffix: Empty
++  components:
++    - type: Sprite
++      sprite: _Orion/Structures/Storage/kvass.rsi
++      state: kvass
++
++- type: entity
++  parent: KvassTank
++  id: KvassTankFull
++  suffix: Full
++  components:
++    - type: SolutionContainerManager
++      solutions:
++        tank:
++          reagents:
++            - ReagentId: Kvass
++              Quantity: 500
+
+### Resources/Prototypes/_Orion/Reagents/Consumable/Drink/drinks.yml
+@@ -0,0 +1,11 @@
++- type: reagent
++  parent: BaseDrink
++  id: Kvass
++  name: reagent-name-kvass
++  desc: reagent-desc-kvass
++  physicalDesc: reagent-physical-desc-bubbly
++  flavor: bread
++  color: "#381600"
++  metamorphicSprite:
++    sprite: _Orion/Objects/Consumable/Drinks/kvass.rsi
++    state: icon

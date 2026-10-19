@@ -1,0 +1,4 @@
+A	Resources/Locale/en-US/_Orion/objectives/conditions/ninja.ftl
+A	Resources/Locale/ru-RU/_Orion/objectives/conditions/ninja.ftl
+M	Resources/Prototypes/GameRules/events.yml
+A	Resources/Prototypes/_Orion/Objective/ninja.yml

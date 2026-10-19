@@ -1,0 +1,94 @@
+Lan poxyu
+
+### Content.Server/Research/Systems/ResearchSystem.Console.cs
+@@ -35,4 +35,6 @@
++using Content.Server.Chat.Systems;
++using Content.Shared.Chat;
+@@ -42,4 +44,5 @@ public sealed partial class ResearchSystem
++    [Dependency] private readonly ChatSystem _chat = default!; // Orion
+@@ -96,5 +99,15 @@ private void OnConsoleUnlock(EntityUid uid, ResearchConsoleComponent component,
++
++            // Orion-Start
++            var messageIC = Loc.GetString(
++                "research-console-unlock-technology-ic",
++                ("technology", Loc.GetString(technologyPrototype.Name)),
++                ("amount", technologyPrototype.Cost.ToString()),
++                ("approver", getIdentityEvent.Title ?? string.Empty));
++            // Orion-End
++
++            _chat.TrySendInGameICMessage(uid, messageIC, InGameICChatType.Speak, false); // Orion
+
+### Content.Server/Research/Systems/ResearchSystem.Server.cs
+@@ -11,4 +11,5 @@
++using Content.Shared.Examine;
+@@ -22,4 +23,5 @@ private void InitializeServer()
++        SubscribeLocalEvent<ResearchServerComponent, ExaminedEvent>(OnServerExamined); // Orion
+@@ -29,4 +31,10 @@ private void OnServerStartup(EntityUid uid, ResearchServerComponent component, C
++
++        // Orion-Start
++        var formattedId = component.Id.ToString("D4");
++        component.ServerName = Loc.GetString("research-server-name", ("id", formattedId));
++        // Orion-End
++
+@@ -181,3 +189,19 @@ public void ModifyServerPoints(EntityUid uid, int points, ResearchServerComponen
+-}
++
++    // Orion-Start
++    private void OnServerExamined(EntityUid uid, ResearchServerComponent component, ExaminedEvent args)
++    {
++        if (!args.IsInDetailsRange)
++            return;
++
++        var points = GetPointsPerSecond(uid, component);
++
++        var msg = Loc.GetString("research-server-examine",
++            ("name", component.ServerName),
++            ("points", points));
++
++        args.PushMarkup(msg);
++    }
++    // Orion-End
++}
+
+### Content.Shared/Anomaly/Components/AnomalyComponent.cs
+@@ -285,5 +285,5 @@ public sealed partial class AnomalyComponent : Component
+-    public int MaxPointsPerSecond = 70;
++    public int MaxPointsPerSecond = 40; // Orion-Edit | 70 > 40
+@@ -316,5 +316,5 @@ public sealed partial class AnomalyComponent : Component
+-    public float Continuity = 0f;
++    public float Continuity;
+@@ -402,3 +402,3 @@ public sealed partial class AnomalyComponent : Component
+-public readonly record struct AnomalyBehaviorChangedEvent(EntityUid Anomaly, ProtoId<AnomalyBehaviorPrototype>? Old, ProtoId<AnomalyBehaviorPrototype>? New);
++public readonly record struct AnomalyBehaviorChangedEvent(EntityUid Anomaly, ProtoId<AnomalyBehaviorPrototype>? Old, ProtoId<AnomalyBehaviorPrototype>? New);
+
+### Content.Shared/Anomaly/SharedAnomalySystem.cs
+@@ -529,5 +529,5 @@ public override void Update(float frameTime)
+-public partial record struct AnomalySpawnSettings()
++public record struct AnomalySpawnSettings() // Orion-Edit | Remove partial
+
+### Content.Shared/Research/Components/ResearchServerComponent.cs
+@@ -40,5 +40,5 @@ public sealed partial class ResearchServerComponent : Component
+-    public string ServerName = "RDSERVER";
++    public string ServerName = ""; // Orion-Edit | Better server name
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/computers.yml
+@@ -758,4 +758,13 @@
++  # Orion-Start
++  - type: Speech
++    speechSounds: Borg
++    speechVerb: Robotic
++  - type: Grammar
++    attributes:
++      gender: female
++      proper: true
++  # Orion-End
+
+### Resources/Prototypes/Entities/Structures/Machines/research.yml
+@@ -7,6 +7,6 @@
+-# SPDX-FileCopyrightText: 2020 V�ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
+-# SPDX-FileCopyrightText: 2020 V�ctor Aguilera Puerto <zddm@outlook.es>
++# SPDX-FileCopyrightText: 2020 V ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
++# SPDX-FileCopyrightText: 2020 V ctor Aguilera Puerto <zddm@outlook.es>
+@@ -125,5 +125,5 @@
+-    pointspersecond: 15
++    pointspersecond: 15 # Orion-TODO: Change this to 1

@@ -1,0 +1,7 @@
+M	Resources/Locale/en-US/_europa/station-events/events/events.ftl
+A	Resources/Locale/ru-RU/_europa/prototypes/entities/mobs/npc/animals.ftl
+M	Resources/Locale/ru-RU/_europa/station-events/events/events.ftl
+A	Resources/Locale/ru-RU/_europa/wisdom.ftl
+A	Resources/Prototypes/_Europa/Datasets/wisdom.yml
+A	Resources/Prototypes/_Europa/Entities/Mobs/NPCs/animals.yml
+M	Resources/Prototypes/_Europa/GameRules/events.yml

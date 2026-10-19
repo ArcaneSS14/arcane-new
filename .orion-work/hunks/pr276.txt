@@ -1,0 +1,15 @@
+[Fix] License Test Fail
+
+### Resources/Audio/Voice/Zombie/attributions.yml
+@@ -5,13 +5,13 @@
+-  license: "CC-0"
++  license: "CC0-1.0"
+-  license: "CC-0"
++  license: "CC0-1.0"
+-  license: "CC-0"
++  license: "CC0-1.0"
+
+### Resources/Audio/_DV/Items/TapeRecorder/attributions.yml
+@@ -15,5 +15,5 @@
+-  license: "CC-0"
++  license: "CC0-1.0"

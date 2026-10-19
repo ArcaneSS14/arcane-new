@@ -1,0 +1,9 @@
+[Tweak] Add Manuals to Hermits
+
+### Resources/Prototypes/_Orion/Catalog/selectable_sets.yml
+@@ -35,4 +35,5 @@
++    - ManualOldFastCodes
+@@ -59,4 +60,5 @@
++    - ManualCodespeak
+@@ -81,4 +83,5 @@
++    - ManualCorporateCodespeak

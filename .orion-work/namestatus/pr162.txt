@@ -1,0 +1,6 @@
+M	Content.Server/_Orion/EnergyDome/Components/EnergyDomeComponent.cs
+M	Content.Server/_Orion/EnergyDome/Components/EnergyDomeGeneratorComponent.cs
+M	Content.Server/_Orion/EnergyDome/Systems/EnergyDomeSystem.cs
+M	Content.Shared/Weapons/Melee/SharedMeleeWeaponSystem.cs
+M	Resources/Prototypes/_Orion/Entities/Effects/energy_dome.yml
+M	Resources/Prototypes/_Orion/tags.yml

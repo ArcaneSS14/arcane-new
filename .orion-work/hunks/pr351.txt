@@ -1,0 +1,176 @@
+up1
+
+### Content.Client/Audio/Jukebox/JukeboxBoundUserInterface.cs
+@@ -50,4 +50,11 @@ protected override void Open()
++        // Orion-Start
++        _menu.OnLoopToggled += () =>
++        {
++            SendMessage(new JukeboxToggleLoopMessage());
++        };
++        // Orion-End
++
+@@ -68,4 +75,5 @@ public void Reload()
++        _menu.SetLoopButton(jukebox.LoopEnabled); // Orion
+
+### Content.Client/Audio/Jukebox/JukeboxMenu.xaml.cs
+@@ -34,4 +34,5 @@ public sealed partial class JukeboxMenu : FancyWindow
++    public event Action? OnLoopToggled; // Orion
+@@ -42,4 +43,6 @@ public sealed partial class JukeboxMenu : FancyWindow
++    private bool _loopState; // Orion
++
+@@ -58,17 +61,25 @@ public JukeboxMenu()
+-        PlayButton.OnPressed += args =>
++        PlayButton.OnPressed += _ =>
+-        StopButton.OnPressed += args =>
++        StopButton.OnPressed += _ =>
++
++        // Orion-Start
++        LoopButton.OnPressed += _ =>
++        {
++            OnLoopToggled?.Invoke();
++        };
++        // Orion-Start
++
+-        VolumeSlider.OnReleased += VolumeSliderKeyUp; /// Orion
++        VolumeSlider.OnReleased += VolumeSliderKeyUp; // Orion
+-        VolumeSlider.MaxValue = 100f; /// Orion
++        VolumeSlider.MaxValue = 100f; // Orion
+@@ -129,4 +140,24 @@ public void SetPlayPauseButton(bool playing, bool force = false)
++    // Orion-Start
++    public void SetLoopButton(bool loopEnabled)
++    {
++        if (_loopState == loopEnabled)
++            return;
++
++        _loopState = loopEnabled;
++
++        if (loopEnabled)
++        {
++            LoopButton.Text = Loc.GetString("jukebox-menu-button-loop-enabled");
++            LoopButton.Pressed = true;
++            return;
++        }
++
++        LoopButton.Text = Loc.GetString("jukebox-menu-button-loop");
++        LoopButton.Pressed = false;
++    }
++    // Orion-End
++
+@@ -164,5 +195,5 @@ protected override void FrameUpdate(FrameEventArgs args)
+-        VolumeNumberLabel.Text = $"{VolumeSlider.Value.ToString("0.##")} %"; // Orion
++        VolumeNumberLabel.Text = $"{VolumeSlider.Value:0.##} %"; // Orion
+
+### Content.Client/Audio/Jukebox/JukeboxSystem.cs
+@@ -150,3 +150,3 @@ private void SetLayerState(JukeboxVisualLayers layer, string? state, Entity<Spri
+-}
++}
+
+### Content.Server/Audio/Jukebox/JukeboxSystem.cs
+@@ -51,4 +51,5 @@
++using Robust.Shared.Timing;
+@@ -60,4 +61,5 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
++    [Dependency] private readonly IGameTiming _gameTiming = default!; // Orion
+@@ -70,4 +72,5 @@ public override void Initialize()
++        SubscribeLocalEvent<JukeboxComponent, JukeboxToggleLoopMessage>(OnJukeboxToggleLoop); // Orion
+@@ -89,4 +92,13 @@ private void OnJukeboxPlay(EntityUid uid, JukeboxComponent component, ref Jukebo
++
++            // Orion-Start
++            if (component.PlaybackStartTime == null && component.CurrentPlaybackOffset > 0)
++            {
++                Audio.SetPlaybackPosition(component.AudioStream, component.CurrentPlaybackOffset);
++            }
++            component.PlaybackStartTime = _gameTiming.CurTime;
++            Dirty(uid, component);
++            // Orion-End
+@@ -100,5 +112,9 @@ private void OnJukeboxPlay(EntityUid uid, JukeboxComponent component, ref Jukebo
+-            component.AudioStream = Audio.PlayPvs(jukeboxProto.Path, uid, AudioParams.Default.WithMaxDistance(10f).WithVolume(MapToRange(component.Volume, component.MinSlider, component.MaxSlider, component.MinVolume, component.MaxVolume)))?.Entity; // Orion
++            component.AudioStream = Audio.PlayPvs(jukeboxProto.Path, uid, AudioParams.Default.WithMaxDistance(10f).WithVolume(MapToRange(component.Volume, component.MinSlider, component.MaxSlider, component.MinVolume, component.MaxVolume)))?.Entity; // Orion-Edit
++            // Orion-Start
++            component.PlaybackStartTime = _gameTiming.CurTime;
++            component.CurrentPlaybackOffset = 0f;
++            // Orion-End
+@@ -108,13 +124,30 @@ private void OnJukeboxPause(Entity<JukeboxComponent> ent, ref JukeboxPauseMessag
++
++        // Orion-Start
++        if (!ent.Comp.PlaybackStartTime.HasValue)
++            return;
++
++        var elapsed = (float)(_gameTiming.CurTime - ent.Comp.PlaybackStartTime.Value).TotalSeconds;
++        ent.Comp.CurrentPlaybackOffset += elapsed;
++        ent.Comp.PlaybackStartTime = null;
++        Dirty(ent);
++        // Orion-End
+-        if (TryComp(args.Actor, out ActorComponent? actorComp))
+-        {
+-            var offset = actorComp.PlayerSession.Channel.Ping * 1.5f / 1000f;
+-            Audio.SetPlaybackPosition(component.AudioStream, args.SongTime + offset);
+-        }
++        if (!TryComp(args.Actor, out ActorComponent? actorComp))
++            return;
++
++        var offset = actorComp.PlayerSession.Channel.Ping * 1.5f / 1000f;
++        var newPosition = args.SongTime + offset; // Orion
++        Audio.SetPlaybackPosition(component.AudioStream, newPosition); // Orion-Edit
++
++        // Orion-Start
++        component.CurrentPlaybackOffset = newPosition;
++        component.PlaybackStartTime = _gameTiming.CurTime;
++        Dirty(uid, component);
++        // Orion-End
+@@ -124,9 +157,14 @@ private void OnJukeboxSetVolume(EntityUid uid, JukeboxComponent component, Jukeb
+-        if (!TryComp<AudioComponent>(component.AudioStream, out var audioComponent))
++        if (!TryComp<AudioComponent>(component.AudioStream, out _))
++
++    private void OnJukeboxToggleLoop(EntityUid uid, JukeboxComponent component, JukeboxToggleLoopMessage args)
++    {
++        ToggleLoop(uid, component);
++    }
+@@ -149,4 +187,8 @@ private void Stop(Entity<JukeboxComponent> entity)
++        // Orion-Start
++        entity.Comp.CurrentPlaybackOffset = 0f;
++        entity.Comp.PlaybackStartTime = null;
++        // Orion-End
+@@ -183,4 +225,24 @@ public override void Update(float frameTime)
++
++            // Orion-Start
++            if (!comp.LoopEnabled || !comp.PlaybackStartTime.HasValue || !Exists(comp.AudioStream) ||
++                !TryComp<AudioComponent>(comp.AudioStream, out var audioComp))
++                continue;
++
++            var audioLength = Audio.GetAudioLength(audioComp.FileName);
++            var elapsed = (float)(_gameTiming.CurTime - comp.PlaybackStartTime.Value).TotalSeconds;
++            var currentPosition = comp.CurrentPlaybackOffset + elapsed;
++
++            if (!(currentPosition >= audioLength.TotalSeconds))
++                continue;
++
++            // Restart track
++            Audio.SetPlaybackPosition(comp.AudioStream, 0f);
++            Audio.SetState(comp.AudioStream, AudioState.Playing);
++            comp.CurrentPlaybackOffset = 0f;
++            comp.PlaybackStartTime = _gameTiming.CurTime;
++            Dirty(uid, comp);
++            // Orion-End
+@@ -192,4 +254,10 @@ private void SetJukeboxVolume(EntityUid uid, JukeboxComponent component, float v
++
++    private void ToggleLoop(EntityUid uid, JukeboxComponent component)
++    {
++        component.LoopEnabled = !component.LoopEnabled;
++        Dirty(uid, component);
++    }
+
+### Content.Shared/Audio/Jukebox/JukeboxComponent.cs
+@@ -52,4 +52,13 @@ public sealed partial class JukeboxComponent : Component
++
++    [DataField, AutoNetworkedField]
++    public bool LoopEnabled;
++
++    [DataField]
++    public TimeSpan? PlaybackStartTime;
++
++    [DataField]
++    public float CurrentPlaybackOffset;
+@@ -82,4 +91,7 @@ public sealed class JukeboxSetVolumeMessage(float volume) : BoundUserInterfaceMe
++
++[Serializable, NetSerializable]
++public sealed class JukeboxToggleLoopMessage : BoundUserInterfaceMessage;

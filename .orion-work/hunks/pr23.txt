@@ -1,0 +1,225 @@
+Fixiki
+
+### Content.Server/NPC/Components/NPCUseActionOnTargetComponent.cs
+@@ -26,7 +26,7 @@ public sealed partial class NPCUseActionOnTargetComponent : Component
+-    public EntProtoId<EntityWorldTargetActionComponent> ActionId;
++    public List<EntProtoId<EntityWorldTargetActionComponent>> ActionId = new(); //  Europa-Edit
+-    [DataField]
+-    public EntityUid? ActionEnt;
+-}
++    [DataField] // Europa
++    public List<EntityUid> ActionEntities = new();
++}
+
+### Content.Server/NPC/Systems/NPCUseActionOnTargetSystem.cs
+@@ -43,4 +43,5 @@
++using Robust.Shared.Random;
+@@ -51,4 +52,5 @@ public sealed class NPCUseActionOnTargetSystem : EntitySystem
++    [Dependency] private readonly IRobustRandom _random = default!; // Europa
+@@ -62,13 +64,24 @@ public override void Initialize()
+-        ent.Comp.ActionEnt = _actions.AddAction(ent, ent.Comp.ActionId);
++        // Europa-Start
++        foreach (var actionProtoId in ent.Comp.ActionId)
++        {
++            var actionEnt = _actions.AddAction(ent.Owner, actionProtoId);
++            if (actionEnt == null || !actionEnt.HasValue)
++                continue;
++
++            ent.Comp.ActionEntities.Add(actionEnt.Value);
++        }
++        // Europa-End
+-    public bool TryUseTentacleAttack(Entity<NPCUseActionOnTargetComponent?> user, EntityUid target)
++    public bool TryUseTentacleAttack(Entity<NPCUseActionOnTargetComponent?> user, EntityUid target, List<EntityUid> actionEntities) // Europa-Edit | Added List
++        var actionEnt = _random.Pick(actionEntities); // Europa
++
+-        if (!TryComp<EntityWorldTargetActionComponent>(user.Comp.ActionEnt, out var action))
++        if (!TryComp<EntityWorldTargetActionComponent>(actionEnt, out var action)) // Europa
+@@ -77,11 +90,9 @@ public bool TryUseTentacleAttack(Entity<NPCUseActionOnTargetComponent?> user, En
+-        {
+-        }
+-            user.Comp.ActionEnt.Value,
++            actionEnt, // Europa-Edit
+@@ -102,6 +113,6 @@ public override void Update(float frameTime)
+-            TryUseTentacleAttack((uid, comp), target);
++            TryUseTentacleAttack(uid, target, comp.ActionEntities); // Europa-Edit
+-}
++}
+
+### Content.Shared/Abilities/Goliath/GoliathTentacleSystem.cs
+@@ -30,4 +30,9 @@ public override void Initialize()
++        // Europa-Start
++        SubscribeLocalEvent<GoliathSummonTentacleSquareAction>(OnSummonSquareAction);
++        SubscribeLocalEvent<GoliathSummonTentacleHollowSquareAction>(OnSummonHollowSquareAction);
++        SubscribeLocalEvent<GoliathSummonTentacleDiagonalCrossAction>(OnSummonDiagonalCrossAction);
++        // Europa-End
+@@ -72,3 +77,131 @@ private void OnSummonAction(GoliathSummonTentacleAction args)
+-}
++
++    // Europa-Start
++    private void OnSummonSquareAction(GoliathSummonTentacleSquareAction args)
++    {
++        if (args.Handled || args.Coords is not { } coords)
++            return;
++
++        _popup.PopupPredicted(Loc.GetString("tentacle-ability-use-popup", ("entity", args.Performer)), args.Performer, args.Performer, type: PopupType.SmallCaution);
++        _stun.TryStun(args.Performer, TimeSpan.FromSeconds(0.8f), false);
++
++        List<EntityCoordinates> spawnPos = new();
++
++        var squareSize = args.Range;
++        var halfSize = squareSize / 2;
++
++        for (int x = -halfSize; x <= halfSize; x++)
++        {
++            for (int y = -halfSize; y <= halfSize; y++)
++            {
++                spawnPos.Add(coords.Offset(new Vector2i(x, y)));
++            }
++        }
++
++        if (_transform.GetGrid(coords) is not { } grid || !TryComp<MapGridComponent>(grid, out var gridComp))
++            return;
++
++        foreach (var pos in spawnPos)
++        {
++            if (!_map.TryGetTileRef(grid, gridComp, pos, out var tileRef) ||
++                tileRef.IsSpace() ||
++                _turf.IsTileBlocked(tileRef, CollisionGroup.Impassable))
++            {
++                continue;
++            }
++
++            if (_net.IsServer)
++                Spawn(args.EntityId, pos);
++        }
++
++        args.Handled = true;
++    }
++
++    private void OnSummonHollowSquareAction(GoliathSummonTentacleHollowSquareAction args)
++    {
++        if (args.Handled || args.Coords is not { } coords)
++            return;
++
++        _popup.PopupPredicted(Loc.GetString("tentacle-ability-use-popup", ("entity", args.Performer)), args.Performer, args.Performer, type: PopupType.SmallCaution);
++        _stun.TryStun(args.Performer, TimeSpan.FromSeconds(0.8f), false);
++
++        List<EntityCoordinates> spawnPos = new();
++
++        var squareSize = args.Range;
++        var halfSize = squareSize / 2;
++
++        for (int x = -halfSize; x <= halfSize; x++)
++        {
++            for (int y = -halfSize; y <= halfSize; y++)
++            {
++                if (Math.Abs(x) == halfSize || Math.Abs(y) == halfSize)
++                {
++                    spawnPos.Add(coords.Offset(new Vector2i(x, y)));
++                }
++            }
++        }
++
++        if (_transform.GetGrid(coords) is not { } grid || !TryComp<MapGridComponent>(grid, out var gridComp))
++            return;
++
++        foreach (var pos in spawnPos)
++        {
++            if (!_map.TryGetTileRef(grid, gridComp, pos, out var tileRef) ||
++                tileRef.IsSpace() ||
++                _turf.IsTileBlocked(tileRef, CollisionGroup.Impassable))
++            {
++                continue;
++            }
++
++            if (_net.IsServer)
++                Spawn(args.EntityId, pos);
++        }
++
++        args.Handled = true;
++    }
++
++    private void OnSummonDiagonalCrossAction(GoliathSummonTentacleDiagonalCrossAction args)
++    {
++        if (args.Handled || args.Coords is not { } coords)
++            return;
++
++        _popup.PopupPredicted(Loc.GetString("tentacle-ability-use-popup", ("entity", args.Performer)), args.Performer, args.Performer, type: PopupType.SmallCaution);
++        _stun.TryStun(args.Performer, TimeSpan.FromSeconds(0.8f), false);
++
++        List<EntityCoordinates> spawnPos = new();
++
++        var squareSize = args.Range;
++        var halfSize = squareSize / 2;
++
++        for (int x = -halfSize; x <= halfSize; x++)
++        {
++            for (int y = -halfSize; y <= halfSize; y++)
++            {
++                if (Math.Abs(x) == Math.Abs(y))
++                {
++                    spawnPos.Add(coords.Offset(new Vector2i(x, y)));
++                }
++            }
++        }
++
++        if (_transform.GetGrid(coords) is not { } grid || !TryComp<MapGridComponent>(grid, out var gridComp))
++            return;
++
++        foreach (var pos in spawnPos)
++        {
++            if (!_map.TryGetTileRef(grid, gridComp, pos, out var tileRef) ||
++                tileRef.IsSpace() ||
++                _turf.IsTileBlocked(tileRef, CollisionGroup.Impassable))
++            {
++                continue;
++            }
++
++            if (_net.IsServer)
++                Spawn(args.EntityId, pos);
++        }
++
++        args.Handled = true;
++    }
++    // Europa-End
++}
+
+### Resources/Prototypes/Entities/Mobs/NPCs/asteroid.yml
+@@ -121,6 +121,7 @@
+-  - type: NPCUseActionOnTarget
+-    actionId: ActionGoliathTentacle
++  - type: NPCUseActionOnTarget # Europa-Edit | Separate action ids
++    actionId:
++    - ActionGoliathTentacle
+@@ -145,8 +146,8 @@
+-      sprite: Mobs/Aliens/Asteroid/goliath.rsi
++      sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle
+-      sprite: Mobs/Aliens/Asteroid/goliath.rsi
++      sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle
+@@ -167,8 +168,9 @@
+-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
++    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle
++    duration: 4 # Europa-Edit
+@@ -202,5 +204,5 @@
+-    sprite: Mobs/Aliens/Asteroid/goliath.rsi
++    sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle
+
+### Resources/Prototypes/_Lavaland/Procedural/lavaland_grid_ruins.yml
+@@ -25,4 +25,10 @@
++- type: lavalandGridRuin # Europa
++  id: BroodmotherArena
++  name: lavaland-ruin-broodmother
++  path: /Maps/_Europa/Lavaland/BroodmotherArena.yml
++  priority: -1 # highest priority
++
+
+### Resources/Prototypes/_Lavaland/Procedural/ruin_pools.yml
+@@ -49,4 +49,5 @@
++    BroodmotherArena: 1
+
+### Resources/Prototypes/_Shitmed/Body/Actions/organactions.yml
+@@ -13,8 +13,8 @@
+-      sprite: Mobs/Aliens/Asteroid/goliath.rsi
++      sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle
+-      sprite: Mobs/Aliens/Asteroid/goliath.rsi
++      sprite: Mobs/Aliens/Asteroid/goliath_tentacle.rsi # Europa-Edit | Separate tentacle

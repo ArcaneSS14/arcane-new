@@ -1,0 +1,9 @@
+[Tweak] AdminWho for Everyone
+
+### Content.Server/Administration/Commands/AdminWhoCommand.cs
+@@ -22,5 +22,5 @@
+-[AdminCommand(AdminFlags.AdminWho)]
++[AnyCommand] // Orion-Edit: Accessible to all
+@@ -72,3 +72,3 @@ public override void Execute(IConsoleShell shell, string argStr, string[] args)
+-}
++}

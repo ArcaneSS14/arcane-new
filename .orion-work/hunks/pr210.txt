@@ -1,0 +1,39 @@
+[Fix] All Access
+
+### Resources/Prototypes/Access/misc.yml
+@@ -16,12 +16,4 @@
+-  # Orion-Start-Access
+-  - InteQVanguardLeader
+-  - InteQVanguard
+-  - UnitedEarthGovernmentGeneral
+-  - UnitedEarthGovernmentMedic
+-  - UnitedEarthGovernmentSpecialist
+-  - UnitedEarthGovernmentCommand
+-  # Orion-End-Access
+
+### Resources/Prototypes/Entities/Objects/Misc/identification_cards.yml
+@@ -1052,4 +1052,8 @@
++    # Orion-Start
++    - InteQ
++    - UnitedEarthGovernment
++    # Orion-End
+
+### Resources/Prototypes/_Orion/Access/inteq.yml
+@@ -6,2 +6,8 @@
++
++- type: accessGroup
++  id: InteQ
++  tags:
++  - InteQVanguardLeader
++  - InteQVanguard
+
+### Resources/Prototypes/_Orion/Entities/Objects/Misc/identification_cards.yml
+@@ -14,7 +14,7 @@
++    groups:
++    - InteQ
+-    - InteQVanguardLeader
+-    - InteQVanguard
+@@ -46,4 +46,5 @@
++    - InteQ
+@@ -60,4 +61,5 @@
++    - InteQVanguard

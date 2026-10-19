@@ -1,0 +1,7 @@
+[Tweak] Gamemode Display for Discord Webhook
+
+### Content.Server/GameTicking/GameTicker.RoundFlow.cs
+@@ -929,5 +929,6 @@ private async void SendRoundStartedDiscordMessage()
+-                var content = Loc.GetString("discord-round-notifications-started", ("id", RoundId), ("map", mapName));
++                var gameMode = CurrentPreset != null ? Loc.GetString(CurrentPreset.ModeTitle) : Loc.GetString("discord-round-notifications-unknown-gamemode"); // Orion
++                var content = Loc.GetString("discord-round-notifications-started", ("id", RoundId), ("map", mapName), ("mode", gameMode)); // Orion-Edit: Gamemode
