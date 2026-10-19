@@ -215,23 +215,18 @@ public sealed class OxygenKnockoutTest : GameTest
         await Server.WaitPost(() =>
         {
             SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
-            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage, Is.EqualTo(deadline + _timing.CurTime - pauseStart),
-                "Stasis between periodic updates must still suspend the treatment grace period.");
+            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(deadline - pauseStart),
+                "Stasis preserves the remaining grace period without restarting ten seconds.");
             SEntMan.AddComponent<StasisBedBuckledComponent>(patient);
         });
         await RunSeconds(0.1f);
-        await Server.WaitPost(() =>
-        {
-            Damage(patient, -1);
-            deadline = SComp<PostmortemHypoxiaComponent>(patient).NextDamage;
-            pauseStart = _timing.CurTime;
-        });
+        await Server.WaitPost(() => Damage(patient, -1));
         await RunSeconds(0.1f);
         await Server.WaitPost(() =>
         {
             SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
-            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage, Is.EqualTo(deadline + _timing.CurTime - pauseStart),
-                "A fresh treatment grace period must not include stasis elapsed before that treatment.");
+            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(TimeSpan.FromSeconds(10)),
+                "Only effective oxygen treatment starts a new ten-second grace period, frozen until stasis ends.");
         });
     }
 
