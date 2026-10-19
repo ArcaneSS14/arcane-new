@@ -1,51 +1,51 @@
 <Document>
-  # Hearts and defibrillators
+  # Сердце и дефибрилляторы
 
-  BPM means beats per minute. A standard human heart rests at 80 BPM. Its stable range is 40–210 inclusive.
-  Outside that range the rhythm becomes unstable; 0 BPM means the heart has stopped. Other hearts can have different limits.
-  Use a medical analyzer to check the pulse and distinguish a stopped heart from a missing one.
+  BPM — число ударов сердца в минуту. У обычного человека пульс в покое составляет 80 BPM. Стабильный диапазон — от 40 до 210 BPM включительно.
+  За его пределами сердечный ритм становится нестабильным; 0 BPM означает остановку сердца. У других сердец границы могут отличаться.
+  Проверяйте пульс медицинским анализатором: он также поможет отличить остановку сердца от его отсутствия.
 
-  ## Manual defibrillator
+  ## Ручной дефибриллятор
 
   <Box><GuideEntityEmbed Entity="Defibrillator" /></Box>
 
-  Use Z to switch the device on or off. Select Shock mode from its context menu; mode 3 is selected by default.
-  Mode selection is below battery removal, so Alt+Z keeps its normal battery interaction.
-  The selected mode is also shown when examining the device.
+  Клавиша Z включает и выключает прибор. Режим разряда выбирается в меню ПКМ; по умолчанию установлен режим 3.
+  Смена режима имеет меньший приоритет, чем извлечение батарейки, поэтому Alt+Z сохраняет обычное действие с батарейкой.
+  Выбранный режим также указан при осмотре прибора.
 
-  - Mode 1: subtracts 80 BPM from a beating heart; does not restart a stopped heart.
-  - Mode 2: subtracts 50 BPM from a beating heart; does not restart a stopped heart.
-  - Mode 3: adds 150 BPM, or starts a stopped heart at 200 BPM.
-  - Mode 4: adds 200 BPM, or starts a stopped heart at 300 BPM.
+  - Режим 1: снижает пульс работающего сердца на 80 BPM; не запускает остановившееся сердце.
+  - Режим 2: снижает пульс работающего сердца на 50 BPM; не запускает остановившееся сердце.
+  - Режим 3: повышает пульс на 150 BPM либо запускает остановившееся сердце с пульсом 200 BPM.
+  - Режим 4: повышает пульс на 200 BPM либо запускает остановившееся сердце с пульсом 300 BPM.
 
-  For example, 250 BPM with mode 2 becomes 200 BPM; 30 BPM with mode 3 becomes 180 BPM.
-  Recheck the patient after a shock. Repeating a raising mode keeps raising the pulse.
-  More power is not always better: mode 4 can start a dangerous rhythm, and mode 1 can stop a heart at 80 BPM.
-  The manual device has no neutral mode for an already normal pulse.
+  Например, режим 2 снижает пульс с 250 до 200 BPM, а режим 3 повышает его с 30 до 180 BPM.
+  После разряда снова проверяйте пациента. Каждый повторный разряд в повышающем режиме продолжает поднимать пульс.
+  Большая мощность не всегда полезнее: режим 4 может вызвать опасный ритм, а режим 1 — остановить сердце с пульсом 80 BPM.
+  У ручного дефибриллятора нет нейтрального режима, сохраняющего уже нормальный пульс.
 
-  ## Automatic defibrillator
+  ## Автоматический дефибриллятор
 
   <Box><GuideEntityEmbed Entity="DefibrillatorCompact" /></Box>
 
-  Automatic shocks move a beating heart by 45 BPM towards its resting rate without overshooting.
-  A stopped standard human heart starts at 210 BPM. The device respects the installed heart's stable limits.
+  Автоматический разряд сдвигает пульс работающего сердца на 45 BPM к норме, не перескакивая через неё.
+  Остановившееся обычное человеческое сердце запускается с пульсом 210 BPM. Прибор учитывает стабильный диапазон установленного сердца.
 
-  ## Chemical assistance
+  ## Лекарства и разряды
 
-  Shocks have no built-in suffocation healing. A dead patient's blood must contain at least 5u of each qualifying medicine.
-  One medicine that treats suffocation only in softcrit or hardcrit provides up to 40 healing.
-  A medicine that also treats suffocation outside crit provides 20; two different such medicines provide 40.
-  The total never exceeds 40. Medicines are not consumed by shocks. Their dose, temperature and other healing conditions still apply.
-  Overdoses that cause net suffocation damage do not qualify. Living patients do not receive this chemical bonus.
+  Сам по себе разряд не лечит удушье. Для такого лечения в крови мёртвого пациента должно быть не менее 5 единиц каждого подходящего препарата.
+  Препарат, лечащий удушье только в софткрите или хардкрите, позволяет вылечить разрядом до 40 единиц удушья.
+  Один препарат, действующий также вне крита, даёт 20 единиц лечения; два разных таких препарата — 40.
+  Суммарное лечение не превышает 40. Разряд не расходует лекарства. Учитываются их дозировка, температура и остальные условия лечебного действия.
+  Передозировка, при которой итоговый эффект усиливает удушье, не подходит. Живые пациенты этот лечебный бонус не получают.
 
-  Do not coordinate repeated shocks from several devices. Each patient needs the previous device's recharge interval between shocks (normally 5 seconds).
-  An earlier shock still changes the pulse but provides no chemical healing and causes an additional 30 heat damage.
-  Every delivered shock restarts this interval, regardless of the operator or device.
+  Не пытайтесь ускорить лечение разрядами из нескольких приборов. Между разрядами на одном пациенте нужно выдержать интервал перезарядки предыдущего прибора — обычно 5 секунд.
+  Более ранний разряд всё ещё меняет пульс, но не лечит удушье и наносит дополнительные 30 единиц термического урона.
+  Каждый проведённый разряд запускает отсчёт заново, независимо от прибора и оператора.
 
-  Defibrillation does not replace breathing, missing blood or treatment of other injuries.
-  Continue CPR when the patient cannot breathe independently. Epinephrine and omnizine can also stabilise and restart a heart.
+  Дефибрилляция не заменяет дыхание, восполнение крови и лечение других повреждений.
+  Продолжайте СЛР, если пациент не может дышать самостоятельно. Эпинефрин и омнизин также могут стабилизировать и запустить сердце.
 
   <Box><GuideEntityEmbed Entity="StasisBed" /></Box>
 
-  Stasis beds suppress the new circulation penalty from a missing or stopped heart while the patient is buckled in.
+  Пока пациент пристёгнут к стазисной кровати, она подавляет добавленный штраф кровообращения от отсутствия или остановки сердца.
 </Document>
