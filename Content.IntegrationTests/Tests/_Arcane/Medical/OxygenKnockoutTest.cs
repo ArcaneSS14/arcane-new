@@ -8,6 +8,7 @@ using Content.Medical.Common.Targeting;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Bed.Sleep;
+using Content.Shared.Bed.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
@@ -100,6 +101,96 @@ public sealed class OxygenKnockoutTest : GameTest
     }
 
     [Test]
+    public async Task DeadBodiesAccumulateOxygenDamageOnlyAfterEffectiveTreatmentStops()
+    {
+        await Pair.CreateTestMap();
+        EntityUid patient = default;
+        float afterTreatment = default;
+        await Server.WaitPost(() =>
+        {
+            patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
+            Damage(patient, 20);
+            _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = 5 } },
+                targetPart: TargetBodyPart.Vital, ignoreResistances: true);
+            SEntMan.System<MobStateSystem>().ChangeMobState(patient, MobState.Dead);
+        });
+        await RunSeconds(9f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(patient), Is.EqualTo(20), "Ordinary dead bodies must not passively heal suffocation.");
+            _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = -1 } },
+                targetPart: TargetBodyPart.Vital, ignoreResistances: true);
+        });
+        await RunSeconds(2.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(patient), Is.InRange(21f, 22f), "Healing another damage type must not reset oxygen treatment grace.");
+            Damage(patient, -5);
+            afterTreatment = Oxygen(patient);
+        });
+        await RunSeconds(9f);
+        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(afterTreatment)));
+        await RunSeconds(2.2f);
+        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.GreaterThan(afterTreatment)));
+    }
+
+    [Test]
+    public async Task PostmortemLimitsFollowTheBodyAndStasisPausesAccumulation()
+    {
+        await Pair.CreateTestMap();
+        EntityUid capped = default, scaled = default, excessive = default, upperStage = default;
+        float pausedDamage = default;
+        await Server.WaitPost(() =>
+        {
+            capped = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
+            scaled = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap.GridCoords);
+            excessive = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap.GridCoords);
+            upperStage = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap.GridCoords);
+            _damage.ChangeDamage(capped, new() { DamageDict = { ["Asphyxiation"] = 99.9f } },
+                targetPart: TargetBodyPart.Vital, ignoreResistances: true);
+            Damage(scaled, 50);
+            Damage(excessive, 130);
+            Damage(upperStage, 75);
+            SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(scaled, 120, MobState.SoftCrit);
+            foreach (var body in new[] { capped, scaled, excessive, upperStage })
+                SEntMan.System<MobStateSystem>().ChangeMobState(body, MobState.Dead);
+            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(excessive), Is.False);
+        });
+        await RunSeconds(12.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(capped), Is.EqualTo(100));
+            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(capped), Is.False);
+            Assert.That(Oxygen(excessive), Is.EqualTo(130), "Do not truncate existing damage above the cap.");
+            Assert.That(Oxygen(upperStage), Is.InRange(75.6f, 75.91f), "The upper stage adds 0.3 damage per second.");
+            Assert.That(Oxygen(scaled), Is.InRange(52f, 53f), "50 damage is still in the lower stage for this body.");
+            Damage(capped, -1);
+            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(capped), Is.True);
+            pausedDamage = Oxygen(scaled);
+            SEntMan.AddComponent<StasisBedBuckledComponent>(scaled);
+        });
+        await RunSeconds(9f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(capped), Is.EqualTo(99));
+            Assert.That(Oxygen(scaled), Is.EqualTo(pausedDamage));
+            SEntMan.RemoveComponent<StasisBedBuckledComponent>(scaled);
+        });
+        await RunSeconds(5.2f);
+        await Server.WaitPost(() =>
+        {
+            Assert.That(Oxygen(capped), Is.EqualTo(100));
+            Assert.That(Oxygen(scaled), Is.GreaterThan(pausedDamage));
+            SEntMan.System<MobStateSystem>().ChangeMobState(scaled, MobState.Alive);
+            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(scaled), Is.False);
+            SEntMan.System<MobStateSystem>().ChangeMobState(scaled, MobState.Dead);
+            pausedDamage = Oxygen(scaled);
+        });
+        await RunSeconds(9f);
+        await Server.WaitPost(() => Assert.That(Oxygen(scaled), Is.EqualTo(pausedDamage), "A new death starts a fresh grace period."));
+    }
+
+    [Test]
     public async Task AnalyzerWarningUsesThePatientsReplicatedKnockoutThreshold()
     {
         await Pair.CreateTestMap();
@@ -129,6 +220,8 @@ public sealed class OxygenKnockoutTest : GameTest
     }
 
     private bool Asleep(EntityUid patient) => _effects.TryGetStatusEffect(patient, OxygenKnockoutSystem.OxygenSleep, out _);
+
+    private float Oxygen(EntityUid patient) => _damage.GetAllDamage(patient).DamageDict.GetValueOrDefault("Asphyxiation").Float();
 
     private void Damage(EntityUid patient, int amount)
         => _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = amount } },
