@@ -278,12 +278,10 @@ namespace Content.Server.Atmos.EntitySystems
                 // Arcane-Start
                 var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
                 RaiseLocalEvent(uid, ref damageEvent);
-                // Arcane-End
 
-                // Arcane-Edit-Start: Observe pressure before applying the damage limit.
                 if (totalDamage >= barotrauma.MaxDamage)
                     continue;
-                // Arcane-Edit-End
+                // Arcane-End
 
                 if (pressure <= Atmospherics.HazardLowPressure)
                 {
