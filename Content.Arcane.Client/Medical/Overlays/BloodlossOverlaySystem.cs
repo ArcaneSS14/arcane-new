@@ -101,6 +101,9 @@ public sealed partial class BloodlossOverlaySystem : EntitySystem
 
     private void MarkDirty(EntityUid entity)
     {
+        if (_refreshRequired)
+            return;
+
         if (_player.LocalEntity is { } player && (entity == player || _body.GetBody(entity) == player))
             _refreshRequired = true;
     }
@@ -122,12 +125,29 @@ public sealed partial class BloodlossOverlaySystem : EntitySystem
         }
 
         var effect = ProtoMan.Index(Effect);
-        var damage = _damageable.GetAllDamage((player, damageable));
-        var total = FixedPoint2.Zero;
-        foreach (var type in effect.DamageTypes)
-            total += damage.DamageDict.GetValueOrDefault(type);
+        var total = GetEffectDamage((player, damageable), effect);
 
         var intensity = effect.FullIntensityDamage > 0f ? total.Float() / effect.FullIntensityDamage : 0f;
         _overlay.SetIntensity(this, intensity);
+    }
+
+    private FixedPoint2 GetEffectDamage(Entity<DamageableComponent?> entity, DamageGreyscalePrototype effect)
+    {
+        var total = FixedPoint2.Zero;
+        if (!Resolve(entity, ref entity.Comp, false))
+            return total;
+
+        if (TryComp<BodyComponent>(entity, out var body))
+        {
+            foreach (var part in _body.GetExternalOrgans((entity.Owner, body)))
+                total += GetEffectDamage(part.Owner, effect);
+        }
+        else
+        {
+            foreach (var type in effect.DamageTypes)
+                total += _damageable.GetDamageAmount(entity, type);
+        }
+
+        return total;
     }
 }
