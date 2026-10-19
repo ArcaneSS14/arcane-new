@@ -200,7 +200,7 @@ public sealed class OxygenKnockoutTest : GameTest
         EntityUid patient = default;
         EntityUid bed = default;
         TimeSpan deadline = default, pauseStart = default;
-        await Server.WaitPost(() =>
+        await Server.WaitAssertion(() =>
         {
             patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
             bed = SSpawnAtPosition("StasisBed", TestMap!.GridCoords);
@@ -208,15 +208,15 @@ public sealed class OxygenKnockoutTest : GameTest
             SEntMan.System<MobStateSystem>().ChangeMobState(patient, MobState.Dead);
         });
         await RunSeconds(0.1f);
-        await Server.WaitPost(() =>
+        await Server.WaitAssertion(() =>
         {
             deadline = SComp<PostmortemHypoxiaComponent>(patient).NextDamage;
             pauseStart = _timing.CurTime;
             Assert.That(SEntMan.System<SharedBuckleSystem>().TryBuckle(patient, null, bed), Is.True);
             Assert.That(SEntMan.HasComponent<StasisBedBuckledComponent>(patient), Is.True);
         });
-        await RunSeconds(0.1f);
-        await Server.WaitPost(() =>
+        await RunSeconds(0.3f);
+        await Server.WaitAssertion(() =>
         {
             Assert.That(SEntMan.System<SharedBuckleSystem>().TryUnbuckle(patient, null), Is.True);
             Assert.That(SEntMan.HasComponent<StasisBedBuckledComponent>(patient), Is.False);
@@ -226,8 +226,8 @@ public sealed class OxygenKnockoutTest : GameTest
         });
         await RunSeconds(0.1f);
         await Server.WaitPost(() => Damage(patient, -1));
-        await RunSeconds(0.1f);
-        await Server.WaitPost(() =>
+        await RunSeconds(0.3f);
+        await Server.WaitAssertion(() =>
         {
             Assert.That(SEntMan.System<SharedBuckleSystem>().TryUnbuckle(patient, null), Is.True);
             Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(TimeSpan.FromSeconds(10)),
@@ -243,7 +243,7 @@ public sealed class OxygenKnockoutTest : GameTest
         EntityUid? previousAttachment = null;
         try
         {
-            await Server.WaitPost(() =>
+            await Server.WaitAssertion(() =>
             {
                 previousAttachment = ServerSession!.AttachedEntity;
                 var patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
@@ -264,7 +264,7 @@ public sealed class OxygenKnockoutTest : GameTest
         async Task AssertWarning(bool expected)
         {
             await Pair.RunUntilSynced();
-            await Client.WaitPost(() =>
+            await Client.WaitAssertion(() =>
             {
                 var diagnostics = new HealthAnalyzerPopulateEvent();
                 CEntMan.EventBus.RaiseLocalEvent(CEntMan.GetEntity(patientNet), ref diagnostics);
