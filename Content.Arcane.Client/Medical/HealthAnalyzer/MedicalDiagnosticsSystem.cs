@@ -1,5 +1,6 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Shared.Medical.Heart;
+using Content.Arcane.Shared.Medical.Respiration;
 using Content.Shared.Body;
 using Content.Shared.Damage.Systems;
 using Content.Shared.IdentityManagement;
@@ -10,6 +11,7 @@ public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
     [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private OxygenThresholdSystem _oxygen = default!;
 
     public override void Initialize()
     {
@@ -59,7 +61,8 @@ public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 
     private void PopulateRespiration(EntityUid body, ref HealthAnalyzerPopulateEvent args)
     {
-        if (_damage.GetAllDamage(body).DamageDict.TryGetValue("Asphyxiation", out var damage) && damage > 75)
+        if (_oxygen.GetThreshold(body) is { } threshold &&
+            _damage.GetAllDamage(body).DamageDict.TryGetValue("Asphyxiation", out var damage) && damage.Float() >= threshold)
             args.Conditions.Add(Loc.GetString("condition-body-asphyxiation-severe"));
     }
 }
