@@ -1579,3 +1579,27 @@ AsimovCircuitBoard: CrewsimovCircuitBoard
 # 2026-09-24
 ClothingShoesTourist: ClothingShoesSandalsBlack
 ClothingShoesWizard: ClothingShoesSandalsBrown
+
+# Arcane-Start: Orion #16 InteQ migrations
+InteQLaserShield: EnergyShieldInteQ
+DefaultStationBeaconInteQSizo37: DefaultStationBeaconInteQSizo73
+
+MagazineBoxLight57x28InteQ: MagazineBoxPistolInteQ
+MagazineBoxLight762x39InteQ: MagazineBoxLightRifleInteQ
+
+AirlockHatchBasik: AirlockHatchInteQVanguardLocked
+
+BackmenVendingMachineCigs: RandomVending
+BackmenVendingMachineCola: RandomVending
+BackmenVendingMachineDonut: RandomVending
+BackmenVendingMachineShamblersJuice: RandomVending
+BackmenVendingMachineSnackGreen: RandomVending
+BackmenVendingMachineSovietSoda: RandomVending
+
+FloorHardCatwalkDarkIron: Catwalk
+
+PrinterDoc: null
+Shower: null
+
+AntiPsychicKnife: null
+# Arcane-End

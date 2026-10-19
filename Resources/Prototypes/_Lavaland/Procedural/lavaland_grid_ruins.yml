@@ -23,6 +23,14 @@
   priority: 1
   patchToPlanet: false
 
+# Arcane-Start: Orion #16 InteQ Sizo ruin
+- type: lavalandGridRuin
+  id: InteQSizo
+  name: lavaland-inteq-sizo
+  path: /Maps/_Arcane/Lavaland/InteQ_Sizo.yml
+  priority: 1
+# Arcane-End
+
 - type: lavalandGridRuin
   id: BiodomeBeach
   name: lavaland-ruin-biodome

@@ -66,6 +66,15 @@
     - id: PosterContrabandExoAcid
     - id: PosterContrabandExoRun
     - id: PosterContrabandExoChomp
+    # Arcane-Start: Orion #16 InteQ posters
+    - id: PosterContrabandInteQRecruitment
+    - id: PosterContrabandInteQWorkship
+    - id: PosterContrabandInteQWorkship2
+    - id: PosterContrabandInteQ
+    - id: PosterContrabandInteQNoSex
+    - id: PosterContrabandInteQVulp
+    - id: PosterContrabandInteQJulie
+    # Arcane-End
 
 - type: entityTable
   id: LegitPosterTable

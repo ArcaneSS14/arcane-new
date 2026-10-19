@@ -131,6 +131,8 @@
   startNode: start
   targetNode: BluespaceFloor
   category: construction-category-structures
+  theory:
+    InfrastructureKnowledge: 0
   conditions:
   - !type:TileNotBlocked
     failIfSpace: false

@@ -1,1 +1,0 @@
-reagent-name-kvass = Kvass

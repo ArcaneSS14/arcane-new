@@ -14,6 +14,10 @@
   - type: Speech
     speechVerb: HolierThanThou
   - type: GhostRole
+    # Arcane-Start
+    name: ghost-role-information-centcom-official-name
+    description: ghost-role-information-centcom-official-description
+    # Arcane-End
 
 ## Navy Shit
 

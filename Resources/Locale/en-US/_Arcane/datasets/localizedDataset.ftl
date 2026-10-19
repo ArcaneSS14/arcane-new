@@ -103,3 +103,7 @@ number-name-97 = 097
 number-name-98 = 098
 number-name-99 = 099
 number-name-100 = 100
+
+inteq-vanguard-leader-prefix-1 = Vanguard Leader
+inteq-vanguard-prefix-1 = Vanguard
+inteq-agent-prefix-1 = Agent
