@@ -16,6 +16,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Containers;
+using Content.Shared.Damage; // Arcane
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -259,14 +260,11 @@ namespace Content.Server.Atmos.EntitySystems
                     totalDamage += damage;
                 }
 
-                if (totalDamage >= barotrauma.MaxDamage)
-                    continue;
-
-                var pressure = 1f;
+                var pressure = 0f; // Arcane-Edit: 1f > 0f
 
                 if (_atmosphereSystem.GetContainingMixture(uid) is {} mixture)
                 {
-                    pressure = MathF.Max(mixture.Pressure, 1f);
+                    pressure = MathF.Max(mixture.Pressure, 0f); // Arcane-Edit: 1f > 0f
                 }
 
                 pressure = pressure switch
@@ -277,10 +275,20 @@ namespace Content.Server.Atmos.EntitySystems
                     _ => pressure
                 };
 
+                // Arcane-Start
+                var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
+                RaiseLocalEvent(uid, ref damageEvent);
+                // Arcane-End
+
+                // Arcane-Edit-Start: Observe pressure before applying the damage limit.
+                if (totalDamage >= barotrauma.MaxDamage)
+                    continue;
+                // Arcane-Edit-End
+
                 if (pressure <= Atmospherics.HazardLowPressure)
                 {
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Shitmed Change
+                    _damageableSystem.TryChangeDamage(uid, damageEvent.Damage ?? barotrauma.Damage * Atmospherics.LowPressureDamage * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Arcane-Edit: Allow pressure damage overrides.
 
                     if (!barotrauma.TakingDamage)
                     {
@@ -295,7 +303,7 @@ namespace Content.Server.Atmos.EntitySystems
                     var damageScale = MathF.Min(((pressure / Atmospherics.HazardHighPressure) - 1) * Atmospherics.PressureDamageCoefficient, Atmospherics.MaxHighPressureDamage);
 
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Shitmed Change
+                    _damageableSystem.TryChangeDamage(uid, damageEvent.Damage ?? barotrauma.Damage * damageScale * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Arcane-Edit: Allow pressure damage overrides.
 
                     if (!barotrauma.TakingDamage)
                     {
@@ -331,4 +339,14 @@ namespace Content.Server.Atmos.EntitySystems
             }
         }
     }
+    // Arcane-Start
+    /// <summary>
+    /// Allows content to replace pressure damage after equipment protection, before damage is applied.
+    /// </summary>
+    [ByRefEvent]
+    public record struct BarotraumaDamageEvent(float Pressure, float UpdateInterval, FixedPoint2 CurrentDamage)
+    {
+        public DamageSpecifier? Damage;
+    }
+    // Arcane-End
 }
