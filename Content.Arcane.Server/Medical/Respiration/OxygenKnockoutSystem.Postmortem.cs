@@ -28,6 +28,28 @@ public sealed partial class OxygenKnockoutSystem
     private static readonly FixedPoint2 UpperRate = FixedPoint2.New(0.3);
     private TimeSpan _nextUpdate;
 
+    private void InitializePostmortem()
+    {
+        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentStartup>(OnStasisStarted);
+        SubscribeLocalEvent<StasisBedBuckledComponent, ComponentShutdown>(OnStasisStopped);
+    }
+
+    private void OnStasisStarted(Entity<StasisBedBuckledComponent> ent, ref ComponentStartup args)
+    {
+        if (TryComp<PostmortemHypoxiaComponent>(ent, out var state))
+            state.LastUpdate = _timing.CurTime;
+    }
+
+    private void OnStasisStopped(Entity<StasisBedBuckledComponent> ent, ref ComponentShutdown args)
+    {
+        if (!TryComp<PostmortemHypoxiaComponent>(ent, out var state))
+            return;
+
+        var now = _timing.CurTime;
+        state.NextDamage += now - state.LastUpdate;
+        state.LastUpdate = now;
+    }
+
     private bool Eligible(EntityUid uid)
         => TryComp<MobStateComponent>(uid, out var mob) && mob.CurrentState == MobState.Dead &&
             HasComp<BodyComponent>(uid) && Active<RespiratorComponent>(uid) &&
@@ -57,7 +79,10 @@ public sealed partial class OxygenKnockoutSystem
             state.LastUpdate = now;
         }
         else if (current < state.Asphyxiation)
+        {
             state.NextDamage = now + TreatmentGrace;
+            state.LastUpdate = now;
+        }
 
         state.Asphyxiation = current;
         state.LowerThreshold = lower;
@@ -73,11 +98,10 @@ public sealed partial class OxygenKnockoutSystem
         var query = EntityQueryEnumerator<PostmortemHypoxiaComponent>();
         while (query.MoveNext(out var uid, out var state))
         {
-            var elapsed = now - state.LastUpdate;
-            state.LastUpdate = now;
             if (HasComp<StasisBedBuckledComponent>(uid))
             {
-                state.NextDamage += elapsed;
+                state.NextDamage += now - state.LastUpdate;
+                state.LastUpdate = now;
                 continue;
             }
 

@@ -14,6 +14,7 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Timing;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
@@ -22,6 +23,7 @@ public sealed class OxygenKnockoutTest : GameTest
 {
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
+    [SidedDependency(Side.Server)] private readonly IGameTiming _timing = null!;
 
     [TestPrototypes]
     private const string Prototypes = """
@@ -188,6 +190,49 @@ public sealed class OxygenKnockoutTest : GameTest
         });
         await RunSeconds(9f);
         await Server.WaitPost(() => Assert.That(Oxygen(scaled), Is.EqualTo(pausedDamage), "A new death starts a fresh grace period."));
+    }
+
+    [Test]
+    public async Task BriefStasisAndTreatmentDuringStasisPreserveTheExactGracePeriod()
+    {
+        await Pair.CreateTestMap();
+        EntityUid patient = default;
+        TimeSpan deadline = default, pauseStart = default;
+        await Server.WaitPost(() =>
+        {
+            patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
+            Damage(patient, 20);
+            SEntMan.System<MobStateSystem>().ChangeMobState(patient, MobState.Dead);
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            deadline = SComp<PostmortemHypoxiaComponent>(patient).NextDamage;
+            pauseStart = _timing.CurTime;
+            SEntMan.AddComponent<StasisBedBuckledComponent>(patient);
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage, Is.EqualTo(deadline + _timing.CurTime - pauseStart),
+                "Stasis between periodic updates must still suspend the treatment grace period.");
+            SEntMan.AddComponent<StasisBedBuckledComponent>(patient);
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            Damage(patient, -1);
+            deadline = SComp<PostmortemHypoxiaComponent>(patient).NextDamage;
+            pauseStart = _timing.CurTime;
+        });
+        await RunSeconds(0.1f);
+        await Server.WaitPost(() =>
+        {
+            SEntMan.RemoveComponent<StasisBedBuckledComponent>(patient);
+            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage, Is.EqualTo(deadline + _timing.CurTime - pauseStart),
+                "A fresh treatment grace period must not include stasis elapsed before that treatment.");
+        });
     }
 
     [Test]

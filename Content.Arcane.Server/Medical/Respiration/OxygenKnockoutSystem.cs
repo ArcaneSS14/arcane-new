@@ -25,6 +25,7 @@ public sealed partial class OxygenKnockoutSystem : EntitySystem
 
     public override void Initialize()
     {
+        InitializePostmortem();
         SubscribeLocalEvent<RespiratorComponent, MobThresholdChecked>(OnThresholds);
         SubscribeLocalEvent<RespiratorComponent, MobStateChangedEvent>(OnStateChanged);
         SubscribeLocalEvent<RespiratorComponent, ComponentStartup>(OnRespiratorStartup);
