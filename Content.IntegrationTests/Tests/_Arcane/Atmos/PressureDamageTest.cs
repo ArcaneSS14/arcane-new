@@ -74,6 +74,7 @@ public sealed class PressureDamageTest : GameTest
         Assert.That(Sample(patient, 0f, 2f).GetTotal().Float(), Is.EqualTo(4f));
         Assert.That(Sample(patient, 825f).GetTotal().Float(), Is.EqualTo(1f));
         Assert.That(Sample(patient, 1100f).GetTotal().Float(), Is.EqualTo(2f));
+        Assert.That(Sample(patient, 550f).GetTotal().Float(), Is.Zero);
     }
 
     [Test]
@@ -88,19 +89,47 @@ public sealed class PressureDamageTest : GameTest
             seed.Flags = DamageSpecifier.DamageFlags.NoWounds | DamageSpecifier.DamageFlags.NoBleeding;
             _damage.ChangeDamage(patient, seed, ignoreResistances: true);
             _mobState.ChangeMobState(patient, MobState.Dead);
+            var barotrauma = SComp<BarotraumaComponent>(patient);
+            barotrauma.LowPressureModifier = 20f;
+            _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(199f));
+            Assert.That(barotrauma.TakingDamage, Is.False);
+
+            barotrauma.LowPressureModifier = 0f;
             _pressure.Update(1f);
             Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(200f));
             for (var i = 0; i < 65; i++)
                 _pressure.Update(1f);
             Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(200f));
             Assert.That(_blood.GetBloodLevel(patient), Is.EqualTo(initialBlood));
+            Assert.That(barotrauma.TakingDamage, Is.False);
 
+            barotrauma.LowPressureModifier = 101.325f;
+            _pressure.Update(1f);
+            Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
+
+            barotrauma.LowPressureModifier = 0f;
             _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = -10 } }, ignoreResistances: true);
             _pressure.Update(1f);
-            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(195f).Within(0.02f));
+            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(192f).Within(0.02f));
             _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = 1 } }, ignoreResistances: true);
             Assert.That(_blood.GetBloodLevel(patient), Is.LessThan(initialBlood), "Ordinary damage still causes blood loss.");
         });
+    }
+
+    [Test]
+    [RunOnSide(Side.Server)]
+    public void RemovingBarotraumaResetsExposure()
+    {
+        var patient = SSpawn("TestArcanePressureBlood");
+        Sample(patient, 0f, 60f);
+        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(5f));
+        var damage = SComp<BarotraumaComponent>(patient).Damage;
+        SEntMan.RemoveComponent<BarotraumaComponent>(patient);
+        Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
+
+        SEntMan.AddComponent<BarotraumaComponent>(patient).Damage = damage;
+        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(2f));
     }
 
     [Test]

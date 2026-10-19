@@ -26,6 +26,12 @@ public sealed partial class PressureDamageSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<BarotraumaComponent, BarotraumaDamageEvent>(OnPressureDamage);
+        SubscribeLocalEvent<BarotraumaComponent, ComponentShutdown>(OnBarotraumaShutdown);
+    }
+
+    private void OnBarotraumaShutdown(Entity<BarotraumaComponent> ent, ref ComponentShutdown args)
+    {
+        RemComp<PressureExposureComponent>(ent);
     }
 
     private void OnPressureDamage(Entity<BarotraumaComponent> ent, ref BarotraumaDamageEvent args)

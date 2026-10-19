@@ -279,11 +279,10 @@ namespace Content.Server.Atmos.EntitySystems
                 var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
                 RaiseLocalEvent(uid, ref damageEvent);
 
-                if (!damageEvent.IgnoreDamageLimit && totalDamage >= barotrauma.MaxDamage)
-                    continue;
+                var canDamage = damageEvent.IgnoreDamageLimit || totalDamage < barotrauma.MaxDamage;
                 // Arcane-End
 
-                if (pressure <= Atmospherics.HazardLowPressure)
+                if (canDamage && pressure < Atmospherics.HazardLowPressure) // Arcane-Edit: Exclude the limit and zero-damage boundary.
                 {
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
                     _damageableSystem.TryChangeDamage(uid, damageEvent.Damage ?? barotrauma.Damage * Atmospherics.LowPressureDamage * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Arcane-Edit: Allow pressure damage overrides.
@@ -296,7 +295,7 @@ namespace Content.Server.Atmos.EntitySystems
 
                     _alertsSystem.ShowAlert(uid, barotrauma.LowPressureAlert, 2);
                 }
-                else if (pressure >= Atmospherics.HazardHighPressure && !_spellblade.IsHoldingItemWithFireSpellbladeEnchantmentComponent(uid)) // Goob edit
+                else if (canDamage && pressure > Atmospherics.HazardHighPressure && !_spellblade.IsHoldingItemWithFireSpellbladeEnchantmentComponent(uid)) // Goob edit // Arcane-Edit: Exclude the limit and zero-damage boundary.
                 {
                     var damageScale = MathF.Min(((pressure / Atmospherics.HazardHighPressure) - 1) * Atmospherics.PressureDamageCoefficient, Atmospherics.MaxHighPressureDamage);
 
@@ -313,7 +312,7 @@ namespace Content.Server.Atmos.EntitySystems
                 }
                 else
                 {
-                    // Within safe pressure limits
+                    // No pressure damage; keep environmental warnings up to date. // Arcane-Edit: Include capped damage.
                     if (barotrauma.TakingDamage)
                     {
                         barotrauma.TakingDamage = false;
