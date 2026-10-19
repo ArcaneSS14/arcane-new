@@ -21,6 +21,16 @@ public sealed class OxygenKnockoutTest : GameTest
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
 
+    [TestPrototypes]
+    private const string Prototypes = """
+- type: entity
+  parent: MobHuman
+  id: TestArcaneOxygenHuman
+  components:
+  - type: Respirator
+    updateInterval: 1000
+""";
+
     [Test]
     [RunOnSide(Side.Server)]
     public void OxygenSleepFollowsDamageThresholdsAndImmunityWithoutClearingSedation()
@@ -56,9 +66,7 @@ public sealed class OxygenKnockoutTest : GameTest
         NetEntity patientNet = default;
         await Server.WaitPost(() =>
         {
-            var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
-            // Keep ordinary breathing from healing the boundary values during replication.
-            SComp<RespiratorComponent>(patient).NextUpdate += TimeSpan.FromHours(1);
+            var patient = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
             SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
             Damage(patient, 59);
             patientNet = SEntMan.GetNetEntity(patient);
