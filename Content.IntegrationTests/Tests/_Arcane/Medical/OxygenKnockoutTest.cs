@@ -1,6 +1,7 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Common.Medical.Respiration;
 using Content.Arcane.Server.Medical.Respiration;
+using Content.Goobstation.Common.Body.Components;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Common.Body;
@@ -95,6 +96,16 @@ public sealed class OxygenKnockoutTest : GameTest
         SEntMan.AddComponent<BreathingImmunityComponent>(patient);
         Assert.That(Asleep(patient), Is.False);
         SEntMan.RemoveComponent<BreathingImmunityComponent>(patient);
+        Assert.That(Asleep(patient), Is.True);
+
+        SEntMan.AddComponent<SpecialBreathingImmunityComponent>(patient);
+        Assert.That(Asleep(patient), Is.False);
+        SEntMan.RemoveComponent<SpecialBreathingImmunityComponent>(patient);
+        Assert.That(Asleep(patient), Is.True);
+
+        SEntMan.RemoveComponent<RespiratorComponent>(patient);
+        Assert.That(Asleep(patient), Is.False);
+        SEntMan.AddComponent<RespiratorComponent>(patient);
         Assert.That(Asleep(patient), Is.True);
 
         _effects.TrySetStatusEffectDuration(patient, SleepingSystem.StatusEffectForcedSleeping, TimeSpan.FromSeconds(10));
