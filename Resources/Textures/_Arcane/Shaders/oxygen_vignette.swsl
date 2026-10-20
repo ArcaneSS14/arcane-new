@@ -1,10 +1,27 @@
 light_mode unshaded;
 
 uniform highp float intensity;
+uniform bool chromaticEnabled;
+uniform highp float chromaticStart;
+uniform sampler2D SCREEN_TEXTURE;
 
 void fragment() {
-    highp vec2 centered = FRAGCOORD.xy * SCREEN_PIXEL_SIZE - vec2(0.5);
+    highp vec2 screenUV = FRAGCOORD.xy * SCREEN_PIXEL_SIZE;
+    highp vec2 centered = screenUV - vec2(0.5);
     highp float innerRadius = mix(0.45, 0.15, intensity);
     highp float darkness = smoothstep(innerRadius, 0.5, length(centered));
-    COLOR = vec4(0.0, 0.0, 0.0, darkness * intensity * 0.95);
+    highp float opacity = darkness * intensity * 0.95;
+    if (chromaticEnabled) {
+        highp float strength = smoothstep(chromaticStart, 1.0, intensity);
+        highp float edge = smoothstep(0.15, 0.5, length(centered));
+        highp vec2 offset = centered * SCREEN_PIXEL_SIZE * 2.0;
+        highp vec2 minimumUV = SCREEN_PIXEL_SIZE * 0.5;
+        highp vec2 maximumUV = vec2(1.0) - minimumUV;
+        highp vec4 color = zTextureSpec(SCREEN_TEXTURE, screenUV);
+        color.r = mix(color.r, zTextureSpec(SCREEN_TEXTURE, clamp(screenUV + offset, minimumUV, maximumUV)).r, strength * edge);
+        color.b = mix(color.b, zTextureSpec(SCREEN_TEXTURE, clamp(screenUV - offset, minimumUV, maximumUV)).b, strength * edge);
+        COLOR = vec4(color.rgb * (1.0 - opacity), color.a);
+    } else {
+        COLOR = vec4(0.0, 0.0, 0.0, opacity);
+    }
 }
