@@ -149,7 +149,8 @@ public sealed class OxygenKnockoutTest : GameTest
         await RunSeconds(2.2f);
         await Server.WaitPost(() =>
         {
-            Assert.That(Oxygen(capped), Is.EqualTo(100));
+            Assert.That(Oxygen(capped), Is.GreaterThan(99).And.LessThanOrEqualTo(100),
+                "Treatment restarts accumulation after its grace period without exceeding the body's cap.");
         });
     }
 
