@@ -2,5 +2,4 @@
   id: BloodlossGreyscale
   damageTypes:
   - Bloodloss
-  - Asphyxiation
   fullIntensityDamage: 100
