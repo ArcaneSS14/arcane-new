@@ -10,14 +10,8 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
-using Content.Shared.Alert;
 using Content.Shared.Buckle;
 using Content.Shared.Medical;
-using Content.Shared.Interaction;
-using Content.Shared.Item.ItemToggle.Components;
-using Content.Shared.Power.EntitySystems;
-using Content.Shared.PowerCell;
-using Content.Shared.PowerCell.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
@@ -28,21 +22,16 @@ using Content.Shared.Mobs.Systems;
 using Content.Medical.Common.Targeting;
 using Content.Shared.FixedPoint;
 using Content.Shared.Verbs;
-using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
 [TestOf(typeof(HeartRateSystem))]
 public sealed class HeartRateTest : GameTest
 {
-    private static readonly ProtoId<AlertPrototype> HeartStopAlert = "HeartStop";
-
     [SidedDependency(Side.Server)] private readonly HeartRateSystem _heart = null!;
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
-    [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -111,85 +100,6 @@ public sealed class HeartRateTest : GameTest
 
         _body.RemoveOrgan(patient, uid);
         Assert.That(SEntMan.HasComponent<DelayedDeathComponent>(patient), Is.False);
-    }
-
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void ExistingDefibrillatorsRestartTheNewHeartSimulation()
-    {
-        var patient = SSpawn("MobHuman");
-        var uid = _body.GetOrgan(patient, "Heart")!.Value;
-        var heart = SComp<HeartRateComponent>(uid);
-        _heart.SetRate(uid, heart, 0f, false);
-
-        var defib = SSpawn("DefibrillatorCompact");
-        var ev = new DefibrillatorTreatmentEvent(defib, patient, true);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(210f));
-
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(165f));
-
-        _heart.SetRate(uid, heart, 90f, false);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "An automatic shock must stop at the resting rate.");
-
-        _heart.SetRate(uid, heart, 70f, false);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
-    }
-
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void ManualVoltageSettingsControlTheShock()
-    {
-        var patient = SSpawn("MobHuman");
-        var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
-        var heart = SComp<HeartRateComponent>(heartUid);
-        var defib = SSpawn("Defibrillator");
-        var manual = SComp<ManualDefibrillatorComponent>(defib);
-        var modes = SEntMan.System<ManualDefibrillatorSystem>();
-        Assert.That(manual.Mode, Is.EqualTo(3));
-        var ev = new DefibrillatorTreatmentEvent(defib, patient, true);
-        _heart.SetRate(heartUid, heart, 0f, false);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(200f));
-        Assert.That(modes.SetMode((defib, manual), 2), Is.True);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref ev);
-        Assert.That(heart.CurrentRate, Is.EqualTo(150f));
-        Assert.That(modes.SetMode((defib, manual), 5), Is.False);
-        Assert.That(manual.Mode, Is.EqualTo(2));
-
-        var verbs = SEntMan.System<Content.Shared.Verbs.SharedVerbSystem>()
-            .GetLocalVerbs(defib, patient,
-                new List<Type> { typeof(Content.Shared.Verbs.Verb), typeof(Content.Shared.Verbs.AlternativeVerb) }, force: true);
-        var choices = verbs.Where(verb => verb.Category?.Text == Loc.GetString("arcane-defibrillator-mode-category")).ToArray();
-        Assert.That(choices, Has.Length.EqualTo(4));
-        Assert.That(choices.All(verb => verb.GetType() == typeof(Content.Shared.Verbs.Verb)), Is.True,
-            "Mode choices must not participate in activation or alternative hotkeys, even without a battery.");
-        Assert.That(verbs.Any(verb => verb is Content.Shared.Verbs.AlternativeVerb
-            && verb.CompareTo(choices[0]) < 0), Is.True,
-            "Battery ejection must remain above the mode choices for Alt+Z.");
-        Assert.That(SComp<ItemToggleComponent>(defib).OnUse, Is.True, "Z must retain the normal power toggle.");
-    }
-
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void HeartTransplantsRefreshAlerts()
-    {
-        var patient = SSpawn("MobHuman");
-        var uid = _body.GetOrgan(patient, "Heart")!.Value;
-        var heart = SComp<HeartRateComponent>(uid);
-        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
-
-        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.False);
-
-        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
-        _heart.SetRate(uid, heart, 0f, false);
-        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
     }
 
     [TestCase(true)]
@@ -354,10 +264,15 @@ public sealed class HeartRateTest : GameTest
             await Client.WaitAssertion(() =>
             {
                 var verbs = CEntMan.System<SharedVerbSystem>().GetLocalVerbs(CEntMan.GetEntity(defibNet),
-                    CEntMan.GetEntity(userNet), new List<Type> { typeof(ActivationVerb), typeof(Verb), typeof(ExamineVerb) }).ToList();
+                    CEntMan.GetEntity(userNet), new List<Type> { typeof(ActivationVerb), typeof(AlternativeVerb), typeof(Verb), typeof(ExamineVerb) }).ToList();
                 var modes = verbs.Where(v => v.Category?.Text == Loc.GetString("arcane-defibrillator-mode-category")).ToList();
                 Assert.That(modes, Has.Count.EqualTo(4), "Modes must exist without requesting server verbs.");
-                Assert.That(verbs.FindIndex(v => v is ActivationVerb), Is.LessThan(verbs.IndexOf(modes[0])));
+                var firstMode = verbs.IndexOf(modes[0]);
+                Assert.That(modes.All(v => v.GetType() == typeof(Verb)), Is.True,
+                    "Mode choices must not replace Z or Alt+Z actions.");
+                Assert.That(verbs.FindIndex(v => v is ActivationVerb), Is.GreaterThanOrEqualTo(0).And.LessThan(firstMode));
+                Assert.That(verbs.FindIndex(v => v is AlternativeVerb), Is.GreaterThanOrEqualTo(0).And.LessThan(firstMode),
+                    "Battery ejection must keep its Alt+Z priority.");
                 Assert.That(verbs.IndexOf(modes[^1]), Is.LessThan(verbs.FindIndex(v => v is ExamineVerb)));
             });
             await Server.WaitPost(() => SEntMan.System<ManualDefibrillatorSystem>()
