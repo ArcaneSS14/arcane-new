@@ -59,14 +59,16 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
     /// <summary>
     /// Returns a single capped bonus for distinct therapeutic reagents present at a dose of at least five units.
     /// </summary>
-    public int GetShockHealing(EntityUid patient, Entity<SolutionComponent> solution)
+    public int GetShockHealing(EntityUid patient, Entity<SolutionComponent> solution,
+        List<ProtoId<ReagentPrototype>>? medicines = null)
     {
         var added = !HasComp<OxygenMedicineEvaluationComponent>(patient);
         if (added)
             AddComp<OxygenMedicineEvaluationComponent>(patient);
         try
         {
-            return CalculateHealing(patient, solution);
+            medicines?.Clear();
+            return CalculateHealing(patient, solution, medicines);
         }
         finally
         {
@@ -75,7 +77,8 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
         }
     }
 
-    private int CalculateHealing(EntityUid patient, Entity<SolutionComponent> solution)
+    private int CalculateHealing(EntityUid patient, Entity<SolutionComponent> solution,
+        List<ProtoId<ReagentPrototype>>? medicines)
     {
         var contents = solution.Comp.Solution;
         var generalMedicines = 0;
@@ -91,7 +94,15 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
                 !(Heals(patient, solution, effects, MobState.SoftCrit) || Heals(patient, solution, effects, MobState.Critical)))
                 continue;
 
-            if (!Heals(patient, solution, effects, MobState.Alive) || ++generalMedicines == 2)
+            if (!Heals(patient, solution, effects, MobState.Alive))
+            {
+                medicines?.Clear();
+                medicines?.Add(id);
+                return 40;
+            }
+
+            medicines?.Add(id);
+            if (++generalMedicines == 2)
                 return 40;
         }
 

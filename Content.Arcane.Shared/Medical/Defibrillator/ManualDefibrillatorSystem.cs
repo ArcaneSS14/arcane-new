@@ -1,9 +1,8 @@
 using Content.Arcane.Shared.Medical.Heart;
-using Content.Arcane.Shared.Medical.Defibrillator;
 using Content.Shared.Examine;
 using Content.Shared.Verbs;
 
-namespace Content.Arcane.Server.Medical.Defibrillator;
+namespace Content.Arcane.Shared.Medical.Defibrillator;
 
 public sealed partial class ManualDefibrillatorSystem : EntitySystem
 {
@@ -41,7 +40,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
                 Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode),
                     ("sign", change > 0 ? "+" : ""), ("change", change), ("restart", restartText)),
                 Category = category,
-                Priority = -100, // Context-menu actions must not replace Z or Alt+Z interactions.
+                Priority = 1,
                 Disabled = mode == ent.Comp.Mode,
                 Act = () => SetMode(ent, selected),
             });
@@ -64,6 +63,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
         ent.Comp.Mode = mode;
         defibrillator.BpmZapHeal = change;
         defibrillator.BpmZapHealFlatline = restart;
+        Dirty(ent);
         return true;
     }
 }
