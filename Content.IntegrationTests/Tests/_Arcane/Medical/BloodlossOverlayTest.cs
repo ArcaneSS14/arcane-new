@@ -19,31 +19,6 @@ public sealed class BloodlossOverlayTest : GameTest
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
 
     [Test]
-    [RunOnSide(Side.Client)]
-    public void EquipmentAndMedicalEffectsShareOneOverlay()
-    {
-        try
-        {
-            _greyscale.SetIntensity(_bloodloss, 0.4f);
-            AssertIntensity(0.4f);
-            _greyscale.SetIntensity(_greyscale, 1f);
-            AssertIntensity(1f);
-            _greyscale.SetIntensity(_bloodloss, 0.7f);
-            AssertIntensity(1f);
-
-            _greyscale.SetIntensity(_greyscale, 0f);
-            AssertIntensity(0.7f);
-            _greyscale.SetIntensity(_bloodloss, 0f);
-            Assert.That(_overlays.HasOverlay<BlackAndWhiteOverlay>(), Is.False);
-        }
-        finally
-        {
-            _greyscale.SetIntensity(_greyscale, 0f);
-            _greyscale.SetIntensity(_bloodloss, 0f);
-        }
-    }
-
-    [Test]
     public async Task DamageRecoveryAndChangingPatientRefreshTheEffect()
     {
         await Pair.CreateTestMap();
@@ -73,10 +48,21 @@ public sealed class BloodlossOverlayTest : GameTest
             {
                 _bloodloss.FrameUpdate(0f);
                 AssertIntensity(0.5f);
+                _greyscale.SetIntensity(_greyscale, 1f);
+                AssertIntensity(1f);
+                _greyscale.SetIntensity(_greyscale, 0f);
+                AssertIntensity(0.5f);
+                _greyscale.SetIntensity(_greyscale, 1f);
             });
 
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, healthy));
             await RunSeconds(0.2f);
+            await Client.WaitPost(() =>
+            {
+                _bloodloss.FrameUpdate(0f);
+                AssertIntensity(1f);
+                _greyscale.SetIntensity(_greyscale, 0f);
+            });
             await AssertNoMedicalOverlay();
 
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, patient));
@@ -93,6 +79,7 @@ public sealed class BloodlossOverlayTest : GameTest
         }
         finally
         {
+            await Client.WaitPost(() => _greyscale.SetIntensity(_greyscale, 0f));
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, null));
             await RunSeconds(0.2f);
             await AssertNoMedicalOverlay();
