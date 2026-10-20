@@ -367,6 +367,11 @@ public sealed class HeartRateTest : GameTest
             await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<ManualDefibrillatorComponent>(
                 CEntMan.GetEntity(defibNet)).Mode, Is.EqualTo(1)));
         }
+        catch (Exception error)
+        {
+            TestContext.Error.WriteLine(error);
+            throw;
+        }
         finally
         {
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, previousAttachment));
