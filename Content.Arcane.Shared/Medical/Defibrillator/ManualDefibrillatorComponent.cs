@@ -1,9 +1,11 @@
+using Robust.Shared.GameStates;
+
 namespace Content.Arcane.Shared.Medical.Defibrillator;
 
-[RegisterComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class ManualDefibrillatorComponent : Component
 {
-    [DataField]
+    [DataField, AutoNetworkedField]
     public int Mode = 3;
 
     [DataField]
