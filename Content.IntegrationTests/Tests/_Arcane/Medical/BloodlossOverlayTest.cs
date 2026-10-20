@@ -15,6 +15,7 @@ namespace Content.IntegrationTests.Tests._Arcane.Medical;
 [TestOf(typeof(MedicalDamageOverlaySystem))]
 public sealed class BloodlossOverlayTest : GameTest
 {
+    private static readonly ProtoId<DamageGreyscalePrototype> Effect = "BloodlossGreyscale";
     [SidedDependency(Side.Client)] private readonly BlackAndWhiteOverlaySystem _greyscale = null!;
     [SidedDependency(Side.Client)] private readonly MedicalDamageOverlaySystem _bloodloss = null!;
     [SidedDependency(Side.Client)] private readonly IPrototypeManager _prototypes = null!;
@@ -56,7 +57,7 @@ public sealed class BloodlossOverlayTest : GameTest
             await Client.WaitPost(() =>
             {
                 _bloodloss.FrameUpdate(0f);
-                expected = Math.Clamp(20f / _prototypes.Index<DamageGreyscalePrototype>("BloodlossGreyscale").FullIntensityDamage, 0f, 1f);
+                expected = Math.Clamp(20f / _prototypes.Index(Effect).FullIntensityDamage, 0f, 1f);
                 AssertIntensity(expected);
                 _greyscale.SetIntensity(_greyscale, 1f);
                 AssertIntensity(1f);
