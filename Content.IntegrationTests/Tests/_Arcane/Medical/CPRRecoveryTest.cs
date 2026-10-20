@@ -17,6 +17,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Stunnable;
 using Content.Shared.Verbs;
 using Content.Trauma.Shared.Medical;
 using Robust.Shared.GameObjects;
@@ -190,6 +191,72 @@ public sealed class CPRRecoveryTest : GameTest
     }
 
     [Test]
+    public async Task ProcedureVerbsAndRecoveryActionsUseSharedState()
+    {
+        await Pair.CreateTestMap();
+        NetEntity patientNet = default, rescuerNet = default;
+        EntityUid? previousAttachment = null;
+        try
+        {
+            await Server.WaitPost(() =>
+            {
+                var patient = SpawnHuman();
+                var rescuer = SpawnHuman();
+                SEntMan.EnsureComponent<CPRTrainingComponent>(rescuer);
+                Damage(patient, 120);
+                _mob.ChangeMobState(patient, MobState.SoftCrit);
+                previousAttachment = ServerSession!.AttachedEntity;
+                Server.PlayerMan.SetAttachedEntity(ServerSession, rescuer);
+                patientNet = SEntMan.GetNetEntity(patient);
+                rescuerNet = SEntMan.GetNetEntity(rescuer);
+            });
+            await AssertLocalVerb("cpr-verb");
+            await Server.WaitPost(() => SEntMan.AddComponent<BreathingImmunityComponent>(SEntMan.GetEntity(rescuerNet)));
+            await AssertLocalVerb("arcane-chest-compressions-verb");
+            await Server.WaitPost(() => SEntMan.RemoveComponent<BreathingImmunityComponent>(SEntMan.GetEntity(rescuerNet)));
+            await AssertLocalVerb("cpr-verb");
+            await Server.WaitPost(() =>
+            {
+                var patient = SEntMan.GetEntity(patientNet);
+                _mob.ChangeMobState(patient, MobState.Dead);
+                _mob.ChangeMobState(patient, MobState.Alive);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
+            });
+            await RunSeconds(3f);
+            await RunUntilSynced();
+            await Client.WaitAssertion(() =>
+            {
+                var patient = CEntMan.GetEntity(patientNet);
+                Assert.That(CEntMan.HasComponent<SleepingComponent>(patient), Is.True);
+                Assert.That(CEntMan.System<SleepingSystem>().TryWakeWithCooldown(patient), Is.False);
+                Assert.That(CEntMan.System<SharedStunSystem>().TryStanding(patient), Is.False);
+            });
+        }
+        catch (Exception error)
+        {
+            TestContext.Error.WriteLine(error);
+            throw;
+        }
+        finally
+        {
+            await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, previousAttachment));
+        }
+
+        async Task AssertLocalVerb(string key)
+        {
+            await RunSeconds(0.2f);
+            await RunUntilSynced();
+            await Client.WaitAssertion(() =>
+            {
+                var verbs = CEntMan.System<SharedVerbSystem>().GetLocalVerbs(CEntMan.GetEntity(patientNet),
+                    CEntMan.GetEntity(rescuerNet), typeof(InnateVerb));
+                Assert.That(verbs.Count(v => v.Text == Loc.GetString(key)), Is.EqualTo(1),
+                    "The procedure must be available without fetching server verbs.");
+            });
+        }
+    }
+
+    [Test]
     public async Task RecoveryExpiresWithoutRemovingOtherSleepSources()
     {
         await Pair.CreateTestMap();
@@ -211,7 +278,16 @@ public sealed class CPRRecoveryTest : GameTest
             }
             _effects.TrySetStatusEffectDuration(sedated, SleepingSystem.StatusEffectForcedSleeping, TimeSpan.FromSeconds(20));
         });
-        await RunSeconds(5.2f);
+        await RunSeconds(3f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.HasComponent<SleepingComponent>(recovering), Is.True);
+            Assert.That(SEntMan.System<SleepingSystem>().TryWakeWithCooldown(recovering), Is.False,
+                "The wake action must not end the five-second recovery sleep early.");
+            Assert.That(SEntMan.System<SharedStunSystem>().TryStanding(recovering), Is.False,
+                "Standing up must not bypass recovery sleep.");
+        });
+        await RunSeconds(2.2f);
         await Server.WaitPost(() =>
         {
             Assert.That(SEntMan.HasComponent<SleepingComponent>(recovering), Is.False);

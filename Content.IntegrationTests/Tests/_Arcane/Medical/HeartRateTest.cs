@@ -27,6 +27,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Medical.Common.Targeting;
 using Content.Shared.FixedPoint;
+using Content.Shared.Verbs;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
@@ -147,7 +148,7 @@ public sealed class HeartRateTest : GameTest
         var heart = SComp<HeartRateComponent>(heartUid);
         var defib = SSpawn("Defibrillator");
         var manual = SComp<ManualDefibrillatorComponent>(defib);
-        var modes = SEntMan.System<Content.Arcane.Server.Medical.Defibrillator.ManualDefibrillatorSystem>();
+        var modes = SEntMan.System<ManualDefibrillatorSystem>();
         Assert.That(manual.Mode, Is.EqualTo(3));
         var ev = new DefibrillatorTreatmentEvent(defib, patient, true);
         _heart.SetRate(heartUid, heart, 0f, false);
@@ -331,6 +332,53 @@ public sealed class HeartRateTest : GameTest
     }
 
     [Test]
+    public async Task ManualModesAreAvailableLocallyAndReplicateSelection()
+    {
+        await Pair.CreateTestMap();
+        NetEntity defibNet = default;
+        NetEntity userNet = default;
+        EntityUid? previousAttachment = null;
+        try
+        {
+            await Server.WaitPost(() =>
+            {
+                var user = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+                var defib = SSpawnAtPosition("Defibrillator", TestMap.GridCoords);
+                previousAttachment = ServerSession!.AttachedEntity;
+                Server.PlayerMan.SetAttachedEntity(ServerSession, user);
+                defibNet = SEntMan.GetNetEntity(defib);
+                userNet = SEntMan.GetNetEntity(user);
+            });
+            await RunSeconds(0.2f);
+            await RunUntilSynced();
+            await Client.WaitAssertion(() =>
+            {
+                var verbs = CEntMan.System<SharedVerbSystem>().GetLocalVerbs(CEntMan.GetEntity(defibNet),
+                    CEntMan.GetEntity(userNet), new List<Type> { typeof(ActivationVerb), typeof(Verb), typeof(ExamineVerb) }).ToList();
+                var modes = verbs.Where(v => v.Category?.Text == Loc.GetString("arcane-defibrillator-mode-category")).ToList();
+                Assert.That(modes, Has.Count.EqualTo(4), "Modes must exist without requesting server verbs.");
+                Assert.That(verbs.FindIndex(v => v is ActivationVerb), Is.LessThan(verbs.IndexOf(modes[0])));
+                Assert.That(verbs.IndexOf(modes[^1]), Is.LessThan(verbs.FindIndex(v => v is ExamineVerb)));
+            });
+            await Server.WaitPost(() => SEntMan.System<ManualDefibrillatorSystem>()
+                .SetMode((SEntMan.GetEntity(defibNet), SComp<ManualDefibrillatorComponent>(SEntMan.GetEntity(defibNet))), 1));
+            await RunSeconds(0.2f);
+            await RunUntilSynced();
+            await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<ManualDefibrillatorComponent>(
+                CEntMan.GetEntity(defibNet)).Mode, Is.EqualTo(1)));
+        }
+        catch (Exception error)
+        {
+            TestContext.Error.WriteLine(error);
+            throw;
+        }
+        finally
+        {
+            await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, previousAttachment));
+        }
+    }
+
+    [Test]
     [RunOnSide(Side.Server)]
     public void DeliveredShockTreatsBeforeRevivalAndPenalizesAnotherDevice()
     {
@@ -341,7 +389,7 @@ public sealed class HeartRateTest : GameTest
         var solutions = SEntMan.System<SharedSolutionContainerSystem>();
         Assert.That(solutions.ResolveSolution(patient, blood.BloodSolutionName, ref blood.BloodSolution, out _), Is.True);
         Assert.That(solutions.TryAddReagent(blood.BloodSolution!.Value, "Epinephrine", 5), Is.True);
-        damage.TryChangeDamage(patient, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 60 } }, true,
+        damage.TryChangeDamage(patient, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 60, ["Bloodloss"] = 30 } }, true,
             targetPart: TargetBodyPart.Vital);
         mob.ChangeMobState(patient, MobState.Dead);
         var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
@@ -354,10 +402,11 @@ public sealed class HeartRateTest : GameTest
         Assert.That(system.CanZap(defib, patient), Is.True);
         system.Zap(defib, patient, patient);
         Assert.That(damage.GetAllDamage(patient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(20)));
+        Assert.That(damage.GetAllDamage(patient).DamageDict["Bloodloss"], Is.EqualTo(FixedPoint2.New(10)));
         Assert.That(SComp<MobStateComponent>(patient).CurrentState, Is.Not.EqualTo(MobState.Dead));
         Assert.That(heart.CurrentRate, Is.GreaterThan(0f));
         Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine"),
-            Is.EqualTo(FixedPoint2.New(5)));
+            Is.EqualTo(FixedPoint2.New(1)));
 
         damage.TryChangeDamage(patient, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 40 } }, true,
             targetPart: TargetBodyPart.Vital);
@@ -368,6 +417,8 @@ public sealed class HeartRateTest : GameTest
         SEntMan.EventBus.RaiseLocalEvent(patient, ref anotherShock);
         Assert.That(damage.GetAllDamage(patient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(60)));
         Assert.That(damage.GetAllDamage(patient).DamageDict["Heat"] - heat, Is.EqualTo(FixedPoint2.New(30)));
+        Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine"),
+            Is.EqualTo(FixedPoint2.New(1)), "An early repeat shock must not consume medicine.");
 
         var stoppedPatient = SSpawn("MobHuman");
         mob.ChangeMobState(stoppedPatient, MobState.Dead);

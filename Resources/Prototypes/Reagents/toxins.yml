@@ -378,13 +378,18 @@
             Bloodloss: 5
       # Arcane-Start
       - !type:ModifyHeartRate
-        amount: -10
+        amount: -7
         conditions:
         - !type:ReagentCondition
           reagent: Lexorin
           min: 5
       - !type:ModifyHeartRate
-        amount: -6
+        amount: -5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lexorin
+          min: 5
+          inverted: true
       # Arcane-End
 
 - type: reagent
@@ -682,7 +687,7 @@
             Poison: 0.6 # Makes it 20 damage per unit.
       # Arcane-Start
       - !type:ModifyHeartRate
-        amount: -1.4
+        amount: -1.2
         lowerCap: 55
         conditions:
         - !type:ReagentCondition

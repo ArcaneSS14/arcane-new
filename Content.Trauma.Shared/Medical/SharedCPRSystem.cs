@@ -73,15 +73,11 @@ public abstract partial class SharedCPRSystem : EntitySystem
 
     private void OnGetVerbs(Entity<CPRTrainingComponent> ent, ref GetVerbsEvent<InnateVerb> args)
     {
-        // Arcane-Start: The server selects the procedure and validates its physiology.
-        if (_net.IsClient)
-            return;
-        // Arcane-End
         var target = args.Target;
         if (!args.CanInteract || !args.CanAccess || !_mobQuery.TryComp(target, out var mob) || mob.CurrentState == MobState.Alive)
             return;
 
-        // Arcane-Start: Resolve the displayed procedure on the authoritative side.
+        // Arcane-Start: Resolve the displayed procedure from shared physiology.
         var capabilities = new CPRCapabilitiesEvent(ent.Owner);
         RaiseLocalEvent(target, ref capabilities);
         if (capabilities.Handled && !capabilities.CanPerform)
