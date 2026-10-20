@@ -4,7 +4,9 @@ using Content.Arcane.Client.Medical.HealthAnalyzer;
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
+using Content.Medical.Common.Body;
 using Content.Medical.Shared.Wounds;
+using Content.Server.Atmos.Components;
 using Content.Shared.Body;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
@@ -81,10 +83,14 @@ public sealed class WoundDiagnosticsTest : GameTest
             {
                 previousAttachment = ServerSession!.AttachedEntity;
                 var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
+                // The test map is vacuum; only the injuries below should affect the readings.
+                SEntMan.RemoveComponent<BarotraumaComponent>(patient);
+                SEntMan.AddComponent<BreathingImmunityComponent>(patient);
                 var torso = _body.GetOrgan(patient, "Torso")!.Value;
                 var arm = _body.GetOrgan(patient, "ArmLeft")!.Value;
+                // Keep wounds below trauma thresholds so random injuries cannot change diagnostic totals.
                 Assert.That(_wounds.TryInduceWound((torso, SComp<WoundableComponent>(torso)), BluntWound, 10, out _), Is.True);
-                Assert.That(_wounds.TryInduceWound((arm, SComp<WoundableComponent>(arm)), BluntWound, 20, out _), Is.True);
+                Assert.That(_wounds.TryInduceWound((arm, SComp<WoundableComponent>(arm)), BluntWound, 5, out _), Is.True);
                 Assert.That(_damage.GetTotalDamage(patient).Int(), Is.Zero);
                 patientNet = SEntMan.GetNetEntity(patient);
                 torsoNet = SEntMan.GetNetEntity(torso);
@@ -97,7 +103,7 @@ public sealed class WoundDiagnosticsTest : GameTest
                 var patient = CEntMan.GetEntity(patientNet);
                 var whole = new HealthAnalyzerPopulateEvent();
                 CEntMan.EventBus.RaiseLocalEvent(patient, ref whole);
-                Assert.That(whole.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(30));
+                Assert.That(whole.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(15));
                 Assert.That(whole.Pulse, Is.Not.Null);
 
                 var selected = new HealthAnalyzerPopulateEvent(CEntMan.GetEntity(torsoNet));
@@ -112,8 +118,8 @@ public sealed class WoundDiagnosticsTest : GameTest
                 var patient = SEntMan.GetEntity(patientNet);
                 var head = _body.GetOrgan(patient, "Head")!.Value;
                 var arm = _body.GetOrgan(patient, "ArmLeft")!.Value;
-                _damage.TryChangeDamage(head, new DamageSpecifier { DamageDict = { ["Blunt"] = 20 } }, ignoreResistances: true);
-                Assert.That(_wounds.TryHealWounds((head, SComp<WoundableComponent>(head)), 20, out _), Is.True);
+                _damage.TryChangeDamage(head, new DamageSpecifier { DamageDict = { ["Blunt"] = 10 } }, ignoreResistances: true);
+                Assert.That(_wounds.TryHealWounds((head, SComp<WoundableComponent>(head)), 10, out _), Is.True);
                 _damage.TryChangeDamage(arm, new DamageSpecifier { DamageDict = { ["Blunt"] = 5 } }, ignoreResistances: true);
                 headNet = SEntMan.GetNetEntity(head);
             });
@@ -124,13 +130,18 @@ public sealed class WoundDiagnosticsTest : GameTest
                 var patient = CEntMan.GetEntity(patientNet);
                 var selected = new HealthAnalyzerPopulateEvent(CEntMan.GetEntity(headNet));
                 CEntMan.EventBus.RaiseLocalEvent(patient, ref selected);
-                Assert.That(selected.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(20), "Raw damage remains visible after wounds heal.");
+                Assert.That(selected.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(10), "Raw damage remains visible after wounds heal.");
 
                 var whole = new HealthAnalyzerPopulateEvent();
                 CEntMan.EventBus.RaiseLocalEvent(patient, ref whole);
-                Assert.That(whole.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(55),
+                Assert.That(whole.DiagnosticDamage!.GetTotal().Int(), Is.EqualTo(30),
                     "Include raw damage on one part and wounds on others without counting the same injury twice.");
             });
+        }
+        catch (Exception error)
+        {
+            TestContext.Error.WriteLine(error);
+            throw;
         }
         finally
         {
