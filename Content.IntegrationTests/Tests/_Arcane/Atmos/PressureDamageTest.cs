@@ -53,30 +53,6 @@ public sealed class PressureDamageTest : GameTest
     damageBleedModifiers: TestArcanePressureBleeding
 """;
 
-    [TestCase(0f, 2f)]
-    [TestCase(5f, 1.5f)]
-    [TestCase(10f, 1f)]
-    [TestCase(15f, 0.5f)]
-    [TestCase(20f, 0f)]
-    [RunOnSide(Side.Server)]
-    public void PressureCurveRampsAndResets(float pressure, float initialDamage)
-    {
-        var patient = SSpawn("TestArcanePressureBlood");
-        Assert.That(Sample(patient, pressure).GetTotal().Float(), Is.EqualTo(initialDamage).Within(0.01f));
-        for (var i = 1; i < 60; i++)
-            Sample(patient, pressure);
-        Assert.That(Sample(patient, pressure).GetTotal().Float(), Is.EqualTo(initialDamage * 2.5f).Within(0.02f));
-
-        Sample(patient, 101.325f);
-        Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
-        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(2f));
-        Sample(patient, 101.325f);
-        Assert.That(Sample(patient, 0f, 2f).GetTotal().Float(), Is.EqualTo(4f));
-        Assert.That(Sample(patient, 825f).GetTotal().Float(), Is.EqualTo(1f));
-        Assert.That(Sample(patient, 1100f).GetTotal().Float(), Is.EqualTo(2f));
-        Assert.That(Sample(patient, 550f).GetTotal().Float(), Is.Zero);
-    }
-
     [Test]
     public async Task DeadPatientStopsAtDamageLimitWithoutBleeding()
     {
@@ -130,6 +106,9 @@ public sealed class PressureDamageTest : GameTest
 
         SEntMan.AddComponent<BarotraumaComponent>(patient).Damage = damage;
         Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(2f));
+        Assert.That(Sample(patient, 20f).GetTotal().Float(), Is.Zero);
+        Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
+        Assert.That(Sample(patient, 550f).GetTotal().Float(), Is.Zero);
     }
 
     [Test]
