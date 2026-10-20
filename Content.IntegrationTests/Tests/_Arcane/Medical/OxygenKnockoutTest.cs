@@ -192,6 +192,13 @@ public sealed class OxygenKnockoutTest : GameTest
             Assert.That(SEntMan.System<SharedBuckleSystem>().TryUnbuckle(patient, null), Is.True);
             Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(TimeSpan.FromSeconds(10)),
                 "Only effective oxygen treatment starts a new ten-second grace period, frozen until stasis ends.");
+
+            var mobs = SEntMan.System<MobStateSystem>();
+            mobs.ChangeMobState(patient, MobState.Alive);
+            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(patient), Is.False);
+            mobs.ChangeMobState(patient, MobState.Dead);
+            Assert.That(SComp<PostmortemHypoxiaComponent>(patient).NextDamage - _timing.CurTime, Is.EqualTo(TimeSpan.FromSeconds(10)),
+                "A new death starts a fresh grace period.");
         });
     }
 
