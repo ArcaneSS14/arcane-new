@@ -39,16 +39,17 @@ public sealed class HeartRateTest : GameTest
     {
         var uid = SSpawn("OrganHumanHeart");
         var heart = SComp<HeartRateComponent>(uid);
+        var restartRate = heart.FibrillationCaps.X / 2f;
         _heart.SetRate(uid, heart, 0f, false);
-        _heart.UpdateRate(uid, heart, 5f, false);
+        _heart.UpdateRate(uid, heart, restartRate, false);
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stopped));
 
-        _heart.UpdateRate(uid, heart, 5f, true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(5f));
+        _heart.UpdateRate(uid, heart, restartRate, true);
+        Assert.That(heart.CurrentRate, Is.EqualTo(restartRate));
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Fibrillating));
 
-        _heart.UpdateRate(uid, heart, 100f, false, highCap: 80f);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
+        _heart.UpdateRate(uid, heart, heart.NormalRate, false, highCap: heart.NormalRate);
+        Assert.That(heart.CurrentRate, Is.EqualTo(heart.NormalRate));
         Assert.That(_heart.GetState(heart), Is.EqualTo(HeartState.Stable));
 
         _heart.SetRate(uid, heart, 250f, true);
@@ -59,13 +60,13 @@ public sealed class HeartRateTest : GameTest
         _heart.UpdateRate(uid, heart, -2f, false, lowCap: 55f);
         Assert.That(heart.CurrentRate, Is.EqualTo(30f));
 
-        _heart.SetRate(uid, heart, 81f, true);
+        _heart.SetRate(uid, heart, heart.NormalRate + 1f, true);
         _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f));
+        Assert.That(heart.CurrentRate, Is.EqualTo(heart.NormalRate));
         _heart.UpdateRate(uid, heart, 5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(80f), "Stabilising medicine must not oscillate around the resting rate.");
+        Assert.That(heart.CurrentRate, Is.EqualTo(heart.NormalRate), "Stabilising medicine must not oscillate around the resting rate.");
         _heart.UpdateRate(uid, heart, -5f, false, autoStabilisation: true);
-        Assert.That(heart.CurrentRate, Is.EqualTo(75f), "A destabilising effect must retain its direction at the resting rate.");
+        Assert.That(heart.CurrentRate, Is.EqualTo(heart.NormalRate - 5f), "A destabilising effect must retain its direction at the resting rate.");
     }
 
     [Test]
@@ -129,11 +130,14 @@ public sealed class HeartRateTest : GameTest
         var hearts = new List<(EntityUid Uid, float UpperBound)>();
         await Server.WaitPost(() =>
         {
-            foreach (var (rate, upperBound) in new[] { (30f, 40f), (70f, 80f) })
+            foreach (var fibrillating in new[] { true, false })
             {
                 var patient = SSpawn("MobHuman");
                 var heartUid = _body.GetOrgan(patient, "Heart")!.Value;
-                _heart.SetRate(heartUid, SComp<HeartRateComponent>(heartUid), rate, true);
+                var heart = SComp<HeartRateComponent>(heartUid);
+                var upperBound = fibrillating ? heart.FibrillationCaps.X : heart.NormalRate;
+                var rate = fibrillating ? upperBound / 2f : (heart.FibrillationCaps.X + upperBound) / 2f;
+                _heart.SetRate(heartUid, heart, rate, true);
                 hearts.Add((heartUid, upperBound));
             }
         });
@@ -155,11 +159,17 @@ public sealed class HeartRateTest : GameTest
         var hearts = new Dictionary<float, EntityUid>();
         await Server.WaitPost(() =>
         {
-            foreach (var offset in new[] { -40f, 130f, 0.05f })
+            for (var i = 0; i < 3; i++)
             {
                 var patient = SSpawn("MobHuman");
                 var uid = _body.GetOrgan(patient, "Heart")!.Value;
                 var heart = SComp<HeartRateComponent>(uid);
+                var offset = i switch
+                {
+                    0 => heart.FibrillationCaps.X - heart.NormalRate,
+                    1 => heart.FibrillationCaps.Y - heart.NormalRate,
+                    _ => 0.05f,
+                };
                 _heart.SetRate(uid, heart, heart.NormalRate + offset, true);
                 hearts.Add(offset, uid);
             }
