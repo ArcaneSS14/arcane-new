@@ -5,6 +5,7 @@ using Content.Medical.Common.Targeting;
 using Content.Shared.Atmos.Rotting;
 using Content.Shared.Body.Components;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Medical;
@@ -12,6 +13,7 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Traits.Assorted;
 using Robust.Shared.Timing;
+using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.Medical.Defibrillator;
 
@@ -60,13 +62,20 @@ public sealed partial class DefibrillatorTreatmentSystem : EntitySystem
             !_solutions.ResolveSolution(ent.Owner, blood.BloodSolutionName, ref blood.BloodSolution, out var solution))
             return;
 
-        var heal = _medicine.GetShockHealing(ent, blood.BloodSolution.Value);
+        var medicines = new List<ProtoId<ReagentPrototype>>(2);
+        var heal = _medicine.GetShockHealing(ent, blood.BloodSolution.Value, medicines);
         if (heal == 0)
             return;
 
-        _damage.TryChangeDamage(ent.Owner, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = -heal } },
+        var treated = _damage.ChangeDamage(ent.Owner,
+            new DamageSpecifier { DamageDict = { ["Asphyxiation"] = -heal, ["Bloodloss"] = -heal / 2 } },
             ignoreResistances: true, origin: args.User, targetPart: TargetBodyPart.Vital,
             splitDamage: SplitDamageBehavior.SplitEnsureAll, interruptsDoAfters: false);
+        if (treated.GetTotal() >= 0)
+            return;
+
+        foreach (var medicine in medicines)
+            _solutions.RemoveReagent(blood.BloodSolution.Value, medicine.Id, 4);
     }
 
     private void ApplyPulse(EntityUid patient, EntityUid defibrillator)

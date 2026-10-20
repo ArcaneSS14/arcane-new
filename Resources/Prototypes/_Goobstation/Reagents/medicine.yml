@@ -1128,7 +1128,7 @@
           min: 15.5
       # Arcane-Start
       - !type:ModifyHeartRate
-        amount: -4
+        amount: -3
         lowerCap: 51
       # Arcane-End
 
