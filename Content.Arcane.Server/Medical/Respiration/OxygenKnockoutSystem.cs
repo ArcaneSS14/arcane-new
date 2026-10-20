@@ -28,24 +28,18 @@ public sealed partial class OxygenKnockoutSystem : EntitySystem
     {
         SubscribeLocalEvent<RespiratorComponent, MobThresholdChecked>(OnThresholds);
         SubscribeLocalEvent<RespiratorComponent, MobStateChangedEvent>(OnStateChanged);
-        SubscribeLocalEvent<RespiratorComponent, ComponentStartup>(OnRespiratorStartup);
-        SubscribeLocalEvent<RespiratorComponent, ComponentShutdown>(OnRespiratorShutdown);
-        SubscribeLocalEvent<BreathingImmunityComponent, ComponentStartup>(OnImmunityStartup);
-        SubscribeLocalEvent<BreathingImmunityComponent, ComponentShutdown>(OnImmunityShutdown);
-        SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentStartup>(OnSpecialStartup);
-        SubscribeLocalEvent<SpecialBreathingImmunityComponent, ComponentShutdown>(OnSpecialShutdown);
+        SubscribeLocalEvent<CPRRespirationComponent, ComponentStartup>(OnRespirationStartup);
+        SubscribeLocalEvent<CPRRespirationComponent, ComponentShutdown>(OnRespirationShutdown);
+        SubscribeLocalEvent<CPRRespirationComponent, RespirationStateChangedEvent>(OnRespirationChanged);
         SubscribeLocalEvent<StasisBedBuckledComponent, ComponentStartup>(OnStasisStarted);
         SubscribeLocalEvent<StasisBedBuckledComponent, ComponentShutdown>(OnStasisStopped);
     }
 
     private void OnThresholds(Entity<RespiratorComponent> ent, ref MobThresholdChecked args) => UpdatePatient(ent);
     private void OnStateChanged(Entity<RespiratorComponent> ent, ref MobStateChangedEvent args) => UpdatePatient(ent);
-    private void OnRespiratorStartup(Entity<RespiratorComponent> ent, ref ComponentStartup args) => UpdatePatient(ent);
-    private void OnRespiratorShutdown(Entity<RespiratorComponent> ent, ref ComponentShutdown args) => UpdatePatient(ent);
-    private void OnImmunityStartup(Entity<BreathingImmunityComponent> ent, ref ComponentStartup args) => UpdatePatient(ent);
-    private void OnImmunityShutdown(Entity<BreathingImmunityComponent> ent, ref ComponentShutdown args) => UpdatePatient(ent);
-    private void OnSpecialStartup(Entity<SpecialBreathingImmunityComponent> ent, ref ComponentStartup args) => UpdatePatient(ent);
-    private void OnSpecialShutdown(Entity<SpecialBreathingImmunityComponent> ent, ref ComponentShutdown args) => UpdatePatient(ent);
+    private void OnRespirationStartup(Entity<CPRRespirationComponent> ent, ref ComponentStartup args) => UpdatePatient(ent);
+    private void OnRespirationShutdown(Entity<CPRRespirationComponent> ent, ref ComponentShutdown args) => UpdatePatient(ent);
+    private void OnRespirationChanged(Entity<CPRRespirationComponent> ent, ref RespirationStateChangedEvent args) => UpdatePatient(ent);
 
     private bool Active<T>(EntityUid patient) where T : Component
         => TryComp<T>(patient, out var component) && component.LifeStage < ComponentLifeStage.Stopping;
