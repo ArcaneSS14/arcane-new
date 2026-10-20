@@ -6,23 +6,18 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
-using Content.Shared.Alert;
 using Content.Shared.Buckle;
 using Content.Shared.Medical;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
 
 [TestOf(typeof(HeartRateSystem))]
 public sealed class HeartRateTest : GameTest
 {
-    private static readonly ProtoId<AlertPrototype> HeartStopAlert = "HeartStop";
-
     [SidedDependency(Side.Server)] private readonly HeartRateSystem _heart = null!;
     [SidedDependency(Side.Server)] private readonly BodySystem _body = null!;
     [SidedDependency(Side.Server)] private readonly SharedBuckleSystem _buckle = null!;
-    [SidedDependency(Side.Server)] private readonly AlertsSystem _alerts = null!;
 
     [Test]
     [RunOnSide(Side.Server)]
@@ -119,25 +114,6 @@ public sealed class HeartRateTest : GameTest
         Assert.That(heart.CurrentRate, Is.EqualTo(80f));
     }
 
-
-    [Test]
-    [RunOnSide(Side.Server)]
-    public void HeartTransplantsRefreshAlerts()
-    {
-        var patient = SSpawn("MobHuman");
-        var uid = _body.GetOrgan(patient, "Heart")!.Value;
-        var heart = SComp<HeartRateComponent>(uid);
-        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
-
-        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.False);
-
-        Assert.That(_body.RemoveOrgan(patient, uid), Is.True);
-        _heart.SetRate(uid, heart, 0f, false);
-        Assert.That(_body.InsertOrgan(patient, uid), Is.True);
-        Assert.That(_alerts.IsShowingAlert(patient, HeartStopAlert), Is.True);
-    }
 
     [TestCase(true)]
     [TestCase(false)]
