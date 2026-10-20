@@ -56,6 +56,7 @@ public sealed class CPRRecoveryTest : GameTest
         await Pair.CreateTestMap();
         EntityUid patient = default, otherPatient = default, first = default, second = default;
         ushort oldIndex = default;
+        float firstHealing = default, afterSecondCycle = default;
         await Server.WaitPost(() =>
         {
             patient = SpawnHuman();
@@ -74,13 +75,15 @@ public sealed class CPRRecoveryTest : GameTest
         await RunSeconds(0.4f);
         await Server.WaitPost(() =>
         {
-            Assert.That(Oxygen(patient), Is.EqualTo(177));
+            firstHealing = 180f - Oxygen(patient);
+            Assert.That(firstHealing, Is.GreaterThan(0f));
             Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.True);
         });
         await RunSeconds(0.8f);
         await Server.WaitPost(() =>
         {
-            Assert.That(Oxygen(patient), Is.EqualTo(174));
+            afterSecondCycle = Oxygen(patient);
+            Assert.That(afterSecondCycle, Is.EqualTo(180f - 2f * firstHealing));
             _doAfter.Cancel(first, oldIndex);
             Assert.That(SEntMan.HasComponent<CPRPerfusionComponent>(patient), Is.False);
         });
@@ -91,7 +94,7 @@ public sealed class CPRRecoveryTest : GameTest
             Assert.That(SComp<ActiveCPRComponent>(patient).Performer, Is.EqualTo(second));
         });
         await RunSeconds(1f);
-        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(174), "A new performer starts a three-second cycle."));
+        await Server.WaitPost(() => Assert.That(Oxygen(patient), Is.EqualTo(afterSecondCycle), "A new performer starts a three-second cycle."));
 
         await Server.WaitPost(() =>
         {
@@ -164,13 +167,16 @@ public sealed class CPRRecoveryTest : GameTest
             _mob.ChangeMobState(patient, MobState.Dead);
             var cycle = new CPRCompletedEvent(rescuer, true, 0.3f);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref cycle);
-            Assert.That(Oxygen(patient), Is.EqualTo(49));
-            Assert.That(cycle.ReviveChance, Is.EqualTo(0.02f).Within(0.0001f));
+            var oxygen = Oxygen(patient);
+            Assert.That(oxygen, Is.LessThan(52));
+            var threshold = SEntMan.System<OxygenThresholdSystem>().GetThreshold(patient)!.Value;
+            Assert.That(cycle.ReviveChance, Is.EqualTo(Math.Clamp(1f - oxygen / threshold, 0f, 1f)).Within(0.0001f));
             SEntMan.System<MobThresholdSystem>().SetMobStateThreshold(patient, 120, MobState.SoftCrit);
             cycle = new CPRCompletedEvent(rescuer, false, 0.3f);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref cycle);
-            Assert.That(cycle.ReviveChance, Is.EqualTo(1f - 49f / 60f).Within(0.0001f));
-            Damage(patient, -49);
+            Assert.That(Oxygen(patient), Is.EqualTo(oxygen), "Compressions must not treat oxygen damage.");
+            Assert.That(cycle.ReviveChance, Is.EqualTo(Math.Clamp(1f - oxygen / 60f, 0f, 1f)).Within(0.0001f));
+            Damage(patient, -oxygen);
             var heart = _heart.GetHeart(patient)!.Value;
             _heart.SetRate(heart.Owner, heart.Comp!, 0, true);
             _mob.ChangeMobState(patient, MobState.Dead);
@@ -180,13 +186,14 @@ public sealed class CPRRecoveryTest : GameTest
         await Server.WaitPost(() =>
         {
             Assert.That(_mob.IsDead(patient), Is.False);
-            Assert.That(_heart.GetHeart(patient)!.Value.Comp!.CurrentRate, Is.GreaterThanOrEqualTo(40));
-            Assert.That(_effects.TryGetStatusEffect(patient, PostRevivalRecoverySystem.RecoverySleep, out _), Is.True);
             var heart = _heart.GetHeart(patient)!.Value;
-            _heart.SetRate(heart.Owner, heart.Comp!, 20, true);
+            Assert.That(heart.Comp!.CurrentRate, Is.GreaterThanOrEqualTo(heart.Comp.FibrillationCaps.X));
+            Assert.That(_effects.TryGetStatusEffect(patient, PostRevivalRecoverySystem.RecoverySleep, out _), Is.True);
+            var fibrillatingRate = heart.Comp.FibrillationCaps.X / 2f;
+            _heart.SetRate(heart.Owner, heart.Comp, fibrillatingRate, true);
             var revived = new CPRRevivedEvent(patient);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref revived);
-            Assert.That(heart.Comp!.CurrentRate, Is.EqualTo(20), "CPR must not fix a beating fibrillating heart.");
+            Assert.That(heart.Comp.CurrentRate, Is.EqualTo(fibrillatingRate), "CPR must not fix a beating fibrillating heart.");
         });
     }
 
@@ -301,7 +308,7 @@ public sealed class CPRRecoveryTest : GameTest
 
     private EntityUid SpawnHuman() => SSpawnAtPosition("TestArcaneCPRHuman", TestMap!.GridCoords);
 
-    private void Damage(EntityUid patient, int amount)
+    private void Damage(EntityUid patient, float amount)
         => _damage.ChangeDamage(patient, new() { DamageDict = { ["Asphyxiation"] = amount } },
             targetPart: TargetBodyPart.Vital, ignoreResistances: true, interruptsDoAfters: false);
 

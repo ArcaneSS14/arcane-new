@@ -2,6 +2,7 @@ using Content.Arcane.Shared.Medical.Overlays;
 using Content.Client.Overlays;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
@@ -11,7 +12,7 @@ using Robust.Shared.Player;
 
 namespace Content.Arcane.Client.Medical.Overlays;
 
-public sealed partial class BloodlossOverlaySystem : EntitySystem
+public sealed partial class MedicalDamageOverlaySystem : EntitySystem
 {
     [Dependency] private IPlayerManager _player = default!;
     [Dependency] private BlackAndWhiteOverlaySystem _overlay = default!;
@@ -86,7 +87,10 @@ public sealed partial class BloodlossOverlaySystem : EntitySystem
     private void OnBloodstreamShutdown(Entity<BloodstreamComponent> ent, ref ComponentShutdown args)
     {
         if (ent.Owner == _player.LocalEntity)
-            Reset();
+        {
+            _overlay.SetIntensity(this, 0f);
+            _refreshRequired = true;
+        }
     }
 
     private void OnOrganInserted(Entity<DamageableComponent> ent, ref OrganGotInsertedEvent args)
@@ -112,42 +116,37 @@ public sealed partial class BloodlossOverlaySystem : EntitySystem
     {
         _refreshRequired = false;
         _overlay.SetIntensity(this, 0f);
+        var ev = new LocalPlayerMedicalDamageEvent(null, new());
+        RaiseLocalEvent(ref ev);
     }
 
     private void Refresh()
     {
         if (_player.LocalEntity is not { } player
-            || !HasComp<BloodstreamComponent>(player)
             || !TryComp<DamageableComponent>(player, out var damageable))
         {
-            _overlay.SetIntensity(this, 0f);
+            Reset();
             return;
         }
 
         var effect = ProtoMan.Index(Effect);
-        var total = GetEffectDamage((player, damageable), effect);
+        var damage = _damageable.GetAllDamage((player, damageable));
+        var total = FixedPoint2.Zero;
+        if (TryComp<BloodstreamComponent>(player, out var blood) && blood.LifeStage < ComponentLifeStage.Stopping)
+        {
+            foreach (var type in effect.DamageTypes)
+                total += damage.DamageDict.GetValueOrDefault(type);
+        }
 
         var intensity = effect.FullIntensityDamage > 0f ? total.Float() / effect.FullIntensityDamage : 0f;
         _overlay.SetIntensity(this, intensity);
-    }
-
-    private FixedPoint2 GetEffectDamage(Entity<DamageableComponent?> entity, DamageGreyscalePrototype effect)
-    {
-        var total = FixedPoint2.Zero;
-        if (!Resolve(entity, ref entity.Comp, false))
-            return total;
-
-        if (TryComp<BodyComponent>(entity, out var body))
-        {
-            foreach (var part in _body.GetExternalOrgans((entity.Owner, body)))
-                total += GetEffectDamage(part.Owner, effect);
-        }
-        else
-        {
-            foreach (var type in effect.DamageTypes)
-                total += _damageable.GetDamageAmount(entity, type);
-        }
-
-        return total;
+        var ev = new LocalPlayerMedicalDamageEvent(player, damage);
+        RaiseLocalEvent(ref ev);
     }
 }
+
+/// <summary>
+/// One batched damage snapshot shared by the local player's medical overlays.
+/// </summary>
+[ByRefEvent]
+public readonly record struct LocalPlayerMedicalDamageEvent(EntityUid? Player, DamageSpecifier Damage);
