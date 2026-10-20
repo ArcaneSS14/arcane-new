@@ -1,0 +1,10 @@
+light_mode unshaded;
+
+uniform highp float intensity;
+
+void fragment() {
+    highp vec2 centered = FRAGCOORD.xy * SCREEN_PIXEL_SIZE - vec2(0.5);
+    highp float innerRadius = mix(0.45, 0.15, intensity);
+    highp float darkness = smoothstep(innerRadius, 0.5, length(centered));
+    COLOR = vec4(0.0, 0.0, 0.0, darkness * intensity * 0.95);
+}

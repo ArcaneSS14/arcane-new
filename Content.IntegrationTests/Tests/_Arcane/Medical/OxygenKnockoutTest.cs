@@ -1,5 +1,6 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Common.Medical.Respiration;
+using Content.Arcane.Client.Medical.Overlays;
 using Content.Arcane.Server.Medical.Respiration;
 using Content.Arcane.Shared.Medical.Respiration;
 using Content.Goobstation.Common.Body.Components;
@@ -16,6 +17,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
+using Robust.Client.Graphics;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Timing;
 
@@ -27,6 +29,8 @@ public sealed class OxygenKnockoutTest : GameTest
     [SidedDependency(Side.Server)] private readonly DamageableSystem _damage = null!;
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Server)] private readonly IGameTiming _timing = null!;
+    [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
+    [SidedDependency(Side.Client)] private readonly MedicalDamageOverlaySystem _medical = null!;
 
     [TestPrototypes]
     private const string Prototypes = """
@@ -211,7 +215,7 @@ public sealed class OxygenKnockoutTest : GameTest
     }
 
     [Test]
-    public async Task AnalyzerWarningUsesThePatientsReplicatedKnockoutThreshold()
+    public async Task AnalyzerAndVignetteUseThePatientsReplicatedKnockoutThreshold()
     {
         await Pair.CreateTestMap();
         NetEntity patientNet = default;
@@ -227,23 +231,48 @@ public sealed class OxygenKnockoutTest : GameTest
                 patientNet = SEntMan.GetNetEntity(patient);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
             });
-            await AssertWarning(false);
+            await AssertSymptoms(false, 59f / 60f);
             await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), 1));
-            await AssertWarning(true);
+            await AssertSymptoms(true, 1f);
+            await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), 10));
+            await AssertSymptoms(true, 1f);
+            await Server.WaitPost(() => SEntMan.System<MobThresholdSystem>()
+                .SetMobStateThreshold(SEntMan.GetEntity(patientNet), 160, MobState.SoftCrit));
+            await AssertSymptoms(false, 70f / 80f);
+            await Server.WaitPost(() => Damage(SEntMan.GetEntity(patientNet), -35));
+            await AssertSymptoms(false, 35f / 80f);
+            await Server.WaitPost(() => SEntMan.AddComponent<BreathingImmunityComponent>(SEntMan.GetEntity(patientNet)));
+            await AssertSymptoms(false, 0f);
+            await Server.WaitPost(() => SEntMan.RemoveComponent<BreathingImmunityComponent>(SEntMan.GetEntity(patientNet)));
+            await AssertSymptoms(false, 35f / 80f);
         }
         finally
         {
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, previousAttachment));
+            await Pair.RunUntilSynced();
+            await Client.WaitAssertion(() =>
+            {
+                _medical.FrameUpdate(0f);
+                Assert.That(_overlays.HasOverlay<OxygenVignetteOverlay>(), Is.False);
+            });
         }
 
-        async Task AssertWarning(bool expected)
+        async Task AssertSymptoms(bool expectedWarning, float expectedIntensity)
         {
             await Pair.RunUntilSynced();
             await Client.WaitAssertion(() =>
             {
+                _medical.FrameUpdate(0f);
                 var diagnostics = new HealthAnalyzerPopulateEvent();
                 CEntMan.EventBus.RaiseLocalEvent(CEntMan.GetEntity(patientNet), ref diagnostics);
-                Assert.That(diagnostics.Conditions.Contains(Loc.GetString("condition-body-asphyxiation-severe")), Is.EqualTo(expected));
+                Assert.That(diagnostics.Conditions.Contains(Loc.GetString("condition-body-asphyxiation-severe")), Is.EqualTo(expectedWarning));
+                if (expectedIntensity == 0f)
+                    Assert.That(_overlays.HasOverlay<OxygenVignetteOverlay>(), Is.False);
+                else
+                {
+                    Assert.That(_overlays.TryGetOverlay<OxygenVignetteOverlay>(out var overlay), Is.True);
+                    Assert.That(overlay!.Intensity, Is.EqualTo(expectedIntensity).Within(0.001f));
+                }
             });
         }
     }
