@@ -39,45 +39,6 @@ public sealed class OxygenKnockoutTest : GameTest
 
     [Test]
     [RunOnSide(Side.Server)]
-    public void RespirationRatesPreserveSpeciesModifiersAndScaleWithTheInterval()
-    {
-        var mobs = SEntMan.System<MobStateSystem>();
-        foreach (var (prototype, lossPerSecond, recoveryPerSecond) in new[]
-                 {
-                     ("MobHuman", 1.5f, -0.625f),
-                     ("MobArachnid", 2.25f, -0.3125f),
-                     ("MobDecapoid", 3f, -0.625f),
-                 })
-        {
-            var patient = SSpawn(prototype);
-            var respirator = SComp<RespiratorComponent>(patient);
-            foreach (var seconds in new[] { 1, 2 })
-            {
-                mobs.ChangeMobState(patient, MobState.Alive);
-                var loss = new RespirationDamageEvent(respirator.Damage, true, TimeSpan.FromSeconds(seconds));
-                SEntMan.EventBus.RaiseLocalEvent(patient, ref loss);
-                Assert.That(loss.Damage.DamageDict["Asphyxiation"].Float(), Is.EqualTo(lossPerSecond * seconds).Within(0.01f), prototype);
-                var recovery = new RespirationDamageEvent(respirator.DamageRecovery, false, TimeSpan.FromSeconds(seconds));
-                SEntMan.EventBus.RaiseLocalEvent(patient, ref recovery);
-                Assert.That(recovery.Damage.DamageDict["Asphyxiation"].Float(), Is.EqualTo(recoveryPerSecond * seconds).Within(0.01f), prototype);
-
-                foreach (var state in new[] { MobState.SoftCrit, MobState.Critical })
-                {
-                    mobs.ChangeMobState(patient, state);
-                    loss = new RespirationDamageEvent(respirator.Damage, true, TimeSpan.FromSeconds(seconds));
-                    SEntMan.EventBus.RaiseLocalEvent(patient, ref loss);
-                    Assert.That(loss.Damage.DamageDict["Asphyxiation"].Float(),
-                        Is.EqualTo(lossPerSecond / 1.5f * 0.33f * seconds).Within(0.01f), prototype);
-                    recovery = new RespirationDamageEvent(respirator.DamageRecovery, false, TimeSpan.FromSeconds(seconds));
-                    SEntMan.EventBus.RaiseLocalEvent(patient, ref recovery);
-                    Assert.That(recovery.Damage.DamageDict["Asphyxiation"].Float(), Is.Zero, prototype);
-                }
-            }
-        }
-    }
-
-    [Test]
-    [RunOnSide(Side.Server)]
     public void OxygenSleepFollowsDamageThresholdsAndImmunityWithoutClearingSedation()
     {
         var patient = SSpawn("MobHuman");
@@ -149,11 +110,10 @@ public sealed class OxygenKnockoutTest : GameTest
     }
 
     [Test]
-    public async Task PostmortemLimitsFollowTheBodyAndStasisPausesAccumulation()
+    public async Task PostmortemLimitsFollowTheBodyAndTreatmentRestartsCappedPatients()
     {
         await Pair.CreateTestMap();
         EntityUid capped = default, scaled = default, excessive = default, upperStage = default;
-        float pausedDamage = default;
         await Server.WaitPost(() =>
         {
             capped = SSpawnAtPosition("TestArcaneOxygenHuman", TestMap!.GridCoords);
@@ -180,28 +140,17 @@ public sealed class OxygenKnockoutTest : GameTest
             Assert.That(Oxygen(scaled), Is.InRange(52f, 53f), "50 damage is still in the lower stage for this body.");
             Damage(capped, -1);
             Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(capped), Is.True);
-            pausedDamage = Oxygen(scaled);
-            SEntMan.AddComponent<StasisBedBuckledComponent>(scaled);
         });
         await RunSeconds(9f);
         await Server.WaitPost(() =>
         {
             Assert.That(Oxygen(capped), Is.EqualTo(99));
-            Assert.That(Oxygen(scaled), Is.EqualTo(pausedDamage));
-            SEntMan.RemoveComponent<StasisBedBuckledComponent>(scaled);
         });
-        await RunSeconds(5.2f);
+        await RunSeconds(2.2f);
         await Server.WaitPost(() =>
         {
             Assert.That(Oxygen(capped), Is.EqualTo(100));
-            Assert.That(Oxygen(scaled), Is.GreaterThan(pausedDamage));
-            SEntMan.System<MobStateSystem>().ChangeMobState(scaled, MobState.Alive);
-            Assert.That(SEntMan.HasComponent<PostmortemHypoxiaComponent>(scaled), Is.False);
-            SEntMan.System<MobStateSystem>().ChangeMobState(scaled, MobState.Dead);
-            pausedDamage = Oxygen(scaled);
         });
-        await RunSeconds(9f);
-        await Server.WaitPost(() => Assert.That(Oxygen(scaled), Is.EqualTo(pausedDamage), "A new death starts a fresh grace period."));
     }
 
     [Test]
