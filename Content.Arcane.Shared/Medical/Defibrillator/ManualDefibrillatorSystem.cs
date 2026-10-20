@@ -40,7 +40,7 @@ public sealed partial class ManualDefibrillatorSystem : EntitySystem
                 Text = Loc.GetString("arcane-defibrillator-mode", ("mode", mode),
                     ("sign", change > 0 ? "+" : ""), ("change", change), ("restart", restartText)),
                 Category = category,
-                Priority = 1,
+                Priority = 11,
                 Disabled = mode == ent.Comp.Mode,
                 Act = () => SetMode(ent, selected),
             });
