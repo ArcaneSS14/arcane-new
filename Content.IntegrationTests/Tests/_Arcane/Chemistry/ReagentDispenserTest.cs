@@ -22,32 +22,28 @@ public sealed class ReagentDispenserTest : GameTest
     private readonly SharedSolutionContainerSystem _solutions = default!;
 
     [Test]
-    public async Task MaxDispensesMoreThanOneThousandUnits()
-    {
-        var fixture = await CreateFixture(FixedPoint2.New(1500.25), FixedPoint2.New(2000.5));
-
-        await Dispense(fixture, ReagentDispenserDispenseAmount.Max);
-        var (sourceVolume, targetVolume) = await ReadVolumes(fixture);
-
-        Assert.That(targetVolume, Is.EqualTo(FixedPoint2.New(1500.25)));
-        Assert.That(sourceVolume, Is.EqualTo(FixedPoint2.Zero));
-    }
-
-    [Test]
     public async Task MaxRespectsFractionalSpaceAndRepeatedDispensePreservesVolume()
     {
-        var fixture = await CreateFixture(FixedPoint2.New(10.75), FixedPoint2.New(15.25), FixedPoint2.New(5));
+        var fixture = await CreateFixture(FixedPoint2.New(1500.75), FixedPoint2.New(1505.25), FixedPoint2.New(5));
 
         await Dispense(fixture, ReagentDispenserDispenseAmount.Max);
         var afterFirstClick = await ReadVolumes(fixture);
 
         Assert.That(afterFirstClick.Source, Is.EqualTo(FixedPoint2.New(0.5)));
-        Assert.That(afterFirstClick.Target, Is.EqualTo(FixedPoint2.New(15.25)));
+        Assert.That(afterFirstClick.Target, Is.EqualTo(FixedPoint2.New(1505.25)));
 
         await Dispense(fixture, ReagentDispenserDispenseAmount.Max);
         var afterSecondClick = await ReadVolumes(fixture);
 
         Assert.That(afterSecondClick, Is.EqualTo(afterFirstClick));
+
+        await Server.WaitPost(() =>
+        {
+            Assert.That(_solutions.TryGetRefillableSolution(fixture.Beaker, out var target, out _), Is.True);
+            _solutions.RemoveAllSolution(target!.Value);
+        });
+        await Dispense(fixture, ReagentDispenserDispenseAmount.Max);
+        Assert.That(await ReadVolumes(fixture), Is.EqualTo((FixedPoint2.Zero, FixedPoint2.New(0.5))));
     }
 
     [Test]
