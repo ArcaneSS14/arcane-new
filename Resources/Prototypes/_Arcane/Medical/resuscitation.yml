@@ -1,0 +1,19 @@
+- type: entity
+  id: StatusEffectResuscitationSleep
+  parent: StatusEffectForcedSleeping
+  name: resuscitation recovery
+  components:
+  - type: MedicalSleepStatusEffect
+
+- type: entity
+  id: StatusEffectResuscitationDrowsiness
+  parent: MobStatusEffectDebuff
+  name: resuscitation drowsiness
+  components:
+  - type: DrowsinessStatusEffect
+    timeBetweenIncidents: null
+
+- type: guideEntry
+  id: ArcaneResuscitation
+  name: guide-entry-arcane-resuscitation
+  text: /ServerInfo/_Arcane/Guidebook/Medical/Resuscitation.xml
