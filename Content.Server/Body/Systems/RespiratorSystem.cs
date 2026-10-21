@@ -33,6 +33,7 @@ using Content.Shared.Mobs.Systems;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Respiration; // Arcane
 
 namespace Content.Server.Body.Systems;
 
@@ -394,6 +395,10 @@ public sealed partial class RespiratorSystem : EntitySystem
         respirator.Saturation += amount;
         respirator.Saturation =
             Math.Clamp(respirator.Saturation, respirator.MinSaturation, respirator.MaxSaturation);
+        // Arcane-Start
+        var reserve = new BreathingReserveChangedEvent(respirator.Saturation >= respirator.SuffocationThreshold);
+        RaiseLocalEvent(uid, ref reserve);
+        // Arcane-End
     }
 
     private void OnApplyMetabolicMultiplier(Entity<RespiratorComponent> ent, ref ApplyMetabolicMultiplierEvent args)
