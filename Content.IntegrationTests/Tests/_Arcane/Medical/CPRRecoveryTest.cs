@@ -5,6 +5,7 @@ using Content.Arcane.Common.Medical.Respiration;
 using Content.Arcane.Server.Medical.Respiration;
 using Content.Arcane.Shared.Medical.Heart;
 using Content.Arcane.Shared.Medical.Respiration;
+using Content.Client.Eye.Blinding;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Common.Body;
@@ -235,6 +236,8 @@ public sealed class CPRRecoveryTest : GameTest
             {
                 var patient = CEntMan.GetEntity(patientNet);
                 Assert.That(CEntMan.HasComponent<SleepingComponent>(patient), Is.True);
+                Assert.That(Client.Resolve<Robust.Client.Graphics.IOverlayManager>()
+                    .GetOverlay<BlindOverlay>().ApplyGreyscale, Is.False);
                 Assert.That(CEntMan.System<SleepingSystem>().TryWakeWithCooldown(patient), Is.False);
                 Assert.That(CEntMan.System<SharedStunSystem>().TryStanding(patient), Is.False);
             });

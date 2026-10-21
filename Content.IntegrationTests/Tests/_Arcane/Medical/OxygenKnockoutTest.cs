@@ -14,6 +14,8 @@ using Content.Shared.Bed.Sleep;
 using Content.Shared.Bed.Components;
 using Content.Shared.Buckle;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Eye.Blinding.Components;
+using Content.Shared.Eye.Blinding.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
@@ -53,6 +55,19 @@ public sealed class OxygenKnockoutTest : GameTest
         Assert.That(Asleep(patient), Is.False);
         Damage(patient, 1);
         Assert.That(Asleep(patient), Is.True);
+        var vision = new CanSeeAttemptEvent();
+        SEntMan.EventBus.RaiseLocalEvent(patient, vision);
+        Assert.That(vision.Blind, Is.True);
+        var awakeVision = new CanSeeAttemptEvent { IgnoreSleeping = true };
+        SEntMan.EventBus.RaiseLocalEvent(patient, awakeVision);
+        Assert.That(awakeVision.Blind, Is.False, "Medical vision may ignore sleep without waking the patient.");
+        var eyeSystem = SEntMan.System<EyeClosingSystem>();
+        var eyelids = SEntMan.EnsureComponent<EyeClosingComponent>(patient);
+        eyeSystem.SetEyelids((patient, eyelids), true);
+        var closedEyes = new CanSeeAttemptEvent { IgnoreSleeping = true };
+        SEntMan.EventBus.RaiseLocalEvent(patient, closedEyes);
+        Assert.That(closedEyes.Blind, Is.True, "Ignoring sleep must preserve independently closed eyes.");
+        eyeSystem.SetEyelids((patient, eyelids), false);
         Assert.That(SEntMan.System<MobStateSystem>().IsAlive(patient), Is.True);
         Assert.That(SEntMan.System<RespiratorSystem>().CanBreathe(patient, SComp<RespiratorComponent>(patient)), Is.True);
 
