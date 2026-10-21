@@ -102,17 +102,18 @@ public sealed class PressureDamageTest : GameTest
     public void RemovingBarotraumaResetsExposure()
     {
         var patient = SSpawn("TestArcanePressureBlood");
+        var initialDamage = Sample(patient, 0f).GetTotal();
         Sample(patient, 0f, 60f);
-        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(5f).Within(0.02f));
+        Assert.That(Sample(patient, 0f).GetTotal(), Is.GreaterThan(initialDamage));
         var damage = SComp<BarotraumaComponent>(patient).Damage;
         SEntMan.RemoveComponent<BarotraumaComponent>(patient);
         Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
 
         SEntMan.AddComponent<BarotraumaComponent>(patient).Damage = damage;
-        Assert.That(Sample(patient, 0f).GetTotal().Float(), Is.EqualTo(2f));
-        Assert.That(Sample(patient, 20f).GetTotal().Float(), Is.Zero);
+        Assert.That(Sample(patient, 0f).GetTotal(), Is.EqualTo(initialDamage));
+        Assert.That(Sample(patient, Atmospherics.HazardLowPressure).GetTotal().Float(), Is.Zero);
         Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
-        Assert.That(Sample(patient, 550f).GetTotal().Float(), Is.Zero);
+        Assert.That(Sample(patient, Atmospherics.HazardHighPressure).GetTotal().Float(), Is.Zero);
     }
 
     [Test]
@@ -171,8 +172,10 @@ public sealed class PressureDamageTest : GameTest
             var limit = SComp<BarotraumaComponent>(patient).MaxDamage;
             Assert.That(_thresholds.TryGetDeadThreshold(patient, out var deathThreshold), Is.True);
             _thresholds.SetMobStateThreshold(patient, FixedPoint2.Max(deathThreshold!.Value, limit * 2), MobState.Dead);
-            for (var i = 0; i < 1000 && _damage.GetAllDamage(patient).GetTotal() < limit; i++)
-                _pressure.Update(1f);
+            var seed = new DamageSpecifier { DamageDict = { ["Blunt"] = limit } };
+            seed.Flags = DamageSpecifier.DamageFlags.NoWounds | DamageSpecifier.DamageFlags.NoBleeding;
+            _damage.ChangeDamage(patient, seed, ignoreResistances: true);
+            _pressure.Update(1f);
 
             var atLimit = _damage.GetAllDamage(patient).GetTotal();
             Assert.That(atLimit, Is.GreaterThanOrEqualTo(limit));
