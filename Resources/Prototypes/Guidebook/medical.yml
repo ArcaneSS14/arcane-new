@@ -21,6 +21,7 @@
   # Arcane-Start
   children:
   - ArcaneResuscitation
+  - ArcaneRespiration
   # Arcane-End
 
 - type: guideEntry

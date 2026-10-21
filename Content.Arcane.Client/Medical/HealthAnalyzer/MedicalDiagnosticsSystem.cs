@@ -1,13 +1,21 @@
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Arcane.Shared.Medical.Heart;
+using Content.Arcane.Shared.Medical.Respiration;
 using Content.Shared.Body;
+using Content.Shared.Damage.Prototypes;
+using Content.Shared.Damage.Systems;
 using Content.Shared.IdentityManagement;
+using Robust.Shared.Prototypes;
 
-namespace Content.Arcane.Client.Medical.Heart;
+namespace Content.Arcane.Client.Medical.HealthAnalyzer;
 
-public sealed partial class HeartRateAnalyzerSystem : EntitySystem
+public sealed partial class MedicalDiagnosticsSystem : EntitySystem
 {
     [Dependency] private HeartRateSystem _heartRate = default!;
+    [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private OxygenThresholdSystem _oxygen = default!;
+
+    private static readonly ProtoId<DamageTypePrototype> Asphyxiation = "Asphyxiation";
 
     public override void Initialize()
     {
@@ -17,6 +25,8 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
 
     private void OnPopulate(Entity<BodyComponent> ent, ref HealthAnalyzerPopulateEvent args)
     {
+        PopulateRespiration(ent, ref args);
+
         if (_heartRate.GetHeart(ent) is not { } heartEntity)
         {
             if (_heartRate.RequiresHeart(ent))
@@ -50,5 +60,12 @@ public sealed partial class HeartRateAnalyzerSystem : EntitySystem
     private void AddCondition(HealthAnalyzerPopulateEvent args, string key, EntityUid body)
     {
         args.Conditions.Add(Loc.GetString(key, ("entity", Identity.Name(body, EntityManager))));
+    }
+
+    private void PopulateRespiration(EntityUid body, ref HealthAnalyzerPopulateEvent args)
+    {
+        if (_oxygen.GetThreshold(body) is { } threshold &&
+            _damage.GetAllDamage(body).DamageDict.TryGetValue(Asphyxiation, out var damage) && damage.Float() >= threshold)
+            args.Conditions.Add(Loc.GetString("condition-body-asphyxiation-severe"));
     }
 }

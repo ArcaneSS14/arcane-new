@@ -24,7 +24,13 @@ public sealed partial class MedicalSleepSystem : EntitySystem
     private void OnApplied(Entity<MedicalSleepStatusEffectComponent> ent, ref StatusEffectAppliedEvent args)
     {
         if (!HasComp<MedicalSleepOwnershipComponent>(args.Target))
-            EnsureComp<MedicalSleepOwnershipComponent>(args.Target).OwnsSleep = !HasComp<SleepingComponent>(args.Target);
+        {
+            var ownership = EnsureComp<MedicalSleepOwnershipComponent>(args.Target);
+            // A sleep already ending on death is not an independent cause after same-tick revival.
+            ownership.OwnsSleep = !TryComp<SleepingComponent>(args.Target, out var sleeping) ||
+                sleeping.LifeStage >= ComponentLifeStage.Stopping;
+            Dirty(args.Target, ownership);
+        }
     }
 
     private void OnRemoved(Entity<MedicalSleepStatusEffectComponent> ent, ref StatusEffectRemovedEvent args)

@@ -50,6 +50,8 @@ public sealed partial class CPRRespirationSystem : EntitySystem
         state.HasBreathReserve = args.HasReserve;
         state.BreathingImmune = immune;
         Dirty(ent.Owner, state);
+        var changed = new RespirationStateChangedEvent();
+        RaiseLocalEvent(ent.Owner, ref changed);
     }
 
     private bool Active<T>(EntityUid uid) where T : Component
