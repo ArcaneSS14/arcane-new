@@ -41,8 +41,13 @@ public sealed partial class CriticalVisionOverlay : Overlay
 
     protected override bool BeforeDraw(in OverlayDrawArgs args)
     {
-        if (_player.LocalEntity != Patient ||
-            !_entities.TryGetComponent(_player.LocalEntity, out EyeComponent? eye) || args.Viewport.Eye != eye.Eye)
+        if (_player.LocalEntity != Patient)
+        {
+            _lastPatient = null;
+            return false;
+        }
+
+        if (!_entities.TryGetComponent(_player.LocalEntity, out EyeComponent? eye) || args.Viewport.Eye != eye.Eye)
             return false;
 
         if (_lastPatient != Patient)
