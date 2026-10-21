@@ -49,6 +49,11 @@ public sealed partial class WoundComponent : Component
     [DataField]
     public bool IsScar;
 
+    // Arcane-Start
+    [DataField]
+    public bool AffectsIntegrity = true;
+    // Arcane-End
+
     /// <summary>
     /// Wound severity. Has six severities: Healed/Minor/Moderate/Severe/Critical and Loss.
     /// Directly depends on <see cref="WoundSeverityPoint"/>

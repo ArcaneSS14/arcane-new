@@ -31,6 +31,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Heart; // Arcane
 
 namespace Content.Shared.Body.Systems;
 
@@ -100,6 +101,12 @@ public sealed partial class BloodstreamSystem : EntitySystem
 
                 // deal bloodloss damage if their blood level is below a threshold.
                 var bloodPercentage = GetBloodLevel(uid);
+                // Arcane-Start
+                var heart = new FindWorkingHeartEvent();
+                RaiseLocalEvent(uid, ref heart);
+                if (!heart.Found && heart.DoEffects)
+                    bloodPercentage = 0f;
+                // Arcane-End
                 if (bloodPercentage < bloodstream.BloodlossThreshold)
                 {
                     // bloodloss damage is based on the base value, and modified by how low your blood level is.

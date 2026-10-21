@@ -22,4 +22,5 @@ public sealed partial class ArcaneCVars
         CVarDef.Create("sprint.sprint_enabled", true, CVar.SERVER | CVar.REPLICATED);
 
     #endregion
+
 }
