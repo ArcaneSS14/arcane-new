@@ -25,6 +25,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Medical.HealthAnalyzer; // Arcane
 
 namespace Content.Client.HealthAnalyzer.UI;
 
@@ -144,6 +145,19 @@ public sealed partial class HealthAnalyzerControl
                 PopulateChemicals(target);
                 break;
         }
+        // Arcane-Start
+        var populate = new HealthAnalyzerPopulateEvent();
+        _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
+        BpmLabel.Text = populate.Pulse ?? Loc.GetString("health-analyzer-window-entity-unknown-value-text");
+        foreach (var condition in populate.Conditions)
+        {
+            ConditionsListContainer.AddChild(new RichTextLabel
+            {
+                Text = condition,
+                Margin = new Thickness(0, 4),
+            });
+        }
+        // Arcane-End
 
         if (ConditionsListContainer.ChildCount == 0)
         {
@@ -252,6 +266,7 @@ public sealed partial class HealthAnalyzerControl
         }
     }
 
+        // Arcane-Edit-Start: Empty conditions are added after every mode and extension has populated the list.
     public void PopulateOrgans(EntityUid body)
     {
         ReturnButton.Visible = false;
@@ -284,14 +299,6 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        if (ConditionsListContainer.ChildCount == 0)
-        {
-            ConditionsListContainer.AddChild(new RichTextLabel
-            {
-                Text = Loc.GetString("condition-none"),
-                Margin = new Thickness(0, 4),
-            });
-        }
     }
 
     public void PopulateChemicals(EntityUid body)
@@ -320,12 +327,8 @@ public sealed partial class HealthAnalyzerControl
 
         DrawSolutionDiagnostics(solutions);
 
-        ConditionsListContainer.AddChild(new RichTextLabel
-        {
-            Text = Loc.GetString("condition-none"),
-            Margin = new Thickness(0, 4),
-        });
     }
+    // Arcane-Edit-End
 
     #endregion
 

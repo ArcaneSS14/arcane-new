@@ -22,6 +22,7 @@
     <ProjectReference Include="../Content.Factory.Common/Content.Factory.Common.csproj" />
     <ProjectReference Include="../Content.Common/Content.Common.csproj" />
     <!-- </Trauma> -->
+    <ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" /> <!-- Arcane -->
     <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
   </ItemGroup>
 
