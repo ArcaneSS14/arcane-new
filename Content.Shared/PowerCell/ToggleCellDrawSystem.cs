@@ -41,6 +41,6 @@ public sealed partial class ToggleCellDrawSystem : EntitySystem
 
     private void OnEmpty(Entity<ToggleCellDrawComponent> ent, ref PowerCellSlotEmptyEvent args)
     {
-        _toggle.TryDeactivate(ent.Owner);
+        _toggle.TryDeactivate(ent.Owner, predicted: false); // Arcane-Edit: Automatic shutdown has no predicting user to exclude from the server sound.
     }
 }
