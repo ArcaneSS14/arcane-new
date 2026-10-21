@@ -254,7 +254,7 @@ public sealed partial class BloodstreamSystem : EntitySystem
         if (_timing.ApplyingState)
             return;
 
-        if (args.DamageDelta is null || !args.DamageIncreased)
+        if (args.DamageDelta is null || !args.DamageIncreased || (args.DamageDelta.Flags & DamageSpecifier.DamageFlags.NoBleeding) != 0) // Arcane-Edit: Respect damage that cannot cause bleeding.
         {
             return;
         }

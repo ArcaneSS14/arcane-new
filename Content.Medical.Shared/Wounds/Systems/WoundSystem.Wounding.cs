@@ -150,7 +150,7 @@ public sealed partial class WoundSystem
     [SubscribeLocalEvent(after: new[] { typeof(DamageableSystem) })]
     private void OnDamageDealt(Entity<WoundableComponent> ent, ref DamageDealtEvent args)
     {
-        if (!ent.Comp.AllowWounds)
+        if (!ent.Comp.AllowWounds || (args.Damage.Flags & DamageSpecifier.DamageFlags.NoWounds) != 0) // Arcane-Edit: Allow damage without changing wounds.
             return;
 
         // Create or update wounds based on damage changes
