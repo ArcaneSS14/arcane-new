@@ -22,6 +22,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Respiration; // Arcane
 
 namespace Content.Trauma.Shared.Medical;
 
@@ -57,6 +58,7 @@ public abstract partial class SharedCPRSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CPRTrainingComponent, GetVerbsEvent<InnateVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<CPRTrainingComponent, ComponentShutdown>(OnPerformerShutdown); // Arcane
 
         SubscribeLocalEvent<ActiveCPRComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<ActiveCPRComponent, CPRDoAfterEvent>(OnDoAfter);
@@ -75,10 +77,16 @@ public abstract partial class SharedCPRSystem : EntitySystem
         if (!args.CanInteract || !args.CanAccess || !_mobQuery.TryComp(target, out var mob) || mob.CurrentState == MobState.Alive)
             return;
 
+        // Arcane-Start: Resolve the displayed procedure from shared physiology.
+        var capabilities = new CPRCapabilitiesEvent(ent.Owner);
+        RaiseLocalEvent(target, ref capabilities);
+        if (capabilities.Handled && !capabilities.CanPerform)
+            return;
+        // Arcane-End
         args.Verbs.Add(new InnateVerb()
         {
             Act = () => StartCPR(ent, target),
-            Text = Loc.GetString("cpr-verb"),
+            Text = capabilities.VerbText ?? Loc.GetString("cpr-verb"), // Arcane-Edit: Show the available breathing assistance.
             Icon = new SpriteSpecifier.Rsi(new("Interface/Alerts/human_alive.rsi"), "health4"),
             Priority = 2
         });
@@ -87,7 +95,7 @@ public abstract partial class SharedCPRSystem : EntitySystem
     private void StartCPR(Entity<CPRTrainingComponent> ent, EntityUid target)
     {
         var identity = Identity.Entity(target, EntityManager);
-        if (!CanStartCPR(ent, target, identity))
+        if (!CanStartCPR(ent, target, identity, out var capabilities)) // Arcane-Edit: Resolve the session's breathing capabilities.
             return;
 
         var userIdentity = Identity.Entity(ent, EntityManager);
@@ -108,10 +116,17 @@ public abstract partial class SharedCPRSystem : EntitySystem
             BlockDuplicate = true
         };
 
-        if (!_doAfter.TryStartDoAfter(doAfterArgs))
-            return;
-
+        // Arcane-Edit-Start: Reserve the patient before starting and retain the procedure identity.
         var active = EnsureComp<ActiveCPRComponent>(target);
+        active.Performer = ent.Owner;
+        active.CanVentilate = capabilities.CanVentilate;
+        if (!_doAfter.TryStartDoAfter(doAfterArgs, out var id))
+        {
+            RemComp<ActiveCPRComponent>(target);
+            return;
+        }
+        active.DoAfterIndex = id.Value.Index;
+        // Arcane-Edit-End
         // PlayPredicted is shitcode and doesnt spawn the same entity for client, can't do it nicely
         if (_net.IsClient || _audio.PlayPredicted(ent.Comp.Sound, ent, ent, ent.Comp.Sound.Params.WithLoop(true)) is not {} audio)
             return;
@@ -120,26 +135,37 @@ public abstract partial class SharedCPRSystem : EntitySystem
         Dirty(target, active);
     }
 
-    private bool CanStartCPR(Entity<CPRTrainingComponent> ent, EntityUid target, EntityUid identity)
+    // Arcane-Edit-Start: Return capabilities without a second physiology query.
+    private bool CanStartCPR(Entity<CPRTrainingComponent> ent, EntityUid target, EntityUid identity,
+        out CPRCapabilitiesEvent capabilities)
+    // Arcane-Edit-End
     {
+        capabilities = default; // Arcane
         if (_activeQuery.HasComp(target))
         {
             _popup.PopupEntity(Loc.GetString("cpr-already-performing", ("entity", identity)), ent, ent, PopupType.Medium);
             return false;
         }
 
-        return CanPerformCPR(ent, target, identity);
+        return CanPerformCPR(ent, target, identity, out capabilities); // Arcane-Edit: Reuse the validated capabilities.
     }
 
-    private bool CanPerformCPR(Entity<CPRTrainingComponent> ent, EntityUid target, EntityUid identity)
+    // Arcane-Edit-Start
+    private bool CanPerformCPR(Entity<CPRTrainingComponent> ent, EntityUid target, EntityUid identity,
+        out CPRCapabilitiesEvent capabilities)
+    // Arcane-Edit-End
     {
+        // Arcane-Start
+        capabilities = new CPRCapabilitiesEvent(ent.Owner);
+        RaiseLocalEvent(target, ref capabilities);
+        // Arcane-End
         if (_rottingQuery.HasComp(target))
         {
             _popup.PopupEntity(Loc.GetString("cpr-target-rotting", ("entity", identity)), ent, ent, PopupType.LargeCaution);
             return false;
         }
 
-        if (GetLungs(target) == null || GetLungs(ent) == null)
+        if (capabilities.Handled ? !capabilities.CanPerform : GetLungs(target) == null || GetLungs(ent) == null) // Arcane-Edit: Compression-only performers do not need lungs.
         {
             _popup.PopupEntity(Loc.GetString("cpr-target-cantbreathe", ("entity", identity)), ent, ent, PopupType.MediumCaution);
             return false;
@@ -152,20 +178,50 @@ public abstract partial class SharedCPRSystem : EntitySystem
         }
 
         // popups done in ingestion system
-        return _ingestion.HasMouthAvailable(ent, ent) || !_ingestion.HasMouthAvailable(ent, target);
+        return capabilities.Handled || _ingestion.HasMouthAvailable(ent, ent) || !_ingestion.HasMouthAvailable(ent, target); // Arcane-Edit: The module validates both airways when providing breaths.
     }
 
     private void OnShutdown(Entity<ActiveCPRComponent> ent, ref ComponentShutdown args)
     {
         _audio.Stop(ent.Comp.Sound);
+        // Arcane-Start
+        var stopped = new CPRStoppedEvent();
+        RaiseLocalEvent(ent.Owner, ref stopped);
+        // Arcane-End
     }
+
+    // Arcane-Start: Release sessions when the performer loses training or is deleted, and stop perfusion immediately.
+    private void OnPerformerShutdown(Entity<CPRTrainingComponent> ent, ref ComponentShutdown args)
+    {
+        if (_net.IsClient)
+            return;
+
+        var query = EntityQueryEnumerator<ActiveCPRComponent>();
+        while (query.MoveNext(out var patient, out var active))
+        {
+            if (active.Performer == ent.Owner)
+                StopCPR((patient, active));
+        }
+    }
+
+    private void StopCPR(Entity<ActiveCPRComponent> ent)
+    {
+        var stopped = new CPRStoppedEvent();
+        RaiseLocalEvent(ent.Owner, ref stopped);
+        RemCompDeferred(ent, ent.Comp);
+    }
+    // Arcane-End
 
     private void OnDoAfter(Entity<ActiveCPRComponent> ent, ref CPRDoAfterEvent args)
     {
         var user = args.User;
+        // Arcane-Start: A late event must not cancel a different operator or a new procedure.
+        if (_net.IsClient || ent.Comp.Performer != user || ent.Comp.DoAfterIndex != args.DoAfter.Id.Index)
+            return;
+        // Arcane-End
         if (args.Cancelled || args.Handled)
         {
-            RemCompDeferred(ent, ent.Comp);
+            StopCPR(ent); // Arcane-Edit: Release circulatory assistance with the session.
             return;
         }
 
@@ -174,35 +230,53 @@ public abstract partial class SharedCPRSystem : EntitySystem
         var identity = Identity.Entity(ent, EntityManager);
         if (!_trainingQuery.TryComp(user, out var training) ||
             !_mobQuery.TryComp(ent, out var mob) ||
-            !CanPerformCPR((user, training), ent, identity))
+            !CanPerformCPR((user, training), ent, identity, out var capabilities)) // Arcane-Edit: Refresh capabilities for this cycle.
         {
-            RemCompDeferred(ent, ent.Comp);
+            StopCPR(ent); // Arcane-Edit: Release circulatory assistance with the session.
             return;
         }
 
-        if (!HasHealthyLungs(ent))
+        if (capabilities.CanVentilate && !HasHealthyLungs(ent)) // Arcane-Edit: Only artificial ventilation needs healthy lungs.
         {
             _popup.PopupEntity(Loc.GetString("cpr-failed-lungs-damaged", ("target", identity)), user, user, PopupType.LargeCaution);
-            RemCompDeferred(ent, ent.Comp);
+            StopCPR(ent); // Arcane-Edit: Release circulatory assistance with the session.
             return;
         }
 
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        if (mob.CurrentState == MobState.Dead && rand.Prob(training.ReviveChance) && CanRevive(ent))
+        // Arcane-Start: Keep treatment before revival and assisted inhalation.
+        ent.Comp.CanVentilate = capabilities.CanVentilate;
+        var completed = new CPRCompletedEvent(user, capabilities.CanVentilate, training.ReviveChance);
+        RaiseLocalEvent(ent.Owner, ref completed);
+        // Arcane-End
+        // Arcane-Edit-Start: Apply the patient's revival chance and notify successful circulation recovery.
+        if (mob.CurrentState == MobState.Dead && completed.CanRevive && rand.Prob(completed.ReviveChance) && CanRevive(ent))
+        {
             _mob.ChangeMobState(ent.Owner, MobState.Critical, origin: user);
+            if (mob.CurrentState != MobState.Dead)
+            {
+                var revived = new CPRRevivedEvent(user);
+                RaiseLocalEvent(ent.Owner, ref revived);
+            }
+        }
+        // Arcane-Edit-End
 
-        if (rand.Prob(training.InhaleChance) && HasHealthyLungs(ent))
+        if (capabilities.CanVentilate && rand.Prob(training.InhaleChance) && HasHealthyLungs(ent)) // Arcane-Edit: Compressions do not provide breaths.
             TryInhale(ent); // technically should be transferring with the performer's lungs but whatever
 
         var isAlive = mob.CurrentState == MobState.Alive;
+        args.Args.Delay = training.RepeatDuration; // Arcane
         args.Repeat = !isAlive;
         if (isAlive)
-            RemCompDeferred(ent, ent.Comp);
+            StopCPR(ent); // Arcane-Edit: Release circulatory assistance with the session.
     }
 
     private void OnModifyInhaledVolume(Entity<ActiveCPRComponent> ent, ref ModifyInhaledVolumeEvent args)
     {
-        args.Volume *= InhaleModifier; // you are being assisted
+        // Arcane-Edit-Start: Chest compressions alone do not increase inhaled volume.
+        if (ent.Comp.CanVentilate)
+            args.Volume *= InhaleModifier;
+        // Arcane-Edit-End
     }
 
     private bool HasHealthyLungs(EntityUid uid)
