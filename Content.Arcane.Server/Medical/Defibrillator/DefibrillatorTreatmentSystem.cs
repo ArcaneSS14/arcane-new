@@ -75,7 +75,8 @@ public sealed partial class DefibrillatorTreatmentSystem : EntitySystem
             return;
 
         foreach (var medicine in medicines)
-            _solutions.RemoveReagent(blood.BloodSolution.Value, medicine.Id, 4);
+            _solutions.RemoveReagent(blood.BloodSolution.Value, medicine.Id,
+                Math.Min(OxygenMedicineSystem.ShockDose, solution.GetTotalPrototypeQuantity(medicine.Id).Float()));
     }
 
     private void ApplyPulse(EntityUid patient, EntityUid defibrillator)
