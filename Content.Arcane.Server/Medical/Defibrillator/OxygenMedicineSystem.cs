@@ -19,6 +19,8 @@ namespace Content.Arcane.Server.Medical.Defibrillator;
 /// </summary>
 public sealed partial class OxygenMedicineSystem : EntitySystem
 {
+    public const int ShockDose = 4;
+
     [Dependency] private IPrototypeManager _prototypes = default!;
     [Dependency] private SharedEntityConditionsSystem _conditions = default!;
 
@@ -57,9 +59,9 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
     }
 
     /// <summary>
-    /// Returns a single capped bonus for distinct therapeutic reagents present at a dose of at least five units.
+    /// Returns a capped therapeutic bonus scaled by the available fraction of each shock dose.
     /// </summary>
-    public int GetShockHealing(EntityUid patient, Entity<SolutionComponent> solution,
+    public float GetShockHealing(EntityUid patient, Entity<SolutionComponent> solution,
         List<ProtoId<ReagentPrototype>>? medicines = null)
     {
         var added = !HasComp<OxygenMedicineEvaluationComponent>(patient);
@@ -77,16 +79,23 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
         }
     }
 
-    private int CalculateHealing(EntityUid patient, Entity<SolutionComponent> solution,
+    private float CalculateHealing(EntityUid patient, Entity<SolutionComponent> solution,
         List<ProtoId<ReagentPrototype>>? medicines)
     {
         var contents = solution.Comp.Solution;
         var generalMedicines = 0;
+        var generalHealing = 0f;
+        var criticalHealing = 0f;
+        ProtoId<ReagentPrototype>? criticalMedicine = null;
         var counted = new HashSet<ProtoId<ReagentPrototype>>();
         foreach (var quantity in contents.Contents)
         {
             var id = quantity.Reagent.Prototype;
-            if (!counted.Add(id) || contents.GetTotalPrototypeQuantity(id) < 5)
+            if (!counted.Add(id))
+                continue;
+
+            var dose = contents.GetTotalPrototypeQuantity(id).Float();
+            if (dose <= 0f)
                 continue;
 
             var effects = GetEffects(id);
@@ -94,19 +103,35 @@ public sealed partial class OxygenMedicineSystem : EntitySystem
                 !(Heals(patient, solution, effects, MobState.SoftCrit) || Heals(patient, solution, effects, MobState.Critical)))
                 continue;
 
+            var fraction = Math.Min(dose / ShockDose, 1f);
             if (!Heals(patient, solution, effects, MobState.Alive))
             {
-                medicines?.Clear();
+                var healing = 40f * fraction;
+                if (healing > criticalHealing)
+                {
+                    criticalHealing = healing;
+                    criticalMedicine = id;
+                }
+            }
+            else if (generalMedicines < 2)
+            {
                 medicines?.Add(id);
-                return 40;
+                generalHealing += 20f * fraction;
+                generalMedicines++;
             }
 
-            medicines?.Add(id);
-            if (++generalMedicines == 2)
-                return 40;
+            if (generalHealing >= 40f || criticalHealing >= 40f)
+                break;
         }
 
-        return generalMedicines == 1 ? 20 : 0;
+        if (criticalMedicine is { } critical && criticalHealing >= generalHealing)
+        {
+            medicines?.Clear();
+            medicines?.Add(critical);
+            return criticalHealing;
+        }
+
+        return generalHealing;
     }
 
     private bool Heals(EntityUid patient, EntityUid solution, OxygenEffect[] effects, MobState state)

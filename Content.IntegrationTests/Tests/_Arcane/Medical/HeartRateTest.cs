@@ -228,8 +228,13 @@ public sealed class HeartRateTest : GameTest
         Assert.That(solutions.ResolveSolution(patient, blood.BloodSolutionName, ref blood.BloodSolution, out var solution), Is.True);
         var medicine = SEntMan.System<OxygenMedicineSystem>();
 
-        Add("Dexalin", 4);
-        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.Zero);
+        var dose = OxygenMedicineSystem.ShockDose;
+        Add("Dexalin", dose / 2f);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(10));
+        Add("Dexalin", dose / 4f);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(15));
+        Add("Dexalin", dose / 4f);
+        Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20));
         Add("Dexalin", 1);
         Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20));
         Add("DexalinPlus", 5);
@@ -247,7 +252,7 @@ public sealed class HeartRateTest : GameTest
         Assert.That(medicine.GetShockHealing(patient, blood.BloodSolution!.Value), Is.EqualTo(20), "Airloss group healing also treats suffocation.");
         Assert.That(SComp<MobStateComponent>(patient).CurrentState, Is.EqualTo(MobState.Alive));
 
-        void Add(string reagent, int quantity)
+        void Add(string reagent, float quantity)
             => Assert.That(solutions.TryAddReagent(blood.BloodSolution!.Value, reagent, quantity), Is.True);
     }
 
@@ -344,6 +349,22 @@ public sealed class HeartRateTest : GameTest
         Assert.That(damage.GetAllDamage(patient).DamageDict["Heat"] - heat, Is.EqualTo(FixedPoint2.New(30)));
         Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine"),
             Is.EqualTo(FixedPoint2.New(1)), "An early repeat shock must not consume medicine.");
+
+        var partialPatient = SSpawn("MobHuman");
+        var partialBlood = SComp<BloodstreamComponent>(partialPatient);
+        Assert.That(solutions.ResolveSolution(partialPatient, partialBlood.BloodSolutionName,
+            ref partialBlood.BloodSolution, out _), Is.True);
+        Assert.That(solutions.TryAddReagent(partialBlood.BloodSolution!.Value, "Dexalin",
+            OxygenMedicineSystem.ShockDose / 2f), Is.True);
+        damage.TryChangeDamage(partialPatient,
+            new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 60, ["Bloodloss"] = 30 } }, true,
+            targetPart: TargetBodyPart.Vital);
+        mob.ChangeMobState(partialPatient, MobState.Dead);
+        var partialShock = new DefibrillatorTreatmentEvent(defib, patient, true);
+        SEntMan.EventBus.RaiseLocalEvent(partialPatient, ref partialShock);
+        Assert.That(damage.GetAllDamage(partialPatient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(50)));
+        Assert.That(damage.GetAllDamage(partialPatient).DamageDict["Bloodloss"], Is.EqualTo(FixedPoint2.New(25)));
+        Assert.That(partialBlood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Dexalin"), Is.EqualTo(FixedPoint2.Zero));
 
         var stoppedPatient = SSpawn("MobHuman");
         mob.ChangeMobState(stoppedPatient, MobState.Dead);
