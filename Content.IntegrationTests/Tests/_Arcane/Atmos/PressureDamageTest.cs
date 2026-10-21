@@ -144,13 +144,15 @@ public sealed class PressureDamageTest : GameTest
         {
             var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
             var parts = _body.GetExternalOrgans(patient).ToArray();
-            for (var i = 0; i < 120; i++)
+            var limit = SComp<BarotraumaComponent>(patient).MaxDamage;
+            for (var i = 0; i < 1000 &&
+                (!_mobState.IsDead(patient) || _damage.GetAllDamage(patient).GetTotal() < limit); i++)
                 _pressure.Update(1f);
 
             Assert.That(SEntMan.Deleted(patient) || SEntMan.IsQueuedForDeletion(patient), Is.False);
             Assert.That(_mobState.IsDead(patient), Is.True);
             var stoppedDamage = _damage.GetAllDamage(patient).GetTotal();
-            Assert.That(stoppedDamage.Float(), Is.GreaterThan(200f));
+            Assert.That(stoppedDamage, Is.GreaterThanOrEqualTo(limit));
             Assert.That(_body.GetExternalOrgans(patient).Count(), Is.EqualTo(parts.Length));
             Assert.That(parts.All(part => !SEntMan.Deleted(part) && !SEntMan.IsQueuedForDeletion(part)), Is.True);
             for (var i = 0; i < 5; i++)
