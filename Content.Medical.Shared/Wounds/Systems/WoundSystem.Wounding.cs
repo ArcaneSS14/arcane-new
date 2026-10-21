@@ -760,6 +760,7 @@ public sealed partial class WoundSystem
             return FixedPoint2.Zero;
 
         var wounds = GetWoundableWounds(part);
+        wounds.RemoveAll(wound => !wound.Comp.AffectsIntegrity); // Arcane
         if (damageGroup != null)
             wounds.RemoveAll(wound => wound.Comp.DamageGroup != damageGroup);
         if (healable)

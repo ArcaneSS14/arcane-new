@@ -12,6 +12,7 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
+using Content.Shared.FixedPoint;
 using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests._Arcane.Medical;
@@ -43,6 +44,8 @@ public sealed class WoundDiagnosticsTest : GameTest
             Assert.That(wound.Comp.WoundSeverityPoint.Int(), Is.EqualTo(10), type);
 
             Assert.That(part.Comp.Integrity, Is.EqualTo(type == "Blunt" ? initialIntegrity - 10 : initialIntegrity), type);
+            Assert.That(_wounds.GetWoundableIntegrityDamage(part),
+                Is.EqualTo(type == "Blunt" ? FixedPoint2.New(10) : FixedPoint2.Zero), type);
 
             // A blocked wound can outlive the corresponding raw damage.
             wound.Comp.CanBeHealed = false;
