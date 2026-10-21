@@ -16,6 +16,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Containers;
+using Content.Shared.Damage; // Arcane
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -169,6 +170,10 @@ namespace Content.Server.Atmos.EntitySystems
                 return Atmospherics.OneAtmosphere;
             }
 
+            // Arcane-Start: Preserve the original 1 kPa reference for multiplicative pressure protection.
+            if (barotrauma.LowPressureMultiplier > 1f)
+                environmentPressure = MathF.Max(environmentPressure, 1f);
+            // Arcane-End
             var modified = (environmentPressure + barotrauma.LowPressureModifier) * (barotrauma.LowPressureMultiplier);
             return Math.Min(modified, Atmospherics.OneAtmosphere);
         }
@@ -249,24 +254,11 @@ namespace Content.Server.Atmos.EntitySystems
             var enumerator = EntityQueryEnumerator<BarotraumaComponent, DamageableComponent>();
             while (enumerator.MoveNext(out var uid, out var barotrauma, out var damageable))
             {
-                var totalDamage = FixedPoint2.Zero;
-                var damageSpecifier = _damageableSystem.GetAllDamage((uid, damageable));
-                foreach (var (barotraumaDamageType, _) in barotrauma.Damage.DamageDict)
-                {
-                    if (!damageSpecifier.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
-                        continue;
-
-                    totalDamage += damage;
-                }
-
-                if (totalDamage >= barotrauma.MaxDamage)
-                    continue;
-
-                var pressure = 1f;
+                var pressure = 0f; // Arcane-Edit: 1f > 0f
 
                 if (_atmosphereSystem.GetContainingMixture(uid) is {} mixture)
                 {
-                    pressure = MathF.Max(mixture.Pressure, 1f);
+                    pressure = MathF.Max(mixture.Pressure, 0f); // Arcane-Edit: 1f > 0f
                 }
 
                 pressure = pressure switch
@@ -277,10 +269,28 @@ namespace Content.Server.Atmos.EntitySystems
                     _ => pressure
                 };
 
-                if (pressure <= Atmospherics.HazardLowPressure)
+                // Arcane-Start
+                var totalDamage = FixedPoint2.Zero;
+                if (pressure < Atmospherics.HazardLowPressure || pressure > Atmospherics.HazardHighPressure)
+                {
+                    var damageSpecifier = _damageableSystem.GetAllDamage((uid, damageable));
+                    foreach (var (barotraumaDamageType, _) in barotrauma.Damage.DamageDict)
+                    {
+                        if (damageSpecifier.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
+                            totalDamage += damage;
+                    }
+                }
+
+                var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
+                RaiseLocalEvent(uid, ref damageEvent);
+
+                var canDamage = damageEvent.IgnoreDamageLimit || totalDamage < barotrauma.MaxDamage;
+                // Arcane-End
+
+                if (canDamage && pressure < Atmospherics.HazardLowPressure) // Arcane-Edit: Exclude the limit and zero-damage boundary.
                 {
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * Atmospherics.LowPressureDamage * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Shitmed Change
+                    _damageableSystem.TryChangeDamage(uid, damageEvent.Damage ?? barotrauma.Damage * Atmospherics.LowPressureDamage * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Arcane-Edit: Allow pressure damage overrides.
 
                     if (!barotrauma.TakingDamage)
                     {
@@ -290,12 +300,12 @@ namespace Content.Server.Atmos.EntitySystems
 
                     _alertsSystem.ShowAlert(uid, barotrauma.LowPressureAlert, 2);
                 }
-                else if (pressure >= Atmospherics.HazardHighPressure && !_spellblade.IsHoldingItemWithFireSpellbladeEnchantmentComponent(uid)) // Goob edit
+                else if (canDamage && pressure > Atmospherics.HazardHighPressure && !_spellblade.IsHoldingItemWithFireSpellbladeEnchantmentComponent(uid)) // Goob edit // Arcane-Edit: Exclude the limit and zero-damage boundary.
                 {
                     var damageScale = MathF.Min(((pressure / Atmospherics.HazardHighPressure) - 1) * Atmospherics.PressureDamageCoefficient, Atmospherics.MaxHighPressureDamage);
 
                     // Deal damage and ignore resistances. Resistance to pressure damage should be done via pressure protection gear.
-                    _damageableSystem.TryChangeDamage(uid, barotrauma.Damage * damageScale * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Shitmed Change
+                    _damageableSystem.TryChangeDamage(uid, damageEvent.Damage ?? barotrauma.Damage * damageScale * _body.GetVitalBodyPartRatio(uid), true, false, targetPart: TargetBodyPart.All); // Arcane-Edit: Allow pressure damage overrides.
 
                     if (!barotrauma.TakingDamage)
                     {
@@ -307,7 +317,7 @@ namespace Content.Server.Atmos.EntitySystems
                 }
                 else
                 {
-                    // Within safe pressure limits
+                    // No pressure damage; keep environmental warnings up to date. // Arcane-Edit: Include capped damage.
                     if (barotrauma.TakingDamage)
                     {
                         barotrauma.TakingDamage = false;
@@ -331,4 +341,15 @@ namespace Content.Server.Atmos.EntitySystems
             }
         }
     }
+    // Arcane-Start
+    /// <summary>
+    /// Allows content to replace pressure damage after equipment protection, before damage is applied.
+    /// </summary>
+    [ByRefEvent]
+    public record struct BarotraumaDamageEvent(float Pressure, float UpdateInterval, FixedPoint2 CurrentDamage)
+    {
+        public DamageSpecifier? Damage;
+        public bool IgnoreDamageLimit;
+    }
+    // Arcane-End
 }
