@@ -170,6 +170,10 @@ namespace Content.Server.Atmos.EntitySystems
                 return Atmospherics.OneAtmosphere;
             }
 
+            // Arcane-Start: Preserve the original 1 kPa reference for multiplicative pressure protection.
+            if (barotrauma.LowPressureMultiplier > 1f)
+                environmentPressure = MathF.Max(environmentPressure, 1f);
+            // Arcane-End
             var modified = (environmentPressure + barotrauma.LowPressureModifier) * (barotrauma.LowPressureMultiplier);
             return Math.Min(modified, Atmospherics.OneAtmosphere);
         }
@@ -250,16 +254,6 @@ namespace Content.Server.Atmos.EntitySystems
             var enumerator = EntityQueryEnumerator<BarotraumaComponent, DamageableComponent>();
             while (enumerator.MoveNext(out var uid, out var barotrauma, out var damageable))
             {
-                var totalDamage = FixedPoint2.Zero;
-                var damageSpecifier = _damageableSystem.GetAllDamage((uid, damageable));
-                foreach (var (barotraumaDamageType, _) in barotrauma.Damage.DamageDict)
-                {
-                    if (!damageSpecifier.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
-                        continue;
-
-                    totalDamage += damage;
-                }
-
                 var pressure = 0f; // Arcane-Edit: 1f > 0f
 
                 if (_atmosphereSystem.GetContainingMixture(uid) is {} mixture)
@@ -276,6 +270,17 @@ namespace Content.Server.Atmos.EntitySystems
                 };
 
                 // Arcane-Start
+                var totalDamage = FixedPoint2.Zero;
+                if (pressure < Atmospherics.HazardLowPressure || pressure > Atmospherics.HazardHighPressure)
+                {
+                    var damageSpecifier = _damageableSystem.GetAllDamage((uid, damageable));
+                    foreach (var (barotraumaDamageType, _) in barotrauma.Damage.DamageDict)
+                    {
+                        if (damageSpecifier.DamageDict.TryGetValue(barotraumaDamageType, out var damage))
+                            totalDamage += damage;
+                    }
+                }
+
                 var damageEvent = new BarotraumaDamageEvent(pressure, UpdateTimer, totalDamage);
                 RaiseLocalEvent(uid, ref damageEvent);
 

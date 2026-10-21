@@ -20,7 +20,8 @@ public sealed partial class PressureDamageSystem : EntitySystem
     private const float RampDuration = 60f;
     private const float HighPressureCoefficient = 2f;
     private const float MaximumHighDamage = 2f;
-    private const float ReferenceDamage = 0.6f; // Existing human barotrauma weight (Blunt + Heat).
+    // Original human Blunt + Heat baseline; prototype/species weights remain relative to this reference.
+    private const float ReferenceDamage = 0.6f;
 
     public override void Initialize()
     {

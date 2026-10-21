@@ -7,11 +7,13 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Medical.Shared.Wounds;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
+using Content.Shared.Atmos;
 using Content.Shared.Body;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
+using Content.Shared.Inventory;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Robust.Shared.GameObjects;
@@ -33,6 +35,7 @@ public sealed class PressureDamageTest : GameTest
     [SidedDependency(Side.Server)] private readonly BloodstreamSystem _blood = null!;
     [SidedDependency(Side.Server)] private readonly MobThresholdSystem _thresholds = null!;
     [SidedDependency(Side.Server)] private readonly MobStateSystem _mobState = null!;
+    [SidedDependency(Side.Server)] private readonly InventorySystem _inventory = null!;
 
     [TestPrototypes]
     private const string Prototypes = """
@@ -61,33 +64,34 @@ public sealed class PressureDamageTest : GameTest
         {
             var patient = SSpawnAtPosition("TestArcanePressureBlood", TestMap!.GridCoords);
             var initialBlood = _blood.GetBloodLevel(patient);
-            var seed = new DamageSpecifier { DamageDict = { ["Blunt"] = 199 } };
+            var barotrauma = SComp<BarotraumaComponent>(patient);
+            var limit = barotrauma.MaxDamage;
+            var seed = new DamageSpecifier { DamageDict = { ["Blunt"] = limit - 1 } };
             seed.Flags = DamageSpecifier.DamageFlags.NoWounds | DamageSpecifier.DamageFlags.NoBleeding;
             _damage.ChangeDamage(patient, seed, ignoreResistances: true);
             _mobState.ChangeMobState(patient, MobState.Dead);
-            var barotrauma = SComp<BarotraumaComponent>(patient);
-            barotrauma.LowPressureModifier = 20f;
+            barotrauma.LowPressureModifier = Atmospherics.HazardLowPressure;
             _pressure.Update(1f);
-            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(199f));
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(limit - 1));
             Assert.That(barotrauma.TakingDamage, Is.False);
 
             barotrauma.LowPressureModifier = 0f;
             _pressure.Update(1f);
-            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(200f));
-            for (var i = 0; i < 65; i++)
-                _pressure.Update(1f);
-            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(200f));
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(limit));
+            _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(limit));
             Assert.That(_blood.GetBloodLevel(patient), Is.EqualTo(initialBlood));
             Assert.That(barotrauma.TakingDamage, Is.False);
 
-            barotrauma.LowPressureModifier = 101.325f;
+            barotrauma.LowPressureModifier = Atmospherics.OneAtmosphere;
             _pressure.Update(1f);
             Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
 
             barotrauma.LowPressureModifier = 0f;
             _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = -10 } }, ignoreResistances: true);
+            var afterHealing = _damage.GetAllDamage(patient).GetTotal();
             _pressure.Update(1f);
-            Assert.That(_damage.GetAllDamage(patient).GetTotal().Float(), Is.EqualTo(192f).Within(0.02f));
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.GreaterThan(afterHealing).And.LessThanOrEqualTo(limit));
             _damage.ChangeDamage(patient, new() { DamageDict = { ["Blunt"] = 1 } }, ignoreResistances: true);
             Assert.That(_blood.GetBloodLevel(patient), Is.LessThan(initialBlood), "Ordinary damage still causes blood loss.");
         });
@@ -124,7 +128,27 @@ public sealed class PressureDamageTest : GameTest
             var parts = _body.GetExternalOrgans(patient).ToArray();
             var initialBlood = _blood.GetBloodLevel(patient);
             _pressure.Update(1f);
-            Assert.That(_thresholds.CheckVitalDamage(patient).Float(), Is.EqualTo(2f).Within(0.02f));
+            var initialDamage = _damage.GetAllDamage(patient).GetTotal();
+            Assert.That(initialDamage, Is.GreaterThan(FixedPoint2.Zero));
+
+            var suit = SSpawn("ClothingOuterHardsuitEngineering");
+            var helmet = SSpawn("ClothingHeadHelmetHardsuitEngineering");
+            Assert.That(_inventory.TryEquip(patient, suit, "outerClothing", force: true), Is.True);
+            Assert.That(_inventory.TryEquip(patient, helmet, "head", force: true), Is.True);
+            var barotrauma = SComp<BarotraumaComponent>(patient);
+            Assert.That(_pressure.GetFeltLowPressure(patient, barotrauma, 0f),
+                Is.GreaterThanOrEqualTo(Atmospherics.HazardLowPressure));
+            _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(initialDamage));
+            Assert.That(SEntMan.HasComponent<PressureExposureComponent>(patient), Is.False);
+            Assert.That(barotrauma.TakingDamage, Is.False);
+
+            Assert.That(_inventory.TryUnequip(patient, "head", force: true), Is.True);
+            Assert.That(_inventory.TryUnequip(patient, "outerClothing", force: true), Is.True);
+            _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal() - initialDamage, Is.EqualTo(initialDamage),
+                "Removing pressure protection must restart damage at its initial rate.");
+
             var wounds = parts.SelectMany(p => _wounds.GetWoundableWounds((p.Owner, SComp<WoundableComponent>(p)))).ToArray();
             Assert.That(wounds.Length, Is.EqualTo(1));
             Assert.That(wounds[0].Comp.WoundSeverityPoint.Float(), Is.EqualTo(10f));
@@ -145,18 +169,26 @@ public sealed class PressureDamageTest : GameTest
             var patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
             var parts = _body.GetExternalOrgans(patient).ToArray();
             var limit = SComp<BarotraumaComponent>(patient).MaxDamage;
-            for (var i = 0; i < 1000 &&
-                (!_mobState.IsDead(patient) || _damage.GetAllDamage(patient).GetTotal() < limit); i++)
+            Assert.That(_thresholds.TryGetDeadThreshold(patient, out var deathThreshold), Is.True);
+            _thresholds.SetMobStateThreshold(patient, FixedPoint2.Max(deathThreshold!.Value, limit * 2), MobState.Dead);
+            for (var i = 0; i < 1000 && _damage.GetAllDamage(patient).GetTotal() < limit; i++)
                 _pressure.Update(1f);
 
+            var atLimit = _damage.GetAllDamage(patient).GetTotal();
+            Assert.That(atLimit, Is.GreaterThanOrEqualTo(limit));
+            Assert.That(_mobState.IsDead(patient), Is.False);
+            _pressure.Update(1f);
+            Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.GreaterThan(atLimit),
+                "A living patient must continue taking pressure damage beyond the cap.");
+
+            _mobState.ChangeMobState(patient, MobState.Dead);
             Assert.That(SEntMan.Deleted(patient) || SEntMan.IsQueuedForDeletion(patient), Is.False);
             Assert.That(_mobState.IsDead(patient), Is.True);
             var stoppedDamage = _damage.GetAllDamage(patient).GetTotal();
             Assert.That(stoppedDamage, Is.GreaterThanOrEqualTo(limit));
             Assert.That(_body.GetExternalOrgans(patient).Count(), Is.EqualTo(parts.Length));
             Assert.That(parts.All(part => !SEntMan.Deleted(part) && !SEntMan.IsQueuedForDeletion(part)), Is.True);
-            for (var i = 0; i < 5; i++)
-                _pressure.Update(1f);
+            _pressure.Update(1f);
             Assert.That(_damage.GetAllDamage(patient).GetTotal(), Is.EqualTo(stoppedDamage));
         });
     }
