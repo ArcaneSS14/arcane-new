@@ -343,12 +343,25 @@ public sealed class HeartRateTest : GameTest
         mob.ChangeMobState(patient, MobState.Dead);
         var heat = damage.GetAllDamage(patient).DamageDict.GetValueOrDefault("Heat");
         var anotherDefib = SSpawn("DefibrillatorCompact");
-        var anotherShock = new DefibrillatorTreatmentEvent(anotherDefib, SSpawn("MobHuman"), true);
-        SEntMan.EventBus.RaiseLocalEvent(patient, ref anotherShock);
+        Assert.That(SEntMan.System<ItemToggleSystem>().TryActivate(anotherDefib), Is.True);
+        system.Zap(anotherDefib, patient, SSpawn("MobHuman"));
         Assert.That(damage.GetAllDamage(patient).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(60)));
         Assert.That(damage.GetAllDamage(patient).DamageDict["Heat"] - heat, Is.EqualTo(FixedPoint2.New(30)));
         Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine"),
             Is.EqualTo(FixedPoint2.New(1)), "An early repeat shock must not consume medicine.");
+
+        foreach (var prototype in new[] { "DefibrillatorCompact", "DefibrillatorSyndicate" })
+        {
+            var untreated = SSpawn("MobHuman");
+            damage.TryChangeDamage(untreated, new DamageSpecifier { DamageDict = { ["Asphyxiation"] = 60 } }, true,
+                targetPart: TargetBodyPart.Vital);
+            mob.ChangeMobState(untreated, MobState.Dead);
+            var automatic = SSpawn(prototype);
+            Assert.That(SEntMan.System<ItemToggleSystem>().TryActivate(automatic), Is.True);
+            system.Zap(automatic, untreated, patient);
+            Assert.That(damage.GetAllDamage(untreated).DamageDict["Asphyxiation"], Is.EqualTo(FixedPoint2.New(60)),
+                "Automatic defibrillators must not heal suffocation without medicine.");
+        }
 
         var partialPatient = SSpawn("MobHuman");
         var partialBlood = SComp<BloodstreamComponent>(partialPatient);
