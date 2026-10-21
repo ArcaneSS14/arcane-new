@@ -307,6 +307,10 @@
       - !type:ModifyHeartRate
         amount: -3
         lowerCap: 45
+      - !type:ModifyStatusEffect
+        effectProto: StatusEffectOpiated
+        type: Add
+        time: 15
       # Arcane-End
 
 - type: reagent
@@ -370,6 +374,10 @@
       - !type:ModifyHeartRate
         amount: -2.5
         lowerCap: 45
+      - !type:ModifyStatusEffect
+        effectProto: StatusEffectOpiated
+        type: Add
+        time: 6
       # Arcane-End
 
 - type: reagent
