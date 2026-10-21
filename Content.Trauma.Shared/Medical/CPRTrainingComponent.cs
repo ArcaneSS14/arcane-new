@@ -4,10 +4,12 @@ using Robust.Shared.Audio;
 
 namespace Content.Trauma.Shared.Medical;
 
+// Arcane-Edit-Start: Full CPR and chest compressions share one interaction.
 /// <summary>
-/// Allows a mob to perform CPR with a verb.
-/// Both this mob and the target must have <c>RespiratorComponent</c>.
+/// Allows a mob to perform CPR or chest compressions with a verb.
+/// Only full CPR requires the performer to provide rescue breaths.
 /// </summary>
+// Arcane-Edit-End
 [RegisterComponent, NetworkedComponent, Access(typeof(SharedCPRSystem))]
 public sealed partial class CPRTrainingComponent : Component
 {
@@ -15,7 +17,15 @@ public sealed partial class CPRTrainingComponent : Component
     /// How long the doafter lasts.
     /// </summary>
     [DataField]
-    public TimeSpan Duration = TimeSpan.FromSeconds(4);
+    public TimeSpan Duration = TimeSpan.FromSeconds(3); // Arcane-Edit: 4 > 3
+
+    // Arcane-Start
+    /// <summary>
+    /// The delay between uninterrupted compression cycles after the first cycle.
+    /// </summary>
+    [DataField]
+    public TimeSpan RepeatDuration = TimeSpan.FromSeconds(0.8);
+    // Arcane-End
 
     /// <summary>
     /// Chance to attempt reviving after a compression, if conditions are met.

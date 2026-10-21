@@ -139,6 +139,7 @@ public record struct EyeDamageChangedEvent(int Damage);
 /// </summary>
 public sealed class CanSeeAttemptEvent : CancellableEntityEventArgs, IInventoryRelayEvent
 {
+    public bool IgnoreSleeping; // Arcane
     public bool Blind => Cancelled;
     public SlotFlags TargetSlots => SlotFlags.EYES | SlotFlags.MASK | SlotFlags.HEAD;
 }
