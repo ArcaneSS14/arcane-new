@@ -13,8 +13,8 @@ void fragment() {
     highp float opacity = darkness * intensity * 0.95;
     if (chromaticEnabled) {
         highp float strength = smoothstep(chromaticStart, 1.0, intensity);
-        highp float edge = smoothstep(0.15, 0.5, length(centered));
-        highp vec2 offset = centered * SCREEN_PIXEL_SIZE * 2.0;
+        highp float edge = smoothstep(0.08, 0.3, length(centered));
+        highp vec2 offset = centered * SCREEN_PIXEL_SIZE * 12.0;
         highp vec2 minimumUV = SCREEN_PIXEL_SIZE * 0.5;
         highp vec2 maximumUV = vec2(1.0) - minimumUV;
         highp vec4 color = zTextureSpec(SCREEN_TEXTURE, screenUV);
