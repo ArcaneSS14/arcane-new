@@ -45,6 +45,16 @@ public sealed partial class ContentAudioSystem : SharedContentAudioSystem
     {
         InterfaceAudioPlayed?.Invoke(uid);
     }
+
+    /// <summary>
+    /// Marks interface playback while preserving its result for callers that retain the stream.
+    /// </summary>
+    public (EntityUid Entity, AudioComponent Component)? MarkInterfaceAudio((EntityUid Entity, AudioComponent Component)? audio)
+    {
+        if (audio is { } stream)
+            MarkInterfaceAudio(stream.Entity);
+        return audio;
+    }
     // Arcane-End
 
     public override void Initialize()
