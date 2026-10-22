@@ -3,11 +3,14 @@ using System.Linq;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Medical.Concussion;
 using Content.Arcane.Shared.Medical.Concussion;
+using Content.Goobstation.Shared.Flashbang;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Shared.Inventory;
+using Content.Shared.Flash;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Trigger.Components.Effects;
 using Content.Trauma.Common.Language;
 using Content.Trauma.Shared.Language.Events;
 using Robust.Client.Graphics;
@@ -26,6 +29,7 @@ public sealed class ConcussionTest : GameTest
     [SidedDependency(Side.Server)] private readonly ServerConcussion _concussion = null!;
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Server)] private readonly InventorySystem _inventory = null!;
+    [SidedDependency(Side.Server)] private readonly SharedFlashSystem _flash = null!;
     [SidedDependency(Side.Server)] private readonly IPrototypeManager _prototypes = null!;
     [SidedDependency(Side.Client)] private readonly ClientConcussion _presentation = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
@@ -33,16 +37,22 @@ public sealed class ConcussionTest : GameTest
     private static readonly EntProtoId Speech = "StatusEffectConcussedSpeech";
 
     [Test]
-    public async Task RecoveryPreservesUnrelatedSpeechAndRestoresLanguage()
+    public async Task FlashbangRecoveryPreservesUnrelatedSpeechAndRestoresLanguage()
     {
+        await Pair.CreateTestMap();
         EntityUid patient = default;
         var language = string.Empty;
+        var recoveryTime = 0f;
         await Server.WaitPost(() =>
         {
-            patient = SSpawn("MobHuman");
+            patient = SSpawnAtPosition("MobHuman", TestMap!.GridCoords);
             var comp = SComp<ConcussionThresholdComponent>(patient);
             SEntMan.EnsureComponent<SlurredAccentComponent>(patient);
-            _concussion.AddConcussionDamage((patient, comp), 1000);
+            var grenade = SSpawnAtPosition("GrenadeFlashBang", TestMap.GridCoords);
+            var flash = SComp<FlashOnTriggerComponent>(grenade);
+            _flash.FlashArea(grenade, null, flash.Range, flash.Duration);
+            var cap = comp.Thresholds.First(entry => entry.Value == ConcussionState.Overwhelmed).Key.Float();
+            Assert.That(comp.StoredDamage.Float(), Is.EqualTo(Math.Min(cap, SComp<FlashbangComponent>(grenade).ConcussionDamage)).Within(0.01f));
             Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.True);
 
             language = _prototypes.EnumeratePrototypes<LanguagePrototype>().First().ID;
@@ -50,9 +60,11 @@ public sealed class ConcussionTest : GameTest
             impaired.UnderstoodLanguages.Add(language);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref impaired);
             Assert.That(impaired.UnderstoodLanguages, Is.Empty);
-            _concussion.SetDamage((patient, comp), 0);
+            var minor = comp.Thresholds.First(entry => entry.Value == ConcussionState.Minor).Key;
+            _concussion.SetDamage((patient, comp), minor + comp.HealRate * (float)comp.UpdateInterval.TotalSeconds);
+            recoveryTime = (float)comp.UpdateInterval.TotalSeconds * 3f;
         });
-        await RunSeconds(0.1f);
+        await RunSeconds(recoveryTime);
         await Server.WaitPost(() =>
         {
             Assert.That(SHasComp<ConcussedComponent>(patient), Is.False);
@@ -70,15 +82,23 @@ public sealed class ConcussionTest : GameTest
     public void EquippedResistanceCombinesAcrossSlots()
     {
         var patient = SSpawn("MobHuman");
+        var comp = SComp<ConcussionThresholdComponent>(patient);
         Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadHelmetSwat"), "head", silent: true, force: true), Is.True);
-        Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "ears", silent: true, force: true), Is.True);
+        var dose = new FlashbangConcussionEvent(comp.Thresholds.First(entry => entry.Value == ConcussionState.Overwhelmed).Key.Float() / 2f);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref dose);
+        var helmetOnly = comp.StoredDamage;
+        _concussion.SetDamage((patient, comp), 0);
+        var headset = SSpawn("ClothingHeadsetAltMedical");
+        Assert.That(_inventory.TryEquip(patient, headset, "ears", silent: true, force: true), Is.True);
+        SEntMan.EventBus.RaiseLocalEvent(patient, ref dose);
+        var wornProtection = comp.StoredDamage;
+        var resistance = Math.Clamp(SComp<ConcussionResistanceComponent>(headset).Resistance, 0f, 1f);
+        Assert.That(wornProtection.Float(), Is.EqualTo(helmetOnly.Float() * (1f - resistance)).Within(0.01f));
+        _concussion.SetDamage((patient, comp), 0);
         Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "pocket1", silent: true, force: true), Is.True);
         Assert.That(_inventory.TryEquip(patient, SSpawn("ClothingHeadsetAltMedical"), "pocket2", silent: true, force: true), Is.True);
-        var dose = new FlashbangConcussionEvent(100);
         SEntMan.EventBus.RaiseLocalEvent(patient, ref dose);
-        var comp = SComp<ConcussionThresholdComponent>(patient);
-        Assert.That(comp.StoredDamage.Float(), Is.EqualTo(48f).Within(0.01f));
-        Assert.That(comp.CurrentState, Is.EqualTo(ConcussionState.Minor));
+        Assert.That(comp.StoredDamage, Is.EqualTo(wornProtection));
     }
 
     [Test]
@@ -102,20 +122,21 @@ public sealed class ConcussionTest : GameTest
                 var comp = SComp<ConcussionThresholdComponent>(patient);
                 comp.HealRate = 0;
                 _concussion.AddConcussionDamage((patient, comp), 80);
+                _effects.TryUpdateStatusEffectDuration(patient, SharedFlashSystem.FlashedKey, TimeSpan.FromMinutes(1));
                 SEntMan.EnsureComponent<SlurredAccentComponent>(patient);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
             });
             await RunSeconds(0.2f);
-            await AssertOverlay(true);
+            await AssertOverlays(true, true);
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, healthy));
             await RunSeconds(0.2f);
-            await AssertOverlay(false);
+            await AssertOverlays(false, false);
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, patient));
             await RunSeconds(0.2f);
-            await AssertOverlay(true);
+            await AssertOverlays(true, true);
             await Server.WaitPost(() => SEntMan.RemoveComponent<ConcussionThresholdComponent>(patient));
             await RunSeconds(0.2f);
-            await AssertOverlay(false);
+            await AssertOverlays(false, true);
             await Server.WaitPost(() =>
             {
                 Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.False);
@@ -127,11 +148,14 @@ public sealed class ConcussionTest : GameTest
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, null));
             await Client.WaitPost(() => _cfg.SetCVar(ArcaneCVars.ConcussionSound, originalSound));
         }
+        await RunSeconds(0.2f);
+        await AssertOverlays(false, false);
     }
 
-    private Task AssertOverlay(bool expected) => Client.WaitPost(() =>
+    private Task AssertOverlays(bool concussion, bool flash) => Client.WaitPost(() =>
     {
         _presentation.FrameUpdate(0f);
-        Assert.That(_overlays.HasOverlay<ConcussionOverlay>(), Is.EqualTo(expected));
+        Assert.That(_overlays.HasOverlay<ConcussionOverlay>(), Is.EqualTo(concussion));
+        Assert.That(_overlays.HasOverlay<Content.Client.Flash.FlashOverlay>(), Is.EqualTo(flash));
     });
 }

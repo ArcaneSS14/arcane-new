@@ -22,6 +22,7 @@ public sealed partial class ConcussionOverlay : Overlay
     {
         IoCManager.InjectDependencies(this);
         _shader = _prototypes.Index(CircleMask).InstanceUnique();
+        ZIndex = 16;
     }
 
     public void Reset()
@@ -45,18 +46,16 @@ public sealed partial class ConcussionOverlay : Overlay
             !_entities.TryGetComponent(_player.LocalEntity, out EyeComponent? eye) || args.Viewport.Eye != eye.Eye)
             return;
 
-        var width = args.ViewportBounds.Width;
+        var size = Math.Min(args.ViewportBounds.Width, args.ViewportBounds.Height);
         var level = SmoothedIntensity;
-        var outerRadius = (2f - level * 1.3f) * width;
-        var innerFade = 1f - Math.Clamp((level - 0.5f) / 0.2f, 0f, 1f);
-        var innerRadius = (0.5f - level * 0.45f) * width * innerFade;
-        var feather = Math.Max(0.001f, 0.002f * width * (1f - level) * innerFade);
+        var outerRadius = (0.9f - level * 0.3f) * size;
+        var innerRadius = (0.6f - level * 0.45f) * size;
         _shader.SetParameter("color", Vector3.One);
-        _shader.SetParameter("darknessAlphaOuter", 2.5f);
+        _shader.SetParameter("darknessAlphaOuter", level * 0.75f);
         _shader.SetParameter("outerCircleRadius", outerRadius);
-        _shader.SetParameter("outerCircleMaxRadius", outerRadius + 0.2f * width);
+        _shader.SetParameter("outerCircleMaxRadius", outerRadius);
         _shader.SetParameter("innerCircleRadius", innerRadius);
-        _shader.SetParameter("innerCircleMaxRadius", innerRadius + feather);
+        _shader.SetParameter("innerCircleMaxRadius", innerRadius);
         args.WorldHandle.UseShader(_shader);
         args.WorldHandle.DrawRect(args.WorldAABB, Color.White);
         args.WorldHandle.UseShader(null);

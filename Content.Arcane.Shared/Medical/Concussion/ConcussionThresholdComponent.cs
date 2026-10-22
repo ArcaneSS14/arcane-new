@@ -30,6 +30,9 @@ public sealed partial class ConcussionThresholdComponent : Component
     public SoundSpecifier? Sound;
 
     [DataField]
+    public SoundSpecifier? RecoverySound;
+
+    [DataField]
     public float HealRate = 1f;
 
     [DataField]

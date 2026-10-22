@@ -17,8 +17,12 @@
       5: Minor
       50: Hard
       100: Overwhelmed
-    healRate: 3
+    healRate: 4
     sound: /Audio/_Arcane/Medical/highpitch.ogg
+    recoverySound:
+      path: /Audio/Misc/woosh.ogg
+      params:
+        volume: -15
     speedModifierThresholds:
       Hard: 0.7
   # Arcane-End

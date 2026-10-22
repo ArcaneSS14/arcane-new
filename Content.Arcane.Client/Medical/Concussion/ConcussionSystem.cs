@@ -19,11 +19,11 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
 
     private ConcussionOverlay _overlay = default!;
     private EntityUid? _sound;
+    private EntityUid? _recoverySound;
     private ConcussionState _lastState = ConcussionState.Sane;
     private bool _hasOverlay;
     private bool _refreshRequired;
     private bool _playSound;
-    private bool _baselinePending = true;
 
     public override void Initialize()
     {
@@ -56,7 +56,11 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
     {
         _playSound = enabled;
         if (!enabled)
+        {
             _sound = _audio.Stop(_sound);
+            _recoverySound = _audio.Stop(_recoverySound);
+        }
+        _refreshRequired = true;
     }
 
     private void OnStateHandled(Entity<ConcussionThresholdComponent> ent, ref AfterAutoHandleStateEvent args)
@@ -72,21 +76,33 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             Reset();
             return;
         }
-        _overlay.TargetIntensity = GetIntensity(concussion);
+        var intensity = GetIntensity(concussion);
+        _overlay.TargetIntensity = intensity;
         if (_overlay.TargetIntensity > 0 && !_hasOverlay)
         {
             _overlays.AddOverlay(_overlay);
             _hasOverlay = true;
         }
-        if (concussion.CurrentState == ConcussionState.Sane && _lastState != ConcussionState.Sane)
-            _sound = _audio.Stop(_sound);
-        else if (!_baselinePending && concussion.CurrentState > _lastState && _playSound)
+        if (concussion.CurrentState == ConcussionState.Sane)
         {
             _sound = _audio.Stop(_sound);
-            _sound = _audio.PlayGlobal(concussion.Sound, Filter.Local(), false, AudioParams.Default.WithVolume(-10f))?.Entity;
+            if (_lastState != ConcussionState.Sane && _playSound)
+            {
+                _recoverySound = _audio.Stop(_recoverySound);
+                _recoverySound = _audio.PlayGlobal(concussion.RecoverySound, Filter.Local(), false)?.Entity;
+            }
+        }
+        else if (_playSound)
+        {
+            _recoverySound = _audio.Stop(_recoverySound);
+            var volume = -10f + 20f * MathF.Log10(Math.Max(intensity, 0.01f));
+            if (!Exists(_sound))
+                _sound = _audio.PlayGlobal(concussion.Sound, Filter.Local(), false,
+                    AudioParams.Default.WithLoop(true).WithVolume(volume))?.Entity;
+            else
+                _audio.SetVolume(_sound, volume);
         }
         _lastState = concussion.CurrentState;
-        _baselinePending = false;
     }
 
     private void OnAttached(LocalPlayerAttachedEvent args)
@@ -120,8 +136,8 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             _overlays.RemoveOverlay(_overlay);
         _hasOverlay = false;
         _lastState = ConcussionState.Sane;
-        _baselinePending = true;
         _sound = _audio.Stop(_sound);
+        _recoverySound = _audio.Stop(_recoverySound);
     }
 
     public override void Shutdown()
