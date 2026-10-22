@@ -116,6 +116,11 @@ namespace Content.Server.Chemistry.EntitySystems
 
         private void OnSetDispenseAmountMessage(Entity<ReagentDispenserComponent> reagentDispenser, ref ReagentDispenserSetDispenseAmountMessage message)
         {
+            // Arcane-Start
+            if (!Enum.IsDefined(message.ReagentDispenserDispenseAmount))
+                return;
+            // Arcane-End
+
             reagentDispenser.Comp.DispenseAmount = message.ReagentDispenserDispenseAmount;
             UpdateUiState(reagentDispenser);
             ClickSound(reagentDispenser);
@@ -138,15 +143,26 @@ namespace Content.Server.Chemistry.EntitySystems
             if (outputContainer is not { Valid: true } || !_solutionContainerSystem.TryGetFitsInDispenser(outputContainer.Value, out var solution, out _))
                 return;
 
-            if (_solutionContainerSystem.TryGetDrainableSolution(storedContainer, out var src, out _) &&
-                _solutionContainerSystem.TryGetRefillableSolution(outputContainer.Value, out var dst, out _))
+            // Arcane-Edit-Start
+            if (_solutionContainerSystem.TryGetDrainableSolution(storedContainer, out var src, out var sourceSolution) &&
+                _solutionContainerSystem.TryGetRefillableSolution(outputContainer.Value, out var dst, out var targetSolution))
+            // Arcane-Edit-End
             {
+                // Arcane-Start: Clamp the actual transfer before splitting the finite source.
+                var requested = reagentDispenser.Comp.DispenseAmount == ReagentDispenserDispenseAmount.Max
+                    ? targetSolution.AvailableVolume
+                    : (FixedPoint2) (int) reagentDispenser.Comp.DispenseAmount;
+                var amount = FixedPoint2.Min(requested, FixedPoint2.Min(sourceSolution.Volume, targetSolution.AvailableVolume));
+                if (amount <= FixedPoint2.Zero)
+                    return;
+                // Arcane-End
+
                 // force open container, if applicable, to avoid confusing people on why it doesn't dispense
                 _openable.SetOpen(storedContainer, true);
                 _solutionTransferSystem.Transfer(new SolutionTransferData(reagentDispenser,
                         storedContainer, src.Value,
                         outputContainer.Value, dst.Value,
-                        (int)reagentDispenser.Comp.DispenseAmount));
+                        amount)); // Arcane-Edit: Transfer only the bounded amount.
             }
 
             UpdateUiState(reagentDispenser);
