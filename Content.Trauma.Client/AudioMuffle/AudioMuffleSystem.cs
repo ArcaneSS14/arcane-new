@@ -512,9 +512,9 @@ public sealed partial class AudioMuffleSystem : SharedAudioMuffleSystem
             ? hearing
             : hearing + GetEnvironmentOcclusion(listener, delta, distance, ignoredEnt);
     }
-    // Arcane-End
 
-    private float GetEnvironmentOcclusion(MapCoordinates listener, Vector2 delta, float distance, EntityUid? ignoredEnt) // Arcane
+    private float GetEnvironmentOcclusion(MapCoordinates listener, Vector2 delta, float distance, EntityUid? ignoredEnt)
+    // Arcane-End
     {
         if (distance < 0.1f || ResolvePlayer() is not { } player)
             return 0f;
