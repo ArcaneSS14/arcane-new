@@ -66,6 +66,11 @@ public sealed partial class MindSystem : SharedMindSystem
         TransferTo(mindId, null, createGhost: false, mind: mind);
         DebugTools.AssertNull(mind.OwnedEntity);
 
+        // Arcane-Start: Do not create ghosts during server cleanup.
+        if (EntityManager.ShuttingDown)
+            return;
+        // Arcane-End
+
         if (!component.GhostOnShutdown || _gameTicker.RunLevel == GameRunLevel.PreRoundLobby)
             return;
 
