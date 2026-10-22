@@ -88,7 +88,7 @@ public sealed partial class ConcussionSystem
         var query = AllEntityQuery<AudioComponent>();
         while (query.MoveNext(out var uid, out var audio))
         {
-            if (uid == _sound || uid == _recoverySound || !audio.Running || !BypassesWorldOcclusion(audio))
+            if (uid == _sound || !audio.Running || !BypassesWorldOcclusion(audio))
                 continue;
 
             if (_interfaceAudio.Contains(uid))

@@ -29,9 +29,6 @@ public sealed partial class ConcussionThresholdComponent : Component
     [DataField]
     public SoundSpecifier? Sound;
 
-    [DataField]
-    public SoundSpecifier? RecoverySound;
-
     /// <summary>
     /// Fraction of maximum concussion intensity below which hearing starts returning.
     /// </summary>

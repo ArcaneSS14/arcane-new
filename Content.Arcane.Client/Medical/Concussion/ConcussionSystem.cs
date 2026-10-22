@@ -1,10 +1,8 @@
-using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.Medical.Concussion;
 using Content.Shared.GameTicking;
 using Robust.Client.Audio;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
-using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 
 namespace Content.Arcane.Client.Medical.Concussion;
@@ -13,23 +11,18 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
 {
     [Dependency] private IPlayerManager _player = default!;
     [Dependency] private IOverlayManager _overlays = default!;
-    [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private AudioSystem _audio = default!;
 
     private ConcussionOverlay _overlay = default!;
     private EntityUid? _sound;
-    private EntityUid? _recoverySound;
-    private ConcussionState _lastState = ConcussionState.Sane;
     private bool _hasOverlay;
     private bool _refreshRequired;
-    private bool _playSound;
 
     public override void Initialize()
     {
         base.Initialize();
         InitializeHearing();
         _overlay = new ConcussionOverlay();
-        _cfg.OnValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged, true);
         SubscribeLocalEvent<ConcussionThresholdComponent, AfterAutoHandleStateEvent>(OnStateHandled);
         SubscribeLocalEvent<ConcussionThresholdComponent, ComponentShutdown>(OnThresholdShutdown);
         SubscribeLocalEvent<LocalPlayerAttachedEvent>(OnAttached);
@@ -51,17 +44,6 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             _hasOverlay = false;
         }
         UpdateUnoccludedAudio();
-    }
-
-    private void OnSoundChanged(bool enabled)
-    {
-        _playSound = enabled;
-        if (!enabled)
-        {
-            _sound = _audio.Stop(_sound);
-            _recoverySound = _audio.Stop(_recoverySound);
-        }
-        _refreshRequired = true;
     }
 
     private void OnStateHandled(Entity<ConcussionThresholdComponent> ent, ref AfterAutoHandleStateEvent args)
@@ -88,22 +70,15 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
         if (concussion.CurrentState == ConcussionState.Sane)
         {
             _sound = _audio.Stop(_sound);
-            if (_lastState != ConcussionState.Sane && _playSound)
-            {
-                _recoverySound = _audio.Stop(_recoverySound);
-                _recoverySound = _audio.PlayGlobal(concussion.RecoverySound, Filter.Local(), false)?.Entity;
-            }
         }
-        else if (_playSound)
+        else
         {
-            _recoverySound = _audio.Stop(_recoverySound);
             var volume = -7f + 20f * MathF.Log10(Math.Max(intensity, 0.01f));
             if (!Exists(_sound))
                 _sound = PlayTinnitus(concussion.Sound, volume);
             else
                 _audio.SetVolume(_sound, volume);
         }
-        _lastState = concussion.CurrentState;
     }
 
     private void OnAttached(LocalPlayerAttachedEvent args)
@@ -137,14 +112,11 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
         if (_hasOverlay)
             _overlays.RemoveOverlay(_overlay);
         _hasOverlay = false;
-        _lastState = ConcussionState.Sane;
         _sound = _audio.Stop(_sound);
-        _recoverySound = _audio.Stop(_recoverySound);
     }
 
     public override void Shutdown()
     {
-        _cfg.UnsubValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged);
         ShutdownHearing();
         Reset();
         _overlay.Dispose();

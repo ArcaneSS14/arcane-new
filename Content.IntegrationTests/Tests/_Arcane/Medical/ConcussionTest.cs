@@ -1,7 +1,6 @@
 #nullable enable
 using System.Linq;
 using System.Numerics;
-using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Medical.Concussion;
 using Content.Arcane.Shared.Medical.Concussion;
 using Content.IntegrationTests.Fixtures;
@@ -12,7 +11,6 @@ using Content.Shared.StatusEffectNew;
 using Content.Trauma.Common.Language.Systems;
 using Content.Trauma.Shared.Language.Events;
 using Robust.Client.Graphics;
-using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using ClientConcussion = Content.Arcane.Client.Medical.Concussion.ConcussionSystem;
@@ -28,7 +26,6 @@ public sealed class ConcussionTest : GameTest
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Client)] private readonly ClientConcussion _presentation = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
-    [SidedDependency(Side.Client)] private readonly IConfigurationManager _cfg = null!;
     [SidedDependency(Side.Client)] private readonly Content.Client.Audio.ContentAudioSystem _clientAudio = null!;
     [SidedDependency(Side.Client)] private readonly Robust.Client.Audio.AudioSystem _audio = null!;
     private static readonly EntProtoId Speech = "StatusEffectConcussedSpeech";
@@ -40,12 +37,6 @@ public sealed class ConcussionTest : GameTest
         EntityUid patient = default;
         EntityUid healthy = default;
         var language = CommonLanguageSystem.FallbackLanguagePrototype;
-        var originalSound = true;
-        await Client.WaitPost(() =>
-        {
-            originalSound = _cfg.GetCVar(ArcaneCVars.ConcussionSound);
-            _cfg.SetCVar(ArcaneCVars.ConcussionSound, false);
-        });
         try
         {
             await Server.WaitPost(() =>
@@ -69,8 +60,6 @@ public sealed class ConcussionTest : GameTest
             {
                 Assert.That(_audio.GetOcclusion(_audio.GetListenerCoordinates(), Vector2.Zero, 0f),
                     Is.EqualTo(float.PositiveInfinity));
-                _cfg.SetCVar(ArcaneCVars.ConcussionSound, true);
-                _presentation.FrameUpdate(0f);
             });
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, healthy));
             await RunSeconds(0.2f);
@@ -94,7 +83,6 @@ public sealed class ConcussionTest : GameTest
         finally
         {
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, null));
-            await Client.WaitPost(() => _cfg.SetCVar(ArcaneCVars.ConcussionSound, originalSound));
         }
         await RunSeconds(0.2f);
         await AssertOverlays(false, false);

@@ -52,10 +52,6 @@
                 <CheckBox Name="AutoFillHighlightsCheckBox" Text="{Loc 'ui-options-auto-fill-highlights'}" />
                 <!-- <Trauma> -->
                 <CheckBox Name="HighlightSoundCheckBox" Text="{Loc 'ui-options-highlight-sound'}" />
-                <!-- Arcane-Start -->
-                <CheckBox Name="ConcussionNoiseCheckBox"
-                          Text="{Loc 'concussion-setting-noise'}" />
-                <!-- Arcane-End -->
                 <CheckBox Name="SkillPopupsCheckBox" Text="{Loc 'ui-options-show-skill-popups'}" />
                 <CheckBox Name="MovieCreditsCheckBox" Text="{Loc 'round-end-credits-trauma-show-credits'}" />
                 <ui:OptionSlider Name="VisionGrainScaleSlider" Title="Vision cone grainyness"/>
