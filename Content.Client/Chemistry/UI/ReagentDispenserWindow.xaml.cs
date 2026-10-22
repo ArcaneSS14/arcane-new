@@ -71,7 +71,11 @@ namespace Content.Client.Chemistry.UI
             ClearButton.Disabled = castState.OutputContainer is null;
             EjectButton.Disabled = castState.OutputContainer is null;
 
-            AmountGrid.Selected = ((int)castState.SelectedDispenseAmount).ToString();
+            // Arcane-Edit-Start
+            AmountGrid.Selected = castState.SelectedDispenseAmount == ReagentDispenserDispenseAmount.Max
+                ? "MAX"
+                : ((int)castState.SelectedDispenseAmount).ToString();
+            // Arcane-Edit-End
         }
 
         /// <summary>
