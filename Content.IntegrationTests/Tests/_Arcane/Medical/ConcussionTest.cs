@@ -24,6 +24,7 @@ public sealed class ConcussionTest : GameTest
 {
     [SidedDependency(Side.Server)] private readonly ServerConcussion _concussion = null!;
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
+    [SidedDependency(Side.Server)] private readonly CommonLanguageSystem _languages = null!;
     [SidedDependency(Side.Client)] private readonly ClientConcussion _presentation = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
     [SidedDependency(Side.Client)] private readonly Content.Client.Audio.ContentAudioSystem _clientAudio = null!;
@@ -52,6 +53,8 @@ public sealed class ConcussionTest : GameTest
                 impaired.UnderstoodLanguages.Add(language);
                 SEntMan.EventBus.RaiseLocalEvent(patient, ref impaired);
                 Assert.That(impaired.UnderstoodLanguages, Is.Empty);
+                Assert.That(_languages.CanUnderstand(patient, CommonLanguageSystem.UniversalPrototype), Is.True);
+                Assert.That(_languages.CanUnderstand(patient, CommonLanguageSystem.PsychomanticPrototype), Is.True);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
             });
             await RunSeconds(0.2f);
