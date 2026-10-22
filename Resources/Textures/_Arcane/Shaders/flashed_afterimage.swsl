@@ -9,7 +9,7 @@ void fragment() {
     highp float strongPhase = min(3.0, duration * 0.75);
     highp float opacity = 1.0 - smoothstep(strongPhase, duration, elapsed);
     // Start with an overexposed afterimage, retaining the visible scene throughout the effect.
-    highp float white = 0.8 * opacity;
+    highp float white = 0.75 * opacity;
     highp vec3 frame = zTexture(UV).rgb;
     if (!reducedMotion) {
         highp vec2 displacement = vec2(sin(TIME * 2.0), cos(TIME * 2.0)) * 0.002 * opacity;
