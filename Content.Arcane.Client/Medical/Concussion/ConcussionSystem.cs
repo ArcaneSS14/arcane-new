@@ -1,10 +1,9 @@
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.Medical.Concussion;
 using Content.Shared.GameTicking;
+using Robust.Client.Audio;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 
@@ -15,7 +14,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
     [Dependency] private IPlayerManager _player = default!;
     [Dependency] private IOverlayManager _overlays = default!;
     [Dependency] private IConfigurationManager _cfg = default!;
-    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private AudioSystem _audio = default!;
 
     private ConcussionOverlay _overlay = default!;
     private EntityUid? _sound;
@@ -98,10 +97,9 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
         else if (_playSound)
         {
             _recoverySound = _audio.Stop(_recoverySound);
-            var volume = -10f + 20f * MathF.Log10(Math.Max(intensity, 0.01f));
+            var volume = -7f + 20f * MathF.Log10(Math.Max(intensity, 0.01f));
             if (!Exists(_sound))
-                _sound = _audio.PlayGlobal(concussion.Sound, Filter.Local(), false,
-                    AudioParams.Default.WithLoop(true).WithVolume(volume))?.Entity;
+                _sound = PlayTinnitus(concussion.Sound, volume);
             else
                 _audio.SetVolume(_sound, volume);
         }

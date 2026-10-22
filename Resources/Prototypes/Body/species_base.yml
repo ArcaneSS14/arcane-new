@@ -18,7 +18,6 @@
       50: Hard
       100: Overwhelmed
     healRate: 4
-    sound: /Audio/_Arcane/Medical/highpitch.ogg
     recoverySound:
       path: /Audio/Misc/woosh.ogg
       params:

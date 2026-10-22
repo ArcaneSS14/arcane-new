@@ -154,6 +154,8 @@ public sealed class ConcussionTest : GameTest
                 Assert.That(_clientAudio.ListenerOcclusion, Is.GreaterThan(0f));
                 Assert.That(_audio.GetOcclusion(_audio.GetListenerCoordinates(), Vector2.Zero, 0f),
                     Is.GreaterThanOrEqualTo(_clientAudio.ListenerOcclusion));
+                _cfg.SetCVar(ArcaneCVars.ConcussionSound, true);
+                _presentation.FrameUpdate(0f);
             });
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, healthy));
             await RunSeconds(0.2f);
