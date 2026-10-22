@@ -11,7 +11,7 @@ using Content.Shared.Flash;
 using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.Trigger.Components.Effects;
-using Content.Trauma.Common.Language;
+using Content.Trauma.Common.Language.Systems;
 using Content.Trauma.Shared.Language.Events;
 using Robust.Client.Graphics;
 using Robust.Shared.Configuration;
@@ -30,7 +30,7 @@ public sealed class ConcussionTest : GameTest
     [SidedDependency(Side.Server)] private readonly StatusEffectsSystem _effects = null!;
     [SidedDependency(Side.Server)] private readonly InventorySystem _inventory = null!;
     [SidedDependency(Side.Server)] private readonly SharedFlashSystem _flash = null!;
-    [SidedDependency(Side.Server)] private readonly IPrototypeManager _prototypes = null!;
+    [SidedDependency(Side.Server)] private readonly CommonLanguageSystem _languages = null!;
     [SidedDependency(Side.Client)] private readonly ClientConcussion _presentation = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
     [SidedDependency(Side.Client)] private readonly IConfigurationManager _cfg = null!;
@@ -41,7 +41,7 @@ public sealed class ConcussionTest : GameTest
     {
         await Pair.CreateTestMap();
         EntityUid patient = default;
-        var language = string.Empty;
+        var language = CommonLanguageSystem.FallbackLanguagePrototype;
         var recoveryTime = 0f;
         await Server.WaitPost(() =>
         {
@@ -55,11 +55,13 @@ public sealed class ConcussionTest : GameTest
             Assert.That(comp.StoredDamage.Float(), Is.EqualTo(Math.Min(cap, SComp<FlashbangComponent>(grenade).ConcussionDamage)).Within(0.01f));
             Assert.That(_effects.TryGetStatusEffect(patient, Speech, out _), Is.True);
 
-            language = _prototypes.EnumeratePrototypes<LanguagePrototype>().First().ID;
             var impaired = new DetermineEntityLanguagesEvent();
             impaired.UnderstoodLanguages.Add(language);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref impaired);
             Assert.That(impaired.UnderstoodLanguages, Is.Empty);
+            Assert.That(_languages.CanUnderstand(patient, language), Is.False);
+            Assert.That(_languages.CanUnderstand(patient, CommonLanguageSystem.UniversalPrototype), Is.True);
+            Assert.That(_languages.CanUnderstand(patient, CommonLanguageSystem.PsychomanticPrototype), Is.True);
             var minor = comp.Thresholds.First(entry => entry.Value == ConcussionState.Minor).Key;
             _concussion.SetDamage((patient, comp), minor + comp.HealRate * (float)comp.UpdateInterval.TotalSeconds);
             recoveryTime = (float)comp.UpdateInterval.TotalSeconds * 3f;
@@ -73,7 +75,7 @@ public sealed class ConcussionTest : GameTest
             var restored = new DetermineEntityLanguagesEvent();
             restored.UnderstoodLanguages.Add(language);
             SEntMan.EventBus.RaiseLocalEvent(patient, ref restored);
-            Assert.That(restored.UnderstoodLanguages, Does.Contain(new ProtoId<LanguagePrototype>(language)));
+            Assert.That(restored.UnderstoodLanguages, Does.Contain(language));
         });
     }
 
