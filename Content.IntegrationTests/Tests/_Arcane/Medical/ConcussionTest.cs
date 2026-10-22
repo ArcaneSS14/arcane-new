@@ -1,5 +1,6 @@
 #nullable enable
 using System.Linq;
+using System.Numerics;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Medical.Concussion;
 using Content.Arcane.Shared.Medical.Concussion;
@@ -34,6 +35,8 @@ public sealed class ConcussionTest : GameTest
     [SidedDependency(Side.Client)] private readonly ClientConcussion _presentation = null!;
     [SidedDependency(Side.Client)] private readonly IOverlayManager _overlays = null!;
     [SidedDependency(Side.Client)] private readonly IConfigurationManager _cfg = null!;
+    [SidedDependency(Side.Client)] private readonly Content.Client.Audio.ContentAudioSystem _clientAudio = null!;
+    [SidedDependency(Side.Client)] private readonly Robust.Client.Audio.AudioSystem _audio = null!;
     private static readonly EntProtoId Speech = "StatusEffectConcussedSpeech";
 
     [Test]
@@ -123,13 +126,35 @@ public sealed class ConcussionTest : GameTest
                 healthy = SSpawnAtPosition("MobHuman", TestMap.GridCoords);
                 var comp = SComp<ConcussionThresholdComponent>(patient);
                 comp.HealRate = 0;
-                _concussion.AddConcussionDamage((patient, comp), 80);
+                _concussion.AddConcussionDamage((patient, comp), comp.Thresholds.First(entry => entry.Value == ConcussionState.Overwhelmed).Key);
                 _effects.TryUpdateStatusEffectDuration(patient, SharedFlashSystem.FlashedKey, TimeSpan.FromMinutes(1));
                 SEntMan.EnsureComponent<SlurredAccentComponent>(patient);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, patient);
             });
             await RunSeconds(0.2f);
             await AssertOverlays(true, true);
+            await Client.WaitPost(() =>
+            {
+                Assert.That(_clientAudio.ListenerOcclusion, Is.EqualTo(float.PositiveInfinity));
+                Assert.That(_audio.GetOcclusion(_audio.GetListenerCoordinates(), Vector2.Zero, 0f),
+                    Is.EqualTo(float.PositiveInfinity));
+            });
+            await Server.WaitPost(() =>
+            {
+                var comp = SComp<ConcussionThresholdComponent>(patient);
+                var minor = comp.Thresholds.First(entry => entry.Value == ConcussionState.Minor).Key.Float();
+                var cap = comp.Thresholds.First(entry => entry.Value == ConcussionState.Overwhelmed).Key.Float();
+                _concussion.SetDamage((patient, comp), minor + (cap - minor) * comp.HearingRecoveryThreshold * 0.5f);
+            });
+            await RunSeconds(0.2f);
+            await AssertOverlays(true, true);
+            await Client.WaitPost(() =>
+            {
+                Assert.That(float.IsFinite(_clientAudio.ListenerOcclusion), Is.True);
+                Assert.That(_clientAudio.ListenerOcclusion, Is.GreaterThan(0f));
+                Assert.That(_audio.GetOcclusion(_audio.GetListenerCoordinates(), Vector2.Zero, 0f),
+                    Is.GreaterThanOrEqualTo(_clientAudio.ListenerOcclusion));
+            });
             await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, healthy));
             await RunSeconds(0.2f);
             await AssertOverlays(false, false);
@@ -159,5 +184,6 @@ public sealed class ConcussionTest : GameTest
         _presentation.FrameUpdate(0f);
         Assert.That(_overlays.HasOverlay<ConcussionOverlay>(), Is.EqualTo(concussion));
         Assert.That(_overlays.HasOverlay<Content.Client.Flash.FlashOverlay>(), Is.EqualTo(flash));
+        Assert.That(_clientAudio.ListenerOcclusion > 0f, Is.EqualTo(concussion));
     });
 }

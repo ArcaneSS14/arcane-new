@@ -30,6 +30,23 @@ public sealed partial class ContentAudioSystem : SharedContentAudioSystem
     public const float LobbyMultiplier = 3f;
     public const float InterfaceMultiplier = 2f;
 
+    // Arcane-Start
+    /// <summary>
+    /// Additional sound occlusion caused by the listener's hearing.
+    /// </summary>
+    public float ListenerOcclusion;
+
+    /// <summary>
+    /// Marks an audio entity as interface feedback rather than a sound in the game world.
+    /// </summary>
+    public event Action<EntityUid>? InterfaceAudioPlayed;
+
+    public void MarkInterfaceAudio(EntityUid uid)
+    {
+        InterfaceAudioPlayed?.Invoke(uid);
+    }
+    // Arcane-End
+
     public override void Initialize()
     {
         base.Initialize();

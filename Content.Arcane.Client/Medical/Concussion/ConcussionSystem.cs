@@ -28,6 +28,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
     public override void Initialize()
     {
         base.Initialize();
+        InitializeHearing();
         _overlay = new ConcussionOverlay();
         _cfg.OnValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged, true);
         SubscribeLocalEvent<ConcussionThresholdComponent, AfterAutoHandleStateEvent>(OnStateHandled);
@@ -50,6 +51,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             _overlays.RemoveOverlay(_overlay);
             _hasOverlay = false;
         }
+        UpdateUnoccludedAudio();
     }
 
     private void OnSoundChanged(bool enabled)
@@ -77,6 +79,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
             return;
         }
         var intensity = GetIntensity(concussion);
+        UpdateHearing(intensity, concussion.HearingRecoveryThreshold);
         _overlay.TargetIntensity = intensity;
         if (_overlay.TargetIntensity > 0 && !_hasOverlay)
         {
@@ -130,6 +133,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
 
     private void Reset()
     {
+        ResetHearing();
         _refreshRequired = false;
         _overlay.Reset();
         if (_hasOverlay)
@@ -143,6 +147,7 @@ public sealed partial class ConcussionSystem : SharedConcussionSystem
     public override void Shutdown()
     {
         _cfg.UnsubValueChanged(ArcaneCVars.ConcussionSound, OnSoundChanged);
+        ShutdownHearing();
         Reset();
         _overlay.Dispose();
         base.Shutdown();
