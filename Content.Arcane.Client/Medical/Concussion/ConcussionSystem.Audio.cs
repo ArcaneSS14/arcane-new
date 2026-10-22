@@ -17,7 +17,7 @@ public sealed partial class ConcussionSystem
     private void InitializeHearing()
     {
         UpdatesAfter.Add(typeof(AudioSystem));
-        SubscribeLocalEvent<AudioComponent, ComponentShutdown>(OnAudioShutdown);
+        EntityManager.EntityDeleted += OnAudioEntityDeleted;
         _contentAudio.InterfaceAudioPlayed += OnInterfaceAudio;
     }
 
@@ -28,7 +28,7 @@ public sealed partial class ConcussionSystem
             original.Component.Occlusion = original.Occlusion;
     }
 
-    private void OnAudioShutdown(Entity<AudioComponent> ent, ref ComponentShutdown args)
+    private void OnAudioEntityDeleted(Entity<MetaDataComponent> ent)
     {
         _muffledAudio.Remove(ent.Owner);
         _interfaceAudio.Remove(ent.Owner);
@@ -98,6 +98,7 @@ public sealed partial class ConcussionSystem
 
     private void ShutdownHearing()
     {
+        EntityManager.EntityDeleted -= OnAudioEntityDeleted;
         _contentAudio.InterfaceAudioPlayed -= OnInterfaceAudio;
         _interfaceAudio.Clear();
     }
