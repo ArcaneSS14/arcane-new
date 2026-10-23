@@ -17,6 +17,11 @@
       - !type:ModifyStatusEffect
         effectProto: StatusEffectWoozy
         time: 20.0
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 4
+        higherCap: 165
+      # Arcane-End
 
 - type: reagent
   id: Dylovene
@@ -172,6 +177,14 @@
           reagent: Bicaridine
           min: 12 # Trauma - Was 15
       - !type:Drunk
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 4.5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Bicaridine
+          min: 15
+      # Arcane-End
 
 - type: reagent
   id: Cryoxadone
@@ -267,6 +280,14 @@
         - !type:ReagentCondition
           reagent: Dermaline
           min: 10
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 4.5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Dermaline
+          min: 10
+      # Arcane-End
 
 - type: reagent
   id: Dexalin
@@ -293,6 +314,14 @@
           types:
             Asphyxiation: 3
             Cold: 1
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -2
+        conditions:
+        - !type:ReagentCondition
+          reagent: Dexalin
+          min: 20
+      # Arcane-End
 
 - type: reagent
   id: DexalinPlus
@@ -326,6 +355,14 @@
           types:
             Asphyxiation: 5
             Cold: 3
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -2
+        conditions:
+        - !type:ReagentCondition
+          reagent: DexalinPlus
+          min: 25
+      # Arcane-End
 
 # this ones a doozy
 - type: reagent
@@ -413,6 +450,12 @@
       # <Goob>
       - !type:ModifyStatusEffect
         effectProto: EpinephrineStatusEffect
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 2
+        heartRestart: true
+        autoStabilisation: true
+      # Arcane-End
       # </Goob>
 
 - type: reagent
@@ -931,6 +974,12 @@
           Toxin: -2
           Airloss: -2
           Brute: -2
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+      # Arcane-End
 
 - type: reagent
   id: Ultravasculine

@@ -780,6 +780,10 @@
       293: 0.8
       280: 0.6
       260: 0.4
+  # Arcane-Start
+  - type: Sprinter
+    staminaDrainRate: 2
+  # Arcane-End
 
 - type: entity
   parent: SimpleMobBase

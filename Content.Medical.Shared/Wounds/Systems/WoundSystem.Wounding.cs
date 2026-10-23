@@ -150,13 +150,14 @@ public sealed partial class WoundSystem
     [SubscribeLocalEvent(after: new[] { typeof(DamageableSystem) })]
     private void OnDamageDealt(Entity<WoundableComponent> ent, ref DamageDealtEvent args)
     {
-        if (!ent.Comp.AllowWounds)
+        if (!ent.Comp.AllowWounds || (args.Damage.Flags & DamageSpecifier.DamageFlags.NoWounds) != 0) // Arcane-Edit: Allow damage without changing wounds.
             return;
 
         // Create or update wounds based on damage changes
         var part = ent.AsNullable();
-        foreach (var (damageType, damageValue) in args.ModifiedDamage.DamageDict)
+        foreach (var (damageType, requested) in args.Damage.DamageDict) // Arcane-Edit: Include residual wound healing even when ordinary damage is already zero.
         {
+            var damageValue = requested < 0 ? requested : args.ModifiedDamage.DamageDict.GetValueOrDefault(damageType); // Arcane: Create positive wounds only from damage the part accepted.
             if (damageValue == 0)
                 continue; // Only create wounds for damage or healing
 
@@ -171,13 +172,15 @@ public sealed partial class WoundSystem
                 if (!IsWoundPrototypeValid(id))
                     continue;
 
-                var multiplier = args.Damage.WoundSeverityMultipliers.GetValueOrDefault(damageType, 1);
+                // Arcane-Edit-Start: Keep wound severity in damage units.
+                // var multiplier = args.Damage.WoundSeverityMultipliers.GetValueOrDefault(damageType, 1);
                 TryInduceWound(part,
                     args.Damage.GetWoundId(damageType),
-                    damageValue * multiplier,
+                    damageValue,
                     out _,
                     damageType: damageType,
                     user: args.Origin);
+                // Arcane-Edit-End
             }
         }
 
@@ -199,8 +202,10 @@ public sealed partial class WoundSystem
         var damage = _damageable.GetAllDamage(ent.Owner);
         foreach (var type in damage.DamageDict.Keys)
         {
-            var mul = damage.WoundSeverityMultipliers.GetValueOrDefault(type, 1);
-            TryInduceWound(part, type.Id, value * mul, out _);
+            // Arcane-Edit-Start: Match the severity used by ordinary damage.
+            // var mul = damage.WoundSeverityMultipliers.GetValueOrDefault(type, 1);
+            TryInduceWound(part, type.Id, value, out _);
+            // Arcane-Edit-End
         }
 
         UpdateWoundableIntegrity(part);
@@ -319,10 +324,10 @@ public sealed partial class WoundSystem
         foreach (var wound in GetWoundableWounds(part))
         {
             if (Prototype(wound)?.ID is not { } woundId ||
-                id != woundId || wound.Comp.IsScar ||
-                ChangeWoundSeverity(wound, severity, part.Comp, user) == FixedPoint2.Zero)
+                id != woundId || wound.Comp.IsScar)
                 continue;
 
+            ChangeWoundSeverity(wound, severity, part.Comp, user);
             woundContinued = wound;
             return true;
         }
@@ -346,16 +351,17 @@ public sealed partial class WoundSystem
             return change;
 
         var old = wound.Comp.WoundSeverityPoint;
+        var overflow = severity - old;
 
         var upperLimit = woundable.IntegrityCap;
         severity = FixedPoint2.Clamp(severity, 0, upperLimit);
 
-        if (severity == old)
-            return change;
-
-        change = severity - old;
-        wound.Comp.WoundSeverityPoint = severity;
-        DirtyField(wound, wound.Comp, nameof(WoundComponent.WoundSeverityPoint));
+        if (severity != old)
+        {
+            change = severity - old;
+            wound.Comp.WoundSeverityPoint = severity;
+            DirtyField(wound, wound.Comp, nameof(WoundComponent.WoundSeverityPoint));
+        }
 
         if (severity > old &&
             wound.Comp.MangleSeverity != null &&
@@ -364,7 +370,7 @@ public sealed partial class WoundSystem
             _trauma.ApplyMangledTraumas((part, woundable), wound.Owner, severity, user);
         }
 
-        WoundSeverityChanged(wound, old);
+        WoundSeverityChanged(wound, old, overflow);
 
         CheckSeverityThresholds(wound, (part, woundable));
 
@@ -468,7 +474,7 @@ public sealed partial class WoundSystem
         foreach (var wound in part.Comp.Wounds.ContainedEntities)
         {
             var woundComp = _query.Comp(wound);
-            if (woundComp.IsScar) // scars don't affect limb integrity
+            if (woundComp.IsScar || !woundComp.AffectsIntegrity) // Arcane-Edit: Scars and systemic wounds do not affect limb integrity.
                 continue;
 
             damage += woundComp.WoundSeverityPoint;
@@ -754,6 +760,7 @@ public sealed partial class WoundSystem
             return FixedPoint2.Zero;
 
         var wounds = GetWoundableWounds(part);
+        wounds.RemoveAll(wound => !wound.Comp.AffectsIntegrity); // Arcane
         if (damageGroup != null)
             wounds.RemoveAll(wound => wound.Comp.DamageGroup != damageGroup);
         if (healable)

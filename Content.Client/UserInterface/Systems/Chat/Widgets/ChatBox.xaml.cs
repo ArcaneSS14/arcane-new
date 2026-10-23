@@ -17,6 +17,7 @@ using Robust.Shared.Input;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.LineEdit;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Chat.Widgets;
 
@@ -81,7 +82,10 @@ public partial class ChatBox : UIWidget
         }
 
         if (msg is { Read: false, AudioPath: { } })
-            _entManager.System<AudioSystem>().PlayGlobal(msg.AudioPath, Filter.Local(), false, AudioParams.Default.AddVolume(msg.AudioVolume));
+            // Arcane-Edit-Start: Keep chat notifications audible during hearing effects.
+            _entManager.System<ContentAudioSystem>().MarkInterfaceAudio(
+                _entManager.System<AudioSystem>().PlayGlobal(msg.AudioPath, Filter.Local(), false, AudioParams.Default.AddVolume(msg.AudioVolume)));
+            // Arcane-Edit-End
 
         msg.Read = true;
 

@@ -186,13 +186,19 @@ PoweredFloorLight: null
 WallXenoMembrane: ResinMembrane
 WallXenoResin: WallResin
 WallXenoResinThick: WallResin
-# </Trauma>
 # Arcane-Edit-End
 
-# Goobstation - Submarine from DeltaV
+# </Trauma>
 
-# 2026-01-10 Goobstation Change Mapped Chem to Energy Chem by default
-ChemDispenser: EnergyChemDispenser
+# Arcane-Edit-Start: Keep original dispensers and radiation collectors on existing maps
+# 2026-01-10
+# ChemDispenser: EnergyChemDispenser
+
+# 2026-10-10
+# CrateEngineeringSingularityCollector: null
+# RadiationCollector: null
+# RadiationCollectorFlatpack: null
+# Arcane-Edit-End
 
 AirlockBoxerGlassLocked: AirlockServiceGlassLocked
 AirlockClownGlassLocked: AirlockServiceGlassLocked

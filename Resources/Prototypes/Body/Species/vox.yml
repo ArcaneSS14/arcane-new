@@ -376,6 +376,13 @@
 - type: entity
   parent: [ OrganBaseHeart, OrganVoxInternal, OrganVoxMetabolizer ]
   id: OrganVoxHeart
+  # Arcane-Start
+  components:
+  - type: HeartRate
+    normalRate: 110
+    criticalRate: 330
+    fibrillationCaps: 50,220
+  # Arcane-End
 
 - type: entity
   parent: [ OrganBaseStomach, OrganVoxInternal, OrganVoxMetabolizer ]

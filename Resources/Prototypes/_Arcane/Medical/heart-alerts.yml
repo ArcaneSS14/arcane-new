@@ -1,0 +1,15 @@
+- type: alert
+  id: Fibrillations
+  icons:
+  - sprite: /Textures/_Arcane/Interface/Medical/alerts.rsi
+    state: fibrillations
+  name: alerts-fibr-name
+  description: alerts-fibr-desc
+
+- type: alert
+  id: HeartStop
+  icons:
+  - sprite: /Textures/_Arcane/Interface/Medical/alerts.rsi
+    state: heartstop
+  name: alerts-heartstop-name
+  description: alerts-heartstop-desc

@@ -3,6 +3,10 @@
 using Content.Goobstation.Common.Barks;
 using Content.Trauma.Common.Knowledge;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using Robust.Shared.GameStates;
+using Robust.Shared.Serialization;
+// Arcane-End
 
 namespace Content.Shared.Humanoid;
 
@@ -11,6 +15,11 @@ namespace Content.Shared.Humanoid;
 /// </summary>
 public sealed partial class HumanoidProfileComponent
 {
+    // Arcane-Start: Replicate character scale on live humanoids
+    [DataField, AutoNetworkedField]
+    public float Scale = 1f;
+    // Arcane-End
+
     [DataField]
     public ProtoId<BarkPrototype> BarkVoice = HumanoidProfileSystem.DefaultBarkVoice;
 

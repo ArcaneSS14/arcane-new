@@ -1,0 +1,4 @@
+- type: guideEntry
+  id: ArcaneBarotrauma
+  name: guide-entry-arcane-barotrauma
+  text: "/ServerInfo/_Arcane/Guidebook/Engineering/Barotrauma.xml"

@@ -15,6 +15,7 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Audio;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.Xenoarchaeology.Ui;
 
@@ -122,7 +123,10 @@ public sealed partial class AnalysisConsoleMenu : FancyWindow
 
         ExtractionSumLabel.SetMarkup(Loc.GetString("analysis-console-extract-sum", ("value", _extractionSum)));
 
-        _audio.PlayGlobal(_owner.Comp.ScanFinishedSound, _owner, AudioParams.Default.WithVolume(1f));
+        // Arcane-Edit-Start: Keep console feedback audible during hearing effects.
+        _ent.System<ContentAudioSystem>().MarkInterfaceAudio(
+            _audio.PlayGlobal(_owner.Comp.ScanFinishedSound, _owner, AudioParams.Default.WithVolume(1f)));
+        // Arcane-Edit-End
         OnExtractButtonPressed?.Invoke();
     }
 

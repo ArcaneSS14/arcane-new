@@ -100,6 +100,12 @@
         damage:
           types:
             Poison: 3
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: 5
+        heartRestart: true
+        autoStabilisation: true
+      # Arcane-End
   tileReactions:
   - !type:ChangeTileReaction # Rusts tile
 

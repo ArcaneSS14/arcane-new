@@ -236,6 +236,7 @@ public sealed partial class HumanoidProfileEditor
         UpdateBarkVoice();
         RefreshTraits();
         // </Trauma>
+        UpdateGrowthControls(); // Arcane
     }
 
     private void SetAge(int newAge)
