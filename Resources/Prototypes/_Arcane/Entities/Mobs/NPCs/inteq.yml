@@ -18,7 +18,6 @@
     - MindRoleGhostRoleSoloAntagonist
     raffle:
       settings: default
-    job: InteQVanguard
   - type: RotationVisuals
     defaultRotation: 90
     horizontalRotation: 90
