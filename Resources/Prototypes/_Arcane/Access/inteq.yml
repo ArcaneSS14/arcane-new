@@ -5,3 +5,9 @@
 - type: accessLevel
   id: InteQVanguardLeader
   #name: Vanguard Leader
+
+- type: accessGroup
+  id: InteQ
+  tags:
+  - InteQVanguardLeader
+  - InteQVanguard

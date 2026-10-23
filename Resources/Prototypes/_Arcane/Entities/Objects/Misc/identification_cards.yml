@@ -9,9 +9,8 @@
       state: brown
     - sprite: _Arcane/Objects/Misc/id_cards.rsi
       state: sword
-  - type: IdCard
-    # jobTitle: job-title-vanguard-leader
-    jobIcon: JobIconInteQ
+  - type: PresetIdCard
+    job: InteQVanguardLeader
   - type: Access
     tags:
     - InteQVanguardLeader
@@ -29,10 +28,25 @@
       state: brown
     - sprite: _Arcane/Objects/Misc/id_cards.rsi
       state: sword
-  - type: IdCard
-    # jobTitle: job-title-vanguard
-    jobIcon: JobIconInteQ
+  - type: PresetIdCard
+    job: InteQVanguard
   - type: Access
     tags:
     - InteQVanguard
     - Maintenance
+
+- type: entity
+  parent: InteQVanguardLeaderIDCard
+  id: ERTInteQVanguardLeaderIDCard
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: PresetIdCard
+    job: ERTInteQVanguardLeader
+
+- type: entity
+  parent: InteQVanguardIDCard
+  id: ERTInteQVanguardIDCard
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: PresetIdCard
+    job: ERTInteQVanguard
