@@ -340,6 +340,13 @@
 - type: entity
   id: OrganDecapoidHeart
   parent: [OrganBaseHeart, OrganDecapoid]
+  # Arcane-Start
+  components:
+  - type: HeartRate
+    normalRate: 125
+    criticalRate: 310
+    fibrillationCaps: 70,250
+  # Arcane-End
 
 - type: entity
   id: OrganDecapoidLiver

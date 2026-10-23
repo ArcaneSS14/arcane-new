@@ -33,7 +33,7 @@ public sealed class DefibrillatorTest : InteractionTest
     // We need two hands to use a defbrillator.
     protected override string PlayerPrototype => "MobHuman";
 
-    private static readonly EntProtoId DefibrillatorProtoId = "Defibrillator";
+    private static readonly EntProtoId DefibrillatorProtoId = "DefibrillatorCompact"; // Arcane-Edit: The standard defibrillator now requires manual voltage selection.
     private static readonly EntProtoId TargetProtoId = "MobHuman";
     private static readonly EntProtoId BedProtoId = "Bed";
     private static readonly ProtoId<DamageTypePrototype> BluntDamageTypeId = "Blunt";
@@ -98,7 +98,7 @@ public sealed class DefibrillatorTest : InteractionTest
         });
 
         // Set the damage halfway between the crit and death thresholds so that the target can be revived.
-        await Server.WaitPost(() => damageableSystem.ChangeDamage((STarget.Value, targetDamageable), critDamage, targetPart: TargetBodyPart.Chest)); // Trauma - changeDamage
+        await Server.WaitPost(() => damageableSystem.ChangeDamage((STarget.Value, targetDamageable), critDamage, targetPart: TargetBodyPart.Chest, ignoreBlockers: true)); // Arcane-Edit: Isolate revival from wound-healing blockers.
         await RunTicks(3);
 
         // Check that the target is still dead.

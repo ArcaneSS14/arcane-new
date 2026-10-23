@@ -58,6 +58,20 @@ namespace Content.Shared.Chemistry
                 case "120":
                     ReagentDispenserDispenseAmount = ReagentDispenserDispenseAmount.U120;
                     break;
+                // Arcane-Start
+                case "25":
+                    ReagentDispenserDispenseAmount = ReagentDispenserDispenseAmount.U25;
+                    break;
+                case "50":
+                    ReagentDispenserDispenseAmount = ReagentDispenserDispenseAmount.U50;
+                    break;
+                case "100":
+                    ReagentDispenserDispenseAmount = ReagentDispenserDispenseAmount.U100;
+                    break;
+                case "MAX":
+                    ReagentDispenserDispenseAmount = ReagentDispenserDispenseAmount.Max;
+                    break;
+                // Arcane-End
                 default:
                     throw new Exception($"Cannot convert the string `{s}` into a valid ReagentDispenser DispenseAmount");
             }
@@ -106,6 +120,12 @@ namespace Content.Shared.Chemistry
         U40 = 40,
         U60 = 60,
         U120 = 120,
+        // Arcane-Start
+        U25 = 25,
+        U50 = 50,
+        U100 = 100,
+        Max = int.MaxValue,
+        // Arcane-End
     }
 
     [Serializable, NetSerializable]

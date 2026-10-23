@@ -105,5 +105,9 @@ public sealed partial class DamageSpecifier
         None = 0,
         PreciseHit = 1 << 0,
         MartialArtCombo = 1 << 1,
+        // Arcane-Start
+        NoWounds = 1 << 2,
+        NoBleeding = 1 << 3,
+        // Arcane-End
     }
 }

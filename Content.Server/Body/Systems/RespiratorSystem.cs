@@ -33,6 +33,7 @@ using Content.Shared.Mobs.Systems;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Respiration; // Arcane
 
 namespace Content.Server.Body.Systems;
 
@@ -354,7 +355,12 @@ public sealed partial class RespiratorSystem : EntitySystem
         if (ent.Comp.SuffocationCycles == 2)
             _adminLogger.Add(LogType.Asphyxiation, $"{ToPrettyString(ent):entity} started suffocating");
 
-        _damageableSys.ChangeDamage(ent.Owner, HasComp<DebrainedComponent>(ent) ? ent.Comp.Damage * 4.5f : ent.Comp.Damage,
+        // Arcane-Start: Keep respiratory balance outside the gas exchange process.
+        var damage = new RespirationDamageEvent(HasComp<DebrainedComponent>(ent) ? ent.Comp.Damage * 4.5f : ent.Comp.Damage,
+            true, ent.Comp.UpdateInterval);
+        RaiseLocalEvent(ent.Owner, ref damage);
+        // Arcane-End
+        _damageableSys.ChangeDamage(ent.Owner, damage.Damage, // Arcane-Edit
             targetPart: TargetBodyPart.Vital, interruptsDoAfters: false, ignoreResistances: true); // Trauma
 
         if (ent.Comp.SuffocationCycles < ent.Comp.SuffocationCycleThreshold)
@@ -369,7 +375,11 @@ public sealed partial class RespiratorSystem : EntitySystem
         if (ent.Comp.SuffocationCycles >= 2)
             _adminLogger.Add(LogType.Asphyxiation, $"{ToPrettyString(ent):entity} stopped suffocating");
 
-        _damageableSys.ChangeDamage(ent.Owner, ent.Comp.DamageRecovery,
+        // Arcane-Start
+        var damage = new RespirationDamageEvent(ent.Comp.DamageRecovery, false, ent.Comp.UpdateInterval);
+        RaiseLocalEvent(ent.Owner, ref damage);
+        // Arcane-End
+        _damageableSys.ChangeDamage(ent.Owner, damage.Damage, // Arcane-Edit
             splitDamage: SplitDamageBehavior.SplitEnsureAllDamagedAndOrganic, targetPart: TargetBodyPart.All, ignoreBlockers: true); // Trauma
 
         var ev = new StopSuffocatingEvent();
@@ -394,6 +404,10 @@ public sealed partial class RespiratorSystem : EntitySystem
         respirator.Saturation += amount;
         respirator.Saturation =
             Math.Clamp(respirator.Saturation, respirator.MinSaturation, respirator.MaxSaturation);
+        // Arcane-Start
+        var reserve = new BreathingReserveChangedEvent(respirator.Saturation >= respirator.SuffocationThreshold);
+        RaiseLocalEvent(uid, ref reserve);
+        // Arcane-End
     }
 
     private void OnApplyMetabolicMultiplier(Entity<RespiratorComponent> ent, ref ApplyMetabolicMultiplierEvent args)

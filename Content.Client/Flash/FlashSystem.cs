@@ -26,7 +26,7 @@ public sealed partial class FlashSystem : SharedFlashSystem
     {
         if (_player.LocalEntity == args.Target)
         {
-            _overlay.RequestScreenTexture = true;
+            _overlay.Start(); // Arcane-Edit: Reset and capture a fresh frame for each flash.
             _overlayMan.AddOverlay(_overlay);
         }
     }
@@ -39,8 +39,7 @@ public sealed partial class FlashSystem : SharedFlashSystem
 
         if (!_statusEffects.HasEffectComp<FlashedStatusEffectComponent>(args.Target))
         {
-            _overlay.ScreenshotTexture = null;
-            _overlay.RequestScreenTexture = false;
+            _overlay.Reset(); // Arcane-Edit: Release the owned snapshot and stop capture requests.
             _overlayMan.RemoveOverlay(_overlay);
         }
     }
@@ -48,18 +47,29 @@ public sealed partial class FlashSystem : SharedFlashSystem
     [SubscribeLocalEvent]
     private void OnPlayerAttached(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectRelayedEvent<LocalPlayerAttachedEvent> args)
     {
-        _overlay.RequestScreenTexture = true;
+        _overlay.Start(captureFrame: false); // Arcane-Edit: An already flashed body has no known last visible frame.
         _overlayMan.AddOverlay(_overlay);
     }
 
     [SubscribeLocalEvent]
     private void OnPlayerDetached(Entity<FlashedStatusEffectComponent> ent, ref StatusEffectRelayedEvent<LocalPlayerDetachedEvent> args)
     {
-        if (_player.LocalEntity is null || _statusEffects.HasEffectComp<FlashedStatusEffectComponent>(_player.LocalEntity.Value))
+        // Arcane-Edit-Start: A detached player with no new body must also release the snapshot.
+        if (_player.LocalEntity is { } player && player != args.AppliedTo &&
+            _statusEffects.HasEffectComp<FlashedStatusEffectComponent>(player))
+        // Arcane-Edit-End
             return;
 
-        _overlay.ScreenshotTexture = null;
-        _overlay.RequestScreenTexture = false;
+        _overlay.Reset(); // Arcane-Edit: Release the owned snapshot and stop capture requests.
         _overlayMan.RemoveOverlay(_overlay);
     }
+
+    // Arcane-Start
+    public override void Shutdown()
+    {
+        _overlayMan.RemoveOverlay(_overlay);
+        _overlay.Dispose();
+        base.Shutdown();
+    }
+    // Arcane-End
 }

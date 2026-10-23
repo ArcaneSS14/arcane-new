@@ -10,6 +10,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.Afk;
 
@@ -46,7 +47,10 @@ public sealed partial class AfkConfirmEui : BaseEui
     public override void Opened()
     {
         _clyde.RequestWindowAttention();
-        _confirmSoundStream = _audio.PlayGlobal(_confirmSound, Filter.Local(), false)?.Entity;
+        // Arcane-Edit-Start: Keep AFK confirmation audible during hearing effects.
+        _confirmSoundStream = _entManager.System<ContentAudioSystem>().MarkInterfaceAudio(
+            _audio.PlayGlobal(_confirmSound, Filter.Local(), false))?.Entity;
+        // Arcane-Edit-End
 
         var screenSize = _clyde.ScreenSize;
         var screenSizeVector = new Vector2(screenSize.X, screenSize.Y);

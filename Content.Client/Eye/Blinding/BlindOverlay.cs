@@ -16,7 +16,8 @@ namespace Content.Client.Eye.Blinding
         [Dependency] private IEntityManager _entityManager = default!;
         [Dependency] private ILightManager _lightManager = default!;
 
-        public override bool RequestScreenTexture => true;
+        public override bool RequestScreenTexture => ApplyGreyscale; // Arcane-Edit: Only capture the scene for greyscale.
+        public bool ApplyGreyscale = true; // Arcane
         public override OverlaySpace Space => OverlaySpace.WorldSpace;
         private readonly ShaderInstance _greyscaleShader;
         private readonly ShaderInstance _circleMaskShader;
@@ -62,7 +63,7 @@ namespace Content.Client.Eye.Blinding
 
         protected override void Draw(in OverlayDrawArgs args)
         {
-            if (ScreenTexture == null)
+            if (ApplyGreyscale && ScreenTexture == null) // Arcane-Edit: The mask alone needs no scene capture.
                 return;
 
             var playerEntity = _playerManager.LocalSession?.AttachedEntity;
@@ -84,12 +85,20 @@ namespace Content.Client.Eye.Blinding
                 _circleMaskShader?.SetParameter("Zoom", content.Zoom.X);
             }
 
-            _greyscaleShader?.SetParameter("SCREEN_TEXTURE", ScreenTexture);
+            // Arcane-Edit-Start: Medical unconsciousness needs no greyscale scene capture.
+            if (ApplyGreyscale)
+                _greyscaleShader.SetParameter("SCREEN_TEXTURE", ScreenTexture!);
+            // Arcane-Edit-End
 
             var worldHandle = args.WorldHandle;
             var viewport = args.WorldBounds;
-            worldHandle.UseShader(_greyscaleShader);
-            worldHandle.DrawRect(viewport, Color.White);
+            // Arcane-Edit-Start: Keep medical unconsciousness independent of Bloodloss greyscale.
+            if (ApplyGreyscale)
+            {
+                worldHandle.UseShader(_greyscaleShader);
+                worldHandle.DrawRect(viewport, Color.White);
+            }
+            // Arcane-Edit-End
             worldHandle.UseShader(_circleMaskShader);
             worldHandle.DrawRect(viewport, Color.White);
             worldHandle.UseShader(null);

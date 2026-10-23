@@ -1,0 +1,11 @@
+- type: entity
+  id: StatusEffectOxygenKnockout
+  parent: StatusEffectForcedSleeping
+  name: oxygen deprivation
+  components:
+  - type: MedicalSleepStatusEffect
+
+- type: guideEntry
+  id: ArcaneRespiration
+  name: guide-entry-arcane-respiration
+  text: /ServerInfo/_Arcane/Guidebook/Medical/Respiration.xml

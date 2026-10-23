@@ -10,6 +10,7 @@ using Content.Shared.Speech;
 using Content.Shared.Standing;
 using Content.Shared.Stunnable;
 using Robust.Shared.Timing;
+using Content.Shared.Body.Components; // Arcane
 
 namespace Content.Medical.Shared.Body;
 
@@ -56,8 +57,11 @@ public sealed partial class DebrainedSystem : EntitySystem
             return;
 
         RemComp<StunnedComponent>(uid);
-        if (_body.GetOrgan(uid, Heart) != null)
+        // Arcane-Edit-Start
+        // Circulation handles a missing heart; bodies without it still need the legacy death timer.
+        if (_body.GetOrgan(uid, Heart) != null || HasComp<BloodstreamComponent>(uid))
             RemComp<DelayedDeathComponent>(uid);
+        // Arcane-Edit-End
     }
 
     private void OnSpeakAttempt(EntityUid uid, DebrainedComponent _, SpeakAttemptEvent args)

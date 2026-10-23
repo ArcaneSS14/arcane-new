@@ -1,0 +1,5 @@
+- type: damageGreyscale
+  id: BloodlossGreyscale
+  damageTypes:
+  - Bloodloss
+  fullIntensityDamage: 100
