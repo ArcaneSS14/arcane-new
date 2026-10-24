@@ -11,3 +11,17 @@
   components:
   - type: LanguageKnowledge
     languageId: SiikMaas
+
+- type: entity
+  parent: BaseLanguageKnowledge
+  id: LanguageSchechi
+  components:
+  - type: LanguageKnowledge
+    languageId: Schechi
+
+- type: entity
+  parent: BaseLanguageKnowledge
+  id: LanguageNehina
+  components:
+  - type: LanguageKnowledge
+    languageId: Nehina

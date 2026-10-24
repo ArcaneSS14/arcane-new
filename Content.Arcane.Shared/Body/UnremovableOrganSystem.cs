@@ -9,12 +9,7 @@ namespace Content.Arcane.Shared.Body;
 /// </summary>
 public sealed partial class UnremovableOrganSystem : EntitySystem
 {
-    public override void Initialize()
-    {
-        base.Initialize();
-        SubscribeLocalEvent<UnremovableOrganComponent, OrganRemoveAttemptEvent>(OnOrganRemoveAttempt);
-    }
-
+    [SubscribeLocalEvent]
     private void OnOrganRemoveAttempt(Entity<UnremovableOrganComponent> ent, ref OrganRemoveAttemptEvent args)
     {
         args.Cancelled = true;
