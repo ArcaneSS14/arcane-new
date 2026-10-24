@@ -3,31 +3,36 @@ name: appearance-and-visualizers
 description: Implement replicated appearance data, GenericVisualizer mappings, sprite layers, overlays, and client visual systems.
 ---
 
-Appearance data describes presentation state. It must not become a second authoritative gameplay model.
+## Когда применять
 
-## Workflow
+Use for client-visible state derived from authoritative or allowed predicted gameplay state: replicated appearance values, `GenericVisualizer` mappings, sprite layers, client animations, overlays, or client visual systems.
 
-1. Identify the authoritative component and system.
-2. Define shared appearance keys only for values the client needs.
-3. Update appearance after authoritative or predicted state changes.
-4. Map simple properties through `GenericVisualizer` or the nearby equivalent.
-5. Use a client visual system for transitions, overlays, shaders, spawned visuals, or complex cleanup.
-6. Verify sprite layers, RSI states, and default appearance.
-7. Test initialization, late join, mutation, removal, and deletion.
+## До изменения
 
-## Boundaries
+Trace the authoritative component and system through mutation, appearance update, client consumer or visualizer, and the target resource/layer. Identify the default appearance, RSI path/state, stable layer key, prediction path, and shutdown/deletion owner before changing a key or visual.
 
-Keep gameplay checks and protected state out of the visual system. Client visuals consume replicated or predicted presentation data. Do not send large objects through appearance values.
+## Правила и границы
 
-## Lifecycle
+- Appearance is client-visible presentation data, never a second authoritative gameplay model. Keep gameplay checks and protected state out of visual code.
+- Shared appearance keys contain only the small values the client needs. Do not replicate hidden state, large objects, or server-only decisions through appearance.
+- After authoritative or permitted predicted mutation, update appearance through the existing owner path. A visualizer consumes replicated or predicted presentation data and must converge to authoritative state.
+- Verify an RSI state exists, use stable layer keys, and retain a viable default appearance. Do not create a layer for every update when an existing layer can be reused.
+- Clean up overlays, child visuals, animations, and subscriptions at component shutdown or entity deletion so no client visual survives its owner.
 
-Clean up overlays, child entities, animations, and subscriptions when the component shuts down. Avoid recreating layers every update when they can be reused.
+## Выбор подхода
 
-## Common failures
+Use `GenericVisualizer` or the nearest existing equivalent for simple state-to-layer/property mappings. Use a dedicated client visual system only for transitions, overlays, shaders, spawned visuals, or cleanup that cannot be expressed through the simple mapping. Keep the authoritative component/system as the source of the decision in either case.
 
-- appearance not refreshed after mutation;
-- wrong layer key;
-- missing RSI state;
-- client visual state surviving component removal;
-- duplicated predicted animation;
-- using appearance as authority instead of presentation.
+## Антипаттерны
+
+- Do not use appearance as authority, send a hidden gameplay value solely to drive a visual, or bypass the owner update path.
+- Do not recreate layers, overlays, or subscriptions on every state update.
+- Do not leave a predicted animation, child visual, or overlay after re-entry, component removal, or deletion.
+
+## Проверка
+
+Check RSI path/state, stable layer key, default appearance, late join, component add/remove, deletion, predicted re-entry, and state convergence. Confirm cleanup for overlays, child visuals, animation, and subscriptions.
+
+## References
+
+No reference is required for ordinary appearance routing; read [Visual lifecycle](../sprite-overlays-and-shaders/references/visual-lifecycle.md) when the change owns overlays, child visuals, shaders, map transfer, or reconnect cleanup.

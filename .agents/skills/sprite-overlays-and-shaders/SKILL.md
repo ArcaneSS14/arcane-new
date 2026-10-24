@@ -3,27 +3,35 @@ name: sprite-overlays-and-shaders
 description: Implement sprite layers, overlays, render targets, shader prototypes, and visual cleanup without leaking gameplay authority.
 ---
 
-Use visual systems for presentation derived from replicated or predicted state.
+## Когда применять
 
-## Sprite layers
+Use for client sprite layers, entity-local or global overlays, shader parameters, render targets, or presentation effects derived from replicated or permitted predicted state.
 
-Prefer stable layer keys. Reuse layers instead of recreating them every update. Verify RSI paths, state names, visibility, color, scale, rotation, and animation behavior.
+## До изменения
 
-## Overlays
+Identify the owner and cleanup lifecycle for each sprite layer, overlay, shader parameter, and render target. Trace component shutdown, state exit, map transfer, disconnect, deletion, and resolution/viewport changes before allocating a visual resource.
 
-Define clear lifetime ownership. Add overlays only while needed and remove them on component shutdown, state exit, map transfer, or client disconnect. Avoid global overlays for entity-local effects.
+## Правила и границы
 
-## Shaders
+- Use stable sprite layer keys and reuse existing layers. Verify RSI path/state, visibility, color, scale, rotation, animation, and resource fallback.
+- Give every overlay, child visual, shader parameter, and render target a clear owner and cleanup path. Remove entity-local resources on component shutdown, state exit, map transfer, disconnect, or deletion as applicable.
+- Update expensive shader parameters only when their value changes. Treat render targets and viewport-dependent resources as lifecycle-sensitive across resolution or viewport changes.
+- Use entity-local overlays for entity-local effects; reserve global overlays for effects genuinely shared by the viewport or client. Do not use a global overlay merely to display an entity-local effect.
+- Visual code consumes allowed presentation data only. It does not receive hidden gameplay state or perform authoritative mutation.
 
-Use shader prototypes and material parameters where current client APIs expect them. Do not update expensive parameters every frame unless the value actually changes. Treat render targets and viewport size as lifecycle-sensitive resources.
+## Выбор подхода
 
-## Boundaries
+Prefer a sprite layer for a persistent entity-owned visual, an entity-local overlay for transient entity presentation, and a global overlay only for a viewport-wide effect. Use a shader or render target only when the established client rendering path needs it; otherwise reuse the nearest existing sprite/overlay pattern.
 
-Do not move gameplay checks or hidden state into client visual code. Visuals may smooth or predict presentation but must converge to authoritative state.
+## Антипаттерны
 
-## Verification
+- Do not recreate a layer or overlay per update, drive an entity-local effect through a global overlay, or retain a visual after its owner disappears.
+- Do not update a costly shader parameter every frame without a changed input.
+- Do not move authority, hidden state, or protected gameplay checks into visual code.
 
-Test late join, reconnect, component add/remove, entity deletion, map transfer, multiple simultaneous effects, resolution changes, and missing resource fallback.
+## Проверка
+
+Check RSI state/path, visibility, color, scale, rotation, animation, and missing-resource fallback. Cover component add/remove, state exit, late join, reconnect, deletion, map transfer, resolution/viewport changes, and multiple simultaneous effects.
 
 ## References
 
