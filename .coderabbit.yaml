@@ -39,33 +39,57 @@ reviews:
 
     - path: "**/*.yml"
       instructions: |
-        Check prototype schema, IDs, inheritance, stale source-fork fields, references, localization,
-        module resource ownership, and missing assets.
+        Outside workflow paths, check YAML against its actual consumer. For prototypes, review schema,
+        IDs, inheritance, references, resource ownership, and missing assets; do not require ru-RU for
+        an English-only change. For another YAML consumer, report only failures demonstrated by that
+        consumer's schema or loader.
 
     - path: "**/*.yaml"
       instructions: |
-        Check prototype schema, IDs, inheritance, stale source-fork fields, references, localization,
-        module resource ownership, and missing assets.
+        Outside workflow paths, check YAML against its actual consumer. For prototypes, review schema,
+        IDs, inheritance, references, resource ownership, and missing assets; do not require ru-RU for
+        an English-only change. For another YAML consumer, report only failures demonstrated by that
+        consumer's schema or loader.
 
-    - path: "**/*.{xaml,md,mdc,toml,json}"
+    - path: "**/*.xaml"
       instructions: |
-        Check frontmatter or syntax, broken links and paths, duplicated guidance, UI lifetime,
-        hardcoded player-facing strings, and invalid tool configuration.
+        Check XAML syntax, bindings/control names used by code-behind, UI lifetime, and player-facing
+        localization. Request a runtime layout check only when the changed layout or behavior has a
+        demonstrated risk that compilation cannot cover.
+
+    - path: "**/*.{md,mdc}"
+      instructions: |
+        Check Markdown structure, fenced blocks, relative links and paths, and duplicated or conflicting
+        guidance. Review the documented contract and evidence; do not prescribe implementation actions
+        such as committing, restoring, delegating, or installing tools.
+
+    - path: "**/*.{toml,json}"
+      instructions: |
+        Check syntax and the documented consumer contract. Flag invalid paths or unsupported settings only
+        when the owning tool/configuration proves the requirement.
 
     - path: "Resources/Locale/**/*.ftl"
       instructions: |
-        Check Russian localization quality, missing keys, stale keys, player-facing wording,
-        THE(...) artifacts, inconsistent entity names, and mismatches with changed prototypes or UI strings.
+        Treat en-US as the structural source. For English-only work, check affected keys, variables,
+        selectors, stale variants, and player-facing wording without requiring ru-RU. Review ru-RU quality,
+        THE(...) artifacts, and grammar only when Russian files are changed or an independent Russian defect
+        is in scope.
 
-    - path: "Modules/Arcane/**"
+    - path: "Content.Arcane.*/**"
       instructions: |
-        Prefer Arcane-local implementation. Flag Arcane-only behavior placed in base, GoobStation,
-        or Lavaland without a clear extension-point reason.
+        Treat this as an Arcane runtime owner path. Check assembly placement, authority, prediction, and
+        owner APIs; flag Arcane-only behavior placed in inherited code without a proven extension-point reason.
+
+    - path: "Resources/**/_Arcane/**"
+      instructions: |
+        Treat this as an Arcane-owned resource path. Check the actual prototype/resource/locale consumer;
+        do not infer a runtime project from `Modules/Arcane`, which contains guidance.
 
     - path: ".agents/**/*.md"
       instructions: |
-        These files are the canonical AI guidance pack for the repository.
-        Review for broken relative links, stale file paths, conflicting instructions, and drift against AGENTS.md, .github instructions, .cursor rules, CLAUDE.md, and GEMINI.md.
+        Review these instruction documents for broken relative links, stale paths, and contradictions with
+        the applicable repository rules. They govern agent guidance, not every game-file contract; evaluate
+        game behavior against its owner code, schema, and localized resources.
 
     - path: ".github/**/*.md"
       instructions: |

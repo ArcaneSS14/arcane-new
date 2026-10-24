@@ -3,33 +3,42 @@ name: entity-relations-and-links
 description: Maintain entity references, ownership links, target relationships, deletion cleanup, and network-safe relation state.
 ---
 
-Entity references are temporary relationships, not permanent object references.
+# entity-relations-and-links
 
-## Storage
+## Когда применять
 
-Use nullable entity IDs, network-safe entity forms, or established relation components. Do not serialize direct component references. Define whether the relation is one-way, bidirectional, unique, or many-to-many.
+Use for entity ownership links, targets, attachments, relation components, network-safe references, and lifecycle cleanup of source/target relationships.
 
-## Lifecycle
+## До изменения
 
-Handle target deletion, source deletion, map transfer, container changes, body transfer, and component removal. Subscribe to relation-breaking events or revalidate before every use according to the lifetime and performance needs.
+Determine the relation owner, direction, cardinality, authority, serialization/network form, and cleanup owner. Trace source/target lifecycle through deletion, component removal, container/body/map transfer, reconnect, and persisted restore.
 
-## Ownership and authority
+## Правила и границы
 
-The server owns protected relationships such as account ownership, machine control, role assignment, or target locks. Clients may receive only the relation data needed for presentation.
+- Use nullable entity IDs, network-safe entity forms, or an existing relation component. Never store direct component/object references as durable relation state.
+- Define whether the contract is one-way, bidirectional, unique, or many-to-many. If both sides store it, update both through one owning system or an atomic path, and prevent stale back-references.
+- The server validates arbitrary client-supplied targets and owns protected relationships such as account ownership, machine control, role assignment, and target locks.
+- Replicate only relation targets needed for presentation. Do not expose hidden target relationships merely because a client receives a related entity.
+- Handle source/target deletion, component removal, container/body/map transfer, reconnect, and invalid persisted restoration through the designated cleanup owner or revalidation before use.
 
-## Consistency
+### Minimal examples
 
-If both entities store the relationship, update both sides atomically or through one owning system. Prevent duplicate links and stale back-references.
+Correct: update both sides through the single relation owner. Prohibited: retain direct object references. Stop: report undefined cardinality or cleanup ownership.
 
-## Common failures
+## Выбор подхода
 
-- deleted target remains cached;
-- entity transfer preserves a relation that should reset;
-- two systems each believe they own cleanup;
-- client supplies an arbitrary linked entity;
-- network state exposes hidden targets;
-- save data restores an invalid entity ID.
+Use an existing relation component or network-safe entity form when it matches the owner contract. Use one-way storage for a one-way relationship; use a single owning system/atomic update for bidirectional links; use a uniqueness-aware owner for unique or many-to-many relations.
 
-## Verification
+## Антипаттерны
 
-Test link, relink, unlink, source deletion, target deletion, map transfer, reconnect, duplicate request, and invalid restored state.
+- Do not retain direct object/component references, duplicate cleanup ownership, or leave a deleted target cached.
+- Do not trust a client-selected linked entity or replicate a hidden target without presentation necessity.
+- Do not preserve a relation through transfer when its contract requires reset, or restore an invalid entity ID without validation.
+
+## Проверка
+
+Check link, relink, unlink, duplicate request, source/target deletion, component removal, container/body/map transfer, reconnect, invalid restore, and stale back-reference cleanup.
+
+## References
+
+No reference is required for ordinary relation routing; inspect the existing relation owner and its cleanup path before changing a link contract.

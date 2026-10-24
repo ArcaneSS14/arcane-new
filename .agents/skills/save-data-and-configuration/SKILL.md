@@ -3,29 +3,40 @@ name: save-data-and-configuration
 description: Validate, migrate, and atomically persist files and configuration with safe fallback and restart coverage.
 ---
 
-Persistent files and configuration are compatibility and reliability surfaces.
+# save-data-and-configuration
 
-## Reading
+## Когда применять
 
-Treat files as untrusted input. Validate schema, bounds, enums, paths, identifiers, required fields, and cross-field rules. Define behavior for missing, empty, truncated, malformed, and future-version data.
+Use for save data, configuration schema/versioning, migration, atomic write, settings recovery, or restart behavior.
 
-## Defaults and migration
+## До изменения
 
-Defaults must satisfy whitelists and cross-field constraints. Normalize legacy values before exposing them to gameplay. Back up unreadable legacy data before reset when recovery matters.
+Find the persistence owner, schema/version, consumers, compatibility/rollback contract, file lifecycle, atomic-write owner, and existing targeted persistence/restart test path.
 
-Version formats when changes are not backward-compatible. Do not silently accept impossible or dangerous configuration.
+## Правила и границы
 
-## Writing
+- Treat files as untrusted: validate schema, bounds, enums, paths, IDs, required/cross-field rules, missing/empty/truncated/malformed/future-version data.
+- Defaults satisfy whitelist/cross-field constraints; normalize legacy values before gameplay. Version incompatible formats and back up unreadable legacy data before reset when recovery matters.
+- Write a unique temporary file, flush when durability matters, replace atomically, and clean temporary files on every failure. Never overwrite valid data with partial/unvalidated output.
+- Player-visible setting text/fallbacks use `en-US`; Russian only on request. Validate saved culture names against available runtime cultures and restore/fallback invalid/removed values safely.
+- Stop without a supported persistence API: do not reflect, alter engine, bypass atomic owner behavior, or create parallel persistence infrastructure.
 
-Write to a unique temporary file, flush when durability matters, and replace atomically. Clean temporary files on every failure path. Never overwrite a valid file with partial or unvalidated output.
+### Minimal examples
 
-## Player-facing settings
+Correct: validate then atomically replace persisted configuration. Prohibited: overwrite valid data with partial output. Stop: report unknown schema/migration/recovery behavior.
 
-Names, descriptions, options, validation errors, and fallback notices require `en-US`; update `ru-RU` only when explicitly requested. Culture names and saved culture values must be validated against cultures actually found at runtime.
+## Выбор подхода
 
-A saved setting must restore after restart. Removed or invalid values must fall back safely without corrupting the config.
+Use backward-compatible migration and safe fallback before destructive reset; scope persistence to its owner and define restart/rollback/corruption behavior explicitly.
 
-## Verification commands
+## Антипаттерны
 
-Build only the affected project. When verification is requested, select focused tests for persistence, reload, client settings, propagation, or restart behavior. Do not restore dependencies or run complete test suites by default. Relevant cases include missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart scenarios.
- Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.
+- Do not silently accept impossible/dangerous config, overwrite a valid file, or treat a successful write as restart proof.
+
+## Проверка
+
+When persistence changes, select existing owner coverage for missing/malformed/legacy/partial/concurrent/out-of-range/backup/normalization/restart paths. Do not restore or run full suites by default.
+
+## References
+
+- [Durable write](references/durable-write.md): Read this when implementing or reviewing configuration or save-data writes to disk.

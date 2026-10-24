@@ -9,7 +9,15 @@ Counts are `[Dependency]` declaration sites across `Content.Server`, `Content.Sh
 [Dependency] private IGameTiming _timing = default!;
 ```
 
-Fields are `private` and **not** `readonly` in current code. `[Dependency] private readonly` appears zero times in the content projects; do not introduce it. `readonly` is acceptable only in a file where every neighbouring dependency already uses it.
+Fields are ordinarily `private` and must not be `readonly` when `[Dependency]` fills them. The declaring type, and every containing type when nested, must be `partial`; current engine analyzers report violations. Preserve a supported protected dependency in an abstract owner when appropriate, but do not use `readonly` for injected state.
+
+`EntityQuery<T>` is a supported dependency shape when a system needs a cached query:
+
+```csharp
+[Dependency] private EntityQuery<FooComponent> _fooQuery = default!;
+```
+
+Do not also initialize that injected query with `GetEntityQuery<T>()` in `Initialize`.
 
 Never resolve inside a method body:
 

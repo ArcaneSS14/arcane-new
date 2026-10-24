@@ -2,31 +2,39 @@
 name: yaml-and-schema
 description: Author and diagnose YAML, prototype schemas, workflows, manifests, and structured configuration with exact validation.
 ---
+# yaml-and-schema
 
-YAML syntax validity is only the first layer. Identify the actual consumer and schema.
+## Когда применять
 
-## Workflow
+Use for YAML whose consumer and schema must be identified.
 
-1. Identify the loader: prototype manager, GitHub Actions, module loader, map serializer, localization tooling, or custom configuration.
-2. Copy structure from a current nearby destination file.
-3. Verify scalar types, indentation, list and map shape, quoting, anchors, and required fields.
-4. Verify every ID, path, component field, and referenced resource.
-5. Avoid formatting unrelated blocks or reserializing maps.
-6. Run generic build validation and the domain-specific validator.
+## До изменения
 
-## Common failures
+Identify the real consumer: prototype loader, map serializer, workflow, manifest or custom configuration; inspect a current nearby file.
+Verify repository identity and edit-marker boundaries before inherited edits.
 
-- valid YAML with an unknown component field;
-- duplicate map keys;
-- string where a number or boolean is required;
-- invalid workflow expression quoting;
-- frontmatter not starting on the first line;
-- module manifest path from another repository;
-- prototype field renamed in destination code;
-- locale or prototype file placed outside the owner root.
+## Правила и границы
 
-## Exact validation commands
+Check schema, scalar types, nullability, quoting, list/map shape, required fields and duplicate keys, not YAML syntax alone. Preserve unrelated formatting and ordering.
+Common failures include unknown component fields, number/boolean strings, invalid workflow quoting, frontmatter not first, obsolete field names and files outside the owner root.
 
-Validate the changed YAML files with the narrowest available validator. For workflow, map, RSI, or custom schema files, use the exact specialized command from the current repository workflow. Build code projects only when code changed. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run a repository-wide linter by default.
+### Minimal examples
 
-For workflow, map, RSI, or custom schema files, also run the exact specialized command from the current repository workflow. Do not guess from another fork.
+Correct: verify schema consumer and exact field type before YAML edit. Prohibited: quote a number/boolean as a string. Stop: report unknown schema/owner-root validation.
+
+## Выбор подхода
+
+Use the destination consumer's established structure and validator; build code only when code changed or that validator requires binaries.
+
+## Антипаттерны
+
+Do not guess validators, copy a module path from another fork, or run generic/full builds for YAML-only work.
+
+## Проверка
+
+Run only the exact current specialized validator when it exists; inspect IDs, paths and references in the final diff.
+Do not restore, full-build or run global lint by default.
+
+## References
+
+No reference is required for ordinary schema selection.
