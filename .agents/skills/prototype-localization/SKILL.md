@@ -7,12 +7,10 @@ description: Maintain English prototype localization and add Russian localizatio
 ## Когда применять
 
 Use for player-visible prototype text; not text resolved directly by code/UI.
-Use for player-visible prototype text; not text resolved directly by code/UI.
 
 ## До изменения
 
 Trace prototype field to locale key to en-US, including parent inheritance, overrides and nearby family keys.
-Search prototype IDs, current and alternative keys, and nearby family keys; use the existing English owner file.
 Search prototype IDs, current and alternative keys, and nearby family keys; use the existing English owner file.
 
 ## Правила и границы
@@ -36,17 +34,14 @@ Correct: resolve prototype field to its existing English locale owner. Prohibite
 ## Выбор подхода
 
 Keep prototype text in the owner locale contract; route direct presentation text to localization-in-code.
-Keep prototype text in the owner locale contract; route direct presentation text to localization-in-code.
 
 ## Антипаттерны
 
-Do not expose prototype IDs, break inherited overrides, or leave stale locale keys after a field/key change.
 Do not expose prototype IDs, break inherited overrides, or leave stale locale keys after a field/key change.
 
 ## Проверка
 
 Check field/key/en-US chain, inherited text, stale references and final contract; run targeted validation only when available.
-Do not require restore, Release build or global YAML lint for FTL-only work.
 Do not require restore, Release build or global YAML lint for FTL-only work.
 
 ## References

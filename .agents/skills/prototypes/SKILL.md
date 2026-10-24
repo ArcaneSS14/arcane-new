@@ -7,12 +7,10 @@ description: Create, inherit, compose, localize, and validate YAML prototypes in
 ## Когда применять
 
 Use for prototype creation, review, inheritance or referenced resources.
-Use for prototype creation, review, inheritance or referenced resources.
 
 ## До изменения
 
 Find owner root through Modules/CATALOG.md, owner guide and existing Resources; inspect a nearby type and its component schema.
-Verify repository identity and edit-marker boundaries before inherited edits.
 Verify repository identity and edit-marker boundaries before inherited edits.
 
 ## Правила и границы
@@ -36,17 +34,14 @@ Correct: verify prototype owner/schema before composing inheritance. Prohibited:
 ## Выбор подхода
 
 Use inheritance for shared defaults, composition for reusable component sets, and a separate prototype for distinct identity.
-Use inheritance for shared defaults, composition for reusable component sets, and a separate prototype for distinct identity.
 
 ## Антипаттерны
 
-Do not copy large YAML blocks, duplicate IDs, leave stale references, or use prototype IDs as visible fallback text.
 Do not copy large YAML blocks, duplicate IDs, leave stale references, or use prototype IDs as visible fallback text.
 
 ## Проверка
 
 Search duplicate IDs and stale consumers; use an existing targeted validator for changed prototypes and direct resources only.
-When lifecycle or map loading changes, choose a focused owner test; do not restore, full-build or run global YAML lint by default.
 When lifecycle or map loading changes, choose a focused owner test; do not restore, full-build or run global YAML lint by default.
 
 ## References

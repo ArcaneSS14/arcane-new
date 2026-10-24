@@ -1,5 +1,5 @@
 
-How C# reads in this repository, and the modern form of that style under `LangVersion` 14 on `net10.0`.
+How C# reads in this repository, using current project-supported language features.
 
 These rules are derived from conventions the upstream project already enforces, from the shape of code already in this repository, and from contributor-authored code in this tree. They describe the house style, not personal preference. Where this repository and upstream disagree, match the surrounding file.
 
@@ -43,7 +43,7 @@ Comments belong in components and prototype types, and beside genuinely non-obvi
 
 The surrounding file may predate these. Apply them when writing or touching a line, without a separate style-only refactor.
 
-The repository uses `LangVersion` 14 on `net10.0`. The complete guidance for C# 14 language behavior and overload-resolution hazards lives in `.agents/skills/csharp-style/SKILL.md`; use that source instead of duplicating compiler details in this rule. Language features do not change the ownership, serialization, compatibility, or readability requirements below.
+Use only language features confirmed by the current project configuration when they clarify the design. This rule does not provide a version-specific language reference; language features do not change ownership, serialization, compatibility, or readability requirements below.
 
 ### Use `var` where the type is apparent
 
@@ -65,22 +65,22 @@ return "Job" + loadout;
 
 `[]` for an empty collection, `[a, b]` for a literal list. This repository already uses collection expressions in over 200 files. `new List<T>()` with no initializer adds nothing.
 
-### Use pattern matching for null and type tests
+### Use pattern matching for values already obtained
 
 ```csharp
 // Prefer
 if (gear is null)
     return null;
 
-if (ent is TransformComponent transform)
+if (component is TransformComponent transform)
     var pos = transform.Coordinates;
 
-// Over
+// Over a null or type test written without a pattern
 if (gear == null)
-if (ent.TryGetComponent<TransformComponent>(out var t))
+    return null;
 ```
 
-This aligns with the guard-clause style below and removes the classic out-variable reuse bug.
+Pattern matching does not retrieve a component from an `EntityUid`. For that, use the repository-supported helper or owner API verified at the call site; do not invent a component-access extension because a value-pattern example looks similar. This aligns with the guard-clause style below and removes the classic out-variable reuse bug.
 
 ### Flatten nesting with guard clauses
 

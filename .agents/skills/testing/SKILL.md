@@ -18,15 +18,15 @@ Determine the owner, failure mode, layer, and smallest observable contract. Sele
 - Test through a public API or real event, message, or lifecycle path; do not use reflection to reach private state.
 - Do not create a project, fixture, CI step, MSBuild target, or `module.yml` test entry without a separate task. Reuse existing infrastructure.
 - Choose the smallest build and focused test that covers the changed behavior. Do not restore or run full root/module suites automatically.
-- Reproduce CI shape only when checking an actual CI gate: CI builds in `DebugOpt` then tests produced binaries, rather than passing a project path to `dotnet test`; integration tests use `DOTNET_gcServer=1`. `Debug` is only fast local iteration and must be reported as different from `DebugOpt`.
+- Reproduce CI shape only when checking an actual CI gate. The build-and-test workflow builds `DebugOpt` then tests produced binaries, while HeisenDetector runs `dotnet test --no-build --configuration DebugOpt` against `Content.IntegrationTests.csproj`; select the named workflow's actual entry point. Integration-test invocations in both use `DOTNET_gcServer=1`. `Debug` is only fast local iteration and must be reported as different from `DebugOpt`.
 - For localization, check affected `en-US` keys/structure; check Russian contracts only when Russian is explicitly in scope.
 
 ### Source ledger
 
-Claim: CI validation uses `DebugOpt` produced binaries and `DOTNET_gcServer=1` for integration tests.
-Source: Current repository CI workflow.
+Claim: CI test entry points differ by workflow: build-and-test uses produced binaries, and HeisenDetector uses `Content.IntegrationTests.csproj`; both integration invocations set `DOTNET_gcServer=1`.
+Source: `build-test-debug.yml` and `heisendetector.yml`.
 Source type: Arcane
-Checked against branch: `66cf1fb0a7`
+Checked against branch: `83d6c121f978aee06a4fbd70cf21ce968d0f8bc8`
 Volatility: branch-bound
 Recheck trigger: Changing CI workflow, test runner, or build configuration.
 
@@ -46,7 +46,7 @@ Use an owner-local focused test for a local observable contract and integration 
 
 ## Проверка
 
-Report commands actually run, their exact result, and omitted checks with their reason. Select the smallest meaningful verification; skill-only documentation changes require diff checks rather than builds/tests.
+Report commands actually run, their exact result, and omitted checks with their reason. Select the smallest meaningful verification; skill-only documentation changes require `git diff --check`, `git diff --stat`, and final diff rather than builds/tests. Validate affected links and paths when the change alters routing, links, or paths.
 
 ## References
 

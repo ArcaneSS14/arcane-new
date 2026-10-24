@@ -288,7 +288,7 @@ A Trauma marker on a line means Trauma wrote that line. When we change that line
 # before, upstream
 cost: 3000 # Trauma - was 1800, its useless for mining
 # after, ours
-cost: 6000 # Arcane-Edit: 1800 > 3000
+cost: 6000 # Arcane-Edit: 3000 > 6000
 ```
 
 That is a legitimate rewrite of an upstream marker, and it is required rather than forbidden: leaving `Trauma - ` on a line we authored claims someone else's authorship for our change and hides our divergence from the next sync.
@@ -301,7 +301,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 - several added lines are wrapped in `Arcane-Start` / `Arcane-End`
 - one changed line carries a trailing `Arcane-Edit: <old> > <new>`
 - several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
-- put a bare `-Start` or `-End` on a line rather than wrapping a pair
+- never put a bare `-Start` or `-End` on a line rather than wrapping a pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work
 
 The Trauma vocabulary has more forms than the Arcane one, because it describes a different job: `// Trauma - reason` for a single line, `// <Trauma>` / `// </Trauma>` for a block, `/* Trauma` ... `*/` for removing a section. Reproducing any of them on our own change is wrong even though the syntax is valid and appears thousands of times in the tree.
