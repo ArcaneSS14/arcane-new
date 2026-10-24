@@ -3,34 +3,35 @@ name: randomness-and-determinism
 description: Use authoritative, deterministic, weighted, and testable randomness without breaking prediction or reproducibility.
 ---
 
-Randomness is part of authority and simulation behavior, not a convenience call.
+## Когда применять
 
-## Choose the owner
+Use for random or weighted gameplay selections, datasets, loot, rewards, combat/economy results, persisted outcomes, retries, and predicted cosmetic variation.
 
-Protected outcomes such as rewards, loot, combat results, economy values, role assignment, or hidden selections are chosen on the server. Client randomness is limited to presentation that has no gameplay effect.
+## До изменения
 
-Shared predicted logic must not use an unsynchronized random source. Either derive the result deterministically from shared inputs or let authoritative state correct presentation without duplicating side effects.
+Identify the authority owner, whether the result is protected or persisted, prediction/reconciliation flow, deterministic inputs, existing random service or weighted collection/dataset, and the commit/replay/retry behavior.
 
-## Data-driven selection
+## Правила и границы
 
-Use existing random services, weighted collections, datasets, and prototype-driven tables. Validate empty collections, zero or negative weights, duplicate entries, and missing prototype references.
+- Protected results are server-authoritative. Client randomness is limited to presentation with no gameplay effect; shared predicted logic must not use an unsynchronized random source.
+- Choose deterministic inputs, an existing random service, a weighted collection/dataset, or authoritative correction according to the flow. Do not introduce a separate global random state.
+- Validate empty or single-entry collections, zero/negative weights, duplicate entries, missing references, retries, and balance changes. Repeated retries must not silently bias a protected result.
+- For a persisted result, define the authoritative commit point and what replay/retry does after commit. Keep prediction reconcilable without duplicating side effects.
+- Make tests and debugging control the random source or deterministic inputs; do not depend on global state or test ordering.
 
-## Reproducibility
+## Выбор подхода
 
-For tests and debugging, control the random source or inject deterministic inputs. Do not depend on global random state or test ordering.
+Use deterministic shared input for predicted presentation that must agree locally. Use the owner random service or weighted data-driven collection for server selection. Use authoritative correction when a client may preview an effect but cannot decide the protected result.
 
-## Common failures
+## Антипаттерны
 
-- client selects a protected result;
-- prediction and server choose different values;
-- repeated retries bias a result;
-- empty collection crashes;
-- a weight change silently alters balance;
-- tests are flaky because randomness is uncontrolled.
+- Do not let a client select loot, rewards, combat/economy values, roles, or hidden outcomes.
+- Do not use global random state, test order, an unseeded shared prediction path, or retry loops that alter odds unintentionally.
+- Do not ignore an empty table, invalid weight, duplicate entry, or missing reference.
 
-## Verification
+## Проверка
 
-Test empty, single-entry, weighted boundary, repeated invocation, rejected requests, deterministic test seeds, and authoritative reconciliation.
+Check deterministic seed/input, empty and single entry, weighted boundaries, zero/negative weight, duplicate/missing entries, repeated invocation, retry, rejection, balance changes, and prediction reconciliation.
 
 ## References
 
