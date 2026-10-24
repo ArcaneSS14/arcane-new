@@ -6,27 +6,31 @@ For symbol access and assembly boundaries, see `architecture-and-ownership.md` a
 ## System structure
 
 ```csharp
+using Robust.Shared.Analyzers;
+using Robust.Shared.GameObjects;
+using Robust.Shared.IoC;
+
 namespace Content.Shared.Foo;
 
 public sealed partial class FooSystem : EntitySystem
 {
     [Dependency] private SharedContainerSystem _container = default!;
 
-    public override void Initialize()
+    [SubscribeLocalEvent(after: [typeof(InitialBodySystem)])]
+    private void OnMapInit(Entity<FooComponent> ent, ref MapInitEvent args)
     {
-        base.Initialize();
-
-        SubscribeLocalEvent<FooComponent, MapInitEvent>(OnMapInit, after: [typeof(InitialBodySystem)]);
     }
 }
 ```
 
 - `namespace` is `Content.Shared/Server/Client.<Domain>`, never shortened.
 - `sealed partial`, one system per concern.
-- Dependencies are `[Dependency] private` fields, not `readonly` in current code. Do not call `IoCManager.Resolve<T>()` inside a system; it hides the dependency and defeats ordering. This is the dominant pattern: `IGameTiming`, `SharedPopupSystem`, and `SharedAudioSystem` appear as dependencies in 709, 483, and 446 declarations.
-- Match the field name to what the surrounding files use. `_timing`, `_popup`, `_audio`, and `_transform` are the established names. Full table of frequent dependencies, field-name variants, and common `using` namespaces: `.agents/skills/csharp-style/references/dependency-injection.md`.
-- `SubscribeLocalEvent` in `Initialize` only. Order matters when two handlers must see consistent state, so use `after:` and `before:` rather than relying on registration accident.
-- `Initialize` calls `base.Initialize()` first.
+- Classes declaring `[Dependency]` fields must be `partial`, including enclosing types when nested. Injected fields must not be `readonly`. These requirements apply beyond EntitySystem; visibility still follows the owner, including protected dependencies in abstract bases. The engine reports RA0049/RA0050/RA0051; builds treating these warnings as errors fail on violations.
+- Prefer `[Dependency] private` fields in systems rather than repeated `IoCManager.Resolve<T>()` calls. Inject cached queries too: `[Dependency] private EntityQuery<FooComponent> _fooQuery = default!;` needs no `GetEntityQuery<FooComponent>()` assignment in `Initialize`.
+- Match surrounding dependency names. For visibility/type selection, see [dependency injection](../skills/csharp-style/references/dependency-injection.md).
+- Put `[SubscribeLocalEvent]` on supported local-event handlers instead of manually registering the same method in `Initialize`. The generator infers component/event types from the signature. Preserve `before:`/`after:` ordering in the attribute and remove the matching manual registration to avoid duplicate subscriptions.
+- Keep explicit subscriptions when the generator cannot preserve the contract, e.g. conditional registration, generic handlers or a runtime-dependent lifetime. Verify the actual engine API when porting to another checkout; do not force this syntax onto an older engine.
+- Keep `Initialize` for other initialization and necessary explicit subscriptions; call `base.Initialize()` first when overriding it. Do not add an override solely for generated subscriptions or injected queries.
 - Handlers are `private void On<Thing><Event>`.
 - Systems hold no state. Per-entity state belongs in a component.
 

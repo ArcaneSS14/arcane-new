@@ -6,7 +6,7 @@ Match the current owning file and actual declaration, not a frequency table or a
 [Dependency] private IGameTiming _timing = default!;
 ```
 
-Existing abstract bases may deliberately expose protected dependencies, e.g. protected IGameTiming Timing in Content.Trauma.Shared/Heretic/Systems/SharedHereticCombatMarkSystem.cs. This is not a universal private-only or readonly rule. Do not normalize another file's established visibility/naming while making an unrelated change.
+Existing abstract bases may deliberately expose protected dependencies, e.g. protected IGameTiming Timing in Content.Trauma.Shared/Heretic/Systems/SharedHereticCombatMarkSystem.cs. Visibility does not relax the [partial/non-readonly requirements and query injection rules](../../../rules/ecs-writing-conventions.md#system-structure). Do not normalize another file's established visibility/naming while making an unrelated change.
 
 Use the repository's supported injected/system dependency mechanism rather than repeated IoCManager.Resolve inside methods. Verify interface, namespace, assembly and client/server/shared variant before calling it; an injected name is not proof of an API.
 

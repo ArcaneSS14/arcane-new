@@ -5,7 +5,7 @@ description: Implement entity behavior, subscriptions, lifecycle handling, and r
 
 # ECS behavior and interactions
 
-Systems own behavior and mutation; components hold state. Use the highest-level existing owner API that expresses the operation. Resolve dependencies through the established injection pattern and subscribe in Initialize; keep event handlers thin.
+Systems own behavior and mutation; components hold state. Use the highest-level existing owner API that expresses the operation. Follow [ECS conventions](../../rules/ecs-writing-conventions.md#system-structure) for generated subscriptions and dependency/query injection; keep event handlers thin.
 
 ## Unfamiliar subsystem, when needed
 
