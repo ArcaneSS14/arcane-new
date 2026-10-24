@@ -1,5 +1,5 @@
 ---
-applyTo: "Content.Shared/**/*.cs,Content.*.Shared/**/*.cs,Modules/*/Content.*.Shared/**/*.cs"
+applyTo: "Content.Shared/**/*.cs,Content.*.Shared/**/*.cs"
 ---
 
 <!--
@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Shared code contains contracts and prediction-compatible behavior. Keep hidden authority on the server, review dirtying and repeated prediction, and avoid client-only dependencies.
+Review Shared code for prediction-safe contracts. Hidden authority remains server-side and client-only dependencies do not enter Shared; request network or replay evidence only for a changed replicated or predicted flow.

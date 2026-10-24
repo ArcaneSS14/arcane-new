@@ -9,12 +9,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Root `AGENTS.md` hard rules apply. Read the nearest scoped `AGENTS.md`, `.agents/skills/testing/SKILL.md`, `.agents/skills/tests-authoring/SKILL.md`, and the relevant domain skill.
-
-Verify repository identity, owner tag, owner-local module and underscore paths, and edit-marker requirements before changing inherited test files. Do not add redundant owner markers inside owner-local paths.
-
-Use the existing owner test project. Do not create duplicate integration projects, PoolManager fixtures, CI steps, MSBuild targets, or `module.yml` entries. Verify declarations, access modifiers, assemblies, and project references.
-
-Treat `en-US` as structural truth. Verify Russian message IDs, attributes, variables, selectors, paths, order, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
-
-Use exact commands and NUnit arguments from the canonical testing skill. Never edit SPDX metadata or weaken assertions to obtain a pass.
+Review test changes against `AGENTS.md`, `testing`, `tests-authoring`, and the affected domain skill. Check that the existing owner test path proves the changed observable contract; do not require an unrelated test file or prescribe broad verification by default.

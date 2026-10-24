@@ -1,6 +1,7 @@
 ---
-description: Arcane guidance adapter for shared
-globs: Content.Shared/**/*.cs,Content.*.Shared/**/*.cs,Modules/*/Content.*.Shared/**/*.cs
+description: Arcane shared networking guidance adapter
+globs: "Content.Shared/**/*.cs,Content.*.Shared/**/*.cs"
 alwaysApply: false
 ---
-Keep shared logic prediction-safe and free of hidden server authority or client-only dependencies.
+
+Use the networking and prediction guidance selected through `AGENTS.md`. Keep shared logic prediction-safe and free of hidden server authority or client-only dependencies.
