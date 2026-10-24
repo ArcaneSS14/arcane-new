@@ -9,10 +9,20 @@ Use for behavior and mutation; do not create a system when an existing owner API
 Locate state owner, entry event, APIs, dependency boundary, query scope, lifecycle callbacks, cleanup, callers and test owner.
 ## Правила и границы
 Systems own behavior. Handlers route, validation does not mutate, and execution has one mutation path. Dependencies and subscriptions follow system lifecycle.
-Resolve dependencies through the established dependency mechanism; subscribe in initialization and release external callbacks on shutdown. Keep handlers thin, route reusable operations through Try methods, and keep Can checks mutation-free.
+Resolve dependencies through the established dependency mechanism. For a fixed handler compatible with the current generator, `[SubscribeLocalEvent]` may replace a matching manual registration; retain an explicit subscription when its conditional/dynamic lifetime or other contract cannot be expressed by the generator, and never use both forms. `[Dependency]` fields require a partial containing type and must not be readonly; injected `EntityQuery<T>` is supported when a cached query is needed. Keep handlers thin, route reusable operations through Try methods, and keep Can checks mutation-free.
+
+### Source ledger
+
+Claim: The current pinned engine supports generated local-event subscriptions and lazy `EntityQuery<T>` dependency injection; dependency analyzer rules require partial containing types and non-readonly injected fields.
+Source: `Robust.Shared/Analyzers/EntitySystemSubscriptionsGeneratorAttributes.cs`, `Robust.Shared/GameObjects/EntitySystemManager.cs`, `Robust.Analyzers/HasDependenciesAnalyzer.cs`, and current Arcane system usages.
+Source type: RobustToolbox / Arcane
+Checked against branch: `AI-skills` at `8cfe7ef937`
+Volatility: version-bound
+Recheck trigger: Changing the RobustToolbox pin, analyzer package, or ECS subscription generator.
+
 ### Minimal examples
 
-Correct: subscribe and clean up through the owning system lifecycle. Prohibited: remove entities unsafely during iteration. Stop: report missing supported cleanup/event path.
+Correct: use one generator or explicit subscription path that preserves the required lifecycle/order. Prohibited: register the same handler both ways. Stop: report an unsupported handler signature or unclear lifecycle/order contract.
 
 ## Выбор подхода
 Use direct owner API for one owner, an event for established extensibility, and bounded queries for matching entities.
