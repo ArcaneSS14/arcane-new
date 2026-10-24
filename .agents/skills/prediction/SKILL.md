@@ -2,19 +2,21 @@
 name: prediction
 description: Keep responsive shared interactions deterministic and free of duplicated side effects while server authority wins.
 ---
-
-Prediction provides immediate local feedback while the server remains authoritative.
-
-Predict only short player-driven interactions with locally known inputs and correctable results. Keep hidden information, economy outcomes, permissions, access checks, and persistence authoritative.
-
-Shared predicted code may execute more than once. Separate deterministic state changes from one-shot effects and avoid non-deterministic randomness in predicted paths.
-
-Predicted player feedback requires `en-US` localization; add Russian only when explicitly requested. Resolving the same key twice is acceptable. Showing the feedback twice is not.
-
-Verify repository ownership and edit-marker requirements before changing inherited files.
-
-Build the affected project and choose focused tests for prediction behavior when verification is requested. Use integration coverage when it exercises latency, rejection, repeated input, observers, deletion, or reconciliation. Do not run all root and module integration suites by default; follow root `AGENTS.md`.
-
+## Когда применять
+Use for responsive player actions executed on predicted paths; not for hidden, privileged, persistent or nondeterministic outcomes.
+## До изменения
+Trace input, predicted execution, server validation, authoritative mutation, reconciliation, presentation and test path.
+## Правила и границы
+Predicted code may execute repeatedly. Keep it deterministic and idempotent; server authority reconciles protected outcomes.
+Separate deterministic state mutation from one-shot presentation. Reconciliation and rejection must be safe after latency, repeated input, deletion or observer state changes.
+## Выбор подхода
+Predict local correctable feedback; keep access, economy, random protected outcomes and persistence authoritative.
+Use the established predicted feedback path when nearby code has one; do not pair an unconditional client-only effect with an unconditional authoritative effect.
+## Антипаттерны
+- One-shot effects in both prediction and confirmation create double sound, popup, spawn or charge.
+- Unsynchronized randomness desyncs client and server.
+- Charging resources, spawning protected entities or committing state in both paths duplicates outcomes.
+## Проверка
+Cover latency, rejection, repeated input, deletion, observers and reconciliation where affected.
 ## References
-
 - [Predicted feedback](references/predicted-feedback.md): Read this when adding or reviewing a predicted popup, sound, spawn, effect, cooldown, UI update, or reconciliation path.

@@ -2,17 +2,22 @@
 name: networking
 description: Implement minimal network events and component state with authority, conversion, dirtying, and regression coverage.
 ---
-
-Define payloads in Shared and verify current serialization and entity-conversion APIs. Keep payloads minimal. Messages express intent, while the server derives protected results.
-
-Replicate only fields needed by clients. After authoritative mutation, call the correct dirtying path. Predicted state must converge without duplicate popups, sounds, spawns, or resource charges.
-
-Player-facing feedback generated from replicated state requires `en-US` localization; add Russian only when explicitly requested.
-
-Verify repository ownership and edit-marker requirements before modifying inherited files.
-
-Build the affected project and select a focused test for the changed serialization, conversion, authority, dirtying, or prediction behavior when verification is requested. Use integration tests when they cover the actual network path. Follow root `AGENTS.md`; do not restore dependencies or run integration suites for every module by default.
-
+## Когда применять
+Use for replicated state, network intent, conversion or dirtying; not for purely local presentation.
+## До изменения
+Find sender, receiver, shared contract, authoritative mutation, serialization/conversion, dirtying, client application and owner test.
+## Правила и границы
+Messages express intent; server derives results. Replicate only data clients need and validate every client-originated request.
+Use the current supported serialization and NetEntity conversion path for entity references; do not send raw server-only entities or broad component objects.
+## Выбор подхода
+Prefer existing component state for ongoing visible state; use a small message for an action request or transient response.
+After authoritative mutation, use the component or field dirtying pattern generated for that state. Trace sender, receiver and client state application before choosing a contract.
+## Антипаттерны
+- Trusting client values enables authority bugs.
+- Replicating full components or secrets wastes bandwidth and leaks state.
+- Forgetting dirtying leaves stale presentation.
+- Treating a transient message as persistent state loses late-join and reconnect correctness.
+## Проверка
+Cover serialization, rejection, late/reconnect state and affected prediction.
 ## References
-
 - [Networking and dirtying](references/networking-and-dirtying.md): Read this when adding or changing a replicated field, component state, dirtying behavior, network payload, or NetEntity conversion.

@@ -3,20 +3,21 @@ name: ecs-events
 description: Choose and implement local, directed, broadcast, cancellable, and network events.
 ---
 
-Use events for established ECS flows or genuine decoupling.
-
-## Event choices
-
-- Directed local events target one entity and its components.
-- Broadcast events notify independent global listeners.
-- Ref events allow listeners to mutate a result or cancellation flag.
-- Handled/cancelled events need explicit ownership of who may stop the flow.
-- Network events cross the trust boundary and require validation.
-
-Prefer a direct call to the owning system when only one known owner performs the operation. Do not invent events simply to hide a dependency.
-
-## Rules
-
-Define event data in the lowest assembly required by publishers and subscribers. Keep network payloads serializable and small. Do not put raw server-only entities into client payloads.
-
-Document whether an event is notification-only, cancellable, or expected to be raised before/after mutation. Tests should cover cancellation and ordering when they affect gameplay.
+## Когда применять
+Use for established ECS flow or real decoupling; not to hide a direct call to one owner.
+## До изменения
+Find publisher, subscribers, assembly boundary, state owner, ordering/cancellation contract and any prediction/network path.
+## Правила и границы
+Directed events target entity components; broadcasts notify independent listeners; mutable/cancellable events require an explicit result owner. Network events are minimal intent, never client results.
+Define whether the event is notification-only, before/after mutation, mutable, handled or cancellable. The publisher owns the ordering contract and the cancellation/result semantics.
+## Выбор подхода
+Use direct calls for one owner, local events for component reactions, broadcasts for observers, and network contracts only for a real boundary.
+At a network boundary, verify prediction behavior and keep the authoritative decision and validation on the server even if a Shared handler participates.
+## Антипаттерны
+- Events as hidden state lose a source of truth.
+- Undefined cancellation/order causes accidental behavior.
+- Server-only data or claimed success crosses a trust boundary.
+## Проверка
+Check subscribers, ordering, cancellation, repeat execution and server validation.
+## References
+No reference is required for ordinary event selection.
