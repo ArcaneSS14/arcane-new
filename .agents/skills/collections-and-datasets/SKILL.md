@@ -1,27 +1,21 @@
 ---
 name: collections-and-datasets
-description: Maintain weighted collections, datasets, groups, selectors, and random content tables.
+description: Maintain weighted collections, datasets, groups, selectors, and random content safely.
 ---
-
-Collections are data-driven selection APIs. Preserve their statistical and compatibility behavior.
-
-## Workflow
-
-1. Find the prototype type and every consumer.
-2. Determine whether entries are weighted, unique, ordered, nested, or filtered.
-3. Verify all referenced prototype IDs or locale keys.
-4. Keep empty and single-entry behavior defined.
-5. Review duplicate entries and unintended weight changes.
-6. Add deterministic tests where selection logic is custom.
-
-## Randomness
-
-Use the owning server or shared random service according to authority and prediction requirements. Do not introduce client-selected outcomes for protected gameplay. Predicted random choices require a deterministic source or authoritative correction.
-
-## Localization
-
-Datasets containing player-visible strings should resolve through FTL. Do not embed raw display text in code when a dataset prototype is appropriate.
-
-## Verification
-
-Check normalization assumptions, fallback behavior, nested collection recursion, invalid references, and distribution-sensitive balance changes.
+## Когда применять
+Use for data-driven collections, datasets, groups and selectors.
+## До изменения
+Find owner, consumer, existing loader/selector and every referenced prototype/resource.
+## Правила и границы
+Check weighted selection, empty set, duplicate IDs, fallback, nesting and deterministic/authoritative requirements.
+Distinguish weighted, unique, ordered, nested and filtered entries. Protected random outcomes are server-authoritative; predicted random must use a deterministic source or authoritative correction. Player-visible dataset strings require FTL.
+## Выбор подхода
+Reuse the existing loader/selector; keep data-driven selection in data instead of introducing runtime randomness when content owns it.
+## Антипаттерны
+Do not leave invalid references, implicit fallback behavior, duplicate entries or uncontrolled random outcomes.
+Do not let a client select rewards, damage, targets or other protected outcomes.
+## Проверка
+Check normalization, empty/fallback behavior, recursion, invalid references and distribution-sensitive balance changes.
+Use targeted tests for custom selection logic.
+## References
+No reference is required for ordinary collection selection.

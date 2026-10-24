@@ -2,24 +2,20 @@
 name: prototype-localization
 description: Maintain English prototype localization and add Russian localization only when explicitly requested.
 ---
-
-Prototype localization is part of the prototype contract.
-
-1. Identify localization conventions for the prototype type.
-2. Inspect the owning resource root and affected English file. Inspect Russian only when requested or diagnosing a Russian-specific issue.
-3. Search prototype IDs, current keys, alternative keys, and nearby family keys.
-4. Use the existing English owner file; use its Russian counterpart only when Russian is in scope.
-5. Treat English as the structural source of truth.
-6. Change Russian entries only when explicitly requested; preserve matching keys, variables, selectors, and ordering when doing so.
-7. Preserve variables, selectors, attributes, and literal semantic data.
-8. Search stale references after ID or key changes.
-
-When Russian localization is requested, place entries consistently with the English structure.
-
-Prototype IDs are machine identifiers and must not leak as display text. When Russian is requested, use natural wording and do not use `THE(...)` wrappers.
-
-Verify the affected English keys, variables, attributes, selectors, and final diff. Run a targeted validator only when one exists and covers the changed surface; do not require restore, a Release build, or global YAML lint for an FTL-only change.
-
+## Когда применять
+Use for player-visible prototype text; not text resolved directly by code/UI.
+## До изменения
+Trace prototype field to locale key to en-US, including parent inheritance, overrides and nearby family keys.
+Search prototype IDs, current and alternative keys, and nearby family keys; use the existing English owner file.
+## Правила и границы
+English is structural source. Preserve key variables, attributes, selectors and semantic literals. Change ru-RU only on request; use natural Russian without THE wrappers.
+When Russian is requested preserve matching paths and ordering.
+## Выбор подхода
+Keep prototype text in the owner locale contract; route direct presentation text to localization-in-code.
+## Антипаттерны
+Do not expose prototype IDs, break inherited overrides, or leave stale locale keys after a field/key change.
+## Проверка
+Check field/key/en-US chain, inherited text, stale references and final contract; run targeted validation only when available.
+Do not require restore, Release build or global YAML lint for FTL-only work.
 ## References
-
 - [Prototype localization checklist](references/prototype-locale-checklist.md): Read this when adding or changing player-visible prototype text, inherited prototype text, or prototype-driven UI labels.

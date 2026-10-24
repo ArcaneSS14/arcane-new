@@ -2,28 +2,21 @@
 name: serialization-and-datafields
 description: Design prototype DataFields, generated component state, custom serializers, and compatibility-safe data contracts.
 ---
-
-Serialized data is a compatibility surface shared by prototypes, maps, network state, configuration, or saves.
-
-## Prototype data
-
-Use `[DataField]` only for values content authors should configure. Choose defaults that produce a valid component before prototype application. Prefer typed prototype IDs, time spans, flags, and structured data over ad hoc strings.
-
-Do not expose runtime caches, service references, or derived state as prototype fields. Validate required fields at prototype load or component startup using existing project patterns.
-
-## Network state
-
-Use the current generated state attributes for fields required by clients. Keep hidden values server-only. After authoritative mutation, dirty the component or generated field.
-
-## Compatibility
-
-Renaming a field can break maps and prototypes. Removing a field can break older content. Search YAML, maps, and downstream modules before changing names or types. Add migration or compatibility handling when the data persists.
-
-## Custom serialization
-
-Write a custom serializer only when standard serializers and structured data cannot express the format. Include round-trip and invalid-input tests.
-
+## Когда применять
+Use for DataFields, serialized configuration, runtime state or compatibility contracts.
+## До изменения
+Find declaration, YAML consumer, defaults, nullability, serializers and every existing consumer.
+## Правила и границы
+Separate prototype configuration, serializable runtime state and server-only implementation detail. A DataField name/type/default/nullability is a contract.
+Use DataField only for author-configurable values; defaults must be valid before prototype application. Prefer typed IDs and structured data, and keep runtime caches, services and derived state out of the contract.
+## Выбор подхода
+Use a DataField for author configuration; keep derived/cache/service values runtime-only; use custom serialization only when standard structured types cannot represent the contract.
+Check required fields at prototype load or component startup. Use generated component state and the owner dirtying path for client-visible state.
+## Антипаттерны
+Do not rename/remove serializable fields without consumer search, or create hidden migrations through accidental fallbacks/defaults.
+## Проверка
+Check compatibility, prototype/maps consumers, null/default behavior and focused serialization validation.
+Custom serializers need round-trip and invalid-input coverage.
 ## References
-
 - [DataField patterns](references/datafield-patterns.md): Read this when adding or changing a DataField, serialized prototype value, default, collection, or compatibility-sensitive field.
 - [Network serialization](references/network-serialization.md): Read this when designing or changing a network payload, component state, entity reference conversion, or replicated message compatibility.
