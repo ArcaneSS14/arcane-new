@@ -23,4 +23,8 @@ Normalize and constrain user-controlled paths. Prevent traversal, arbitrary over
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test unauthorized access, malformed payloads, boundary values, replay, concurrent requests, stale targets, and partial failure.
+
+Re-resolve entities and framework guarantees at receipt, then validate remaining actor/target/current-state constraints. Derive protected prices, balances, random outcomes, permissions and account identity on the server. Send limited state rather than replicating an entire protected component. [Forms](../forms-and-input-validation/SKILL.md) owns syntax/feedback, [admin](../admin-and-permissions/SKILL.md) privileged audit.

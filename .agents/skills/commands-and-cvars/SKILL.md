@@ -9,7 +9,7 @@ Keep parsing, authorization, validation, execution, and feedback distinct. Verif
 
 Commands affecting players, round state, persistence, or server configuration require permission checks and useful audit logging.
 
-Command descriptions, help, usage, success, and player-safe errors must use `en-US`; add `ru-RU` only when explicitly requested. Do not expose internal exceptions or raw IDs.
+Command descriptions, help, usage, success, and player-safe errors must use `en-US`; add `ru-RU` only when explicitly requested. Do not expose internal exceptions or unexplained raw IDs in player feedback; operator diagnostics may show technical IDs when required by their audience.
 
 Use the existing command registration and permission pattern. Validate argument count, parsing, ranges, and current world/player state before mutation. A client-visible command or command completion is not authorization; privileged actions must be checked on the server. Follow `admin-and-permissions` for permission and audit requirements when the command is privileged.
 
@@ -31,12 +31,14 @@ Choose flags from the value's actual ownership and lifecycle; verify their defin
 
 Decide whether the value is startup-only or supports runtime changes. Validate bounds and reject invalid/non-finite numeric values before applying timers, rates, sizes, economy values, or paths. Do not replicate private server state or put credentials/secrets in a CVar.
 
-Subscribe only when live changes are supported. For an `EntitySystem`, prefer `Subs.CVar` so the subscription is removed with system lifecycle; use the immediate callback option when initialization must consume the already-loaded value. For other owners, pair subscription and unsubscription explicitly. Persisted client settings must survive restart and handle removed or invalid values safely.
+Subscribe only when live changes are supported. For an `EntitySystem`, inspect the current subscription manager/helper and its immediate-callback and cleanup guarantees before selecting it; use the immediate callback option when initialization must consume the already-loaded value. For other owners, pair subscription and unsubscription explicitly. Persisted client settings must survive restart and handle removed or invalid values safely.
 
 CVar and command names are operational APIs. Renames require migration or compatibility handling.
-Use `.agents/skills/commands-and-cvars/references/cvar-checklist.md` when adding or changing a CVar.
+Use [cvar-checklist](references/cvar-checklist.md) when adding or changing a CVar.
 
 ## Verification
+
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
 
 Build only the affected project. When verification is requested, select focused tests for the changed behavior; do not restore dependencies or run the complete root or module test suites by default.
 

@@ -1,8 +1,10 @@
 # Arcane edit markers
 
-Marking an inherited file is what makes an Arcane change survive the next upstream sync. A change that is not marked is a change that will be reverted by someone else's rebase.
+Markers identify Arcane divergence in inherited files for later reconciliation. They do not prove correctness, behavior equivalence or priority of a whole file; actual conflicts follow [merge policy](merge-conflict-resolution.md).
 
 Marking applies only outside owner-local paths. Arcane runtime projects are root-level `Content.Arcane.*`; Arcane-owned resource directories include existing `Resources/**/_Arcane/**` paths. `Modules/Arcane` currently contains guidance files, not runtime code.
+
+Instruction/documentation edits do not use gameplay edit markers. For inherited game code, resources and sync-sensitive configuration use the forms below when the format supports them.
 
 ## Which form to use
 
@@ -67,11 +69,11 @@ A multi-line C# change still prefers an owner-local partial file when the additi
 
 A bare `# Arcane` is the single-line addition form in YAML.
 
-`# Arcane-Edit: <old> > <new>` records what Arcane replaced. Read `new`, not `old`: if a rebase offers `old`, the correct resolution is to restore `new`.
+`# Arcane-Edit: <old> > <new>` records what Arcane replaced. Use these values as historical evidence; preserve confirmed behavior under [merge policy](merge-conflict-resolution.md), rather than automatically choosing a value from a marker.
 
 ## Added usings
 
-Every added `using` goes below all other `using` directives in the file, and inside a marker. One added `using` gets a trailing `// Arcane`; two or more get the pair.
+In an inherited file, every added `using` goes below all other `using` directives and carries a marker. One added `using` gets a trailing `// Arcane`; two or more get the pair. Arcane owner-local files remain exempt.
 
 ```csharp
 // one added using
@@ -90,7 +92,7 @@ using Content.Arcane.Shared.Map;
 
 Two requirements at once: last position, and marked. A new `using` placed alphabetically among the existing ones is wrong even when it is marked, because it will collide with every upstream edit to the using block.
 
-The current C# tree does not follow this yet. Arcane has never marked a `using` in C#, and existing fork usings use `// <Trauma>` / `// </Trauma>` or a trailing `// Trauma` instead. Those are upstream markers on lines we did not touch, so they stay. New Arcane usings follow the rule above.
+Preserve existing upstream using markers on untouched lines. New Arcane usings follow the rule above; do not normalize an unrelated using group.
 
 ## More than five modified lines
 
@@ -226,7 +228,7 @@ One added line is a bare trailing marker, not a block.
 itemOne: 1 # Arcane
 ```
 
-A block and a lone line beside it. The block was a block because it covered two or more lines, and the lone line was never a block.
+A block and an adjacent single line of the same change kind must also merge when no unchanged content or foreign boundary separates them. For example:
 
 ```yaml
 # Arcane-Start
@@ -237,19 +239,33 @@ itemTwo: 2
 itemThree: 3 # Arcane
 ```
 
+becomes
+
+```yaml
+# Arcane-Start
+itemOne: 1
+itemTwo: 2
+itemThree: 3
+# Arcane-End
+```
+
+Do not merge across unchanged code, incompatible reasons or foreign marker boundaries.
+
 ## Never merge across change kinds
 
 Two pairs of the same kind merge. Pairs of different kinds never merge.
 
 Merge `Arcane-Start` into `Arcane-Start` and `Arcane-Edit-Start` into `Arcane-Edit-Start`. Never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block, even when they are adjacent. The `-End` marker says which kind of change a reader is looking at, and a merged block cannot say that.
 
-```yaml example="wrong"
+```yaml
 # Arcane-Edit-Start
-oldName: oldValue
+oldName: replacementValue
+oldCount: 2
 # Arcane-Edit-End
 
 # Arcane-Start
 newName: newValue
+newCount: 1
 # Arcane-End
 ```
 
@@ -268,7 +284,7 @@ Check, per file:
 - `-Start` and `-End` counts match
 - no nested `-Start` inside an open `-Start`
 - no `Arcane-Edit` in `Arcane-Start` blocks, or the reverse
-- no two marker blocks adjacent but unmerged
+- no adjacent compatible blocks of the same change kind left unmerged; never merge across unchanged content or another kind
 - added `using` lines are last in the file's `using` block and marked
 
 An `-Edit-Start` with no matching `-End` is a real defect, not a style question. It means the block runs to end of file and the next sync has no boundary to work with.
@@ -279,17 +295,17 @@ Do not repair an unrelated inherited marker defect as a side effect of another t
 
 `Trauma`, `Goobstation`, `Goob`, `DeltaV`, `Shitmed`, and `EinsteinEngines` markers are not ours. They record upstream authorship; interpret them from the affected line and its history rather than assuming the marker identifies who authored a later change.
 
-The rule that follows from this is absolute:
+For our adaptations in inherited paths that require a marker:
 
-**Every change we author is marked with Arcane markers only. Never with `Trauma - `, never with `<Trauma>`.**
+**Use Arcane markers only, never `Trauma - ` or `<Trauma>`.** Arcane owner-local and instruction/documentation exceptions still apply.
 
-A Trauma marker on a line means Trauma wrote that line. When we change that line, the line becomes ours and the marker becomes `Arcane-Edit`, recording what we replaced:
+A Trauma marker records upstream authorship at that point in history. When we adapt the line, the adaptation is ours and the marker becomes `Arcane-Edit`, recording the actual replaced value:
 
 ```yaml
 # before, upstream
 cost: 3000 # Trauma - was 1800, its useless for mining
 # after, ours
-cost: 6000 # Arcane-Edit: 1800 > 3000
+cost: 6000 # Arcane-Edit: 3000 > 6000
 ```
 
 That is a legitimate rewrite of an upstream marker, and it is required rather than forbidden: leaving `Trauma - ` on a line we authored claims someone else's authorship for our change and hides our divergence from the next sync.
@@ -302,7 +318,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 - several added lines are wrapped in `Arcane-Start` / `Arcane-End`
 - one changed line carries a trailing `Arcane-Edit: <old> > <new>`
 - several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
-- put a bare `-Start` or `-End` on a line rather than wrapping a pair
+- never use a bare `-Start` or `-End` instead of a matching pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work
 
 The Trauma vocabulary has more forms than the Arcane one, because it describes a different job: `// Trauma - reason` for a single line, `// <Trauma>` / `// </Trauma>` for a block, `/* Trauma` ... `*/` for removing a section. Reproducing any of them on our own change is wrong even though the syntax is valid and appears thousands of times in the tree.
@@ -311,7 +327,7 @@ Placement differs by owner and file. Preserve upstream placement on untouched co
 
 ## Marking inside Trauma files
 
-`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are owner-local for Arcane, but they are also upstream surface for everyone syncing TraumaStation, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
+`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are Trauma-owned and sync-sensitive, not Arcane owner-local. Mark our adaptations so later sync can distinguish them from unchanged Trauma content.
 
 Mark Arcane changes in inherited Trauma files with Arcane markers:
 
@@ -341,7 +357,7 @@ An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's
 
 - add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
-- add a marker inside another fork's underscore dir
+- use another fork's marker for our adaptation; necessary edits in inherited foreign-owner paths still use Arcane markers
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked
 - keep an upstream marker on a line we changed. Replacing `Trauma - ` with `Arcane-Edit: <upstream value> > <our value>` is the correct result, not an unauthorized conversion
 - rewrite upstream markers on lines we are not changing, and never convert them in bulk as a side effect of unrelated work
@@ -352,3 +368,5 @@ An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's
 - use an Arcane marker to claim a change authored by another fork
 
 Marking a divergence is not an excuse to edit a file. Before marking, check whether the change belongs in an Arcane-owned path at all: `.agents/rules/fork-trajectory-priority.md`.
+
+If the file format cannot represent a valid comment marker, report the limitation before editing; do not corrupt data or silently leave an inherited change unmarked. Marker requirements do not authorize changing SPDX lines.

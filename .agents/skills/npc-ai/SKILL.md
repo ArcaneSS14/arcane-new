@@ -17,4 +17,4 @@ Identify:
 
 Avoid expensive global searches in repeated updates. Keep behavior deterministic where tests require it. Cancel or invalidate navigation when entities, maps, targets, or goals change.
 
-Update prototypes and integration coverage for observable behavior. Test no-target, unreachable-target, deletion, map transfer, and repeated planning.
+Update affected prototypes and select checks for observable changes under [verification](../../rules/verification.md). No-target, unreachable-target, deletion, map transfer or repeated planning matter when that contract changes; prototype tuning does not automatically require new integration coverage.

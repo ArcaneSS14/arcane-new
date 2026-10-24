@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Module Architecture"
-  short_description: "Choose the correct base project or module, assembly role, resource root, and dependency direction."
+  short_description: "Resolve assembly access and owner boundaries"
   default_prompt: "Use $module-architecture and the nearest scoped AGENTS.md for this task."

@@ -1,13 +1,5 @@
 # Tests adapter
 
-Root `AGENTS.md` hard rules apply. Read the nearest scoped `AGENTS.md` and canonical `testing` and `tests-authoring` skills.
+For test edits use [tests-authoring](../../.agents/skills/tests-authoring/SKILL.md); for check selection/execution use [testing](../../.agents/skills/testing/SKILL.md) and [verification](../../.agents/rules/verification.md). Use the actual owner and production path, preserving assertions, user work and [SPDX/Git limits](../../.agents/rules/git-safety.md). [Locale policy](../../.agents/rules/content-and-localization.md) determines whether Russian culture behavior is in scope.
 
-Verify repository identity, owner tag, owner-local module and underscore paths, and edit-marker requirements before changing inherited test files. Do not add redundant owner markers inside owner-local paths.
-
-Use existing owner-local infrastructure. Verify declarations, access modifiers, assemblies, runtime sides, and project references before writing test code.
-
-Do not create duplicate test projects, PoolManager fixtures, CI steps, MSBuild targets, or `module.yml` entries. Never edit SPDX metadata or weaken assertions.
-
-For localization and culture behavior, treat `en-US` as structural truth. Verify `ru-RU` message IDs, attributes, variables, selectors, relative file paths, ordered positions, fallback, persistence, repeated switching, and subscription cleanup.
-
-Run exact canonical commands and preserve complete failure output.
+For review assess reachable regression coverage and actual results; do not launch a test/edit workflow merely because this adapter is present. Keep full failure evidence outside the source tree and return the relevant primary failure.

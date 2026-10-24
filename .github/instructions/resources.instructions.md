@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Use the owning resource root. Validate prototypes, FTL, RSI states, audio paths, maps, and asset licensing.
+Select the changed asset type through [resources-and-assets](../../.agents/skills/resources-and-assets/SKILL.md) and [CATALOG](../../.agents/CATALOG.md). Preserve [rights](../../.agents/rules/third-party-materials.md) and the exact owner/consumer contract. Review evidence does not imply running every validator or changing locale scope.

@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Audio"
-  short_description: "Add data-driven audio, sound collections, predicted feedback, world playback, and licensed audio assets."
+  short_description: "Choose audio source, recipients and lifetime"
   default_prompt: "Use $audio and the nearest scoped AGENTS.md for this task."

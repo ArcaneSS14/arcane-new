@@ -32,4 +32,8 @@ For hands and equipment, account for active hand, blocked slots, nested storage,
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test insert, remove, swap, drop, delete, nested storage, full inventory, denied whitelist, body transfer, reconnect, and multiple viewers.
+
+A transfer must keep owner, parent, container registration and network visibility consistent. Do not retain cached content IDs without lifetime handling. For multiple-item operations define atomic, best-effort or rollback behavior.

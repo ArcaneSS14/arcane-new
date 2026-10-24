@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Entity Lifecycle And Spawning"
-  short_description: "Spawn, initialize, replace, transfer, and delete entities safely."
+  short_description: "Spawn, replace and remove entities safely"
   default_prompt: "Use $entity-lifecycle-and-spawning for spawn and lifecycle work."

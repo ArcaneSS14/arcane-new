@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-For a port, read `.agents/rules/change-history-analysis.md` and `.agents/rules/port-destination.md`, plus the porting, module-architecture, upstream-maintenance, third-party-materials, and relevant testing guidance. Use root `Content.Arcane.*` and existing `_Arcane` resource paths by default. Apply the provenance-based exceptions for confirmed TraumaStation additions and Trauma-side revert restorations. Add or edit Russian localization only when explicitly requested.
+Only for an actual port/restoration, use [porting](../../.agents/skills/porting/SKILL.md), [history](../../.agents/rules/change-history-analysis.md), [destination](../../.agents/rules/port-destination.md) and [rights](../../.agents/rules/third-party-materials.md). A pinned source ref and provenance exceptions remain explicit. During review assess that evidence; this adapter does not authorize implementing a port or running commands.

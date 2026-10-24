@@ -3,16 +3,12 @@ name: testing
 description: Select the existing owner test project and run checks matching the real failure mode.
 ---
 
-Match tests to the owner and failure mode.
+# Select and run sufficient checks
 
-Use `Content.Tests` for focused root tests, `Content.IntegrationTests` for integrated root behavior, and the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project for module behavior.
+Match the changed contract and failure mode to its existing owner under [verification](../../rules/verification.md). Content.Tests and Content.IntegrationTests are real root owners; use the actual project graph rather than inventing module test projects or new fixtures/CI steps.
 
-Search before creating a project, fixture, CI step, or MSBuild target. Duplicate infrastructure is forbidden. Test projects do not belong in `module.yml`.
+Use the [testing matrix](references/testing-matrix.md) for an initial choice. Test through accessible production APIs/events. Follow the affected workflow's exact configuration and artifact when reproducing CI; gates may target a DLL or a csproj. Confirm artifact freshness before --no-build and inspect selected/executed counts. Integration runs use DOTNET_gcServer=1.
 
-Test through accessible public APIs or real event paths. Do not use reflection to reach private implementation.
+Start with the smallest sufficient check; broaden for a concrete uncovered risk or required gate while respecting the current task's local/remote restrictions. Do not restore dependencies or run full root/module suites by default. A parse-only check cannot establish network or gameplay behavior; static inspection does not establish a visual result.
 
-For localization changes, verify the affected `en-US` keys and structure. Verify corresponding Russian contracts only when Russian localization is explicitly in scope.
-
-Choose the smallest build and focused test that cover the changed behavior. Follow root `AGENTS.md`: do not restore by default or run full root and module suites automatically. Use the CI configuration when verifying a CI gate, and run broader suites only when requested or when the failure cannot be isolated and the risk justifies it. Report exact commands, failures, and omitted checks.
-
-CI builds in `DebugOpt` and then tests the produced binaries, rather than passing a project path to `dotnet test`. Reproduce that shape only when verifying a CI gate. When running integration tests, use `DOTNET_gcServer=1`, matching CI. Use `--configuration Debug` only for fast local iteration, and say so, because `Debug` and `DebugOpt` differ in optimization and tool availability.
+Record exact commands, relevant results/failures and omissions. Use [tests-authoring](../tests-authoring/SKILL.md) when a new or changed test is actually needed.

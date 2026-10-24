@@ -23,4 +23,6 @@ Define what happens on death, disconnect, role removal, objective completion, ro
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test late join, reconnect, body transfer, cloning, ghosting, objective completion, role removal, duplicate assignment, and round cleanup.

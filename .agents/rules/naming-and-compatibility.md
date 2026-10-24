@@ -24,3 +24,10 @@ Methods that act on entities take `Entity<T?>` or `EntityUid` first. Methods tha
 Systems are `FooSystem`. Managers, where they exist, are `FooManager` only when they are genuinely lifecycle-owning singletons. Avoid a new `Manager` for something an `EntitySystem` covers.
 
 Treat serialized field names, prototype IDs, network contracts, database columns, map entities, and saved configuration as compatibility surfaces. Renames require migration, aliases, or an explicit compatibility decision.
+
+
+Names describe intent and timing: TryPurchase validates and executes; CanPurchase does not mutate; Before/Attempt/Completed events must state whether cancellation/handled results are meaningful. Use established domain vocabulary rather than new abbreviations or vague Handle/Process/Data names.
+
+Match case exactly for resource directories/states, including Linux consumers. Keep released paths, sprite states and audio collection identities stable; collection names express selection purpose, not an individual file name. FTL keys/variables describe feature and meaning, e.g. bank-transfer-error-insufficient-funds rather than error-2; file placement does not prevent duplicate keys.
+
+For a renamed compatibility surface, trace actual code/data/config/downstream consumers and stale variants, with migration/alias where needed. Search all references when the public surface requires it; a local variable rename does not justify every resource/build check. Locale scope remains in [content policy](content-and-localization.md), partial placement in [trajectory](fork-trajectory-priority.md).

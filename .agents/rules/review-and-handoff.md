@@ -1,16 +1,7 @@
+# Evidence and handoff
 
-A completed agent task must leave an evidence-based handoff.
+Report the requested result, affected behavior/owner, actual checks and material omissions. Add migration, authority, networking, resource or compatibility decisions only when relevant; do not impose a full report template on a small task.
 
-Report:
+Match evidence to the claim: a declaration proves API/access, a selected test exercises its scenario, a live view supports a visual claim. No evidence type universally outranks every other one. Distinguish inspection, execution and inference; report primary failures rather than hiding them behind teardown noise or a green unrelated gate.
 
-- what behavior changed and which owner contains it;
-- important authority, networking, prediction, persistence, or resource decisions;
-- files changed by category;
-- exact validation commands and results;
-- checks not run and why;
-- migration or compatibility risks;
-- follow-up work intentionally excluded.
-
-Do not hide uncertainty behind confident wording. Distinguish verified behavior, code inspection, and inference. Avoid style-only review comments unless style obscures a correctness or maintenance problem.
-
-Before committing, inspect `git diff --check`, `git status`, unexpected generated files, and unrelated local changes.
+Before delivery inspect the task's final diff, unexpected outputs and unrelated work. PR/CL text belongs to its requested delivery task; durable technical documentation belongs to its existing public owner. Logs, temporary refs and unresolved task states belong in the task record, not permanent skill policy.

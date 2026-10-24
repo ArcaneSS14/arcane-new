@@ -34,4 +34,8 @@ Use deferred deletion when dispatch, iteration, or physics callbacks make immedi
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test map and grid placement, containers, late initialization, replacement, deletion during events, map transfer, reconnect, and cleanup of dependent state.
+
+Choose the earliest initialization point with valid dependencies and the last safe cleanup point; component removal, parent/container changes and map transfer are distinct from entity deletion. For replacement read [replacement-checklist](references/replacement-checklist.md) to decide preserved/reset state; a generic helper may transfer a different subset.

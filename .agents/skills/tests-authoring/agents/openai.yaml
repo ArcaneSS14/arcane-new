@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Tests Authoring"
-  short_description: "Design deterministic focused and integration regression tests."
+  short_description: "Test observable production contracts"
   default_prompt: "Use $tests-authoring to add or review tests."

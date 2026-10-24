@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Client code owns presentation, visuals, controls, and UI. Do not move protected decisions client-side. Review UI lifetime and predicted duplicate effects.
+For implementation use [AGENTS](../../AGENTS.md) and its changed-surface catalog. For review apply [code-review](../../.agents/skills/code-review/SKILL.md) criteria to presentation/visual lifetime and replay only when changed. Client visibility is not authority; [architecture](../../.agents/rules/architecture-and-ownership.md) owns layers.

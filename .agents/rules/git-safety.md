@@ -1,17 +1,9 @@
+# Git safety and metadata
 
-Inspect `git status --short --branch` before staging or committing.
+Inspect status and the relevant diff before writing, staging or committing. Preserve unrelated tracked and untracked work. Stage only reviewed task paths; do not stage a path or bulk git add -u selection you have not inspected.
 
-Do not run destructive commands without explicit approval for that exact action:
+Destructive discard/deletion, history rewriting, amend/rebase of shared work and force push require explicit authorization for that action. Do not run reset --hard, clean -fd/-fdx, checkout -- ., restore ., forced recursive cleanup or worktree deletion as routine preparation.
 
-- `git reset --hard`;
-- `git clean -fd` or `git clean -fdx`;
-- `git checkout -- .`;
-- `git restore .`;
-- force push or history rewriting;
-- recursive forced deletion;
-- worktree deletion;
-- removal of untracked files.
+Follow the requested commit count and scope. Permission to commit or push does not permit merge. Only the user merges. A remote advancing or push failing does not authorize choosing merge/rebase/pull strategy or changing remotes; report the concrete state.
 
-Keep unrelated local files out of commits. Do not silently amend, rebase, squash, or force-update a shared branch. When a push fails because the remote moved, report it instead of choosing a merge or rebase policy for the user.
-
-Read-only commands such as status, diff, log, show, grep, and ls-files are safe defaults.
+Never add, edit, remove, reorder, normalize, copy or generate a line containing SPDX- in code, resources or configuration unless the current request specifies that exact change. Preserve existing notices during instruction maintenance. Files under .agents/, .claude/, .cursor/ and .codex/ carry no SPDX headers; absence of a header is not permission to relicense or privately redistribute their content.

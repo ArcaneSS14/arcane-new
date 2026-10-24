@@ -72,15 +72,16 @@ return "Job" + loadout;
 if (gear is null)
     return null;
 
-if (ent is TransformComponent transform)
-    var pos = transform.Coordinates;
-
-// Over
-if (gear == null)
-if (ent.TryGetComponent<TransformComponent>(out var t))
+// Type testing an existing component object:
+if (component is TransformComponent transform)
+{
+    var coordinates = transform.Coordinates;
+}
 ```
 
-This aligns with the guard-clause style below and removes the classic out-variable reuse bug.
+An EntityUid is an identifier, not a component object. Use the current EntitySystem component lookup (e.g. TryComp with its actual signature) to obtain its TransformComponent; a type pattern does not replace that lookup.
+
+This aligns with the guard-clause style below while preserving the distinction between object type tests and ECS lookup.
 
 ### Flatten nesting with guard clauses
 

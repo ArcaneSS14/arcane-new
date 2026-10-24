@@ -3,16 +3,12 @@ name: resources-and-assets
 description: Discover and reuse owner resource structure, then validate paths, RSI, audio, maps, attribution, and localization companions.
 ---
 
-# Resources And Assets
+# Resource ownership and provenance
 
-Use the owning resource root. Inspect the existing tree before creating any path. Do not derive directories from repository names, module names, namespaces, or prototype IDs.
+Inspect the existing feature owner and exact consumer before creating paths. Preserve case, underscores, IDs, states and collection names; do not derive directories from a repository/namespace/prototype name. Widen a search only for a concrete ownership, equivalent-asset or collision question.
 
-Verify the resource owner, the relevant owner-local module or underscore directory, nearby feature files, and exact IDs, keys, paths, states, or collections. Search only the candidate owner path and directly relevant paths; widen only to resolve a demonstrated ownership or collision question.
+Resolve source/ref/license/attribution under [third-party-materials](../../rules/third-party-materials.md). Preserve required metadata and [SPDX](../../rules/git-safety.md). [Trajectory](../../rules/fork-trajectory-priority.md) decides marker exemptions: a foreign underscore directory is not Arcane owner-local. Visible labels follow [locale policy](../../rules/content-and-localization.md).
 
-Add English text for player-visible content. Add Russian counterparts only when explicitly requested. Preserve attribution and asset metadata without editing SPDX.
+Read [asset-validation](references/asset-validation.md) for the changed asset type only. Use [audio](../audio/SKILL.md), [appearance](../appearance-and-visualizers/SKILL.md), [rendering](../sprite-overlays-and-shaders/SKILL.md) or [maps](../maps-and-mapping/SKILL.md) when that contract changes. One asset edit does not require every resource validator.
 
-Do not add repository edit markers inside owner-local module or underscore paths. Add the current repository marker only to inherited text files when ownership requires it and the format supports comments.
-
-Verify RSI metadata, dimensions, states, frame data, case-sensitive paths, audio collections, formats, volume, prediction, and source lifetime.
-
-Use the exact resource paths and specialized validator commands from the current owner workflow. Validate only changed resource types and directly affected paths. Follow root `AGENTS.md`; do not recursively inventory all resources, restore dependencies, or run unrelated builds and validators by default. Run `git diff --check`.
+Check changed exact paths and affected references, including replaced-path consumers, under [verification](../../rules/verification.md). Report unavailable resource tooling rather than initializing the engine or claiming a visual result from compilation.

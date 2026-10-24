@@ -3,22 +3,12 @@ name: maps-and-mapping
 description: Edit maps, map prototypes, grids, placements, entity references, and serialized compatibility safely.
 ---
 
-Maps are serialized compatibility artifacts, not ordinary hand-written YAML.
+# Serialized maps
 
-## Workflow
+Choose the actual owner/consumer: map file, map prototype, template or runtime spawner. Prefer the supported editor/serializer. Verify changed prototype/tile/field references and loaded resources; source-fork chunks may require deliberate schema/ID adaptation.
 
-1. Decide whether the change belongs in a map file, map prototype, template resource, or runtime spawner.
-2. Use the supported editor or serializer path where possible.
-3. Verify every prototype, tile, component field, resource, and required runtime module.
-4. Review parents, grids, coordinates, anchored state, containers, map IDs, and entity references.
-5. Avoid unrelated serializer churn.
-6. Add `en-US` for player-visible map, landmark, device, or UI text. Add `ru-RU` only when explicitly requested.
-7. Load or validate the affected map.
+Inspect relevant parents, grids, coordinate/rotation, anchoring, containers, map/entity IDs and reference compatibility. Keep intended additions/removals distinct from serializer-wide reordering, GUID or metadata churn. A small behavior change must not silently reserialize unrelated map content.
 
-Do not copy map chunks from another fork before resolving unavailable prototypes and changed schemas deliberately.
+Use [resource rights](../../rules/third-party-materials.md) for imports and [locale policy](../../rules/content-and-localization.md) for visible labels. Sprite/map conflicts go to the user under [merge policy](../../rules/merge-conflict-resolution.md).
 
-## Verification commands
-
-Run the exact current map schema workflow command only for changed map files. Build the affected project if code changed, and inspect the diff for mass reserialization, missing prototypes, or unrelated GUID and metadata changes. Follow root `AGENTS.md`; do not restore dependencies or run full builds and global linters by default.
-
-Run the exact current map schema workflow command for changed map files. Inspect the diff for mass reserialization, missing prototypes, and unrelated GUID or metadata changes.
+Load/validate the affected map through the actual current owner/workflow under [verification](../../rules/verification.md); establish whether a specialized command applies before using it. Build code only when required by the changed executable contract. Inspect the final map diff for missing prototypes and unrelated churn.

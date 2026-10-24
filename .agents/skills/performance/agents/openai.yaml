@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Performance"
-  short_description: "Review hot paths, allocations, iteration, caching, event frequency, and correctness-preserving optimization."
+  short_description: "Measure cost while preserving behavior"
   default_prompt: "Use $performance and the nearest scoped AGENTS.md for this task."

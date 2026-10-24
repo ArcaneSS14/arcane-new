@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Commands And Cvars"
-  short_description: "Implement commands and CVar-backed configuration safely."
+  short_description: "Validate commands and operational configuration"
   default_prompt: "Use $commands-and-cvars for console and configuration work."

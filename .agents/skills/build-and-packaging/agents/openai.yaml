@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Build And Packaging"
-  short_description: "Work with solution structure, CI, generated content, packaging, and release outputs."
+  short_description: "Verify build consumers, outputs and packages"
   default_prompt: "Use $build-and-packaging for project, workflow, and packaging changes."

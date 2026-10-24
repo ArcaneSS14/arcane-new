@@ -30,4 +30,8 @@ Cancel or invalidate work on round restart, map unload, entity deletion, user di
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test cancellation, deletion, repeated scheduling, shutdown, disconnect, exception paths, and delayed completion after state changes.
+
+Before applying a delayed result, confirm system activity, non-terminating entity/component, current session/target, matching map/round, cancellation, operation identity (not superseded) and current authoritative inputs as relevant. Use the current owner scheduler/main-thread mechanism; do not add a new framework by default.

@@ -3,56 +3,12 @@ name: git-workflow
 description: Preserve user work, scope, metadata, history, and verifiable delivery.
 ---
 
-# Git Workflow
+# Scoped Git work
 
-## Baseline
+For a write task inspect status and the affected diff, including pre-existing tracked/untracked work. Inspect branch/remotes/history only when the requested operation or ownership depends on them. Follow [Git safety and metadata](../../rules/git-safety.md) for destructive operations, SPDX and user work.
 
-Start every write task with:
+Stage only reviewed task paths and inspect the full staged diff before committing. Keep logs, generated outputs and unrelated cleanup out unless requested. Follow the user's commit count/message/scope; logical layers in a port inventory do not require separate commits.
 
-```text
-git status --short --branch
-git branch --show-current
-git remote -v
-```
+An actual conflict follows [semantic merge policy](../../rules/merge-conflict-resolution.md), not a marker-based side-selection shortcut. Choosing a history strategy is separate from inspecting history.
 
-Record existing modified and untracked paths, branch relationship, and any pre-existing SPDX diff. Preserve user-owned work.
-
-## Scope control
-
-Stage only task-related paths. Inspect the full staged diff before committing.
-
-Agents MUST NOT add, edit, delete, normalize, or generate lines containing `SPDX-`. If a new file requires metadata, leave it for the user and report the path. Do not repair REUSE by changing SPDX.
-
-Do not include generated files, logs, test results, IDE files, or unrelated cleanup unless requested.
-
-## Shared history
-
-Do not force-push, reset hard, clean untracked files, rewrite published history, or choose merge versus rebase without approval. Resolve conflicts by understanding both sides, not by selecting ours or theirs mechanically.
-
-Every conflicted hunk has three versions: base, the incoming side, and the current branch. Identify all three before editing, then resolve by the priority order in `.agents/rules/merge-conflict-resolution.md`: an Arcane-marked change outranks both other versions, and otherwise the version being pushed forward wins unless the incoming side carries an independent reason to change.
-
-## Commits
-
-Follow the exact commit count and message requested by the user. If one commit is requested, do not create preparatory commits on the target branch.
-
-A local task record is not a Git commit. A local commit is not a remote update. Verify the resulting SHA and branch ref before claiming delivery.
-
-## Delivery gate
-
-Inspect:
-
-```text
-git status --short --branch
-git diff --name-status
-git diff --check
-git diff -U0
-```
-
-Confirm:
-
-- only requested paths changed;
-- no agent-introduced SPDX line changed;
-- no user work was removed;
-- no duplicate project or infrastructure appeared;
-- all claimed checks actually ran;
-- the target branch or PR head points to the reported commit.
+Inspect final status/diff and git diff --check. A local record, local commit, pushed ref and PR are distinct outcomes: verify only the requested delivery's resulting SHA/ref before claiming it. Commit or push authorization does not authorize merge; only the user merges.

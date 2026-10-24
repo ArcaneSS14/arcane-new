@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Sprite Overlays And Shaders"
-  short_description: "Implement sprite layers, overlays, render targets, shaders, and cleanup."
+  short_description: "Own render resources and visual lifecycle"
   default_prompt: "Use $sprite-overlays-and-shaders for complex client visuals."

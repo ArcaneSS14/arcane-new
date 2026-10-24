@@ -28,4 +28,8 @@ Inspect body type, fixtures, collision layers, masks, density, awake state, and 
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test grids, map edges, anchoring, unanchored movement, containers, collisions, fixture updates, and deletion during events.
+
+Container registration/movement belongs to [containers-and-inventory](../containers-and-inventory/SKILL.md); changing transform parenting alone cannot insert an entity.

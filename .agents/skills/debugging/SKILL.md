@@ -1,20 +1,14 @@
 ---
 name: debugging
-description: Reproduce failures, trace authoritative flow, prove the broken assumption, and add targeted regression coverage.
+description: Diagnose a concrete failure from primary evidence and select a causal reproduction or regression check.
 ---
 
-Debug before redesigning.
+# Diagnose a failure
 
-1. Reproduce the exact symptom and record inputs, runtime side, repository owner, and lifecycle stage.
-2. Identify the authoritative owner and public entry point.
-3. Trace subscription, validation, mutation, dirtying, persistence, and presentation.
-4. Compare server and client state for networking issues.
-5. Verify every assumed declaration and resource reference.
-6. Add temporary diagnostics only around the suspected divergence.
-7. Confirm the failing assumption, fix the narrow cause, remove diagnostics, and add a stable regression test.
+Start with the supplied primary failure, logs and current path. Record input, runtime side and lifecycle stage only as needed to distinguish causes. Locate the real entry/owner and trace input → validation → mutation → publication → consumer. Resolve a first schema/reference error before downstream cascades.
 
-For localization bugs, inspect English file discovery, keys, variables, selectors, loaded roots, and UI refresh. Compare Russian files only when the issue is Russian-specific or Russian is in scope.
+Compare the implicated runs/versions or states. For desync, compare the same entity on server and client; for UI, follow state generation/application, subscriptions and window lifetime; for locale, check the affected loaded root/key/variables and refresh. Locale scope follows [policy](../../rules/content-and-localization.md).
 
-Apply repository markers only to inherited files and never to owner-local module or underscore paths.
+Use a narrow runtime reproduction, breakpoints, View Variables or temporary diagnostics when current evidence leaves a concrete uncertainty and the environment is available. Added latency is useful for a timing/desync hypothesis, not mandatory for every failure. Reuse existing logs instead of rerunning an expensive command for one known status.
 
-After reproducing the issue, build only the affected project and use a focused regression test when verification is requested and the owner can cover the failure. Run an integration test only when it exercises the broken cross-layer path. Follow root `AGENTS.md`; do not restore dependencies or run every affected owner’s full suite by default.
+Fix the demonstrated cause using current APIs and the existing owner. Remove temporary diagnostics. Select a focused regression check when it can distinguish the failure; author a stable test only when justified by the changed risk and existing infrastructure. Follow [verification](../../rules/verification.md), not a blanket test/build requirement. Report unavailable evidence and unresolved hypotheses explicitly.

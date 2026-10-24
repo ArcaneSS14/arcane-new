@@ -3,28 +3,12 @@ name: logging-and-errors
 description: Add useful diagnostics, choose log levels, preserve context, and handle player-facing failures safely.
 ---
 
-Logs should help operators locate a failure without flooding normal operation or exposing sensitive information.
+# Operator diagnostics and player feedback
 
-## Log levels
+Choose levels by meaning: debug/verbose for development detail, information for operational transitions, warning for unexpected recoverable state, error for failed operations needing investigation. Expected rejection is not automatically an error.
 
-Use debug/verbose output for development-only detail, information for meaningful operational transitions, warnings for recoverable unexpected state, and errors for failed operations requiring investigation. Avoid logging normal rejection paths as errors.
+Include searchable subsystem/operation, entity/prototype identity and useful non-sensitive parameters. [Security](../security-and-validation/SKILL.md) owns secret/private-data limits. Technical diagnostics may need IDs; player messages should use safe localized feedback through [forms](../forms-and-input-validation/SKILL.md).
 
-## Context
+Catch only to recover, add context, translate a result or clean up; preserve stack information on rethrow and do not swallow the failure. Bound or aggregate repeated diagnostics in hot loops or abusive request paths.
 
-Include subsystem, entity or prototype identity, operation, and important non-sensitive parameters. Prefer structured or consistent messages that can be searched. Do not log tokens, credentials, private messages, or complete user-provided payloads without necessity.
-
-## Exceptions
-
-Catch exceptions only when the caller can recover, add useful context, translate to a domain result, or perform cleanup. Do not swallow failures. Preserve stack information when rethrowing.
-
-## Player-facing errors
-
-Localize player messages and avoid exposing internal stack traces, file paths, SQL, or permission internals. Keep operator diagnostics separate from player feedback.
-
-## Hot paths
-
-Do not log every tick, every entity in a broad query, or every expected network rejection. Add rate limiting or aggregation when repeated diagnostics are necessary.
-
-## Verification
-
-Exercise success, expected rejection, malformed input, and exception paths. Confirm logs contain enough context and no secrets.
+Check the changed log/exception branch and data exposure under [verification](../../rules/verification.md). Changing one level does not require every runtime success/rejection path to be exercised.

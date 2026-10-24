@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Documentation"
-  short_description: "Write concise technical documentation, PR notes, architecture explanations, and verification reports."
+  short_description: "Maintain canonical technical documentation"
   default_prompt: "Use $documentation and the nearest scoped AGENTS.md for this task."

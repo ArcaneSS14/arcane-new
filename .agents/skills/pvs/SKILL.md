@@ -21,4 +21,6 @@ Avoid broad or permanent overrides that retain large entity sets. Do not expose 
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test entering and leaving range, reconnecting, observing, container changes, parent changes, map transfer, deletion, and UI closure. Confirm state does not leak to unrelated sessions.

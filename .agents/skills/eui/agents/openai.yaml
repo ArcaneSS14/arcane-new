@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Eui"
-  short_description: "Implement EUI sessions, shared state and messages, server lifecycle, and client presentation."
+  short_description: "Manage session UI state and authorization"
   default_prompt: "Use $eui and the nearest scoped AGENTS.md for this task."

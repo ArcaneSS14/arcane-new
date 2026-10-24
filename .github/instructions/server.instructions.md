@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Server code owns validation, protected decisions, persistence, and authoritative mutation. Validate every client-originated request.
+[Architecture](../../.agents/rules/architecture-and-ownership.md) owns server authority and persistence boundaries; [security](../../.agents/skills/security-and-validation/SKILL.md) owns authoritative request validation. In review identify a reachable violated check/contract rather than demanding unrelated implementation workflows.

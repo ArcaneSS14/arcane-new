@@ -13,7 +13,7 @@ Appearance data describes presentation state. It must not become a second author
 4. Map simple properties through `GenericVisualizer` or the nearby equivalent.
 5. Use a client visual system for transitions, overlays, shaders, spawned visuals, or complex cleanup.
 6. Verify sprite layers, RSI states, and default appearance.
-7. Test initialization, late join, mutation, removal, and deletion.
+7. Check initialization, late join, mutation, removal or deletion when the changed mapping/lifecycle affects them.
 
 ## Boundaries
 
@@ -31,3 +31,5 @@ Clean up overlays, child entities, animations, and subscriptions when the compon
 - client visual state surviving component removal;
 - duplicated predicted animation;
 - using appearance as authority instead of presentation.
+
+Use [sprite-overlays-and-shaders](../sprite-overlays-and-shaders/SKILL.md) for render-resource ownership and cleanup beyond appearance-key/layer mapping.

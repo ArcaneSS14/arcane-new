@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Porting"
-  short_description: "Port one complete feature family into the modular repository with provenance, adaptation, dependencies, and validation."
+  short_description: "Port selected behavior with provenance"
   default_prompt: "Use $porting and the nearest scoped AGENTS.md for this task."

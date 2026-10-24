@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Debugging"
-  short_description: "Investigate SS14 behavior using reproduction, event tracing, logs, VV, breakpoints, and targeted regression tests."
+  short_description: "Trace a failure and verify its cause"
   default_prompt: "Use $debugging and the nearest scoped AGENTS.md for this task."

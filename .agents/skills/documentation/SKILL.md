@@ -1,32 +1,12 @@
 ---
 name: documentation
-description: Write concise technical guidance, PR notes, architecture explanations, and reproducible verification reports.
+description: Maintain concise canonical technical documentation for its actual reader and durable decision.
 ---
 
-# Documentation
+# Maintain technical documentation
 
-Documentation should explain decisions that code alone does not make obvious.
+Identify the reader and the durable decision or procedure they need. Update its existing canonical owner rather than adding a parallel document. Explain behavior, boundaries or a tradeoff that code alone does not make clear; include architecture, compatibility or examples only when the reader needs them.
 
-For substantial changes, document the problem, intended behavior, owner, assembly boundaries, data or event flow, compatibility, localization impact (`ru-RU` only when in scope), resources, tests, and limitations.
+Use current paths, declarations and exact commands from the real owner/workflow. Do not infer destination behavior from an old fork. Preserve approved meaning and distinguish a factual correction from stylistic rewriting.
 
-Use current paths, declarations, and exact commands. Do not claim behavior based on the old repository or a source fork.
-
-Verification reports must separate:
-
-- commands actually run and their result;
-- commands not run and why;
-- manual checks performed;
-- unresolved risks;
-- files requiring human SPDX metadata.
-
-Do not write “all tests passed” when only a build ran. Do not translate internal implementation notes into a player changelog. Do not add documentation files when an existing canonical file owns the information.
-
-## Verification commands
-
-```powershell
-git diff --name-status
-git diff --check
-git diff -U0
-```
-
-When documenting commands, copy them from current workflows or verified project instructions. Do not invent or simplify flags.
+Task results/omissions belong to [handoff](../../rules/review-and-handoff.md); requested PR/CL text belongs to its delivery task, not a permanent technical manual. Validate affected links/anchors/routes and diff under [verification](../../rules/verification.md). Markdown alone does not justify a game build.

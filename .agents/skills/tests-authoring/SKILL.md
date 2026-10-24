@@ -3,16 +3,14 @@ name: tests-authoring
 description: Author deterministic owner-correct tests that prove observable contracts through valid APIs.
 ---
 
-A useful test fails for the original defect and proves a caller-visible contract.
+# Author a regression contract
 
-Place focused root tests in `Content.Tests`, root integration tests in `Content.IntegrationTests`, and module integration tests in the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project.
+Use the smallest setup that reaches the production API, event, command, UI message or lifecycle entry responsible for the defect. The assertion must distinguish broken from fixed observable behavior, not merely repeat the implementation or call a different internal handler.
 
-Do not create duplicate projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
+Choose the actual existing test owner under [verification](../../rules/verification.md). Check declarations, access, assemblies and runtime side before using helpers. Do not add reflection, duplicate projects/fixtures/CI targets or runtime-manifest test entries for convenience.
 
-Act through the public API, real event, command, UI message, or lifecycle entry point used by production. Verify declarations, access modifiers, assemblies, runtime sides, and project references before using symbols.
+Control simulation time and randomness; avoid wall-clock sleeps, machine culture, live services, test order and leaked global state. Clean up entities, subscriptions, configuration and other state owned by the fixture even on failure.
 
-Use controlled simulation time and deterministic randomness. Avoid wall-clock sleeps, machine locale, live services, order dependence, and leaked global state.
+Choose additional cases from the changed contract: bounds, repeat, denial, deletion, cancellation, reconnect/late state, reference failures or provider differences. They are alternatives based on risk, not a compulsory matrix for every test. Locale assertions follow [locale policy](../../rules/content-and-localization.md).
 
-For localization behavior, test the requested locale contract. Require Russian parity, ordering, and culture-switch behavior only when Russian localization is in scope.
-
-Run the focused test that covers the authored contract and build only its affected project when needed. Do not require a complete root or module test suite by default; expand to a full owner suite only when requested or when no narrower test can establish the result. Report exact filters and arguments.
+Run the focused selection and confirm it executed; when feasible demonstrate fails-before/passes-after. State any unperformed half honestly. Build fresh dependencies when necessary and expand checks only under the shared verification policy.

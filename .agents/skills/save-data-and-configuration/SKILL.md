@@ -3,29 +3,14 @@ name: save-data-and-configuration
 description: Validate, migrate, and atomically persist files and configuration with safe fallback and restart coverage.
 ---
 
-Persistent files and configuration are compatibility and reliability surfaces.
+# File-backed state and settings
 
-## Reading
+Identify the existing persistence owner/API first. CVars and relational databases keep their own writers; do not wrap them in an unrelated temp/rename implementation. File formats, defaults and restart behavior are compatibility contracts.
 
-Treat files as untrusted input. Validate schema, bounds, enums, paths, identifiers, required fields, and cross-field rules. Define behavior for missing, empty, truncated, malformed, and future-version data.
+Treat loaded data as untrusted. Validate schema, enum/ID/path/bounds and cross-field rules; define missing, empty, truncated, malformed, legacy and future-version behavior. Defaults must satisfy the same constraints. Normalize accepted legacy data before gameplay; version incompatible formats and preserve unreadable originals when recovery policy needs them.
 
-## Defaults and migration
+For an owned custom writer read [durable-write](references/durable-write.md). Do not overwrite valid state with partial/unvalidated output. Define concurrent-writer and recovery behavior through that owner's supported mechanism.
 
-Defaults must satisfy whitelists and cross-field constraints. Normalize legacy values before exposing them to gameplay. Back up unreadable legacy data before reset when recovery matters.
+Saved settings must restore after restart and fall back safely for removed/invalid values. Validate culture values against actually loaded cultures; labels/errors and view culture follow [localization-in-code](../localization-in-code/SKILL.md).
 
-Version formats when changes are not backward-compatible. Do not silently accept impossible or dangerous configuration.
-
-## Writing
-
-Write to a unique temporary file, flush when durability matters, and replace atomically. Clean temporary files on every failure path. Never overwrite a valid file with partial or unvalidated output.
-
-## Player-facing settings
-
-Names, descriptions, options, validation errors, and fallback notices require `en-US`; update `ru-RU` only when explicitly requested. Culture names and saved culture values must be validated against cultures actually found at runtime.
-
-A saved setting must restore after restart. Removed or invalid values must fall back safely without corrupting the config.
-
-## Verification commands
-
-Build only the affected project. When verification is requested, select focused tests for persistence, reload, client settings, propagation, or restart behavior. Do not restore dependencies or run complete test suites by default. Relevant cases include missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart scenarios.
- Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.
+Select affected load/migration/reload/propagation/restart/failure checks under [verification](../../rules/verification.md). Not every settings label needs the whole persistence matrix.

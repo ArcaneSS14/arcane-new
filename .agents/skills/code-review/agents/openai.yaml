@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Code Review"
-  short_description: "Review correctness, regressions, authority, architecture, compatibility, and tests."
+  short_description: "Review reachable defects and supporting evidence"
   default_prompt: "Use $code-review and report concrete findings ordered by severity."

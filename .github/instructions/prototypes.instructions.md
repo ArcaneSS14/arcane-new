@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Use the owning resource root. Load prototype, prototype-localization, localization, resources, maps, datasets, or chemistry skills as appropriate. Verify every ID, field, locale key, sprite state, sound path, and inherited parent.
+Use [prototypes](../../.agents/skills/prototypes/SKILL.md) for actual prototype data, [localization](../../.agents/skills/localization/SKILL.md) for its text, and [CATALOG](../../.agents/CATALOG.md) for maps/datasets/chemistry only when changed. In review check effective fields/parents and direct references for the actual loader, not every resource type.

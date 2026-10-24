@@ -1,46 +1,42 @@
-
 # Rule and skill routing
 
-Read the root `AGENTS.md` and the nearest scoped `AGENTS.md` files first. For cross-layer work, ownership/build changes, or another non-routine workflow, consult the matching entry in `.agents/SCENARIOS.md`. Use this catalog to load only the rule files and skills for surfaces actually affected.
+Start with [root guidance](../AGENTS.md). This is the index for changed surfaces; [SCENARIOS.md](SCENARIOS.md) combines routes when concerns intersect. Rule paths below are relative to .agents/; skill entries resolve to skills/<name>/SKILL.md. Load only entries relevant to the task.
 
-Rules are repository policy; skills are task playbooks. A selected skill is an execution contract for its topic. Do not read every rule or skill by default. A cross-layer task can legitimately need several skills.
+## Policy by situation
 
-## Rules by situation
-
-- Any task: root and nearest scoped `AGENTS.md`; use `CONTRIBUTING.md` for contributor-facing project conventions.
-- Work in a root `Content.*` project: consult `Modules/CATALOG.md` and read the linked owner/project guide because its documentation location under `Modules/` is not in the source project's automatic `AGENTS.md` scope.
-- Ownership, project references, or module placement: `.agents/rules/architecture-and-ownership.md`; read `.agents/skills/module-architecture/SKILL.md` when assembly or ownership analysis is needed.
-- Inherited file or upstream sync choice: `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`.
-- Reverts, restorations, cherry-picks/backports, ports, or unexplained removals: `.agents/rules/change-history-analysis.md`; add domain rules and skills for affected code and resources.
-- Actual merge conflict: add `.agents/rules/merge-conflict-resolution.md`.
-- C# layout, comments, ECS, or YAML format: read only the matching `.agents/rules/*conventions.md` file.
-- Localization or player-visible text: `.agents/rules/content-and-localization.md` and the relevant localization skill.
-- API design and access boundary: `.agents/rules/coding-and-api-design.md`.
-- Third-party code or assets: `.agents/rules/third-party-materials.md`.
-- Verification or handoff: `.agents/rules/verification.md` and `.agents/rules/review-and-handoff.md` when applicable.
+| Situation | Public owner |
+| --- | --- |
+| Root Content.* owner/project | [Modules/CATALOG.md](../Modules/CATALOG.md) and its relevant guide |
+| Placement, layers, project references, inaccessible API | [architecture-and-ownership](rules/architecture-and-ownership.md), [coding-and-api-design](rules/coding-and-api-design.md) |
+| Inherited path or upstream sync | [fork-trajectory-priority](rules/fork-trajectory-priority.md), [arcane-edit-markers](rules/arcane-edit-markers.md) |
+| Port, restoration, revert or unexplained removal | [change-history-analysis](rules/change-history-analysis.md), [port-destination](rules/port-destination.md) |
+| Actual conflict | [merge-conflict-resolution](rules/merge-conflict-resolution.md) |
+| C# / ECS / comments / prototype YAML | Matching [C#](rules/csharp-writing-conventions.md), [ECS](rules/ecs-writing-conventions.md), [comments](rules/commenting-conventions.md) or [YAML](rules/yaml-prototype-conventions.md) convention |
+| Naming or compatibility | [naming-and-compatibility](rules/naming-and-compatibility.md) |
+| Player text / locale | [content-and-localization](rules/content-and-localization.md) |
+| External material | [third-party-materials](rules/third-party-materials.md) |
+| Check / Git action / completion | [verification](rules/verification.md), [git-safety](rules/git-safety.md), [review-and-handoff](rules/review-and-handoff.md), as applicable |
 
 ## Skills by changed surface
 
-- Local C# implementation: `csharp-style`; add `naming-conventions` for symbol/API naming, `performance` for hot paths, `logging-and-errors` for diagnostics, and `security-and-validation` for trust boundaries. Use `module-architecture` for project or assembly boundaries.
-- ECS: use `ecs-basics` to understand an unfamiliar subsystem; use `ecs-components`, `ecs-events`, and/or `ecs-systems` for the corresponding implementation. Add `entity-api-patterns` for shared helpers/prototypes, `serialization-and-datafields` for serialized contracts, and `entity-lifecycle-and-spawning` or `entity-relations-and-links` for those lifecycle concerns.
-- Client/server/shared, networking, prediction, or PVS: `client-server-shared` plus only the applicable `networking`, `prediction`, `pvs`, `security-and-validation`, and gameplay-domain skills.
-- Interactions and entity behavior: `interaction-flow` for verbs/in-hand/reusable interactions; `actions-and-doafter` for actions/cooldowns/DoAfter; `containers-and-inventory` for item movement; `transform-and-physics` for coordinates/collisions; `timers-and-async` for delayed work.
-- Gameplay domains: `damage-status-and-effects`, `round-and-game-rules`, `minds-roles-and-objectives`, `npc-ai`, `commands-and-cvars`, `admin-and-permissions`, `database-migrations`, `save-data-and-configuration`, `randomness-and-determinism`, or `external-services` when that domain changes.
-- Content systems: `construction-and-machines`, `chemistry-and-reagents`, `atmos`, or `collections-and-datasets` for those respective systems.
-- UI: `xaml-ui` for XAML controls/code-behind; `bound-user-interface` for entity-owned UI contracts and message/state flow (use both when both surfaces change); `eui` for session-oriented interfaces. Add `forms-and-input-validation` and localization skills only when those surfaces change.
-- Localization: `localization`; add `localization-in-code` when code resolves text, and `prototype-localization` when visible prototype text changes.
-- Prototypes and structured resources: `prototypes` for prototype authoring, `yaml-and-schema` for other schema/config YAML, `maps-and-mapping` for maps, and `resources-and-assets` for resource ownership/validation. Add `appearance-and-visualizers`, `sprite-overlays-and-shaders`, or `audio` for those presentation assets and behaviors.
-- Build, project, CI, or packaging: `build-and-packaging`; add `module-architecture` when project ownership or references change. For root `Content.*` module ownership, references, and build impact, consult `Modules/CATALOG.md` and read only the linked owner/layer guide for the affected project.
-- Tests: `tests-authoring` when writing tests; `testing` when choosing or running checks. Debugging a reproduced failure uses `debugging`.
-- Documentation and task process: `documentation` for technical docs/reports, `git-workflow` for history/staging/commit operations, and `ai-workflow` for multi-step planning, preflight, and delivery gates.
-- Complete feature spanning layers: `gameplay-feature` plus the technical skills for the affected layers.
-- Feature port or inherited upstream work: `porting` and `upstream-maintenance`, plus `git-workflow` when history/staging is part of the task and domain skills for ported code/resources.
-- Review: `code-review` plus the technical skills for the changed surfaces.
-
-## Always-on invariants
-
-- Arcane runtime projects are root-level `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`. Arcane resources use existing `Resources` owner directories such as `Resources/Prototypes/_Arcane`, `Resources/Textures/_Arcane`, and `Resources/Locale/{culture}/_Arcane`. `Modules/Arcane` currently contains guidance, not runtime projects.
-- Arcane-owned projects and `_Arcane` owner directories do not need Arcane edit markers. Inherited paths on the TraumaStation sync surface do; consult the marker rule for language-specific syntax and line-count details.
-- Never author our change under another fork's marker. Preserve upstream markers on lines we did not change.
-- `en-US` is the structural source of truth and the only locale updated by default. Change `ru-RU` only when the user explicitly requests Russian localization; then preserve the existing key contract, attributes, variables, selectors, paths, and ordering.
-- Do not cross engine boundaries, invent APIs, bypass access modifiers, or expand repository searches beyond the task's evidence needs.
+| Surface | Skills (choose the affected concern) |
+| --- | --- |
+| C# / assembly design | [csharp-style](skills/csharp-style/SKILL.md), [module-architecture](skills/module-architecture/SKILL.md) |
+| ECS state / events / execution / format | [ecs-components](skills/ecs-components/SKILL.md), [ecs-events](skills/ecs-events/SKILL.md), [ecs-systems](skills/ecs-systems/SKILL.md), [serialization-and-datafields](skills/serialization-and-datafields/SKILL.md) |
+| Spawn/delete/replace or links | [entity-lifecycle-and-spawning](skills/entity-lifecycle-and-spawning/SKILL.md), [entity-relations-and-links](skills/entity-relations-and-links/SKILL.md) |
+| State transport / replay / interest | [networking](skills/networking/SKILL.md), [prediction](skills/prediction/SKILL.md), [pvs](skills/pvs/SKILL.md) |
+| Verbs/in-hand interactions / granted or timed actions | [ecs-systems](skills/ecs-systems/SKILL.md), [actions-and-doafter](skills/actions-and-doafter/SKILL.md) |
+| Item movement / coordinates and collision / deferred work | [containers-and-inventory](skills/containers-and-inventory/SKILL.md), [transform-and-physics](skills/transform-and-physics/SKILL.md), [timers-and-async](skills/timers-and-async/SKILL.md) |
+| Damage/effects / round / mind/role / NPC | [damage-status-and-effects](skills/damage-status-and-effects/SKILL.md), [round-and-game-rules](skills/round-and-game-rules/SKILL.md), [minds-roles-and-objectives](skills/minds-roles-and-objectives/SKILL.md), [npc-ai](skills/npc-ai/SKILL.md) |
+| Commands/config / privileged actions / DB / files / external service | [commands-and-cvars](skills/commands-and-cvars/SKILL.md), [admin-and-permissions](skills/admin-and-permissions/SKILL.md), [database-migrations](skills/database-migrations/SKILL.md), [save-data-and-configuration](skills/save-data-and-configuration/SKILL.md), [external-services](skills/external-services/SKILL.md) |
+| Construction / chemistry / atmos / datasets / random choice | [construction-and-machines](skills/construction-and-machines/SKILL.md), [chemistry-and-reagents](skills/chemistry-and-reagents/SKILL.md), [atmos](skills/atmos/SKILL.md), [collections-and-datasets](skills/collections-and-datasets/SKILL.md), [randomness-and-determinism](skills/randomness-and-determinism/SKILL.md) |
+| View / entity UI / session UI / input syntax | [xaml-ui](skills/xaml-ui/SKILL.md), [bound-user-interface](skills/bound-user-interface/SKILL.md), [eui](skills/eui/SKILL.md), [forms-and-input-validation](skills/forms-and-input-validation/SKILL.md) |
+| FTL (including prototype text) / code-resolved text | [localization](skills/localization/SKILL.md), [localization-in-code](skills/localization-in-code/SKILL.md) |
+| Prototypes / other YAML / maps / asset ownership | [prototypes](skills/prototypes/SKILL.md), [yaml-and-schema](skills/yaml-and-schema/SKILL.md), [maps-and-mapping](skills/maps-and-mapping/SKILL.md), [resources-and-assets](skills/resources-and-assets/SKILL.md) |
+| Appearance data / render resources / sound | [appearance-and-visualizers](skills/appearance-and-visualizers/SKILL.md), [sprite-overlays-and-shaders](skills/sprite-overlays-and-shaders/SKILL.md), [audio](skills/audio/SKILL.md) |
+| Trust / logs / execution cost | [security-and-validation](skills/security-and-validation/SKILL.md), [logging-and-errors](skills/logging-and-errors/SKILL.md), [performance](skills/performance/SKILL.md) |
+| Build graph, CI, output/package | [build-and-packaging](skills/build-and-packaging/SKILL.md); module-architecture only for affected references/ownership |
+| Author tests / choose and run checks / diagnose a failure | [tests-authoring](skills/tests-authoring/SKILL.md), [testing](skills/testing/SKILL.md), [debugging](skills/debugging/SKILL.md) |
+| Technical docs / Git stage or history / multi-step task | [documentation](skills/documentation/SKILL.md), [git-workflow](skills/git-workflow/SKILL.md), [ai-workflow](skills/ai-workflow/SKILL.md) |
+| Feature port / upstream integration | [porting](skills/porting/SKILL.md), [upstream-maintenance](skills/upstream-maintenance/SKILL.md), plus affected domains |
+| Review | [code-review](skills/code-review/SKILL.md), plus changed-surface policy and contracts; implementation commands require a separate implementation task |

@@ -30,4 +30,8 @@ For tests and debugging, control the random source or inject deterministic input
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test empty, single-entry, weighted boundary, repeated invocation, rejected requests, deterministic test seeds, and authoritative reconciliation.
+
+For a changed choice establish who owns the outcome, who may know its candidates, whether retry/replay can reroll it, and whether the chosen result persists or replicates. Cosmetic randomness may be client-local; protected targets/rewards/roles may not.

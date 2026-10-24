@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Damage Status And Effects"
-  short_description: "Implement damage, status effects, alerts, modifiers, and timed effects consistently."
+  short_description: "Preserve damage and effect-source ownership"
   default_prompt: "Use $damage-status-and-effects for health and status gameplay."

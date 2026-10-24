@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.xaml,Content.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs"
+applyTo: "**/*.xaml,Content.Client/**/*.cs,Content.*.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs"
 ---
 
 <!--
@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Read the nearest scoped `AGENTS.md` and the XAML, BUI, EUI, appearance, audio, and prediction skills relevant to the change. Keep authority server-side, localize visible text, and clean up UI subscriptions and overlays.
+Use [CATALOG](../../.agents/CATALOG.md) to choose XAML, BUI/EUI, appearance, audio or prediction only for changed surfaces. In review apply [code-review](../../.agents/skills/code-review/SKILL.md) to the actual view/session/authority contract, localization and cleanup. Implementation commands require an implementation task.

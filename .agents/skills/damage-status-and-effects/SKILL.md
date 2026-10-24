@@ -32,4 +32,8 @@ Keep player alerts, icons, sounds, and popups synchronized with authoritative st
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test apply, refresh, stack, expire, remove, immunity, deletion, reconnect, death/critical state, and interactions with existing modifiers.
+
+Use an application token or current-state identity when an old timer might remove a newer effect. Cleanup removes only the contribution owned by that source; refresh derived modifiers after removal.

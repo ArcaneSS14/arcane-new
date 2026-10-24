@@ -3,37 +3,12 @@ name: actions-and-doafter
 description: Implement actions, cooldowns, DoAfter flows, interruption, cancellation, and authoritative completion safely.
 ---
 
-Use actions for reusable player abilities and DoAfter flows for interruptible, time-based completion.
+# Granted actions and timed completion
 
-## Action lifecycle
+Trace grant source → action identity/state → UI availability → request → validation → optional DoAfter → completion/cooldown → revoke. The source may be equipment, component, prototype, role or runtime state; grant/revoke must be idempotent and follow that source's lifetime, including body/source transfer when affected.
 
-1. Find the owner component and system.
-2. Decide whether the action is granted by prototype, component startup, equipment, role, or runtime state.
-3. Keep action identity and event contract in Shared when client prediction or UI needs it.
-4. Validate user, target, cooldown, range, access, and current state on the server.
-5. Start the action or DoAfter exactly once.
-6. Apply resources, cooldowns, and persistent effects only at the correct authoritative point.
-7. Remove or disable the action when its source disappears.
+Use the current action/DoAfter event pattern. Share only contracts needed by clients/prediction. The server checks actor, target, range, access, current state and cooldown at the authoritative point. Prevent duplicate starts/completions where they would spend or grant twice.
 
-## DoAfter design
+Define relevant interruption conditions (movement, damage, hand/target change, incapacitation or deletion). Revalidate on completion: start-time checks do not guarantee the world is unchanged. Charge costs/cooldowns once at the intended point; an early valuable mutation needs explicit rollback. Cancellation must leave consistent state and feedback.
 
-Define interruption rules deliberately: movement, damage, hand changes, target movement, target deletion, range, incapacitation, and duplicate requests. Use the established DoAfter event pattern in the current codebase.
-
-Do not mutate valuable state before completion unless rollback is explicit. Completion handlers must revalidate state because the world may have changed during the delay.
-
-## Prediction
-
-Immediate local animation, popup, or sound may be predicted. The final protected outcome remains authoritative. Prevent duplicate feedback when the server confirms or rejects the action.
-
-## Common failures
-
-- action remains after the granting component is removed;
-- cooldown is applied before a rejected attempt;
-- two concurrent DoAfters complete the same operation;
-- target deletion leaves stale state;
-- completion trusts conditions checked only at start;
-- predicted sound or popup plays twice.
-
-## Verification
-
-Test success, cancellation by every configured interrupt, repeated requests, target deletion, disconnect, source removal, cooldown, and rejection under latency.
+Predicted animation/audio/popups must not repeat on confirmation; see [prediction](../prediction/SKILL.md). Select checks for changed transitions under [verification](../../rules/verification.md), including configured cancellation or latency only where they affect the contract.

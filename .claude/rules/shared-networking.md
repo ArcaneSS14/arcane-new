@@ -1,9 +1,1 @@
-
-For Shared, networking, prediction, PVS, interaction, and replicated-state work, read:
-
-- the nearest scoped `AGENTS.md`;
-- `.agents/rules/gameplay-networking.md`;
-- `.agents/rules/interactions-and-authority.md`;
-- the relevant `client-server-shared`, `networking`, `prediction`, `pvs`, or `interaction-flow` skill.
-
-Do not place hidden server authority or client-only presentation in Shared.
+For an affected shared/network/interaction contract, use [architecture](../../.agents/rules/architecture-and-ownership.md) and select [networking](../../.agents/skills/networking/SKILL.md), [prediction](../../.agents/skills/prediction/SKILL.md), [PVS](../../.agents/skills/pvs/SKILL.md), [security](../../.agents/skills/security-and-validation/SKILL.md) or [ECS interactions](../../.agents/skills/ecs-systems/SKILL.md) from the changed surface. Shared may own genuine common gameplay logic; protected authority and client-only presentation retain their layers. In review apply these contracts as criteria, not execution commands.

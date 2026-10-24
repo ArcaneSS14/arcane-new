@@ -1,12 +1,7 @@
 ---
 description: Arcane guidance adapter for csharp
-globs: **/*.cs,**/*.csproj
+globs: "**/*.cs,**/*.csproj"
 alwaysApply: false
 ---
-Follow module ownership, ECS API design, networking, and verification guidance.
 
-Read `.agents/rules/csharp-writing-conventions.md`, `.agents/rules/ecs-writing-conventions.md`, and the `csharp-style` skill plus `references/dependency-injection.md`.
-
-Use the canonical marker rules summarized in `.cursor/rules/core.mdc`; they cover all inherited paths and line-count cases.
-
-`[Dependency] private Type _field = default!;` without `readonly`. Reusable `EntityQuery<T>` and `HashSet<T>` over per-call allocation. Mark types `sealed`, `static`, `abstract`, or `[Virtual]`.
+Use [C# conventions](../../.agents/rules/csharp-writing-conventions.md), [ECS conventions](../../.agents/rules/ecs-writing-conventions.md) and [csharp-style](../../.agents/skills/csharp-style/SKILL.md) for the affected code. Read its DI reference only when selecting/matching dependencies; visibility and naming follow the actual owner, not a duplicated private-only example. [Architecture](../../.agents/rules/architecture-and-ownership.md) owns access/layers; [marker syntax](../../.agents/rules/arcane-edit-markers.md) owns inherited edits. In review apply criteria rather than execution procedures.

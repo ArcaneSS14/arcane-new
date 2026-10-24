@@ -1,238 +1,30 @@
-# Repository Agent Guidance
+# Repository agent guidance
 
-## Default scope
+Work from the paths, symbols, resources or failure named in the current request. Search the likely owner first; expand only to resolve a concrete missing dependency. Do not inventory the repository or load every rule/skill for routine work. An explicitly requested instruction audit may inspect its relevant instruction set.
 
-Work only within the smallest scope required by the current task.
+## Select guidance
 
-Use paths, symbols, projects, modules, prototypes, locale keys, resources, and errors explicitly named by the user as the initial scope.
+1. Follow higher-priority instructions and the user's current request, then root and nearest scoped AGENTS.md.
+2. Use [.agents/CATALOG.md](.agents/CATALOG.md) for the changed surfaces and [CONTRIBUTING.md](CONTRIBUTING.md) for contributor conventions. Rules set project policy; skills explain its application.
+3. Use [.agents/SCENARIOS.md](.agents/SCENARIOS.md) when several layers, history, conflicts or build structure interact. Load only the relevant combination; there is no fixed skill count.
+4. For root Content.* code, find the owner/project guide through [Modules/CATALOG.md](Modules/CATALOG.md). Modules/ contains guidance, not relocated runtime projects; do not assume a module.yml exists.
 
-Do not inspect, inventory, summarize, or recursively enumerate the whole repository before starting work.
+Resolve an instruction conflict by priority and current task scope. Ask about a material unresolved behavior or authority decision; do not silently replace project policy with a client adapter or optional external library.
 
-Do not read every `AGENTS.md`, `.agents/rules` file, skill, catalog, or scenario file for routine work. If the user explicitly requests an audit of agent instructions, inspect the instruction set needed to complete that audit.
+## Boundaries
 
-Do not read every entry in `.agents/CATALOG.md` or `.agents/SCENARIOS.md` for routine work. Consult relevant entries for task routing; inspect the wider index only when the user explicitly requests an audit of agent instructions.
+- Preserve user changes and approved behavior. Reuse the existing system, owner, project, resource root and test infrastructure. Verify unfamiliar declarations, access and actual consumers before using them.
+- Arcane runtime lives in root Content.Arcane.*; Arcane resources use existing _Arcane owner directories. [Ownership](.agents/rules/architecture-and-ownership.md) and [trajectory](.agents/rules/fork-trajectory-priority.md) decide placement, including Trauma sync-sensitive paths.
+- In inherited code/resources, apply [Arcane markers](.agents/rules/arcane-edit-markers.md) to our changes only. Do not reformat neighbours or convert untouched foreign markers. Resolve actual conflicts under [merge policy](.agents/rules/merge-conflict-resolution.md), preserving confirmed Arcane intent. Sprite/map conflicts go to the user.
+- Addressed engine source reads and CI's read-only content validators are allowed. Engine edits, commands inside the submodule and gitlink updates need a current explicit request: [engine boundary](.agents/rules/engine-boundaries.md).
+- Preserve SPDX lines unless the current request specifies their exact change. Instruction files under .agents/, .claude/, .cursor/ and .codex/ carry no SPDX headers. Git mutations and existing work follow [Git safety](.agents/rules/git-safety.md); commit/push permission does not authorize merge.
+- Use [localization policy](.agents/rules/content-and-localization.md): en-US by default; ru-RU only for explicitly requested Russian localization or the reported Russian-specific defect. Do not automatically synchronize it.
+- Third-party code, assets and documentation follow [provenance and rights](.agents/rules/third-party-materials.md). Public contribution and CI must work without any private instruction package.
 
-Do not inspect unrelated modules, forks, upstream repositories, projects, resources, localization trees, tests, or workflows.
+## Verify and deliver
 
-## Instruction selection
+Start with the smallest sufficient check and expand for a concrete uncovered risk, up to a full set when necessary. Respect current restrictions on where and how checks run; GitHub validation does not authorize a duplicate full local run. Use [verification.md](.agents/rules/verification.md) for commands and owners.
 
-Use instructions in this order:
+For documentation/instruction edits, inspect the diff and affected links/routes; exercise a changed executable helper separately. Do not build the game for Markdown alone. Do not automatically restore dependencies, update submodules or run the whole solution/test suite.
 
-1. System and developer instructions, then the user's current request.
-2. This root `AGENTS.md` and the nearest `AGENTS.md` files applying to the paths being changed.
-3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
-4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
-
-More specific instructions add detail to general instructions. Root scope and verification limits are ceilings: scoped rules and skills may narrow them, but must not silently expand repository searches, builds, restores, or test runs. If two applicable instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
-
-Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
-
-When expanding the instruction scope, state which concrete changed surface requires it.
-
-## Skill routing
-
-Select skills from the actual requested change, not from hypothetical side effects. `.agents/CATALOG.md` is the canonical skill-routing index; consult only the entries relevant to changed surfaces, then read only those skills. A task spanning layers may require multiple skills.
-
-For work in any root `Content.*` project, use `Modules/CATALOG.md` to find its owner and project guide, then read that linked guide when its source area is relevant. Those guides are stored under `Modules/` for organization and are not discovered automatically as the nearest `AGENTS.md` for root project files. Runtime projects remain at the repository root; use their project references and existing owner guidance rather than expecting a `module.yml` under `Modules/`.
-
-This repository is based on TraumaStation and receives changes along its sync trajectory. `CONTRIBUTING.md` describes Arcane's project layout and contributor conventions. For changes intended for a Trauma-owned path, apply `.agents/rules/fork-trajectory-priority.md` and `.agents/rules/arcane-edit-markers.md`; do not use another fork's marker for our changes.
-
-## Targeted discovery
-
-Search for exact symbols, paths, prototype IDs, locale keys, resource paths, errors, or directly related types.
-
-Search commands must use the narrowest practical directory or pathspec.
-
-Preferred examples:
-
-```sh
-git grep -n "ExactSymbol" -- Content.Arcane.Server
-git grep -n "exact-locale-key" -- Resources/Locale
-git grep -n "PrototypeId" -- Resources/Prototypes
-find Content.Arcane.Server/Feature -maxdepth 1 -type f
-dotnet build Content.Arcane.Server/Content.Arcane.Server.csproj --no-restore
-```
-
-Do not begin with unrestricted commands such as:
-
-```sh
-find . -type f
-git grep -n "generic-term"
-rg "generic-term" .
-dotnet build SpaceStation14.slnx
-dotnet test
-```
-
-An unrestricted repository-wide search is allowed only when:
-
-* the user explicitly requests repository-wide analysis
-* the exact owner cannot be found through targeted searches
-* a public compatibility surface is being renamed
-* the task explicitly requires finding every reference
-
-Stop expanding once enough evidence exists to implement the requested change.
-
-## Repository identity
-
-Do not perform a full repository identity audit for every task.
-
-Arcane runtime projects are the root-level `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client` projects. Arcane resources use the existing root `Resources` tree and `_Arcane` owner directories. Treat these as Arcane-owned unless current project metadata contradicts it. `Modules/Arcane` contains guidance files; it is not the runtime project root.
-
-Run repository, remote, upstream, owner-tag, and edit-marker discovery only when the task changes:
-
-* an inherited file outside owner-local paths
-* module or project ownership
-* project references
-* upstream synchronization
-* edit markers
-* repository automation
-
-When required, use targeted identity checks:
-
-```powershell
-git rev-parse --show-toplevel
-git branch --show-current
-git remote -v
-git log -1 --oneline
-```
-
-Do not scan every source file for edit markers unless an inherited file is actually being changed.
-
-## Evidence before changes
-
-Do not invent APIs, symbols, events, types, paths, prototype IDs, locale keys, resources, projects, or framework behavior.
-
-Verify declarations only for symbols that the implementation will actually call or modify.
-
-For a non-local symbol, verify the declaration, accessibility, namespace, owning project, caller project, and required project reference.
-
-Do not inspect unrelated assemblies or dependency graphs after the required access has already been proven.
-
-If required state is inaccessible and no supported extension point exists, stop and report the concrete declaration and access boundary. Do not use reflection or copy private implementation logic.
-
-## Engine access
-
-Do not modify anything inside `RobustToolbox/`, run commands inside the engine, move the submodule pointer, or treat engine internals as an implementation option unless the user explicitly asked for an engine change in their current request.
-
-When content cannot reach something the engine owns, implement the smallest legitimate content-side extension point, or STOP and report the declaration, its access modifier, the involved assemblies, and the engine boundary that would need crossing. Then wait for the user. Propose the engine change; do not begin it.
-
-Reading the engine to verify a signature is allowed and is not an engine change. Read-only validators that CI runs against content are allowed as well. Full rules: `.agents/rules/engine-boundaries.md`.
-
-## Ownership and edit markers
-
-This section is always in context for Codex and OpenCode. The canonical text is `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, and `.agents/rules/merge-conflict-resolution.md`.
-
-Arcane is a fork of TraumaStation and TraumaStation is the sync source, so inherited and Trauma-owned files are the conflict surface.
-
-Our own changes carry Arcane markers only:
-
-* one added line: trailing `// Arcane` or `# Arcane`, no `-Start` / `-End`
-* two or more added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
-* one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
-* two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
-* over 5 changed lines: keep the active change inside an `Arcane-Edit` block; comment out removed content only when disabling it is the intended behavior
-* merge adjacent Arcane blocks of the same kind into one pair, never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
-* an added `using` goes after all others, inside an Arcane block or trailing `Arcane`
-* never put a bare `-Start` or `-End` on a line instead of a pair
-
-Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change, whatever the surrounding file uses.
-
-Arcane owner-local paths take no marker, because nothing syncs into them: `Content.Arcane.*`, `Resources/**/_Arcane/**`, and `Resources/Locale/**/_Arcane/**`.
-
-Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths require an Arcane marker when the file format supports comments. If a valid marker cannot be represented, stop before editing and report the limitation rather than corrupting the file or silently leaving an unmarked change.
-
-Editing a Trauma file is allowed and often correct. Keep it cheap to reconcile:
-
-1. append to the end of a list rather than inserting into sorted position
-2. gather every addition in one file into a single block
-3. prefer additive over destructive; achieve removals through a partial or `!Remove`
-4. do not reformat, reorder, re-alphabetize, or tidy neighbouring lines
-5. keep the hunk contiguous
-6. record both sides when a value changes, as `Arcane-Edit: <old> > <new>`
-
-Changing a line that carries an upstream marker makes that line ours, so the marker becomes `Arcane-Edit`. Leave upstream markers on lines we did not touch alone, and never convert them in bulk.
-
-Prefer `Content.Arcane.*` and Arcane resource directories for Arcane-only behavior. Changes intended for the TraumaStation sync trajectory may belong in Trauma-owned or vanilla paths; keep those changes minimal, marked, and consistent with the inherited contribution rules.
-
-When a sync conflict must be resolved, read all three versions and merge semantically. The resolved line takes the marker of whoever wrote it, and our resolution is ours, so it carries an Arcane marker. Never blanket-resolve with `git checkout --ours/--theirs`, `-X ours`, or `-X theirs`, and never `git add -u` a path you did not read.
-
-Never add, edit, remove, reorder, normalize, copy, or generate a line containing `SPDX-` in game code, resources, or configuration unless the user's current request provides the exact SPDX change. Agent instruction files under `.agents/`, `.claude/`, `.cursor/`, and `.codex/` carry no SPDX headers.
-
-Determine marker requirements only for files that will actually be modified.
-
-Do not scan or classify unrelated files.
-
-## Localization
-
-For changed localization entries, `en-US` is the structural source of truth.
-
-By default, make localization changes in `en-US` only. Add, edit, move, reorder, or remove `ru-RU` entries only when the user explicitly requests Russian localization. Do not create or update Russian counterparts as an automatic consequence of an English structural change.
-
-When Russian localization is explicitly requested, use natural wording and do not use `THE(...)` or equivalent English grammar wrappers. Preserve existing Russian entries during English-only work.
-
-Compare only the affected locale files and directly referenced keys. Do not enumerate the complete locale tree for a local correction.
-
-## Implementation
-
-Inspect the current implementation and nearby files before introducing a new abstraction.
-
-Prefer the existing owner, system, component, prototype file, resource directory, locale file, test project, and extension point.
-
-Do not create parallel managers, helpers, projects, fixtures, CI steps, resource hierarchies, or locale files when an existing owner already covers the requested behavior.
-
-Validate client-originated requests on the server when the task crosses a trust boundary.
-
-Keep compatibility-sensitive identifiers stable unless the user explicitly requests their migration.
-
-## Verification
-
-Use the smallest verification set covering the files actually changed.
-
-Do not automatically run:
-
-* `git submodule update --init --recursive`
-* `dotnet restore`
-* a full solution build
-* all unit tests
-* all integration tests
-* both Debug and Release builds
-* every linter
-* every packaging check
-
-For a local C# change, build the directly affected project.
-
-For a test change, run the directly affected test project or filtered test.
-
-For localization or prototype changes, run only the relevant validation when such a targeted command exists.
-
-For documentation or agent-instruction changes, use diff checks only unless executable behavior changed.
-
-Always run:
-
-```powershell
-git diff --check
-git diff --stat
-```
-
-Inspect the final diff for the files changed by the task.
-
-Run full repository verification only when the user explicitly requests full validation, final PR validation, release validation, or a repository-wide audit.
-
-Do not include large successful build or test logs in model context. Preserve the command result and inspect only relevant warnings or failures.
-
-When a command fails, narrow the output to the first actionable errors before further analysis.
-
-## Delivery
-
-Before reporting completion, verify only the surfaces touched by the task:
-
-* changed files belong to the requested scope
-* used symbols exist and are accessible
-* requested localization files were updated
-* no unrelated files were modified
-* claimed verification commands actually ran
-* the final diff matches the requested outcome
-
-Do not claim checks that were not run.
-
-Do not rewrite published history, discard user changes, remove untracked files, or perform destructive cleanup without explicit approval.
+Before completion, inspect the final task diff, run git diff --check and git diff --stat, and report the change, actual checks and material omissions under [handoff](.agents/rules/review-and-handoff.md). Do not claim runtime, visual or server-side results from static inspection.

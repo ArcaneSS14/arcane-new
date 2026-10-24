@@ -3,22 +3,12 @@ name: prototypes
 description: Create, inherit, compose, localize, and validate YAML prototypes in the correct resource root.
 ---
 
-## Workflow
+# Effective prototype data
 
-1. Verify repository identity, resource ownership, and edit-marker boundaries.
-2. Find a current nearby prototype of the same type and owner.
-3. Confirm the owning resource root from `module.yml`.
-4. Verify fields against the destination component schema.
-5. Prefer inheritance or composition over copying a large prototype.
-6. Use stable specific IDs and typed IDs in code.
-7. Add English display text; add or update Russian only when explicitly requested.
-8. Verify every referenced prototype, sprite, state, sound, dataset, map, and locale key.
-9. Search for duplicate IDs and stale references.
+Find a current nearby prototype of the same type and real resource owner. Use the actual loader/project metadata; inspect a module.yml only if that owner has one. Placement/markers follow [trajectory](../../rules/fork-trajectory-priority.md), not a generic underscore exemption.
 
-Do not place repository-owned prototypes in another owner's root for convenience. Do not expose prototype IDs as fallback player text.
+Verify fields against current component/serializer schema. Prefer supported inheritance/composition to copying a large parent; check effective defaults, parent chain, abstract/spawnable intent, component merge/replacement and permitted remove/clear syntax.
 
-When Russian prototype localization is explicitly requested, preserve matching keys, attributes, variables, selectors, paths, and ordering.
+Use stable IDs and typed code IDs. Index represents required data; TryIndex fits expected absence. Verify directly used prototype/RSI state/sound/dataset/map/key references, duplicate IDs and stale source-fork fields. Do not run a global resource inventory for a local change.
 
-Validate only the changed prototype and directly referenced resources with an available targeted validator. Build the affected project when code changes. Run a focused owner test when lifecycle or map-loading behavior is in scope and verification is requested. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run the global YAML linter by default.
-
-When verification is requested and the prototype changes server/client lifecycle or map loading, select a focused owner test that covers that path. Do not run the complete integration project by default.
+Visible/inherited prototype text follows [localization](../localization/SKILL.md), including its prototype subsection. Select loader/reference validation or focused lifecycle/map-loading tests for the changed risk under [verification](../../rules/verification.md); no automatic Release build or complete integration suite.

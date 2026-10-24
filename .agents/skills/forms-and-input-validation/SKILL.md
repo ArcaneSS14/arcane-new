@@ -3,29 +3,12 @@ name: forms-and-input-validation
 description: Validate UI, command, text, numeric, entity, and configuration input with localized feedback and server authority.
 ---
 
-Validation has two layers: client feedback and authoritative server enforcement.
+# Input syntax and domain feedback
 
-## Parsing
+Define accepted syntax and normalized representation. Trim/case-fold only when the domain treats them as insignificant. Choose explicit numeric culture/decimal policy; distinguish integer from decimal forms, bound length before expensive processing and reject invalid/non-finite/overflowing numbers.
 
-Trim deliberately. Parse numbers with an explicit culture and format policy. Reject ambiguous forms such as integer fields supplied as `1.0` unless the domain permits them. Check length before expensive processing.
+Validate ranges, identifiers and cross-field constraints through one authoritative domain source where possible; client checks provide feedback. Authorization, replay/abuse and trust boundaries belong to [security](../security-and-validation/SKILL.md). Use structured APIs for rich text, paths, URLs, shell and SQL rather than unsafe concatenation.
 
-## Domain validation
+Return useful localized errors without hidden state or internal exceptions. Variables/types must match the selected FTL contract under [locale policy](../../rules/content-and-localization.md); technical IDs are acceptable only where the diagnostic audience requires them, not as unexplained player labels.
 
-Validate ranges, overflow, whitelists, prototype IDs, entity existence, ownership, access, cooldowns, and cross-field constraints. Normalize case and whitespace only when the domain defines them as insignificant.
-
-Use one authoritative validation source where possible. Do not allow UI and server rules to drift.
-
-## Feedback
-
-Return specific player-safe errors in `en-US`; add `ru-RU` only when explicitly requested. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
-
-Variable names and values passed into validation messages must match `en-US`; match Russian too only when Russian is in scope.
-
-## Security failures
-
-Treat rich text, markup, paths, URLs, and command fragments as hostile. Use structured APIs instead of concatenating shell, SQL, markup, or resource paths.
-
-## Verification commands
-
-Build only the affected project. When verification is requested, choose focused tests for the changed validation boundary (such as BUI, command authority, stale entities, or client/server behavior). Do not restore dependencies or run complete test suites by default. Relevant cases include empty and whitespace input, boundaries, overflow, locale variants when in scope, malformed markup, unauthorized actors, and conflicting fields.
- Test empty, whitespace, boundaries, overflow, locale variants, malformed markup, unauthorized actors, and conflicting fields.
+For numeric/text format changes read [numeric-and-text-input](references/numeric-and-text-input.md). Select checks for the affected empty/boundary/normalization/culture/cross-field case under [verification](../../rules/verification.md), not a compulsory full matrix.

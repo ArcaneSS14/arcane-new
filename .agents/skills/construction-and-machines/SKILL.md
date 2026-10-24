@@ -25,11 +25,15 @@ The server owns machine state, inventory, costs, output, and access. BUI message
 
 - upgraded value never recalculated after part change;
 - construction replacement loses ownership or contents;
-- machine runs while unpowered or unanchored;
+- machine violates its specified power or anchoring requirement;
 - server trusts client-selected output or price;
 - map-spawned machines skip setup;
 - examine text disagrees with actual state.
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test construction, deconstruction, map spawn, power loss, anchoring, part replacement, damage, UI concurrency, and YAML references.
+
+For each changed transition in prototype/map spawn → initialization → anchoring/power → interaction/part change → damage → deconstruction/deletion, identify derived values and UI needing event-driven invalidation.

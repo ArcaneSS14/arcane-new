@@ -32,4 +32,6 @@ If both entities store the relationship, update both sides atomically or through
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test link, relink, unlink, source deletion, target deletion, map transfer, reconnect, duplicate request, and invalid restored state.

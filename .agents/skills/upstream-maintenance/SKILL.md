@@ -3,24 +3,12 @@ name: upstream-maintenance
 description: Keep inherited changes narrow, correctly marked, traceable, and easy to rebase across repository layers.
 ---
 
-Before editing inherited code, determine whether the change is an upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned behavior.
+# Maintain an inherited delta
 
-When behavior was added, removed, reverted, or later restored upstream, trace its commit history before deciding what to carry forward. Follow `.agents/rules/change-history-analysis.md`; do not infer intent from a commit subject or marker alone.
+Establish the actual upstream refs and the confirmed Arcane behavior to preserve. Distinguish an upstream fix, reusable extension, compatibility adaptation and Arcane-only behavior. For additions/removals/reverts use [history](../../rules/change-history-analysis.md); a title or marker is not proof of intent.
 
-Verify the current repository owner tag and existing marker syntax.
+Choose placement through [trajectory](../../rules/fork-trajectory-priority.md) and [architecture](../../rules/architecture-and-ownership.md). Reuse supported owner-local extensions; keep necessary inherited edits minimal, preserve surrounding style and apply [marker rules](../../rules/arcane-edit-markers.md) only to our adaptations.
 
-Repository-owned behavior belongs in owner-local module or underscore paths whenever possible. Those paths do not receive redundant owner edit markers.
+For actual conflicts follow [semantic merge policy](../../rules/merge-conflict-resolution.md): preserve agreed intent, accept compatible improvements, and remove an old Arcane implementation only on proved full current equivalence. Behavior decisions and sprite/map conflicts go to the user. Do not use contradictory marked/unmarked side-selection shortcuts.
 
-When an inherited file must change:
-
-- add the current repository marker around the smallest changed block
-- preserve nearby formatting and upstream layout
-- avoid unrelated cleanup
-- document intentional divergence and source revision when relevant
-- replace an upstream marker on a line you change, since the line becomes yours; leave upstream markers on untouched lines alone
-
-Separate mechanical upstream conflict resolution from repository behavior changes. Do not copy a whole inherited file merely to change a small branch when a supported extension point exists.
-
-An upstream change is not ours by landing in our tree. If a feature came from TraumaStation and we do not want it as-is, rework it and mark the result with our marker; do not leave an upstream marker on a line we authored.
-
-When a rebase or merge actually conflicts, the side with a current repository marker outranks the incoming side. Take the version without the marker when the incoming change does not invalidate the marked one, and ask when it does. Full priority order and marker forms: `.agents/rules/merge-conflict-resolution.md`.
+Separate mechanical integration from behavior changes and do not copy a whole inherited file for one branch. Verify the affected consumers/resources under [verification](../../rules/verification.md), recording the reason for each intentional remaining divergence. Git history strategy remains separately authorized.

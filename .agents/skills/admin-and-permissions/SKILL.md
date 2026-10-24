@@ -26,4 +26,8 @@ Log actor, operation, target, important parameters, and outcome for high-impact 
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test authorized and unauthorized users, missing sessions, disconnected targets, repeated execution, malformed arguments, and runtime permission changes.
+
+For an affected privileged entry, inspect alternate invocation paths and failure consistency as well as its named permission. Follow [security](../security-and-validation/SKILL.md) for input/secrets and [logging](../logging-and-errors/SKILL.md) for safe diagnostics.

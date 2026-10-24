@@ -27,3 +27,5 @@ A networked component belongs in Shared. Do not replicate hidden server state. A
 - mutable collections without a clear serialization and dirtying strategy;
 - client-only types in Shared;
 - using `EntityUid.Invalid` instead of nullable references when the surrounding API uses nullability.
+
+Keep components focused by responsibility. Expose runtime fields through serialization only when the format requires it; optional relationships use nullable/network-safe IDs, not serialized direct component references. [Serialization](../serialization-and-datafields/SKILL.md) owns field compatibility and [networking](../networking/SKILL.md) owns delivery/dirtying.

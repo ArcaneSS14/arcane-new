@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Localization"
-  short_description: "Write and validate FTL, locale-backed prototype text, variables, and localized code."
+  short_description: "Maintain FTL keys and prototype text"
   default_prompt: "Use $localization and the nearest scoped AGENTS.md for this task."

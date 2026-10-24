@@ -3,21 +3,12 @@ name: performance
 description: Review hot paths, allocations, iteration, caching, event frequency, and correctness-preserving optimization.
 ---
 
-Do not optimize from intuition alone. Identify a measured or clearly high-frequency path.
+# Evaluate execution cost
 
-Review:
+Identify workload, runtime side and a measured or demonstrably frequent path. Separate server simulation, client CPU, networking and GPU hypotheses. State which work and frequency the proposed change reduces; do not call a heuristic a measured improvement.
 
-- `Update()` frequency;
-- broad entity queries;
-- per-tick allocations;
-- LINQ and closures;
-- repeated prototype or localization lookups;
-- dictionary creation;
-- network payload frequency;
-- unnecessary dirtying;
-- repeated pathfinding or atmos work;
-- client rendering allocations.
+Candidates include global scans in frequent events, per-tick allocations/LINQ/closures, repeated stable lookups, dirtying unchanged state, oversized BUI updates, uncontrolled pathfinding, unbatched atmos work, recreated overlays and hot-loop logs. Each needs its actual workload/caller evidence; none is automatically a defect.
 
-Prefer established ECS queries, cached dependencies, reused buffers, event-driven updates, and narrower dirtying. Preserve behavior, prediction, and lifecycle safety.
+Prefer existing queries, dependency caches, buffers, event-driven updates and narrower dirtying when their invalidation/lifetime is correct. Preserve authority, prediction, lifecycle and visual quality. A faster operation that changes the agreed result is a regression.
 
-Add a benchmark, profiler evidence, targeted test, or at least a reasoned before/after operation count when practical.
+Use comparable before/after observations, profiling or operation counts proportionate to the claim. An isolated benchmark is not mandatory for every edit; label estimates and unmeasured effects. Choose behavior checks and any broader measurements under [verification](../../rules/verification.md).

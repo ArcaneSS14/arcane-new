@@ -1,14 +1,14 @@
+# Initial check selection
 
-| Change | Minimum meaningful verification |
+| Changed contract | Starting check |
 | --- | --- |
-| Shared/server/client C# | affected project build; focused test when it covers the changed behavior |
-| Network or prediction | focused test of the affected network/prediction path when available |
-| Prototype | targeted schema/resource validation when available; build only if code also changed |
-| FTL | targeted localization validation when available; no build by default |
-| RSI or sprite state | targeted RSI validator and reference check when available |
-| XAML | affected client project build; runtime layout check when available and relevant |
-| Database schema | focused migration/upgrade check for the changed provider and path |
-| Packaging | `Content.Packaging` build and requested package path |
-| Documentation/guidance | `git diff --check`; validate changed links or paths when applicable |
+| Shared/server/client C# | Affected project build; focused scenario test where useful |
+| Network/prediction | Affected delivery/replay path, not only a handler unit test |
+| Prototype / FTL | Actual loader/resource or locale validation; references and diff |
+| RSI / sprite state | Relevant RSI validation and consumer reference; visual check for changed appearance |
+| XAML | Affected client build and changed layout/lifecycle check as applicable |
+| Database schema | Existing-row upgrade and generated migration for both supported providers |
+| Packaging | Affected target/output/artifact contract |
+| Documentation/instructions | Diff, changed links/anchors/routes; run a changed helper separately |
 
-Follow root `AGENTS.md`. Increase scope only when the changed behavior crosses multiple rows or the user requests broader validation. Do not run a global linter or full build when no targeted check exists unless broader validation was requested.
+These are starting points, not an exhaustive mandatory suite. Expand for a concrete risk under [verification](../../../rules/verification.md), including a full run when necessary and authorized by the current execution scope.

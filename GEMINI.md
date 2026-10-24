@@ -5,8 +5,8 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <puroslavking@yahoo.com>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Gemini repository guidance
+# Gemini repository entry
 
-Use `AGENTS.md` as the canonical entry point. Scoped `AGENTS.md` files refine rules by directory. Task instructions and references live in `.agents/skills/`; always-on constraints live in `.agents/rules/`.
+Use [AGENTS.md](AGENTS.md) and [.agents/CATALOG.md](.agents/CATALOG.md) for the actual changed surface. Root Content.* owner guides are indexed in [Modules/CATALOG.md](Modules/CATALOG.md); Modules/ is documentation, not relocated runtime code.
 
-Inspect current code, project references, and the linked owner/project guide in `Modules/CATALOG.md` before proposing changes. Preserve server authority, prediction, localization, resource ownership, and test reporting. `Modules/` contains guidance; Arcane runtime code belongs in root `Content.Arcane.*` projects and resources in existing `_Arcane` paths.
+For review apply [code-review](.agents/skills/code-review/SKILL.md) criteria and public policy; do not execute implementation/Git/build procedures merely because a guideline mentions them. This adapter does not create a second policy owner.

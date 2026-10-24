@@ -1,6 +1,3 @@
+Read [AGENTS.md](AGENTS.md), then the nearest applicable guidance and only the changed-surface route in [.agents/CATALOG.md](.agents/CATALOG.md). For root Content.* projects use [Modules/CATALOG.md](Modules/CATALOG.md) to locate the owner guide.
 
-Read `AGENTS.md` first. Then read the nearest scoped `AGENTS.md` for every file you edit, the relevant always-on rules in `.agents/rules/`, and only the task-specific skills in `.agents/skills/`.
-
-The repository is modular. Determine project ownership from `Modules/CATALOG.md`, project references, scoped guidance, and existing code before choosing a path. The `Modules/` tree contains documentation; Arcane runtime code belongs in the root `Content.Arcane.*` projects and its resources in the existing `_Arcane` paths.
-
-Do not duplicate canonical guidance in this file. Follow the server-authority, localization, verification, licensing, and Git-safety rules from the canonical documents.
+During review apply [.agents/skills/code-review/SKILL.md](.agents/skills/code-review/SKILL.md) and relevant public policy as criteria. Implementation, Git and build procedures apply only to an authorized execution task. This adapter adds no separate policy or private dependency.

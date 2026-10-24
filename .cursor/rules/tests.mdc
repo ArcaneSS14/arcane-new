@@ -1,15 +1,7 @@
 ---
 description: Repository test guidance adapter
-globs: Content.Tests/**/*.cs,Content.IntegrationTests/**/*.cs,Modules/*/Content.*.IntegrationTests/**/*.cs
+globs: "Content.Tests/**/*.cs,Content.IntegrationTests/**/*.cs"
 alwaysApply: false
 ---
 
-Root `AGENTS.md` hard rules apply. Read the nearest scoped `AGENTS.md` and canonical `testing` and `tests-authoring` skills.
-
-Verify repository identity, owner-local module and underscore paths, and edit-marker requirements before changing inherited test files. Do not add redundant owner markers inside owner-local paths.
-
-Use existing owner-local test infrastructure. Verify symbol access and project references. Do not create duplicate test projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
-
-Treat `en-US` as structural truth. Verify Russian keys, attributes, variables, selectors, file paths, order, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
-
-Run exact canonical commands, preserve failures, never edit SPDX metadata, and never weaken assertions for green CI.
+Use [tests-authoring](../../.agents/skills/tests-authoring/SKILL.md) for test edits and [testing](../../.agents/skills/testing/SKILL.md)/[verification](../../.agents/rules/verification.md) for choosing or running checks. Use the actual existing owner and production boundary. Preserve assertions, user work and [SPDX/Git limits](../../.agents/rules/git-safety.md); [locale policy](../../.agents/rules/content-and-localization.md) owns locale scope. During review assess the reachable regression and evidence; a missing new file is not itself a defect and a review does not authorize execution.

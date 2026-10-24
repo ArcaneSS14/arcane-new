@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Csharp Style"
-  short_description: "Write repository-consistent C# with clear APIs, nullability, and ownership."
+  short_description: "Use current C# conventions and verified APIs"
   default_prompt: "Use $csharp-style when adding or reviewing C# APIs."

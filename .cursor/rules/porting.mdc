@@ -1,10 +1,7 @@
 ---
 description: Arcane guidance adapter for feature-family ports
-globs: Content.*/**/*,Resources/**/*,Modules/Arcane/**/*
+globs: "Content.*/**/*,Resources/**/*,Modules/Arcane/**/*"
 alwaysApply: false
 ---
-For a port, read the `porting`, `upstream-maintenance`, `module-architecture`, and `testing` skills plus `.agents/rules/third-party-materials.md` and `.agents/rules/port-destination.md`. Build a source PR family manifest and adapt integration edits to current Goob Reforged code.
 
-Destination: use the root `Content.Arcane.*` projects and existing `_Arcane` resource paths by default. Apply the provenance-based exceptions in `.agents/rules/port-destination.md` for confirmed TraumaStation additions and Trauma-side revert restorations. Source markers do not travel; mark only inherited/base integration edits as required by the canonical marker rules.
-
-Add English localization when required. Add or edit Russian localization only when the user explicitly requests it. Preserve asset licensing and attribution.
+Only for an actual port/restoration use [porting](../../.agents/skills/porting/SKILL.md), [history](../../.agents/rules/change-history-analysis.md), [destination](../../.agents/rules/port-destination.md) and [third-party rights](../../.agents/rules/third-party-materials.md). Adapt the selected source to current destination declarations and the provenance exceptions; add other domain routes only when changed. In review evaluate the source-family evidence and contract, not an unrequested port implementation or test run.

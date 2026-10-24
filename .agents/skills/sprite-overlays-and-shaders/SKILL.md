@@ -23,4 +23,8 @@ Do not move gameplay checks or hidden state into client visual code. Visuals may
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test late join, reconnect, component add/remove, entity deletion, map transfer, multiple simultaneous effects, resolution changes, and missing resource fallback.
+
+Trace component start → state refresh → repeated application → removal/deletion. Every overlay, child visual, shader instance or render target needs an owner/cleanup point; prevent duplicate allocation/subscriptions. Select directions/viewport and visual checks for the changed effect; compilation is not visual evidence. Sprite conflicts go to the user under [merge policy](../../rules/merge-conflict-resolution.md).

@@ -23,4 +23,8 @@ Use BUI when the interaction is clearly owned by an entity and normal range/life
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Choose focused checks for the changed behavior. For lifecycle or message-flow changes, cover the relevant open/update/rejection/close/disconnect/stale-session cases; do not require every case for an unrelated presentation-only edit. Check affected localization and constrained text layout when those surfaces change. Follow root `AGENTS.md` and `.agents/skills/testing/references/testing-matrix.md` for verification scope.
+
+View layout and culture handling belong to [XAML](../xaml-ui/SKILL.md) and [localization-in-code](../localization-in-code/SKILL.md), not a second session policy.

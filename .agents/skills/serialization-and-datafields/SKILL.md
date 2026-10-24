@@ -1,24 +1,14 @@
 ---
 name: serialization-and-datafields
-description: Design prototype DataFields, generated component state, custom serializers, and compatibility-safe data contracts.
+description: Maintain serialized fields, defaults, collection merge rules and custom formats for prototypes, maps and stored data. Use networking for transport and component state delivery.
 ---
 
-Serialized data is a compatibility surface shared by prototypes, maps, network state, configuration, or saves.
+# Serialized fields and compatibility
 
-## Prototype data
+Identify the actual loader/format: prototypes, maps, save/config state or another serializer. DataFields are not limited to designer tuning; expose values the actual format needs, with valid defaults, meaningful nullability, typed IDs and appropriate bounds. Keep service references, unintended caches and derived runtime state out of persisted data.
 
-Use `[DataField]` only for values content authors should configure. Choose defaults that produce a valid component before prototype application. Prefer typed prototype IDs, time spans, flags, and structured data over ad hoc strings.
+Choose existing serializers and project validation patterns before adding a custom serializer. Establish field name/type compatibility with existing consumers/data; renames/removals may need migration or aliases. Collections have explicit merge/replacement semantics, and mutable defaults must not be accidentally shared between instances.
 
-Do not expose runtime caches, service references, or derived state as prototype fields. Validate required fields at prototype load or component startup using existing project patterns.
+Check required/default fields at the correct load/startup point. For a custom format exercise round-trip and invalid inputs that distinguish its contract. Select checks under [verification](../../rules/verification.md).
 
-## Network state
-
-Use the current generated state attributes for fields required by clients. Keep hidden values server-only. After authoritative mutation, dirty the component or generated field.
-
-## Compatibility
-
-Renaming a field can break maps and prototypes. Removing a field can break older content. Search YAML, maps, and downstream modules before changing names or types. Add migration or compatibility handling when the data persists.
-
-## Custom serialization
-
-Write a custom serializer only when standard serializers and structured data cannot express the format. Include round-trip and invalid-input tests.
+Component registration/state ownership belongs to [ecs-components](../ecs-components/SKILL.md); generated/manual transport, entity conversion and dirtying belong to [networking](../networking/SKILL.md). Avoid a second network-state procedure here.

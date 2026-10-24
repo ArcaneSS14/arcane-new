@@ -3,25 +3,10 @@ name: collections-and-datasets
 description: Maintain weighted collections, datasets, groups, selectors, and random content tables.
 ---
 
-Collections are data-driven selection APIs. Preserve their statistical and compatibility behavior.
+# Content collections
 
-## Workflow
+Find the prototype type and affected consumer. Determine whether entries are ordered, unique, weighted, nested or filtered; not every dataset is random. Preserve selection/order semantics, stable IDs, exact locale references and intended duplicates/weights.
 
-1. Find the prototype type and every consumer.
-2. Determine whether entries are weighted, unique, ordered, nested, or filtered.
-3. Verify all referenced prototype IDs or locale keys.
-4. Keep empty and single-entry behavior defined.
-5. Review duplicate entries and unintended weight changes.
-6. Add deterministic tests where selection logic is custom.
+Define empty/single-entry fallback and nested recursion behavior. Check a balance-sensitive weight change against normalization/consumer assumptions. Use [randomness-and-determinism](../randomness-and-determinism/SKILL.md) for authority, seed and replay rather than duplicating that contract.
 
-## Randomness
-
-Use the owning server or shared random service according to authority and prediction requirements. Do not introduce client-selected outcomes for protected gameplay. Predicted random choices require a deterministic source or authoritative correction.
-
-## Localization
-
-Datasets containing player-visible strings should resolve through FTL. Do not embed raw display text in code when a dataset prototype is appropriate.
-
-## Verification
-
-Check normalization assumptions, fallback behavior, nested collection recursion, invalid references, and distribution-sensitive balance changes.
+Player-visible entries use [localization](../localization/SKILL.md). Select reference/schema checks or deterministic tests for custom selection logic under [verification](../../rules/verification.md); a data-only tuning change need not add new test infrastructure.

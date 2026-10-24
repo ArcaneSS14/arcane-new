@@ -1,5 +1,5 @@
 
 interface:
   display_name: "Security And Validation"
-  short_description: "Review trust boundaries, validation, permissions, abuse resistance, and secrets."
+  short_description: "Enforce trust, safe rejection and data limits"
   default_prompt: "Use $security-and-validation for protected or externally influenced behavior."

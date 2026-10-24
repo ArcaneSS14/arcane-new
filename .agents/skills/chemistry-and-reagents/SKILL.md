@@ -27,4 +27,8 @@ Keep reagent names, descriptions, alerts, and machine controls localized. Do not
 
 ## Verification
 
+Select only cases exercising the changed contract under [verification](../../rules/verification.md); the following list is conditional, not a required full suite.
+
 Test exact quantities, boundary volumes, reaction order, catalysts, temperature conditions, repeated metabolism, transfer cancellation, and YAML validation.
+
+Re-resolve source/destination and current solution before transferring. Bound positive quantity, define partial transfer/capacity behavior, process reactions through the existing solution API, and refresh affected UI. Do not apply a quantity calculated only from stale client state.
