@@ -23,10 +23,10 @@ Record `git status --short --branch`, the current branch, and remotes. Record ex
 
 ### Source ledger
 
-Claim: The Arcane conflict-priority rule for marked and unmarked lines is repository-specific and governs conflict resolution here.
+Claim: Arcane conflict resolution is semantic: compare base, current, incoming, confirmed behavior, and intent; markers record provenance rather than an automatic winner.
 Source: Root `AGENTS.md` and `.agents/rules/merge-conflict-resolution.md`.
 Source type: Arcane
-Checked against branch: `66cf1fb0a7`
+Checked against branch: `83d6c121f978aee06a4fbd70cf21ce968d0f8bc8`
 Volatility: branch-bound
 Recheck trigger: Changing repository conflict-resolution or edit-marker policy.
 
@@ -36,7 +36,7 @@ Correct: stage only reviewed task paths before a requested commit. Prohibited: r
 
 ## Выбор подхода
 
-Keep work unstaged while investigating. Stage the smallest reviewed task slice only when a commit is requested. For a conflict, read all three versions and make the narrow semantic resolution; ask rather than selecting a side when the priority rule does not resolve intent.
+Keep work unstaged while investigating. Stage the smallest reviewed task slice only when a commit is requested. For a conflict, compare base, current, incoming, confirmed behavior, and intent before making the narrow semantic resolution; ask rather than selecting a side when equivalence is partial or intent is unclear.
 
 ## Антипаттерны
 

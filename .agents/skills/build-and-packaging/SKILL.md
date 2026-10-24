@@ -19,17 +19,17 @@ Determine owner, dependency direction, target framework, generated-code/XAML nee
 - Do not introduce a base-to-module reference or make Shared depend on Client/Server. Do not add integration-test projects to `module.yml`.
 - Inherited workflow/project edits use the current repository marker when the format supports it; owner-local module/underscore paths do not receive redundant markers.
 - Copy commands and flags from current repository workflows. Preserve actual output paths, artifacts, test arguments, and submodule assumptions; do not import commands from another fork.
-- Repository configurations are `Debug`, `DebugOpt`, `Tools`, and `Release`. CI uses `DebugOpt`, tests produced binaries, and separately builds `Release` without `/p:WarningsAsErrors=` so that Release warnings are errors. `DOTNET_gcServer=1` belongs to the integration-test path. Reproduce these only for a requested CI-equivalent gate.
+- Repository configurations are `Debug`, `DebugOpt`, `Tools`, and `Release`. `MSBuild/Content.props` sets `TreatWarningsAsErrors=true` for `Release`, except `CS0618`, `CS0672`, `CS0612`, `CS1062`, `CS1064`, `NU1900`, `NU1901`, `NU1902`, `NU1903`, and `NU1904` in `WarningsNotAsErrors`. The build-and-test workflow uses `DebugOpt`, tests produced binaries, and separately builds `Release`; its YAML-linter job additionally passes `/p:WarningsAsErrors=` to that job's Release build. Treat that empty property as workflow-specific evidence, not a general override claim. `DOTNET_gcServer=1` belongs to the integration-test path. Reproduce these only for a requested CI-equivalent gate.
 - Do not run `git submodule update` without explicit user request. The engine boundary is closed by default; if dependencies/submodule are unavailable, report the blocker rather than initializing them.
 
 ### Source ledger
 
-Claim: CI uses `DebugOpt`, produced binaries, a separate `Release` build, and `DOTNET_gcServer=1` on integration tests.
-Source: Current repository workflows and build configuration.
+Claim: Release warning treatment comes from `MSBuild/Content.props`; the YAML-linter's `/p:WarningsAsErrors=` is specific to its own Release build.
+Source: `MSBuild/Content.props`, `build-test-debug.yml`, and `yaml-linter.yml`.
 Source type: Arcane
-Checked against branch: `66cf1fb0a7`
+Checked against branch: `83d6c121f978aee06a4fbd70cf21ce968d0f8bc8`
 Volatility: branch-bound
-Recheck trigger: Changing workflow, build configuration, or integration-test invocation.
+Recheck trigger: Changing warning properties, workflow build commands, or integration-test invocation.
 
 ### Minimal examples
 

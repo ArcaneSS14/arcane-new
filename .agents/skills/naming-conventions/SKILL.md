@@ -36,7 +36,7 @@ Choose stable owner-prefixed identifiers for compatibility surfaces and existing
 
 ## Проверка
 
-For a rename, use targeted consumer search and affected build/resource validation only when that compatibility surface changed; do not run Release/global lint by default.
+For a C# symbol rename, use targeted consumer search and build the affected owner project. Run resource/localization validation only when resources, FTL, prototype references, or their consumer contract changed; do not run Release/global lint by default.
 
 ## References
 

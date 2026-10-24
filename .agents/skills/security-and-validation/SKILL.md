@@ -27,7 +27,7 @@ Correct: recompute protected input/result at authoritative owner. Prohibited: us
 
 ## Выбор подхода
 
-Place validation at the authoritative owner and reuse its public API. Use owner-local rate limiting only for demonstrated repeated abuse; separate safe player feedback from operator diagnostics.
+Place validation at the authoritative owner and reuse its public API. Add owner-local rate limiting for a resource-intensive authoritative handler when its threat model identifies a client/network entry point, protected resource, expected cost, limiter scope, and effect on legitimate traffic; reproduced abuse is evidence, not a prerequisite. Do not add a limiter to every public API. Separate safe player feedback from operator diagnostics.
 
 ## Антипаттерны
 

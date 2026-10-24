@@ -7,16 +7,13 @@ description: Implement actions, cooldowns, DoAfter flows, interruption, cancella
 ## Когда применять
 
 Use actions for reusable abilities and DoAfter for interruptible timed completion.
-Use actions for reusable abilities and DoAfter for interruptible timed completion.
 
 ## До изменения
 
 Find the source (prototype, component startup, equipment, role, or runtime), owner system, Shared identity/event contract when prediction or UI needs it, target, and grant/transfer/removal lifecycle.
-Find the source (prototype, component startup, equipment, role, or runtime), owner system, Shared identity/event contract when prediction or UI needs it, target, and grant/transfer/removal lifecycle.
 
 ## Правила и границы
 
-Validate user, target, range, access, cooldown, and current state on the server. Start exactly one action/DoAfter; apply resources, cooldowns, and persistent effects at the correct authoritative point; revalidate on completion and remove or disable the action when its source disappears.
 Validate user, target, range, access, cooldown, and current state on the server. Start exactly one action/DoAfter; apply resources, cooldowns, and persistent effects at the correct authoritative point; revalidate on completion and remove or disable the action when its source disappears.
 
 ### Minimal examples
@@ -26,16 +23,13 @@ Correct: start one owner DoAfter and revalidate on completion. Prohibited: commi
 ## Выбор подхода
 
 Define interruption for movement, damage, hand change, target movement/change, target deletion, range loss, incapacitation, and duplicate requests. Do not commit valuable state before completion without explicit rollback. Predict only correctable animation, popup, or sound and prevent duplicate feedback on server confirm/reject.
-Define interruption for movement, damage, hand change, target movement/change, target deletion, range loss, incapacitation, and duplicate requests. Do not commit valuable state before completion without explicit rollback. Predict only correctable animation, popup, or sound and prevent duplicate feedback on server confirm/reject.
 
 ## Антипаттерны
 
 Do not commit protected outcome before completion or duplicate predicted/server feedback.
-Do not commit protected outcome before completion or duplicate predicted/server feedback.
 
 ## Проверка
 
-Cover success, every interrupt, deletion, disconnect, cooldown, source removal and latency rejection.
 Cover success, every interrupt, deletion, disconnect, cooldown, source removal and latency rejection.
 
 ## References
