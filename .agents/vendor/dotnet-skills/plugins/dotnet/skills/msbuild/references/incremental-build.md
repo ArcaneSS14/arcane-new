@@ -171,8 +171,183 @@ Visual Studio's Fast Up-to-Date Check (FUTDC) is distinct from MSBuild's
 
 - **Fast checks:** the project system examines known inputs, outputs, copy items,
   and timestamps without a full build.
-- **Custom work:** custom …14879 tokens truncated…meterization overrides inside compiled queries — EF Core 9](https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-9.0/breaking-changes)
-- [Efficient updating (ExecuteUpdate/ExecuteDelete) — EF Core](https://learn.microsoft.com/en-us/ef/core/performance/efficient-updating)
-- [Single vs. split queries](https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries)
-- [Pagination](https://learn.microsoft.com/en-us/ef/core/querying/pagination)
-- [Indexes](https://learn.microsoft.com/en-us/ef/core/modeling/indexes)
+- **Custom work:** custom targets, generated files, or nonstandard/dynamic items
+  may not be visible to that check.
+- **Diagnostic comparison:** temporarily force MSBuild checks when investigating
+  a Visual Studio-only discrepancy:
+
+  ```xml
+  <PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+  ```
+
+  Do not leave FUTDC disabled as a default performance fix.
+- **Logging:** in Visual Studio's **Tools > Options > Projects and Solutions >
+  SDK-Style Projects**, enable verbose up-to-date-check logging and inspect the
+  Output window for the actual file/reason.
+- **Common cases:** unregistered custom build actions, items added only during
+  target execution, and changed `Content`/`None` copy items. Diagnose FUTDC's
+  decision separately from MSBuild target skip reasons.
+
+## Making Custom Targets Incremental
+
+The following example combines C# templates under `config\$(ConfigFlavor)` into a
+generated compilation input. The small state file tracks both the selected flavor
+and input membership; a plain timestamp list would miss some changes to either.
+Adapt the generator step and declared dependencies to the repository's real tool.
+
+```xml
+<PropertyGroup>
+  <ConfigFlavor Condition="'$(ConfigFlavor)' == ''">Default</ConfigFlavor>
+</PropertyGroup>
+<ItemGroup>
+  <ConfigInput Include="config\$(ConfigFlavor)\*.cs.in" />
+</ItemGroup>
+
+<Target Name="WriteConfigInputs">
+  <MakeDir Directories="$(IntermediateOutputPath)" />
+  <WriteLinesToFile File="$(IntermediateOutputPath)config.inputs"
+                    Lines="Flavor=$(ConfigFlavor);@(ConfigInput->'%(FullPath)')"
+                    Overwrite="true"
+                    WriteOnlyWhenDifferent="true" />
+  <ItemGroup>
+    <FileWrites Include="$(IntermediateOutputPath)config.inputs" />
+  </ItemGroup>
+</Target>
+
+<Target Name="GenerateConfig"
+        DependsOnTargets="WriteConfigInputs"
+        Inputs="$(MSBuildProjectFullPath);@(ConfigInput);$(IntermediateOutputPath)config.inputs"
+        Outputs="$(IntermediateOutputPath)config.generated.cs"
+        BeforeTargets="CoreCompile">
+  <ReadLinesFromFile File="%(ConfigInput.Identity)"
+                     Condition="'@(ConfigInput)' != ''">
+    <Output TaskParameter="Lines" ItemName="_ConfigLines" />
+  </ReadLinesFromFile>
+  <WriteLinesToFile File="$(IntermediateOutputPath)config.generated.cs"
+                    Lines="@(_ConfigLines)"
+                    Overwrite="true" />
+  <ItemGroup>
+    <FileWrites Include="$(IntermediateOutputPath)config.generated.cs" />
+    <Compile Include="$(IntermediateOutputPath)config.generated.cs" />
+  </ItemGroup>
+</Target>
+```
+
+**Key points:**
+
+- The project file, actual input files, and state file participate in freshness.
+  Also declare imported generator logic, tool binaries, templates, and relevant
+  settings when they affect the real generator.
+- `WriteOnlyWhenDifferent` prevents the **state file** from causing churn on every
+  build. Include every relevant property/input-set value in an unambiguous,
+  stable representation.
+- Generated output is overwritten when regeneration is necessary. If a real
+  generator preserves output timestamps for identical content, use appropriate
+  completion-state tracking so newer inputs do not make it execute forever;
+  still detect missing real outputs.
+- `IntermediateOutputPath` should isolate configurations/TFMs/RIDs; inspect custom
+  overrides. `FileWrites`, not the directory name, supplies clean registration.
+- `BeforeTargets="CoreCompile"` makes the file available before compilation.
+  `Compile` inclusion and `FileWrites` registration can be inferred on a skip.
+- Do not duplicate the generated item or rely on an evaluation-time glob to find
+  a file that does not yet exist.
+- For per-input generated outputs, detect removal and clean obsolete **owned**
+  outputs as well as updating the input-set state.
+
+### Common Mistakes to Avoid
+
+```xml
+<!-- Expensive generation without file-based freshness checks -->
+<Target Name="BadTarget" BeforeTargets="CoreCompile">
+  <Exec Command="generate-code.exe" />
+</Target>
+
+<!-- Volatile output path: the next invocation cannot reuse it -->
+<Target Name="BadTarget2"
+        Inputs="@(Compile)"
+        Outputs="$(OutputPath)gen_$([System.DateTime]::Now.Ticks).cs">
+  <Exec Command="generate-code.exe" />
+</Target>
+
+<!-- Stable-output pattern; declare the real tool/configuration inputs too -->
+<Target Name="GoodTarget"
+        Inputs="$(MSBuildProjectFullPath);@(GeneratorInput)"
+        Outputs="$(IntermediateOutputPath)generated.cs"
+        BeforeTargets="CoreCompile">
+  <Exec Command="generate-code.exe -o &quot;$(IntermediateOutputPath)generated.cs&quot;" />
+  <ItemGroup>
+    <FileWrites Include="$(IntermediateOutputPath)generated.cs" />
+    <Compile Include="$(IntermediateOutputPath)generated.cs" />
+  </ItemGroup>
+</Target>
+```
+
+These external-tool patterns assume the actual generator exists and produces the
+declared file. Add property/input-set tracking when needed, as in the full example.
+Do not include generated outputs in their own input set.
+
+## Performance Summary and Preprocess
+
+- **`-clp:PerformanceSummary`:** identifies cumulative project/target/task costs:
+
+  ```powershell
+  dotnet build -clp:PerformanceSummary
+  ```
+
+  Compare the relevant second-build work; inclusive durations are not exclusive
+  CPU time.
+- **`-pp:preprocess.xml`:** expands imports to locate definitions and their origin:
+
+  ```powershell
+  dotnet msbuild .\MyProject.csproj "-pp:preprocess.xml"
+  ```
+
+  It is not a dump of fully evaluated property/item values. Find the definitions
+  of `Inputs`, `Outputs`, and imports, then inspect the matching build instance.
+- Use the summary for what ran and `/pp` for where it was defined, together with
+  replayed skip reasons.
+
+## Common Fixes
+
+- **Declare meaningful Inputs/Outputs** for repeatable file-producing work,
+  including missing-output recovery and all real dependencies.
+- **Use stable intermediate paths** while preserving configuration/TFM/RID
+  isolation and avoiding output collisions.
+- **Register owned generated files in FileWrites**; validate the applicable
+  scoped Clean behavior rather than assuming every intermediate file is tracked.
+- **Avoid unnecessary volatile data.** If per-build timestamps are required,
+  preserve that contract and isolate their downstream impact. For Git revision
+  state, a project-file timestamp or `.git\HEAD` alone is insufficient: branch
+  refs can change without either changing. Use the repository's reliable state
+  mechanism or a cheap probe that writes only changed content; report probe
+  failures instead of freezing a stale value.
+- **Use Returns for return-only item collections.** These are alternative
+  definitions, not two targets to install together:
+
+  ```xml
+  <!-- Outputs also participates in file-based freshness -->
+  <Target Name="GetFiles" Outputs="@(DiscoveredFiles)" />
+
+  <!-- Returns supplies items without a file-based freshness contract -->
+  <Target Name="GetFiles" Returns="@(DiscoveredFiles)" />
+  ```
+
+- **Choose copy metadata deliberately** using
+  [CopyToOutputDirectory modes](copy-to-output-directory.md), especially when
+  consumers mutate copied files.
+
+## Validation
+
+Compare equivalent ordinary builds using the
+[baseline](build-perf-baseline.md). In an authorized disposable/scoped workspace,
+verify: a no-change second build; input modification, addition, and removal;
+property/template/tool changes; deletion of a real generated output; downstream
+compilation and required diagnostics; relevant configuration/TFM/RID variants;
+and approved Clean behavior. For copied content, include destination mutation.
+
+Report the target/project instance, exact reason/file evidence, the correction,
+before/after timings, and checks actually completed. A faster build that misses
+required regeneration, leaves stale outputs, or changes an agreed metadata
+contract is not a successful incremental-build fix.
