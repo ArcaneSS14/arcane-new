@@ -28,3 +28,7 @@ Account for component startup, shutdown, map initialization, entity deletion, an
 ## Performance
 
 Avoid allocations, LINQ, repeated prototype lookups, and broad queries in `Update()` or frequent events. Measure before redesigning a hot path.
+
+## References
+
+- [System event patterns](references/system-event-patterns.md): Read this when designing an event handler, reusable action API, validation method, or execution path.

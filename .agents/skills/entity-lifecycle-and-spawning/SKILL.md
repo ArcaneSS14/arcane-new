@@ -35,3 +35,7 @@ Use deferred deletion when dispatch, iteration, or physics callbacks make immedi
 ## Verification
 
 Test map and grid placement, containers, late initialization, replacement, deletion during events, map transfer, reconnect, and cleanup of dependent state.
+
+## References
+
+- [Replacement checklist](references/replacement-checklist.md): Read this when replacing, transforming, respawning, or transferring an entity while preserving selected state.

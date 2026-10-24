@@ -22,3 +22,7 @@ For routine changes, follow root `AGENTS.md` and validate only the changed proje
 CI links `bin/Content.IntegrationTests/runtimes` into `bin/Content.Tests/` before running unit tests. Reproduce that only when a requested local test run fails on a missing native runtime rather than assuming the test itself is broken.
 
 Run module integration projects, packaging platforms, and specialized validators only when they cover changed behavior or the requested CI/package target. Do not run every module suite or packaging platform by default.
+
+## References
+
+- [Project change checklist](references/project-change-checklist.md): Read this when adding or changing a project, solution entry, build target, generated-code setting, or packaging input.

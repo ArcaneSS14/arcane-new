@@ -30,3 +30,7 @@ Central package versions live in `Directory.Packages.props`; do not assume an ol
 - EF tools now require `--framework` for multi-targeted projects.
 
 Because existing servers keep their old schema, a migration that is correct for a fresh database can still fail on upgrade. Review the generated `Up`/`Down` operations and the snapshot, and confirm SQLite and PostgreSQL outputs separately.
+
+## References
+
+- [Migration workflow](references/migration-workflow.md): Read this when changing a persistent model, schema, relationship, index, or migration.

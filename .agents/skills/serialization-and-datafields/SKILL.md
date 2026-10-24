@@ -22,3 +22,8 @@ Renaming a field can break maps and prototypes. Removing a field can break older
 ## Custom serialization
 
 Write a custom serializer only when standard serializers and structured data cannot express the format. Include round-trip and invalid-input tests.
+
+## References
+
+- [DataField patterns](references/datafield-patterns.md): Read this when adding or changing a DataField, serialized prototype value, default, collection, or compatibility-sensitive field.
+- [Network serialization](references/network-serialization.md): Read this when designing or changing a network payload, component state, entity reference conversion, or replicated message compatibility.

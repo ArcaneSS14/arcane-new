@@ -24,4 +24,9 @@ XAML is client presentation. Keep authority and protected validation out of code
 
 Verify owner paths and edit-marker requirements before changing inherited files. Do not add markers to owner-local module paths. For code-behind boundaries see `.agents/rules/architecture-and-ownership.md`; for BUI contracts and message flow see `.agents/skills/bound-user-interface/SKILL.md`.
 
-Choose the smallest build or UI behavior check that covers the changed surface and follow root `AGENTS.md` and `.agents/skills/testing/references/testing-matrix.md`. Documentation-only changes need diff checks; do not run a full build or every integration test by default.
+Choose the smallest build or UI behavior check that covers the changed surface and follow root `AGENTS.md`. Documentation-only changes need diff checks; do not run a full build or every integration test by default.
+
+## References
+
+- [XAML structure](references/xaml-structure.md): Read this when designing or reviewing XAML layout, named controls, code-behind ownership, event subscriptions, or resource URIs.
+- [Testing matrix](../testing/references/testing-matrix.md): Read this when selecting XAML or client UI verification.

@@ -43,3 +43,8 @@ git diff --check
 ```
 
 Search all references only when the renamed identifier is a public compatibility surface or the task requires finding every reference. For prototype or locale changes, use a targeted validator when available; follow root `AGENTS.md` for verification scope instead of automatically running a Release build or global YAML linter.
+
+## References
+
+- [C# and event naming](references/csharp-and-event-naming.md): Read this when naming a C# method, event, action, or API whose mutation and cancellation semantics must be clear.
+- [Resource and locale naming](references/resource-and-locale-naming.md): Read this when naming an FTL key, resource path, sprite state, audio collection, or other content identifier.

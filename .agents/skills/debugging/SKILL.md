@@ -18,3 +18,7 @@ For localization bugs, inspect English file discovery, keys, variables, selector
 Apply repository markers only to inherited files and never to owner-local module or underscore paths.
 
 After reproducing the issue, build only the affected project and use a focused regression test when verification is requested and the owner can cover the failure. Run an integration test only when it exercises the broken cross-layer path. Follow root `AGENTS.md`; do not restore dependencies or run every affected owner’s full suite by default.
+
+## References
+
+- [Debugging workflow](references/debugging-workflow.md): Read this when tracing a runtime failure, desync, UI issue, or prototype-load error.

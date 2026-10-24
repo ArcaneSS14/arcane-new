@@ -42,3 +42,8 @@ English localization is structurally canonical and required by default. Do not a
 Build the smallest affected Arcane project and run the existing owner test project when it covers the port. Run targeted resource validation for resource changes. Build a base project too when the port edited a base file. Do not create new test infrastructure for a port.
 
 Report omitted source behavior, unavailable checks, and the count of base-path files edited.
+
+## References
+
+- [Porting workflow](references/porting-workflow.md): Read this when porting a feature family, including follow-up fixes, assets, dependencies, and inherited integration changes.
+- [Source PR family manifest](references/source-pr-family-manifest.md): Read this when recording provenance and scope for a port, cherry-pick, or feature-family migration.

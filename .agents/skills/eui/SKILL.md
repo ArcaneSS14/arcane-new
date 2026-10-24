@@ -23,4 +23,8 @@ Use BUI when the interaction is clearly owned by an entity and normal range/life
 
 ## Verification
 
-Choose focused checks for the changed behavior. For lifecycle or message-flow changes, cover the relevant open/update/rejection/close/disconnect/stale-session cases; do not require every case for an unrelated presentation-only edit. Check affected localization and constrained text layout when those surfaces change. Follow root `AGENTS.md` and `.agents/skills/testing/references/testing-matrix.md` for verification scope.
+Choose focused checks for the changed behavior. For lifecycle or message-flow changes, cover the relevant open/update/rejection/close/disconnect/stale-session cases; do not require every case for an unrelated presentation-only edit. Check affected localization and constrained text layout when those surfaces change. Follow root `AGENTS.md` for verification scope.
+
+## References
+
+- [Testing matrix](../testing/references/testing-matrix.md): Read this when selecting EUI lifecycle, message-flow, rejection, disconnect, or stale-session coverage.

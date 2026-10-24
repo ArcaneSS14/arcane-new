@@ -16,3 +16,7 @@ Do not add repository edit markers inside owner-local module or underscore paths
 Verify RSI metadata, dimensions, states, frame data, case-sensitive paths, audio collections, formats, volume, prediction, and source lifetime.
 
 Use the exact resource paths and specialized validator commands from the current owner workflow. Validate only changed resource types and directly affected paths. Follow root `AGENTS.md`; do not recursively inventory all resources, restore dependencies, or run unrelated builds and validators by default. Run `git diff --check`.
+
+## References
+
+- [Asset validation](references/asset-validation.md): Read this when changing an RSI, audio, map asset, attribution, source provenance, or resource path.

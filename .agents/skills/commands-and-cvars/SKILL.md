@@ -34,7 +34,6 @@ Decide whether the value is startup-only or supports runtime changes. Validate b
 Subscribe only when live changes are supported. For an `EntitySystem`, prefer `Subs.CVar` so the subscription is removed with system lifecycle; use the immediate callback option when initialization must consume the already-loaded value. For other owners, pair subscription and unsubscription explicitly. Persisted client settings must survive restart and handle removed or invalid values safely.
 
 CVar and command names are operational APIs. Renames require migration or compatibility handling.
-Use `.agents/skills/commands-and-cvars/references/cvar-checklist.md` when adding or changing a CVar.
 
 ## Verification
 
@@ -42,3 +41,7 @@ Build only the affected project. When verification is requested, select focused 
 
 - Commands: cover parsing, missing/extra arguments, invalid and boundary values, permissions, and user-facing output when affected.
 - CVars: cover default/override behavior, runtime updates, replication, archived persistence, or invalid-value fallback only where the change affects those contracts.
+
+## References
+
+- [CVar change checklist](references/cvar-checklist.md): Read this when adding, renaming, or changing a CVar's type, default, flags, or runtime behavior.

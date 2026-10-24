@@ -28,3 +28,7 @@ Remove spawned entities, timers, subscriptions, overlays, temporary CVars, and r
 ## Verification
 
 Test activation, late join, no eligible players, disconnect, participant deletion, multiple simultaneous rules, early round end, normal round end, and restart.
+
+## References
+
+- [Round lifecycle](references/round-lifecycle.md): Read this when changing game-rule selection, activation, player assignment, end conditions, cleanup, or restart behavior.

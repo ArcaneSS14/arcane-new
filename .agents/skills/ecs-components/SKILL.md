@@ -27,3 +27,7 @@ A networked component belongs in Shared. Do not replicate hidden server state. A
 - mutable collections without a clear serialization and dirtying strategy;
 - client-only types in Shared;
 - using `EntityUid.Invalid` instead of nullable references when the surrounding API uses nullability.
+
+## References
+
+- [Component patterns](references/component-patterns.md): Read this when designing component fields, prototype configuration, entity references, or replicated runtime state.

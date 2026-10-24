@@ -19,3 +19,7 @@ When Russian localization is requested, place entries consistently with the Engl
 Prototype IDs are machine identifiers and must not leak as display text. When Russian is requested, use natural wording and do not use `THE(...)` wrappers.
 
 Verify the affected English keys, variables, attributes, selectors, and final diff. Run a targeted validator only when one exists and covers the changed surface; do not require restore, a Release build, or global YAML lint for an FTL-only change.
+
+## References
+
+- [Prototype localization checklist](references/prototype-locale-checklist.md): Read this when adding or changing player-visible prototype text, inherited prototype text, or prototype-driven UI labels.

@@ -12,3 +12,7 @@ Player-facing feedback generated from replicated state requires `en-US` localiza
 Verify repository ownership and edit-marker requirements before modifying inherited files.
 
 Build the affected project and select a focused test for the changed serialization, conversion, authority, dirtying, or prediction behavior when verification is requested. Use integration tests when they cover the actual network path. Follow root `AGENTS.md`; do not restore dependencies or run integration suites for every module by default.
+
+## References
+
+- [Networking and dirtying](references/networking-and-dirtying.md): Read this when adding or changing a replicated field, component state, dirtying behavior, network payload, or NetEntity conversion.

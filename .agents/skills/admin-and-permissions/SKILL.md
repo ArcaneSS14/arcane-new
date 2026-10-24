@@ -27,3 +27,7 @@ Log actor, operation, target, important parameters, and outcome for high-impact 
 ## Verification
 
 Test authorized and unauthorized users, missing sessions, disconnected targets, repeated execution, malformed arguments, and runtime permission changes.
+
+## References
+
+- [Permission review](references/permission-review.md): Read this for a privileged command, admin UI, mutating admin operation, or permission-check change.

@@ -33,3 +33,7 @@ Keep player alerts, icons, sounds, and popups synchronized with authoritative st
 ## Verification
 
 Test apply, refresh, stack, expire, remove, immunity, deletion, reconnect, death/critical state, and interactions with existing modifiers.
+
+## References
+
+- [Effect lifecycle](references/effect-lifecycle.md): Read this when adding or changing an effect's application, stack, timer, cleanup, or transfer behavior.

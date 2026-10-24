@@ -14,3 +14,7 @@ Predicted player feedback requires `en-US` localization; add Russian only when e
 Verify repository ownership and edit-marker requirements before changing inherited files.
 
 Build the affected project and choose focused tests for prediction behavior when verification is requested. Use integration coverage when it exercises latency, rejection, repeated input, observers, deletion, or reconciliation. Do not run all root and module integration suites by default; follow root `AGENTS.md`.
+
+## References
+
+- [Predicted feedback](references/predicted-feedback.md): Read this when adding or reviewing a predicted popup, sound, spawn, effect, cooldown, UI update, or reconciliation path.

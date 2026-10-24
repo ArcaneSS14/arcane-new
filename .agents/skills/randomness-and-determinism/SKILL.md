@@ -31,3 +31,7 @@ For tests and debugging, control the random source or inject deterministic input
 ## Verification
 
 Test empty, single-entry, weighted boundary, repeated invocation, rejected requests, deterministic test seeds, and authoritative reconciliation.
+
+## References
+
+- [Random review](references/random-review.md): Read this when adding or changing a random outcome, weighted selection, retry path, persisted result, or predicted cosmetic choice.

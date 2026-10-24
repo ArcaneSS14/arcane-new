@@ -16,3 +16,7 @@ Use controlled simulation time and deterministic randomness. Avoid wall-clock sl
 For localization behavior, test the requested locale contract. Require Russian parity, ordering, and culture-switch behavior only when Russian localization is in scope.
 
 Run the focused test that covers the authored contract and build only its affected project when needed. Do not require a complete root or module test suite by default; expand to a full owner suite only when requested or when no narrower test can establish the result. Report exact filters and arguments.
+
+## References
+
+- [Regression test design](references/regression-test-design.md): Read this when designing a regression test for a defect with boundary, permission, deletion, cancellation, reconnect, stale-state, or provider-specific risk.

@@ -33,3 +33,7 @@ The server owns machine state, inventory, costs, output, and access. BUI message
 ## Verification
 
 Test construction, deconstruction, map spawn, power loss, anchoring, part replacement, damage, UI concurrency, and YAML references.
+
+## References
+
+- [Machine lifecycle](references/machine-lifecycle.md): Read this when changing a machine's spawn, anchoring, power, part, damage, deconstruction, or UI lifecycle.

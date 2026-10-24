@@ -21,3 +21,7 @@ Review:
 Prefer established ECS queries, cached dependencies, reused buffers, event-driven updates, and narrower dirtying. Preserve behavior, prediction, and lifecycle safety.
 
 Add a benchmark, profiler evidence, targeted test, or at least a reasoned before/after operation count when practical.
+
+## References
+
+- [Common performance pitfalls](references/common-performance-pitfalls.md): Read this when changing a hot update path, query, allocation pattern, replicated state frequency, or client visual update loop.

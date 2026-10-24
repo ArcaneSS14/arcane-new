@@ -12,3 +12,7 @@ Keep payloads minimal and represent requested intent rather than a claimed resul
 For UI flows, keep XAML and code-behind in Client, serializable cross-boundary contracts in Shared, and authoritative validation/mutation in Server. A BUI/EUI adapter connects the window to the state and message flow; it should not become a second gameplay system.
 
 Before inherited-file changes, verify ownership, assembly boundaries, project references, and marker requirements. Choose verification for the changed behavior and follow root `AGENTS.md`; do not restore, build the full solution, or run every integration test by default.
+
+## References
+
+- [Trust boundary](references/trust-boundary.md): Read this when adding or reviewing a client-originated message, request validation, or replicated response that exposes authority-sensitive state.

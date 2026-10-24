@@ -28,3 +28,7 @@ Send only required data. Avoid player-identifying or private content unless the 
 ## Verification
 
 Test timeout, cancellation, invalid certificate or endpoint, non-success status, malformed response, oversized response, duplicate callback, stale result, and service outage.
+
+## References
+
+- [Service failure matrix](references/service-failure-matrix.md): Read this when adding or changing an HTTP, webhook, external-process, or other remote-service integration.

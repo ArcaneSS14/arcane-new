@@ -28,3 +28,7 @@ Treat rich text, markup, paths, URLs, and command fragments as hostile. Use stru
 ## Verification commands
 
 Build only the affected project. When verification is requested, choose focused tests for the changed validation boundary (such as BUI, command authority, stale entities, or client/server behavior). Do not restore dependencies or run complete test suites by default. Relevant cases include empty and whitespace input, boundaries, overflow, locale variants when in scope, malformed markup, unauthorized actors, and conflicting fields.
+
+## References
+
+- [Numeric and text input](references/numeric-and-text-input.md): Read this when defining numeric parsing, range, rounding, text normalization, length, character, or escaping policy.

@@ -24,3 +24,7 @@ Do not move gameplay checks or hidden state into client visual code. Visuals may
 ## Verification
 
 Test late join, reconnect, component add/remove, entity deletion, map transfer, multiple simultaneous effects, resolution changes, and missing resource fallback.
+
+## References
+
+- [Visual lifecycle](references/visual-lifecycle.md): Read this when adding or changing overlays, child visuals, shaders, client visual cleanup, map transfer, or reconnect behavior.

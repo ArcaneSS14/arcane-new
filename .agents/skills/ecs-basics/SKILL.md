@@ -27,3 +27,8 @@ Entities are identifiers. Components hold data. Systems own behavior. Prototypes
 - Which prototype or resource references are required?
 
 Do not begin by copying a nearby system until you understand why its ownership and lifecycle match the new task.
+
+## References
+
+- [ECS reading guide](references/ecs-reading-guide.md): Read this when mapping an unfamiliar feature from prototype or component to events, presentation, and tests.
+- [Lifecycle primer](references/lifecycle-primer.md): Read this when choosing initialization, cleanup, deletion, parent-change, anchoring, container, or map-transfer handling.

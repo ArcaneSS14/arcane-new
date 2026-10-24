@@ -48,3 +48,9 @@ Run the narrowest meaningful check first, then broaden according to risk. A miss
 ## Deliver
 
 Inspect final status and diff. Confirm the applicable scope, marker placement, accessibility, requested localization coverage, duplicate infrastructure, and exact verification results. Confirm commit count and remote branch SHA only if commits or remote publication were part of the task.
+
+## References
+
+- [Evidence and verification](references/evidence-and-verification.md): Read this when weighing conflicting evidence, reporting a failed check, or handing off an uncertainty.
+- [Prompt patterns](references/prompt-patterns.md): Read this when writing an implementation or review prompt for an agent.
+- [Task decomposition](references/task-decomposition.md): Read this when dividing a cross-layer task into parallel workstreams.

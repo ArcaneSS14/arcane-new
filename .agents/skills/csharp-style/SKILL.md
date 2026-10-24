@@ -33,7 +33,6 @@ Keep public APIs small but sufficient for real callers. Do not expose mutable in
 
 Fields and auto-properties come before every method, so a reader can orient on the data first. Mark every type `sealed`, `static`, `abstract`, or `[Virtual]`. Full layout, reuse, and comment rules: `.agents/rules/csharp-writing-conventions.md`. ECS and prototype layout: `.agents/rules/ecs-writing-conventions.md` and `.agents/rules/yaml-prototype-conventions.md`.
 
-For the frequently injected dependency types, their canonical field names, and the most common `using` namespaces, see `references/dependency-injection.md`. Use it to match a neighbour's naming; still verify the declaration before calling it.
 
 ## Language version
 
@@ -88,3 +87,7 @@ Explain why, compatibility constraints, or non-obvious framework behavior. Do no
 Comment inside components and prototype types, where a `[DataField]` member's documentation is the only thing a content contributor sees. In systems, comment only logic that would otherwise require reconstruction: ordering constraints, deliberate bounds, framework workarounds, derivations, and invariants. No section banners. Full rules: `.agents/rules/commenting-conventions.md`.
 
 Treat public methods, events, serialized fields, prototype IDs, CVars, and network payloads as compatibility surfaces. Check all consumers before broad changes.
+
+## References
+
+- [Dependency injection](references/dependency-injection.md): Read this when selecting an injected system, dependency field name, or common namespace; verify the current declaration before use.

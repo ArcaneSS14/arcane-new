@@ -22,3 +22,7 @@ When Russian prototype localization is explicitly requested, preserve matching k
 Validate only the changed prototype and directly referenced resources with an available targeted validator. Build the affected project when code changes. Run a focused owner test when lifecycle or map-loading behavior is in scope and verification is requested. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run the global YAML linter by default.
 
 When verification is requested and the prototype changes server/client lifecycle or map loading, select a focused owner test that covers that path. Do not run the complete integration project by default.
+
+## References
+
+- [Prototype workflow](references/prototype-workflow.md): Read this when authoring, inheriting, reviewing, or diagnosing a prototype and its referenced resources.

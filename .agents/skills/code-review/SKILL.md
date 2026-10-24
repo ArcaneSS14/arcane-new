@@ -21,3 +21,7 @@ Review observable behavior and architectural validity before style.
 Treat inaccessible members, cross-assembly partial assumptions, reversed dependencies, duplicate infrastructure, foreign edit markers, missing inherited-file markers, redundant owner-local markers, missing or out-of-order Russian entries when Russian is in scope, mismatched FTL contracts, stale culture UI, hardcoded text, and unproven test claims as defects.
 
 Every finding needs a path, declaration or execution sequence, impact, and minimal remediation.
+
+## References
+
+- [Severity and evidence](references/severity-and-evidence.md): Read this when ranking findings or deciding whether observed evidence supports a defect report.

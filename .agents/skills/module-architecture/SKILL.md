@@ -45,3 +45,8 @@ When a required member is inaccessible, STOP and identify the smallest public ex
 Before creating anything, search for an existing project, integration-test project, fixture, manifest entry when applicable, CI step, MSBuild target, manager, system, event, or service.
 
 Build the smallest affected project and use the existing `Content.Tests` or `Content.IntegrationTests` project when it owns coverage for the changed behavior. Do not assume a separate Arcane integration-test project exists.
+
+## References
+
+- [Dependency direction](references/dependency-direction.md): Read this when selecting an assembly, adding a project reference, or evaluating a cross-layer dependency.
+- [Repository map](references/repository-map.md): Read this when locating an owner, runtime project, resource root, test project, or engine boundary.

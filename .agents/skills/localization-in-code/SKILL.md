@@ -26,3 +26,7 @@ Use entity-name and grammar helpers instead of manual name, pronoun, or article 
 Review failures include hardcoded player text, mismatched variables, localized string comparison, persisted output, stale UI, and duplicate culture-change subscriptions. Russian key coverage and ordering are review criteria only when Russian is in scope.
 
 Inspect the affected FTL file and exact keys, then review the code or XAML that resolves them. Search plausible owner roots for an exact duplicate key only when needed. Follow root `AGENTS.md` for verification scope; FTL-only changes do not require dependency restore, a full build, or YAML linting by default.
+
+## References
+
+- [Entity text and popups](references/entity-text-and-popups.md): Read this when composing entity-aware text, popup feedback, predicted feedback, or messages that may reveal server-only information.

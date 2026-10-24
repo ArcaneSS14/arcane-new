@@ -25,4 +25,9 @@ Keep payloads as small as practical. Prefer typed state localized by the client 
 
 Use repository ownership rules for edit markers. Do not mark owner-local module or underscore paths.
 
-Verify the affected contract and lifecycle with the narrowest checks supported by the owning projects. Select only the lifecycle cases affected by the change, using `.agents/skills/testing/references/testing-matrix.md` and root `AGENTS.md`; do not restore dependencies or run every integration test by default.
+Verify the affected contract and lifecycle with the narrowest checks supported by the owning projects. Select only the lifecycle cases affected by the change and follow root `AGENTS.md`; do not restore dependencies or run every integration test by default.
+
+## References
+
+- [BUI flow](references/bui-flow.md): Read this when adding or reviewing a BUI open, state, intent-message, validation, or close path.
+- [Testing matrix](../testing/references/testing-matrix.md): Read this when selecting BUI lifecycle, message-flow, or reconnect coverage.

@@ -31,3 +31,7 @@ Cancel or invalidate work on round restart, map unload, entity deletion, user di
 ## Verification
 
 Test cancellation, deletion, repeated scheduling, shutdown, disconnect, exception paths, and delayed completion after state changes.
+
+## References
+
+- [Lifetime checklist](references/lifetime-checklist.md): Read this when a timer, callback, task, or delayed result may outlive an entity, session, map, round, or current state.

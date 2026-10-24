@@ -23,3 +23,7 @@ A feature is incomplete when code exists but required English localization, prot
 Mark inherited edits with the current repository marker. Do not add redundant markers in owner-local module or underscore paths.
 
 Choose a build and focused test for each changed behavior, using the owning projects. Use targeted resource validation for changed prototypes and assets. Follow root `AGENTS.md`; do not restore dependencies or run full root and module suites by default. Run broader CI-equivalent checks only when requested or needed to validate a specific release or CI requirement.
+
+## References
+
+- [Feature checklist](references/feature-checklist.md): Read this when planning or reviewing a feature that spans authority, networking, resources, UI, or tests.

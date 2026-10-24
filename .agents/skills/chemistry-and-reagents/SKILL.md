@@ -28,3 +28,7 @@ Keep reagent names, descriptions, alerts, and machine controls localized. Do not
 ## Verification
 
 Test exact quantities, boundary volumes, reaction order, catalysts, temperature conditions, repeated metabolism, transfer cancellation, and YAML validation.
+
+## References
+
+- [Solution safety](references/solution-safety.md): Read this when implementing or reviewing reagent transfer, solution mutation, capacity handling, or chemistry UI refresh.

@@ -37,3 +37,8 @@ Immediate local animation, popup, or sound may be predicted. The final protected
 ## Verification
 
 Test success, cancellation by every configured interrupt, repeated requests, target deletion, disconnect, source removal, cooldown, and rejection under latency.
+
+## References
+
+- [Action lifecycle](references/action-lifecycle.md): Read this when adding, transferring, removing, or debugging an action across entity, body, or round lifecycle changes.
+- [DoAfter checklist](references/doafter-checklist.md): Read this when adding or changing a DoAfter, its interruption rules, or its completion handler.

@@ -33,3 +33,7 @@ For hands and equipment, account for active hand, blocked slots, nested storage,
 ## Verification
 
 Test insert, remove, swap, drop, delete, nested storage, full inventory, denied whitelist, body transfer, reconnect, and multiple viewers.
+
+## References
+
+- [Container invariants](references/container-invariants.md): Read this when moving, transferring, deleting, or replacing contained entities or inventory contents.

@@ -51,3 +51,7 @@ Check the candidate owner path against the root locale path and directly relevan
 ## Verification
 
 Inspect only the affected English locale file, directly referenced keys, and the final FTL diff. Run a targeted localization validator only when one exists; do not run a full build, YAML linter, or dependency restore for an FTL-only change. Always run `git diff --check`.
+
+## References
+
+- [Localization workflow](references/localization-workflow.md): Read this when adding, moving, renaming, or reviewing player-visible locale keys and their usage.
