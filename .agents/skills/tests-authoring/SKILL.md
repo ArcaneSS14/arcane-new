@@ -5,7 +5,7 @@ description: Author deterministic owner-correct tests that prove observable cont
 
 A useful test fails for the original defect and proves a caller-visible contract.
 
-Place focused root tests in `Content.Tests`, root integration tests in `Content.IntegrationTests`, and module integration tests in the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project.
+Place focused root tests in `Content.Tests` and root integration tests in `Content.IntegrationTests`. Choose the test owner through `Modules/CATALOG.md`, existing `.csproj` files, and nearby tests for that owner.
 
 Do not create duplicate projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
 

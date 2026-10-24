@@ -18,4 +18,4 @@ When Russian localization is requested, place entries consistently with the Engl
 
 Prototype IDs are machine identifiers and must not leak as display text. When Russian is requested, use natural wording and do not use `THE(...)` wrappers.
 
-Run Release resource validation and inspect missing-key output.
+Verify the affected English keys, variables, attributes, selectors, and final diff. Run a targeted validator only when one exists and covers the changed surface; do not require restore, a Release build, or global YAML lint for an FTL-only change.

@@ -28,4 +28,3 @@ A saved setting must restore after restart. Removed or invalid values must fall 
 ## Verification commands
 
 Build only the affected project. When verification is requested, select focused tests for persistence, reload, client settings, propagation, or restart behavior. Do not restore dependencies or run complete test suites by default. Relevant cases include missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart scenarios.
- Test missing, malformed, legacy, partial, concurrent, out-of-range, backup, normalization, and restart cases.

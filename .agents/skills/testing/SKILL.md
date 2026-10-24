@@ -5,7 +5,7 @@ description: Select the existing owner test project and run checks matching the 
 
 Match tests to the owner and failure mode.
 
-Use `Content.Tests` for focused root tests, `Content.IntegrationTests` for integrated root behavior, and the existing `Modules/<Module>/Content.<Module>.IntegrationTests` project for module behavior.
+Use `Content.Tests` for focused root tests and `Content.IntegrationTests` for integrated root behavior. Choose the test owner through `Modules/CATALOG.md`, existing `.csproj` files, and nearby tests for that owner.
 
 Search before creating a project, fixture, CI step, or MSBuild target. Duplicate infrastructure is forbidden. Test projects do not belong in `module.yml`.
 

@@ -12,7 +12,7 @@ YAML syntax validity is only the first layer. Identify the actual consumer and s
 3. Verify scalar types, indentation, list and map shape, quoting, anchors, and required fields.
 4. Verify every ID, path, component field, and referenced resource.
 5. Avoid formatting unrelated blocks or reserializing maps.
-6. Run generic build validation and the domain-specific validator.
+6. Run the domain-specific validator when one exists for the changed format.
 
 ## Common failures
 
@@ -27,6 +27,4 @@ YAML syntax validity is only the first layer. Identify the actual consumer and s
 
 ## Exact validation commands
 
-Validate the changed YAML files with the narrowest available validator. For workflow, map, RSI, or custom schema files, use the exact specialized command from the current repository workflow. Build code projects only when code changed. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run a repository-wide linter by default.
-
-For workflow, map, RSI, or custom schema files, also run the exact specialized command from the current repository workflow. Do not guess from another fork.
+Validate the changed YAML files with the narrowest available validator. For workflow, map, RSI, or custom schema files, use the exact specialized command from the current repository workflow. Build a code project only when code changed or the selected validator requires built binaries. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run a repository-wide linter by default. Do not guess validation commands from another fork.

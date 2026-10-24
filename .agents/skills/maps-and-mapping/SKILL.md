@@ -20,5 +20,3 @@ Do not copy map chunks from another fork before resolving unavailable prototypes
 ## Verification commands
 
 Run the exact current map schema workflow command only for changed map files. Build the affected project if code changed, and inspect the diff for mass reserialization, missing prototypes, or unrelated GUID and metadata changes. Follow root `AGENTS.md`; do not restore dependencies or run full builds and global linters by default.
-
-Run the exact current map schema workflow command for changed map files. Inspect the diff for mass reserialization, missing prototypes, and unrelated GUID or metadata changes.

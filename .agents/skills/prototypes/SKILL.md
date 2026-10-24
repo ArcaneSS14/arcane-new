@@ -7,7 +7,7 @@ description: Create, inherit, compose, localize, and validate YAML prototypes in
 
 1. Verify repository identity, resource ownership, and edit-marker boundaries.
 2. Find a current nearby prototype of the same type and owner.
-3. Confirm the owning resource root from `module.yml`.
+3. Confirm the owning resource root from `Modules/CATALOG.md`, the relevant owner guide, and the actual `Resources` structure. Read `module.yml` only when the owning module actually provides one.
 4. Verify fields against the destination component schema.
 5. Prefer inheritance or composition over copying a large prototype.
 6. Use stable specific IDs and typed IDs in code.
