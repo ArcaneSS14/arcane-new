@@ -19,6 +19,10 @@ Determine intended scope and observable behavior, owner, authority, assembly/acc
 - Inspect the complete diff for unrelated paths, SPDX edits, duplicated infrastructure, invented APIs/commands, and unproven verification claims.
 - Every finding needs path, concrete declaration/execution evidence, impact, severity, and minimal remediation. A stylistic preference without observable impact is not a defect.
 
+### Minimal examples
+
+Correct: report an evidence-backed observable defect with path and impact. Prohibited: call a style preference a bug. Stop: report insufficient declaration/diff evidence instead of asserting a finding.
+
 ## Выбор подхода
 
 Start with correctness/authority/architecture, then lifecycle and safety, then test evidence and scope, then maintainability/style. Report only evidence-backed findings; distinguish a confirmed defect from an unverified risk or a request for clarification.

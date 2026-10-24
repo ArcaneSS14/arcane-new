@@ -17,7 +17,20 @@ Find the database owner, current provider conventions/package versions, model co
 - Generate/review matching SQLite and PostgreSQL migrations and snapshots. Fresh creation is insufficient: evaluate upgrade from existing schema and `Up`/`Down` separately.
 - Consider existing rows, nullability, defaults, index/uniqueness, backfills, destructive change, rollback, atomicity, corruption, and provider-specific behavior. Report migrations not exercised against both providers.
 - Confirm current EF/provider versions in `Directory.Packages.props`; do not assume old major behavior or build hand-made provider assumptions.
+
+### Source ledger
+
+Claim: Provider/version behavior must be read from current central package management and both SQLite/PostgreSQL migration conventions, not inferred from an older EF Core major.
+Source: `Directory.Packages.props`, current database projects, and generated migration conventions.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: version-bound
+Recheck trigger: Changing EF Core/provider package versions, target framework, or migration tooling.
 - Stop if no supported persistence extension point exists: do not use reflection, alter engine, or create parallel persistence/test infrastructure.
+
+### Minimal examples
+
+Correct: review SQLite and PostgreSQL upgrade migrations separately. Prohibited: accept fresh database creation as upgrade proof. Stop: report unavailable provider migration validation.
 
 ## Выбор подхода
 

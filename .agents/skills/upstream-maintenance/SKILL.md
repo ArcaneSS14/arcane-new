@@ -19,6 +19,19 @@ Classify the change as upstream bug fix, reusable extension point, compatibility
 - Separate mechanical conflict resolution from an Arcane behavior change. An upstream change landing in the tree is not ours until Arcane authors/adapts it with the correct marker.
 - For a real conflict read base, current, and incoming. Follow `.agents/rules/merge-conflict-resolution.md`: the current Arcane marker outranks incoming; retain the unmarked version when incoming does not invalidate the marked change, and ask when intent remains unresolved. Never blanket-select `ours` or `theirs`.
 
+### Source ledger
+
+Claim: Arcane marker precedence, owner-local marker exemptions, and conflict-resolution order are repository policy, not generic Git behavior.
+Source: Root `AGENTS.md`, `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, and `.agents/rules/merge-conflict-resolution.md`.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing marker policy, fork trajectory, or conflict-resolution rules.
+
+### Minimal examples
+
+Correct: inspect add/remove/revert history before inherited edit. Prohibited: blanket-resolve a conflict. Stop: report unresolved base/current/incoming intent.
+
 ## Выбор подхода
 
 Use an upstream fix when it is the intended sync behavior, an extension point when it can isolate Arcane behavior, and an owner-local divergence when the repository intentionally differs. Keep source-history research proportional to the actual inherited path rather than scanning unrelated history.

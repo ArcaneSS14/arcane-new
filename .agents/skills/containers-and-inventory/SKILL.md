@@ -19,6 +19,10 @@ Identify the owning container/slot/hand/storage system, item lifecycle, capacity
 - Account for active hand, blocked slots, nested storage, deletion, body/polymorph transfer, disconnect, and multiple viewers.
 - Stop when no supported owner API exists: do not bypass access, use reflection, alter engine, or build a parallel inventory implementation.
 
+### Minimal examples
+
+Correct: move an item with the owning container API. Prohibited: manually parent it as insertion. Stop: report when the destination owner or transfer invariant is unknown.
+
 ## Выбор подхода
 
 Use the owner system that owns the destination and event flow; model transfers through its APIs, not an independent entity-parenting path.

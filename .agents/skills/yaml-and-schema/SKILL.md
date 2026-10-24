@@ -10,6 +10,10 @@ Verify repository identity and edit-marker boundaries before inherited edits.
 ## Правила и границы
 Check schema, scalar types, nullability, quoting, list/map shape, required fields and duplicate keys, not YAML syntax alone. Preserve unrelated formatting and ordering.
 Common failures include unknown component fields, number/boolean strings, invalid workflow quoting, frontmatter not first, obsolete field names and files outside the owner root.
+### Minimal examples
+
+Correct: verify schema consumer and exact field type before YAML edit. Prohibited: quote a number/boolean as a string. Stop: report unknown schema/owner-root validation.
+
 ## Выбор подхода
 Use the destination consumer's established structure and validator; build code only when code changed or that validator requires binaries.
 ## Антипаттерны

@@ -19,6 +19,10 @@ Identify the owner and cleanup lifecycle for each sprite layer, overlay, shader 
 - Use entity-local overlays for entity-local effects; reserve global overlays for effects genuinely shared by the viewport or client. Do not use a global overlay merely to display an entity-local effect.
 - Visual code consumes allowed presentation data only. It does not receive hidden gameplay state or perform authoritative mutation.
 
+### Minimal examples
+
+Correct: reuse stable entity-local layer/overlay and clean it at lifecycle end. Prohibited: use a global overlay for entity-local effect. Stop: report missing visual resource owner.
+
 ## Выбор подхода
 
 Prefer a sprite layer for a persistent entity-owned visual, an entity-local overlay for transient entity presentation, and a global overlay only for a viewport-wide effect. Use a shader or render target only when the established client rendering path needs it; otherwise reuse the nearest existing sprite/overlay pattern.

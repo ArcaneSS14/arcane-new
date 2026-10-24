@@ -21,6 +21,19 @@ Classify the sound and identify its audience separately from its audible spatial
 - A predicted action must not play the same sound again on authoritative confirmation. For every loop, define the stream owner and stop/clean it up on cancellation, deletion, source removal, and map transfer.
 - Preserve source attribution and asset metadata; do not edit SPDX. Add localization only for genuinely player-visible captions, UI, or settings, with `ru-RU` only on explicit request.
 
+### Source ledger
+
+Claim: `AudioFlags.NoOcclusion` bypasses default occlusion.
+Source: Current branch audio call sites and pinned RobustToolbox declaration.
+Source type: Arcane / RobustToolbox
+Checked against branch: `66cf1fb0a7`
+Volatility: version-bound
+Recheck trigger: Changing audio flags, engine revision, or spatial-audio behavior.
+
+### Minimal examples
+
+Correct: use the owner SoundSpecifier and choose delivery separately from spatial audibility. Prohibited: play predicted and confirmed audio twice. Stop: report when source lifetime or spatial owner is unknown.
+
 ## Выбор подхода
 
 Use predicted local audio for immediate correctable feedback, PVS world delivery for audible in-world events, an entity-attached source for moving lifetime-bound sound, and a static coordinate source for a stable location. Use global notification or UI-only audio only when it intentionally has no world source; do not add entity queries or wall raycasts to those categories without a spatial requirement.

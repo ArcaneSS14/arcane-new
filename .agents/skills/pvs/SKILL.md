@@ -18,6 +18,10 @@ Determine why the specific client needs the entity, event, or state. Check wheth
 - Limit an override's audience, lifetime, and entity volume. Remove the override and session-specific visibility as soon as the reason ends.
 - Re-evaluate visibility through transforms, parents, containers, grids, maps, ghosts/observers, sessions, map transfer, deletion, and UI closure. World audio and effects normally use PVS-scoped recipients; global delivery needs an explicit gameplay reason and recipient filter.
 
+### Minimal examples
+
+Correct: use an override only when the entity itself must remain visible. Prohibited: use PVS as authorization. Stop: report unknown audience/lifetime owner.
+
 ## Выбор подхода
 
 Prefer ordinary world visibility and existing filters. Select a limited message or UI state for remote, viewer-specific data. Select a PVS override only when keeping the actual entity network-visible is necessary, and bind it to the narrowest viewer/session and lifecycle.

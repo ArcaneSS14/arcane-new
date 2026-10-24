@@ -19,6 +19,10 @@ Trace activation, round start, assignment, updates, end conditions, round end/re
 - Clean spawned entities, timers, subscriptions, overlays, temporary CVars, and round caches at end/restart so no state leaks to the next round.
 - Stop at absent owner extension point: no reflection, engine edits, client-authoritative rule outcomes, or parallel round framework.
 
+### Minimal examples
+
+Correct: clean round-scoped timers/entities on round end. Prohibited: retain global static rule state across restart. Stop: report missing game-rule lifecycle owner.
+
 ## Выбор подхода
 
 Extend the established rule/entity/objective owner and lifecycle events; keep rule-specific state serialized/prototype-backed only when it belongs to that contract.

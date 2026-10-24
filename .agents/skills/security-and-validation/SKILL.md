@@ -19,6 +19,10 @@ Identify untrusted input, authoritative owner, protected result, target/permissi
 - Normalize/constrain user paths; prevent traversal, arbitrary overwrite, shell interpolation, and unsafe temporary-file behavior. Use atomic replacement/explicit permissions where persistence needs them.
 - Stop at a missing supported boundary: do not bypass access, use reflection, change engine, or create parallel authorization/validation infrastructure.
 
+### Minimal examples
+
+Correct: recompute protected input/result at authoritative owner. Prohibited: use a hidden UI control as security. Stop: report missing server validation extension point.
+
 ## Выбор подхода
 
 Place validation at the authoritative owner and reuse its public API. Use owner-local rate limiting only for demonstrated repeated abuse; separate safe player feedback from operator diagnostics.

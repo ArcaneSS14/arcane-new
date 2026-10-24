@@ -21,6 +21,19 @@ Verify repository identity/remotes/branch only for ownership, inherited-path, sy
 - When a member is inaccessible, find the smallest public extension point or stop with the boundary. Do not use reflection or copy private implementation.
 - Reuse existing projects, owner tests, fixtures, CI steps, manifests where applicable, managers, systems, events, services, and resource roots before creating infrastructure.
 
+### Source ledger
+
+Claim: Arcane runtime projects are root `Content.Arcane.*`, Arcane resources use existing `_Arcane` roots, `Modules/Arcane` is guidance, and root test ownership uses the existing `Content.Tests`/`Content.IntegrationTests` paths.
+Source: Root `AGENTS.md`, `Modules/CATALOG.md`, current project/resource tree, and current test project files.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing project layout, module catalog, resource roots, or test project ownership.
+
+### Minimal examples
+
+Correct: choose Server for hidden authority and Client for presentation. Prohibited: add a reference to bypass access. Stop: report an inaccessible member and required public extension point.
+
 ## Выбор подхода
 
 Prefer an owner-local Arcane path for Arcane-only behavior. For a sync-trajectory change, use the smallest inherited path and marker-correct block. Build/test only the existing owner project (`Content.Tests` or `Content.IntegrationTests` when it owns coverage), never assume a separate Arcane integration project exists.

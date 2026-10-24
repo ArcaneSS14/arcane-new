@@ -10,6 +10,10 @@ Trace the Shared UI key and serializable contract, server owner/handler/state, c
 Shared contains only the UI key and minimal serializable intent/state contract. Messages express intent, not a claimed result. The server validates actor, lifecycle, range, access, and current state, performs authoritative mutation, and refreshes minimal state without hidden data or resolved text. The client adapter opens/closes the window, applies state, and forwards typed intent; XAML owns controls/view state, never authorization or gameplay outcome.
 
 Subscribe once for a window lifetime. Unsubscribe from every long-lived publisher on close or dispose, and prevent duplicate subscriptions after reopen. For multiple viewers, keep per-viewer presentation state separate while the server refreshes only viewer-appropriate shared state. A delayed callback must verify the identity of the current window and owner before changing controls. Refresh culture-sensitive text without discarding or replacing authoritative state.
+### Minimal examples
+
+Correct: send typed intent and validate actor/range/state on Server. Prohibited: authorize from a client button. Stop: report when the BUI contract or server owner is unavailable.
+
 ## Выбор подхода
 Use one source for displayed state: the latest replicated component or BUI state. Keep window selection/filter presentation-only unless the feature contract explicitly requires otherwise; per-viewer presentation state never substitutes shared entity state.
 ## Антипаттерны

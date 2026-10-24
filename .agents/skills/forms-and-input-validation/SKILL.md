@@ -15,6 +15,10 @@ Determine the field format and owner, consumer, trust boundary, allowed bounds, 
 
 Client validation provides early, clear feedback; the server repeats the exact authoritative validation. Before domain validation, define trimming/normalization, an explicit culture and numeric format, length, bounds, and overflow behavior. Reject ambiguous integer forms such as `1.0` unless the domain permits them, and check length before expensive work. Then validate ranges, overflow, whitelists, prototype IDs, entity existence and ownership, access, cooldowns, current state, and cross-field constraints. Player errors must be safe and localized: never expose internal exceptions, raw IDs, or server-only reasons. Treat markup, paths, URLs, commands, and identifiers as hostile input and use an appropriate allowlist, escaping, or parse policy.
 
+### Minimal examples
+
+Correct: parse with explicit format then validate domain state on Server. Prohibited: trust a disabled control. Stop: report undefined input format/bounds or authoritative owner.
+
 ## Выбор подхода
 
 Separate parse failure, syntactic validity, and domain validity. Use one authoritative validation source so UI and server rules cannot drift. Use a typed message or contract when input crosses the network; transmit intent, not a client-claimed result.

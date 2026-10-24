@@ -20,6 +20,10 @@ Identify service owner, configuration/secret source, request/response schema, ti
 - Keep request handlers task-observable: do not use `async void` except a framework-required event handler, and do not synchronously wait on `Task` from simulation/UI flow. A cancellation, timeout, or exception must leave no partial authoritative mutation or unreleased request state.
 - Stop without a supported extension point: no reflection, engine edits, or parallel service/retry framework.
 
+### Minimal examples
+
+Correct: apply a validated remote result through the supported owner path. Prohibited: retry a non-idempotent mutation. Stop: report an unavailable service/configuration contract.
+
 ## Выбор подхода
 
 Use an existing service client/configuration owner, bounded cache for stable data, and clear unavailable-service fallback. Prefer failure reporting with safe operator context over user-visible raw remote errors.

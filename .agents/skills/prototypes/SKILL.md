@@ -10,6 +10,20 @@ Verify repository identity and edit-marker boundaries before inherited edits.
 ## Правила и границы
 Verify type, ID, parent, component fields, typed IDs and every locale, sprite, sound, dataset and map reference. Prototype fields are configuration; runtime state belongs to systems/components.
 Add English display text; change Russian only when explicitly requested.
+
+### Source ledger
+
+Claim: Prototype ownership is selected through the current `Modules/CATALOG.md`, owner guidance, and existing resource root; localization follows the repository's English-source policy.
+Source: `Modules/CATALOG.md`, root `AGENTS.md`, applicable owner guide, and the current resource tree.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing catalog routing, owner guidance, resource roots, or localization policy.
+
+### Minimal examples
+
+Correct: verify prototype owner/schema before composing inheritance. Prohibited: add a parallel owner root. Stop: report unknown consumer/schema validation.
+
 ## Выбор подхода
 Use inheritance for shared defaults, composition for reusable component sets, and a separate prototype for distinct identity.
 ## Антипаттерны

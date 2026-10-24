@@ -19,6 +19,10 @@ Trace the server owner, task/HTN/utility selection, target acquisition, pathfind
 - Bound query scope and replan frequency. Do not perform an expensive global search every update when the existing owner has a bounded query, cooldown, or event-driven refresh.
 - Keep observable configuration prototype-backed where the owner expects it, and retain existing debug/test paths for behavior investigation.
 
+### Minimal examples
+
+Correct: invalidate navigation after target deletion or map transfer. Prohibited: run a global target search each update. Stop: report missing task/navigation owner API.
+
 ## Выбор подхода
 
 Use the current task/HTN/utility path for the behavior family being changed. Reuse existing pathfinding/steering and cancellation ownership; add a new plan only when no existing owner contract covers the objective. Prefer an owner-local cooldown or state change over repeated polling.

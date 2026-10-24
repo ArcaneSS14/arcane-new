@@ -9,6 +9,20 @@ Find the owner from existing owner paths and nearby assets, never a namespace or
 ## Правила и границы
 Check case-sensitive paths, RSI metadata/states, audio format/resources, source provenance and attribution. Keep player-visible companions localized as requested.
 Check RSI dimensions, states and frame data; check audio collections, format and volume. Add English player-visible text; change ru-RU only when requested. Apply owner-local/inherited edit-marker rules.
+
+### Source ledger
+
+Claim: Asset companions use the repository English-source localization policy, and inherited versus owner-local asset edits follow Arcane marker policy.
+Source: Root `AGENTS.md`, `.agents/rules/content-and-localization.md`, and `.agents/rules/arcane-edit-markers.md`.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing localization, asset ownership, or edit-marker policy.
+
+### Minimal examples
+
+Correct: reuse owner-local RSI/audio resource structure and validate direct paths. Prohibited: create a parallel hierarchy. Stop: report unknown asset provenance/consumer.
+
 ## Выбор подхода
 Reuse the owner hierarchy and its supported specialized validation path. Consider prediction, audience and audio lifetime only for an audio task.
 ## Антипаттерны

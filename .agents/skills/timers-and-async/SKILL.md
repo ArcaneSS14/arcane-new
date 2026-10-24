@@ -20,6 +20,10 @@ Identify the timer/task owner, cancellation owner, entity/session/map/round life
 - Handle exceptions at the owning boundary: a faulted callback must not leave an operation or cleanup state permanently active.
 - Use `async void` only for a framework-required event handler that delegates to an observable task path. Do not block a simulation/UI thread with `Task.Wait`, `.Result`, or equivalent waiting unless the current owner API explicitly requires it and its lifetime/deadlock behavior is proven.
 
+### Minimal examples
+
+Correct: revalidate owner state before delayed mutation. Prohibited: block simulation with Task.Wait. Stop: report unavailable scheduler/thread handoff.
+
 ## Выбор подхода
 
 Prefer an owner update loop for hot, repeated simulation work; use the existing shared scheduler/timer pattern for delayed completion; use supported background work only when it does not touch ECS state directly. Couple cancellation to the narrowest owner that can end the operation.

@@ -17,6 +17,10 @@ Trace entry point, prototype, component state, owner system, events, Server/Shar
 ## Правила и границы
 Entities identify; components store state; systems own behavior and mutation; prototypes compose initial state.
 Ask: which component stores state; which system may mutate it; which event starts the flow; what is authoritative, predicted and replicated; which lifecycle initializes or cleans up; and which prototype, resource and locale dependencies are required.
+### Minimal examples
+
+Correct: trace component, system, event, mutation, dirtying, and presentation. Prohibited: edit the first matching component without flow discovery. Stop: report unknown owner/lifecycle before changing it.
+
 ## Выбор подхода
 Choose the existing state owner first, then its system and event; trace client presentation separately from authority.
 ## Антипаттерны

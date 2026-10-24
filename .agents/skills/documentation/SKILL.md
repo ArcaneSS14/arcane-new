@@ -19,6 +19,10 @@ Identify the canonical documentation owner, requested audience, scope, and decis
 - Do not create a separate documentation file when an existing canonical owner already contains the information.
 - Copy commands from current workflow/instructions; do not invent or simplify flags from memory.
 
+### Minimal examples
+
+Correct: report exact commands run and omitted checks separately. Prohibited: state all tests passed after a diff check. Stop: report missing evidence instead of documenting a claim.
+
 ## Выбор подхода
 
 Write the smallest owner-local addition that explains a non-obvious decision, contract, limitation, or verification outcome. Omit fields that do not apply rather than filling a handoff with generic repository detail.

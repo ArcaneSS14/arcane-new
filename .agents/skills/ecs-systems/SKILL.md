@@ -10,6 +10,10 @@ Locate state owner, entry event, APIs, dependency boundary, query scope, lifecyc
 ## Правила и границы
 Systems own behavior. Handlers route, validation does not mutate, and execution has one mutation path. Dependencies and subscriptions follow system lifecycle.
 Resolve dependencies through the established dependency mechanism; subscribe in initialization and release external callbacks on shutdown. Keep handlers thin, route reusable operations through Try methods, and keep Can checks mutation-free.
+### Minimal examples
+
+Correct: subscribe and clean up through the owning system lifecycle. Prohibited: remove entities unsafely during iteration. Stop: report missing supported cleanup/event path.
+
 ## Выбор подхода
 Use direct owner API for one owner, an event for established extensibility, and bounded queries for matching entities.
 Prefer existing entity helpers and bounded EntityQueryEnumerator-style queries over repeated global searches. Use guarded component lookup for optional state, resolution only where the caller contract requires it, and idempotent component creation only when creation is intended.

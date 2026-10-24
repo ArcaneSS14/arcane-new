@@ -9,6 +9,10 @@ Trace prototype, placement coordinate space, parent/container, initialization, r
 ## Правила и границы
 Use established owner APIs and prototype composition. Define preservation/reset semantics for replacement. Cleanup timers, UI, actions, children and cached references.
 Choose spawn semantics deliberately: attachment for a parent-owned entity, container insertion for contained ownership, grid placement for grid-local placement, and map coordinates for map placement. Do not manually reconstruct a prototype component set unless runtime composition is the intent.
+### Minimal examples
+
+Correct: choose spawn semantics for map/grid/container ownership. Prohibited: delete twice without idempotent cleanup. Stop: report unverified initialization/transfer contract.
+
 ## Выбор подхода
 Choose spawn semantics from attachment/container/grid/map intent; choose replacement only after listing state to preserve.
 For replacement or transfer, explicitly decide position/rotation, parent/container membership, mind/session/ownership, hands/inventory, damage/status/actions, metadata/appearance, BUI/EUI sessions, timers/external references and persistence identity.

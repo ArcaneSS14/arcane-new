@@ -10,6 +10,20 @@ Search prototype IDs, current and alternative keys, and nearby family keys; use 
 ## Правила и границы
 English is structural source. Preserve key variables, attributes, selectors and semantic literals. Change ru-RU only on request; use natural Russian without THE wrappers.
 When Russian is requested preserve matching paths and ordering.
+
+### Source ledger
+
+Claim: Prototype localization resolves through the English owner file, and Russian updates are explicitly requested companion work.
+Source: Root `AGENTS.md` and `.agents/rules/content-and-localization.md`.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing localization policy, FTL ownership, or prototype-resource layout.
+
+### Minimal examples
+
+Correct: resolve prototype field to its existing English locale owner. Prohibited: create Russian entries without request. Stop: report unknown field/key inheritance contract.
+
 ## Выбор подхода
 Keep prototype text in the owner locale contract; route direct presentation text to localization-in-code.
 ## Антипаттерны

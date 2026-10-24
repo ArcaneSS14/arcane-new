@@ -19,6 +19,19 @@ Determine the owner, failure mode, layer, and smallest observable contract. Sele
 - Reproduce CI shape only when checking an actual CI gate: CI builds in `DebugOpt` then tests produced binaries, rather than passing a project path to `dotnet test`; integration tests use `DOTNET_gcServer=1`. `Debug` is only fast local iteration and must be reported as different from `DebugOpt`.
 - For localization, check affected `en-US` keys/structure; check Russian contracts only when Russian is explicitly in scope.
 
+### Source ledger
+
+Claim: CI validation uses `DebugOpt` produced binaries and `DOTNET_gcServer=1` for integration tests.
+Source: Current repository CI workflow.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing CI workflow, test runner, or build configuration.
+
+### Minimal examples
+
+Correct: select existing owner test project and focused observable contract. Prohibited: create a fixture/project for a local test. Stop: report unavailable owner coverage rather than inventing a command.
+
 ## Выбор подхода
 
 Use an owner-local focused test for a local observable contract and integration coverage only when the behavior crosses the relevant root layers. Broaden only when the failure cannot be isolated or the task explicitly requires a CI/full-owner gate.

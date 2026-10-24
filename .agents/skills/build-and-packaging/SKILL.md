@@ -20,6 +20,19 @@ Determine owner, dependency direction, target framework, generated-code/XAML nee
 - Repository configurations are `Debug`, `DebugOpt`, `Tools`, and `Release`. CI uses `DebugOpt`, tests produced binaries, and separately builds `Release` without `/p:WarningsAsErrors=` so that Release warnings are errors. `DOTNET_gcServer=1` belongs to the integration-test path. Reproduce these only for a requested CI-equivalent gate.
 - Do not run `git submodule update` without explicit user request. The engine boundary is closed by default; if dependencies/submodule are unavailable, report the blocker rather than initializing them.
 
+### Source ledger
+
+Claim: CI uses `DebugOpt`, produced binaries, a separate `Release` build, and `DOTNET_gcServer=1` on integration tests.
+Source: Current repository workflows and build configuration.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing workflow, build configuration, or integration-test invocation.
+
+### Minimal examples
+
+Correct: copy the exact current workflow command for a requested CI gate. Prohibited: initialize a missing submodule. Stop: report unavailable dependencies/workflow rather than inventing a build path.
+
 ## Выбор подхода
 
 Validate only the changed project or workflow for routine work. Reproduce exact relevant CI/package steps only when the requested scope is CI-equivalent, release, or packaging. Run specialized validator/module integration/package platform only when it covers changed behavior; reproduce the `bin/Content.IntegrationTests/runtimes` link into `bin/Content.Tests/` only when a requested local test fails from a missing native runtime.

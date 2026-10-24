@@ -18,6 +18,10 @@ Map owner-local/inherited paths, marker boundary, assembly/authority, public ext
 - Use owner roots and existing infrastructure. Mark inherited edits only with the current marker; do not mark owner-local module/underscore paths.
 - Do not invent API/prototype/resource IDs, bypass access, use reflection, alter engine, or create parallel test/build/UI infrastructure when no supported extension point exists; stop and report the boundary.
 
+### Minimal examples
+
+Correct: complete one vertical slice through existing authority and presentation owners. Prohibited: create a parallel feature framework. Stop: report an unavailable extension point or owner.
+
 ## Выбор подхода
 
 Implement the smallest complete vertical slice through existing owners: authoritative system, allowed Shared contract, client presentation, then only affected prototype/resource/locale/test surfaces.

@@ -19,6 +19,19 @@ Record `git status --short --branch`, the current branch, and remotes. Record ex
 - Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: an Arcane-marked change outranks both other versions; otherwise the pushed-forward version wins unless the incoming side independently requires change.
 - Create commits only with the exact count/message requested by the user. A local task record, local commit, and remote push are distinct states.
 
+### Source ledger
+
+Claim: The Arcane conflict-priority rule for marked and unmarked lines is repository-specific and governs conflict resolution here.
+Source: Root `AGENTS.md` and `.agents/rules/merge-conflict-resolution.md`.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing repository conflict-resolution or edit-marker policy.
+
+### Minimal examples
+
+Correct: stage only reviewed task paths before a requested commit. Prohibited: reset hard to clean user work. Stop: report unresolved conflict intent instead of choosing ours/theirs.
+
 ## Выбор подхода
 
 Keep work unstaged while investigating. Stage the smallest reviewed task slice only when a commit is requested. For a conflict, read all three versions and make the narrow semantic resolution; ask rather than selecting a side when the priority rule does not resolve intent.

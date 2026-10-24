@@ -19,6 +19,10 @@ Trace the authoritative component and system through mutation, appearance update
 - Verify an RSI state exists, use stable layer keys, and retain a viable default appearance. Do not create a layer for every update when an existing layer can be reused.
 - Clean up overlays, child visuals, animations, and subscriptions at component shutdown or entity deletion so no client visual survives its owner.
 
+### Minimal examples
+
+Correct: update an existing appearance key after authoritative mutation. Prohibited: use appearance as gameplay authority. Stop: report a missing client visual owner or resource/layer contract.
+
 ## Выбор подхода
 
 Use `GenericVisualizer` or the nearest existing equivalent for simple state-to-layer/property mappings. Use a dedicated client visual system only for transitions, overlays, shaders, spawned visuals, or cleanup that cannot be expressed through the simple mapping. Keep the authoritative component/system as the source of the decision in either case.

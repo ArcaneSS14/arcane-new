@@ -19,6 +19,10 @@ Identify the exact permission/flag, server entry points (command, EUI/BUI, verb,
 - Return localized player-safe feedback without secrets. Use normal owner APIs so admin work preserves lifecycle and invariants.
 - Stop when required access has no supported extension point: do not bypass modifiers, use reflection, alter engine, or create a parallel admin framework.
 
+### Minimal examples
+
+Correct: validate the exact server-side permission before an admin mutation. Prohibited: treat a visible admin button as authorization. Stop: report when no supported permission or audit owner exists.
+
 ## Выбор подхода
 
 Use the narrowest existing permission instead of broadening a flag because a nearby command does. Route mutating functionality through its owner system and an auditable server handler.

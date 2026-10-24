@@ -19,6 +19,19 @@ Establish the owner, assembly, runtime side, access boundary, production entry p
 - Cover boundary, permission, deletion, cancellation, reconnect, stale state, or provider-specific behavior when it belongs to the defect. Test Russian behavior only when Russian is in scope.
 - Do not create duplicate projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
 
+### Source ledger
+
+Claim: Focused root tests use `Content.Tests`, root integration tests use `Content.IntegrationTests`, and owner selection comes from current project/catalog evidence.
+Source: `Modules/CATALOG.md`, current `.csproj` files, and neighboring owner tests.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing test project layout, catalog ownership, or test infrastructure.
+
+### Minimal examples
+
+Correct: make a deterministic test fail on the original caller-visible defect. Prohibited: reflect private state or sleep on wall clock. Stop: report inaccessible production entry point.
+
 ## Выбор подхода
 
 Use a focused root test for a local contract and integration coverage only for a real cross-layer production path. Prefer the nearest existing owner fixture and deterministic control point over a broader asynchronous test harness.

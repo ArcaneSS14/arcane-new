@@ -19,6 +19,10 @@ Trace graph/node conventions, prototype contract, machine owner, map initializat
 - Server owns machine state, costs, inventory/output, and access. BUI expresses intent and is revalidated; expose minimal UI state.
 - Stop without a supported extension point: do not bypass access, reflect, change engine, or create a parallel machine system.
 
+### Minimal examples
+
+Correct: recalculate part-derived values at the established lifecycle event. Prohibited: let a machine run when unpowered. Stop: report a missing machine/board owner API.
+
 ## Выбор подхода
 
 Extend the current graph/machine owner and prototype fields; use event-driven recalculation and existing BUI flow instead of isolated loops/caches.

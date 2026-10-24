@@ -9,6 +9,10 @@ Trace input, predicted execution, server validation, authoritative mutation, rec
 ## Правила и границы
 Predicted code may execute repeatedly. Keep it deterministic and idempotent; server authority reconciles protected outcomes.
 Separate deterministic state mutation from one-shot presentation. Reconciliation and rejection must be safe after latency, repeated input, deletion or observer state changes.
+### Minimal examples
+
+Correct: separate replayable state mutation from one-shot presentation. Prohibited: predict privileged irreversible result. Stop: report unknown reconciliation/authority owner.
+
 ## Выбор подхода
 Predict local correctable feedback; keep access, economy, random protected outcomes and persistence authoritative.
 Use the established predicted feedback path when nearby code has one; do not pair an unconditional client-only effect with an unconditional authoritative effect.

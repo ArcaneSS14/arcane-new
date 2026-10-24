@@ -9,6 +9,10 @@ Find declaration, YAML consumer, defaults, nullability, serializers and every ex
 ## Правила и границы
 Separate prototype configuration, serializable runtime state and server-only implementation detail. A DataField name/type/default/nullability is a contract.
 Use DataField only for author-configurable values; defaults must be valid before prototype application. Prefer typed IDs and structured data, and keep runtime caches, services and derived state out of the contract.
+### Minimal examples
+
+Correct: use DataField for author-configurable serialized value with valid default. Prohibited: serialize runtime cache/service state. Stop: report unknown serializer/compatibility contract.
+
 ## Выбор подхода
 Use a DataField for author configuration; keep derived/cache/service values runtime-only; use custom serialization only when standard structured types cannot represent the contract.
 Check required fields at prototype load or component startup. Use generated component state and the owner dirtying path for client-visible state.

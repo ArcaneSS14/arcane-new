@@ -9,6 +9,10 @@ Find owner, consumer, existing loader/selector and every referenced prototype/re
 ## Правила и границы
 Check weighted selection, empty set, duplicate IDs, fallback, nesting and deterministic/authoritative requirements.
 Distinguish weighted, unique, ordered, nested and filtered entries. Protected random outcomes are server-authoritative; predicted random must use a deterministic source or authoritative correction. Player-visible dataset strings require FTL.
+### Minimal examples
+
+Correct: select protected weighted outcome on the authoritative owner. Prohibited: let a client choose protected random data. Stop: report an unverified collection loader or fallback contract.
+
 ## Выбор подхода
 Reuse the existing loader/selector; keep data-driven selection in data instead of introducing runtime randomness when content owns it.
 ## Антипаттерны

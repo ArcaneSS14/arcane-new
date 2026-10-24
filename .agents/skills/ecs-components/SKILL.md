@@ -10,6 +10,10 @@ Find schema, prototype, state owner, serializers, consumers, assemblies, and rep
 ## Правила и границы
 Components contain serializable data. Shared holds only cross-side data; hidden authority remains Server; client-only types never enter Shared.
 Use the repository's component registration and serialization attributes. Use prototype-backed data fields for author-tunable configuration, typed prototype IDs where the current schema supports them, and defaults that remain valid before prototype data is applied.
+### Minimal examples
+
+Correct: store serialized component state in the assembly that owns its authority. Prohibited: put runtime cache in prototype DataFields. Stop: report an unverified component/state contract.
+
 ## Выбор подхода
 Use a component field for durable entity state, prototype data for author tuning, and system-local state for implementation detail.
 Put a component in Shared only when both sides need its contract or replicated state; use Server for authoritative-only data and Client for presentation-only caches. A client-visible server mutation must use the established generated state and dirtying path owned by its system.

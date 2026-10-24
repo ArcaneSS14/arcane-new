@@ -18,6 +18,10 @@ Establish the owner, frequency, baseline or operation count, allocation/query/di
 - Preserve observable behavior, prediction, authority, and lifecycle semantics. A micro-optimization must not change correctness or remove required work.
 - Compare before/after with profiler or benchmark evidence, a focused test, or a reasoned operation count when tooling is not appropriate. Report measured improvement separately from unverified risks.
 
+### Minimal examples
+
+Correct: compare measured or reasoned before/after operation count. Prohibited: introduce an unbounded cache for a micro-optimization. Stop: report when frequency/invalidation is unknown.
+
 ## Выбор подхода
 
 First remove unnecessary frequency or scope; then reuse an established buffer/cache; only then consider an algorithmic change. Choose event-driven work over repeated polling when the owner already exposes the needed event, and narrower dirtying over a larger replicated update when the contract permits it.

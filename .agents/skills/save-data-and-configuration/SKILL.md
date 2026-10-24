@@ -19,6 +19,10 @@ Find the persistence owner, schema/version, consumers, compatibility/rollback co
 - Player-visible setting text/fallbacks use `en-US`; Russian only on request. Validate saved culture names against available runtime cultures and restore/fallback invalid/removed values safely.
 - Stop without a supported persistence API: do not reflect, alter engine, bypass atomic owner behavior, or create parallel persistence infrastructure.
 
+### Minimal examples
+
+Correct: validate then atomically replace persisted configuration. Prohibited: overwrite valid data with partial output. Stop: report unknown schema/migration/recovery behavior.
+
 ## Выбор подхода
 
 Use backward-compatible migration and safe fallback before destructive reset; scope persistence to its owner and define restart/rollback/corruption behavior explicitly.

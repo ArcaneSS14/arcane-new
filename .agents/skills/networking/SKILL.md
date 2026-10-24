@@ -9,6 +9,10 @@ Find sender, receiver, shared contract, authoritative mutation, serialization/co
 ## Правила и границы
 Messages express intent; server derives results. Replicate only data clients need and validate every client-originated request.
 Use the current supported serialization and NetEntity conversion path for entity references; do not send raw server-only entities or broad component objects.
+### Minimal examples
+
+Correct: replicate minimal state and validate message intent on Server. Prohibited: send hidden data or client-claimed result. Stop: report unknown serialization/NetEntity contract.
+
 ## Выбор подхода
 Prefer existing component state for ongoing visible state; use a small message for an action request or transient response.
 After authoritative mutation, use the component or field dirtying pattern generated for that state. Trace sender, receiver and client state application before choosing a contract.

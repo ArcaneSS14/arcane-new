@@ -19,6 +19,19 @@ Find current command registration/shell pattern, server authority/permission own
 - CVar keys are global operational APIs. Renames need compatibility/migration. Subscribe only for supported live changes; match subscription lifetime to its owner and handle invalid/removed persisted values safely.
 - Stop at a missing supported command/CVar extension point: do not bypass access, use reflection, alter engine, or create a parallel configuration system.
 
+### Source ledger
+
+Claim: CVar definition/flag behavior must be verified in the current engine rather than inferred.
+Source: Current branch CVar consumers and pinned RobustToolbox declarations.
+Source type: Arcane / RobustToolbox
+Checked against branch: `66cf1fb0a7`
+Volatility: version-bound
+Recheck trigger: Changing CVar flags, engine revision, or replication behavior.
+
+### Minimal examples
+
+Correct: validate command input and permission at its server owner. Prohibited: use a CVar for per-entity state. Stop: report unverified CVar flags or command registration.
+
 ## Выбор подхода
 
 Use a component/prototype for content/entity state and a CVar for global behavior. Define replicated values in Shared only when replication is required; never store secrets/private server state in a CVar.

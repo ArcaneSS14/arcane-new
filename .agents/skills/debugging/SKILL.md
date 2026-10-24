@@ -19,6 +19,10 @@ Reproduce the exact symptom and record inputs, runtime side, owner, lifecycle st
 - For localization, inspect English root discovery, key, variables, selectors, loaded roots, and UI refresh. Inspect Russian only when the defect is Russian-specific or Russian is in scope.
 - Apply repository markers only to inherited files; do not mark owner-local module or underscore paths.
 
+### Minimal examples
+
+Correct: reproduce and trace the authoritative divergence before fixing it. Prohibited: redesign from a symptom alone. Stop: report when the entry point or declaration cannot be proven.
+
 ## Выбор подхода
 
 Choose a focused affected-project build after reproduction. Use a focused regression test when the owner can cover the failure; use integration coverage only for a broken cross-layer path. Treat a server/client comparison as required evidence for a network divergence rather than assuming which side is wrong.

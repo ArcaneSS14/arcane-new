@@ -17,6 +17,10 @@ Keep static layout, labels, and visual hierarchy in XAML; keep presentation stat
 
 Use `async void` only when the UI framework requires an event handler; delegate to an observable task and cancel or ignore it on close. Do not block the UI thread with `Task.Wait`, `.Result`, or equivalent waiting; a canceled or faulted callback must not leave stale controls or subscriptions.
 
+### Minimal examples
+
+Correct: keep static layout in XAML and authorize on Server owner. Prohibited: update a disposed window callback. Stop: report unknown generated control/lifecycle API.
+
 ## Выбор подхода
 
 Choose XAML for static structure and themes/resources, code-behind for narrow state-to-control adaptation, a BUI/EUI contract for data and intent messages, and the gameplay owner for mutation.

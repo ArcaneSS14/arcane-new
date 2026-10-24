@@ -19,6 +19,10 @@ Identify whether state belongs to account/session, mind, current body, role, or 
 - Clean actions, components, permissions, subscriptions, and references tied to a prior role/body. Server owns protected assignment/transfer outcomes.
 - Stop at a missing owner API: do not use reflection, engine edits, direct cross-owner mutation, or a parallel mind/role system.
 
+### Minimal examples
+
+Correct: store state on mind/session/body matching its lifetime. Prohibited: cache the current body as permanent identity. Stop: report missing transfer/cleanup owner.
+
 ## Выбор подхода
 
 Use the owner whose lifetime matches the feature and established transfer/role/objective API. Keep body-local presentation distinct from mind/session identity.

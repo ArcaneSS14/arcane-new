@@ -19,6 +19,10 @@ Determine the relation owner, direction, cardinality, authority, serialization/n
 - Replicate only relation targets needed for presentation. Do not expose hidden target relationships merely because a client receives a related entity.
 - Handle source/target deletion, component removal, container/body/map transfer, reconnect, and invalid persisted restoration through the designated cleanup owner or revalidation before use.
 
+### Minimal examples
+
+Correct: update both sides through the single relation owner. Prohibited: retain direct object references. Stop: report undefined cardinality or cleanup ownership.
+
 ## Выбор подхода
 
 Use an existing relation component or network-safe entity form when it matches the owner contract. Use one-way storage for a one-way relationship; use a single owning system/atomic update for bidirectional links; use a uniqueness-aware owner for unique or many-to-many relations.

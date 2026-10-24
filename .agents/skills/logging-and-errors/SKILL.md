@@ -19,6 +19,10 @@ Identify the subsystem, operation, failure mode, expected rejection path, author
 - Keep operator diagnostics separate from localized player feedback. Player feedback must not expose stacks, file paths, SQL, or permission internals.
 - Do not emit per-tick, per-entity broad-query, or expected-network-rejection spam. Use owner-local rate limiting or aggregation only when repeated diagnostics are actually needed.
 
+### Minimal examples
+
+Correct: log safe subsystem and operation context at the appropriate level. Prohibited: log credentials or normal rejection as error. Stop: report when safe diagnostic context cannot be identified.
+
 ## Выбор подхода
 
 Log the smallest safe context that distinguishes the operation and owner. Return a localized domain failure to the player while keeping diagnostics with operators. Add aggregation only after proving a repeated operational signal, not to conceal an unbounded hot path.

@@ -19,6 +19,10 @@ Identify the authority owner, whether the result is protected or persisted, pred
 - For a persisted result, define the authoritative commit point and what replay/retry does after commit. Keep prediction reconcilable without duplicating side effects.
 - Make tests and debugging control the random source or deterministic inputs; do not depend on global state or test ordering.
 
+### Minimal examples
+
+Correct: commit protected weighted result on Server. Prohibited: use unsynchronized random in predicted shared code. Stop: report unknown deterministic input/retry semantics.
+
 ## Выбор подхода
 
 Use deterministic shared input for predicted presentation that must agree locally. Use the owner random service or weighted data-driven collection for server selection. Use authoritative correction when a client may preview an effect but cannot decide the protected result.

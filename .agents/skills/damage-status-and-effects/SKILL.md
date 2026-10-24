@@ -19,6 +19,10 @@ Find the owner damage/status/movement/alert systems, typed specifications, proto
 - Server owns protected outcome; alerts/icons/sounds/popups are presentation synchronized from authority and must not duplicate predicted feedback.
 - Stop at a missing supported extension point: no reflection, engine edits, direct multi-component mutation, or parallel status framework.
 
+### Minimal examples
+
+Correct: use the owner damage/status API and refresh derived modifiers. Prohibited: overwrite a base speed permanently. Stop: report an unverified effect lifecycle/owner API.
+
 ## Выбор подхода
 
 Use components/status APIs according to nearby owner patterns; use lifecycle cleanup rather than a detached timer and localize player-visible presentation.

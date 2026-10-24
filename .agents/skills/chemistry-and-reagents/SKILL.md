@@ -19,6 +19,10 @@ Find the existing reagent/reaction/solution owner, prototype IDs, quantities, ca
 - Define effect conditions, scaling, interval, cap, stacking, and cleanup. Avoid per-tick allocations or repeated costly lookup in metabolism.
 - Stop at a missing supported owner API: do not use reflection, direct collection mutation, engine edits, or a parallel solution system.
 
+### Minimal examples
+
+Correct: transfer solution through the existing solution-system API. Prohibited: mutate reagent collections directly. Stop: report when the solution owner API cannot be established.
+
 ## Выбор подхода
 
 Extend the existing solution/reaction/metabolism owner and prototype contract. Use owner-local UI refresh only as presentation of authoritative state.

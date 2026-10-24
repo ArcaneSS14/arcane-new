@@ -19,6 +19,10 @@ Establish the requested outcome, exclusions, allowed paths, commit/push expectat
 - English localization is structurally canonical; update Russian only when explicitly requested.
 - Run the narrowest meaningful check first. A missing dependency or tool is a limitation to report, never a pass.
 
+### Minimal examples
+
+Correct: use declarations and command output as evidence for the changed owner. Prohibited: implement from an unverified summary. Stop: report a correctness-critical unknown boundary before implementation.
+
 ## Выбор подхода
 
 Map entry points, dependencies, lifecycle, resources, localization, and tests using exact paths/symbols only for the changed surface. Choose the smallest existing extension point and owner-local implementation that satisfies the outcome; broaden exploration or verification only when evidence requires it.

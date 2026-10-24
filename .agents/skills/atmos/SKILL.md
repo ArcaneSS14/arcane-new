@@ -20,6 +20,10 @@ Find the owner system, gas/pressure/fire/pipe/device contract, update frequency,
 - Keep BUI/XAML separate from simulation. Validate every UI request on the server and send minimal state; do not make UI an authority path.
 - When one feature changes prototype tuning, UI, player-visible text, overlays, or sprite states, trace and update each affected owner surface together; add Russian only when explicitly requested.
 
+### Minimal examples
+
+Correct: extend the existing server gas/device owner with its current units. Prohibited: create a parallel gas container. Stop: report when the gas/device API or simulation owner is unverified.
+
 ## Выбор подхода
 
 Extend the existing gas, pipe, device, or alarm owner rather than creating a parallel container or update loop. Use prototype-backed fields for content tuning and component/system state for runtime simulation. Add client overlays or UI only as presentation consumers of authoritative state.

@@ -20,6 +20,19 @@ Record source repository, base/head commit, root PR, follow-ups, reverts/restora
 - Source markers never travel. Mark inherited destination changes only with Arcane markers; never use `Trauma - `, `<Trauma>`, or `Goobstation-`.
 - English localization is structurally required; add Russian only on explicit request, preserving keys, attributes, variables, selectors, paths, and order. Do not create new build/test infrastructure without a separate reason.
 
+### Source ledger
+
+Claim: Arcane-owned ports default to root `Content.Arcane.*` and existing `_Arcane` resource roots, while proven Trauma additions follow the sync-sensitive destination rule.
+Source: Root `AGENTS.md`, `.agents/rules/port-destination.md`, `.agents/rules/fork-trajectory-priority.md`, and current resource/project layout.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing ownership policy, port destination rule, runtime project layout, or resource roots.
+
+### Minimal examples
+
+Correct: trace source add/follow-up/revert history before destination choice. Prohibited: copy historical broken snapshot. Stop: report unverified provenance/current destination API.
+
 ## Выбор подхода
 
 Choose destination by Arcane/Trauma ownership and provenance, not convenience. Inventory the feature family’s code layers, prototypes, English locale, UI, maps, sprites, audio, tests, database changes, CVars, additions/removals, and inherited modifications only as relevant to that family. Prefer owner-local adaptation; alter a base type only by the smallest working Arcane-marked delta and name it in delivery.

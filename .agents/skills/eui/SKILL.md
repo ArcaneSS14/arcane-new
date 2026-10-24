@@ -15,6 +15,10 @@ Find the server-session owner, Shared message/state contract, viewer admission r
 
 The server creates and closes the session, checks viewer authorization before opening it, and sends only data that viewer may see. Each message revalidates sender, permission, target, operation, and current state; disconnect, permission change, target deletion, and shutdown must close or invalidate the session. The client applies the latest state, releases subscriptions on close, and ignores callbacks from an obsolete session. A visible control or enabled button is never authorization.
 
+### Minimal examples
+
+Correct: validate each session message on Server. Prohibited: treat client permission as authorization. Stop: report missing session lifecycle/visibility owner.
+
 ## Выбор подхода
 
 Choose BUI when lifecycle and authority naturally belong to an entity; choose EUI when a server session, rather than a world object, owns them. Keep the Shared contract minimal and mutation on Server.

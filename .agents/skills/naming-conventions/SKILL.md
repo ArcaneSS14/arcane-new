@@ -19,6 +19,10 @@ Find owner conventions, exact declarations, consumers, compatibility surface, lo
 - Before renaming serialized fields, prototype IDs, map entities, database fields, CVars, locale keys, or network messages, search relevant consumers and provide migration/compatibility alias when required. Russian is in scope only on request.
 - Stop without a supported extension point: do not bypass access, reflection, engine edits, or parallel identifiers to avoid a stable rename/migration.
 
+### Minimal examples
+
+Correct: preserve a stable prototype/FTL/CVar identifier and search consumers before rename. Prohibited: use display text as a machine ID. Stop: report unproven compatibility/migration path.
+
 ## Выбор подхода
 
 Choose stable owner-prefixed identifiers for compatibility surfaces and existing partial/resource naming for conflict-sensitive paths. Search every reference only for a public compatibility rename or explicit all-reference task.
