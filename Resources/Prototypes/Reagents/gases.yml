@@ -17,6 +17,12 @@
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant, Arachnid, Cybernetic ] # Trauma - added Cybernetic
+      # Arcane-Start
+      - !type:Oxygenate # Feroxi still need to breathe
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi ]
+      # Arcane-End
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -58,6 +64,12 @@
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ] # Goob - add Cybernetic
+      # Arcane-Start
+      - !type:Oxygenate # Feroxi still need to breathe
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi ]
+      # Arcane-End
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:

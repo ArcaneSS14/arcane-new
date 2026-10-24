@@ -1,0 +1,57 @@
+- type: speechVerb
+  id: Chitinid
+  name: chat-speech-verb-name-chitinid
+  speechVerbStrings:
+  - chat-speech-verb-chitinid-1
+  - chat-speech-verb-chitinid-2
+  - chat-speech-verb-chitinid-3
+  - chat-speech-verb-chitinid-4
+
+- type: typingIndicator
+  id: chitinid
+  spritePath: /Textures/_Arcane/Effects/speech.rsi
+  typingState: chitinid0
+  idleState: chitinid0
+  offset: -0.2, 0.1
+
+- type: emoteSounds
+  id: UnisexChitinid
+  params:
+    variation: 0.125
+  sounds:
+    Buzz:
+      path: /Audio/_Arcane/Voice/Chitinid/moth_scream.ogg
+    Scream:
+      path: /Audio/Voice/Arachnid/arachnid_scream.ogg
+    Laugh:
+      path: /Audio/_Arcane/Voice/Chitinid/moth_laugh.ogg
+    Chitter:
+      path: /Audio/Voice/Arachnid/arachnid_chitter.ogg
+    Click:
+      path: /Audio/Voice/Arachnid/arachnid_click.ogg
+    Crying:
+      collection: FemaleCry
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Sneeze:
+      collection: MaleSneezes
+    Cough:
+      collection: MaleCoughs
+    Yawn:
+      collection: MaleYawn
+    Hiss:
+      path: /Audio/Animals/snake_hiss.ogg
+    Gasp:
+      collection: MaleGasp
+    DefaultDeathgasp:
+      collection: MothDeathGasp
+    Sigh:
+      collection: MaleSigh
+    Whistle:
+      collection: Whistles
+    Gulp:
+      path: /Audio/_Goobstation/Voice/gulpexotic.ogg
+    Surprised:
+      path: /Audio/_Goobstation/Voice/surprised.ogg

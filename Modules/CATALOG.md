@@ -49,7 +49,7 @@ A direct `dotnet build <project>.csproj --no-restore` builds that project and it
 | `Content.Trauma.Common` | Trauma: Low-level shared types and contracts for this owner | `Content.Common` | [Guide](Trauma/Content.Trauma.Common/AGENTS.md) |
 | `Content.Trauma.Server` | Trauma: Server-side authoritative behavior for this owner | `Content.Trauma.Shared`, `Content.Goobstation.Server`, `Content.Server` | [Guide](Trauma/Content.Trauma.Server/AGENTS.md) |
 | `Content.Trauma.Shared` | Trauma: Shared gameplay contracts, components, systems, and behavior for this owner | `Content.Goobstation.Shared`, `Content.Shared` | [Guide](Trauma/Content.Trauma.Shared/AGENTS.md) |
-| `Content.YAMLLinter` | Core: YAML validation executable and its content-aware linting rules. | `Content.Client`, `Content.Server`, `Content.Shared`, `Content.IntegrationTests` | [Guide](Core/Content.YAMLLinter/AGENTS.md) |
+| `Content.YAMLLinter` | Core: YAML validation executable and its content-aware linting rules. | `Content.Client`, `Content.Server`, `Content.Shared`, `Content.IntegrationTests`, `Content.Arcane.Client`, `Content.Arcane.Server` | [Guide](Core/Content.YAMLLinter/AGENTS.md) |
 
 ## Module and resource guidance
 

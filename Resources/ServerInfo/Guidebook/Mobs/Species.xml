@@ -20,4 +20,9 @@
     <GuideEntityEmbed Entity="AppearanceIPC" Caption="IPC"/>
   <GuideEntityEmbed Entity="MobDecapoid" Caption="Decapoid"/>
   </Box>
+  <!-- Arcane-Start -->
+  <Box>
+    <GuideEntityEmbed Entity="AppearanceFeroxi" Caption="Feroxi"/>
+  </Box>
+  <!-- Arcane-End -->
 </Document>

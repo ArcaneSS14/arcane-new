@@ -54,6 +54,7 @@
           - ExtendedEmergencyNitrogenTank
           - EmergencyPlasmaTank
           - ExtendedEmergencyPlasmaTank
+          - EmergencyWaterVaporTank # Arcane
       mask:
         ejectOnInteract: false
         whitelist:

@@ -218,6 +218,12 @@
         children:
         - id: NitrogenTankFilled
         - id: DoubleEmergencyNitrogenTankFilled
+      # Arcane-Start
+      - !type:GroupSelector # Random water vapor tanks spawn too
+        children:
+        - id: WaterVaporTankFilled
+        - id: DoubleEmergencyWaterVaporTankFilled
+      # Arcane-End
       - id: EmergencyFunnyOxygenTankFilled
       - !type:GroupSelector # EE Plasmeme Change
         children:

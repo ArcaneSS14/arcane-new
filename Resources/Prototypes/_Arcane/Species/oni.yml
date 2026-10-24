@@ -1,0 +1,11 @@
+- type: species
+  id: Oni
+  name: species-name-oni
+  roundStart: true
+  prototype: MobOni
+  dollPrototype: AppearanceOni
+  skinColoration: Hues
+  naming: FirstLast
+  maleFirstNames: NamesOniFirstMale
+  femaleFirstNames: NamesOniFirstFemale
+  lastNames: NamesOniLast
