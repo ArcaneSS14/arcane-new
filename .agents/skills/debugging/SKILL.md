@@ -3,21 +3,35 @@ name: debugging
 description: Reproduce failures, trace authoritative flow, prove the broken assumption, and add targeted regression coverage.
 ---
 
-Debug before redesigning.
+## Когда применять
 
-1. Reproduce the exact symptom and record inputs, runtime side, repository owner, and lifecycle stage.
-2. Identify the authoritative owner and public entry point.
-3. Trace subscription, validation, mutation, dirtying, persistence, and presentation.
-4. Compare server and client state for networking issues.
-5. Verify every assumed declaration and resource reference.
-6. Add temporary diagnostics only around the suspected divergence.
-7. Confirm the failing assumption, fix the narrow cause, remove diagnostics, and add a stable regression test.
+Use when a runtime symptom, desync, UI issue, prototype-load error, localization defect, or regression needs a proven cause before changing design.
 
-For localization bugs, inspect English file discovery, keys, variables, selectors, loaded roots, and UI refresh. Compare Russian files only when the issue is Russian-specific or Russian is in scope.
+## До изменения
 
-Apply repository markers only to inherited files and never to owner-local module or underscore paths.
+Reproduce the exact symptom and record inputs, runtime side, owner, lifecycle stage, and expected versus actual result. Establish the authoritative owner and public entry point first. Verify every assumed declaration, ID, resource, and path before altering the suspected flow.
 
-After reproducing the issue, build only the affected project and use a focused regression test when verification is requested and the owner can cover the failure. Run an integration test only when it exercises the broken cross-layer path. Follow root `AGENTS.md`; do not restore dependencies or run every affected owner’s full suite by default.
+## Правила и границы
+
+- Trace only the affected flow: subscription, validation, mutation, dirtying, persistence, replication, and presentation. For a network defect, compare server and client state and identify the divergence point.
+- Put temporary diagnostics only around the suspected divergence, remove them after the cause is confirmed, and never use them as a substitute for tracing ownership.
+- Fix the narrow, proven broken assumption. Add regression coverage only through an existing owner test path and only when it can exercise the failure.
+- For localization, inspect English root discovery, key, variables, selectors, loaded roots, and UI refresh. Inspect Russian only when the defect is Russian-specific or Russian is in scope.
+- Apply repository markers only to inherited files; do not mark owner-local module or underscore paths.
+
+## Выбор подхода
+
+Choose a focused affected-project build after reproduction. Use a focused regression test when the owner can cover the failure; use integration coverage only for a broken cross-layer path. Treat a server/client comparison as required evidence for a network divergence rather than assuming which side is wrong.
+
+## Антипаттерны
+
+- Do not redesign before reproducing, fix a symptom without a proven owner, or leave temporary diagnostics in the final change.
+- Do not infer a declaration, prototype ID, resource path, or replication step from a similar feature.
+- Do not add a parallel test fixture or claim regression coverage that has not been added and run.
+
+## Проверка
+
+Record the reproduction result, the evidence for the divergence/cause, the narrow fix, and only commands actually run. Follow root `AGENTS.md`: do not restore dependencies or run an owner’s full suite by default.
 
 ## References
 

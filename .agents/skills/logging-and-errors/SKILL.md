@@ -3,28 +3,36 @@ name: logging-and-errors
 description: Add useful diagnostics, choose log levels, preserve context, and handle player-facing failures safely.
 ---
 
-Logs should help operators locate a failure without flooding normal operation or exposing sensitive information.
+## Когда применять
 
-## Log levels
+Use when adding diagnostics, handling exceptions, classifying an operational failure, or producing safe player-facing feedback.
 
-Use debug/verbose output for development-only detail, information for meaningful operational transitions, warnings for recoverable unexpected state, and errors for failed operations requiring investigation. Avoid logging normal rejection paths as errors.
+## До изменения
 
-## Context
+Identify the subsystem, operation, failure mode, expected rejection path, authority boundary, audience, and whether the code is a hot path. Establish what context is useful to an operator without exposing sensitive or untrusted data.
 
-Include subsystem, entity or prototype identity, operation, and important non-sensitive parameters. Prefer structured or consistent messages that can be searched. Do not log tokens, credentials, private messages, or complete user-provided payloads without necessity.
+## Правила и границы
 
-## Exceptions
+- Use debug/verbose for development detail, information for meaningful operational transitions, warning for recoverable unexpected state, and error for failed operations that require investigation. Do not log normal rejection as an error.
+- Include subsystem, operation, entity/prototype identity, and safe context in structured or consistent searchable messages. Do not log credentials, tokens, private messages, or a full untrusted payload without necessity.
+- Catch only to recover, clean up, translate to a domain result, or add useful context. Do not swallow exceptions; preserve stack information on rethrow.
+- Keep operator diagnostics separate from localized player feedback. Player feedback must not expose stacks, file paths, SQL, or permission internals.
+- Do not emit per-tick, per-entity broad-query, or expected-network-rejection spam. Use owner-local rate limiting or aggregation only when repeated diagnostics are actually needed.
 
-Catch exceptions only when the caller can recover, add useful context, translate to a domain result, or perform cleanup. Do not swallow failures. Preserve stack information when rethrowing.
+## Выбор подхода
 
-## Player-facing errors
+Log the smallest safe context that distinguishes the operation and owner. Return a localized domain failure to the player while keeping diagnostics with operators. Add aggregation only after proving a repeated operational signal, not to conceal an unbounded hot path.
 
-Localize player messages and avoid exposing internal stack traces, file paths, SQL, or permission internals. Keep operator diagnostics separate from player feedback.
+## Антипаттерны
 
-## Hot paths
+- Do not classify a normal invalid request as an error, log secrets, or concatenate uncontrolled payloads into diagnostics.
+- Do not catch-and-ignore, rethrow without stack preservation, or expose internal diagnostic text to players.
+- Do not log a normal loop iteration merely because the code lacks another signal.
 
-Do not log every tick, every entity in a broad query, or every expected network rejection. Add rate limiting or aggregation when repeated diagnostics are necessary.
+## Проверка
 
-## Verification
+Exercise success, expected rejection, malformed input, and exception paths. Confirm the message has enough safe context, no secrets/private payload, correct operational level, and no hot-path spam.
 
-Exercise success, expected rejection, malformed input, and exception paths. Confirm logs contain enough context and no secrets.
+## References
+
+No reference is required for ordinary diagnostics; inspect the owner subsystem's existing logging conventions before adding a new message.
