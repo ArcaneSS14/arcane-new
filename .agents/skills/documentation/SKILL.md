@@ -3,30 +3,36 @@ name: documentation
 description: Write concise technical guidance, PR notes, architecture explanations, and reproducible verification reports.
 ---
 
-# Documentation
+## Когда применять
 
-Documentation should explain decisions that code alone does not make obvious.
+Use for technical guidance, PR notes, architecture explanations, handoffs, and reproducible verification reports.
 
-For substantial changes, document the problem, intended behavior, owner, assembly boundaries, data or event flow, compatibility, localization impact (`ru-RU` only when in scope), resources, tests, and limitations.
+## До изменения
 
-Use current paths, declarations, and exact commands. Do not claim behavior based on the old repository or a source fork.
+Identify the canonical documentation owner, requested audience, scope, and decisions that are not obvious from the diff. For substantial work, determine only relevant owner, assembly boundary, data/event flow, compatibility, localization scope, resources, tests, and limitations.
 
-Verification reports must separate:
+## Правила и границы
 
-- commands actually run and their result;
-- commands not run and why;
-- manual checks performed;
-- unresolved risks;
-- files requiring human SPDX metadata.
+- Document decisions and evidence, not a restatement of code. Use current paths, declarations, and exact commands; do not claim behavior from an old repository or source fork.
+- A verification report separates commands actually run/results, checks not run/reason, manual checks, unresolved risks, and paths requiring human SPDX action.
+- Do not state “all tests passed” when only a build or diff check ran. Do not turn internal implementation notes into a player changelog.
+- Do not create a separate documentation file when an existing canonical owner already contains the information.
+- Copy commands from current workflow/instructions; do not invent or simplify flags from memory.
 
-Do not write “all tests passed” when only a build ran. Do not translate internal implementation notes into a player changelog. Do not add documentation files when an existing canonical file owns the information.
+## Выбор подхода
 
-## Verification commands
+Write the smallest owner-local addition that explains a non-obvious decision, contract, limitation, or verification outcome. Omit fields that do not apply rather than filling a handoff with generic repository detail.
 
-```powershell
-git diff --name-status
-git diff --check
-git diff -U0
-```
+## Антипаттерны
 
-When documenting commands, copy them from current workflows or verified project instructions. Do not invent or simplify flags.
+- Do not invent paths, APIs, commands, behavior, test status, or source-fork assumptions.
+- Do not report an unrun check as successful or hide an unavailable dependency behind a generic pass.
+- Do not duplicate canonical documentation or create a changelog when technical guidance was requested.
+
+## Проверка
+
+Review every factual statement against the current file/declaration/command output. For documentation-only changes, use `git diff --name-status`, `git diff --check`, and final diff; state that builds/tests were not run unless they actually were.
+
+## References
+
+No reference is required for ordinary technical documentation; use the current workflow or owner guidance as the command source.

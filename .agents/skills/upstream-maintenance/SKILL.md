@@ -3,24 +3,36 @@ name: upstream-maintenance
 description: Keep inherited changes narrow, correctly marked, traceable, and easy to rebase across repository layers.
 ---
 
-Before editing inherited code, determine whether the change is an upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned behavior.
+## Когда применять
 
-When behavior was added, removed, reverted, or later restored upstream, trace its commit history before deciding what to carry forward. Follow `.agents/rules/change-history-analysis.md`; do not infer intent from a commit subject or marker alone.
+Use when an inherited path needs an upstream bug fix, extension point, compatibility adaptation, divergence, revert/restore analysis, or conflict resolution.
 
-Verify the current repository owner tag and existing marker syntax.
+## До изменения
 
-Repository-owned behavior belongs in owner-local module or underscore paths whenever possible. Those paths do not receive redundant owner edit markers.
+Classify the change as upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned divergence. For add/remove/revert/restore, trace relevant history and actual diffs through `.agents/rules/change-history-analysis.md`; do not decide from a title or marker alone. Verify current owner tag and marker syntax.
 
-When an inherited file must change:
+## Правила и границы
 
-- add the current repository marker around the smallest changed block
-- preserve nearby formatting and upstream layout
-- avoid unrelated cleanup
-- document intentional divergence and source revision when relevant
-- replace an upstream marker on a line you change, since the line becomes yours; leave upstream markers on untouched lines alone
+- Prefer an owner-local module/underscore path for repository-owned behavior; those paths receive no redundant markers.
+- For an inherited edit, use the smallest current-repository marker block, preserve nearby layout, avoid format cleanup, and document intentional divergence/source revision when relevant.
+- Do not copy a whole inherited file for a small change when a supported extension point exists. If an upstream-marked line is changed, it becomes Arcane-marked; untouched upstream markers remain untouched.
+- Separate mechanical conflict resolution from an Arcane behavior change. An upstream change landing in the tree is not ours until Arcane authors/adapts it with the correct marker.
+- For a real conflict read base, current, and incoming. Follow `.agents/rules/merge-conflict-resolution.md`: the current Arcane marker outranks incoming; retain the unmarked version when incoming does not invalidate the marked change, and ask when intent remains unresolved. Never blanket-select `ours` or `theirs`.
 
-Separate mechanical upstream conflict resolution from repository behavior changes. Do not copy a whole inherited file merely to change a small branch when a supported extension point exists.
+## Выбор подхода
 
-An upstream change is not ours by landing in our tree. If a feature came from TraumaStation and we do not want it as-is, rework it and mark the result with our marker; do not leave an upstream marker on a line we authored.
+Use an upstream fix when it is the intended sync behavior, an extension point when it can isolate Arcane behavior, and an owner-local divergence when the repository intentionally differs. Keep source-history research proportional to the actual inherited path rather than scanning unrelated history.
 
-When a rebase or merge actually conflicts, the side with a current repository marker outranks the incoming side. Take the version without the marker when the incoming change does not invalidate the marked one, and ask when it does. Full priority order and marker forms: `.agents/rules/merge-conflict-resolution.md`.
+## Антипаттерны
+
+- Do not judge provenance from a marker/title, copy an entire inherited file, or mix formatting cleanup with a behavior change.
+- Do not put redundant markers in owner-local paths, leave an upstream marker on an Arcane-authored line, or resolve a conflict mechanically.
+- Do not call an unreviewed incoming change an Arcane change merely because it is present locally.
+
+## Проверка
+
+Inspect history/diffs required by the change, final marker placement, inherited diff scope, and delivery note for intentional divergence/source revision when relevant. Verify only the directly affected owner path; do not rebase, merge, or initialize engine dependencies for documentation-only work.
+
+## References
+
+No reference is required for ordinary inherited maintenance; read `.agents/rules/change-history-analysis.md` for add/remove/revert/restore history and `.agents/rules/merge-conflict-resolution.md` for an actual conflict.
