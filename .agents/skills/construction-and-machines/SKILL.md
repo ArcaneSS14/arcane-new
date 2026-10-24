@@ -3,6 +3,8 @@ name: construction-and-machines
 description: Implement construction graphs, machine lifecycle, power, parts, upgrades, examination, and machine UI.
 ---
 
+# construction-and-machines
+
 ## Когда применять
 
 Use for construction graphs, machines, boards/parts, upgrades, power/anchoring, examination, or machine UI.

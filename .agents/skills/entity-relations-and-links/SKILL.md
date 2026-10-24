@@ -3,6 +3,8 @@ name: entity-relations-and-links
 description: Maintain entity references, ownership links, target relationships, deletion cleanup, and network-safe relation state.
 ---
 
+# entity-relations-and-links
+
 ## Когда применять
 
 Use for entity ownership links, targets, attachments, relation components, network-safe references, and lifecycle cleanup of source/target relationships.

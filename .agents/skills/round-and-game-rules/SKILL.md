@@ -3,6 +3,8 @@ name: round-and-game-rules
 description: Implement round lifecycle, game rules, objectives, announcements, win conditions, and restart-safe cleanup.
 ---
 
+# round-and-game-rules
+
 ## Когда применять
 
 Use for round lifecycle, game rules, objectives, announcements, win conditions, player assignment, or restart cleanup.

@@ -3,6 +3,8 @@ name: containers-and-inventory
 description: Move entities through containers, hands, slots, storage, equipment, and inventories without corrupting ownership or transforms.
 ---
 
+# containers-and-inventory
+
 ## Когда применять
 
 Use for containers, slots, hands, storage, equipment, pickup/drop, transfer, and inventory UI.

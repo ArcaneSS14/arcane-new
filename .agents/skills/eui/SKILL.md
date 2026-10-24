@@ -3,6 +3,8 @@ name: eui
 description: Implement EUI sessions, shared state and messages, server lifecycle, and client windows.
 ---
 
+# eui
+
 ## Когда применять
 
 Use EUI for a session-oriented interface not owned by one entity: a menu, lobby, administration, or separate client/server session flow. Use BUI for an entity-owned UI.

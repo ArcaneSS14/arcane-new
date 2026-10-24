@@ -3,6 +3,8 @@ name: porting
 description: Port one complete feature family with provenance, current-API adaptation, repository ownership, localization, resources, and verification.
 ---
 
+# porting
+
 ## Когда применять
 
 Use when porting, cherry-picking, restoring, or adapting one coherent feature family from a source repository or history.
@@ -13,7 +15,7 @@ Record source repository, base/head commit, root PR, follow-ups, reverts/restora
 
 ## Правила и границы
 
-- Port intended final behavior, including confirmed follow-up fixes, rather than a historically broken snapshot. Do not combine independent feature families.
+- Port the explicitly pinned source revision and feature scope. Treat later follow-ups, reverts, and restorations as risks or proposals until the user explicitly includes them; do not silently replace the requested ref with a newer "final" state. Do not combine independent feature families.
 - Default Arcane-only behavior to root `Content.Arcane.*` projects and existing Arcane-owned resource paths such as `Resources/Prototypes/_Arcane`, `Resources/Textures/_Arcane`, and `Resources/Locale/{culture}/_Arcane`; `Modules/Arcane` is guidance, not a runtime destination.
 - A proven TraumaStation addition follows the corresponding Trauma-owned/vanilla sync path; an implementation restored after a Trauma-side deletion/revert belongs in Arcane-owned paths. Keep inherited integration minimal and Arcane-marked.
 - Do not add a project reference merely to compile. Respect dependency direction: Common does not depend on Arcane Shared, Server, or Client.

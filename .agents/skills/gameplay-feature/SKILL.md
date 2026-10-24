@@ -3,6 +3,8 @@ name: gameplay-feature
 description: Implement complete SS14 features across ownership, ECS, networking, resources, localization, UI, and tests.
 ---
 
+# gameplay-feature
+
 ## Когда применять
 
 Use as routing guidance for a gameplay feature spanning ownership, ECS, authority, networking, UI, resources, localization, or tests.

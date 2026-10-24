@@ -3,6 +3,8 @@ name: performance
 description: Review hot paths, allocations, iteration, caching, event frequency, and correctness-preserving optimization.
 ---
 
+# performance
+
 ## Когда применять
 
 Use only for a measured issue or a clearly high-frequency path such as `Update`, a broad query, replication/dirtying, pathfinding, atmos, or client rendering.

@@ -3,6 +3,8 @@ name: naming-conventions
 description: Name C# symbols, events, prototypes, FTL keys, resources, and compatibility surfaces consistently.
 ---
 
+# naming-conventions
+
 ## Когда применять
 
 Use when naming or renaming symbols, events, prototypes, FTL keys, resources, CVars, network contracts, or serialized compatibility identifiers.

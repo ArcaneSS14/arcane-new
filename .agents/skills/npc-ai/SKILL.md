@@ -3,6 +3,8 @@ name: npc-ai
 description: Modify NPC behavior, HTN tasks, navigation, steering, prototypes, and AI debugging.
 ---
 
+# npc-ai
+
 ## Когда применять
 
 Use for server-owned NPC target selection, HTN tasks/operators, utility selection, navigation, steering, cooldowns, prototype configuration, and AI debugging.

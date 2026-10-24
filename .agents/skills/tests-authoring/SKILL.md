@@ -3,6 +3,8 @@ name: tests-authoring
 description: Author deterministic owner-correct tests that prove observable contracts through valid APIs.
 ---
 
+# tests-authoring
+
 ## Когда применять
 
 Use when authoring or reviewing a focused regression test for a caller-visible contract.

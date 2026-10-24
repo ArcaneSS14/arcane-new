@@ -3,6 +3,8 @@ name: chemistry-and-reagents
 description: Modify reagents, solutions, reactions, transfers, metabolism, effects, containers, and chemistry UI safely.
 ---
 
+# chemistry-and-reagents
+
 ## Когда применять
 
 Use for reagent/reaction prototypes, solution transfer, metabolism, chemistry effects, containers, or chemistry UI.

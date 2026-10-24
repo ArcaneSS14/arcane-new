@@ -3,6 +3,8 @@ name: pvs
 description: Work with visibility, network interest, PVS filters, and PVS-sensitive entity behavior.
 ---
 
+# pvs
+
 ## Когда применять
 
 Use when changing which entities, events, or replicated state a client receives through world visibility, network interest, filters, or a PVS override.

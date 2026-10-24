@@ -3,6 +3,8 @@ name: sprite-overlays-and-shaders
 description: Implement sprite layers, overlays, render targets, shader prototypes, and visual cleanup without leaking gameplay authority.
 ---
 
+# sprite-overlays-and-shaders
+
 ## Когда применять
 
 Use for client sprite layers, entity-local or global overlays, shader parameters, render targets, or presentation effects derived from replicated or permitted predicted state.

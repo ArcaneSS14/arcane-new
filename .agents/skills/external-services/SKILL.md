@@ -3,6 +3,8 @@ name: external-services
 description: Integrate HTTP APIs, webhooks, external processes, retries, timeouts, caching, and secret-backed configuration safely.
 ---
 
+# external-services
+
 ## Когда применять
 
 Use for HTTP APIs, webhooks, external processes, retries, timeouts, caches, or secret-backed configuration.

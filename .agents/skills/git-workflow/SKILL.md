@@ -3,6 +3,8 @@ name: git-workflow
 description: Preserve user work, scope, metadata, history, and verifiable delivery.
 ---
 
+# git-workflow
+
 ## Когда применять
 
 Use for any write task that changes a Git worktree, staging, commit, conflict resolution, branch delivery, or remote publication.
@@ -16,7 +18,7 @@ Record `git status --short --branch`, the current branch, and remotes. Record ex
 - Stage only task-related paths and inspect the full staged diff before committing. Do not include generated files, logs, test results, IDE files, or unrelated cleanup unless requested.
 - Never add, edit, delete, normalize, or generate `SPDX-` lines. Report a file requiring human metadata instead of repairing REUSE.
 - Do not force-push, `reset --hard`, clean untracked files, rewrite published history, or choose merge/rebase without approval.
-- Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: an Arcane-marked change outranks both other versions; otherwise the pushed-forward version wins unless the incoming side independently requires change.
+- Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: choose the result that preserves confirmed behavior and intent; an incoming complete implementation may supersede an older Arcane divergence, while partial or unclear equivalence requires escalation.
 - Create commits only with the exact count/message requested by the user. A local task record, local commit, and remote push are distinct states.
 
 ### Source ledger

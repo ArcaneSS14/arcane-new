@@ -3,6 +3,8 @@ name: atmos
 description: Modify atmos simulation, gases, fire, pressure, pipes, devices, UI, and hot paths safely.
 ---
 
+# atmos
+
 ## Когда применять
 
 Use for authoritative atmosphere simulation: gases, pressure, fire, pipe networks, atmospheric devices, alarms, and presentation/UI derived from their state.

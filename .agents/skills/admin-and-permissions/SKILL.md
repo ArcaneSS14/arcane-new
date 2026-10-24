@@ -3,6 +3,8 @@ name: admin-and-permissions
 description: Implement privileged commands, admin UI, role checks, audit logs, and safe operational controls.
 ---
 
+# admin-and-permissions
+
 ## Когда применять
 
 Use for privileged commands, admin UI, role/flag checks, player-affecting operations, and audit trails.

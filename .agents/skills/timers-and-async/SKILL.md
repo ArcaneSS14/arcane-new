@@ -3,6 +3,8 @@ name: timers-and-async
 description: Manage timers, cancellation, entity lifetime, asynchronous work, and main-thread state safely.
 ---
 
+# timers-and-async
+
 ## Когда применять
 
 Use for timers, delayed callbacks, cancellation, asynchronous I/O/computation, deferred ECS mutation, and work that can outlive an entity, session, map, or round.

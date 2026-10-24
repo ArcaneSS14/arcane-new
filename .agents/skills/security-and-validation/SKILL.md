@@ -3,6 +3,8 @@ name: security-and-validation
 description: Review trust boundaries, input validation, permissions, abuse resistance, secrets, and safe failure behavior.
 ---
 
+# security-and-validation
+
 ## Когда применять
 
 Use for client, command, file, network, external-service, permission, secret, or abuse-resistance boundaries.

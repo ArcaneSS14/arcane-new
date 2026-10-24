@@ -3,6 +3,8 @@ name: save-data-and-configuration
 description: Validate, migrate, and atomically persist files and configuration with safe fallback and restart coverage.
 ---
 
+# save-data-and-configuration
+
 ## Когда применять
 
 Use for save data, configuration schema/versioning, migration, atomic write, settings recovery, or restart behavior.

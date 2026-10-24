@@ -3,6 +3,8 @@ name: debugging
 description: Reproduce failures, trace authoritative flow, prove the broken assumption, and add targeted regression coverage.
 ---
 
+# debugging
+
 ## Когда применять
 
 Use when a runtime symptom, desync, UI issue, prototype-load error, localization defect, or regression needs a proven cause before changing design.

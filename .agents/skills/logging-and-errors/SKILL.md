@@ -3,6 +3,8 @@ name: logging-and-errors
 description: Add useful diagnostics, choose log levels, preserve context, and handle player-facing failures safely.
 ---
 
+# logging-and-errors
+
 ## Когда применять
 
 Use when adding diagnostics, handling exceptions, classifying an operational failure, or producing safe player-facing feedback.

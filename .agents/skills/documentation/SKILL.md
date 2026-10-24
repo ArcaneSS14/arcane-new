@@ -3,6 +3,8 @@ name: documentation
 description: Write concise technical guidance, PR notes, architecture explanations, and reproducible verification reports.
 ---
 
+# documentation
+
 ## Когда применять
 
 Use for technical guidance, PR notes, architecture explanations, handoffs, and reproducible verification reports.

@@ -3,6 +3,8 @@ name: caveman-mode
 description: Apply an explicit, current-turn-only concise response mode without changing task rules, verification, or technical payload.
 ---
 
+# caveman-mode
+
 ## Когда применять
 
 Use only when the user explicitly requests `$caveman`, “caveman mode”, a brief/minimal answer, fewer tokens, or an unambiguous equivalent. It changes response style for the current turn only; it never persists into later turns.

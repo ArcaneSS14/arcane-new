@@ -3,6 +3,8 @@ name: database-migrations
 description: Change persistent models and SQLite/PostgreSQL migrations without breaking existing servers.
 ---
 
+# database-migrations
+
 ## Когда применять
 
 Use for persistent models, SQLite/PostgreSQL schema, migrations, provider compatibility, backfills, or upgrade/rollback behavior.
@@ -26,6 +28,7 @@ Source type: Arcane
 Checked against branch: `66cf1fb0a7`
 Volatility: version-bound
 Recheck trigger: Changing EF Core/provider package versions, target framework, or migration tooling.
+
 - Stop if no supported persistence extension point exists: do not use reflection, alter engine, or create parallel persistence/test infrastructure.
 
 ### Minimal examples

@@ -3,6 +3,8 @@ name: upstream-maintenance
 description: Keep inherited changes narrow, correctly marked, traceable, and easy to rebase across repository layers.
 ---
 
+# upstream-maintenance
+
 ## Когда применять
 
 Use when an inherited path needs an upstream bug fix, extension point, compatibility adaptation, divergence, revert/restore analysis, or conflict resolution.
@@ -17,11 +19,11 @@ Classify the change as upstream bug fix, reusable extension point, compatibility
 - For an inherited edit, use the smallest current-repository marker block, preserve nearby layout, avoid format cleanup, and document intentional divergence/source revision when relevant.
 - Do not copy a whole inherited file for a small change when a supported extension point exists. If an upstream-marked line is changed, it becomes Arcane-marked; untouched upstream markers remain untouched.
 - Separate mechanical conflict resolution from an Arcane behavior change. An upstream change landing in the tree is not ours until Arcane authors/adapts it with the correct marker.
-- For a real conflict read base, current, and incoming. Follow `.agents/rules/merge-conflict-resolution.md`: the current Arcane marker outranks incoming; retain the unmarked version when incoming does not invalidate the marked change, and ask when intent remains unresolved. Never blanket-select `ours` or `theirs`.
+- For a real conflict read base, current, and incoming. Follow `.agents/rules/merge-conflict-resolution.md`: compare confirmed intent and behavior; a complete incoming implementation may supersede older Arcane code, while partial equivalence or unclear intent requires escalation. Never blanket-select `ours` or `theirs`.
 
 ### Source ledger
 
-Claim: Arcane marker precedence, owner-local marker exemptions, and conflict-resolution order are repository policy, not generic Git behavior.
+Claim: Arcane marker provenance, owner-local marker exemptions, and intent-based conflict resolution are repository policy, not generic Git behavior.
 Source: Root `AGENTS.md`, `.agents/rules/arcane-edit-markers.md`, `.agents/rules/fork-trajectory-priority.md`, and `.agents/rules/merge-conflict-resolution.md`.
 Source type: Arcane
 Checked against branch: `66cf1fb0a7`

@@ -3,6 +3,8 @@ name: build-and-packaging
 description: Change projects, solution structure, CI, generated content, and packaging with repository-correct ownership and exact commands.
 ---
 
+# build-and-packaging
+
 ## Когда применять
 
 Use for project files, solution structure, MSBuild targets, workflows, manifests, generated output, packaging rules, or CI-equivalent validation.

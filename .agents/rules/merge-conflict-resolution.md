@@ -26,13 +26,9 @@ git show :3:<path>
 
 Stages are `1` base, `2` ours, `3` theirs, during a merge.
 
-## Priority order
+## Decision process
 
-When the three versions disagree, decide in this order and stop at the first rule that applies.
-
-### 1. Arcane-marked changes win
-
-A change inside an Arcane marker is the repository's deliberate divergence from upstream. It outranks both other versions, and it outranks any preference below.
+When the three versions disagree, establish the behavior and intent each version represents before choosing a result. An Arcane marker is provenance evidence, not a mechanical winner: it identifies a deliberate divergence that must be understood and either preserved, superseded by a fully equivalent incoming implementation, or escalated.
 
 Marker forms, by file type:
 
@@ -51,9 +47,9 @@ The reason suffix is optional and used when the block's purpose is not obvious. 
 
 No C# block form exists in the tree yet, but the rule covers C#: a merged C# conflict touching two or more lines uses `// Arcane-Edit-Start` / `// Arcane-Edit-End`. When a conflict offers a larger Arcane block than the change actually needs, keep the block minimal and say so.
 
-When an Arcane change conflicts with an incoming change to the same line, keep the Arcane value. If the incoming change makes the Arcane one wrong, that is a decision for the user, not a silent overwrite. Report it.
+When an Arcane change conflicts with an incoming change to the same line, compare their confirmed behavior. If incoming completely implements the Arcane intent, it may replace the older Arcane implementation; preserve or adapt the marker only when the resolved line remains Arcane-authored. If both sides are only partly equivalent, are behaviorally incompatible, or their intent cannot be proven, stop and ask for a decision.
 
-The `old > new` in a marker records what Arcane replaced. If the incoming side reintroduces `old`, the conflict is already settled: restore `new` and move on without asking. Only ask when the incoming side changes the value to something neither marker mentions.
+The `old > new` marker records provenance; it does not settle a later behavioral change by itself. An incoming reintroduction of `old` is evidence to investigate, not permission to restore `new` without reading the current contract.
 
 Foreign markers are not Arcane markers. `Trauma - ` and `Goobstation-` blocks in the tree record upstream authorship, not ours. They carry the same standing relative to upstream, but they are not this repository's vocabulary.
 
@@ -70,7 +66,7 @@ Syncs arrive along the Trauma trajectory. Before resolving, classify the file, b
 | File class | Cost of keeping our side |
 |---|---|
 | Arcane owner-local, root `Content.Arcane.*` or `_Arcane` resources | none; resolve normally |
-| Trauma owner-local, `*.Trauma.cs` | none; these are ours, resolve normally |
+| Trauma-owned, `Content.Trauma.*`, `Resources/**/_Trauma/**`, or `*.Trauma.cs` | sync-sensitive; preserve confirmed intent and mark Arcane-authored resolution |
 | vanilla space-station-14, unmarked | high; this is the conflict surface |
 | foreign fork path, `Content.Goobstation.*`, `_Goobstation`, `_DV`, `_EinsteinEngines` | low; not part of this trajectory |
 
@@ -80,28 +76,15 @@ For a foreign-fork-path conflict, resolve on its own terms. Do not import the Tr
 
 Classification details: `.agents/rules/fork-trajectory-priority.md`.
 
-### 2. The version being pushed forward wins
-
-When no Arcane marker applies, prefer `ours` in a merge: the current branch is the future that will exist after the push, and the incoming side is history already written.
-
-This is a default, not a shortcut. Apply it only when the incoming side brings no independent reason to change. A bug fix, a schema migration, or an upstream security patch from the incoming side is a reason to change, and it wins over mechanical preference.
-
-Reverse the roles only when the current branch is the stale one. Determine that from the actual divergence, not from which ref has more commits:
-
-```powershell
-git log --oneline HEAD..<incoming>   # incoming-only work
-git log --oneline <incoming>..HEAD   # your work not yet shared
-git merge-base --is-ancestor HEAD <incoming> && echo "incoming is ahead"
-```
-
-### 3. Semantic merge when both carry meaning
+### Semantic merge when both carry meaning
 
 When both sides changed the same thing for a reason, produce the third version that keeps both intents. Do not concatenate hunks and do not average conflicting values.
 
-- additive changes on both sides: keep both, ordered engine component then content, or in the order the file establishes
-- different hunks, same intent: keep one, simplest form
-- same key, different value: pick deliberately, say why in the report
-- structural move plus content change: apply the content change at the new location, keep the move's intent
+- full equivalence: keep the implementation that is current, supported, and preserves the confirmed intent; remove superseded Arcane code when it adds no behavior
+- additive changes on both sides: keep both in the order the file establishes
+- different hunks, same intent: keep one simplest verified form
+- same key, different value: choose by confirmed behavior and record why
+- structural move plus content change: apply the content change at the new location, preserving both confirmed intents
 
 A merge that resolves without a single thought is a merge resolved wrong.
 

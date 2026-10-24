@@ -3,6 +3,8 @@ name: damage-status-and-effects
 description: Implement damage, healing, status effects, alerts, movement modifiers, and timed gameplay effects consistently.
 ---
 
+# damage-status-and-effects
+
 ## Когда применять
 
 Use for damage/healing, status effects, alerts, movement/action modifiers, or timed gameplay effects.

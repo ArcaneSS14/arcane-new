@@ -3,6 +3,8 @@ name: ai-workflow
 description: Plan, verify, implement, and deliver repository work through evidence-backed ownership and quality gates.
 ---
 
+# ai-workflow
+
 ## Когда применять
 
 Use for repository work that needs an evidence-backed plan, implementation boundary, verification choice, or delivery report.

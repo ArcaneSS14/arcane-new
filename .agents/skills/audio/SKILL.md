@@ -3,6 +3,8 @@ name: audio
 description: Add data-driven audio with correct prediction, audience, resources, attribution, and verification.
 ---
 
+# audio
+
 ## Когда применять
 
 Use for predicted local feedback, PVS world sound, entity-attached or coordinate sound, global notifications, UI-only sound, ambient loops, or music.

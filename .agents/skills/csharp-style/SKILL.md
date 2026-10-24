@@ -3,6 +3,8 @@ name: csharp-style
 description: Write repository-consistent C# only after proving symbol access, ownership, and compatibility.
 ---
 
+# csharp-style
+
 ## Когда применять
 
 Use before writing or reviewing C# that crosses symbols, assemblies, ECS/prototype contracts, or compatibility surfaces.
@@ -25,7 +27,7 @@ Correct: verify declaration, access, assembly, and reference before a non-local 
 
 ## Выбор подхода
 
-Use the current owner pattern and explicit stable API for cross-assembly behavior. Choose a clear field over newer syntax when serialization/attributes/clarity require it; adopt current supported language features only when they clarify the actual design.
+Use the current owner pattern and explicit stable API for cross-assembly behavior. Choose a clear field over newer syntax when serialization, attributes, or clarity require it; adopt only language features confirmed by the current project configuration when they clarify the actual design.
 
 ## Антипаттерны
 

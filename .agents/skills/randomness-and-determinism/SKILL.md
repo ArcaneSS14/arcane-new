@@ -3,6 +3,8 @@ name: randomness-and-determinism
 description: Use authoritative, deterministic, weighted, and testable randomness without breaking prediction or reproducibility.
 ---
 
+# randomness-and-determinism
+
 ## Когда применять
 
 Use for random or weighted gameplay selections, datasets, loot, rewards, combat/economy results, persisted outcomes, retries, and predicted cosmetic variation.

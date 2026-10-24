@@ -3,6 +3,8 @@ name: commands-and-cvars
 description: Implement commands and CVar-backed configuration with validation, authority, persistence, localized feedback, and compatibility.
 ---
 
+# commands-and-cvars
+
 ## Когда применять
 
 Use for console commands, CVar-backed operational configuration, command permissions, runtime settings, or CVar compatibility changes.

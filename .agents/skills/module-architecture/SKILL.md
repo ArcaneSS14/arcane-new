@@ -3,6 +3,8 @@ name: module-architecture
 description: Prove repository ownership, module ownership, assembly boundaries, edit-marker rules, extension points, and test placement.
 ---
 
+# module-architecture
+
 ## Когда применять
 
 Use when a change crosses ownership, inherited paths, assemblies, project references, resource roots, modules, tests, or engine boundaries.

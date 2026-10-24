@@ -3,6 +3,8 @@ name: xaml-ui
 description: Build localized client XAML controls with correct lifecycle, culture refresh, resource references, ownership, and validation.
 ---
 
+# xaml-ui
+
 ## Когда применять
 
 Use for client XAML controls, BUI/EUI windows, and their presentation code-behind. Gameplay authority, server services, and authoritative validation are outside this skill.

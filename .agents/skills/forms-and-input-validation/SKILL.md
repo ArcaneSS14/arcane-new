@@ -3,6 +3,8 @@ name: forms-and-input-validation
 description: Validate UI, command, text, numeric, entity, and configuration input with localized feedback and server authority.
 ---
 
+# forms-and-input-validation
+
 ## Когда применять
 
 Use for any text, number, entity selection, command, or configuration value received from a player, UI, or external input.

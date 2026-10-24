@@ -3,6 +3,8 @@ name: code-review
 description: Review correctness, access, repository ownership, authority, localization, compatibility, resources, scope, and verification evidence.
 ---
 
+# code-review
+
 ## Когда применять
 
 Use when reviewing a change for observable correctness, architectural validity, scope, evidence, and actionable defects; review formatting and style last.

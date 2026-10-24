@@ -3,6 +3,8 @@ name: appearance-and-visualizers
 description: Implement replicated appearance data, GenericVisualizer mappings, sprite layers, overlays, and client visual systems.
 ---
 
+# appearance-and-visualizers
+
 ## Когда применять
 
 Use for client-visible state derived from authoritative or allowed predicted gameplay state: replicated appearance values, `GenericVisualizer` mappings, sprite layers, client animations, overlays, or client visual systems.

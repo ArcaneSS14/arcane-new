@@ -3,6 +3,8 @@ name: minds-roles-and-objectives
 description: Work with minds, sessions, bodies, roles, antagonists, objectives, ownership, and transfers safely.
 ---
 
+# minds-roles-and-objectives
+
 ## Когда применять
 
 Use for minds, sessions, bodies, roles, antagonists, objectives, ownership, transfers, or round cleanup.

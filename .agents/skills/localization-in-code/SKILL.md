@@ -3,6 +3,8 @@ name: localization-in-code
 description: Resolve localized text at presentation boundaries using English-source keys and safe typed variables.
 ---
 
+# localization-in-code
+
 ## Когда применять
 
 Use when presenting player-visible UI, popup, chat, or log text; do not use localization as gameplay-state storage.
