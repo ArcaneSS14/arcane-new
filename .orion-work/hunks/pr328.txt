@@ -1,0 +1,13 @@
+[Fix] Dispenser Energy Dupe
+
+### Content.Goobstation.Server/Chemistry/Components/EnergyReagentDispenserComponent.cs
+@@ -89,4 +89,7 @@ public sealed partial class EnergyReagentDispenserComponent : Component
++        [DataField]
++        public float RefundEnergyEfficiency = 0.5f;
++
+
+### Content.Goobstation.Server/Chemistry/EntitySystems/EnergyReagentDispenserSystem.cs
+@@ -221,5 +221,6 @@ private void OnClearContainerSolutionMessage(Entity<EnergyReagentDispenserCompon
+-            var refundedPower = soln.Sum(reagent => GetPowerCostForReagent(reagent.Reagent.Prototype, (int) reagent.Quantity, reagentDispenser));
++            var refundedPower = soln.Sum(reagent => GetPowerCostForReagent(reagent.Reagent.Prototype, (int) reagent.Quantity, reagentDispenser.Comp)) // Orion-Edit
++                                * reagentDispenser.Comp.RefundEnergyEfficiency; // Orion

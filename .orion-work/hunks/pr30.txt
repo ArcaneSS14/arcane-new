@@ -1,0 +1,87 @@
+Fix walking dead gone postal
+
+### Content.Client/CombatMode/CombatModeSystem.cs
+@@ -28,8 +28,11 @@
++using Content.Shared.StatusIcon.Components;
++using Robust.Client.GameObjects;
++using Robust.Shared.Utility;
+@@ -47,4 +50,5 @@ public sealed class CombatModeSystem : SharedCombatModeSystem
++    private EntityQuery<SpriteComponent> _spriteQuery; // Europa
+@@ -53,6 +57,9 @@ public override void Initialize()
+-
++        SubscribeLocalEvent<CombatModeComponent, GetStatusIconsEvent>(UpdateCombatModeIndicator); // Europa
++        Subs.CVar(_cfg, CCVars.CombatIndicator, (bool value) => OnShowCombatIndicatorChanged(value), true); // Europa
++
++        _spriteQuery = GetEntityQuery<SpriteComponent>(); // Europa
+@@ -117,3 +124,46 @@ private void OnShowCombatIndicatorsChanged(bool isShow)
+-}
++
++    // Europa-Start
++    private bool _combatIndicatorEnabled = false;
++
++    private void OnShowCombatIndicatorChanged(bool value)
++    {
++        _combatIndicatorEnabled = value;
++    }
++
++    private void UpdateCombatModeIndicator(EntityUid uid, CombatModeComponent comp, ref GetStatusIconsEvent _)
++    {
++        if (!_combatIndicatorEnabled)
++        {
++            if (_spriteQuery.TryComp(uid, out var sprite) && sprite.LayerMapTryGet("combat_mode_indicator", out var layerToRemove))
++            {
++                sprite.RemoveLayer(layerToRemove);
++            }
++            return;
++        }
++
++        if (comp.IsInCombatMode)
++        {
++            if (!_spriteQuery.TryComp(uid, out var sprite))
++                return;
++
++            if (!sprite.LayerMapTryGet("combat_mode_indicator", out var layer))
++            {
++                if (!_spriteQuery.TryComp(uid, out var sprite2))
++                    return;
++
++                layer = sprite2.AddLayer(new SpriteSpecifier.Rsi(new ResPath("_Europa/Effects/combat_mode.rsi"), "combat_mode"));
++                sprite2.LayerMapSet("combat_mode_indicator", layer);
++            }
++        }
++        else
++        {
++            if (_spriteQuery.TryComp(uid, out var sprite) && sprite.LayerMapTryGet("combat_mode_indicator", out var layerToRemove))
++            {
++                sprite.RemoveLayer(layerToRemove);
++            }
++        }
++    }
++    // Europa-End
++}
+
+### Content.Client/Options/UI/Tabs/AccessibilityTab.xaml.cs
+@@ -70,4 +70,5 @@ public AccessibilityTab()
++        Control.AddOptionCheckBox(CCVars.CombatIndicator, CombatIndicatorCheckBox); // Europa
+
+### Content.Shared/CombatMode/SharedCombatModeSystem.cs
+@@ -28,5 +28,8 @@
++using Content.Shared.Bed.Sleep;
++using Content.Shared.Mobs;
++using Content.Shared.Mobs.Systems;
+@@ -43,4 +46,5 @@ public abstract class SharedCombatModeSystem : EntitySystem
++    [Dependency] private   readonly MobStateSystem _mobState = default!; // Europa
+@@ -74,6 +78,6 @@ private void OnActionPerform(EntityUid uid, CombatModeComponent component, Toggl
+-        var msg = component.IsInCombatMode ? "action-popup-combat-enabled" : "action-popup-combat-disabled";
+-        _popup.PopupClient(Loc.GetString(msg), args.Performer, args.Performer);
++//        var msg = component.IsInCombatMode ? "action-popup-combat-enabled" : "action-popup-combat-disabled"; // Europa-Remove
++//        _popup.PopupClient(Loc.GetString(msg), args.Performer, args.Performer); // Europa-Remove
+@@ -99,4 +103,12 @@ public virtual void SetInCombatMode(EntityUid entity, bool value, CombatModeComp
++        // Europa-Start | Dont let entity gone postal when unconscious
++        if (_mobState.IsDead(entity) || _mobState.IsCritical(entity) || HasComp<SleepingComponent>(entity))
++        {
++            if (value)
++                return;
++        }
++        // Europa-End
++

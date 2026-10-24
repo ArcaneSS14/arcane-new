@@ -1,0 +1,222 @@
+{
+"17": {
+"verdict": "KEEP",
+"reason": "_Europa-контент (мудрости/события), пустой дифф"
+},
+"29": {
+"verdict": "KEEP",
+"reason": ""
+},
+"57": {
+"verdict": "KEEP",
+"reason": "обновление карты InteQ_Sizo (Maps/_Europa) — оріоновская карта"
+},
+"85": {
+"verdict": "CUT",
+"reason": "чистка Goob-voice чата"
+},
+"162": {
+"verdict": "KEEP",
+"reason": ""
+},
+"210": {
+"verdict": "KEEP",
+"reason": ""
+},
+"239": {
+"verdict": "KEEP",
+"reason": ""
+},
+"302": {
+"verdict": "KEEP",
+"reason": ""
+},
+"350": {
+"verdict": "KEEP",
+"reason": ""
+},
+"356": {
+"verdict": "KEEP",
+"reason": ""
+},
+"372": {
+"verdict": "KEEP",
+"reason": ""
+},
+"381": {
+"verdict": "KEEP",
+"reason": ""
+},
+"23": {
+"verdict": "KEEP",
+"reason": ""
+},
+"31": {
+"verdict": "KEEP",
+"reason": ""
+},
+"61": {
+"verdict": "KEEP",
+"reason": ""
+},
+"93": {
+"verdict": "CUT",
+"reason": "YAML-фикс Orion-постеров/доступов UEG"
+},
+"182": {
+"verdict": "CUT",
+"reason": "возврат к апстриму (RND-Server, медпак)"
+},
+"211": {
+"verdict": "KEEP",
+"reason": ""
+},
+"248": {
+"verdict": "CUT",
+"reason": "косметический спрайт bleed-алерта"
+},
+"311": {
+"verdict": "CUT",
+"reason": "удаляет ChangelogOrion.yml (нет в базе)"
+},
+"351": {
+"verdict": "KEEP",
+"reason": ""
+},
+"359": {
+"verdict": "KEEP",
+"reason": ""
+},
+"373": {
+"verdict": "CUT",
+"reason": "Orion-баланс патч (TC/урон/броня)"
+},
+"382": {
+"verdict": "KEEP",
+"reason": ""
+},
+"25": {
+"verdict": "KEEP",
+"reason": "фикс спрайтов.modsuit — пустой дифф"
+},
+"38": {
+"verdict": "KEEP",
+"reason": ""
+},
+"63": {
+"verdict": "KEEP",
+"reason": ""
+},
+"143": {
+"verdict": "KEEP",
+"reason": ""
+},
+"183": {
+"verdict": "KEEP",
+"reason": ""
+},
+"216": {
+"verdict": "KEEP",
+"reason": ""
+},
+"283": {
+"verdict": "KEEP",
+"reason": ""
+},
+"341": {
+"verdict": "CUT",
+"reason": "Orion-баланс брони шляп"
+},
+"353": {
+"verdict": "KEEP",
+"reason": ""
+},
+"363": {
+"verdict": "KEEP",
+"reason": ""
+},
+"375": {
+"verdict": "KEEP",
+"reason": ""
+},
+"429": {
+"verdict": "KEEP",
+"reason": "аудио-фикс reptilian_hiss.ogg (бинарь)"
+},
+"26": {
+"verdict": "CUT",
+"reason": "миграция DresserCaptainFilled→CaptainDrobe (ломает базу)"
+},
+"41": {
+"verdict": "CUT",
+"reason": "Floodlight уже наследует HandheldLight"
+},
+"76": {
+"verdict": "KEEP",
+"reason": ""
+},
+"157": {
+"verdict": "CUT",
+"reason": "PDA-время уже есть в базе"
+},
+"207": {
+"verdict": "CUT",
+"reason": "Trauma-языки уже аддитивные (Knowledge)"
+},
+"232": {
+"verdict": "KEEP",
+"reason": ""
+},
+"298": {
+"verdict": "CUT",
+"reason": "фикс UI рекрутинга без самой системы"
+},
+"349": {
+"verdict": "KEEP",
+"reason": ""
+},
+"354": {
+"verdict": "KEEP",
+"reason": ""
+},
+"370": {
+"verdict": "KEEP",
+"reason": ""
+},
+"376": {
+"verdict": "KEEP",
+"reason": ""
+},
+"466": {
+"verdict": "CUT",
+"reason": "fan airtight для широких шлюзов (нет в базе)"
+},
+"6": {
+"verdict": "CUT",
+"reason": "1592/2490 ids уже в базе"
+},
+"30": {
+"verdict": "CUT",
+"reason": "1/1 ids уже в базе"
+},
+"154": {
+"verdict": "CUT",
+"reason": "1/1 ids уже в базе"
+},
+"176": {
+"verdict": "CUT",
+"reason": "1/1 ids уже в базе"
+},
+"191": {
+"verdict": "CUT",
+"reason": "1/1 ids уже в базе"
+},
+"355": {
+"verdict": "CUT",
+"reason": "2/2 ids уже в базе"
+},
+"442": {
+"verdict": "CUT",
+"reason": "36/49 ids уже в базе"
+}
+}

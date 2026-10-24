@@ -1,0 +1,10 @@
+SUBJ: [Tweak] InteQ Things
+MB: 0f358362ad6741dcd2afe44a4edf8eec32d8e55e
+
+ Resources/Locale/en-US/_europa/job/job-names.ftl   |   5 +
+ Resources/Locale/ru-RU/_europa/job/job-names.ftl   |   5 +
+ .../_Europa/Entities/Mobs/NPCs/inteq.yml           |   1 +
+ .../_Europa/Entities/Mobs/Player/Other/inteq.yml   | 185 ++++++++-------------
+ .../Prototypes/_Europa/Roles/Jobs/Fun/inteq.yml    |  26 +++
+ .../_Europa/Roles/play_time_trackers.yml           |   5 +
+ 6 files changed, 112 insertions(+), 115 deletions(-)

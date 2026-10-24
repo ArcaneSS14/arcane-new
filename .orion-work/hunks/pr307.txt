@@ -1,0 +1,81 @@
+up6
+
+### Content.Client/Lobby/LobbyState.cs
+@@ -240,4 +240,5 @@ public override void FrameUpdate(FrameEventArgs e)
++                Lobby.StartTimeContainer.Visible = false; // Orion
+@@ -245,4 +246,5 @@ public override void FrameUpdate(FrameEventArgs e)
++            Lobby!.StartTimeContainer.Visible = true; // Orion
+@@ -299,14 +301,18 @@ private void UpdateLobbyUi()
+-                Lobby!.ManifestButton.Disabled = true; // Orion
++                // Orion-Start
++                Lobby!.ManifestButton.Visible = false;
++                Lobby.StartTimeContainer.Visible = false;
++                // Orion-End
++                Lobby.StartTimeContainer.Visible = true; // Orion
+-                Lobby!.ManifestButton.Disabled = false; // Orion
++                Lobby!.ManifestButton.Visible = true; // Orion
+
+### Content.Client/Lobby/UI/LobbyCharacterPreviewPanel.xaml.cs
+@@ -48,4 +48,5 @@
++using static Robust.Client.UserInterface.Controls.LayoutContainer;
+@@ -64,4 +65,8 @@ public LobbyCharacterPreviewPanel()
++
++        // Orion-Start
++        SetAnchorPreset(CharacterBackground, LayoutPreset.Wide);
++        // Orion-End
+@@ -91,5 +96,5 @@ public void SetSprite(EntityUid uid)
+-            MaxSize = new Vector2(112, 112),
++            MaxSize = new Vector2(148, 148), // Orion-Edit: Was 122, 122
+@@ -104,3 +109,3 @@ protected override void Dispose(bool disposing)
+-}
++}
+
+### Content.Client/Lobby/UI/LobbyGui.xaml.cs
+@@ -81,4 +81,15 @@ public LobbyGui()
++
++            // Orion-Start
++            LeftCollapseButton.OnPressed += _ => ToggleLeftPanel(false);
++            LeftExpandButton.OnPressed += _ => ToggleLeftPanel(true);
++
++            TopCollapseButton.OnPressed += _ => ToggleTopPanel(false);
++            TopExpandButton.OnPressed += _ => ToggleTopPanel(true);
++
++            AttributionCollapseButton.OnPressed += _ => ToggleAttributionPanel(false);
++            AttributionExpandButton.OnPressed += _ => ToggleAttributionPanel(true);
++            // Orion-End
+@@ -93,4 +104,13 @@ public void SwitchState(LobbyGuiState state)
++                    // Orion-Start
++                    ExpandPanel.Visible = false;
++                    TopPanel.Visible = true;
++                    TopExpandPanel.Visible = false;
++                    LeftInfoPanel.Visible = true;
++                    LeftExpandPanel.Visible = false;
++                    AttributionPanel.Visible = false;
++                    AttributionExpandPanel.Visible = true;
++                    // Orion-End
+@@ -117,4 +137,24 @@ private void TogglePanel(bool value)
++        // Orion-Start
++        private void ToggleLeftPanel(bool value)
++        {
++            LeftInfoPanel.Visible = value;
++            LeftExpandPanel.Visible = !value;
++        }
++
++        private void ToggleTopPanel(bool value)
++        {
++            TopPanel.Visible = value;
++            TopExpandPanel.Visible = !value;
++        }
++
++        private void ToggleAttributionPanel(bool value)
++        {
++            AttributionPanel.Visible = value;
++            AttributionExpandPanel.Visible = !value;
++        }
++        // Orion-End
++
+@@ -126,6 +166,6 @@ public enum LobbyGuiState : byte
+-            CharacterSetup
++            CharacterSetup,
+-}
++}

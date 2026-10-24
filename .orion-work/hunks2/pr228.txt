@@ -1,0 +1,22 @@
+SUBJ: up1
+MB: f0831b68d3c65fed165ce8d09407273017634eb0
+
+ .../Components/RadioAnnounceOnSpawnComponent.cs    |  30 ++++++++++++++++
+ .../Chat/Systems/RadioAnnounceOnSpawnSystem.cs     |  39 +++++++++++++++++++++
+ .../en-US/_Orion/chat/radio-announce/announce.ftl  |   3 ++
+ Resources/Locale/en-US/_Orion/chat/senders.ftl     |   1 +
+ Resources/Locale/en-US/_Orion/job/job-names.ftl    |   3 ++
+ .../ru-RU/_Orion/chat/radio-announce/announce.ftl  |   3 ++
+ Resources/Locale/ru-RU/_Orion/chat/senders.ftl     |   1 +
+ Resources/Locale/ru-RU/_Orion/job/job-names.ftl    |   3 ++
+ .../_Orion/Catalog/Fills/Backpacks/backpack.yml    |  15 +++-----
+ .../_Orion/Entities/Markers/Spawners/inteq.yml     |  16 +++++++++
+ .../Entities/Objects/Misc/identification_cards.yml |  30 +++++-----------
+ .../Entities/Objects/Misc/subdermal_implants.yml   |   1 +
+ .../Prototypes/_Orion/Roles/Jobs/Fun/inteq.yml     |  36 ++++++++++++++++++-
+ .../Prototypes/_Orion/Roles/play_time_trackers.yml |   6 ++++
+ Resources/Prototypes/_Orion/StatusIcon/job.yml     |   7 ++++
+ .../Interface/Misc/job_icons.rsi/InteQ-Leader.png  | Bin 0 -> 296 bytes
+ .../_Orion/Interface/Misc/job_icons.rsi/InteQ.png  | Bin 312 -> 278 bytes
+ .../_Orion/Interface/Misc/job_icons.rsi/meta.json  |   5 ++-
+ 18 files changed, 165 insertions(+), 34 deletions(-)

@@ -1,0 +1,6 @@
+[Tweak] Cutter Silo Link
+
+### Resources/Prototypes/Entities/Structures/Machines/lathe.yml
+@@ -1105,5 +1105,5 @@
+-  parent: BaseLathe
++  parent: [ BaseLatheLube, BaseSiloUtilizer ] # Orion-Edit: BaseSiloUtilizer

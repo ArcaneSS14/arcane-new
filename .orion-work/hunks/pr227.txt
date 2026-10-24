@@ -1,0 +1,29 @@
+smaller ghost button
+
+### Content.Client/Info/LinkBanner.cs
+@@ -39,5 +39,4 @@
+-﻿using Content.Client._RMC14.LinkAccount;
+@@ -68,5 +67,5 @@ public LinkBanner()
+-            rulesButton.OnPressed += args => new RulesAndInfoWindow().Open();
++            rulesButton.OnPressed += _ => new RulesAndInfoWindow().Open();
+@@ -78,4 +77,5 @@ public LinkBanner()
++/* // Orion-Edit: Didn't use this
+@@ -85,4 +85,5 @@ public LinkBanner()
++*/
+@@ -95,5 +96,5 @@ public LinkBanner()
+-            changelogButton.OnPressed += args => UserInterfaceManager.GetUIController<ChangelogUIController>().ToggleWindow();
++            changelogButton.OnPressed += _ => UserInterfaceManager.GetUIController<ChangelogUIController>().ToggleWindow();
+@@ -120,3 +121,3 @@ protected override void EnteredTree()
+-}
++}
+
+### Content.Client/_RMC14/LinkAccount/LinkAccountUIController.cs
+@@ -83,4 +83,5 @@ private void OnUpdated()
++/* // Orion-Edit: Removed because don't give a fuck about Patron
+@@ -92,4 +93,5 @@ private void OnLobbyMessageReceived(SharedRMCDisplayLobbyMessageEvent message)
++*/
+@@ -255,10 +257,10 @@ private void UpdateExamples()
+-        system.LobbyMessageReceived += OnLobbyMessageReceived;
++//        system.LobbyMessageReceived += OnLobbyMessageReceived; // Orion-Edit: Removed because don't give a fuck about Patron
+-        system.LobbyMessageReceived -= OnLobbyMessageReceived;
++//        system.LobbyMessageReceived -= OnLobbyMessageReceived; // Orion-Edit: Removed because don't give a fuck about Patron

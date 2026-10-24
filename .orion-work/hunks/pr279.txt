@@ -1,0 +1,6 @@
+[Fix] Attribution Test Fail
+
+### Resources/Textures/Tiles/attributions.yml
+@@ -68,5 +68,5 @@
+-- files: ["asteroid_plating.png]
++- files: ["asteroid_plating.png"]

@@ -1,0 +1,262 @@
+[Port] Emergency Light Alerts
+
+### Content.Server/AlertLevel/AlertLevelPrototype.cs
+@@ -90,3 +90,17 @@ public sealed partial class AlertLevelDetail
++
++    // Orion-Start
++    /// <summary>
++    ///     Alarm sound that the emergency lights will play.
++    /// </summary>
++    [DataField]
++    public SoundSpecifier? AlarmSound;
++
++    /// <summary>
++    ///     How often will the alarm should play.
++    /// </summary>
++    [DataField]
++    public TimeSpan AlarmInterval = TimeSpan.FromSeconds(30);
++    // Orion-End
+
+### Content.Server/Light/Components/EmergencyLightComponent.cs
+@@ -30,4 +30,5 @@
++using Robust.Shared.Audio;
+@@ -67,4 +68,19 @@ public sealed partial class EmergencyLightComponent : SharedEmergencyLightCompon
++
++    // Orion-Start
++    /// <summary>
++    ///     Alarm sound that the emergency lights will play
++    ///     Overwritten by AlertLevelPrototype on station alert level change
++    /// </summary>
++    [DataField]
++    public SoundSpecifier? AlarmSound;
++
++    [DataField]
++    public TimeSpan AlarmInterval;
++
++    [DataField]
++    public TimeSpan AlarmNextSound = TimeSpan.Zero;
++    // Orion-End
+@@ -85,3 +101,3 @@ public EmergencyLightEvent(EmergencyLightState state)
+-}
++}
+
+### Content.Server/Light/EntitySystems/EmergencyLightSystem.cs
+@@ -70,5 +70,8 @@
++using Robust.Server.Audio;
++using Robust.Shared.Player;
++using Robust.Shared.Timing;
+@@ -82,4 +85,6 @@ public sealed class EmergencyLightSystem : SharedEmergencyLightSystem
++    [Dependency] private readonly AudioSystem _audioSystem = default!; // Orion
++    [Dependency] private readonly IGameTiming _timing = default!; // Orion
+@@ -87,4 +92,5 @@ public override void Initialize()
++        SubscribeLocalEvent<EmergencyLightComponent, MapInitEvent>(OnMapInit); // Orion
+@@ -93,4 +99,6 @@ public override void Initialize()
++    private void OnMapInit(Entity<EmergencyLightComponent> entity, ref MapInitEvent args) => UpdateState(entity); // Orion
++
+@@ -142,7 +150,8 @@ private void OnEmergencyLightEvent(EntityUid uid, EmergencyLightComponent compon
++            case EmergencyLightState.Full: // Orion
+-            case EmergencyLightState.Full:
++//            case EmergencyLightState.Full: // Orion-Edit: Moved upper
+@@ -169,4 +178,5 @@ private void OnAlertLevelChanged(AlertLevelChangedEvent ev)
++            UpdateAlarmSound((uid, light), details);
+@@ -192,4 +202,5 @@ public void SetState(EntityUid uid, EmergencyLightComponent component, Emergency
++    // Orion-Edit-Start
+@@ -197,32 +208,37 @@ public override void Update(float frameTime)
+-            Update((uid, emergencyLight), battery, frameTime);
+-        }
+-    }
+-
+-    private void Update(Entity<EmergencyLightComponent> entity, BatteryComponent battery, float frameTime)
+-    {
+-        if (entity.Comp.State == EmergencyLightState.On)
+-        {
+-            if (!_battery.TryUseCharge(entity.Owner, entity.Comp.Wattage * frameTime, battery))
++            if (emergencyLight.State == EmergencyLightState.On)
+-                SetState(entity.Owner, entity.Comp, EmergencyLightState.Empty);
+-                TurnOff(entity);
++                if (!_battery.TryUseCharge(uid, emergencyLight.Wattage * frameTime, battery))
++                {
++                    SetState(uid, emergencyLight, EmergencyLightState.Empty);
++                    TurnOff((uid, emergencyLight));
++                }
+-        }
+-        else
+-        {
+-            _battery.SetCharge(entity.Owner, battery.CurrentCharge + entity.Comp.ChargingWattage * frameTime * entity.Comp.ChargingEfficiency, battery);
+-            if (_battery.IsFull(entity, battery))
++            else
+-                if (TryComp<ApcPowerReceiverComponent>(entity.Owner, out var receiver))
++                _battery.SetCharge(
++                    uid,
++                    battery.CurrentCharge + emergencyLight.ChargingWattage * frameTime * emergencyLight.ChargingEfficiency,
++                    battery);
++                if (_battery.IsFull(uid, battery))
+-                    receiver.Load = 1;
+-                }
++                    if (TryComp<ApcPowerReceiverComponent>(uid, out var receiver))
++                        receiver.Load = 1;
+-                SetState(entity.Owner, entity.Comp, EmergencyLightState.Full);
++                    SetState(uid, emergencyLight, EmergencyLightState.Full);
++                }
++
++            // Audio Alarm
++            if (emergencyLight.AlarmNextSound >= _timing.CurTime || emergencyLight.AlarmSound == null)
++                continue;
++
++            _audioSystem.PlayEntity(emergencyLight.AlarmSound, Filter.Pvs(uid, 0.5f), uid, true);
++
++            emergencyLight.AlarmNextSound = _timing.CurTime.Add(emergencyLight.AlarmInterval);
++    // Orion-Edit-End
+@@ -249,7 +265,10 @@ public void UpdateState(Entity<EmergencyLightComponent> entity)
+-        else if (!receiver.Powered) // If internal battery runs out it will end in off red state
++        else if (!receiver.Powered) // If internal battery runs out
+-            TurnOn(entity, Color.Red);
++            // Orion-Edit-Start
++            if (!entity.Comp.ForciblyEnabled)
++                TurnOn(entity, Color.Red);
++            // Orion-Edit-End
+@@ -258,4 +277,5 @@ public void UpdateState(Entity<EmergencyLightComponent> entity)
++            UpdateAlarmSound(entity, details); // Orion
+@@ -298,3 +318,22 @@ private void TurnOn(Entity<EmergencyLightComponent> entity, Color color)
+-}
++
++    // Orion-Start
++    private void UpdateAlarmSound(Entity<EmergencyLightComponent> entity, AlertLevelDetail alertLevel)
++    {
++        if (alertLevel.AlarmSound == null)
++        {
++            entity.Comp.AlarmSound = null;
++            return;
++        }
++
++        entity.Comp.AlarmSound = alertLevel.AlarmSound;
++        entity.Comp.AlarmInterval = alertLevel.AlarmInterval;
++
++        if (entity.Comp.AlarmInterval < TimeSpan.FromSeconds(1f)) // Safeguard against spam and client crash
++            entity.Comp.AlarmInterval = TimeSpan.FromSeconds(1f);
++
++        entity.Comp.AlarmNextSound = _timing.CurTime.Add(entity.Comp.AlarmInterval);
++    }
++    // Orion-End
++}
+
+### Resources/Prototypes/AlertLevels/alert_levels.yml
+@@ -101,4 +101,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/beep_beep.ogg
++        params:
++          pitch: 1.4
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 120
++      # Orion-End
+@@ -108,4 +118,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/alien.ogg
++        params:
++          pitch: 1.1
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -115,4 +135,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/rising.ogg
++        params:
++          volume: -12
++          pitch: 0.89
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -123,4 +153,12 @@
++      alarmSound:
++        path: /Audio/_Orion/Announcements/2_tone_alarm.ogg
++        params:
++          volume: -12
++          pitch: 0.89
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
+@@ -131,4 +169,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/2_tone_alarm.ogg
++        params:
++          volume: -12
++          pitch: 0.89
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -139,4 +187,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/2_tone_alarm.ogg
++        params:
++          volume: -12
++          pitch: 0.6
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -151,4 +209,13 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/overload.ogg
++        params:
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 45
++      # Orion-End
+@@ -163,4 +230,13 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/angry.ogg
++        params:
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -173,4 +249,14 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/alien.ogg
++        params:
++          pitch: 0.85
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+@@ -182,2 +268,12 @@
++      # Orion-Start
++      alarmSound:
++        path: /Audio/_Orion/Announcements/alien.ogg
++        params:
++          pitch: 0.85
++          volume: -12
++          maxDistance: 10
++          rolloffFactor: 2
++      alarmInterval: 60
++      # Orion-End
+
+### Resources/Prototypes/Entities/Structures/Lighting/base_lighting.yml
+@@ -569,5 +569,5 @@
+-  description: A small light with an internal battery that turns on as soon as it stops receiving any power. Nanotrasen technology allows it to adapt its color to alert crew to the conditions of the station.
++  description: A small light with an internal battery that alerts the crew about the station's conditions. Has an integrated speaker for sound alerts.
+@@ -575,6 +575,6 @@
+-    radius: 5
+-    energy: 0.6
++    radius: 3.5 # Orion-Edit: 5 > 3.5
++    energy: 2 # Orion-Edit: 0.6 > 2
+@@ -587,5 +587,5 @@
+-    speed: 40
++    speed: 120 # Orion-Edit: 40 > 120

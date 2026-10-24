@@ -1,0 +1,40 @@
+also
+
+### Content.Client/CartridgeLoader/Cartridges/NanoTaskItemPopup.xaml.cs
+@@ -19,5 +19,5 @@ public sealed partial class NanoTaskItemPopup : DefaultWindow
+-    public Action<NanoTaskItem>? TaskPrinted;
++//    public Action<NanoTaskItem>? TaskPrinted; // Orion-Edit
+@@ -52,8 +52,10 @@ public NanoTaskItemPopup()
++/* // Orion-Edit
++*/
+
+### Content.Client/CartridgeLoader/Cartridges/NanoTaskUi.cs
+@@ -65,8 +65,10 @@ public override void Setup(BoundUserInterface userInterface, EntityUid? fragment
++/* // Orion-Edit
++*/
+
+### Content.Server/CartridgeLoader/Cartridges/NanoTaskCartridgeSystem.cs
+@@ -1,11 +1,5 @@
+-using Content.Shared.Hands.EntitySystems;
+-using Content.Shared.Paper;
+-using Robust.Shared.Audio;
+-using Robust.Shared.Audio.Systems;
+-using Robust.Shared.Timing;
+-using Robust.Shared.Utility;
+@@ -17,8 +11,10 @@ public sealed class NanoTaskCartridgeSystem : SharedNanoTaskCartridgeSystem
++/*
++*/
+@@ -69,4 +65,5 @@ private void OnUiReady(Entity<NanoTaskCartridgeComponent> ent, ref CartridgeUiRe
++/* // Orion-Edit
+@@ -91,4 +88,5 @@ private void SetupPrintedTask(EntityUid uid, NanoTaskItem item)
++*/
+@@ -124,4 +122,5 @@ private void OnUiMessage(Entity<NanoTaskCartridgeComponent> ent, ref CartridgeMe
++/* // Orion-Edit
+@@ -138,4 +137,5 @@ private void OnUiMessage(Entity<NanoTaskCartridgeComponent> ent, ref CartridgeMe
++*/
+
+### Content.Shared/CartridgeLoader/Cartridges/NanoTaskUiMessageEvent.cs
+@@ -61,4 +61,5 @@ public NanoTaskDeleteTask(int id)
++/* // Orion-Edit
+@@ -77,4 +78,5 @@ public NanoTaskPrintTask(NanoTaskItem item)
++*/

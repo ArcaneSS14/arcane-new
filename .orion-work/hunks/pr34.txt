@@ -1,0 +1,16 @@
+Revert "[Tweak] Role By Priority (#32)"
+
+### Resources/Prototypes/AppearanceCustomization/station_ai.yml
+@@ -41,4 +41,11 @@
++  - StationAiIconAnima
++  - StationAiIconBorb
++  - StationAiIconDarkMatter
++  - StationAiIconRedDot
++  - StationAiIconLamp
++  - StationAiIconLizard
++  - StationAiIconVox
+@@ -58,4 +65,8 @@
++  - StationAiHologramAngel
++  - StationAiHologramBorb
++  - StationAiHologramCloudkat
++  - StationAiHologramPhoenix

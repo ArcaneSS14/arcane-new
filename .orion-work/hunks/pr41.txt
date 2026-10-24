@@ -1,0 +1,15 @@
+remove recipe
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/engivend.yml
+@@ -109,4 +109,5 @@
++    Floodlight: 1 # Europa
+
+### Resources/Prototypes/Entities/Objects/Misc/fluff_lights.yml
+@@ -1,4 +1,4 @@
+-# SPDX-FileCopyrightText: 2020 V�ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
++# SPDX-FileCopyrightText: 2020 V ctor Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
+@@ -344,4 +344,8 @@
++  # Europa-Start
++  - type: HandheldLight
++    wattage: 0.5
++  # Europa-End

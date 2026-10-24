@@ -1,0 +1,4 @@
+A	Resources/Prototypes/_Orion/lobbyscreens.yml
+A	Resources/Textures/_Orion/LobbyScreens/attributions.yml
+A	Resources/Textures/_Orion/LobbyScreens/orion-station.webp
+A	Resources/Textures/_Orion/LobbyScreens/orion-station.webp.yml

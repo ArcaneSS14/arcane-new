@@ -1,0 +1,17 @@
+[Fix] Incapacitated Grab Release
+
+### Content.Goobstation.Shared/GrabIntent/GrabIntentSystem.ReleaseThrow.cs
+@@ -2,4 +2,5 @@
++using Content.Shared.Mobs.Systems;
+@@ -14,4 +15,6 @@ namespace Content.Goobstation.Shared.GrabIntent;
++    [Dependency] private readonly MobStateSystem _mobState = default!; // Orion
++
+@@ -58,4 +61,12 @@ private bool TryGrabRelease(EntityUid pullableUid, EntityUid? user, EntityUid pu
++        // Orion-Start
++        if (!_mobState.IsAlive(pullableUid))
++        {
++            _popup.PopupPredicted(Loc.GetString("popup-grab-release-fail-not-alive"), pullableUid, pullableUid, PopupType.SmallCaution);
++            return false;
++        }
++        // Orion-End
++

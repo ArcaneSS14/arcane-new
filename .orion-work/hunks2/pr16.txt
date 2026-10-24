@@ -1,0 +1,764 @@
+SUBJ: Fix Build Test
+MB: 88132b81bc5166a3e1b465e133d8f03a6284f2c5
+
+ Content.Client/Administration/AdminNameOverlay.cs  |     4 +-
+ .../_Europa/Weapons/Melee/plasma/plasma_hit.ogg    |   Bin 0 -> 46623 bytes
+ .../_Europa/Weapons/Melee/plasma/plasma_off.ogg    |   Bin 0 -> 12166 bytes
+ .../_Europa/Weapons/Melee/plasma/plasma_on.ogg     |   Bin 0 -> 45665 bytes
+ .../_Europa/Weapons/Melee/plasma/plasma_swing.ogg  |   Bin 0 -> 32442 bytes
+ Resources/Fonts/_Europa/supernatural.ttf           |   Bin 0 -> 287916 bytes
+ .../_europa/advertisements/other/inteq_agent.ftl   |     7 +
+ .../_europa/advertisements/vending/inteqdrobe.ftl  |     1 +
+ .../en-US/_europa/chat/managers/chat-language.ftl  |     3 +
+ .../en-US/_europa/datasets/localizedDataset.ftl    |     5 +
+ .../_europa/ghost/roles/ghost-role-component.ftl   |    11 +
+ .../Locale/en-US/_europa/language/languages.ftl    |     4 +
+ Resources/Locale/en-US/_europa/mind/role-types.ftl |     1 +
+ .../_europa/navmap-beacons/station-beacons.ftl     |     1 +
+ Resources/Locale/en-US/_europa/radio_channels.ftl  |     1 +
+ .../en-US/_europa/salvage/lavaland_names.ftl       |     1 +
+ .../en-US/_europa/station-events/events/events.ftl |     1 +
+ Resources/Locale/en-US/_europa/tiles/tiles.ftl     |    10 +
+ .../_europa/advertisements/other/inteq_agent.ftl   |     7 +
+ .../_europa/advertisements/vending/inteqdrobe.ftl  |     1 +
+ .../ru-RU/_europa/chat/managers/chat-language.ftl  |     3 +
+ .../ru-RU/_europa/datasets/localizedDataset.ftl    |     5 +
+ .../_europa/ghost/roles/ghost-role-component.ftl   |    11 +
+ Resources/Locale/ru-RU/_europa/job/job-names.ftl   |     2 +
+ .../Locale/ru-RU/_europa/language/languages.ftl    |     4 +
+ Resources/Locale/ru-RU/_europa/mind/role-types.ftl |     1 +
+ .../_europa/navmap-beacons/station-beacons.ftl     |     1 +
+ .../_europa/prototypes/Objects/weapons/turrets.ftl |     3 +
+ .../fills/backpacks/startinggear/backpack.ftl      |     4 +
+ .../prototypes/catalog/fills/items/belts.ftl       |     2 +
+ .../prototypes/catalog/fills/lockers/inteq.ftl     |    13 +
+ .../catalog/fills/lockers/suit_storage.ftl         |    12 +
+ .../entities/clothing/back/backpacks.ftl           |     2 +
+ .../prototypes/entities/clothing/back/duffel.ftl   |     6 +
+ .../entities/clothing/back/messenger.ftl           |     2 +
+ .../prototypes/entities/clothing/back/satchel.ftl  |     2 +
+ .../prototypes/entities/clothing/belt/belts.ftl    |     7 +
+ .../prototypes/entities/clothing/ears/headsets.ftl |     2 +
+ .../entities/clothing/ears/headsets_alt.ftl        |     2 +
+ .../prototypes/entities/clothing/eyes/glasses.ftl  |     2 +
+ .../prototypes/entities/clothing/hands/gloves.ftl  |     4 +
+ .../entities/clothing/head/eva-helmets.ftl         |     2 +
+ .../entities/clothing/head/hardsuit-helmets.ftl    |     6 +
+ .../prototypes/entities/clothing/head/hats.ftl     |     8 +
+ .../prototypes/entities/clothing/head/helmets.ftl  |    13 +
+ .../prototypes/entities/clothing/head/soft.ftl     |     2 +
+ .../prototypes/entities/clothing/masks/masks.ftl   |     2 +
+ .../prototypes/entities/clothing/neck/cloaks.ftl   |     2 +
+ .../entities/clothing/outerclothing/armor.ftl      |    10 +
+ .../entities/clothing/outerclothing/coat.ftl       |    12 +
+ .../entities/clothing/outerclothing/hardsuits.ftl  |     6 +
+ .../entities/clothing/outerclothing/softsuits.ftl  |     2 +
+ .../prototypes/entities/clothing/shoes/boots.ftl   |     2 +
+ .../entities/clothing/uniforms/jumpskirts.ftl      |     8 +
+ .../entities/clothing/uniforms/jumpsuits.ftl       |     8 +
+ .../prototypes/entities/markers/spawners/inteq.ftl |    42 +
+ .../prototypes/entities/markers/spawners/mine.ftl  |     3 +
+ .../_europa/prototypes/entities/mobs/npc/inteq.ftl |     4 +
+ .../entities/mobs/player/other/inteq.ftl           |     8 +
+ .../prototypes/entities/objects/Storage/case.ftl   |    21 +
+ .../entities/objects/Storage/inteq_box.ftl         |    13 +
+ .../entities/objects/consumable/food/snacks.ftl    |     4 +
+ .../consumable/smokeables/cigarettes/packs.ftl     |     2 +
+ .../objects/devices/electronics/door_access.ftl    |     6 +
+ .../entities/objects/devices/inteq_uplink.ftl      |     3 +
+ .../entities/objects/devices/station_beacon.ftl    |     3 +
+ .../prototypes/entities/objects/fun/toys.ftl       |     2 +
+ .../prototypes/entities/objects/misc/bedsheets.ftl |     2 +
+ .../prototypes/entities/objects/misc/flag.ftl      |     2 +
+ .../entities/objects/misc/identification_cards.ftl |     4 +
+ .../entities/objects/misc/inteq_mech_figurines.ftl |     4 +
+ .../prototypes/entities/objects/misc/paper.ftl     |    11 +
+ .../entities/objects/misc/subdermal_implants.ftl   |     4 +
+ .../entities/objects/shields/shields.ftl           |     2 +
+ .../entities/objects/tools/blueprint.ftl           |     4 +
+ .../weapons/guns/ammunition/boxes/inteq_boxes.ftl  |     9 +
+ .../objects/weapons/guns/pistols/pistols.ftl       |     3 +
+ .../objects/weapons/guns/rifles/rifles.ftl         |     3 +
+ .../objects/weapons/guns/shotguns/shotguns.ftl     |     3 +
+ .../entities/objects/weapons/guns/smgs/SMGs.ftl    |     3 +
+ .../objects/weapons/melee/plasma_sword.ftl         |    10 +
+ .../entities/objects/weapons/melee/ushm.ftl        |     2 +
+ .../entities/structures/decoration/banners.ftl     |     2 +
+ .../doors/airlocks/hatches/airlock_hatch_inteq.ftl |    20 +
+ .../structures/furniture/potted_plants.ftl         |     4 +
+ .../structures/machines/vending_machines.ftl       |     5 +
+ .../structures/storage/closets/closets.ftl         |     4 +
+ .../entities/structures/wallmounts/intercom.ftl    |     3 +
+ .../entities/structures/wallmounts/posters.ftl     |    14 +
+ .../Locale/ru-RU/_europa/prototypes/radio.ftl      |     2 +
+ Resources/Locale/ru-RU/_europa/radio_channels.ftl  |     1 +
+ .../ru-RU/_europa/salvage/lavaland_names.ftl       |     1 +
+ .../ru-RU/_europa/station-events/events/events.ftl |     1 +
+ Resources/Locale/ru-RU/_europa/tiles/tiles.ftl     |    10 +
+ .../entities/clothing/head/base_clothinghead.ftl   |     2 -
+ Resources/Maps/_Europa/Lavaland/InteQ_Sizo.yml     | 26920 +++++++++++++++++++
+ Resources/Prototypes/Access/misc.yml               |     4 +
+ .../Prototypes/Catalog/Fills/Lockers/misc.yml      |     4 +
+ .../Prototypes/Entities/Clothing/Masks/masks.yml   |     3 +-
+ .../Entities/Markers/Spawners/Random/bedsheet.yml  |     3 +-
+ .../Entities/Markers/Spawners/Random/posters.yml   |     7 +
+ .../Markers/Spawners/Random/pottedplants.yml       |     6 +-
+ .../Entities/Markers/Spawners/Random/trash.yml     |     3 +-
+ Resources/Prototypes/_Europa/Access/inteq.yml      |     7 +
+ .../Body/Prototypes/Animal/animal_human.yml        |    30 +
+ .../_Europa/Catalog/Fills/Backpacks/backpack.yml   |    51 +
+ .../_Europa/Catalog/Fills/Items/Belts/belts.yml    |    16 +
+ .../Catalog/Fills/Items/Container/inteq_box.yml    |    23 +
+ .../Catalog/Fills/Items/Container/inteq_case.yml   |    57 +
+ .../_Europa/Catalog/Fills/Lockers/inteq.yml        |    54 +
+ .../_Europa/Catalog/Fills/Lockers/misc.yml         |    47 +
+ .../_Europa/Catalog/Fills/Lockers/suit_storage.yml |    47 +
+ .../VendingMachines/Advertisements/inteq_agent.yml |     5 +
+ .../VendingMachines/Advertisements/inteqdrobe.yml  |     5 +
+ .../VendingMachines/Inventories/inteqdrobe.yml     |    71 +
+ .../Prototypes/_Europa/Datasets/Names/inteq.yml    |    17 +
+ .../_Europa/Entities/Clothing/Back/backpacks.yml   |     8 +
+ .../_Europa/Entities/Clothing/Back/duffel.yml      |    26 +
+ .../_Europa/Entities/Clothing/Back/messengers.yml  |    36 +
+ .../_Europa/Entities/Clothing/Back/satchel.yml     |     8 +
+ .../_Europa/Entities/Clothing/Belt/belts.yml       |    56 +
+ .../_Europa/Entities/Clothing/Ears/headsets.yml    |    14 +
+ .../Entities/Clothing/Ears/headsets_alt.yml        |    13 +
+ .../_Europa/Entities/Clothing/Eyes/glasses.yml     |    13 +
+ .../_Europa/Entities/Clothing/Hands/gloves.yml     |    31 +
+ .../_Europa/Entities/Clothing/Head/eva-helmets.yml |    12 +
+ .../Entities/Clothing/Head/hardsuit-helmets.yml    |    59 +
+ .../_Europa/Entities/Clothing/Head/hats.yml        |    43 +
+ .../_Europa/Entities/Clothing/Head/helmets.yml     |    56 +
+ .../_Europa/Entities/Clothing/Head/soft.yml        |    10 +
+ .../_Europa/Entities/Clothing/Masks/masks.yml      |    30 +
+ .../_Europa/Entities/Clothing/Neck/cloaks.yml      |     8 +
+ .../Entities/Clothing/OuterClothing/armor.yml      |    75 +
+ .../Entities/Clothing/OuterClothing/coat.yml       |    54 +
+ .../Entities/Clothing/OuterClothing/hardsuits.yml  |    41 +
+ .../Entities/Clothing/OuterClothing/softsuits.yml  |    14 +
+ .../_Europa/Entities/Clothing/Shoes/boots.yml      |    16 +
+ .../Entities/Clothing/Uniforms/jumpskirts.yml      |    43 +
+ .../Entities/Clothing/Uniforms/jumpsuits.yml       |    43 +
+ .../_Europa/Entities/Markers/Spawners/inteq.yml    |   346 +
+ .../_Europa/Entities/Markers/Spawners/mine.yml     |    15 +
+ .../_Europa/Entities/Markers/Spawners/npc.yml      |    71 +
+ .../Prototypes/_Europa/Entities/Mobs/NPCs/base.yml |   114 +
+ .../_Europa/Entities/Mobs/NPCs/inteq.yml           |   137 +
+ .../_Europa/Entities/Mobs/NPCs/syndicate.yml       |   201 +
+ .../_Europa/Entities/Mobs/Player/Other/inteq.yml   |   169 +
+ .../Entities/Objects/Consumable/Food/snacks.yml    |    26 +
+ .../Consumable/Smokeables/Cigarettes/packs.yml     |    10 +
+ .../Objects/Devices/Electronics/door_access.yml    |    15 +
+ .../Entities/Objects/Devices/encryption_keys.yml   |    15 +
+ .../Entities/Objects/Devices/inteq_uplink.yml      |    23 +
+ .../Entities/Objects/Devices/station_beacon.yml    |     8 +
+ .../_Europa/Entities/Objects/Fun/toys.yml          |    17 +
+ .../_Europa/Entities/Objects/Misc/bedsheets.yml    |    11 +
+ .../_Europa/Entities/Objects/Misc/flag.yml         |     9 +
+ .../Entities/Objects/Misc/identification_cards.yml |    38 +
+ .../Entities/Objects/Misc/inteq_mech_figurines.yml |    19 +
+ .../_Europa/Entities/Objects/Misc/paper.yml        |    37 +
+ .../Entities/Objects/Misc/subdermal_implants.yml   |    23 +
+ .../_Europa/Entities/Objects/Shields/shields.yml   |    11 +
+ .../_Europa/Entities/Objects/Storage/case.yml      |    39 +
+ .../_Europa/Entities/Objects/Storage/inteq_box.yml |    14 +
+ .../_Europa/Entities/Objects/Tools/blueprint.yml   |    41 +
+ .../Weapons/Guns/Ammunition/Boxes/inteq_boxes.yml  |    68 +
+ .../Objects/Weapons/Guns/Pistols/Pistols.yml       |    14 +
+ .../Objects/Weapons/Guns/Rifles/rifles.yml         |    11 +
+ .../Entities/Objects/Weapons/Guns/SMGs/SMGs.yml    |    15 +
+ .../Objects/Weapons/Guns/Shotguns/shotguns.yml     |    11 +
+ .../Entities/Objects/Weapons/Guns/turrets.yml      |     9 +
+ .../Entities/Objects/Weapons/Melee/USHM.yml        |    28 +
+ .../Objects/Weapons/Melee/plasma_sword.yml         |   103 +
+ .../Entities/Structures/Decoration/banners.yml     |     9 +
+ .../Structures/Doors/Airlocks/Hatches/hatches.yml  |    23 +
+ .../Entities/Structures/Doors/Airlocks/access.yml  |    36 +
+ .../Structures/Furniture/potted_plants.yml         |    29 +
+ .../Structures/Machines/vending_machines.yml       |    37 +
+ .../Structures/Storage/Closets/closets.yml         |    53 +
+ .../Entities/Structures/Wallmounts/intercom.yml    |    11 +
+ .../Entities/Structures/Wallmounts/posters.yml     |    69 +
+ Resources/Prototypes/_Europa/GameRules/events.yml  |    16 +
+ .../_Europa/Language/Fraction-specific/inteq.yml   |   130 +
+ .../_Europa/Recipes/Lathes/contraband_inteq.yml    |    51 +
+ .../Recipes/Lathes/contraband_syndicate.yml        |   110 +
+ .../Roles/Jobs/Fun/inteq_sizo_startinggear.yml     |    83 +
+ .../_Europa/Roles/Jobs/Fun/inteq_startinggear.yml  |    83 +
+ Resources/Prototypes/_Europa/Roles/role_types.yml  |     4 +
+ .../_Europa/StatusEffects/statuseffects.yml        |     6 +
+ Resources/Prototypes/_Europa/Tiles/floors.yml      |   162 +
+ Resources/Prototypes/_Europa/ai_factions.yml       |    37 +
+ Resources/Prototypes/_Europa/fonts.yml             |     3 +
+ Resources/Prototypes/_Europa/radio_channels.yml    |     7 +
+ .../Prototypes/_Goobstation/_Pirates/faction.yml   |     6 +-
+ Resources/Prototypes/_Goobstation/ai_factions.yml  |     4 +
+ .../_Lavaland/Procedural/lavaland_grid_ruins.yml   |     8 +-
+ .../Prototypes/_Lavaland/Procedural/ruin_pools.yml |     7 +-
+ Resources/Prototypes/ai_factions.yml               |    43 +-
+ .../Objects/Misc/bureaucracy.rsi/meta.json         |     3 +
+ .../Misc/bureaucracy.rsi/paper_stamp-inteq.png     |   Bin 0 -> 182 bytes
+ .../inteq_backpack.rsi/equipped-BACKPACK.png       |   Bin 0 -> 923 bytes
+ .../Back/Backpacks/inteq_backpack.rsi/icon.png     |   Bin 0 -> 599 bytes
+ .../Backpacks/inteq_backpack.rsi/inhand-left.png   |   Bin 0 -> 417 bytes
+ .../Backpacks/inteq_backpack.rsi/inhand-right.png  |   Bin 0 -> 403 bytes
+ .../Back/Backpacks/inteq_backpack.rsi/meta.json    |    26 +
+ .../Duffels/inteq_duffel.rsi/equipped-BACKPACK.png |   Bin 0 -> 826 bytes
+ .../Back/Duffels/inteq_duffel.rsi/icon.png         |   Bin 0 -> 255 bytes
+ .../Back/Duffels/inteq_duffel.rsi/inhand-left.png  |   Bin 0 -> 584 bytes
+ .../Back/Duffels/inteq_duffel.rsi/inhand-right.png |   Bin 0 -> 599 bytes
+ .../Back/Duffels/inteq_duffel.rsi/meta.json        |    26 +
+ .../inteq_duffel_ammo.rsi/equipped-BACKPACK.png    |   Bin 0 -> 881 bytes
+ .../Back/Duffels/inteq_duffel_ammo.rsi/icon.png    |   Bin 0 -> 285 bytes
+ .../Duffels/inteq_duffel_ammo.rsi/inhand-left.png  |   Bin 0 -> 584 bytes
+ .../Duffels/inteq_duffel_ammo.rsi/inhand-right.png |   Bin 0 -> 599 bytes
+ .../Back/Duffels/inteq_duffel_ammo.rsi/meta.json   |    26 +
+ .../inteq_duffel_med.rsi/equipped-BACKPACK.png     |   Bin 0 -> 888 bytes
+ .../Back/Duffels/inteq_duffel_med.rsi/icon.png     |   Bin 0 -> 289 bytes
+ .../Duffels/inteq_duffel_med.rsi/inhand-left.png   |   Bin 0 -> 584 bytes
+ .../Duffels/inteq_duffel_med.rsi/inhand-right.png  |   Bin 0 -> 599 bytes
+ .../Back/Duffels/inteq_duffel_med.rsi/meta.json    |    26 +
+ .../inteq_satchel.rsi/equipped-BACKPACK.png        |   Bin 0 -> 696 bytes
+ .../Back/Satchels/inteq_satchel.rsi/icon.png       |   Bin 0 -> 285 bytes
+ .../Satchels/inteq_satchel.rsi/inhand-left.png     |   Bin 0 -> 637 bytes
+ .../Satchels/inteq_satchel.rsi/inhand-right.png    |   Bin 0 -> 574 bytes
+ .../Back/Satchels/inteq_satchel.rsi/meta.json      |    26 +
+ .../Belt/inteq_droppouch.rsi/equipped-BELT.png     |   Bin 0 -> 893 bytes
+ .../Clothing/Belt/inteq_droppouch.rsi/icon.png     |   Bin 0 -> 545 bytes
+ .../Belt/inteq_droppouch.rsi/inhand-left.png       |   Bin 0 -> 720 bytes
+ .../Belt/inteq_droppouch.rsi/inhand-right.png      |   Bin 0 -> 663 bytes
+ .../Clothing/Belt/inteq_droppouch.rsi/meta.json    |    27 +
+ .../Belt/inteq_shieldbelt.rsi/equipped-BELT.png    |   Bin 0 -> 561 bytes
+ .../Clothing/Belt/inteq_shieldbelt.rsi/icon.png    |   Bin 0 -> 543 bytes
+ .../Belt/inteq_shieldbelt.rsi/inhand-left.png      |   Bin 0 -> 552 bytes
+ .../Belt/inteq_shieldbelt.rsi/inhand-right.png     |   Bin 0 -> 574 bytes
+ .../Clothing/Belt/inteq_shieldbelt.rsi/meta.json   |    26 +
+ .../Belt/inteq_webbing.rsi/equipped-BELT.png       |   Bin 0 -> 972 bytes
+ .../Clothing/Belt/inteq_webbing.rsi/icon.png       |   Bin 0 -> 533 bytes
+ .../Belt/inteq_webbing.rsi/inhand-left.png         |   Bin 0 -> 660 bytes
+ .../Belt/inteq_webbing.rsi/inhand-right.png        |   Bin 0 -> 655 bytes
+ .../Clothing/Belt/inteq_webbing.rsi/meta.json      |    27 +
+ .../Ears/inteq_headset.rsi/alt-equipped-EARS.png   |   Bin 0 -> 510 bytes
+ .../Ears/inteq_headset.rsi/equipped-EARS.png       |   Bin 0 -> 406 bytes
+ .../Clothing/Ears/inteq_headset.rsi/icon.png       |   Bin 0 -> 573 bytes
+ .../Clothing/Ears/inteq_headset.rsi/icon_alt.png   |   Bin 0 -> 539 bytes
+ .../Clothing/Ears/inteq_headset.rsi/meta.json      |    25 +
+ .../Eyes/inteq_goggles.rsi/equipped-EYES.png       |   Bin 0 -> 451 bytes
+ .../Clothing/Eyes/inteq_goggles.rsi/icon.png       |   Bin 0 -> 439 bytes
+ .../Eyes/inteq_goggles.rsi/inhand-left.png         |   Bin 0 -> 503 bytes
+ .../Eyes/inteq_goggles.rsi/inhand-right.png        |   Bin 0 -> 479 bytes
+ .../Clothing/Eyes/inteq_goggles.rsi/meta.json      |    26 +
+ .../Hands/inteq_infiltrator.rsi/equipped-HAND.png  |   Bin 0 -> 514 bytes
+ .../Clothing/Hands/inteq_infiltrator.rsi/icon.png  |   Bin 0 -> 248 bytes
+ .../Hands/inteq_infiltrator.rsi/inhand-left.png    |   Bin 0 -> 492 bytes
+ .../Hands/inteq_infiltrator.rsi/inhand-right.png   |   Bin 0 -> 517 bytes
+ .../Clothing/Hands/inteq_infiltrator.rsi/meta.json |    26 +
+ .../Hands/inteq_maid_gloves.rsi/equipped-HAND.png  |   Bin 0 -> 641 bytes
+ .../Clothing/Hands/inteq_maid_gloves.rsi/icon.png  |   Bin 0 -> 648 bytes
+ .../Hands/inteq_maid_gloves.rsi/inhand-left.png    |   Bin 0 -> 492 bytes
+ .../Hands/inteq_maid_gloves.rsi/inhand-right.png   |   Bin 0 -> 517 bytes
+ .../Clothing/Hands/inteq_maid_gloves.rsi/meta.json |    27 +
+ .../elite_inteq_hardsuit.rsi/icon-flash.png        |   Bin 0 -> 718 bytes
+ .../Hardsuits/elite_inteq_hardsuit.rsi/icon.png    |   Bin 0 -> 596 bytes
+ .../Hardsuits/elite_inteq_hardsuit.rsi/meta.json   |    33 +
+ .../off-equipped-HELMET-vox.png                    |   Bin 0 -> 930 bytes
+ .../off-equipped-HELMET.png                        |   Bin 0 -> 917 bytes
+ .../on-equipped-HELMET-vox.png                     |   Bin 0 -> 1771 bytes
+ .../on-equipped-HELMET.png                         |   Bin 0 -> 1065 bytes
+ .../Hardsuits/inteq_hardsuit.rsi/icon-flash.png    |   Bin 0 -> 718 bytes
+ .../Head/Hardsuits/inteq_hardsuit.rsi/icon.png     |   Bin 0 -> 596 bytes
+ .../Head/Hardsuits/inteq_hardsuit.rsi/meta.json    |    33 +
+ .../inteq_hardsuit.rsi/off-equipped-HELMET-vox.png |   Bin 0 -> 1187 bytes
+ .../inteq_hardsuit.rsi/off-equipped-HELMET.png     |   Bin 0 -> 1219 bytes
+ .../inteq_hardsuit.rsi/on-equipped-HELMET-vox.png  |   Bin 0 -> 2053 bytes
+ .../inteq_hardsuit.rsi/on-equipped-HELMET.png      |   Bin 0 -> 1429 bytes
+ .../inteq_syn_hardsuit.rsi/icon-flash.png          |   Bin 0 -> 559 bytes
+ .../Head/Hardsuits/inteq_syn_hardsuit.rsi/icon.png |   Bin 0 -> 559 bytes
+ .../Hardsuits/inteq_syn_hardsuit.rsi/meta.json     |    33 +
+ .../off-equipped-HELMET-vox.png                    |   Bin 0 -> 1140 bytes
+ .../inteq_syn_hardsuit.rsi/off-equipped-HELMET.png |   Bin 0 -> 1270 bytes
+ .../on-equipped-HELMET-vox.png                     |   Bin 0 -> 1985 bytes
+ .../inteq_syn_hardsuit.rsi/on-equipped-HELMET.png  |   Bin 0 -> 1879 bytes
+ .../Hats/inteq_beret.rsi/equipped-HELMET-vox.png   |   Bin 0 -> 472 bytes
+ .../Head/Hats/inteq_beret.rsi/equipped-HELMET.png  |   Bin 0 -> 580 bytes
+ .../Clothing/Head/Hats/inteq_beret.rsi/icon.png    |   Bin 0 -> 353 bytes
+ .../Head/Hats/inteq_beret.rsi/inhand-left.png      |   Bin 0 -> 478 bytes
+ .../Head/Hats/inteq_beret.rsi/inhand-right.png     |   Bin 0 -> 478 bytes
+ .../Clothing/Head/Hats/inteq_beret.rsi/meta.json   |    31 +
+ .../inteq_headband.rsi/equipped-HELMET-vox.png     |   Bin 0 -> 364 bytes
+ .../Hats/inteq_headband.rsi/equipped-HELMET.png    |   Bin 0 -> 455 bytes
+ .../Clothing/Head/Hats/inteq_headband.rsi/icon.png |   Bin 0 -> 436 bytes
+ .../Head/Hats/inteq_headband.rsi/inhand-left.png   |   Bin 0 -> 451 bytes
+ .../Head/Hats/inteq_headband.rsi/inhand-right.png  |   Bin 0 -> 465 bytes
+ .../Head/Hats/inteq_headband.rsi/meta.json         |    31 +
+ .../equipped-HELMET-vox.png                        |   Bin 0 -> 507 bytes
+ .../inteq_honorable_beret.rsi/equipped-HELMET.png  |   Bin 0 -> 571 bytes
+ .../Head/Hats/inteq_honorable_beret.rsi/icon.png   |   Bin 0 -> 358 bytes
+ .../Hats/inteq_honorable_beret.rsi/inhand-left.png |   Bin 0 -> 438 bytes
+ .../inteq_honorable_beret.rsi/inhand-right.png     |   Bin 0 -> 438 bytes
+ .../Head/Hats/inteq_honorable_beret.rsi/meta.json  |    30 +
+ .../Hats/inteq_peaked.rsi/equipped-HELMET-vox.png  |   Bin 0 -> 531 bytes
+ .../Head/Hats/inteq_peaked.rsi/equipped-HELMET.png |   Bin 0 -> 605 bytes
+ .../Clothing/Head/Hats/inteq_peaked.rsi/icon.png   |   Bin 0 -> 349 bytes
+ .../Head/Hats/inteq_peaked.rsi/inhand-left.png     |   Bin 0 -> 708 bytes
+ .../Head/Hats/inteq_peaked.rsi/inhand-right.png    |   Bin 0 -> 728 bytes
+ .../Clothing/Head/Hats/inteq_peaked.rsi/meta.json  |    30 +
+ .../equipped-HELMET-vox.png                        |   Bin 0 -> 607 bytes
+ .../inteq_alt_dark_templar.rsi/equipped-HELMET.png |   Bin 0 -> 673 bytes
+ .../Helmets/inteq_alt_dark_templar.rsi/icon.png    |   Bin 0 -> 469 bytes
+ .../inteq_alt_dark_templar.rsi/inhand-left.png     |   Bin 0 -> 569 bytes
+ .../inteq_alt_dark_templar.rsi/inhand-right.png    |   Bin 0 -> 576 bytes
+ .../Helmets/inteq_alt_dark_templar.rsi/meta.json   |    31 +
+ .../inteq_dark_templar.rsi/equipped-HELMET-vox.png |   Bin 0 -> 620 bytes
+ .../inteq_dark_templar.rsi/equipped-HELMET.png     |   Bin 0 -> 710 bytes
+ .../Head/Helmets/inteq_dark_templar.rsi/icon.png   |   Bin 0 -> 433 bytes
+ .../Helmets/inteq_dark_templar.rsi/inhand-left.png |   Bin 0 -> 569 bytes
+ .../inteq_dark_templar.rsi/inhand-right.png        |   Bin 0 -> 576 bytes
+ .../Head/Helmets/inteq_dark_templar.rsi/meta.json  |    31 +
+ .../Helmets/inteq_eva.rsi/equipped-HELMET-vox.png  |   Bin 0 -> 797 bytes
+ .../Head/Helmets/inteq_eva.rsi/equipped-HELMET.png |   Bin 0 -> 852 bytes
+ .../Clothing/Head/Helmets/inteq_eva.rsi/icon.png   |   Bin 0 -> 494 bytes
+ .../Head/Helmets/inteq_eva.rsi/inhand-left.png     |   Bin 0 -> 1255 bytes
+ .../Head/Helmets/inteq_eva.rsi/inhand-right.png    |   Bin 0 -> 1298 bytes
+ .../Clothing/Head/Helmets/inteq_eva.rsi/meta.json  |    31 +
+ .../equipped-HELMET-reptilian.png                  |   Bin 0 -> 1464 bytes
+ .../Helmets/inteq_infiltrator/equipped-HELMET.png  |   Bin 0 -> 1069 bytes
+ .../Head/Helmets/inteq_infiltrator/icon.png        |   Bin 0 -> 464 bytes
+ .../Head/Helmets/inteq_infiltrator/meta.json       |    18 +
+ .../Helmets/inteq_swat.rsi/equipped-HELMET-vox.png |   Bin 0 -> 791 bytes
+ .../Helmets/inteq_swat.rsi/equipped-HELMET.png     |   Bin 0 -> 806 bytes
+ .../Clothing/Head/Helmets/inteq_swat.rsi/icon.png  |   Bin 0 -> 426 bytes
+ .../Head/Helmets/inteq_swat.rsi/inhand-left.png    |   Bin 0 -> 784 bytes
+ .../Head/Helmets/inteq_swat.rsi/inhand-right.png   |   Bin 0 -> 902 bytes
+ .../Clothing/Head/Helmets/inteq_swat.rsi/meta.json |    31 +
+ .../equipped-HELMET-reptilian.png                  |   Bin 0 -> 824 bytes
+ .../inteq_tombstone.rsi/equipped-HELMET.png        |   Bin 0 -> 793 bytes
+ .../Head/Helmets/inteq_tombstone.rsi/icon.png      |   Bin 0 -> 239 bytes
+ .../Head/Helmets/inteq_tombstone.rsi/meta.json     |    22 +
+ .../inteq_hoodiehood.rsi/equipped-HELMET-vox.png   |   Bin 0 -> 680 bytes
+ .../Hoods/inteq_hoodiehood.rsi/equipped-HELMET.png |   Bin 0 -> 724 bytes
+ .../Head/Hoods/inteq_hoodiehood.rsi/icon.png       |   Bin 0 -> 345 bytes
+ .../Head/Hoods/inteq_hoodiehood.rsi/meta.json      |    22 +
+ .../inteq_winterhood.rsi/equipped-HELMET-vox.png   |   Bin 0 -> 714 bytes
+ .../Hoods/inteq_winterhood.rsi/equipped-HELMET.png |   Bin 0 -> 769 bytes
+ .../Head/Hoods/inteq_winterhood.rsi/icon.png       |   Bin 0 -> 361 bytes
+ .../Head/Hoods/inteq_winterhood.rsi/meta.json      |    22 +
+ .../Soft/inteq_softhat.rsi/equipped-HELMET.png     |   Bin 0 -> 582 bytes
+ .../inteq_softhat.rsi/flipped-equipped-HELMET.png  |   Bin 0 -> 606 bytes
+ .../Soft/inteq_softhat.rsi/flipped-inhand-left.png |   Bin 0 -> 383 bytes
+ .../inteq_softhat.rsi/flipped-inhand-right.png     |   Bin 0 -> 389 bytes
+ .../Clothing/Head/Soft/inteq_softhat.rsi/icon.png  |   Bin 0 -> 396 bytes
+ .../Head/Soft/inteq_softhat.rsi/icon_flipped.png   |   Bin 0 -> 460 bytes
+ .../Head/Soft/inteq_softhat.rsi/inhand-left.png    |   Bin 0 -> 384 bytes
+ .../Head/Soft/inteq_softhat.rsi/inhand-right.png   |   Bin 0 -> 380 bytes
+ .../Clothing/Head/Soft/inteq_softhat.rsi/meta.json |    42 +
+ .../equipped-MASK-reptilian.png                    |   Bin 0 -> 953 bytes
+ .../Mask/inteq_infiltrator.rsi/equipped-MASK.png   |   Bin 0 -> 896 bytes
+ .../Clothing/Mask/inteq_infiltrator.rsi/icon.png   |   Bin 0 -> 305 bytes
+ .../Clothing/Mask/inteq_infiltrator.rsi/meta.json  |    22 +
+ .../Bedsheets/inteq_bedsheet.rsi/equipped-NECK.png |   Bin 0 -> 926 bytes
+ .../Bedsheets/inteq_bedsheet.rsi/inhand-left.png   |   Bin 0 -> 421 bytes
+ .../Bedsheets/inteq_bedsheet.rsi/inhand-right.png  |   Bin 0 -> 427 bytes
+ .../Neck/Bedsheets/inteq_bedsheet.rsi/meta.json    |    23 +
+ .../Neck/Cloaks/inteq_cloak.rsi/equipped-NECK.png  |   Bin 0 -> 1079 bytes
+ .../Clothing/Neck/Cloaks/inteq_cloak.rsi/icon.png  |   Bin 0 -> 252 bytes
+ .../Clothing/Neck/Cloaks/inteq_cloak.rsi/meta.json |    18 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 2444 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 2405 bytes
+ .../Armor/inteq_alt_dark_templar.rsi/icon.png      |   Bin 0 -> 1002 bytes
+ .../inteq_alt_dark_templar.rsi/inhand-left.png     |   Bin 0 -> 1290 bytes
+ .../inteq_alt_dark_templar.rsi/inhand-right.png    |   Bin 0 -> 1234 bytes
+ .../Armor/inteq_alt_dark_templar.rsi/meta.json     |    30 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 2324 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 2303 bytes
+ .../Armor/inteq_dark_templar.rsi/icon.png          |   Bin 0 -> 873 bytes
+ .../Armor/inteq_dark_templar.rsi/inhand-left.png   |   Bin 0 -> 1290 bytes
+ .../Armor/inteq_dark_templar.rsi/inhand-right.png  |   Bin 0 -> 1234 bytes
+ .../Armor/inteq_dark_templar.rsi/meta.json         |    30 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1668 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 1537 bytes
+ .../Armor/inteq_infiltrator.rsi/icon.png           |   Bin 0 -> 618 bytes
+ .../Armor/inteq_infiltrator.rsi/meta.json          |    22 +
+ .../equipped-OUTERCLOTHING-light-vox.png           |   Bin 0 -> 378 bytes
+ .../equipped-OUTERCLOTHING-light.png               |   Bin 0 -> 388 bytes
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1710 bytes
+ .../inteq_tombstone.rsi/equipped-OUTERCLOTHING.png |   Bin 0 -> 1647 bytes
+ .../Armor/inteq_tombstone.rsi/icon.png             |   Bin 0 -> 294 bytes
+ .../Armor/inteq_tombstone.rsi/light-overlay.png    |   Bin 0 -> 219 bytes
+ .../Armor/inteq_tombstone.rsi/meta.json            |    33 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1577 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 1544 bytes
+ .../Coats/inteq_battle_coat.rsi/icon-open.png      |   Bin 0 -> 376 bytes
+ .../Coats/inteq_battle_coat.rsi/icon.png           |   Bin 0 -> 569 bytes
+ .../Coats/inteq_battle_coat.rsi/inhand-left.png    |   Bin 0 -> 441 bytes
+ .../Coats/inteq_battle_coat.rsi/inhand-right.png   |   Bin 0 -> 439 bytes
+ .../Coats/inteq_battle_coat.rsi/meta.json          |    45 +
+ .../open-equipped-OUTERCLOTHING.png                |   Bin 0 -> 2237 bytes
+ .../inteq_battle_coat.rsi/open-inhand-left.png     |   Bin 0 -> 1565 bytes
+ .../inteq_battle_coat.rsi/open-inhand-right.png    |   Bin 0 -> 1583 bytes
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1476 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 1433 bytes
+ .../inteq_honorable_battle_coat.rsi/icon-open.png  |   Bin 0 -> 376 bytes
+ .../Coats/inteq_honorable_battle_coat.rsi/icon.png |   Bin 0 -> 558 bytes
+ .../inhand-left.png                                |   Bin 0 -> 441 bytes
+ .../inhand-right.png                               |   Bin 0 -> 439 bytes
+ .../inteq_honorable_battle_coat.rsi/meta.json      |    45 +
+ .../open-equipped-OUTERCLOTHING.png                |   Bin 0 -> 2237 bytes
+ .../open-inhand-left.png                           |   Bin 0 -> 1565 bytes
+ .../open-inhand-right.png                          |   Bin 0 -> 1583 bytes
+ .../inteq_hoodie.rsi/equipped-OUTERCLOTHING.png    |   Bin 0 -> 1127 bytes
+ .../OuterClothing/Coats/inteq_hoodie.rsi/icon.png  |   Bin 0 -> 502 bytes
+ .../Coats/inteq_hoodie.rsi/inhand-left.png         |   Bin 0 -> 441 bytes
+ .../Coats/inteq_hoodie.rsi/inhand-right.png        |   Bin 0 -> 439 bytes
+ .../OuterClothing/Coats/inteq_hoodie.rsi/meta.json |    26 +
+ .../inteq_med_coat.rsi/equipped-OUTERCLOTHING.png  |   Bin 0 -> 1359 bytes
+ .../Coats/inteq_med_coat.rsi/icon.png              |   Bin 0 -> 546 bytes
+ .../Coats/inteq_med_coat.rsi/inhand-left.png       |   Bin 0 -> 441 bytes
+ .../Coats/inteq_med_coat.rsi/inhand-right.png      |   Bin 0 -> 439 bytes
+ .../Coats/inteq_med_coat.rsi/meta.json             |    26 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 2515 bytes
+ .../equipped-OUTERCLOTHING-vox.png                 |   Bin 0 -> 2651 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 2243 bytes
+ .../Hardsuits/elite_inteq_hardsuit.rsi/icon.png    |   Bin 0 -> 838 bytes
+ .../elite_inteq_hardsuit.rsi/inhand-left.png       |   Bin 0 -> 1290 bytes
+ .../elite_inteq_hardsuit.rsi/inhand-right.png      |   Bin 0 -> 1234 bytes
+ .../Hardsuits/elite_inteq_hardsuit.rsi/meta.json   |    34 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 2231 bytes
+ .../inteq_eva.rsi/equipped-OUTERCLOTHING-vox.png   |   Bin 0 -> 2304 bytes
+ .../inteq_eva.rsi/equipped-OUTERCLOTHING.png       |   Bin 0 -> 2029 bytes
+ .../OuterClothing/Hardsuits/inteq_eva.rsi/icon.png |   Bin 0 -> 720 bytes
+ .../Hardsuits/inteq_eva.rsi/inhand-left.png        |   Bin 0 -> 1086 bytes
+ .../Hardsuits/inteq_eva.rsi/inhand-right.png       |   Bin 0 -> 1137 bytes
+ .../Hardsuits/inteq_eva.rsi/meta.json              |    35 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 2603 bytes
+ .../equipped-OUTERCLOTHING-vox.png                 |   Bin 0 -> 2566 bytes
+ .../inteq_hardsuit.rsi/equipped-OUTERCLOTHING.png  |   Bin 0 -> 2396 bytes
+ .../Hardsuits/inteq_hardsuit.rsi/icon.png          |   Bin 0 -> 362 bytes
+ .../Hardsuits/inteq_hardsuit.rsi/inhand-left.png   |   Bin 0 -> 1290 bytes
+ .../Hardsuits/inteq_hardsuit.rsi/inhand-right.png  |   Bin 0 -> 1234 bytes
+ .../Hardsuits/inteq_hardsuit.rsi/meta.json         |    34 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1577 bytes
+ .../equipped-OUTERCLOTHING-vox.png                 |   Bin 0 -> 1691 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 1528 bytes
+ .../Hardsuits/inteq_syn_hardsuit.rsi/icon.png      |   Bin 0 -> 254 bytes
+ .../inteq_syn_hardsuit.rsi/inhand-left.png         |   Bin 0 -> 1290 bytes
+ .../inteq_syn_hardsuit.rsi/inhand-right.png        |   Bin 0 -> 1234 bytes
+ .../Hardsuits/inteq_syn_hardsuit.rsi/meta.json     |    34 +
+ .../equipped-OUTERCLOTHING-reptilian.png           |   Bin 0 -> 1548 bytes
+ .../equipped-OUTERCLOTHING.png                     |   Bin 0 -> 1591 bytes
+ .../WinterCoats/inteq_wintercoat.rsi/icon.png      |   Bin 0 -> 637 bytes
+ .../inteq_wintercoat.rsi/inhand-left.png           |   Bin 0 -> 594 bytes
+ .../inteq_wintercoat.rsi/inhand-right.png          |   Bin 0 -> 591 bytes
+ .../WinterCoats/inteq_wintercoat.rsi/meta.json     |    30 +
+ .../equipped-FEET-reptilian.png                    |   Bin 0 -> 832 bytes
+ .../Boots/inteq_infiltrator.rsi/equipped-FEET.png  |   Bin 0 -> 792 bytes
+ .../Shoes/Boots/inteq_infiltrator.rsi/icon.png     |   Bin 0 -> 292 bytes
+ .../Shoes/Boots/inteq_infiltrator.rsi/meta.json    |    22 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1422 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1385 bytes
+ .../inteq_formal.rsi/equipped-INNERCLOTHING.png    |   Bin 0 -> 1424 bytes
+ .../Uniforms/Jumpskirt/inteq_formal.rsi/icon.png   |   Bin 0 -> 582 bytes
+ .../Jumpskirt/inteq_formal.rsi/inhand-left.png     |   Bin 0 -> 685 bytes
+ .../Jumpskirt/inteq_formal.rsi/inhand-right.png    |   Bin 0 -> 655 bytes
+ .../Uniforms/Jumpskirt/inteq_formal.rsi/meta.json  |    34 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 915 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 915 bytes
+ .../inteq_maid.rsi/equipped-INNERCLOTHING.png      |   Bin 0 -> 886 bytes
+ .../Uniforms/Jumpskirt/inteq_maid.rsi/icon.png     |   Bin 0 -> 434 bytes
+ .../Jumpskirt/inteq_maid.rsi/inhand-left.png       |   Bin 0 -> 596 bytes
+ .../Jumpskirt/inteq_maid.rsi/inhand-right.png      |   Bin 0 -> 578 bytes
+ .../Uniforms/Jumpskirt/inteq_maid.rsi/meta.json    |    34 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1027 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1074 bytes
+ .../inteq_medical.rsi/equipped-INNERCLOTHING.png   |   Bin 0 -> 998 bytes
+ .../Uniforms/Jumpskirt/inteq_medical.rsi/icon.png  |   Bin 0 -> 480 bytes
+ .../Jumpskirt/inteq_medical.rsi/inhand-left.png    |   Bin 0 -> 482 bytes
+ .../Jumpskirt/inteq_medical.rsi/inhand-right.png   |   Bin 0 -> 499 bytes
+ .../Uniforms/Jumpskirt/inteq_medical.rsi/meta.json |    34 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1330 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1081 bytes
+ .../inteq_operative.rsi/equipped-INNERCLOTHING.png |   Bin 0 -> 1057 bytes
+ .../Jumpskirt/inteq_operative.rsi/icon.png         |   Bin 0 -> 484 bytes
+ .../Jumpskirt/inteq_operative.rsi/inhand-left.png  |   Bin 0 -> 448 bytes
+ .../Jumpskirt/inteq_operative.rsi/inhand-right.png |   Bin 0 -> 478 bytes
+ .../Jumpskirt/inteq_operative.rsi/meta.json        |    34 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1480 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1580 bytes
+ .../inteq_formal.rsi/equipped-INNERCLOTHING.png    |   Bin 0 -> 1548 bytes
+ .../Uniforms/jumpsuit/inteq_formal.rsi/icon.png    |   Bin 0 -> 624 bytes
+ .../jumpsuit/inteq_formal.rsi/inhand-left.png      |   Bin 0 -> 614 bytes
+ .../jumpsuit/inteq_formal.rsi/inhand-right.png     |   Bin 0 -> 590 bytes
+ .../Uniforms/jumpsuit/inteq_formal.rsi/meta.json   |    34 +
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1352 bytes
+ .../inteq_honorable.rsi/equipped-INNERCLOTHING.png |   Bin 0 -> 1248 bytes
+ .../Uniforms/jumpsuit/inteq_honorable.rsi/icon.png |   Bin 0 -> 506 bytes
+ .../jumpsuit/inteq_honorable.rsi/inhand-left.png   |   Bin 0 -> 514 bytes
+ .../jumpsuit/inteq_honorable.rsi/inhand-right.png  |   Bin 0 -> 527 bytes
+ .../jumpsuit/inteq_honorable.rsi/meta.json         |    30 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1027 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1344 bytes
+ .../inteq_medical.rsi/equipped-INNERCLOTHING.png   |   Bin 0 -> 1192 bytes
+ .../Uniforms/jumpsuit/inteq_medical.rsi/icon.png   |   Bin 0 -> 522 bytes
+ .../jumpsuit/inteq_medical.rsi/inhand-left.png     |   Bin 0 -> 482 bytes
+ .../jumpsuit/inteq_medical.rsi/inhand-right.png    |   Bin 0 -> 499 bytes
+ .../Uniforms/jumpsuit/inteq_medical.rsi/meta.json  |    34 +
+ .../equipped-INNERCLOTHING-monkey.png              |   Bin 0 -> 1330 bytes
+ .../equipped-INNERCLOTHING-reptilian.png           |   Bin 0 -> 1410 bytes
+ .../inteq_operative.rsi/equipped-INNERCLOTHING.png |   Bin 0 -> 1245 bytes
+ .../Uniforms/jumpsuit/inteq_operative.rsi/icon.png |   Bin 0 -> 478 bytes
+ .../jumpsuit/inteq_operative.rsi/inhand-left.png   |   Bin 0 -> 514 bytes
+ .../jumpsuit/inteq_operative.rsi/inhand-right.png  |   Bin 0 -> 527 bytes
+ .../jumpsuit/inteq_operative.rsi/meta.json         |    34 +
+ Resources/Textures/_Europa/Icons/inteq.png         |   Bin 0 -> 60622 bytes
+ .../Textures/_Europa/Icons/inteq.rsi/logo.png      |   Bin 0 -> 479 bytes
+ .../Textures/_Europa/Icons/inteq.rsi/meta.json     |    14 +
+ .../_Europa/Interface/Misc/job_icons.rsi/InteQ.png |   Bin 0 -> 252 bytes
+ .../_Europa/Interface/Misc/job_icons.rsi/meta.json |    14 +
+ .../_Europa/Mobs/Npc/gigachad_inteq.rsi/alive.png  |   Bin 0 -> 4451 bytes
+ .../_Europa/Mobs/Npc/gigachad_inteq.rsi/meta.json  |    15 +
+ .../Mobs/Npc/simple_syndicate/blade.rsi/alive.png  |   Bin 0 -> 4766 bytes
+ .../Mobs/Npc/simple_syndicate/blade.rsi/meta.json  |    33 +
+ .../Mobs/Npc/simple_syndicate/knife.rsi/alive.png  |   Bin 0 -> 3289 bytes
+ .../Mobs/Npc/simple_syndicate/knife.rsi/meta.json  |    15 +
+ .../Mobs/Npc/simple_syndicate/pistol.rsi/alive.png |   Bin 0 -> 3293 bytes
+ .../Mobs/Npc/simple_syndicate/pistol.rsi/meta.json |    15 +
+ .../Npc/simple_syndicate/shotgun.rsi/alive.png     |   Bin 0 -> 3557 bytes
+ .../Npc/simple_syndicate/shotgun.rsi/meta.json     |    15 +
+ .../Mobs/Npc/simple_syndicate/smg.rsi/alive.png    |   Bin 0 -> 3480 bytes
+ .../Mobs/Npc/simple_syndicate/smg.rsi/meta.json    |    15 +
+ .../_Europa/Mobs/Pets/inteq_carp.rsi/alive.png     |   Bin 0 -> 4456 bytes
+ .../_Europa/Mobs/Pets/inteq_carp.rsi/dead.png      |   Bin 0 -> 530 bytes
+ .../_Europa/Mobs/Pets/inteq_carp.rsi/icon.png      |   Bin 0 -> 875 bytes
+ .../_Europa/Mobs/Pets/inteq_carp.rsi/meta.json     |    47 +
+ .../Food/inteq_cookies.rsi/inteq_cookies.png       |   Bin 0 -> 215 bytes
+ .../Food/inteq_cookies.rsi/inteq_cookies_trash.png |   Bin 0 -> 226 bytes
+ .../Consumable/Food/inteq_cookies.rsi/meta.json    |    17 +
+ .../Packs/inteq_cigarette.rsi/closed.png           |   Bin 0 -> 166 bytes
+ .../Packs/inteq_cigarette.rsi/equipped-BELT.png    |   Bin 0 -> 159 bytes
+ .../Packs/inteq_cigarette.rsi/inhand-left.png      |   Bin 0 -> 293 bytes
+ .../Packs/inteq_cigarette.rsi/inhand-right.png     |   Bin 0 -> 275 bytes
+ .../Cigarettes/Packs/inteq_cigarette.rsi/meta.json |    32 +
+ .../Cigarettes/Packs/inteq_cigarette.rsi/open.png  |   Bin 0 -> 290 bytes
+ .../Cigarettes/Packs/inteq_cigarette.rsi/trash.png |   Bin 0 -> 166 bytes
+ .../Devices/encryption_keys.rsi/crypt_brown.png    |   Bin 0 -> 349 bytes
+ .../Devices/encryption_keys.rsi/inteq_label.png    |   Bin 0 -> 203 bytes
+ .../Objects/Devices/encryption_keys.rsi/meta.json  |    13 +
+ .../Devices/inteq_uplink.rsi/inteq-uplink.png      |   Bin 0 -> 870 bytes
+ .../Objects/Devices/inteq_uplink.rsi/meta.json     |    22 +
+ .../Objects/Fun/inteq_balloon.rsi/inhand-left.png  |   Bin 0 -> 454 bytes
+ .../Objects/Fun/inteq_balloon.rsi/inhand-right.png |   Bin 0 -> 438 bytes
+ .../Objects/Fun/inteq_balloon.rsi/inteq.png        |   Bin 0 -> 317 bytes
+ .../Objects/Fun/inteq_balloon.rsi/meta.json        |    22 +
+ .../Objects/Fun/inteq_flag_mini.rsi/icon.png       |   Bin 0 -> 269 bytes
+ .../Objects/Fun/inteq_flag_mini.rsi/meta.json      |    14 +
+ .../Objects/Fun/inteq_mech_figurines.rsi/ares.png  |   Bin 0 -> 516 bytes
+ .../Fun/inteq_mech_figurines.rsi/hermes.png        |   Bin 0 -> 508 bytes
+ .../Objects/Fun/inteq_mech_figurines.rsi/meta.json |    17 +
+ .../_Europa/Objects/Misc/id_cards.rsi/brown.png    |   Bin 0 -> 727 bytes
+ .../_Europa/Objects/Misc/id_cards.rsi/meta.json    |    17 +
+ .../_Europa/Objects/Misc/id_cards.rsi/sword.png    |   Bin 0 -> 182 bytes
+ .../Objects/Misc/inteq_bedsheet.rsi/meta.json      |    14 +
+ .../Objects/Misc/inteq_bedsheet.rsi/sheetinteq.png |   Bin 0 -> 514 bytes
+ .../Misc/inteq_bur.rsi/folder-overlay-paper.png    |   Bin 0 -> 113 bytes
+ .../_Europa/Objects/Misc/inteq_bur.rsi/meta.json   |    26 +
+ .../Misc/inteq_bur.rsi/paper_stamp-inteq.png       |   Bin 0 -> 182 bytes
+ .../Objects/Misc/inteq_bur.rsi/secret_docs.png     |   Bin 0 -> 580 bytes
+ .../Objects/Misc/inteq_bur.rsi/secret_folder.png   |   Bin 0 -> 287 bytes
+ .../Objects/Misc/inteq_bur.rsi/stamp-inteq.png     |   Bin 0 -> 186 bytes
+ .../Misc/inteq_large_stamp/large_stamp-inteq.png   |   Bin 0 -> 3408 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/30.png       |   Bin 0 -> 207 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/35.png       |   Bin 0 -> 225 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/50.png       |   Bin 0 -> 207 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/57x28.png    |   Bin 0 -> 248 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/762x39.png   |   Bin 0 -> 254 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/icon.png     |   Bin 0 -> 366 bytes
+ .../Objects/Storage/inteq_ammobox.rsi/meta.json    |    29 +
+ .../_Europa/Objects/Storage/inteq_box.rsi/icon.png |   Bin 0 -> 219 bytes
+ .../Objects/Storage/inteq_box.rsi/meta.json        |    14 +
+ .../Objects/Storage/inteq_case.rsi/icon.png        |   Bin 0 -> 306 bytes
+ .../Objects/Storage/inteq_case.rsi/inhand-left.png |   Bin 0 -> 487 bytes
+ .../Storage/inteq_case.rsi/inhand-right.png        |   Bin 0 -> 482 bytes
+ .../Objects/Storage/inteq_case.rsi/meta.json       |    22 +
+ .../Guns/Pistols/inteq_commissar.rsi/base.png      |   Bin 0 -> 623 bytes
+ .../Guns/Pistols/inteq_commissar.rsi/bolt-open.png |   Bin 0 -> 642 bytes
+ .../Pistols/inteq_commissar.rsi/equipped-BELT.png  |   Bin 0 -> 215 bytes
+ .../Guns/Pistols/inteq_commissar.rsi/icon.png      |   Bin 0 -> 656 bytes
+ .../Pistols/inteq_commissar.rsi/inhand-left.png    |   Bin 0 -> 798 bytes
+ .../Pistols/inteq_commissar.rsi/inhand-right.png   |   Bin 0 -> 769 bytes
+ .../Guns/Pistols/inteq_commissar.rsi/mag-0.png     |   Bin 0 -> 179 bytes
+ .../Guns/Pistols/inteq_commissar.rsi/meta.json     |    38 +
+ .../Pistols/inteq_commissar.rsi/suppressor.png     |   Bin 0 -> 162 bytes
+ .../Weapons/Guns/Rifles/inteq_akm.rsi/base.png     |   Bin 0 -> 303 bytes
+ .../Guns/Rifles/inteq_akm.rsi/bolt-open.png        |   Bin 0 -> 303 bytes
+ .../Rifles/inteq_akm.rsi/equipped-BACKPACK.png     |   Bin 0 -> 1049 bytes
+ .../Rifles/inteq_akm.rsi/equipped-SUITSTORAGE.png  |   Bin 0 -> 1049 bytes
+ .../Weapons/Guns/Rifles/inteq_akm.rsi/icon.png     |   Bin 0 -> 865 bytes
+ .../Guns/Rifles/inteq_akm.rsi/inhand-left.png      |   Bin 0 -> 1209 bytes
+ .../Guns/Rifles/inteq_akm.rsi/inhand-right.png     |   Bin 0 -> 1230 bytes
+ .../Weapons/Guns/Rifles/inteq_akm.rsi/mag-0.png    |   Bin 0 -> 157 bytes
+ .../Weapons/Guns/Rifles/inteq_akm.rsi/meta.json    |    48 +
+ .../Rifles/inteq_akm.rsi/wielded-inhand-left.png   |   Bin 0 -> 1209 bytes
+ .../Rifles/inteq_akm.rsi/wielded-inhand-right.png  |   Bin 0 -> 1230 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/base.png        |   Bin 0 -> 679 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/bolt-open.png   |   Bin 0 -> 679 bytes
+ .../Guns/SMG/inteq_smg.rsi/equipped-BACKPACK.png   |   Bin 0 -> 665 bytes
+ .../SMG/inteq_smg.rsi/equipped-SUITSTORAGE.png     |   Bin 0 -> 665 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/icon.png        |   Bin 0 -> 745 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/inhand-left.png |   Bin 0 -> 753 bytes
+ .../Guns/SMG/inteq_smg.rsi/inhand-right.png        |   Bin 0 -> 743 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-0.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-1.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-2.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-3.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-4.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/mag-5.png       |   Bin 0 -> 135 bytes
+ .../Weapons/Guns/SMG/inteq_smg.rsi/meta.json       |    65 +
+ .../Weapons/Guns/SMG/inteq_smg.rsi/suppressor.png  |   Bin 0 -> 120 bytes
+ .../Guns/SMG/inteq_smg.rsi/wielded-inhand-left.png |   Bin 0 -> 753 bytes
+ .../SMG/inteq_smg.rsi/wielded-inhand-right.png     |   Bin 0 -> 743 bytes
+ .../Guns/Shotguns/inteq_bulldog.rsi/base.png       |   Bin 0 -> 881 bytes
+ .../Guns/Shotguns/inteq_bulldog.rsi/bolt-open.png  |   Bin 0 -> 881 bytes
+ .../inteq_bulldog.rsi/equipped-BACKPACK.png        |   Bin 0 -> 1245 bytes
+ .../inteq_bulldog.rsi/equipped-SUITSTORAGE.png     |   Bin 0 -> 1245 bytes
+ .../Guns/Shotguns/inteq_bulldog.rsi/icon.png       |   Bin 0 -> 911 bytes
+ .../Shotguns/inteq_bulldog.rsi/inhand-left.png     |   Bin 0 -> 923 bytes
+ .../Shotguns/inteq_bulldog.rsi/inhand-right.png    |   Bin 0 -> 925 bytes
+ .../Guns/Shotguns/inteq_bulldog.rsi/mag-0.png      |   Bin 0 -> 139 bytes
+ .../Guns/Shotguns/inteq_bulldog.rsi/meta.json      |    48 +
+ .../inteq_bulldog.rsi/wielded-inhand-left.png      |   Bin 0 -> 923 bytes
+ .../inteq_bulldog.rsi/wielded-inhand-right.png     |   Bin 0 -> 925 bytes
+ .../Objects/Weapons/Melee/USHM.rsi/icon-off.png    |   Bin 0 -> 872 bytes
+ .../Objects/Weapons/Melee/USHM.rsi/icon.png        |   Bin 0 -> 2562 bytes
+ .../Objects/Weapons/Melee/USHM.rsi/inhand-left.png |   Bin 0 -> 3158 bytes
+ .../Objects/Weapons/Melee/USHM.rsi/inhand-off.png  |   Bin 0 -> 1018 bytes
+ .../Weapons/Melee/USHM.rsi/inhand-right.png        |   Bin 0 -> 3158 bytes
+ .../Objects/Weapons/Melee/USHM.rsi/meta.json       |   202 +
+ .../Weapons/Melee/USHM.rsi/wielded-inhand-left.png |   Bin 0 -> 3158 bytes
+ .../Melee/USHM.rsi/wielded-inhand-right.png        |   Bin 0 -> 3158 bytes
+ .../Melee/inteq_e_shield.rsi/eshield-icon.png      |   Bin 0 -> 212 bytes
+ .../inteq_e_shield.rsi/eshield-inhand-left.png     |   Bin 0 -> 345 bytes
+ .../inteq_e_shield.rsi/eshield-inhand-right.png    |   Bin 0 -> 361 bytes
+ .../Melee/inteq_e_shield.rsi/eshield-on.png        |   Bin 0 -> 1266 bytes
+ .../inteq_e_shield.rsi/inhand-left-shield.png      |   Bin 0 -> 2873 bytes
+ .../inteq_e_shield.rsi/inhand-right-shield.png     |   Bin 0 -> 2920 bytes
+ .../Weapons/Melee/inteq_e_shield.rsi/meta.json     |   121 +
+ .../plasma_sword-inhands.rsi/inhand-left-blade.png |   Bin 0 -> 2055 bytes
+ .../Melee/plasma_sword-inhands.rsi/inhand-left.png |   Bin 0 -> 397 bytes
+ .../inhand-right-blade.png                         |   Bin 0 -> 1895 bytes
+ .../plasma_sword-inhands.rsi/inhand-right.png      |   Bin 0 -> 403 bytes
+ .../Melee/plasma_sword-inhands.rsi/meta.json       |    71 +
+ .../Weapons/Melee/plasma_sword.rsi/icon-on.png     |   Bin 0 -> 1446 bytes
+ .../Weapons/Melee/plasma_sword.rsi/icon.png        |   Bin 0 -> 302 bytes
+ .../Weapons/Melee/plasma_sword.rsi/meta.json       |    44 +
+ .../Melee/plasma_sword.rsi/overlay_blade.png       |   Bin 0 -> 1125 bytes
+ .../Melee/plasma_sword.rsi/overlay_handle.png      |   Bin 0 -> 622 bytes
+ .../inhand-left-blade.png                          |   Bin 0 -> 1081 bytes
+ .../plasma_sword_alt-inhands.rsi/inhand-left.png   |   Bin 0 -> 412 bytes
+ .../inhand-right-blade.png                         |   Bin 0 -> 1101 bytes
+ .../plasma_sword_alt-inhands.rsi/inhand-right.png  |   Bin 0 -> 400 bytes
+ .../Melee/plasma_sword_alt-inhands.rsi/meta.json   |    63 +
+ .../Weapons/Melee/plasma_sword_alt.rsi/icon-on.png |   Bin 0 -> 735 bytes
+ .../Weapons/Melee/plasma_sword_alt.rsi/icon.png    |   Bin 0 -> 305 bytes
+ .../Weapons/Melee/plasma_sword_alt.rsi/meta.json   |    41 +
+ .../Melee/plasma_sword_alt.rsi/overlay_blade.png   |   Bin 0 -> 492 bytes
+ .../Melee/plasma_sword_alt.rsi/overlay_handle.png  |   Bin 0 -> 561 bytes
+ .../inhand-left-blade.png                          |   Bin 0 -> 6030 bytes
+ .../inhand-left.png                                |   Bin 0 -> 872 bytes
+ .../inhand-right-blade.png                         |   Bin 0 -> 5462 bytes
+ .../inhand-right.png                               |   Bin 0 -> 893 bytes
+ .../plasma_sword_double-inhands.rsi/meta.json      |   139 +
+ .../wielded-inhand-left.png                        |   Bin 0 -> 4158 bytes
+ .../wielded-inhand-right.png                       |   Bin 0 -> 3121 bytes
+ .../plasma_sword_double.rsi/e_sword_double.png     |   Bin 0 -> 406 bytes
+ .../e_sword_double_blade.png                       |   Bin 0 -> 1633 bytes
+ .../Weapons/Melee/plasma_sword_double.rsi/icon.png |   Bin 0 -> 1633 bytes
+ .../Melee/plasma_sword_double.rsi/meta.json        |    54 +
+ .../plasma_sword_double.rsi/overlay_blade.png      |   Bin 0 -> 1205 bytes
+ .../plasma_sword_double.rsi/overlay_handle.png     |   Bin 0 -> 1013 bytes
+ .../Decoration/banner.rsi/banner_inteq.png         |   Bin 0 -> 757 bytes
+ .../Structures/Decoration/banner.rsi/meta.json     |    14 +
+ .../Hatches/hatch_glass_inteq.rsi/assembly.png     |   Bin 0 -> 842 bytes
+ .../hatch_glass_inteq.rsi/bolted_open_unlit.png    |   Bin 0 -> 202 bytes
+ .../Hatches/hatch_glass_inteq.rsi/bolted_unlit.png |   Bin 0 -> 202 bytes
+ .../Hatches/hatch_glass_inteq.rsi/closed.png       |   Bin 0 -> 958 bytes
+ .../Hatches/hatch_glass_inteq.rsi/closed_unlit.png |   Bin 0 -> 200 bytes
+ .../Hatches/hatch_glass_inteq.rsi/closing.png      |   Bin 0 -> 2565 bytes
+ .../hatch_glass_inteq.rsi/closing_unlit.png        |   Bin 0 -> 621 bytes
+ .../Hatches/hatch_glass_inteq.rsi/deny_unlit.png   |   Bin 0 -> 397 bytes
+ .../hatch_glass_inteq.rsi/emergency_open_unlit.png |   Bin 0 -> 206 bytes
+ .../hatch_glass_inteq.rsi/emergency_unlit.png      |   Bin 0 -> 206 bytes
+ .../Hatches/hatch_glass_inteq.rsi/meta.json        |   197 +
+ .../Hatches/hatch_glass_inteq.rsi/open.png         |   Bin 0 -> 585 bytes
+ .../Hatches/hatch_glass_inteq.rsi/open_unlit.png   |   Bin 0 -> 173 bytes
+ .../Hatches/hatch_glass_inteq.rsi/opening.png      |   Bin 0 -> 2345 bytes
+ .../hatch_glass_inteq.rsi/opening_unlit.png        |   Bin 0 -> 540 bytes
+ .../Hatches/hatch_glass_inteq.rsi/panel_closed.png |   Bin 0 -> 120 bytes
+ .../hatch_glass_inteq.rsi/panel_closing.png        |   Bin 0 -> 431 bytes
+ .../Hatches/hatch_glass_inteq.rsi/panel_open.png   |   Bin 0 -> 248 bytes
+ .../hatch_glass_inteq.rsi/panel_opening.png        |   Bin 0 -> 415 bytes
+ .../Hatches/hatch_glass_inteq.rsi/sparks.png       |   Bin 0 -> 750 bytes
+ .../hatch_glass_inteq.rsi/sparks_broken.png        |   Bin 0 -> 315 bytes
+ .../hatch_glass_inteq.rsi/sparks_damaged.png       |   Bin 0 -> 504 bytes
+ .../Hatches/hatch_glass_inteq.rsi/sparks_open.png  |   Bin 0 -> 439 bytes
+ .../Hatches/hatch_glass_inteq.rsi/welded.png       |   Bin 0 -> 494 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/assembly.png  |   Bin 0 -> 817 bytes
+ .../Hatches/hatch_inteq.rsi/bolted_open_unlit.png  |   Bin 0 -> 202 bytes
+ .../Hatches/hatch_inteq.rsi/bolted_unlit.png       |   Bin 0 -> 202 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/closed.png    |   Bin 0 -> 935 bytes
+ .../Hatches/hatch_inteq.rsi/closed_unlit.png       |   Bin 0 -> 200 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/closing.png   |   Bin 0 -> 2491 bytes
+ .../Hatches/hatch_inteq.rsi/closing_unlit.png      |   Bin 0 -> 621 bytes
+ .../Hatches/hatch_inteq.rsi/deny_unlit.png         |   Bin 0 -> 397 bytes
+ .../hatch_inteq.rsi/emergency_open_unlit.png       |   Bin 0 -> 206 bytes
+ .../Hatches/hatch_inteq.rsi/emergency_unlit.png    |   Bin 0 -> 206 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/meta.json     |   197 +
+ .../Airlocks/Hatches/hatch_inteq.rsi/open.png      |   Bin 0 -> 585 bytes
+ .../Hatches/hatch_inteq.rsi/open_unlit.png         |   Bin 0 -> 173 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/opening.png   |   Bin 0 -> 2285 bytes
+ .../Hatches/hatch_inteq.rsi/opening_unlit.png      |   Bin 0 -> 540 bytes
+ .../Hatches/hatch_inteq.rsi/panel_closed.png       |   Bin 0 -> 120 bytes
+ .../Hatches/hatch_inteq.rsi/panel_closing.png      |   Bin 0 -> 431 bytes
+ .../Hatches/hatch_inteq.rsi/panel_open.png         |   Bin 0 -> 248 bytes
+ .../Hatches/hatch_inteq.rsi/panel_opening.png      |   Bin 0 -> 415 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/sparks.png    |   Bin 0 -> 750 bytes
+ .../Hatches/hatch_inteq.rsi/sparks_broken.png      |   Bin 0 -> 315 bytes
+ .../Hatches/hatch_inteq.rsi/sparks_damaged.png     |   Bin 0 -> 504 bytes
+ .../Hatches/hatch_inteq.rsi/sparks_open.png        |   Bin 0 -> 439 bytes
+ .../Airlocks/Hatches/hatch_inteq.rsi/welded.png    |   Bin 0 -> 494 bytes
+ .../Furniture/potted_plants.rsi/hedge.png          |   Bin 0 -> 1409 bytes
+ .../Furniture/potted_plants.rsi/meta.json          |    26 +
+ .../Furniture/potted_plants.rsi/plasma_plant.png   |   Bin 0 -> 1437 bytes
+ .../VendingMachines/inteqdrobe.rsi/broken.png      |   Bin 0 -> 861 bytes
+ .../VendingMachines/inteqdrobe.rsi/meta.json       |    33 +
+ .../inteqdrobe.rsi/normal-unshaded.png             |   Bin 0 -> 1014 bytes
+ .../VendingMachines/inteqdrobe.rsi/off.png         |   Bin 0 -> 561 bytes
+ .../VendingMachines/inteqdrobe.rsi/panel.png       |   Bin 0 -> 190 bytes
+ .../_Europa/Structures/Storage/inteq.rsi/inteq.png |   Bin 0 -> 215 bytes
+ .../Structures/Storage/inteq.rsi/locked.png        |   Bin 0 -> 127 bytes
+ .../_Europa/Structures/Storage/inteq.rsi/meta.json |    32 +
+ .../_Europa/Structures/Storage/inteq.rsi/open.png  |   Bin 0 -> 198 bytes
+ .../Structures/Storage/inteq.rsi/unlocked.png      |   Bin 0 -> 127 bytes
+ .../Structures/Storage/inteq.rsi/vanguard_door.png |   Bin 0 -> 236 bytes
+ .../Storage/inteq.rsi/vanguard_leader_door.png     |   Bin 0 -> 230 bytes
+ .../Structures/Storage/inteq.rsi/welded.png        |   Bin 0 -> 206 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster1.png    |   Bin 0 -> 1292 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster2.png    |   Bin 0 -> 420 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster3.png    |   Bin 0 -> 434 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster4.png    |   Bin 0 -> 228 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster5.png    |   Bin 0 -> 288 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster6.png    |   Bin 0 -> 593 bytes
+ .../Posters/inteq_posters.rsi/inteq_poster7.png    |   Bin 0 -> 1273 bytes
+ .../Wallmounts/Posters/inteq_posters.rsi/meta.json |    32 +
+ .../Textures/_Europa/Tiles/dark_herringbone.png    |   Bin 0 -> 337 bytes
+ Resources/Textures/_Europa/Tiles/dark_pavement.png |   Bin 0 -> 247 bytes
+ .../_Europa/Tiles/dark_pavement_vertical.png       |   Bin 0 -> 252 bytes
+ .../Textures/_Europa/Tiles/steel_herringbone.png   |   Bin 0 -> 337 bytes
+ .../Textures/_Europa/Tiles/steel_pavement.png      |   Bin 0 -> 247 bytes
+ .../_Europa/Tiles/steel_pavement_vertical.png      |   Bin 0 -> 252 bytes
+ .../Textures/_Europa/Tiles/white_herringbone.png   |   Bin 0 -> 337 bytes
+ .../Textures/_Europa/Tiles/white_pavement.png      |   Bin 0 -> 247 bytes
+ .../_Europa/Tiles/white_pavement_vertical.png      |   Bin 0 -> 252 bytes
+ .../Throwable/boomerangIncomplete.rsi/meta.json    |     2 +-
+ Resources/migration.yml                            |    22 +
+ 760 files changed, 34740 insertions(+), 17 deletions(-)

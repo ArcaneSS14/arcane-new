@@ -1,0 +1,5 @@
+[Tweak] Ebloid Links Support
+
+### Content.Client/_Orion/DetailExaminable/DetailExaminableWindow.xaml.cs
+@@ -256,4 +256,5 @@ private static bool IsValidUrl(string url)
++            url.StartsWith("https://eblo.id", StringComparison.OrdinalIgnoreCase) ||

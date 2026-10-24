@@ -1,0 +1,79 @@
+Fix Test
+
+### Resources/Prototypes/Entities/Effects/chemistry_effects.yml
+@@ -151,9 +151,9 @@
+-  - type: Slippery
+-  - type: StepTrigger
+-    triggerGroups:
+-      types:
+-      - SlipTile
++#  - type: Slippery # Europa-Remove | Fuck slippery curse
++#  - type: StepTrigger # Europa-Remove | Fuck slippery curse
++#    triggerGroups:
++#      types:
++#      - SlipTile
+
+### Resources/Prototypes/Entities/Effects/puddle.yml
+@@ -257,5 +257,5 @@
+-  - type: Slippery
++#  - type: Slippery # Europa-Remove | Fuck slippery curse
+@@ -297,8 +297,8 @@
+-  - type: StepTrigger
+-    triggerGroups: # Goobstation
+-      types:
+-      - SlipTile
++#  - type: StepTrigger # Europa-Remove | Fuck slippery curse
++#    triggerGroups: # Goobstation
++#      types:
++#      - SlipTile
+
+### Resources/Prototypes/Entities/Objects/Consumable/Food/ingredients.yml
+@@ -794,5 +794,5 @@
+-  - type: Slippery
++#  - type: Slippery # Europa-Remove | Fuck slippery curse
+@@ -1156,3 +1156,3 @@
+-    state: croissant-raw-cotton
++    state: croissant-raw-cotton
+
+### Resources/Prototypes/Reagents/Consumable/Drink/base_drink.yml
+@@ -18,6 +18,6 @@
+-  slipData:
+-    requiredSlipSpeed: 3.5
++#  slipData: # Europa-Remove | Fuck slippery curse
++#    requiredSlipSpeed: 3.5
+@@ -61,6 +61,6 @@
+-  slipData:
+-    requiredSlipSpeed: 3.5
++#  slipData: # Europa-Remove | Fuck slippery curse
++#    requiredSlipSpeed: 3.5
+
+### Resources/Prototypes/Reagents/Consumable/Drink/drinks.yml
+@@ -564,4 +564,8 @@
++  # Europa-Start
++  slipData:
++    requiredSlipSpeed: 4.0
++  # Europa-End
+
+### Resources/Prototypes/Reagents/biological.yml
+@@ -309,7 +309,7 @@
+-  slipData:
+-    requiredSlipSpeed: 4.0 #It's not as slippery as water
+-  friction: 0.4
++#  slipData: # Europa-Remove | Fuck slippery curse
++#    requiredSlipSpeed: 4.0 #It's not as slippery as water
++#  friction: 0.4
+@@ -343,3 +343,3 @@
+-            Cellular: 2
++            Cellular: 2
+
+### Resources/Prototypes/Reagents/fun.yml
+@@ -215,6 +215,6 @@
+-  slipData:
+-    requiredSlipSpeed: 3.5
++#  slipData: # Europa-Remove | Fuck slippery curse
++#    requiredSlipSpeed: 3.5
+@@ -352,6 +352,6 @@
+-  slipData:
+-    requiredSlipSpeed: 3.5 #clown juice gotta slip
++#  slipData: # Europa-Remove | Fuck slippery curse
++#    requiredSlipSpeed: 3.5 #clown juice gotta slip

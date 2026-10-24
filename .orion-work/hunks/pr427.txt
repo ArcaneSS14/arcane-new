@@ -1,0 +1,444 @@
+Merge branch 'master' into wizport
+
+### Content.Client/Doors/AirlockSystem.cs
+@@ -44,4 +44,12 @@ private void OnComponentStartup(EntityUid uid, AirlockComponent comp, ComponentS
++        // Orion-Start
++        else
++        {
++            // Orion: Register BaseUnlit end-states so DoorSystem.OnAnimationCompleted restores them. Allows removing LayerSetAnimationTime(0) in OnAppearanceChange that caused jitter.
++            door.OpenSpriteStates.Add((DoorVisualLayers.BaseUnlit, comp.ClosingSpriteState));
++            door.ClosedSpriteStates.Add((DoorVisualLayers.BaseUnlit, comp.OpeningSpriteState));
++        }
++        // Orion-End
+@@ -75,4 +83,9 @@ private void OnComponentStartup(EntityUid uid, AirlockComponent comp, ComponentS
++        // For some reason the open panel sprite is used for both open and
++        // closed sprites. I really don't get it.
++        door.OpenSpriteStates.Add((WiresVisualLayers.MaintenancePanel, comp.OpenPanelSpriteState));
++        door.ClosedSpriteStates.Add((WiresVisualLayers.MaintenancePanel, comp.OpenPanelSpriteState));
++
+@@ -131,4 +144,5 @@ private void OnAppearanceChange(EntityUid uid, AirlockComponent comp, ref Appear
++        /* Orion-Edit-Start: LayerSetAnimationTime(0) here caused one-frame jitter when DoorState.Open arrived animation.
+@@ -142,4 +156,5 @@ private void OnAppearanceChange(EntityUid uid, AirlockComponent comp, ref Appear
++        */ // Orion-Edit-End
+
+### Content.Client/Doors/DoorSystem.cs
+@@ -38,4 +38,5 @@ public override void Initialize()
++        SubscribeLocalEvent<DoorComponent, AnimationCompletedEvent>(OnAnimationCompleted);
+@@ -43,6 +44,6 @@ protected override void OnComponentInit(Entity<DoorComponent> ent, ref Component
+-        comp.OpenSpriteStates = new List<(DoorVisualLayers, string)>(2);
+-        comp.ClosedSpriteStates = new List<(DoorVisualLayers, string)>(2);
++        comp.OpenSpriteStates = new List<(Enum, string)>(2);
++        comp.ClosedSpriteStates = new List<(Enum, string)>(2);
+@@ -51,5 +52,5 @@ protected override void OnComponentInit(Entity<DoorComponent> ent, ref Component
+-            Length = TimeSpan.FromSeconds(comp.OpeningAnimationTime),
++            Length = comp.OpeningAnimationTime,
+@@ -67,5 +68,5 @@ protected override void OnComponentInit(Entity<DoorComponent> ent, ref Component
+-            Length = TimeSpan.FromSeconds(comp.ClosingAnimationTime),
++            Length = comp.ClosingAnimationTime,
+@@ -83,10 +84,10 @@ protected override void OnComponentInit(Entity<DoorComponent> ent, ref Component
+-            Length = TimeSpan.FromSeconds(comp.EmaggingAnimationTime),
++            Length = comp.EmaggingAnimationTime,
+-                    LayerKey = DoorVisualLayers.BaseUnlit,
++                    LayerKey = DoorVisualLayers.BaseEmagging,
+@@ -98,4 +99,35 @@ protected override void OnComponentInit(Entity<DoorComponent> ent, ref Component
++    private void OnAnimationCompleted(Entity<DoorComponent> ent, ref AnimationCompletedEvent args)
++    {
++        if (args.Key != DoorComponent.OpenKey && args.Key != DoorComponent.CloseKey)
++            return;
++
++        if (!TryComp<SpriteComponent>(ent, out var sprite))
++            return;
++
++        switch (ent.Comp.State)
++        {
++            case DoorState.Open:
++
++                foreach (var (layer, layerState) in ent.Comp.OpenSpriteStates)
++                {
++                    _sprite.LayerSetAutoAnimated((ent.Owner, sprite), layer, true); // Orion: fix
++                    _sprite.LayerSetRsiState((ent.Owner, sprite), layer, layerState);
++                }
++
++                break;
++            case DoorState.Closed:
++
++                foreach (var (layer, layerState) in ent.Comp.ClosedSpriteStates)
++                {
++                    _sprite.LayerSetAutoAnimated((ent.Owner, sprite), layer, true); // Orion: Fix
++                    _sprite.LayerSetRsiState((ent.Owner, sprite), layer, layerState);
++                }
++
++                break;
++        }
++    }
++
+@@ -109,6 +141,7 @@ private void OnAppearanceChange(Entity<DoorComponent> entity, ref AppearanceChan
+-        if (_animationSystem.HasRunningAnimation(entity, DoorComponent.AnimationKey))
+-            _animationSystem.Stop(entity.Owner, DoorComponent.AnimationKey);
++        // We are checking beforehand since some doors may not have an emagging visual layer, and we don't want LayerSetVisible to throw an error.
++        if (_sprite.TryGetLayer(entity.Owner, DoorVisualLayers.BaseEmagging, out var _, false))
++            _sprite.LayerSetVisible(entity.Owner, DoorVisualLayers.BaseEmagging, state == DoorState.Emagging);
+@@ -122,6 +155,18 @@ private void UpdateAppearanceForDoorState(Entity<DoorComponent> entity, SpriteCo
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
++                    return;
++
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
++                {
++                    _animationSystem.Stop(entity, null, DoorComponent.CloseKey);
++                    _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.OpenKey);
++                }
++
++                    // Allow animations to play while it's open (e.g., pinion);
++                    // the animation unsets this so we gotta set it again.
++                    _sprite.LayerSetAutoAnimated((entity.Owner, sprite), layer, true);
+@@ -129,6 +174,16 @@ private void UpdateAppearanceForDoorState(Entity<DoorComponent> entity, SpriteCo
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
++                    return;
++
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
++                {
++                    _animationSystem.Stop(entity, null, DoorComponent.OpenKey);
++                    _animationSystem.Play(entity, (Animation)entity.Comp.ClosingAnimation, DoorComponent.CloseKey); // Orion-Edit: Fix
++                }
++
++                    _sprite.LayerSetAutoAnimated((entity.Owner, sprite), layer, true);
+@@ -136,23 +191,37 @@ private void UpdateAppearanceForDoorState(Entity<DoorComponent> entity, SpriteCo
+-                if (entity.Comp.OpeningAnimationTime == 0.0)
++                if (entity.Comp.OpeningAnimationTime == TimeSpan.Zero)
++                    return;
++
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
+-                _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.AnimationKey);
++                _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.OpenKey);
+-                if (entity.Comp.ClosingAnimationTime == 0.0 || entity.Comp.CurrentlyCrushing.Count != 0)
++                if (entity.Comp.ClosingAnimationTime == TimeSpan.Zero)
++                    return;
++
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
+-                _animationSystem.Play(entity, (Animation)entity.Comp.ClosingAnimation, DoorComponent.AnimationKey);
++                _animationSystem.Play(entity, (Animation)entity.Comp.ClosingAnimation, DoorComponent.CloseKey);
+-                _animationSystem.Play(entity, (Animation)entity.Comp.DenyingAnimation, DoorComponent.AnimationKey);
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.DenyKey))
++                    return;
++
++                _animationSystem.Play(entity, (Animation)entity.Comp.DenyingAnimation, DoorComponent.DenyKey);
+-                _animationSystem.Play(entity, (Animation)entity.Comp.EmaggingAnimation, DoorComponent.AnimationKey);
++                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.EmagKey))
++                    return;
++
++                // We are checking beforehand since some doors may not have an emagging visual layer.
++                if (_sprite.TryGetLayer(entity.Owner, DoorVisualLayers.BaseEmagging, out var _, false))
++                    _animationSystem.Play(entity, (Animation)entity.Comp.EmaggingAnimation, DoorComponent.EmagKey);
+
+### Content.Server/Doors/Systems/AirlockSystem.cs
+@@ -77,6 +77,4 @@ namespace Content.Server.Doors.Systems;
+-    [Dependency] private readonly WiresSystem _wiresSystem = default!;
+-
+@@ -123,17 +121,4 @@ private void OnActivate(EntityUid uid, AirlockComponent component, ActivateInWor
+-        if (TryComp<WiresPanelComponent>(uid, out var panel) &&
+-            panel.Open &&
+-            TryComp<ActorComponent>(args.User, out var actor))
+-        {
+-            if (TryComp<WiresPanelSecurityComponent>(uid, out var wiresPanelSecurity) &&
+-                !wiresPanelSecurity.WiresAccessible)
+-                return;
+-
+-            _wiresSystem.OpenUserInterface(uid, actor.PlayerSession);
+-            args.Handled = true;
+-            return;
+-        }
+-
+
+### Content.Server/Wires/WiresSystem.cs
+@@ -94,5 +94,4 @@ public sealed class WiresSystem : SharedWiresSystem
+-    [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
+@@ -524,5 +523,5 @@ private void OnInteractUsing(EntityUid uid, WiresComponent component, InteractUs
+-                _uiSystem.OpenUi(uid, WiresUiKey.Key, actor.PlayerSession);
++                UI.OpenUi(uid, WiresUiKey.Key, actor.PlayerSession);
+@@ -535,5 +534,5 @@ private void OnPanelChanged(Entity<WiresComponent> ent, ref PanelChangedEvent ar
+-        _uiSystem.CloseUi(ent.Owner, WiresUiKey.Key);
++        UI.CloseUi(ent.Owner, WiresUiKey.Key);
+@@ -642,5 +641,5 @@ private void UpdateUserInterface(EntityUid uid, WiresComponent? wires = null, Us
+-        _uiSystem.SetUiState((uid, ui), WiresUiKey.Key, new WiresBoundUserInterfaceState(
++        UI.SetUiState((uid, ui), WiresUiKey.Key, new WiresBoundUserInterfaceState(
+@@ -650,9 +649,4 @@ private void UpdateUserInterface(EntityUid uid, WiresComponent? wires = null, Us
+-    public void OpenUserInterface(EntityUid uid, ICommonSession player)
+-    {
+-        _uiSystem.OpenUi(uid, WiresUiKey.Key, player);
+-    }
+-
+@@ -696,5 +690,5 @@ public void SetWiresPanelSecurity(EntityUid uid, WiresPanelSecurityComponent com
+-            _uiSystem.CloseUi(uid, WiresUiKey.Key);
++            UI.CloseUi(uid, WiresUiKey.Key);
+
+### Content.Shared/Access/Systems/AccessReaderSystem.cs
+@@ -190,5 +190,5 @@ private void OnEmagged(EntityUid uid, AccessReaderComponent reader, ref GotEmagg
+-        Dirty(uid, reader);
++        Dirty(accessReader.Value); // Orion-Edit: fix door desynchronization
+
+### Content.Shared/Doors/Components/AirlockComponent.cs
+@@ -44,5 +44,5 @@ public sealed partial class AirlockComponent : Component
+-	
++
+@@ -57,4 +57,18 @@ public sealed partial class AirlockComponent : Component
++    // Orion-Start
++    /// <summary>
++    /// Sound to play when the airlock is force-opened.
++    /// </summary>
++    [DataField]
++    public SoundSpecifier? ForceOpenSound;
++
++    /// <summary>
++    /// Sound to play when the airlock is force-closed.
++    /// </summary>
++    [DataField]
++    public SoundSpecifier? ForceCloseSound;
++    // Orion-End
++
+@@ -135,4 +149,11 @@ public sealed partial class AirlockComponent : Component
++    /// <summary>
++    /// The sprite state to use for the wire panel when the airlock is open. The
++    /// first frame will be used for when the airlock is closed.
++    /// </summary>
++    [DataField]
++    public string OpenPanelSpriteState = "panel_open";
++
+
+### Content.Shared/Doors/Components/DoorComponent.cs
+@@ -61,5 +61,5 @@ public sealed partial class DoorComponent : Component
+-    public TimeSpan CloseTimeOne = TimeSpan.FromSeconds(0.4f);
++    public TimeSpan CloseTimeOne = TimeSpan.FromSeconds(0.3f); // Orion-Edit: 0.4 > 0.3
+@@ -67,5 +67,5 @@ public sealed partial class DoorComponent : Component
+-    public TimeSpan CloseTimeTwo = TimeSpan.FromSeconds(0.2f);
++    public TimeSpan CloseTimeTwo = TimeSpan.FromSeconds(0.3f); // Orion-Edit: 0.2 > 0.3
+@@ -73,5 +73,5 @@ public sealed partial class DoorComponent : Component
+-    public TimeSpan OpenTimeOne = TimeSpan.FromSeconds(0.4f);
++    public TimeSpan OpenTimeOne = TimeSpan.FromSeconds(0.2f); // Orion-Edit: 0.4 > 0.2
+@@ -79,5 +79,5 @@ public sealed partial class DoorComponent : Component
+-    public TimeSpan OpenTimeTwo = TimeSpan.FromSeconds(0.2f);
++    public TimeSpan OpenTimeTwo = TimeSpan.FromSeconds(0.4f); // Orion-Edit: 0.2 > 0.4
+@@ -85,5 +85,5 @@ public sealed partial class DoorComponent : Component
+-    public TimeSpan DenyDuration = TimeSpan.FromSeconds(0.45f);
++    public TimeSpan DenyDuration = TimeSpan.FromSeconds(0.5f); // Orion-Edit: 0.45 > 0.5
+@@ -164,8 +164,23 @@ public sealed partial class DoorComponent : Component
++
++    // Orion-Start: for notice
+-    public const string AnimationKey = "door_animation";
++    // Orion-End
++    public const string OpenKey = "door_animation_open";
++
++    public const string CloseKey = "door_animation_close";
++
++    /// <summary>
++    /// The key used when playing door deny animations.
++    /// </summary>
++    public const string DenyKey = "door_animation_deny";
++
++    /// <summary>
++    /// The key used when playing door emag animations.
++    /// </summary>
++    public const string EmagKey = "door_animation_emag";
+@@ -180,5 +195,5 @@ public sealed partial class DoorComponent : Component
+-    public List<(DoorVisualLayers, string)> OpenSpriteStates = default!;
++    public List<(Enum, string)> OpenSpriteStates = default!;
+@@ -193,5 +208,5 @@ public sealed partial class DoorComponent : Component
+-    public List<(DoorVisualLayers, string)> ClosedSpriteStates = default!;
++    public List<(Enum, string)> ClosedSpriteStates = default!;
+@@ -214,20 +229,20 @@ public sealed partial class DoorComponent : Component
+-    /// The sprite state used for the door when it's open.
++    /// The length of the door's opening animation.
+-    public float OpeningAnimationTime = 0.8f;
++    public TimeSpan OpeningAnimationTime = TimeSpan.FromSeconds(0.6); // Orion-Edit: 0.8 > 0.6
+-    /// The sprite state used for the door when it's open.
++    /// The length of the door's closing animation.
+-    public float ClosingAnimationTime = 0.8f;
++    public TimeSpan ClosingAnimationTime = TimeSpan.FromSeconds(0.6); // Orion-Edit: 0.8 > 0.6.
+-    /// The sprite state used for the door when it's open.
++    /// The length of the door's emagging animation.
+-    public float EmaggingAnimationTime = 1.5f;
++    public TimeSpan EmaggingAnimationTime = TimeSpan.FromSeconds(1.5);
+@@ -352,3 +367,4 @@ public enum DoorVisualLayers : byte
+-}
++    BaseEmagging,
++}
+
+### Content.Shared/Doors/Systems/SharedDoorSystem.cs
+@@ -289,13 +289,29 @@ private void OnBeforePry(EntityUid uid, DoorComponent door, ref BeforePryEvent a
+-        if (door.State == DoorState.Closed)
++        // Orion-Start: use force sounds when prying airlocks 
++        SoundSpecifier? forceOpen = null;
++        SoundSpecifier? forceClose = null;
++        if (TryComp<AirlockComponent>(uid, out var airlock))
+-            _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} open");
+-            StartOpening(uid, door, args.User, true);
++            forceOpen = airlock.ForceOpenSound;
++            forceClose = airlock.ForceCloseSound;
++        }
++        // Orion-End
++
++        if (door.State == DoorState.Closed)
++        {   
++            // Orion-Edit-Start
++            _adminLog.Add(LogType.Action, LogImpact.Medium,
++                $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} open");
++            StartOpening(uid, door, args.User, true, forceOpen);
++            // Orion-Edit-End
+-        {
+-            _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} closed");
+-            StartClosing(uid, door, args.User, true);
++        {   
++            // Orion-Edit-Start
++            _adminLog.Add(LogType.Action, LogImpact.Medium,
++                $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} closed");
++            StartClosing(uid, door, args.User, true, forceClose);
++            // Orion-Edit-End
+@@ -413,5 +429,5 @@ public bool CanOpen(EntityUid uid, DoorComponent? door = null, EntityUid? user =
+-    public void StartOpening(EntityUid uid, DoorComponent? door = null, EntityUid? user = null, bool predicted = false)
++    public void StartOpening(EntityUid uid, DoorComponent? door = null, EntityUid? user = null, bool predicted = false, SoundSpecifier? soundOverride = null) // Orion-Edit
+@@ -423,8 +439,9 @@ public void StartOpening(EntityUid uid, DoorComponent? door = null, EntityUid? u
++        var sound = soundOverride ?? door.OpenSound; // Orion
+-            Audio.PlayPredicted(door.OpenSound, uid, user, AudioParams.Default.WithVolume(-5));
++            Audio.PlayPredicted(sound, uid, user, AudioParams.Default.WithVolume(-5)); // Orion-Edit
+-            Audio.PlayPvs(door.OpenSound, uid, AudioParams.Default.WithVolume(-5));
++            Audio.PlayPvs(sound, uid, AudioParams.Default.WithVolume(-5)); // Orion-Edit
+@@ -442,5 +459,5 @@ public void OnPartialOpen(EntityUid uid, DoorComponent? door = null)
+-        door.NextStateChange = GameTiming.CurTime + door.CloseTimeTwo;
++        door.NextStateChange = GameTiming.CurTime + door.OpenTimeTwo; // Orion-Edit: fix
+@@ -508,5 +525,5 @@ public bool CanClose(EntityUid uid, DoorComponent? door = null, EntityUid? user
+-    public void StartClosing(EntityUid uid, DoorComponent? door = null, EntityUid? user = null, bool predicted = false)
++    public void StartClosing(EntityUid uid, DoorComponent? door = null, EntityUid? user = null, bool predicted = false, SoundSpecifier? soundOverride = null) // Orion-Edit
+@@ -516,8 +533,9 @@ public void StartClosing(EntityUid uid, DoorComponent? door = null, EntityUid? u
++        var sound = soundOverride ?? door.CloseSound; // Orion
+-            Audio.PlayPredicted(door.CloseSound, uid, user, AudioParams.Default.WithVolume(-5));
++            Audio.PlayPredicted(sound, uid, user, AudioParams.Default.WithVolume(-5)); // Orion-Edit
+-            Audio.PlayPvs(door.CloseSound, uid, AudioParams.Default.WithVolume(-5));
++            Audio.PlayPvs(sound, uid, AudioParams.Default.WithVolume(-5)); // Orion-Edit
+
+### Content.Shared/Wires/SharedWiresSystem.cs
+@@ -34,5 +34,8 @@
++using Content.Shared.Verbs;
++using Robust.Shared.Player;
++using Robust.Shared.Utility;
+@@ -45,4 +48,5 @@ public abstract class SharedWiresSystem : EntitySystem
++    [Dependency] protected readonly SharedUserInterfaceSystem UI = default!;
+@@ -54,4 +58,5 @@ public override void Initialize()
++        SubscribeLocalEvent<WiresPanelComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
+@@ -126,4 +131,30 @@ private void OnExamine(EntityUid uid, WiresPanelComponent component, ExaminedEve
++    private void OnGetVerbs(Entity<WiresPanelComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
++    {
++        if (!IsPanelOpen(ent.Owner))
++            return;
++
++        var actor = args.User;
++        var verb = new AlternativeVerb
++        {
++            Text = Loc.GetString("wires-panel-verb-view-panel"),
++            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/screwdriver.png")),
++            Act = () => OpenUserInterface(ent, actor),
++        };
++
++        args.Verbs.Add(verb);
++    }
++
++    public void OpenUserInterface(EntityUid uid, EntityUid actor)
++    {
++        UI.OpenUi(uid, WiresUiKey.Key, actor);
++    }
++
++    public void OpenUserInterface(EntityUid uid, ICommonSession player)
++    {
++        UI.OpenUi(uid, WiresUiKey.Key, player);
++    }
++
+
+### Resources/Audio/Machines/attributions.yml
+@@ -157,4 +157,9 @@
++- files: ["boltsup.ogg", "boltsdown.ogg"]
++  license: "CC-BY-SA-3.0"
++  copyright: "Baystation12"
++  source: "https://github.com/Baystation12/Baystation12/commit/41c3cfd386b11aee101b3f89ab7fefe77a57a1ba"
++
+
+### Resources/Audio/_Orion/Machines/attributions.yml
+@@ -3,2 +3,12 @@
++
++- files: ["airlock_open_force.ogg", "airlock_close_force.ogg", "firedoor_openclose.ogg"]
++  license: "CC-BY-SA-3.0"
++  copyright: "Baystation12. Edited by UmbiMax"
++  source: "https://github.com/Baystation12/Baystation12/commit/41c3cfd386b11aee101b3f89ab7fefe77a57a1ba"
++
++- files: ["blastdoornew.ogg"]
++  license: "CC-BY-SA-3.0"
++  copyright: "Used in FNAF 1. Reworked by UmbiMax"
++  source: "https://freddy-fazbears-pizza.fandom.com/wiki/Doors/Audio"
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/base_structureairlocks.yml
+@@ -135,4 +135,8 @@
++    - state: sparks
++      map: ["enum.DoorVisualLayers.BaseEmagging"]
++      shader: unshaded
++      visible: false
+@@ -173,5 +177,11 @@
+-    openUnlitVisible: true # Orion
++    # Orion-Start
++    openUnlitVisible: true
++    forceOpenSound:
++      path: /Audio/_Orion/Machines/airlock_open_force.ogg
++    forceCloseSound:
++      path: /Audio/_Orion/Machines/airlock_close_force.ogg
++    # Orion-End
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/highsec.yml
+@@ -104,4 +104,8 @@
++    - state: sparks
++      map: ["enum.DoorVisualLayers.BaseEmagging"]
++      shader: unshaded
++      visible: false
+@@ -137,5 +141,11 @@
+-    openUnlitVisible: true # Orion
++    # Orion-Start
++    openUnlitVisible: true
++    forceOpenSound:
++      path: /Audio/_Orion/Machines/airlock_open_force.ogg
++    forceCloseSound:
++      path: /Audio/_Orion/Machines/airlock_close_force.ogg
++    # Orion-End
+
+### Resources/Prototypes/Entities/Structures/Doors/Airlocks/shuttle.yml
+@@ -149,4 +149,31 @@
++    layers:
++    - state: closed
++      map: ["enum.DoorVisualLayers.Base"]
++    - state: closed_unlit
++      shader: unshaded
++      map: ["enum.DoorVisualLayers.BaseUnlit"]
++      visible: false
++    - state: welded
++      map: ["enum.WeldableLayers.BaseWelded"]
++    - state: bolted_unlit
++      shader: unshaded
++      map: ["enum.DoorVisualLayers.BaseBolted"]
++    - state: emergency_unlit
++      map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
++      shader: unshaded
++    - state: panel_open
++      map: ["enum.WiresVisualLayers.MaintenancePanel"]
++    - state: electrified_ai
++      sprite: Interface/Misc/ai_hud.rsi
++      shader: unshaded
++      visible: false
++      map: ["enum.ElectrifiedLayers.HUD"]
+
+### Resources/Prototypes/Entities/Structures/Doors/Firelocks/firelock.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/MaterialDoors/material_doors.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Shutter/blast_door.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Windoors/base_structurewindoors.yml
+
+### Resources/Prototypes/Entities/Structures/Doors/Windoors/clockwork.yml
+
+### Resources/Prototypes/SoundCollections/harpy.yml
+
+### Resources/Prototypes/_Orion/Entities/Structures/Doors/Airlocks/Double/double_glass_airlock.yml

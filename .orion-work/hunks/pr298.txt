@@ -1,0 +1,235 @@
+up2
+
+### Content.Client/_Orion/Recruitment/RecruitmentConfirmationSystem.cs
+@@ -0,0 +1,87 @@
++using Content.Client._Orion.Recruitment.UI;
++using Content.Shared._Orion.Recruitment;
++using Content.Shared._Orion.Recruitment.Events;
++
++namespace Content.Client._Orion.Recruitment;
++
++public sealed class RecruitmentConfirmationSystem : EntitySystem
++{
++    private RecruitmentConfirmationWindow? _window;
++    private EntityUid? _scanner;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeNetworkEvent<RecruitmentOpenConfirmationEvent>(OnOpenConfirmation);
++    }
++
++    public override void Shutdown()
++    {
++        CloseWindow();
++        base.Shutdown();
++    }
++
++    private void OnOpenConfirmation(RecruitmentOpenConfirmationEvent ev, EntitySessionEventArgs args)
++    {
++        if (!TryGetEntity(ev.Scanner, out var scanner))
++            return;
++
++        CloseWindow();
++
++        _scanner = scanner.Value;
++        _window = new RecruitmentConfirmationWindow();
++        _window.UpdateState(new RecruitmentConfirmationBuiState
++        {
++            OrganizationName = ev.OrganizationName,
++            ImplantName = ev.ImplantName,
++        });
++
++        _window.OnAcceptPressed += OnAcceptPressed;
++        _window.OnDeclinePressed += OnDeclinePressed;
++        _window.OnClose += OnWindowClosed;
++        _window.OpenCentered();
++    }
++
++    private void OnAcceptPressed()
++    {
++        SendResponse(true);
++    }
++
++    private void OnDeclinePressed()
++    {
++        SendResponse(false);
++    }
++
++    private void SendResponse(bool accepted)
++    {
++        if (_scanner == null)
++            return;
++
++        RaiseNetworkEvent(new RecruitmentRespondConfirmationEvent
++        {
++            Scanner = GetNetEntity(_scanner.Value),
++            Accepted = accepted,
++        });
++
++        CloseWindow();
++    }
++
++    private void OnWindowClosed()
++    {
++        CloseWindow();
++    }
++
++    private void CloseWindow()
++    {
++        if (_window == null)
++            return;
++
++        _window.OnAcceptPressed -= OnAcceptPressed;
++        _window.OnDeclinePressed -= OnDeclinePressed;
++        _window.OnClose -= OnWindowClosed;
++        _window.Dispose();
++        _window = null;
++        _scanner = null;
++    }
++}
+
+### Content.Server/_Orion/Recruitment/Systems/RecruitmentMemberListSystem.cs
+@@ -10,4 +10,7 @@ public sealed class RecruitmentMemberListSystem : EntitySystem
++    private const float UpdateIntervalSeconds = 2f;
++    private float _nextUpdateAt;
++
+@@ -59,3 +62,23 @@ private void UpdateMemberList(EntityUid uid, RecruitmentScanningComponent comp)
++
++    public override void Update(float frameTime)
++    {
++        base.Update(frameTime);
++
++        _nextUpdateAt -= frameTime;
++        if (_nextUpdateAt > 0f)
++            return;
++
++        _nextUpdateAt = UpdateIntervalSeconds;
++
++        var query = EntityQueryEnumerator<RecruitmentScanningComponent>();
++        while (query.MoveNext(out var scannerUid, out var scannerComp))
++        {
++            if (!_ui.IsUiOpen(scannerUid, RecruitmentMemberListUiKey.Key))
++                continue;
++
++            UpdateMemberList(scannerUid, scannerComp);
++        }
++    }
+
+### Content.Server/_Orion/Recruitment/Systems/RecruitmentScanningSystem.cs
+@@ -4,4 +4,5 @@
++using Content.Shared._Orion.Recruitment.Events;
+@@ -36,5 +37,5 @@ public sealed class RecruitmentScanningSystem : EntitySystem
+-    [Dependency] private readonly IAdminLogManager _adminLogger = default!;
++    [Dependency] private readonly IAdminLogManager _admin = default!;
+@@ -49,4 +50,6 @@ public override void Initialize()
++
++        SubscribeNetworkEvent<RecruitmentRespondConfirmationEvent>(OnRecruitmentResponse);
+@@ -59,5 +62,4 @@ private void OnMapInit(EntityUid uid, RecruitedComponent comp, MapInitEvent args
+-    // TODO: Fix UI doesn't open for target on scan
+@@ -67,14 +69,16 @@ private void OnScanAttempt(EntityUid uid, RecruitmentScanningComponent comp, Aft
+-        if (!TryComp<ActorComponent>(target, out var actor))
++        if (!TryComp(target, out ActorComponent? targetActor))
+-        // This will be until we fix UI, also remove this when UI is fixed
+-        var targetName = Identity.Name(target, EntityManager);
+-        _popup.PopupEntity(Loc.GetString("recruitment-start-user-temporal-popup", ("target", targetName)), target, args.User);
+-
+-/* Doesn't open the UI for the target :(
+-// Uncomment this when UI is fixed
++        if (TryComp<RecruitedComponent>(target, out var recruitedComp) && recruitedComp.Organization == comp.OrganizationName)
++        {
++            var alreadyInOrganizationMsg = args.User == target
++                ? Loc.GetString("recruitment-already-in-organization-self")
++                : Loc.GetString("recruitment-already-in-organization", ("target", targetName));
++            _popup.PopupEntity(alreadyInOrganizationMsg, uid, args.User);
++            return;
++        }
+@@ -82,5 +86,4 @@ private void OnScanAttempt(EntityUid uid, RecruitmentScanningComponent comp, Aft
+-*/
+@@ -97,14 +100,42 @@ private void OnScanAttempt(EntityUid uid, RecruitmentScanningComponent comp, Aft
+-        var state = new RecruitmentConfirmationBuiState
++        RaiseNetworkEvent(new RecruitmentOpenConfirmationEvent
++            Scanner = GetNetEntity(uid),
+-        };
++        },
++        targetActor.PlayerSession);
++        _admin.Add(LogType.Action, LogImpact.Low, $"{Identity.Name(args.User, EntityManager)} sent a recruitment request to {targetName} for {comp.OrganizationName}");
++        args.Handled = true;
++    }
+-        _ui.SetUiState(uid, RecruitmentConfirmationUiKey.Key, state);
+-        _ui.OpenUi(uid, RecruitmentConfirmationUiKey.Key, actor.PlayerSession);
++    private void OnRecruitmentResponse(RecruitmentRespondConfirmationEvent ev, EntitySessionEventArgs args)
++    {
++        if (!TryGetEntity(ev.Scanner, out var scannerUid))
++            return;
+-        args.Handled = true;
++        var actor = args.SenderSession.AttachedEntity;
++        if (actor == null)
++            return;
++
++        if (!TryComp<RecruitmentConfirmationComponent>(scannerUid, out var confirmComp) ||
++            !TryComp<RecruitmentScanningComponent>(scannerUid, out var scanComp))
++            return;
++
++        if (confirmComp.Target != actor.Value)
++            return;
++
++        var actorName = Identity.Name(actor.Value, EntityManager, confirmComp.Recruiter);
++        if (ev.Accepted)
++        {
++            _admin.Add(LogType.Action, LogImpact.Low, $"{actorName} accepted a recruitment request to {confirmComp.OrganizationName}");
++            OnAccept(scannerUid.Value, scanComp, new RecruitmentAcceptMessage { Actor = actor.Value });
++        }
++        else
++        {
++            _admin.Add(LogType.Action, LogImpact.Low, $"{actorName} declined a recruitment request to {confirmComp.OrganizationName}");
++            OnDecline(scannerUid.Value, scanComp, new RecruitmentDeclineMessage { Actor = actor.Value });
++        }
+@@ -114,4 +145,7 @@ private void OnAccept(EntityUid uid, RecruitmentScanningComponent scanComp, Recr
++        if (args.Actor != confirmComp.Target)
++            return;
++
+@@ -136,4 +170,7 @@ private void OnAccept(EntityUid uid, RecruitmentScanningComponent scanComp, Recr
++        _popup.PopupEntity(Loc.GetString("recruitment-processing-user", ("target", Identity.Name(target, EntityManager, confirmComp.Recruiter))), uid, confirmComp.Recruiter);
++        _popup.PopupEntity(Loc.GetString("recruitment-processing-target", ("user", Identity.Name(confirmComp.Recruiter, EntityManager, target))), uid, target);
++
+@@ -156,4 +193,5 @@ private void OnDecline(EntityUid uid, RecruitmentScanningComponent scanComp, Rec
++        _popup.PopupEntity(Loc.GetString("recruitment-decline-target", ("organization", confirmComp.OrganizationName)), uid, confirmComp.Target);
+@@ -169,4 +207,12 @@ private void OnScanComplete(EntityUid uid, RecruitmentScanningComponent comp, Re
++        if (TryComp<RecruitedComponent>(target, out var recruitedComp) &&
++            recruitedComp.Organization == comp.OrganizationName)
++        {
++            var msg = Loc.GetString("recruitment-already-in-organization", ("target", name));
++            _popup.PopupEntity(msg, target, args.User);
++            return;
++        }
++
+@@ -206,5 +252,5 @@ private void OnScanComplete(EntityUid uid, RecruitmentScanningComponent comp, Re
+-        _adminLogger.Add(LogType.Mind, LogImpact.High, $"{recruiterName} recruited {name} to {comp.OrganizationName} with implant {comp.Implant} and faction {comp.Faction}");
++        _admin.Add(LogType.Mind, LogImpact.High, $"{recruiterName} recruited {name} to {comp.OrganizationName} with implant {comp.Implant} and faction {comp.Faction}");
+
+### Content.Shared/_Orion/Recruitment/Events/RecruitmentConfirmationNetEvents.cs
+@@ -0,0 +1,18 @@
++using Robust.Shared.Serialization;
++
++namespace Content.Shared._Orion.Recruitment.Events;
++
++[Serializable, NetSerializable]
++public sealed class RecruitmentOpenConfirmationEvent : EntityEventArgs
++{
++    public NetEntity Scanner { get; init; }
++    public string OrganizationName { get; init; } = string.Empty;
++    public string ImplantName { get; init; } = string.Empty;
++}
++
++[Serializable, NetSerializable]
++public sealed class RecruitmentRespondConfirmationEvent : EntityEventArgs
++{
++    public NetEntity Scanner { get; init; }
++    public bool Accepted { get; init; }
++}
+
+### Resources/Prototypes/_Orion/Entities/Objects/Devices/recruitment.yml
+@@ -23,4 +23,5 @@
++        interactionRange: 1

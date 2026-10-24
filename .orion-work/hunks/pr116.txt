@@ -1,0 +1,6 @@
+[Tweak] Remove Mail Time Penalty
+
+### Content.Server/Nyanotrasen/Mail/MailSystem.cs
+@@ -556,5 +556,5 @@ public void SetupMail(EntityUid uid, MailTeleporterComponent component, MailReci
+-                        PenalizeStationFailedDelivery(uid, mailComp, "mail-penalty-expired");
++//                        PenalizeStationFailedDelivery(uid, mailComp, "mail-penalty-expired"); // Europa-Remove

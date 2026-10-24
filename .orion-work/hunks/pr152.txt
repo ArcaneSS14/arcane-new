@@ -1,0 +1,303 @@
+Update Resources/Locale/en-US/ss14-ru/prototypes/_orion/catalog/fills/lockers/security.ftl
+
+### Content.Server/_Orion/AlertLevelLock/StationAlertLevelLockSystem.cs
+@@ -0,0 +1,102 @@
++using System.Linq;
++using Content.Server.AlertLevel;
++using Content.Server.Station.Systems;
++using Content.Shared._Orion.AlertLevelLock.Components;
++using Content.Shared.Emag.Systems;
++using Content.Shared.Examine;
++using Robust.Shared.Prototypes;
++
++namespace Content.Server._Orion.AlertLevelLock;
++
++//
++// License-Identifier: AGPL-3.0-or-later
++//
++
++public sealed class StationAlertLevelLockSystem : EntitySystem
++{
++    [Dependency] private readonly StationSystem _station = default!;
++    [Dependency] private readonly IEntityManager _entMan = default!;
++    [Dependency] private readonly AlertLevelSystem _level = default!;
++    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeLocalEvent<StationAlertLevelLockComponent, MapInitEvent>(OnInit);
++        SubscribeLocalEvent<StationAlertLevelLockComponent, ExaminedEvent>(OnExamined);
++        SubscribeLocalEvent<StationAlertLevelLockComponent, GotEmaggedEvent>(OnEmagged);
++        SubscribeLocalEvent<AlertLevelChangedEvent>(OnAlertChanged);
++    }
++
++    public void OnInit(EntityUid uid, StationAlertLevelLockComponent component, MapInitEvent args)
++    {
++        var station = _station.GetOwningStation(uid);
++
++        if (station == null)
++        {
++            component.Enabled = false;
++            Dirty(uid, component);
++            return;
++        }
++
++        component.StationId = station.Value;
++        UpdateLockState(component, _level.GetLevel(component.StationId.Value));
++        Dirty(uid, component);
++    }
++
++    private void OnAlertChanged(AlertLevelChangedEvent args)
++    {
++        var enumerator = _entMan.AllEntityQueryEnumerator<StationAlertLevelLockComponent>();
++        while (enumerator.MoveNext(out var uid, out var component))
++        {
++            var station = args.Station;
++
++            if (component.StationId != station)
++                continue;
++
++            UpdateLockState(component, args.AlertLevel);
++            Dirty(uid, component);
++        }
++    }
++
++    private void UpdateLockState(StationAlertLevelLockComponent component, string newAlertLevel)
++    {
++        component.Locked = component.LockedAlertLevels.Contains(newAlertLevel);
++    }
++
++    private void OnEmagged(EntityUid uid, StationAlertLevelLockComponent component, ref GotEmaggedEvent args)
++    {
++        args.Handled = true;
++        component.Enabled = false;
++        Dirty(uid, component);
++    }
++
++    public void OnExamined(EntityUid uid, StationAlertLevelLockComponent component, ExaminedEvent args)
++    {
++        if (!component.Enabled || component.LockedAlertLevels.Count == 0)
++            return;
++
++        var levels = string.Join(", ",
++            component.LockedAlertLevels.Select(level =>
++            {
++                var color = GetAlertColor(level);
++                return $"[color={color.ToHex()}]{Loc.GetString($"alert-level-{level}").ToLower()}[/color]";
++            }));
++
++        args.PushMarkup(Loc.GetString("station-alert-level-lock-examined", ("levels", levels)));
++    }
++
++    private Color GetAlertColor(string alertLevel)
++    {
++        const string prototypeId = "stationAlerts";
++
++        if (!_prototypeManager.TryIndex<AlertLevelPrototype>(prototypeId, out var alertSet))
++            return Color.White;
++
++        if (!alertSet.Levels.TryGetValue(alertLevel, out var levelData))
++            return Color.White;
++
++        return levelData.Color;
++    }
++}
+
+### Content.Shared/_Orion/AlertLevelLock/Components/StationAlertLevelLockComponent.cs
+@@ -0,0 +1,29 @@
++using Robust.Shared.GameStates;
++
++namespace Content.Shared._Orion.AlertLevelLock.Components;
++
++//
++// License-Identifier: AGPL-3.0-or-later
++//
++
++/// <summary>
++/// Component that locks entities based on the current station alert level.
++/// </summary>
++[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
++public sealed partial class StationAlertLevelLockComponent : Component
++{
++    [DataField, AutoNetworkedField]
++    public bool Enabled = true;
++
++    [DataField, AutoNetworkedField]
++    public bool Locked = true;
++
++    /// <summary>
++    /// Set of alert levels that will cause this entity to be locked.
++    /// </summary>
++    [DataField, AutoNetworkedField]
++    public HashSet<string> LockedAlertLevels = [];
++
++    [DataField, AutoNetworkedField]
++    public EntityUid? StationId;
++}
+
+### Content.Shared/_Orion/AlertLevelLock/SharedStationAlertLevelLockSystem.cs
+@@ -0,0 +1,43 @@
++using Content.Shared._Orion.AlertLevelLock.Components;
++using Content.Shared.Lock;
++using Content.Shared.Popups;
++
++namespace Content.Shared._Orion.AlertLevelLock;
++
++//
++// License-Identifier: AGPL-3.0-or-later
++//
++
++public sealed class SharedStationAlertLevelLockSystem : EntitySystem
++{
++    [Dependency] private readonly SharedPopupSystem _popup = default!;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeLocalEvent<StationAlertLevelLockComponent, LockToggleAttemptEvent>(OnTryAccess);
++    }
++
++    private void OnTryAccess(Entity<StationAlertLevelLockComponent> ent, ref LockToggleAttemptEvent args)
++    {
++        if (!TryComp<LockComponent>(ent.Owner, out var lockComponent))
++            return;
++
++        if (!ent.Comp.Enabled || !ent.Comp.Locked)
++            return;
++
++        // If the user is trying to lock the object (not unlock), allow it.
++        var isLocking = !lockComponent.Locked;
++        if (isLocking)
++            return;
++
++        _popup.PopupClient(
++            Loc.GetString("access-failed-wrong-station-alert-level"),
++            ent.Owner,
++            args.User
++        );
++
++        args.Cancelled = true;
++    }
++}
+
+### Resources/Prototypes/Catalog/Fills/Lockers/security.yml
+@@ -307,4 +307,5 @@
++  abstract: true # Orion | Alert Level Locked
+@@ -326,4 +327,5 @@
++  abstract: true # Orion | Alert Level Locked
+@@ -345,4 +347,5 @@
++  abstract: true # Orion | Alert Level Locked
+@@ -364,4 +367,5 @@
++  abstract: true # Orion | Alert Level Locked
+@@ -382,4 +386,5 @@
++  abstract: true # Orion | Alert Level Locked
+@@ -403,4 +408,5 @@
++  abstract: true # Orion | Alert Level Locked
+
+### Resources/Prototypes/Entities/Structures/Storage/glass_box.yml
+@@ -158,4 +158,5 @@
++  abstract: true # Orion | Alert Level Locked
+
+### Resources/Prototypes/_Orion/Catalog/Fills/Lockers/security.yml
+@@ -0,0 +1,59 @@
++# Lecter
++- type: entity
++  parent: [ GunSafeRifleLecterAlertUnlocked, AlertLevelLock ]
++  id: GunSafeRifleLecterAlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeRifleLecter ]
++  id: GunSafeRifleLecterAlertUnlocked
++
++# Drozd
++- type: entity
++  parent: [ GunSafeSubMachineGunDrozdAlertUnlocked, AlertLevelLock ]
++  id: GunSafeSubMachineGunDrozdAlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeSubMachineGunDrozd ]
++  id: GunSafeSubMachineGunDrozdAlertUnlocked
++
++# Enforcer
++- type: entity
++  parent: [ GunSafeShotgunEnforcerAlertUnlocked, AlertLevelLock ]
++  id: GunSafeShotgunEnforcerAlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeShotgunEnforcer ]
++  id: GunSafeShotgunEnforcerAlertUnlocked
++
++# Kammerer
++- type: entity
++  parent: [ GunSafeShotgunKammererAlertUnlocked, AlertLevelLock ]
++  id: GunSafeShotgunKammererAlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeShotgunKammerer]
++  id: GunSafeShotgunKammererAlertUnlocked
++
++# Wt550
++- type: entity
++  parent: [ GunSafeSubMachineGunWt550AlertUnlocked, AlertLevelLock ]
++  id: GunSafeSubMachineGunWt550AlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeSubMachineGunWt550 ]
++  id: GunSafeSubMachineGunWt550AlertUnlocked
++
++# Laser Carabine
++- type: entity
++  parent: [ GunSafeLaserCarbineAlertUnlocked, AlertLevelLock ]
++  id: GunSafeLaserCarbineAlertLocked
++  suffix: Alert Level Lock
++
++- type: entity
++  parent: [ GunSafeLaserCarbine ]
++  id: GunSafeLaserCarbineAlertUnlocked
+
+### Resources/Prototypes/_Orion/Entities/Structures/Storage/Closets/Lockers/lockers.yml
+@@ -0,0 +1,10 @@
++- type: entity
++  abstract: true
++  id: AlertLevelLock
++  components:
++  - type: StationAlertLevelLock
++    lockedAlertLevels:
++    - green
++    - blue
++    - yellow
++    - violet
+
+### Resources/Prototypes/_Orion/Entities/Structures/Storage/glass_box.yml
+@@ -0,0 +1,9 @@
++- type: entity
++  parent: [ GlassBoxLaserFilledAlertUnlocked, AlertLevelLock ]
++  id: GlassBoxLaserFilledAlertLocked
++  suffix: AntiqueLaser, Filled, Alert Level Lock
++
++- type: entity
++  parent: [ GlassBoxLaserFilled ]
++  id: GlassBoxLaserFilledAlertUnlocked
++  suffix: AntiqueLaser, Filled
+
+### Resources/migration.yml
+@@ -149,4 +149,5 @@
++
+@@ -211,4 +212,13 @@ VendingMachinePride: RandomVending
++
++GunSafeRifleLecter: GunSafeRifleLecterAlertLocked
++GunSafeSubMachineGunDrozd: GunSafeSubMachineGunDrozdAlertLocked
++GunSafeShotgunEnforcer: GunSafeShotgunEnforcerAlertLocked
++GunSafeShotgunKammerer: GunSafeShotgunKammererAlertLocked
++GunSafeSubMachineGunWt550: GunSafeSubMachineGunWt550AlertLocked
++GunSafeLaserCarbine: GunSafeLaserCarbineAlertLocked
++GlassBoxLaserFilled: GlassBoxLaserFilledAlertLocked
++

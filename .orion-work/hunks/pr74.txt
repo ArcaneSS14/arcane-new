@@ -1,0 +1,95 @@
+Merge branch 'StationAlertAttention' of https://github.com/AtaraxiaSpaceFoundation/Europa-Station-14 into StationAlertAttention
+
+### Content.Server/AlertLevel/AlertLevelPrototype.cs
+@@ -48,4 +48,9 @@ public sealed partial class AlertLevelDetail
++    /// <summary>
++    /// Europa | Literally filler, because instructions are automatically taken
++    /// </summary>
++    [DataField] public string Instruction { get; private set; } = string.Empty;
++
+
+### Content.Server/AlertLevel/AlertLevelSystem.cs
+@@ -29,4 +29,5 @@
++using Robust.Shared.Utility;
+@@ -191,11 +192,20 @@ public void SetLevel(EntityUid station, string level, bool playSound, bool annou
+-        var name = level.ToLower();
++        var name = level.ToUpper(); // Europa-Edit
+-            name = locName.ToLower();
++            name = locName.ToUpper(); // Europa-Edit
++        // Europa-Start
++        var instruction = detail.Instruction;
++
++        if (Loc.TryGetString($"alert-level-{level}-instructions", out var locInstruction))
++        {
++            instruction = locInstruction;
++        }
++        // Europa-End
++
+@@ -206,6 +216,8 @@ public void SetLevel(EntityUid station, string level, bool playSound, bool annou
++        /* Europa-Remove | Better using markups
++        */
+@@ -223,9 +235,44 @@ public void SetLevel(EntityUid station, string level, bool playSound, bool annou
++        // Europa-Start
++        var messageTitle = new FormattedMessage();
++
++        messageTitle.PushTag(new MarkupNode("examineborder", null, null));
++        messageTitle.AddText(Loc.GetString("announce-border-line"));
++        messageTitle.PushNewline();
++
++        // Announcement title
++        messageTitle.AddText(Loc.GetString("alert-level-announcement-title", ("name", name.ToUpper())));
++        messageTitle.PushNewline();
++        messageTitle.AddText(Loc.GetString("announce-border-line"));
++        messageTitle.Pop();
++
++        var message = new FormattedMessage();
++        // Announcement text
++        message.AddMarkup(announcement);
++        message.PushNewline();
++        message.PushNewline();
++
++        // Instructions
++        message.AddMarkup(instruction);
++        message.PushNewline();
++
++        message.AddText(Loc.GetString("announce-border-line"));
++        message.PushNewline();
++        message.Pop();
++        //Europa-End
++
++        // Europa-Edit-Start
+-            _chatSystem.DispatchStationAnnouncement(station, announcementFull, playDefaultSound: playDefault,
+-                colorOverride: detail.Color, sender: stationName);
++            _chatSystem.DispatchStationAnnouncement(
++                station,
++                message.ToMarkup(),
++                messageTitle.ToMarkup(),
++                playDefaultSound: playDefault,
++                colorOverride: detail.Color
++            );
++        // Europa-Edit-End
+@@ -249,3 +296,3 @@ public AlertLevelChangedEvent(EntityUid station, string alertLevel)
+-}
++}
+
+### Resources/Prototypes/AlertLevels/alert_levels.yml
+@@ -90,4 +90,5 @@
++      sound: /Audio/_Europa/Misc/greenalert.ogg # Europa
+@@ -114,7 +115,16 @@
++    # Europa-Start
++    amber:
++      announcement: alert-level-amber-announcement
++      sound: /Audio/_Europa/Misc/amberalert.ogg
++      color: Orange
++      emergencyLightColor: Orange
++      forceEnableEmergencyLights: true
++      shuttleTime: 600
++    # Europa-End
+-      sound: /Audio/Misc/redalert.ogg
++      sound: /Audio/_Europa/Misc/redalert.ogg # Europa-Edit
+@@ -124,8 +134,5 @@
+-      sound:
+-        path: /Audio/_Europa/Misc/siren.ogg # Europa | Return old gamma sound
+-        params:
+-          volume: -2
++      sound: /Audio/_Europa/Misc/gammaalert.ogg # Europa-Edit

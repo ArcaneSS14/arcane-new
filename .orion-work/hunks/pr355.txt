@@ -1,0 +1,84 @@
+locker
+
+### Content.Shared/Cloning/CloningPodComponent.cs
+@@ -78,5 +78,5 @@ public sealed partial class CloningPodComponent : Component
+-            { "Cellular", 20},
++            { "Cellular", 10}, // Orion-Edit: 20 > 10
+
+### Resources/Prototypes/Entities/Structures/Machines/cloning_machine.yml
+@@ -48,5 +48,5 @@
+-    cloningTime: 90 # Goobstation
++    cloningTime: 30 # Goobstation # Orion-Edit: 90 > 30
+
+### Resources/Prototypes/_Goobstation/Heretic/Catalog/Heretic/path_side.yml
+@@ -92,19 +92,21 @@
+-#- type: listing
+-#  id: HereticSidePathKnowledge
+-#  name: knowledge-path-side-knowledge-name
+-#  description: knowledge-path-side-knowledge-desc
+-#  icon: { sprite: _Goobstation/Heretic/book.rsi, state: icon }
+-#  productHereticKnowledge: RitualOfKnowledge
+-#  cost:
+-#    KnowledgePoint: 1
+-#  categories:
+-#  - HereticPathSide
+-#  conditions:
+-#  - !type:ListingLimitedStockCondition
+-#    stock: 1
+-#  - !type:HereticPathCondition
+-#    stage: 0
++# Orion-Edit-Start: Revert
++- type: listing
++  id: HereticSidePathKnowledge
++  name: knowledge-path-side-knowledge-name
++  description: knowledge-path-side-knowledge-desc
++  icon: { sprite: _Goobstation/Heretic/book.rsi, state: icon }
++  productHereticKnowledge: RitualOfKnowledge
++  cost:
++    KnowledgePoint: 1
++  categories:
++  - HereticPathSide
++  conditions:
++  - !type:ListingLimitedStockCondition
++    stock: 1
++  - !type:HereticPathCondition
++    stage: 0
++# Orion-Edit-End
+
+### Resources/Prototypes/_Goobstation/Heretic/Heretic/heretic_knowledge.yml
+@@ -553,9 +553,11 @@
+-#- type: hereticKnowledge
+-#  id: RitualOfKnowledge
+-#  sideKnowledge: true
+-#  ritualPrototypes:
+-#  - RitualOfKnowledge
++# Orion-Edit-Start: Revert
++- type: hereticKnowledge
++  id: RitualOfKnowledge
++  sideKnowledge: true
++  ritualPrototypes:
++  - RitualOfKnowledge
++# Orion-Edit-End
+
+### Resources/Prototypes/_Goobstation/Heretic/Heretic/heretic_rituals.yml
+@@ -347,13 +347,15 @@
+-#- type: hereticRitual
+-#  id: RitualOfKnowledge
+-#  locName: knowledge-path-side-knowledge-name
+-#  locDesc: knowledge-path-side-knowledge-desc
+-#  icon:
+-#    sprite: _Goobstation/Heretic/book.rsi
+-#    state: icon
+-#  customBehaviors:
+-#  - !type:RitualKnowledgeBehavior
++# Orion-Edit-Start: Revert
++- type: hereticRitual
++  id: RitualOfKnowledge
++  locName: knowledge-path-side-knowledge-name
++  locDesc: knowledge-path-side-knowledge-desc
++  icon:
++    sprite: _Goobstation/Heretic/book.rsi
++    state: icon
++  customBehaviors:
++  - !type:RitualKnowledgeBehavior
++# Orion-Edit-End

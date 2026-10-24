@@ -1,0 +1,8 @@
+[Tweak] Remove RND Console Access
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/computers.yml
+@@ -747,6 +747,6 @@
+-  - type: AccessReader
+-    access: [["Research"]]
++#  - type: AccessReader # Europa-Remove
++#    access: [["Research"]]

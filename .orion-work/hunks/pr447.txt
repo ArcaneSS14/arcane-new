@@ -1,0 +1,21 @@
+[Fix] Terminating ToggleableClothing
+
+### Content.Shared/Clothing/EntitySystems/ToggleableClothingSystem.cs
+@@ -301,4 +301,9 @@ private void OnToggleableUnequip(Entity<ToggleableClothingComponent> toggleable,
++        // Orion-Start
++        if (TerminatingOrDeleted(toggleable.Owner))
++            return;
++        // Orion-End
++
+@@ -415,4 +420,9 @@ private void OnRemoveAttached(Entity<AttachedClothingComponent> attached, ref Co
++        // Orion-Start
++        if (TerminatingOrDeleted(comp.AttachedUid))
++            return;
++        // Orion-End
++
+@@ -448,4 +458,9 @@ private void OnAttachedUnequip(Entity<AttachedClothingComponent> attached, ref G
++        // Orion-Start
++        if (TerminatingOrDeleted(comp.AttachedUid))
++            return;
++        // Orion-End
++

@@ -1,0 +1,478 @@
+up4
+
+### Resources/Audio/Animals/attributions.yml
+@@ -8,7 +8,7 @@
+-  license: "CC-BY-NC-SA-3.0"
+-  copyright: "Taken from goonstation"
+-  source: "https://github.com/goonstation/goonstation/blob/4059e4be90832b02b1228b1bee3db342094e4f1e/sound/voice/screams/monkey_scream.ogg"
++  license: "CC-BY-SA-3.0"
++  copyright: "Taken from TG Station"
++  source: "https://github.com/tgstation/tgstation"
+@@ -147,23 +147,4 @@
+-- files:
+-  - fox1.ogg
+-  - fox2.ogg
+-  - fox3.ogg
+-  - fox4.ogg
+-  - fox5.ogg
+-  - fox6.ogg
+-  - fox7.ogg
+-  - fox8.ogg
+-  - fox9.ogg
+-  - fox10.ogg
+-  - fox11.ogg
+-  - fox12.ogg
+-  - fox13.ogg
+-  - fox14.ogg
+-  copyright: "Created by fujiwaranao"
+-  license: "CC-BY-NC-SA-4.0"
+-  source: "https://github.com/space-wizards/space-station-14/pull/27578"
+-
+
+### Resources/Audio/Effects/Diseases/attributions.yml
+@@ -10,10 +10,10 @@
+-  license: CC-BY-NC-4.0
+-  copyright: '"Howler Monkey - Single, Close, Costa Rica" by TRAVELcandies of Freesound.org'
+-  source: https://freesound.org/people/TRAVELcandies/sounds/423396/
++  license: CC-BY-SA-3.0
++  copyright: "tgstation"
++  source: https://github.com/tgstation/tgstation
+-  source: https://freesound.org/people/Archeos/sounds/325549/
++  source: https://freesound.org/people/Archeos/sounds/325549/
+
+### Resources/Audio/Mecha/attributions.yml
+@@ -5,13 +5,13 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  source: "https://github.com/tgstation/tgstation/commit/45123dd06cb6dc7c56e8004c528230682ea559b2"
++  source: "https://github.com/tgstation/tgstation/commit/45123dd06cb6dc7c56e8004c528230682ea559b2"
+
+### Resources/Audio/Misc/attributions.yml
+@@ -132,7 +132,7 @@
+-  license: "CC-BY-NC-4.0"
+-  copyright: "Taken from SergeQuadrado via freesound.org, edit and mono by TheShuEd"
+-  source: "https://freesound.org/people/SergeQuadrado/sounds/683504/"
++  license: "CC0-1.0"
++  copyright: "Taken from TG station."
++  source: "https://github.com/tgstation/tgstation"
+
+### Resources/Audio/Voice/Talk/attributions.yml
+@@ -37,10 +37,10 @@
+-  license: "CC-BY-NC-SA-3.0"
+-  copyright: "Goonstation, Modified by Whisper"
+-  source: "https://github.com/goonstation/goonstation/tree/eb3e7df6292d23f6af2f18b4372d3a8ba4b0fda7/sound/misc/talk"
++  license: "CC-BY-SA-3.0"
++  copyright: "Taken from TG Station, Modified by Whisper"
++  source: "https://github.com/tgstation/tgstation"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  source: "https://github.com/goonstation/goonstation/tree/eb3e7df6292d23f6af2f18b4372d3a8ba4b0fda7/sound/misc/talk"
++  source: "https://github.com/tgstation/tgstation"
+
+### Resources/Audio/Voice/Zombie/attributions.yml
+@@ -5,13 +5,13 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-0"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-0"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-0"
+-  source: "https://freesound.org/people/gneube/sounds/315844/"
++  source: "https://freesound.org/people/gneube/sounds/315844/"
+
+### Resources/Audio/Weapons/Xeno/attributions.yml
+@@ -11,5 +11,5 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  source: "https://github.com/tgstation/TerraGov-Marine-Corps/blob/233891d0e19a002d8307299bfe15206591172784/sound/voice/alien_spitacid.ogg"
++  source: "https://github.com/tgstation/TerraGov-Marine-Corps/blob/233891d0e19a002d8307299bfe15206591172784/sound/voice/alien_spitacid.ogg"
+
+### Resources/Audio/_DV/Items/TapeRecorder/attributions.yml
+@@ -15,5 +15,5 @@
+-  license: "CC-BY-NC-4.0"
+-  copyright: "Taken from CassetteRewind.flac by acclivity. Converted from Flac to Ogg."
+-  source: "https://freesound.org/people/acclivity/sounds/23393/"
++  license: "CC-0"
++  copyright: "Taken from freesound.org by LuKaiX. Converted to .ogg by PuroSlavKing (Github)"
++  source: "https://freesound.org/people/LuKaiX/sounds/700527/"
+
+### Resources/Audio/_Goobstation/Mecha/attributions.yml
+@@ -8,5 +8,5 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+
+### Resources/Audio/_Goobstation/Voice/Resomi/attributions.yml
+@@ -8,5 +8,5 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+
+### Resources/Audio/_White/Items/Goggles/attributions.yml
+@@ -6,10 +6,10 @@
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  license: "CC-BY-NC-SA-3.0"
++  license: "CC-BY-SA-3.0"
+-  source: "https://github.com/tgstation/tgstation"
++  source: "https://github.com/tgstation/tgstation"
+
+### Resources/Prototypes/Catalog/Fills/Crates/cargo.yml
+@@ -348,7 +348,7 @@
+-    - id: PlushieHuman
+-      prob: 0.01
+-      orGroup: Plushies
++#    - id: PlushieHuman # Orion-Edit: NC license sprites
++#      prob: 0.01
++#      orGroup: Plushies
+@@ -366,7 +366,7 @@
+-    - id: PlushieArachind
+-      prob: 0.01
+-      orGroup: Plushies
++#    - id: PlushieArachind # Orion-Edit: NC license sprites
++#      prob: 0.01
++#      orGroup: Plushies
+
+### Resources/Prototypes/Catalog/Fills/Crates/fun.yml
+@@ -168,9 +168,9 @@
+-    - id: PlushieDiona
++#    - id: PlushieDiona # Orion-Edit: NC license sprites
+-    - id: PlushieArachind
++#    - id: PlushieArachind # Orion-Edit: NC license sprites
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/toy.yml
+@@ -73,6 +73,6 @@
+-        - PlushieDiona
+-        - PlushieArachind
++#        - PlushieDiona # Orion-Edit: NC license sprites
++#        - PlushieArachind # Orion-Edit: NC license sprites
+
+### Resources/Prototypes/Entities/Mobs/NPCs/regalrat.yml
+@@ -316,43 +316,42 @@
+-- type: entity
+-  id: MobRatKingBuff
+-  parent: MobRatKing
+-  suffix: Buff
+-  components:
+-  - type: Sprite
+-    sprite: Mobs/Animals/buffrat.rsi
+-    scale: 1.2, 1.2
+-    layers:
+-    - map: ["enum.DamageStateVisualLayers.Base"]
+-      state: regalrat
+-    - map: [ "enum.DamageStateVisualLayers.BaseUnshaded"]
+-      state: eyes
+-      shader: unshaded
+-  - type: MobState
+-  - type: MobThresholds
+-    thresholds:
+-      0: Alive
+-      350: Dead
+-  - type: MeleeWeapon
+-    altDisarm: false
+-    soundHit:
+-        path: /Audio/Weapons/Xeno/alien_claw_flesh2.ogg
+-    angle: 0
+-    attackRate: 0.75
+-    animation: WeaponArcFist
+-    damage:
+-      types:
+-        Blunt: 66 #oof ouch owie my bones
+-  - type: SlowOnDamage
+-    speedModifierThresholds:
+-      200: 0.7
+-      250: 0.5
+-  - type: GuideHelp
+-    guides:
+-    - MinorAntagonists
+-  - type: GlobalAntagonist # Orion
+-    antagonistPrototype: globalAntagonistRats
+-
++#- type: entity # Orion-Edit: NC license sprites
++#  id: MobRatKingBuff
++#  parent: MobRatKing
++#  suffix: Buff
++#  components:
++#  - type: Sprite
++#    sprite: Mobs/Animals/buffrat.rsi
++#    scale: 1.2, 1.2
++#    layers:
++#    - map: ["enum.DamageStateVisualLayers.Base"]
++#      state: regalrat
++#    - map: [ "enum.DamageStateVisualLayers.BaseUnshaded"]
++#      state: eyes
++#      shader: unshaded
++#  - type: MobState
++#  - type: MobThresholds
++#    thresholds:
++#      0: Alive
++#      350: Dead
++#  - type: MeleeWeapon
++#    altDisarm: false
++#    soundHit:
++#        path: /Audio/Weapons/Xeno/alien_claw_flesh2.ogg
++#    angle: 0
++#    attackRate: 0.75
++#    animation: WeaponArcFist
++#    damage:
++#      types:
++#        Blunt: 66 #oof ouch owie my bones
++#  - type: SlowOnDamage
++#    speedModifierThresholds:
++#      200: 0.7
++#      250: 0.5
++#  - type: GuideHelp
++#    guides:
++#    - MinorAntagonists
++#  - type: GlobalAntagonist # Orion
++#    antagonistPrototype: globalAntagonistRats
+
+### Resources/Prototypes/Entities/Objects/Decoration/present.yml
+@@ -135,8 +135,8 @@
+-      - id: PlushieDiona
+-        orGroup: GiftPool
+-      - id: PlushieArachind
+-        orGroup: GiftPool
++#      - id: PlushieDiona # Orion-Edit: NC license sprites
++#        orGroup: GiftPool
++#      - id: PlushieArachind # Orion-Edit: NC license sprites
++#        orGroup: GiftPool
+
+### Resources/Prototypes/Entities/Objects/Fun/plushies.yml
+@@ -304,41 +304,41 @@
+-- type: entity
+-  parent: BasePlushie
+-  id: PlushieArachind
+-  name: arachnid plushie
+-  description: An adorable stuffed toy that resembles an arachnid. It feels silky..
+-  components:
+-  - type: Sprite
+-    sprite: Objects/Fun/Plushies/arachnid.rsi
+-    state: icon
+-  - type: EmitSoundOnUse
+-    sound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: EmitSoundOnLand
+-    sound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: EmitSoundOnActivate
+-    sound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: EmitSoundOnTrigger
+-    sound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: EmitSoundOnCollide
+-    sound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: Food
+-    requiresSpecialDigestion: true
+-    useSound:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: MeleeWeapon
+-    wideAnimationRotation: 180
+-    soundHit:
+-      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
+-  - type: Clothing
+-    quickEquip: false
+-    sprite: Objects/Fun/Plushies/arachnid.rsi
+-    slots:
+-    - HEAD
++#- type: entity # Orion-Edit: NC license sprites
++#  parent: BasePlushie
++#  id: PlushieArachind
++#  name: arachnid plushie
++#  description: An adorable stuffed toy that resembles an arachnid. It feels silky..
++#  components:
++#  - type: Sprite
++#    sprite: Objects/Fun/Plushies/arachnid.rsi
++#    state: icon
++#  - type: EmitSoundOnUse
++#    sound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: EmitSoundOnLand
++#    sound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: EmitSoundOnActivate
++#    sound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: EmitSoundOnTrigger
++#    sound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: EmitSoundOnCollide
++#    sound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: Food
++#    requiresSpecialDigestion: true
++#    useSound:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: MeleeWeapon
++#    wideAnimationRotation: 180
++#    soundHit:
++#      path: /Audio/Voice/Arachnid/arachnid_laugh.ogg
++#  - type: Clothing
++#    quickEquip: false
++#    sprite: Objects/Fun/Plushies/arachnid.rsi
++#    slots:
++#    - HEAD
+@@ -606,91 +606,91 @@
+-- type: entity
+-  parent: BasePlushie
+-  id: PlushieDiona
+-  name: diona plushie
+-  description: An adorable stuffed toy that resembles a diona. Love water and cuddles. Do not wet!
+-  components:
+-  - type: Sprite
+-    sprite: Objects/Fun/Plushies/diona.rsi
+-    layers:
+-    - state: plushie_diona
+-    - state: plushie_diona1
+-      map: [ "enum.SolutionContainerLayers.Fill" ]
+-      visible: false
+-  - type: EmitSoundOnUse
+-    sound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: EmitSoundOnLand
+-    sound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: EmitSoundOnActivate
+-    sound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: EmitSoundOnTrigger
+-    sound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: EmitSoundOnCollide
+-    sound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: MeleeWeapon
+-    wideAnimationRotation: 180
+-    soundHit:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: Food
+-    requiresSpecialDigestion: true
+-    useSound:
+-      path: /Audio/Items/Toys/toy_rustle.ogg
+-  - type: SolutionContainerManager
+-    solutions:
+-      plushie:
+-        maxVol: 1
+-      food:
+-        maxVol: 10
+-        reagents:
+-        - ReagentId: Fiber
+-          Quantity: 10
+-  - type: RefillableSolution
+-    solution: plushie
+-  - type: SolutionContainerVisuals
+-    solutionName: plushie
+-    maxFillLevels: 1
+-    fillBaseName: plushie_diona
+-    changeColor: false
+-  - type: Appearance
+-  - type: Reactive
+-    reactions:
+-    - reagents: [ Water ]
+-      methods: [ Touch ]
+-      effects:
+-      - !type:AddToSolutionReaction
+-        solution: plushie
+-  - type: Fixtures
+-    fixtures:
+-      fix1:
+-        shape:
+-          !type:PhysShapeAabb
+-          bounds: "-0.3,-0.3,0.3,0.3"
+-        density: 15
+-        mask:
+-        - ItemMask
+-      rehydrate:
+-        shape:
+-          !type:PhysShapeAabb
+-          bounds: "-0.3,-0.3,0.3,0.3"
+-        hard: false
+-        layer:
+-        - LowImpassable
+-  - type: CollisionWake
+-    enabled: false
+-  - type: Clothing
+-    quickEquip: false
+-    sprite: Objects/Fun/Plushies/diona.rsi
+-    slots:
+-    - HEAD
+-    clothingVisuals:
+-      head:
+-      - state: equipped-HELMET
+-        offset: "0, 0.09"
++#- type: entity # Orion-Edit: NC license sprites
++#  parent: BasePlushie
++#  id: PlushieDiona
++#  name: diona plushie
++#  description: An adorable stuffed toy that resembles a diona. Love water and cuddles. Do not wet!
++#  components:
++#  - type: Sprite
++#    sprite: Objects/Fun/Plushies/diona.rsi
++#    layers:
++#    - state: plushie_diona
++#    - state: plushie_diona1
++#      map: [ "enum.SolutionContainerLayers.Fill" ]
++#      visible: false
++#  - type: EmitSoundOnUse
++#    sound:
++#      path: /Audio/Items/Toys/toy_rustle.ogg
++#  - type: EmitSoundOnLand
++#    sound:
++#      path: /Audio/Items/Toys/toy_rustle.ogg
++#  - type: EmitSoundOnActivate
++#    sound:
++#      path: /Audio/Items/Toys/toy_rustle.ogg
++#  - type: EmitSoundOnTrigger
++#    sound:
++#      path: /Audio/Items/Toys/toy_rustle.ogg
++#  - type: EmitSoundOnCollide
++#    sound:
++#      path: /Audio/Items/Toys/toy_rustle.ogg
++#  - type: MeleeWeapon
++#    wideAnimationRotation: 180
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/arcades.yml
+
+### Resources/Prototypes/SoundCollections/fox.yml
+
+### Resources/Prototypes/Tiles/floors.yml
+
+### Resources/Prototypes/Tiles/plating.yml
+
+### Resources/Prototypes/_Goobstation/Actions/fishing.yml
+
+### Resources/Prototypes/_Goobstation/Catalog/Fills/Crates/service.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Mobs/Customization/Markings/IPCwings.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Fun/immovable_rod.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Mail/mail_fun.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Tools/fishing_rods.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Structures/Decorations/construction.yml
+
+### Resources/Prototypes/_Goobstation/Entities/Structures/Machines/gambling_machines.yml
+
+### Resources/Prototypes/_Goobstation/Wizard/Random/polymorph.yml
+
+### Resources/Prototypes/_Goobstation/themes.yml
+
+### Resources/Prototypes/_NF/Entities/Objects/Comsumable/Drinks/drinks.yml
+
+### Resources/Prototypes/_NF/Reagents/Comsumables/Drink/drinks.yml
+
+### Resources/Prototypes/_Orion/Ghosts/personal_ghosts.yml
+
+### Resources/Prototypes/_White/themes.yml
+
+### Resources/Textures/Tiles/Planet/Concrete/attributions.yml
+
+### Resources/Textures/Tiles/attributions.yml
+
+### Resources/migration.yml

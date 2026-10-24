@@ -1,0 +1,12 @@
+[Fix] Missing Command Roles
+
+### Resources/Prototypes/Roles/Jobs/departments.yml
+@@ -193,9 +193,7 @@
+-  # Orion-Edit-Start: Now it only in (CentralCommand)
+-#  - BlueshieldOfficer # Goobstation 
+-#  - NanotrasenRepresentative # Goobstation
+-#  - NanotrasenCareerTrainer # Goobstation
+-  # Orion-Edit-End
++  - BlueshieldOfficer # Goobstation 
++  - NanotrasenRepresentative # Goobstation
++  - NanotrasenCareerTrainer # Goobstation

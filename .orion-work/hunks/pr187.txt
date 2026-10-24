@@ -1,0 +1,162 @@
+[Tweak] Better Window Recipe
+
+### Content.Server/Construction/ConstructionSystem.Graph.cs
+@@ -438,5 +438,14 @@ public bool ChangeNode(EntityUid uid, EntityUid? userUid, string id, bool perfor
+-            QueueDel(uid);
++            // Orion-Start
++            var node = GetCurrentGraph(uid, construction) is { } graph
++                ? GetNodeFromGraph(graph, construction.Node)
++                : null;
++            // Orion-End
++
++            // Orion-Edit-Start
++            if (node?.KeepOriginalEntity != true)
++                QueueDel(uid);
++            // Orion-Edit-End
+
+### Content.Shared/Construction/ConstructionGraphNode.cs
+@@ -60,4 +60,13 @@ public sealed partial class ConstructionGraphNode
++        // Orion-Start
++        /// <summary>
++        ///     If true, the original entity will NOT be deleted when changing to this node.
++        ///     Useful for attaching objects (e.g. windows on grilles) without replacing entity.
++        /// </summary>
++        [DataField]
++        public bool KeepOriginalEntity = false;
++        // Orion-End
++
+@@ -88,3 +97,3 @@ public bool TryGetEdge(string target, [NotNullWhen(true)] out ConstructionGraphE
+-}
++}
+
+### Resources/Prototypes/Recipes/Construction/Graphs/structures/grille.yml
+@@ -40,4 +40,68 @@
++        # Orion-Start
++        - to: window
++          steps:
++            - material: Glass
++              amount: 2
++              doAfter: 3
++
++        - to: reinforcedWindow
++          steps:
++            - material: ReinforcedGlass
++              amount: 2
++              doAfter: 2
++
++        - to: uraniumWindow
++          steps:
++            - material: UraniumGlass
++              amount: 2
++              doAfter: 2
++
++        - to: reinforcedUraniumWindow
++          steps:
++            - material: ReinforcedUraniumGlass
++              amount: 2
++              doAfter: 3
++
++        - to: plasmaWindow
++          steps:
++            - material: PlasmaGlass
++              amount: 2
++              doAfter: 2
++
++        - to: reinforcedPlasmaWindow
++          steps:
++            - material: ReinforcedPlasmaGlass
++              amount: 2
++              doAfter: 3
++
++        - to: shuttleWindow
++          steps:
++            - material: Plasteel
++              amount: 2
++            - material: ReinforcedGlass
++              amount: 2
++              doAfter: 4
++
++#        - to: plastitaniumWindow
++#          steps:
++#            - material: PlasteelGlass
++#              amount: 2
++#              doAfter: 3
++
++        - to: clockworkWindow
++          steps:
++            - material: ClockworkGlass
++              amount: 2
++              doAfter: 3
++
++#        - to: tintedWindow
++#          steps:
++#            - material: ReinforcedGlass
++#              amount: 2
++#              doAfter: 2
++        # Orion-End
++
+@@ -55,3 +119,65 @@
+-              doAfter: 0.5
++              doAfter: 0.5
++
++    # Orion-Start
++    - node: window
++      entity: Window
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: reinforcedWindow
++      entity: ReinforcedWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: uraniumWindow
++      entity: UraniumWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: reinforcedUraniumWindow
++      entity: ReinforcedUraniumWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: plasmaWindow
++      entity: PlasmaWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: reinforcedPlasmaWindow
++      entity: ReinforcedPlasmaWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++    - node: shuttleWindow
++      entity: ShuttleWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++#    - node: plastitaniumWindow
++#      entity: PlastitaniumWindow
++#      keepOriginalEntity: true
++#      actions:
++#      - !type:SnapToGrid {}
++
++    - node: clockworkWindow
++      entity: ClockworkWindow
++      keepOriginalEntity: true
++      actions:
++      - !type:SnapToGrid {}
++
++#    - node: tintedWindow
++#      entity: TintedWindow
++#      keepOriginalEntity: true
++#      actions:
++#      - !type:SnapToGrid {}
++    # Orion-End

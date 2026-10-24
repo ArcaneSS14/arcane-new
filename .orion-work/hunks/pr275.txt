@@ -1,0 +1,414 @@
+up6
+
+### Content.Client/Sprite/SpriteFadeSystem.cs
+@@ -80,4 +80,10 @@ private void FadeIn(float change)
++
++        // Orion-Start
++        if (player == null)
++            return;
++        // Orion-End
++
+@@ -112,7 +118,6 @@ private void FadeIn(float change)
+-                        var transform = _physics.GetPhysicsTransform(ent);
+-                        var collided = false;
+-
++                        // Orion-Edit-Start
++                        var hasHardFixtures = false;
+@@ -120,16 +125,33 @@ private void FadeIn(float change)
+-                            if (_fixtures.TestPoint(fixture.Shape, transform, mapPos.Position))
++                            hasHardFixtures = true;
++                            break;
++                        }
++
++                        if (!hasHardFixtures)
++                        {
++                            // Skip collision check if no hard fixtures
++                        }
++                        else
++                        {
++                            var transform = _physics.GetPhysicsTransform(ent);
++                            var collided = false;
++
++                            foreach (var fixture in body.Fixtures.Values)
++                                if (!fixture.Hard)
++                                    continue;
++
++                                if (!_fixtures.TestPoint(fixture.Shape, transform, mapPos.Position))
++                                    continue;
++
+-                        }
+-                        // Check next entity
+-                        if (collided)
+-                        {
+-                            continue;
++                            if (collided)
++                                continue;
++                        // Orion-Edit-End
+@@ -163,4 +185,9 @@ private void FadeOut(float change)
++            // Orion-Start
++            if (TerminatingOrDeleted(uid))
++                continue;
++            // Orion-End
++
+@@ -190,3 +217,3 @@ public override void FrameUpdate(float frameTime)
+-}
++}
+
+### Content.Shared/Chemistry/EntitySystems/SolutionRegenerationSystem.cs
+@@ -45,17 +45,40 @@ public override void Update(float frameTime)
++/* // Orion-Edit: Moved down
+-            if (!_solutionContainer.ResolveSolution((uid, manager),
+-                    regen.SolutionName,
+-                    ref regen.SolutionRef,
+-                    out var solution))
++*/
++
++            // Orion-Edit-Start
++            Solution? solution;
++            if (regen.SolutionRef != null && !TerminatingOrDeleted(regen.SolutionRef.Value.Owner))
++            {
++                solution = regen.SolutionRef.Value.Comp.Solution;
++            }
++            else if (!_solutionContainer.ResolveSolution((uid, manager),
++                         regen.SolutionName,
++                         ref regen.SolutionRef,
++                         out solution))
++            {
++            }
++            // Orion-Edit-End
++            {
++                // Orion-Start
++                regen.NextRegenTime += regen.Duration;
++                Dirty(uid, regen);
++                // Orion-End
++            }
++
++            // Orion-Start
++            regen.NextRegenTime += regen.Duration;
++            Dirty(uid, regen);
++            // Orion-End
+@@ -64,5 +87,9 @@ public override void Update(float frameTime)
++            // Orion-Edit-Start
++            regen.NextRegenTime += regen.Duration;
++            Dirty(uid, regen);
++            // Orion-Edit-End
+
+### Content.Shared/Nutrition/EntitySystems/HungerSystem.cs
+@@ -117,8 +117,27 @@ public sealed class HungerSystem : EntitySystem
++    // Orion-Start
++    private static readonly HashSet<HungerThreshold> MovementAffectingThresholds = new()
++    {
++        HungerThreshold.Overfed,
++        HungerThreshold.Okay,
++        HungerThreshold.Peckish,
++    };
++
++    private SatiationIconPrototype? _overfedIcon;
++    private SatiationIconPrototype? _peckishIcon;
++    private SatiationIconPrototype? _starvingIcon;
++    // Orion-End
++
++        // Orion-Start
++        _prototype.TryIndex(HungerIconOverfedId, out _overfedIcon);
++        _prototype.TryIndex(HungerIconPeckishId, out _peckishIcon);
++        _prototype.TryIndex(HungerIconStarvingId, out _starvingIcon);
++        // Orion-End
++
+@@ -254,7 +273,13 @@ private void DoHungerThresholdEffects(EntityUid uid, HungerComponent? component
+-            component.ActualDecayRate = component.BaseDecayRate * modifier;
+-            DirtyField(uid, component, nameof(HungerComponent.ActualDecayRate));
+-            SetAuthoritativeHungerValue((uid, component), GetHunger(component));
++            // Orion-Edit-Start
++            var newDecayRate = component.BaseDecayRate * modifier;
++            if (Math.Abs(component.ActualDecayRate - newDecayRate) > 0.001f)
++            {
++                component.ActualDecayRate = newDecayRate;
++                DirtyField(uid, component, nameof(HungerComponent.ActualDecayRate));
++                SetAuthoritativeHungerValue((uid, component), GetHunger(component));
++            }
++            // Orion-Edit-End
+@@ -311,37 +336,22 @@ public bool IsHungerBelowState(EntityUid uid, HungerThreshold threshold, float?
+-    private bool GetMovementThreshold(HungerThreshold threshold)
++    // Orion-Edit-Start
++    private static bool GetMovementThreshold(HungerThreshold threshold)
+-        switch (threshold)
+-        {
+-            case HungerThreshold.Overfed:
+-            case HungerThreshold.Okay:
+-                return true;
+-            case HungerThreshold.Peckish:
+-            case HungerThreshold.Starving:
+-            case HungerThreshold.Dead:
+-                return false;
+-            default:
+-                throw new ArgumentOutOfRangeException(nameof(threshold), threshold, null);
+-        }
++        return MovementAffectingThresholds.Contains(threshold);
++    // Orion-Edit-End
+-        switch (component.CurrentThreshold)
++        // Orion-Edit-Start
++        prototype = component.CurrentThreshold switch
+-            case HungerThreshold.Overfed:
+-                _prototype.TryIndex(HungerIconOverfedId, out prototype);
+-                break;
+-            case HungerThreshold.Peckish:
+-                _prototype.TryIndex(HungerIconPeckishId, out prototype);
+-                break;
+-            case HungerThreshold.Starving:
+-                _prototype.TryIndex(HungerIconStarvingId, out prototype);
+-                break;
+-            default:
+-                prototype = null;
+-                break;
+-        }
++            HungerThreshold.Overfed => _overfedIcon,
++            HungerThreshold.Peckish => _peckishIcon,
++            HungerThreshold.Starving => _starvingIcon,
++            _ => null,
++        };
++        // Orion-Edit-End
+@@ -366,5 +376,12 @@ public override void Update(float frameTime)
++            var previousThreshold = hunger.CurrentThreshold; // Orion
++
++            // Orion-Start
++            if (hunger.CurrentThreshold == HungerThreshold.Dead && previousThreshold == HungerThreshold.Dead && _mobState.IsDead(uid))
++                continue;
++            // Orion-End
++
+
+### Content.Shared/Nutrition/EntitySystems/ThirstSystem.cs
+@@ -129,8 +129,26 @@ public sealed class ThirstSystem : EntitySystem
++    // Orion-Start
++    private static readonly HashSet<ThirstThreshold> MovementThresholds = new()
++    {
++        ThirstThreshold.Dead,
++        ThirstThreshold.Parched,
++    };
++
++    private SatiationIconPrototype? _overhydratedIcon;
++    private SatiationIconPrototype? _thirstyIcon;
++    private SatiationIconPrototype? _parchedIcon;
++    // Orion-End
++
++        // Orion-Start
++        _prototype.TryIndex(ThirstIconOverhydratedId, out _overhydratedIcon);
++        _prototype.TryIndex(ThirstIconThirstyId, out _thirstyIcon);
++        _prototype.TryIndex(ThirstIconParchedId, out _parchedIcon);
++        // Orion-End
++
+@@ -157,6 +175,8 @@ private void OnMapInit(EntityUid uid, ThirstComponent component, MapInitEvent ar
+-        TryComp(uid, out MovementSpeedModifierComponent? moveMod);
++        // Orion-Edit-Start
++        if (TryComp(uid, out MovementSpeedModifierComponent? moveMod))
++        // Orion-Edit-End
+@@ -176,19 +196,21 @@ private void OnRejuvenate(EntityUid uid, ThirstComponent component, RejuvenateEv
++    // Orion-Edit-Start
+-        ThirstThreshold result = ThirstThreshold.Dead;
+-        var value = component.ThirstThresholds[ThirstThreshold.OverHydrated];
+-        foreach (var threshold in component.ThirstThresholds)
+-        {
+-            if (threshold.Value <= value && threshold.Value >= amount)
+-            {
+-                result = threshold.Key;
+-                value = threshold.Value;
+-            }
+-        }
++        if (amount <= component.ThirstThresholds[ThirstThreshold.Dead])
++            return ThirstThreshold.Dead;
+-        return result;
++        if (amount <= component.ThirstThresholds[ThirstThreshold.Parched])
++            return ThirstThreshold.Parched;
++
++        if (amount <= component.ThirstThresholds[ThirstThreshold.Thirsty])
++            return ThirstThreshold.Thirsty;
++
++        return amount <= component.ThirstThresholds[ThirstThreshold.Okay]
++            ? ThirstThreshold.Okay
++            : ThirstThreshold.OverHydrated;
++    // Orion-Edit-End
+@@ -207,48 +229,34 @@ public void SetThirst(EntityUid uid, ThirstComponent component, float amount)
+-    private bool IsMovementThreshold(ThirstThreshold threshold)
++    // Orion-Edit-Start
++    private static bool IsMovementThreshold(ThirstThreshold threshold)
+-        switch (threshold)
+-        {
+-            case ThirstThreshold.Dead:
+-            case ThirstThreshold.Parched:
+-                return true;
+-            case ThirstThreshold.Thirsty:
+-            case ThirstThreshold.Okay:
+-            case ThirstThreshold.OverHydrated:
+-                return false;
+-            default:
+-                throw new ArgumentOutOfRangeException(nameof(threshold), threshold, null);
+-        }
++        return MovementThresholds.Contains(threshold);
++    // Orion-Edit-End
++    // Orion-Edit-Start
+-        switch (component.CurrentThirstThreshold)
++        prototype = component.CurrentThirstThreshold switch
+-            case ThirstThreshold.OverHydrated:
+-                _prototype.TryIndex(ThirstIconOverhydratedId, out prototype);
+-                break;
+-
+-            case ThirstThreshold.Thirsty:
+-                _prototype.TryIndex(ThirstIconThirstyId, out prototype);
+-                break;
+-
+-            case ThirstThreshold.Parched:
+-                _prototype.TryIndex(ThirstIconParchedId, out prototype);
+-                break;
+-
+-            default:
+-                prototype = null;
+-                break;
+-        }
++            ThirstThreshold.OverHydrated => _overhydratedIcon,
++            ThirstThreshold.Thirsty => _thirstyIcon,
++            ThirstThreshold.Parched => _parchedIcon,
++            _ => null,
++        };
++    // Orion-Edit-End
+-        if (IsMovementThreshold(component.LastThirstThreshold) != IsMovementThreshold(component.CurrentThirstThreshold) &&
+-                TryComp(uid, out MovementSpeedModifierComponent? movementSlowdownComponent))
++        // Orion-Start
++        var wasMovementAffected = IsMovementThreshold(component.LastThirstThreshold);
++        var isMovementAffected = IsMovementThreshold(component.CurrentThirstThreshold);
++        // Orion-End
++
++        if (wasMovementAffected != isMovementAffected && TryComp(uid, out MovementSpeedModifierComponent? movementSlowdownComponent)) // Orion-Edit
+@@ -265,37 +273,25 @@ private void UpdateEffects(EntityUid uid, ThirstComponent component)
+-        DirtyField(uid, component, nameof(ThirstComponent.LastThirstThreshold));
+-        DirtyField(uid, component, nameof(ThirstComponent.ActualDecayRate));
++        // Orion-Edit-Start
++        component.LastThirstThreshold = component.CurrentThirstThreshold;
+-        switch (component.CurrentThirstThreshold)
++        var newDecayRate = component.CurrentThirstThreshold switch
++        {
++            ThirstThreshold.OverHydrated => component.BaseDecayRate * 1.2f,
++            ThirstThreshold.Okay => component.BaseDecayRate,
++            ThirstThreshold.Thirsty => component.BaseDecayRate * 0.8f,
++            ThirstThreshold.Parched => component.BaseDecayRate * 0.6f,
++            ThirstThreshold.Dead => component.ActualDecayRate,
++            _ => throw new ArgumentOutOfRangeException(),
++        };
++
++        if (Math.Abs(component.ActualDecayRate - newDecayRate) > 0.001f)
+-            case ThirstThreshold.OverHydrated:
+-                component.LastThirstThreshold = component.CurrentThirstThreshold;
+-                component.ActualDecayRate = component.BaseDecayRate * 1.2f;
+-                return;
+-
+-            case ThirstThreshold.Okay:
+-                component.LastThirstThreshold = component.CurrentThirstThreshold;
+-                component.ActualDecayRate = component.BaseDecayRate;
+-                return;
+-
+-            case ThirstThreshold.Thirsty:
+-                // Same as okay except with UI icon saying drink soon.
+-                component.LastThirstThreshold = component.CurrentThirstThreshold;
+-                component.ActualDecayRate = component.BaseDecayRate * 0.8f;
+-                return;
+-            case ThirstThreshold.Parched:
+-                _movement.RefreshMovementSpeedModifiers(uid);
+-                component.LastThirstThreshold = component.CurrentThirstThreshold;
+-                component.ActualDecayRate = component.BaseDecayRate * 0.6f;
+-                return;
+-
+-            case ThirstThreshold.Dead:
+-                return;
+-
+-            default:
+-                Log.Error($"No thirst threshold found for {component.CurrentThirstThreshold}");
+-                throw new ArgumentOutOfRangeException($"No thirst threshold found for {component.CurrentThirstThreshold}");
++            component.ActualDecayRate = newDecayRate;
++            DirtyField(uid, component, nameof(ThirstComponent.ActualDecayRate));
++
++        DirtyField(uid, component, nameof(ThirstComponent.LastThirstThreshold));
++        // Orion-Edit-End
+@@ -312,5 +308,12 @@ public override void Update(float frameTime)
++            var oldThirst = thirst.CurrentThirst; // Orion
++
++            // Orion-Start
++            if (Math.Abs(oldThirst - thirst.CurrentThirst) < 1e-6f)
++                continue;
++            // Orion-End
++
+@@ -322,3 +325,3 @@ public override void Update(float frameTime)
+-}
++}
+
+### Content.Shared/_Shitcode/Wizard/Chuuni/ChuuniEyepatchSystem.cs
+@@ -26,4 +26,6 @@ public sealed class ChuuniEyepatchSystem : EntitySystem
++    private readonly HashSet<Entity<ChuuniEyepatchComponent>> _activeEyepatches = new(); // Orion
++
+@@ -32,4 +34,5 @@ public override void Initialize()
++        SubscribeLocalEvent<ChuuniEyepatchComponent, ComponentShutdown>(OnShutdown); // Orion
+@@ -44,15 +47,29 @@ public override void Update(float frameTime)
+-        var query = EntityQueryEnumerator<ChuuniEyepatchComponent>();
+-        while (query.MoveNext(out var uid, out var eyepatch))
++        // Orion-Edit-Start
++        var toRemove = new List<Entity<ChuuniEyepatchComponent>>();
++        foreach (var (uid, eyepatch) in _activeEyepatches)
+-            if (eyepatch.Accumulator >= eyepatch.Delay)
++            if (TerminatingOrDeleted(uid))
++            {
++                toRemove.Add((uid, eyepatch));
++            }
+-            if (eyepatch.Accumulator >= eyepatch.Delay)
+-                Dirty(uid, eyepatch);
++            if (!(eyepatch.Accumulator >= eyepatch.Delay))
++                continue;
++
++            eyepatch.Accumulator = eyepatch.Delay;
++            Dirty(uid, eyepatch);
++            toRemove.Add((uid, eyepatch));
++        }
++
++        foreach (var ent in toRemove)
++        {
++            _activeEyepatches.Remove(ent);
++        // Orion-Edit-End
+@@ -75,6 +92,13 @@ private void OnGetInvocation(Entity<ChuuniEyepatchComponent> ent,
+-        ent.Comp.Accumulator = 0f;
+-        Dirty(ent);
++        // Orion-Edit-Start
++        if (ent.Comp.Accumulator != 0f)
++        {
++            ent.Comp.Accumulator = 0f;
++            Dirty(ent);
++        }
++        // Orion-Edit-End
++
++        _activeEyepatches.Add(ent); // Orion
+@@ -104,4 +128,11 @@ private void OnInit(Entity<ChuuniEyepatchComponent> ent, ref ComponentInit args)
++    // Orion-Start
++    private void OnShutdown(Entity<ChuuniEyepatchComponent> ent, ref ComponentShutdown args)
++    {
++        _activeEyepatches.Remove(ent);
++    }
++    // Orion-End
++
+@@ -116,5 +147,8 @@ private void AddFlipVerb(Entity<ChuuniEyepatchComponent> ent, ref GetVerbsEvent<
+-                _clothing.SetEquippedPrefix(uid, comp.IsFliped ? comp.FlippedPrefix : null);
++                // Orion-Edit-Start
++                var prefix = comp.IsFliped ? comp.FlippedPrefix : null;
++                _clothing.SetEquippedPrefix(uid, prefix);
++                // Orion-Edit-End
+@@ -147,4 +181,4 @@ public sealed class GetMessageColorOverrideEvent : EntityEventArgs, IInventoryRe
+-    public Color? Color = null;
++    public Color? Color;
+
+### Content.Shared/_Shitmed/Surgery/Pain/Systems/PainSystem.cs
+@@ -27,5 +27,4 @@
+-using System.Linq;
+@@ -54,5 +53,5 @@ public sealed partial class PainSystem : EntitySystem
+-    private bool _screamsEnabled = false;
++    private bool _screamsEnabled;
+@@ -116,6 +115,8 @@ private void OnComponentHandleState(EntityUid uid, NerveComponent component, ref
+-            if (!TerminatingOrDeleted(entity) && !component.PainFeelingModifiers.ContainsKey((entity, id)))
+-                component.PainFeelingModifiers.Add((entity, id), modifier);
++            // Orion-Edit-Start
++            if (!TerminatingOrDeleted(entity))
++                component.PainFeelingModifiers.TryAdd((entity, id), modifier);
++            // Orion-Edit-End

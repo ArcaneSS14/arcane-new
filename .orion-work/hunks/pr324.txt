@@ -1,0 +1,508 @@
+up2
+
+### Content.Client/HealthAnalyzer/UI/HealthAnalyzerWindow.xaml.cs
+@@ -483,5 +483,6 @@ private static string GetStatus(MobState mobState)
+-                MobState.Critical => Loc.GetString("health-analyzer-window-entity-critical-text"),
++                MobState.SoftCritical => Loc.GetString("health-analyzer-window-entity-soft-critical-text"), // Orion-Edit
++                MobState.HardCritical => Loc.GetString("health-analyzer-window-entity-hard-critical-text"), // Orion
+
+### Content.Client/Overlays/EntityHealthBarOverlay.cs
+@@ -224,5 +224,5 @@ protected override void Draw(in OverlayDrawArgs args)
+-            if (!_mobThresholdSystem.TryGetThresholdForState(uid, MobState.Critical, out var threshold, thresholds) &&
++            if (!_mobThresholdSystem.TryGetThresholdForState(uid, MobState.SoftCritical, out var threshold, thresholds) && // Orion-Edit
+@@ -234,5 +234,5 @@ protected override void Draw(in OverlayDrawArgs args)
+-            if (!_mobThresholdSystem.TryGetThresholdForState(uid, MobState.Critical, out var critThreshold, thresholds) ||
++            if (!_mobThresholdSystem.TryGetThresholdForState(uid, MobState.SoftCritical, out var critThreshold, thresholds) || // Orion-Edit
+
+### Content.Client/UserInterface/Systems/DamageOverlays/DamageOverlayUiController.cs
+@@ -144,5 +144,6 @@ private void UpdateOverlays(EntityUid entity,
+-                case MobState.Critical:
++                case MobState.SoftCritical: // Orion-Edit
++                case MobState.HardCritical: // Orion
+@@ -199,5 +200,6 @@ private void UpdateOverlays(EntityUid entity,
+-                case MobState.Critical:
++                case MobState.SoftCritical: // Orion-Edit
++                case MobState.HardCritical: // Orion
+
+### Content.Client/UserInterface/Systems/DamageOverlays/Overlays/DamageOverlay.cs
+@@ -190,5 +190,9 @@ protected override void Draw(in OverlayDrawArgs args)
+-        level = State != MobState.Critical ? _oldOxygenLevel : 1f;
++        // Orion-Edit-Start
++        level = State is MobState.SoftCritical or MobState.HardCritical
++            ? 1f
++            : _oldOxygenLevel;
++        // Orion-Edit-End
+
+### Content.Server/Administration/Systems/AdminVerbSystem.Smites.cs
+@@ -320,5 +320,6 @@ private void AddSmiteVerbs(GetVerbsEvent<Verb> args)
+-                    if (!_mobThresholdSystem.TryGetThresholdForState(args.Target, MobState.Critical, out var criticalThreshold)) {
++                    if (!_mobThresholdSystem.TryGetThresholdForState(args.Target, MobState.HardCritical, out var criticalThreshold)) // Orion-Edit
++                    {
+
+### Content.Server/Body/Systems/RespiratorSystem.cs
+@@ -95,4 +95,5 @@
++using Content.Shared._Orion.Mobs.Critical;
+@@ -112,4 +113,5 @@
++using Robust.Shared.Random;
+@@ -132,4 +134,5 @@ public sealed class RespiratorSystem : EntitySystem
++    [Dependency] private readonly IRobustRandom _random = default!; // Orion
+@@ -201,16 +204,29 @@ public override void Update(float frameTime)
+-            if (!_mobState.IsIncapacitated(uid) && !HasComp<DebrainedComponent>(uid)) // Shitmed Change - Cannot breathe in crit or when no brain.
++            // Orion-Start
++            var critComponent = CompOrNull<CritStateMovementComponent>(uid);
++            var canBreatheActively = !HasComp<DebrainedComponent>(uid) && (!_mobState.IsIncapacitated(uid) || _mobState.IsSoftCritical(uid));
++            // Orion-End
++
++            if (canBreatheActively) // Orion-Edit
+-                switch (respirator.Status)
++                // Orion-Start
++                var canCycleBreath = !_mobState.IsSoftCritical(uid) || critComponent == null || _random.Prob(critComponent.SoftCritBreathChance);
++                if (canCycleBreath)
++                // Orion-End
+-                    case RespiratorStatus.Inhaling:
+-                        Inhale((uid, respirator));
+-                        respirator.Status = RespiratorStatus.Exhaling;
+-                        break;
+-                    case RespiratorStatus.Exhaling:
+-                        Exhale((uid, respirator));
+-                        respirator.Status = RespiratorStatus.Inhaling;
+-                        break;
++                    // Orion-Edit-Start
++                    switch (respirator.Status)
++                    {
++                        case RespiratorStatus.Inhaling:
++                            Inhale((uid, respirator));
++                            respirator.Status = RespiratorStatus.Exhaling;
++                            break;
++                        case RespiratorStatus.Exhaling:
++                            Exhale((uid, respirator));
++                            respirator.Status = RespiratorStatus.Inhaling;
++                            break;
++                    }
++                    // Orion-Edit-End
+@@ -530,5 +546,5 @@ private void StopSuffocation(Entity<RespiratorComponent> ent)
+-        _damageableSys.TryChangeDamage(ent, ent.Comp.DamageRecovery);
++//        _damageableSys.TryChangeDamage(ent, ent.Comp.DamageRecovery); // Orion-Edit
+@@ -577,8 +593,23 @@ private void OnStopSuffocating(Entity<BodyComponent> ent, ref StopSuffocatingEve
+-        _damageableSys.TryChangeDamage(ent, respirator.DamageRecovery, targetPart: TargetBodyPart.All, ignoreBlockers: true);
++        _damageableSys.TryChangeDamage(ent, CalculateSuffocationRecovery(ent.Owner, respirator), targetPart: TargetBodyPart.All, ignoreBlockers: true); // Orion-Edit
++    private DamageSpecifier CalculateSuffocationRecovery(EntityUid ent, RespiratorComponent respirator)
++    {
++        var recovery = respirator.DamageRecovery;
++
++        if (!TryComp<CritStateMovementComponent>(ent, out var critConfig))
++            return recovery;
++
++        if (_mobState.IsSoftCritical(ent))
++            recovery *= critConfig.SoftCritSuffocationRecoveryMultiplier;
++        else if (_mobState.IsHardCritical(ent))
++            recovery *= critConfig.HardCritSuffocationRecoveryMultiplier;
++
++        return recovery;
++    }
++
+
+### Content.Server/Chat/Systems/ChatSystem.cs
+@@ -134,4 +134,5 @@
++using Content.Shared.Damage.ForceSay;
+@@ -436,4 +437,9 @@ public void TrySendInGameICMessage(
++        // Orion-Start
++        if (desiredType == InGameICChatType.Speak && _mobStateSystem.IsSoftCritical(source))
++            desiredType = InGameICChatType.Whisper;
++        // Orion-End
++
+@@ -814,6 +820,22 @@ private void SendEntityWhisper(
++        // Orion-Start
++        var allowSoftCritWhisper = false;
++        if (!ignoreActionBlocker && _mobStateSystem.IsSoftCritical(source) && !HasComp<AllowNextCritSpeechComponent>(source))
++        {
++            allowSoftCritWhisper = true;
++            EnsureComp<AllowNextCritSpeechComponent>(source);
++        }
++        // Orion-End
++
++        // Orion-Edit-Start
++        {
++            if (allowSoftCritWhisper)
++                RemCompDeferred<AllowNextCritSpeechComponent>(source);
++
++        }
++        // Orion-Edit-End
+
+### Content.Server/Damage/ForceSay/DamageForceSaySystem.cs
+@@ -132,5 +132,5 @@ private void OnDamageChanged(EntityUid uid, DamageForceSayComponent component, D
+-        if (args is not { OldMobState: MobState.Alive, NewMobState: MobState.Critical or MobState.Dead })
++        if (args is not { OldMobState: MobState.Alive, NewMobState: MobState.SoftCritical or MobState.HardCritical or MobState.Dead }) // Orion-Edit
+
+### Content.Server/Ghost/Roles/GhostRoleSystem.cs
+@@ -148,6 +148,7 @@ private void OnMobStateChanged(Entity<GhostTakeoverAvailableComponent> component
+-            case MobState.Critical:
+-            case MobState.Dead:
++            case MobState.SoftCritical: // Orion-Edit
++            case MobState.HardCritical: // Orion
++            case MobState.Dead: // Orion
+
+### Content.Server/Guardian/GuardianSystem.cs
+@@ -311,5 +311,5 @@ private void OnHostStateChange(EntityUid uid, GuardianHostComponent component, M
+-            if (args.NewMobState == MobState.Critical)
++            if (args.NewMobState is MobState.SoftCritical or MobState.HardCritical) // Orion-Edit
+
+### Content.Server/KillTracking/KillTrackerComponent.cs
+@@ -21,5 +21,5 @@ public sealed partial class KillTrackerComponent : Component
+-    public MobState KillState = MobState.Critical;
++    public MobState KillState = MobState.SoftCritical; // Orion-Edit
+
+### Content.Server/Medical/DefibrillatorSystem.cs
+@@ -325,5 +325,5 @@ public void Zap(EntityUid uid, EntityUid target, EntityUid user, DefibrillatorCo
+-                _mobState.ChangeMobState(target, MobState.Critical, mob, uid);
++                _mobState.ChangeMobState(target, MobState.SoftCritical, mob, uid); // Orion-Edit
+
+### Content.Server/Medical/SuitSensors/SuitSensorSystem.cs
+@@ -502,5 +502,5 @@ public void SetAllSensors(EntityUid target, SuitSensorMode mode, SlotFlags slots
+-        if (_mobThresholdSystem.TryGetThresholdForState(sensor.User.Value, MobState.Critical, out var critThreshold))
++        if (_mobThresholdSystem.TryGetThresholdForState(sensor.User.Value, MobState.SoftCritical, out var critThreshold)) // Orion-Edit
+
+### Content.Server/Mobs/DeathgaspSystem.cs
+@@ -31,6 +31,8 @@ private void OnMobStateChanged(EntityUid uid, DeathgaspComponent component, MobS
+-            && args.OldMobState != MobState.Critical
+-            || args.NewMobState != MobState.Dead)
++            // Orion-Edit-Start
++            && (args.OldMobState is not MobState.SoftCritical and not MobState.HardCritical
++                || args.NewMobState != MobState.Dead))
++            // Orion-Edit-End
+@@ -53,3 +55,3 @@ public bool Deathgasp(EntityUid uid, DeathgaspComponent? component = null)
+-}
++}
+
+### Content.Server/NPC/Systems/NPCSystem.cs
+@@ -180,5 +180,6 @@ public void OnMobStateChange(EntityUid uid, HTNComponent component, MobStateChan
+-                case MobState.Critical:
++                case MobState.SoftCritical: // Orion-Edit
++                case MobState.HardCritical: // Orion
+
+### Content.Server/Players/PlayTimeTracking/PlayTimeTrackingSystem.cs
+@@ -180,5 +180,5 @@ private bool IsPlayerAlive(ICommonSession session)
+-        return state.CurrentState is MobState.Alive or MobState.Critical;
++        return state.CurrentState is MobState.Alive or MobState.SoftCritical or MobState.HardCritical; // Orion-Edit
+@@ -338,3 +338,3 @@ public void PlayerRolesChanged(ICommonSession player)
+-}
++}
+
+### Content.Server/Revenant/EntitySystems/EssenceSystem.cs
+@@ -83,5 +83,6 @@ private void UpdateEssenceAmount(EntityUid uid, EssenceComponent component)
+-            case MobState.Critical:
++            case MobState.SoftCritical: // Orion-Edit
++            case MobState.HardCritical: // Orion
+@@ -91,3 +92,3 @@ private void UpdateEssenceAmount(EntityUid uid, EssenceComponent component)
+-}
++}
+
+### Content.Server/_DV/Harpy/HarpySingerSystem.cs
+@@ -73,5 +73,5 @@ private void OnEquip(GotEquippedEvent args)
+-            if (args.NewMobState is MobState.Critical or MobState.Dead)
++            if (args.NewMobState is MobState.SoftCritical or MobState.HardCritical or MobState.Dead) // Orion-Edit
+
+### Content.Server/_EinsteinEngines/Medical/CPR/CPRSystem.cs
+@@ -133,5 +133,5 @@ private void OnCPRDoAfter(Entity<CPRTrainingComponent> performer, ref CPRDoAfter
+-            _mobStateSystem.ChangeMobState(args.Target.Value, MobState.Critical, state, performer);
++            _mobStateSystem.ChangeMobState(args.Target.Value, MobState.SoftCritical, state, performer); // Orion-Edit
+
+### Content.Server/_EinsteinEngines/Silicon/DeadStartupButton/DeadStartupButtonSystem.cs
+@@ -58,5 +58,5 @@ private void OnDoAfter(EntityUid uid, DeadStartupButtonComponent comp, OnDoAfter
+-        if (_mobThreshold.TryGetThresholdForState(uid, MobState.Critical, out var criticalThreshold, mobThresholdsComponent)
++        if (_mobThreshold.TryGetThresholdForState(uid, MobState.SoftCritical, out var criticalThreshold, mobThresholdsComponent) // Orion-Edit
+
+### Content.Server/_EinsteinEngines/Silicon/EmitBuzzOnCrit/EmitBuzzWhileDamagedSystem.cs
+@@ -39,5 +39,5 @@ public override void Update(float frameTime)
+-                || !_mobThreshold.TryGetThresholdForState(uid, MobState.Critical, out var threshold, thresholdsComponent)
++                || !_mobThreshold.TryGetThresholdForState(uid, MobState.SoftCritical, out var threshold, thresholdsComponent) // Orion-Edit
+@@ -61,3 +61,3 @@ public override void Update(float frameTime)
+-}
++}
+
+### Content.Server/_Orion/Mobs/CriticalStateFeedbackSystem.cs
+@@ -0,0 +1,33 @@
++using Content.Server.Popups;
++using Content.Shared.Popups;
++using Content.Shared.Mobs;
++using Content.Shared.Mobs.Components;
++
++namespace Content.Server._Orion.Mobs;
++
++public sealed class CriticalStateFeedbackSystem : EntitySystem
++{
++    [Dependency] private readonly PopupSystem _popup = default!;
++
++    public override void Initialize()
++    {
++        SubscribeLocalEvent<MobStateComponent, MobStateChangedEvent>(OnMobStateChanged);
++    }
++
++    private void OnMobStateChanged(Entity<MobStateComponent> ent, ref MobStateChangedEvent args)
++    {
++        if (args.OldMobState == args.NewMobState)
++            return;
++
++        var message = args.NewMobState switch
++        {
++            MobState.SoftCritical => Loc.GetString("mob-state-softcrit-enter"),
++            MobState.HardCritical => Loc.GetString("mob-state-hardcrit-enter"),
++            MobState.Alive when args.OldMobState is MobState.SoftCritical or MobState.HardCritical => Loc.GetString("mob-state-crit-exit"),
++            _ => null,
++        };
++
++        if (message != null)
++            _popup.PopupEntity(message, ent, ent, PopupType.LargeCaution);
++    }
++}
+
+### Content.Server/_Shitcode/Heretic/Abilities/HereticAbilitySystem.Ash.cs
+@@ -90,5 +90,5 @@ private void OnNWRebirth(Entity<HereticComponent> ent, ref EventHereticNightwatc
+-            if (mobstate.CurrentState == MobState.Critical)
++            if (mobstate.CurrentState is MobState.SoftCritical or MobState.HardCritical) // Orion-Edit
+
+### Content.Server/_Shitcode/Heretic/EntitySystems/GhoulSystem.cs
+@@ -195,5 +195,5 @@ public void GhoulifyEntity(Entity<GhoulComponent> ent)
+-            _threshold.SetMobStateThreshold(ent, ent.Comp.TotalHealth * 0.99f, MobState.Critical, th);
++            _threshold.SetMobStateThreshold(ent, ent.Comp.TotalHealth * 0.99f, MobState.SoftCritical, th); // Orion-Edit
+
+### Content.Server/_Shitmed/DelayedDeath/DelayedDeathSystem.cs
+@@ -46,5 +46,5 @@ public override void Update(float frameTime)
+-                _mobState.ChangeMobState(ent, MobState.Critical, mob);
++                _mobState.ChangeMobState(ent, MobState.SoftCritical, mob); // Orion-Edit
+
+### Content.Server/_Shitmed/Targeting/TargetingSystem.cs
+@@ -47,5 +47,5 @@ private void OnMobStateChange(EntityUid uid, TargetingComponent component, MobSt
+-        else if (args is { OldMobState: MobState.Dead, NewMobState: MobState.Alive or MobState.Critical })
++        else if (args is { OldMobState: MobState.Dead, NewMobState: MobState.Alive or MobState.SoftCritical or MobState.HardCritical }) // Orion-Edit
+
+### Content.Shared/Damage/Components/DamageableComponent.cs
+@@ -171,5 +171,6 @@ public sealed partial class DamageableComponent : Component
+-            { MobState.Critical, "HealthIconCritical" },
++            { MobState.SoftCritical, "HealthIconCritical" }, // Orion-Edit
++            { MobState.HardCritical, "HealthIconCritical" }, // Orion
+
+### Content.Shared/Devour/DevourSystem.cs
+@@ -73,5 +73,6 @@ private void OnDevourAction(Entity<DevourerComponent> ent, ref DevourActionEvent
+-                case MobState.Critical:
++                case MobState.SoftCritical: // Orion-Edit
++                case MobState.HardCritical: // Orion
+
+### Content.Shared/Medical/Healing/HealingSystem.cs
+@@ -634,5 +634,5 @@ public float GetScaledHealingPenalty(Entity<DamageableComponent?, MobThresholdsC
+-        if (!_mobThresholdSystem.TryGetThresholdForState(ent, MobState.Critical, out var amount, ent.Comp2))
++        if (!_mobThresholdSystem.TryGetThresholdForState(ent, MobState.SoftCritical, out var amount, ent.Comp2)) // Orion-Edit
+
+### Content.Shared/Mobs/Components/MobStateComponent.cs
+@@ -37,7 +37,8 @@ public sealed partial class MobStateComponent : Component
+-                MobState.Critical,
+-                MobState.Dead
++                MobState.SoftCritical, // Orion-Edit
++                MobState.HardCritical, // Orion
++                MobState.Dead,
+-}
++}
+
+### Content.Shared/Mobs/Components/MobThresholdsComponent.cs
+@@ -43,5 +43,6 @@ public sealed partial class MobThresholdsComponent : Component
+-        {MobState.Critical, "HumanCrit"},
++        {MobState.SoftCritical, "HumanSoftCrit"}, // Orion-Edit
++        {MobState.HardCritical, "HumanHardCrit"}, // Orion
+
+### Content.Shared/Mobs/MobState.cs
+@@ -22,6 +22,8 @@ public enum MobState : byte
+-    Critical = 2,
+-    Dead = 3
++    SoftCritical = 2, // Orion
++    Critical = SoftCritical, // Orion-Edit
++    HardCritical = 3, // Orion
++    Dead = 4, // Orion-Edit
+@@ -47,3 +49,3 @@ public enum MobStateVisuals : byte
+-}
++}
+
+### Content.Shared/Mobs/Systems/MobStateSystem.Subscribers.cs
+@@ -151,5 +151,6 @@ private void CheckConcious(Entity<MobStateComponent> ent, ref ConsciousAttemptEv
+-            case MobState.Critical:
++            case MobState.SoftCritical: // Orion-Edit
++            case MobState.HardCritical: // Orion
+@@ -164,5 +165,6 @@ private void OnStateExitSubscribers(EntityUid target, MobStateComponent componen
+-            case MobState.Critical:
++            case MobState.SoftCritical: // Orion-Edit
++            case MobState.HardCritical: // Orion
+@@ -194,9 +196,16 @@ private void OnStateEnteredSubscribers(EntityUid target, MobStateComponent compo
+-            case MobState.Critical:
++            case MobState.SoftCritical: // Orion-Edit
+-                _appearance.SetData(target, MobStateVisuals.State, MobState.Critical);
++                _appearance.SetData(target, MobStateVisuals.State, MobState.SoftCritical); // Orion-Edit
++            // Orion-Start
++            case MobState.HardCritical:
++                _standing.Down(target);
++                RaiseLocalEvent(target, ref ev); // Goobstation
++                _appearance.SetData(target, MobStateVisuals.State, MobState.HardCritical);
++                break;
++            // Orion-End
+@@ -226,5 +235,9 @@ private void OnGettingStripped(EntityUid target, MobStateComponent component, Be
+-        else if (IsCritical(target, component))
++        // Orion-Start
++        else if (IsHardCritical(target, component))
++            args.Multiplier /= 3;
++        // Orion-End
++        else if (IsSoftCritical(target, component)) // Orion-Edit
+@@ -246,7 +259,15 @@ private void CheckAct(EntityUid target, MobStateComponent component, Cancellable
+-            case MobState.Critical:
++            // Orion-Start
++            case MobState.HardCritical:
++            // Orion-End
++            // Orion-Edit-Start
++            case MobState.SoftCritical:
++                if (args is not UpdateCanMoveEvent)
++                    args.Cancel();
++                break;
++            // Orion-Edit-End
+
+### Content.Shared/Mobs/Systems/MobStateSystem.cs
+@@ -76,6 +76,30 @@ public bool IsCritical(EntityUid target, MobStateComponent? component = null)
+-        return component.CurrentState == MobState.Critical;
++
++        return component.CurrentState is MobState.SoftCritical or MobState.HardCritical; // Orion-Edit
++    }
++
++    // Orion-Start
++    /// <summary>
++    /// New MobStates, better use these methods!
++    /// </summary>
++    /// <param name="target"></param>
++    /// <param name="component"></param>
++    public bool IsSoftCritical(EntityUid target, MobStateComponent? component = null)
++    {
++        if (!_mobStateQuery.Resolve(target, ref component, false))
++            return false;
++
++        return component.CurrentState == MobState.SoftCritical;
++    }
++
++    public bool IsHardCritical(EntityUid target, MobStateComponent? component = null)
++    {
++        if (!_mobStateQuery.Resolve(target, ref component, false))
++            return false;
++
++        return component.CurrentState == MobState.HardCritical;
++    // Orion-End
+@@ -102,5 +126,5 @@ public bool IsIncapacitated(EntityUid target, MobStateComponent? component = nul
+-        return component.CurrentState is MobState.Critical or MobState.Dead;
++        return component.CurrentState is MobState.SoftCritical or MobState.HardCritical or MobState.Dead; // Orion-Edit
+@@ -119,3 +143,3 @@ public bool IsInvalidState(EntityUid target, MobStateComponent? component = null
+-}
++}
+
+### Content.Shared/Mobs/Systems/MobThresholdSystem.cs
+@@ -212,5 +212,5 @@ public bool TryGetIncapThreshold(EntityUid target, [NotNullWhen(true)] out Fixed
+-        return TryGetThresholdForState(target, MobState.Critical, out threshold, thresholdComponent)
++        return TryGetThresholdForState(target, MobState.SoftCritical, out threshold, thresholdComponent) // Orion-Edit
+
+### Content.Shared/Movement/Pulling/Systems/PullingSystem.cs
+@@ -257,5 +257,5 @@ private void OnStateChanged(EntityUid uid, PullerComponent component, ref Update
+-        if (TryComp<PullableComponent>(component.Pulling, out var comp) && (args.State == MobState.Critical || args.State == MobState.Dead))
++        if (TryComp<PullableComponent>(component.Pulling, out var comp) && args.State is MobState.SoftCritical or MobState.HardCritical or MobState.Dead) // Orion-Edit
+
+### Content.Shared/Silicons/Bots/MedibotSystem.cs
+@@ -113,5 +113,5 @@ public bool CheckInjectable(Entity<MedibotComponent?> medibot, EntityUid target,
+-        if (mobState.CurrentState != MobState.Alive && mobState.CurrentState != MobState.Critical)
++        if (mobState.CurrentState != MobState.Alive && mobState.CurrentState != MobState.SoftCritical && mobState.CurrentState != MobState.HardCritical) // Orion-Edit
+@@ -157,3 +157,3 @@ public bool TryInject(Entity<MedibotComponent?> medibot, EntityUid target)
+-public sealed partial class MedibotInjectDoAfterEvent : SimpleDoAfterEvent { }
++public sealed partial class MedibotInjectDoAfterEvent : SimpleDoAfterEvent { }
+
+### Content.Shared/Stealth/SharedStealthSystem.cs
+@@ -84,5 +84,5 @@ public virtual void SetEnabled(EntityUid uid, bool value, StealthComponent? comp
+-        if (args.NewMobState == MobState.Dead || args.NewMobState == MobState.Critical)
++        if (args.NewMobState is MobState.Dead or MobState.SoftCritical or MobState.HardCritical) // Orion-Edit
+
+### Content.Shared/Stunnable/SharedStunSystem.cs
+@@ -129,5 +129,5 @@ public override void Initialize()
+-        SubscribeLocalEvent<MobStateComponent, MobStateChangedEvent>(OnMobStateChanged);
++        SubscribeLocalEvent<StunnedStatusEffectComponent, MobStateChangedEvent>(OnMobStateChanged); // Orion-Edit
+@@ -149,5 +149,5 @@ private void OnAttemptInteract(Entity<StunnedComponent> ent, ref InteractionAtte
+-    private void OnMobStateChanged(EntityUid uid, MobStateComponent component, MobStateChangedEvent args)
++    private void OnMobStateChanged(Entity<StunnedStatusEffectComponent> ent, ref MobStateChangedEvent args) // Orion-Edit: Ent
+@@ -157,12 +157,9 @@ private void OnMobStateChanged(EntityUid uid, MobStateComponent component, MobSt
+-            case MobState.Critical:
++            case MobState.SoftCritical: // Orion-Edit
++            case MobState.HardCritical: // Orion
++            case MobState.Dead: // Orion-Edit: Merge duplicates
+-                    _status.TryRemoveStatusEffect(uid, StunId);
+-                    break;
+-                }
+-            case MobState.Dead:
+-                {
+-                    _status.TryRemoveStatusEffect(uid, StunId);
++                    _status.TryRemoveStatusEffect(ent, StunId); // Orion-Edit
+
+### Content.Shared/Trigger/Components/Effects/RattleOnTriggerComponent.cs
+@@ -25,6 +25,6 @@ public sealed partial class RattleOnTriggerComponent : BaseXOnTriggerComponent
+-        {MobState.Critical, "rattle-on-trigger-critical-message"},
+-        {MobState.Dead, "rattle-on-trigger-dead-message"}
++        {MobState.SoftCritical, "rattle-on-trigger-critical-message"}, // Orion-Edit
++        {MobState.Dead, "rattle-on-trigger-dead-message"},
+
+### Content.Shared/_EinsteinEngines/Contests/ContestsSystem.cs
+@@ -239,5 +239,5 @@ public float HealthContest(EntityUid performer, bool bypassClamp = false, float
+-                || !_mobThreshold.TryGetThresholdForState(performer, Mobs.MobState.Critical, out var threshold))
++                || !_mobThreshold.TryGetThresholdForState(performer, Mobs.MobState.SoftCritical, out var threshold)) // Orion-Edit
+@@ -254,6 +254,6 @@ public float HealthContest(EntityUid performer, EntityUid target, bool bypassCla
+-                || !_mobThreshold.TryGetThresholdForState(performer, Mobs.MobState.Critical, out var perfThreshold)
+-                || !_mobThreshold.TryGetThresholdForState(target, Mobs.MobState.Critical, out var targetThreshold))
++                || !_mobThreshold.TryGetThresholdForState(performer, Mobs.MobState.SoftCritical, out var perfThreshold) // Orion-Edit
++                || !_mobThreshold.TryGetThresholdForState(target, Mobs.MobState.SoftCritical, out var targetThreshold)) // Orion-Edit
+
+### Content.Shared/_EinsteinEngines/Flight/SharedFlightSystem.cs
+@@ -286,5 +286,5 @@ private void OnMobStateChangedEvent(EntityUid uid, FlightComponent component, Mo
+-            || args.NewMobState is MobState.Critical or MobState.Dead)
++            || args.NewMobState is MobState.SoftCritical or MobState.HardCritical or MobState.Dead) // Orion-Edit
+
+### Content.Shared/_Lavaland/Body/CursedHeartSystem.cs
+@@ -68,5 +68,5 @@ public override void Update(float frameTime)
+-            if (state.CurrentState is MobState.Critical or MobState.Dead)
++            if (state.CurrentState is MobState.SoftCritical or MobState.HardCritical or MobState.Dead) // Orion-Edit
+
+### Content.Shared/_Orion/Mobs/Critical/CritState.cs
+@@ -0,0 +1,12 @@
++using Robust.Shared.Serialization;
++
++namespace Content.Shared._Orion.Mobs.Critical;
++
++[Serializable, NetSerializable]
++public enum CritState : byte
++{
++    Normal = 0,
++    SoftCrit = 1,
++    HardCrit = 2,
++    Dead = 3,
++}
+
+### Content.Shared/_Orion/Mobs/Critical/CritStateMessages.cs
+@@ -0,0 +1,18 @@
++using Robust.Shared.Serialization;
++
++namespace Content.Shared._Orion.Mobs.Critical;
++
++[Serializable, NetSerializable]
++public sealed class CritStateChangedMessage : EntityEventArgs
++{
+
+### Content.Shared/_Orion/Mobs/Critical/CritStateMovementComponent.cs
+
+### Content.Shared/_Orion/Mobs/Critical/SharedCritStateSystem.cs
+
+### Content.Shared/_Shitcode/Heretic/EntitySystems/ChampionStanceSystem.cs
+
+### Content.Shared/_Shitcode/Wizard/SharedSpellsSystem.cs
+
+### Content.Shared/_Shitmed/Surgery/Consciousness/Systems/ConsciousnessSystem.Helpers.cs
+
+### Content.Shared/_Shitmed/Surgery/Pain/Systems/PainSystem.cs
+
+### Resources/Prototypes/Entities/Mobs/base.yml
+
+### Resources/Prototypes/_Orion/Alerts/crit.yml

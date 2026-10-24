@@ -84,6 +84,9 @@
   - PowerCageSmall
   - TelescopicShield
   - ClothingBackpackHarmpack
+  # Arcane-Start
+  - EnergyDomeTurtle
+  # Arcane-End
 
 - type: latheRecipePack
   id: SecurityBoards

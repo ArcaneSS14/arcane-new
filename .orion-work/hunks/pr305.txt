@@ -1,0 +1,5 @@
+[Fix] Unequip EarsRight on Zombify
+
+### Content.Server/Zombies/ZombieSystem.Transform.cs
+@@ -272,4 +272,5 @@ public void ZombifyEntity(EntityUid target, MobStateComponent? mobState = null)
++        _inventory.TryUnequip(target, "earsright", true, true); // Orion

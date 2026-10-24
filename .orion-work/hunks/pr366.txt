@@ -1,0 +1,36 @@
+2
+
+### Resources/Prototypes/Entities/Structures/Machines/Computers/arcades.yml
+@@ -75,4 +75,12 @@
++  - type: GenericVisualizer # Orion
++    visuals:
++      enum.EdgeConnectionVisuals.ConnectionMask:
++        computerLayerBody:
++          None: { state: arcade, sprite: Structures/Machines/arcade.rsi }
++          East: { state: arcade, sprite: Structures/Machines/arcade.rsi }
++          West: { state: arcade, sprite: Structures/Machines/arcade.rsi }
++          East, West: { state: arcade, sprite: Structures/Machines/arcade.rsi }
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/wardrobe.yml
+@@ -142,6 +142,6 @@
+-    stateDoorOpen: sec_wardrobe_door # Orion-Edit
+-    stateDoorClosed: red_door
++    stateDoorOpen: generic_open
++    stateDoorClosed: sec_wardrobe_door # Orion-Edit
+
+### Resources/Prototypes/Entities/Structures/Storage/Crates/crates.yml
+@@ -582,6 +582,4 @@
+-    - state: overlay
+-      color: "#ad8c27"
+@@ -617,6 +615,4 @@
+-    - state: overlay
+-      color: "#92c7e8"
+@@ -652,6 +648,4 @@
+-    - state: overlay
+-      color: "#ba4bf0"
+@@ -687,6 +681,4 @@
+-    - state: overlay
+-      color: "#c12d30"
+@@ -722,6 +714,4 @@
+-    - state: overlay
+-      color: "#53b723"

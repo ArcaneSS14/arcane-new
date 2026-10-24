@@ -83,6 +83,7 @@
   - TowelColorSilver
   - TowelColorGold
   # </Trauma>
+  - InteQMiniFlag # Arcane
 
 - type: loadoutGroup
   id: AssistiveItems
@@ -302,6 +303,10 @@
   minLimit: 0
   loadouts:
   - PassengerWintercoat
+  # Arcane-Start: Orion #254 InteQ loadouts
+  - InteQWinter
+  - InteQHoodie
+  # Arcane-End
 
 - type: loadoutGroup
   id: PassengerShoes

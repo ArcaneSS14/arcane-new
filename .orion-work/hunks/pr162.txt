@@ -1,0 +1,201 @@
+[Fix] Energy Dome
+
+### Content.Server/_Orion/EnergyDome/Components/EnergyDomeComponent.cs
+@@ -1,17 +1,18 @@
+-namespace Content.Server.EnergyDome;
++using Content.Server._Orion.EnergyDome.Systems;
++
++namespace Content.Server._Orion.EnergyDome.Components;
+-// License-Identifier: MIT
++// License-Identifier: AGPL-3.0-or-later
+-/// marker component that allows linking the dome generator with the dome itself
++/// Allows linking the dome generator with the dome itself
+-
+-    /// A linked generator that uses energy
++    /// Linked generator that uses energy
+
+### Content.Server/_Orion/EnergyDome/Components/EnergyDomeGeneratorComponent.cs
+@@ -1,16 +1,17 @@
++using Content.Server._Orion.EnergyDome.Systems;
+-namespace Content.Server.EnergyDome;
++namespace Content.Server._Orion.EnergyDome.Components;
+-// License-Identifier: MIT
++// License-Identifier: AGPL-3.0-or-later
+-/// component, allows an entity to generate a battery-powered energy dome of a specific type.
++/// Allows an entity to generate a battery-powered energy dome of a specific type.
+-[RegisterComponent, Access(typeof(EnergyDomeSystem))] //Access add
++[RegisterComponent, Access(typeof(EnergyDomeSystem))]
+@@ -37,5 +38,6 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
+-    //Dome
++    #region Dome
++
+@@ -44,4 +46,6 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
++    #endregion
++
+@@ -52,5 +56,6 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
+-    //Action
++    #region Action
++
+@@ -59,5 +64,8 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
+-    //Sounds
++    #endregion
++
++    #region Sounds
++
+@@ -75,8 +83,11 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
+-        Params = AudioParams.Default.WithVariation(0.05f)
++        Params = AudioParams.Default.WithVariation(0.05f),
+-    //Ports
++    #endregion
++
++    #region Ports
++
+@@ -87,3 +98,5 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
++
++    #endregion
+
+### Content.Server/_Orion/EnergyDome/Systems/EnergyDomeSystem.cs
+@@ -1,2 +1,3 @@
++using Content.Server._Orion.EnergyDome.Components;
+@@ -11,4 +12,5 @@
++using Content.Shared.Tag;
+@@ -17,11 +19,11 @@
+-namespace Content.Server.EnergyDome;
++namespace Content.Server._Orion.EnergyDome.Systems;
+-// License-Identifier: MIT
++// License-Identifier: AGPL-3.0-or-later
+-public sealed partial class EnergyDomeSystem : EntitySystem
++public sealed class EnergyDomeSystem : EntitySystem
+@@ -38,5 +40,4 @@ public override void Initialize()
+-        //Generator events
+@@ -57,5 +58,5 @@ public override void Initialize()
+-        //Dome events
++
+@@ -67,5 +68,5 @@ private void OnInit(Entity<EnergyDomeGeneratorComponent> generator, ref MapInitE
+-    //different ways of use
++    #region Use Ways
+@@ -114,5 +115,4 @@ private void AddToggleDomeVerb(Entity<EnergyDomeGeneratorComponent> generator, r
+-        var @event = args;
+@@ -123,5 +123,6 @@ private void AddToggleDomeVerb(Entity<EnergyDomeGeneratorComponent> generator, r
+-    private void OnGetActions(Entity<EnergyDomeGeneratorComponent> generator, ref GetItemActionsEvent args)
++
++    private static void OnGetActions(Entity<EnergyDomeGeneratorComponent> generator, ref GetItemActionsEvent args)
+@@ -135,9 +136,10 @@ private void OnToggleAction(Entity<EnergyDomeGeneratorComponent> generator, ref
+-
+-    // System interactions
++    #endregion
++
++    #region Interactions
+@@ -157,4 +159,5 @@ private void OnChargeChanged(Entity<EnergyDomeGeneratorComponent> generator, ref
++
+@@ -162,13 +165,12 @@ private void OnDomeDamaged(Entity<EnergyDomeComponent> dome, ref DamageChangedEv
+-        var generatorUid = dome.Comp.Generator.Value;
+-
+-        if (!TryComp<EnergyDomeGeneratorComponent>(generatorUid, out var generatorComp))
++        if (args.DamageDelta == null)
+-        if (args.DamageDelta == null)
++        var generatorUid = dome.Comp.Generator.Value;
++        if (!TryComp<EnergyDomeGeneratorComponent>(generatorUid, out var generatorComp))
+-        float totalDamage = args.DamageDelta.GetTotal().Float();
++        var totalDamage = args.DamageDelta.GetTotal().Float();
+@@ -177,8 +179,7 @@ private void OnDomeDamaged(Entity<EnergyDomeComponent> dome, ref DamageChangedEv
+-            _powerCell.TryGetBatteryFromSlot(generatorUid, out var cell);
+-            if (cell != null)
++            if (_powerCell.TryGetBatteryFromSlot(generatorUid, out var cell))
+-                _battery.UseCharge(cell.Owner, energyLeak);
++                _battery.UseCharge(generatorUid, energyLeak, cell);
+@@ -187,19 +188,18 @@ private void OnDomeDamaged(Entity<EnergyDomeComponent> dome, ref DamageChangedEv
+-        //it seems to me it would not work well to hang both a powercell and an internal battery with wire charging on the object....
+-        if (TryComp<BatteryComponent>(generatorUid, out var battery)) {
+-            _battery.UseCharge(generatorUid, energyLeak);
++        // It seems to me it would not work well to hang both a powercell and an internal battery with wire charging on the object....
++        if (!TryComp<BatteryComponent>(generatorUid, out var battery))
++            return;
+-            if (battery.CurrentCharge == 0)
+-                TurnOff((generatorUid, generatorComp), true);
+-        }
++        _battery.UseCharge(generatorUid, energyLeak, battery);
++
++        if (battery.CurrentCharge == 0)
++            TurnOff((generatorUid, generatorComp), true);
+-        //To do: taking the active barrier in hand for some reason does not manage to change the parent in this case,
+-        //and the barrier is not turned off.
+-        //
+-        //Laying down works well (-_-)
++        // TODO: taking the active barrier in hand for some reason does not manage to change the parent in this case,
++        // and the barrier is not turned off.
+@@ -211,5 +211,7 @@ private void OnComponentRemove(Entity<EnergyDomeGeneratorComponent> generator, r
+-    // Functional
++    #endregion
++
++    #region Functional
+@@ -224,7 +226,7 @@ public bool AttemptToggle(Entity<EnergyDomeGeneratorComponent> generator, bool s
+-        if (TryComp<PowerCellSlotComponent>(generator, out var powerCellSlot))
++        if (TryComp<PowerCellSlotComponent>(generator, out _))
+-            if (!_powerCell.TryGetBatteryFromSlot(generator, out var cell) && !TryComp(generator, out cell))
++            if (!_powerCell.TryGetBatteryFromSlot(generator, out _) && !TryComp(generator, out BatteryComponent? _))
+@@ -285,10 +287,11 @@ private void TurnOn(Entity<EnergyDomeGeneratorComponent> generator)
+-        if (TryComp<PowerCellDrawComponent>(generator.Owner, out var powerCellDrawComponent))
++        if (TryComp<PowerCellDrawComponent>(generator.Owner, out _))
+-        if (TryComp<BatterySelfRechargerComponent>(generator, out var recharger)) {
++        if (TryComp<BatterySelfRechargerComponent>(generator, out var recharger))
++        {
+@@ -307,5 +310,5 @@ private void TurnOff(Entity<EnergyDomeGeneratorComponent> generator, bool startR
+-        if (TryComp<PowerCellDrawComponent>(generator.Owner, out var powerCellDrawComponent))
++        if (TryComp<PowerCellDrawComponent>(generator.Owner, out _))
+@@ -317,15 +320,19 @@ private void TurnOff(Entity<EnergyDomeGeneratorComponent> generator, bool startR
+-        if (startReloading)
++
++        if (!startReloading)
++            return;
++
++        _audio.PlayPvs(generator.Comp.EnergyOutSound, generator);
++
++        if (TryComp<UseDelayComponent>(generator, out var useDelay))
+-            _audio.PlayPvs(generator.Comp.EnergyOutSound, generator);
+-            if (TryComp<UseDelayComponent>(generator, out var useDelay))
+-            {
+-                _useDelay.TryResetDelay(new Entity<UseDelayComponent>(generator, useDelay));
+-            }
++            _useDelay.TryResetDelay(new Entity<UseDelayComponent>(generator, useDelay));
+-    // Util
++    #endregion
++
++    #region Util
+@@ -335,3 +342,5 @@ private EntityUid GetProtectedEntity(EntityUid entity)
++
++    #endregion
+
+### Content.Shared/Weapons/Melee/SharedMeleeWeaponSystem.cs
+@@ -799,4 +799,6 @@ private bool DoHeavyAttack(EntityUid user, HeavyAttackEvent ev, EntityUid meleeU
++        entities = entities.Where(e => !_tag.HasTag(e, "MeleeHitIgnore")).ToList(); // Orion
++
+@@ -866,4 +868,9 @@ private bool DoHeavyAttack(EntityUid user, HeavyAttackEvent ev, EntityUid meleeU
++            // Orion-Start
++            if (_tag.HasTag(entity, "MeleeHitIgnore"))
++                continue;
++            // Orion-End
++
+@@ -979,12 +986,11 @@ public HashSet<EntityUid> ArcRayCast(Vector2 position, Angle angle, Angle arcWid
++            var ray = new CollisionRay(position, castAngle.ToWorldVec(), AttackMask); // Orion | Make CollisionRay var for "var res"
+-                new CollisionRay(position,
+-                    castAngle.ToWorldVec(),
+-                    AttackMask),
++                ray,
+-                .Where(x => !_tag.HasTag(x.HitEntity, "WideSwingIgnore")) // Goobstation
++                .Where(x => !_tag.HasAnyTag(x.HitEntity, "WideSwingIgnore", "MeleeHitIgnore")) // Goobstation - WideSwingIgnore | Orion-Edit - HasAnyTag, MeleeHitIgnore
+
+### Resources/Prototypes/_Orion/Entities/Effects/energy_dome.yml
+@@ -12,5 +12,5 @@
+-          radius: 0.8
++          radius: 0.85
+@@ -32,5 +32,6 @@
+-      - HideContextMenu
++    - HideContextMenu
++    - MeleeHitIgnore
+
+### Resources/Prototypes/_Orion/tags.yml
+@@ -1,2 +1,5 @@
++
++- type: Tag
++  id: MeleeHitIgnore

@@ -1,0 +1,13 @@
+[Tweak] Macrobomb Buff
+
+### Resources/Prototypes/Entities/Objects/Misc/subdermal_implants.yml
+@@ -357,5 +357,5 @@
+-      preventSuicide: true
++      preventSuicide: false # Europa-Edit | true > false
+@@ -370,7 +370,7 @@
+-      totalIntensity: 3500
+-      intensitySlope: 15
+-      maxIntensity: 70
++      totalIntensity: 4000 # Europa-Edit | 3500 > 4000
++      intensitySlope: 5 # Europa-Edit | 15 > 5
++      maxIntensity: 50 # Europa-Edit | 70 > 50

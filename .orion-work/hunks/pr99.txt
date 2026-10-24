@@ -1,0 +1,129 @@
+[Tweak] Game Rules Edits
+
+### Content.Shared/CCVar/CCVars.Game.cs
+@@ -43,5 +43,5 @@ public static readonly CVarDef<bool>
+-        GameLobbyDefaultPreset = CVarDef.Create("game.defaultpreset", "secret", CVar.ARCHIVE);
++        GameLobbyDefaultPreset = CVarDef.Create("game.defaultpreset", "SecretPlusMid", CVar.ARCHIVE); // Europa-Edit
+@@ -55,5 +55,5 @@ public static readonly CVarDef<bool>
+-        GameLobbyFallbackPreset = CVarDef.Create("game.fallbackpreset", "Traitor,Extended", CVar.ARCHIVE);
++        GameLobbyFallbackPreset = CVarDef.Create("game.fallbackpreset", "SecretPlusLow,Extended", CVar.ARCHIVE); // Europa-Edit
+
+### Resources/Prototypes/GameRules/events.yml
+@@ -183,5 +183,5 @@
+-    - id: MalignRiftSpawn # DeltaV
++#    - id: MalignRiftSpawn # DeltaV | Europa-Remove
+@@ -247,4 +247,5 @@
++    minimumPlayers: 10 # Europa
+@@ -352,5 +353,5 @@
+-    minimumPlayers: 10
++    minimumPlayers: 15 # Europa-Edit | 10 > 15
+@@ -590,4 +591,5 @@
++    minimumPlayers: 8 # Europa
+@@ -975,22 +977,22 @@
+-- type: entity
+-  id: MimicVendorRule
+-  parent: BaseGameRule
+-  components:
+-  - type: StationEvent
+-    earliestStart: 0
+-    minimumPlayers: 20
+-    maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
+-    weight: 5
+-    chaos: # Goobstation
+-      Hostile: 20 # for when they're actually properly hostile
+-      Hunger: 10
+-      Thirst: 10
+-    eventType: Neutral # Goobstation
+-  # Goobstation
+-  - type: GameRule
+-    chaosScore: 20
+-  - type: MobReplacementRule
++#- type: entity # Europa-Remove
++#  id: MimicVendorRule
++#  parent: BaseGameRule
++#  components:
++#  - type: StationEvent
++#    earliestStart: 0
++#    minimumPlayers: 20
++#    maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
++#    weight: 5
++#    chaos: # Goobstation
++#      Hostile: 20 # for when they're actually properly hostile
++#      Hunger: 10
++#      Thirst: 10
++#    eventType: Neutral # Goobstation
++#  # Goobstation
++#  - type: GameRule
++#    chaosScore: 20
++#  - type: MobReplacementRule
+
+### Resources/Prototypes/GameRules/pests.yml
+@@ -53,6 +53,6 @@
+-      - id: MobMouseCancer # Goobstation
+-        weight: 0.05 # 1/60
++#      - id: MobMouseCancer # Goobstation | Europa-Remove
++#        weight: 0.05 # 1/60
+@@ -82,6 +82,6 @@
+-      - id: MobMouseCancer # Goobstation
+-        weight: 0.05
++#      - id: MobMouseCancer # Goobstation | Europa-Remove
++#        weight: 0.05
+
+### Resources/Prototypes/_DV/GameRules/events.yml
+@@ -24,21 +24,22 @@
+-- type: entity
+-  parent: BaseGameRule
+-  id: MalignRiftSpawn
+-  components:
+-  - type: StationEvent
+-    earliestStart: 15
+-    minimumPlayers: 15
+-    weight: 4
+-    eventType: Neutral
+-    startAnnouncement: cosmiccult-announce-tier2-warning
+-    startAnnouncementColor: "#cae8e8"
+-    startAudio:
+-      path: /Audio/_DV/CosmicCult/tier2.ogg
+-  - type: GameRule
+-    chaosScore: -50
+-  - type: RandomMultipleSpawnRule
+-    prototype: CosmicMalignRift
+-    minAmount: 2
+-    maxAmount: 4
++# Europa-Remove | Shitass event
++#- type: entity
++#  parent: BaseGameRule
++#  id: MalignRiftSpawn
++#  components:
++#  - type: StationEvent
++#    earliestStart: 15
++#    minimumPlayers: 15
++#    weight: 4
++#    eventType: Neutral
++#    startAnnouncement: cosmiccult-announce-tier2-warning
++#    startAnnouncementColor: "#cae8e8"
++#    startAudio:
++#      path: /Audio/_DV/CosmicCult/tier2.ogg
++#  - type: GameRule
++#    chaosScore: -50
++#  - type: RandomMultipleSpawnRule
++#    prototype: CosmicMalignRift
++#    minAmount: 2
++#    maxAmount: 4
+
+### Resources/Prototypes/_Goobstation/GameRules/events.yml
+@@ -19,4 +19,5 @@
++    minimumPlayers: 12 # Europa
+@@ -36,5 +37,5 @@
+-    minimumPlayers: 4
++    minimumPlayers: 8 # Europa-Edit | 4 > 8
+
+### Resources/Prototypes/_White/GameRules/events.yml
+@@ -4,5 +4,5 @@
+-    weight: 7.5 # New antag I wanna be able to actually play it
++    weight: 6 # New antag I wanna be able to actually play it | Europa-Edit 7.5 > 6
+@@ -27,6 +27,6 @@
+-      min: 2
+-      max: 4
++      min: 1 # Europa-Edit | 2 > 1
++      max: 2 # Europa-Edit | 4 > 2

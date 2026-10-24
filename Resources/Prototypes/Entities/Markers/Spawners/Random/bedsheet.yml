@@ -32,5 +32,6 @@
         weight: 3
         children:
         - id: BedsheetIan
+        - id: BedsheetInteQ # Arcane
         - id: BedsheetCosmos
     offset: 0

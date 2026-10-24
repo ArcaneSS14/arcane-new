@@ -1,0 +1,12 @@
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_europa/entities/structures/cryostasis_sleeper.ftl
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_europa/entities/structures/power/apc.ftl
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_europa/entities/structures/wallmounts/air_alarm.ftl
+M	Resources/Maps/_Europa/Lavaland/InteQ_Sizo.yml
+M	Resources/Prototypes/_Europa/Entities/Markers/Spawners/hermit.yml
+M	Resources/Prototypes/_Europa/Entities/Markers/Spawners/inteq.yml
+A	Resources/Prototypes/_Europa/Entities/Structures/Power/apc.yml
+A	Resources/Prototypes/_Europa/Entities/Structures/Wallmounts/air_alarm.yml
+A	Resources/Prototypes/_Europa/Entities/Structures/cryostasis_sleeper.yml
+A	Resources/Textures/_Europa/Structures/cryostasis_sleeper.rsi/meta.json
+A	Resources/Textures/_Europa/Structures/cryostasis_sleeper.rsi/sleeper_0.png
+A	Resources/Textures/_Europa/Structures/cryostasis_sleeper.rsi/sleeper_1.png

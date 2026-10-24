@@ -1,0 +1,191 @@
+Merge branch 'master' into airloooooks
+
+### Content.Client/_Orion/Doors/PhantomAirtightSpriteSystem.cs
+@@ -0,0 +1,28 @@
++using Content.Shared._Orion.Doors.Components;
++using Robust.Client.GameObjects;
++
++namespace Content.Client._Orion.Doors.Systems;
++
++public sealed class PhantomAirtightSpriteSystem : EntitySystem
++{
++    [Dependency] private readonly SpriteSystem _sprite = default!;
++
++    public override void Initialize()
++    {
++        SubscribeLocalEvent<PhantomAirtightParentComponent, ComponentInit>(OnInit);
++    }
++
++    private void OnInit(Entity<PhantomAirtightParentComponent> ent, ref ComponentInit args)
++    {
++        if (ent.Comp.ParentUid == null)
++            return;
++        if (!TryGetEntity(ent.Comp.ParentUid.Value, out var parentUid))
++            return;
++        if (!TryComp<SpriteComponent>(parentUid, out var parentSprite))
++            return;
++        if (!TryComp<SpriteComponent>(ent.Owner, out var phantomSprite))
++            return;
++
++        _sprite.SetDrawDepth((ent.Owner, phantomSprite), parentSprite.DrawDepth);
++    }
++}
+
+### Content.Server/_Orion/Doors/Components/MultiTileAirlockAirtightComponent.cs
+@@ -0,0 +1,20 @@
++namespace Content.Server._Orion.Doors.Components;
++
++/// <summary>
++/// Marks a 2-tile-wide airlock so that a phantom airtight entity is spawned
++/// on the adjacent tile, properly sealing atmosphere on both tiles when closed.
++/// The offset is derived from the entity's local rotation (sprite offset 0.5,0
++/// means the second tile is always at +1 local X).
++/// </summary>
++[RegisterComponent]
++public sealed partial class MultiTileAirlockAirtightComponent : Component
++{
++    /// <summary>
++    /// Local-space offsets (pre-rotation) of additional tiles to seal.
++    /// </summary>
++    [DataField]
++    public List<Vector2i> TileOffsets = new() { new Vector2i(1, 0) };
++
++    [ViewVariables]
++    public List<EntityUid> PhantomEntities = new();
++}
+
+### Content.Server/_Orion/Doors/Systems/MultiTileAirlockAirtightSystem.cs
+@@ -0,0 +1,103 @@
++using Content.Server._Orion.Doors.Components;
++using Content.Server.Atmos.Components;
++using Content.Server.Atmos.EntitySystems;
++using Content.Shared._Orion.Doors.Components;
++using Robust.Shared.Map.Components;
++using System.Numerics;
++
++namespace Content.Server._Orion.Doors.Systems;
++
++public sealed class MultiTileAirlockAirtightSystem : EntitySystem
++{
++    [Dependency] private readonly AirtightSystem _airtight = default!;
++    [Dependency] private readonly SharedMapSystem _mapSystem = default!;
++
++    private const string PhantomPrototype = "PhantomAirtight";
++
++    public override void Initialize()
++    {
++        SubscribeLocalEvent<MultiTileAirlockAirtightComponent, AnchorStateChangedEvent>(OnAnchorChanged);
++        SubscribeLocalEvent<MultiTileAirlockAirtightComponent, MoveEvent>(OnMoved);
++        SubscribeLocalEvent<MultiTileAirlockAirtightComponent, AirtightChanged>(OnAirtightChanged);
++        SubscribeLocalEvent<MultiTileAirlockAirtightComponent, ComponentShutdown>(OnShutdown);
++    }
++
++    private void OnAnchorChanged(Entity<MultiTileAirlockAirtightComponent> ent, ref AnchorStateChangedEvent args)
++    {
++        if (args.Anchored)
++            SpawnPhantoms(ent);
++        else
++            DeletePhantoms(ent);
++    }
++
++    private void OnMoved(Entity<MultiTileAirlockAirtightComponent> ent, ref MoveEvent args)
++    {
++        DeletePhantoms(ent);
++        if (Transform(ent).Anchored)
++            SpawnPhantoms(ent);
++    }
++
++    private void OnAirtightChanged(Entity<MultiTileAirlockAirtightComponent> ent, ref AirtightChanged args)
++    {
++        if (!TryComp<AirtightComponent>(ent, out var parentAirtight))
++            return;
++
++        foreach (var phantom in ent.Comp.PhantomEntities)
++        {
++            if (!TryComp<AirtightComponent>(phantom, out var phantomAirtight))
++                continue;
++
++            _airtight.SetAirblocked((phantom, phantomAirtight), parentAirtight.AirBlocked);
++        }
++    }
++
++    private void OnShutdown(Entity<MultiTileAirlockAirtightComponent> ent, ref ComponentShutdown args)
++    {
++        DeletePhantoms(ent);
++    }
++
++    private void SpawnPhantoms(Entity<MultiTileAirlockAirtightComponent> ent)
++    {
++        var xform = Transform(ent);
++        if (!xform.Anchored || xform.GridUid == null)
++            return;
++
++        if (!TryComp<MapGridComponent>(xform.GridUid, out var grid))
++            return;
++
++        if (!TryComp<AirtightComponent>(ent, out var parentAirtight))
++            return;
++
++        var anchorTile = _mapSystem.TileIndicesFor(xform.GridUid.Value, grid, xform.Coordinates);
++
++        foreach (var offset in ent.Comp.TileOffsets)
++        {
++            var rotated = xform.LocalRotation.RotateVec(new Vector2(offset.X, offset.Y));
++            var snapped = new Vector2i(
++                (int) MathF.Round(rotated.X),
++                (int) MathF.Round(rotated.Y));
++
++            var phantomTile = anchorTile + snapped;
++            var phantomCoords = _mapSystem.GridTileToLocal(xform.GridUid.Value, grid, phantomTile);
++            var phantom = EntityManager.SpawnEntity(PhantomPrototype, phantomCoords);
++
++            var parentComp = EnsureComp<PhantomAirtightParentComponent>(phantom);
++            parentComp.ParentUid = GetNetEntity(ent.Owner);
++
++            if (TryComp<AirtightComponent>(phantom, out var phantomAirtight))
++                _airtight.SetAirblocked((phantom, phantomAirtight), parentAirtight.AirBlocked);
++
++            ent.Comp.PhantomEntities.Add(phantom);
++        }
++    }
++
++    private void DeletePhantoms(Entity<MultiTileAirlockAirtightComponent> ent)
++    {
++        foreach (var phantom in ent.Comp.PhantomEntities)
++        {
++            if (!TerminatingOrDeleted(phantom))
++                QueueDel(phantom);
++        }
++        ent.Comp.PhantomEntities.Clear();
++    }
++}
+
+### Content.Shared/_Orion/Doors/PhantomAirtightParentComponent.cs
+@@ -0,0 +1,10 @@
++using Robust.Shared.GameStates;
++
++namespace Content.Shared._Orion.Doors.Components;
++
++[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
++public sealed partial class PhantomAirtightParentComponent : Component
++{
++    [DataField, AutoNetworkedField]
++    public NetEntity? ParentUid;
++}
+
+### Resources/Prototypes/_Orion/Entities/Structures/Doors/Airlocks/Double/double_glass_airlock.yml
+@@ -5,4 +5,5 @@
++  - type: MultiTileAirlockAirtight
+
+### Resources/Prototypes/_Orion/Entities/Structures/Doors/Airlocks/phantom_airtight.yml
+@@ -0,0 +1,10 @@
++- type: entity
++  id: PhantomAirtight
++  name: phantom airtight blocker
++  categories: [ HideSpawnMenu ]
++  components:
++  - type: Airtight
++    noAirWhenFullyAirBlocked: false
++    fixVacuum: false
++  - type: Transform
++    anchored: true

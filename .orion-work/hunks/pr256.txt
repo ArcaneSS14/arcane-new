@@ -1,0 +1,339 @@
+mf
+
+### Content.Client/Chat/TypingIndicator/TypingIndicatorSystem.cs
+@@ -29,4 +29,5 @@ public sealed class TypingIndicatorSystem : SharedTypingIndicatorSystem
++    private bool _isClientEmoteWindowActive; // Orion
+@@ -37,4 +38,13 @@ public override void Initialize()
++    // Orion-Start
++    public void ClientChangedWindowStatus(bool isOpen)
++    {
++        _isClientEmoteWindowActive = isOpen;
++        if (_cfg.GetCVar(CCVars.ChatShowTypingIndicator))
++            ClientUpdateTyping();
++    }
++    // Orion-End
++
+@@ -98,5 +108,5 @@ private void ClientUpdateTyping()
+-        if (_isClientChatFocused)
++        if (_isClientChatFocused || _isClientEmoteWindowActive) // Orion-Edit: _isClientEmoteWindowActive
+@@ -114,3 +124,3 @@ private void OnShowTypingChanged(bool showTyping)
+-}
++}
+
+### Content.Client/_Orion/Chat/Systems/DirectionalEmote/DirectionalEmoteSystem.cs
+@@ -0,0 +1,61 @@
++using Content.Shared._Orion.Chat.Components;
++using Content.Shared.CCVar;
++using Content.Shared.Verbs;
++using Robust.Client.UserInterface;
++using Robust.Shared.Configuration;
++using Robust.Shared.Utility;
++
++namespace Content.Client._Orion.Chat.Systems.DirectionalEmote;
++
++public sealed partial class DirectionalEmoteSystem : EntitySystem
++{
++    [Dependency] private readonly IUserInterfaceManager _userInterfaceManager = default!;
++    [Dependency] private readonly IConfigurationManager _cfg = default!;
++
++    private bool _directionalEmotesEnabled;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        _cfg.OnValueChanged(CCVars.DirectionalEmotesEnabled, v => _directionalEmotesEnabled = v, true);
++
++        SubscribeLocalEvent<DirectionalEmoteTargetComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
++    }
++
++    public void ShowMessage(NetEntity source, NetEntity target, string text)
++    {
++        if (string.IsNullOrEmpty(text))
++            return;
++
++        var maxLength = _cfg.GetCVar(CCVars.ChatMaxEmoteLength);
++        if (text.Length > maxLength)
++            return;
++
++        RaiseNetworkEvent(new SendDirectionalEmoteEvent(source, target, text));
++    }
++
++    private void OnGetVerbs(EntityUid uid, DirectionalEmoteTargetComponent component, GetVerbsEvent<Verb> args)
++    {
++        if (!_directionalEmotesEnabled)
++            return;
++
++        if (args.Target == args.User ||
++            !HasComp<DirectionalEmoteTargetComponent>(args.User))
++            return;
++
++        args.Verbs.Add(new Verb
++        {
++            Act = () => OpenWindow(GetNetEntity(args.User), GetNetEntity(args.Target)),
++            Priority = 15,
++            Text = Loc.GetString("directional-emote-verb-name"),
++            Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/emotes.svg.192dpi.png")),
++            ClientExclusive = true,
++        });
++    }
++
++    private void OpenWindow(NetEntity source, NetEntity target)
++    {
++        _userInterfaceManager.GetUIController<DirectionalEmoteUIController>().ToggleWindow(source, target);
++    }
++}
+
+### Content.Client/_Orion/Chat/Systems/DirectionalEmote/DirectionalEmoteUIController.cs
+@@ -0,0 +1,64 @@
++using Content.Client.Chat.TypingIndicator;
++using JetBrains.Annotations;
++using Robust.Client.UserInterface;
++using Robust.Client.UserInterface.Controllers;
++
++namespace Content.Client._Orion.Chat.Systems.DirectionalEmote;
++
++[UsedImplicitly]
++public sealed class DirectionalEmoteUIController : UIController
++{
++    [UISystemDependency] private readonly DirectionalEmoteSystem _directionalEmoteSystem = default!;
++    [UISystemDependency] private readonly TypingIndicatorSystem _typingIndicator = default!;
++
++    private DirectionalEmoteWindow _emoteWindow = default!;
++
++    public void OpenWindow()
++    {
++        EnsureWindow();
++
++        _emoteWindow.OpenCentered();
++        _emoteWindow.MoveToFront();
++
++        _typingIndicator.ClientChangedWindowStatus(true);
++
++        _emoteWindow.MessageChanged += () =>
++        {
++            _typingIndicator.ClientChangedChatText();
++            _typingIndicator.ClientChangedWindowStatus(true);
++        };
++
++        _emoteWindow.AcceptPressed += () =>
++        {
++            _typingIndicator.ClientChangedWindowStatus(false);
++            _typingIndicator.ClientSubmittedChatText();
++            _directionalEmoteSystem.ShowMessage(_emoteWindow.Source, _emoteWindow.Target, _emoteWindow.Text);
++            _emoteWindow.Dispose();
++        };
++    }
++
++    private void EnsureWindow()
++    {
++        if (_emoteWindow is { Disposed: false })
++            return;
++
++        _emoteWindow = UIManager.CreateWindow<DirectionalEmoteWindow>();
++    }
++
++    public void ToggleWindow(NetEntity source, NetEntity emoteTarget)
++    {
++        EnsureWindow();
++        _emoteWindow.Source = source;
++        _emoteWindow.Target = emoteTarget;
++
++        if (_emoteWindow.IsOpen)
++        {
++            _typingIndicator.ClientChangedWindowStatus(false);
++            _emoteWindow.Dispose();
++        }
++        else
++        {
++            OpenWindow();
++        }
++    }
++}
+
+### Content.Client/_Orion/Chat/Systems/DirectionalEmote/DirectionalEmoteWindow.xaml.cs
+@@ -0,0 +1,34 @@
++using Content.Client.UserInterface.Controls;
++using Robust.Client.AutoGenerated;
++using Robust.Client.UserInterface.XAML;
++using Robust.Shared.Utility;
++
++namespace Content.Client._Orion.Chat.Systems.DirectionalEmote;
++
++[GenerateTypedNameReferences]
++public sealed partial class DirectionalEmoteWindow : FancyWindow
++{
++    public NetEntity Source { get; set; }
++    public NetEntity Target { get; set; }
++    public string Text { get; private set; } = "";
++    public Action? AcceptPressed;
++    public Action? MessageChanged;
++    public Action? Closed;
++
++    public DirectionalEmoteWindow()
++    {
++        RobustXamlLoader.Load(this);
++
++        AcceptButton.OnPressed += _ => AcceptPressed?.Invoke();
++        MessageInput.OnTextChanged += e =>
++        {
++            Text = Rope.Collapse(e.TextRope).Trim();
++            MessageChanged?.Invoke();
++        };
++        CloseButton.OnPressed += _ =>
++        {
++            Closed?.Invoke();
++            Dispose();
++        };
++    }
++}
+
+### Content.IntegrationTests/Tests/EntityTest.cs
+@@ -258,4 +258,5 @@ await server.WaitPost(() =>
++        [Ignore("Fucking broken, maybe someone fix")] // Orion
+
+### Content.Server/_Orion/Chat/Systems/DirectionalEmoteSystem.cs
+@@ -0,0 +1,83 @@
++using Content.Server._Orion.ServerProtection.Chat;
++using Content.Server.Administration.Logs;
++using Content.Server.Chat.Managers;
++using Content.Shared._Orion.Chat.Components;
++using Content.Shared.CCVar;
++using Content.Shared.Chat;
++using Content.Shared.Database;
++using Content.Shared.Examine;
++using Robust.Shared.Configuration;
++using Robust.Shared.Player;
++using Robust.Shared.Timing;
++
++namespace Content.Server._Orion.Chat.Systems;
++
++public sealed partial class DirectionalEmoteSystem : EntitySystem
++{
++    [Dependency] private readonly IChatManager _chatManager = default!;
++    [Dependency] private readonly IGameTiming _gameTiming = default!;
++    [Dependency] private readonly ExamineSystemShared _examineSystem = default!;
++    [Dependency] private readonly IAdminLogManager _adminLogger = default!;
++    [Dependency] private readonly ChatProtectionSystem _chatProtection = default!;
++    [Dependency] private readonly IConfigurationManager _cfg = default!;
++
++    private bool _directionalEmotesEnabled;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        _cfg.OnValueChanged(CCVars.DirectionalEmotesEnabled, v => _directionalEmotesEnabled = v, true);
++
++        SubscribeNetworkEvent<SendDirectionalEmoteEvent>(OnSendDirectionalEmoteEvent);
++    }
++
++    private void OnSendDirectionalEmoteEvent(SendDirectionalEmoteEvent args, EntitySessionEventArgs session)
++    {
++        if (!_directionalEmotesEnabled)
++            return;
++
++        if (string.IsNullOrWhiteSpace(args.Text))
++            return;
++
++        var source = session.SenderSession.AttachedEntity;
++        if (source == null)
++            return;
++
++        var target = GetEntity(args.Target);
++
++        if (!TryComp<ActorComponent>(source.Value, out var sourceActor) ||
++            !TryComp<ActorComponent>(target, out var targetActor) ||
++            !TryComp<DirectionalEmoteTargetComponent>(source.Value, out var directEmote))
++            return;
++
++        var curTime = _gameTiming.CurTime;
++        if (directEmote.LastSend + directEmote.Cooldown > curTime)
++            return;
++
++        var directEmoteRange = _cfg.GetCVar(CCVars.DirectionalEmoteRange);
++        var rangeError = Loc.GetString("directional-emote-range-error");
++        if (!_examineSystem.InRangeUnOccluded(source.Value, target, directEmoteRange))
++        {
++            _chatManager.ChatMessageToOne(ChatChannel.Emotes, rangeError, rangeError, default, false, sourceActor.PlayerSession.Channel);
++            return;
++        }
++
++        var maxLength = _cfg.GetCVar(CCVars.ChatMaxEmoteLength);
++        if (args.Text.Length > maxLength)
++        {
++            var lengthError = Loc.GetString("directional-emote-length-error", ("maxLength", maxLength));
++            _chatManager.ChatMessageToOne(ChatChannel.Emotes, lengthError, lengthError, default, false, sourceActor.PlayerSession.Channel);
++            return;
++        }
++
++        if (_chatProtection.CheckICMessage(args.Text, source.Value))
++            return;
++
++        var wrappedMessage = Loc.GetString("chat-manager-entity-directional-emote-wrap-message", ("entityName", MetaData(source.Value).EntityName), ("message", args.Text));
++
++        _chatManager.ChatMessageToMany(ChatChannel.Emotes, args.Text, wrappedMessage, source.Value, false, true, [targetActor.PlayerSession.Channel, sourceActor.PlayerSession.Channel]);
++        directEmote.LastSend = curTime;
++        _adminLogger.Add(LogType.Chat, LogImpact.Low, $"{ToPrettyString(source):source} send directional emote to {ToPrettyString(target):target}: {args.Text}");
++    }
++}
+
+### Content.Shared/_Orion/CCVar/CCVars.Chat.cs
+@@ -0,0 +1,25 @@
++using Robust.Shared.Configuration;
++
++namespace Content.Shared.CCVar;
++
++//
++// License-Identifier: MIT
++//
++
++public sealed partial class CCVars
++{
++    /// <summary>
++    ///     Enable or disable directional emotes systems.
++    /// </summary>
++    public static readonly CVarDef<bool> DirectionalEmotesEnabled =
++        CVarDef.Create("chat.directional_emotes_enabled", false, CVar.REPLICATED);
++
++    /// <summary>
++    ///     The range at which directional emotes can be used.
++    /// </summary>
++    public static readonly CVarDef<int> DirectionalEmoteRange =
++        CVarDef.Create("chat.directional_emotes_range", 3, CVar.REPLICATED);
++
++    public static readonly CVarDef<int> ChatMaxEmoteLength =
++        CVarDef.Create("chat.max_emote_length", 10000, CVar.REPLICATED);
++}
+
+### Content.Shared/_Orion/Chat/Components/DirectionalEmoteTargetComponent.cs
+@@ -0,0 +1,25 @@
++using Robust.Shared.Serialization;
++
++namespace Content.Shared._Orion.Chat.Components;
++
++[RegisterComponent]
++public sealed partial class DirectionalEmoteTargetComponent : Component
++{
++    public TimeSpan LastSend = TimeSpan.MinValue;
++    public TimeSpan Cooldown = TimeSpan.FromSeconds(1);
++}
++
++[Serializable, NetSerializable]
++public sealed class SendDirectionalEmoteEvent : EntityEventArgs
++{
++    public readonly NetEntity Source;
++    public readonly NetEntity Target;
++    public readonly string Text;
++
++    public SendDirectionalEmoteEvent(NetEntity source, NetEntity target, string text)
++    {
++        Source = source;
++        Target = target;
++        Text = text;
++    }
++}
+
+### Resources/Prototypes/Entities/Mobs/base.yml
+@@ -140,4 +140,5 @@
++  - type: DirectionalEmoteTarget # Orion

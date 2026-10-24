@@ -1,0 +1,42 @@
+Huh
+
+### Content.Server/StationEvents/Components/RandomSpawnRuleComponent.cs
+@@ -13,5 +13,5 @@ namespace Content.Server.StationEvents.Components;
+-/// Spawns a single entity at a random tile on a station using TryGetRandomTile.
++/// Spawns entities at random tiles on a station.
+@@ -23,3 +23,15 @@ public sealed partial class RandomSpawnRuleComponent : Component
+-}
++
++    /// <summary>
++    /// Minimum number of entities to spawn | Europa
++    /// </summary>
++    [DataField]
++    public int MinCount = 1;
++
++    /// <summary>
++    /// Maximum number of entities to spawn | Europa
++    /// </summary>
++    [DataField]
++    public int MaxCount = 1;
++}
+
+### Content.Server/StationEvents/Events/RandomSpawnRule.cs
+@@ -9,4 +9,5 @@
++using Robust.Shared.Random;
+@@ -14,13 +15,21 @@ namespace Content.Server.StationEvents.Events;
++    [Dependency] private readonly IRobustRandom _random = default!; // Europa
+-        if (TryFindRandomTile(out _, out _, out _, out var coords))
++        // Europa-Edit-Start
++        int spawnCount = _random.Next(comp.MinCount, comp.MaxCount + 1);
++
++        for (int i = 0; i < spawnCount; i++)
+-            Sawmill.Info($"Spawning {comp.Prototype} at {coords}");
+-            Spawn(comp.Prototype, coords);
++            if (TryFindRandomTile(out _, out _, out _, out var coords))
++            {
++                Sawmill.Info($"Spawning {comp.Prototype} at {coords}");
++                Spawn(comp.Prototype, coords);
++            }
++        // Europa-Edit-End
+-}
++}
