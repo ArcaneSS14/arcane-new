@@ -3,31 +3,33 @@ name: round-and-game-rules
 description: Implement round lifecycle, game rules, objectives, announcements, win conditions, and restart-safe cleanup.
 ---
 
-Round systems coordinate global state and must remain deterministic, authority-safe, and restart-safe.
+## Когда применять
 
-## Lifecycle
+Use for round lifecycle, game rules, objectives, announcements, win conditions, player assignment, or restart cleanup.
 
-Trace rule activation, round start, player assignment, periodic updates, end conditions, round end, restart, and cleanup. Do not assume a system instance or cached entity survives only one round.
+## До изменения
 
-## Rule state
+Trace activation, round start, assignment, updates, end conditions, round end/restart, rule entity/state, prototype/serialized contract, presentation, and cleanup owner.
 
-Keep authoritative rule state on the server. Replicate only information clients need. Prefer rule entities and existing game-rule APIs over global static state.
+## Правила и границы
 
-## Players and roles
+- Keep authoritative rule state on Server; replicate only needed presentation. Prefer rule entities and existing game-rule APIs over static state.
+- Handle late join, reconnect, ghosting, body/mind transfer, disconnect, administrative intervention, no eligible players, and duplicate role/objective assignment.
+- Compute win conditions from current authoritative state and restrict hidden antagonist/objective information to intended recipients. Localize announcements/results.
+- Clean spawned entities, timers, subscriptions, overlays, temporary CVars, and round caches at end/restart so no state leaks to the next round.
+- Stop at absent owner extension point: no reflection, engine edits, client-authoritative rule outcomes, or parallel round framework.
 
-Handle late join, reconnect, ghosting, body changes, mind transfer, disconnect, and administrative intervention. Assign objectives and roles through established systems and avoid duplicate assignment.
+## Выбор подхода
 
-## Announcements and results
+Extend the established rule/entity/objective owner and lifecycle events; keep rule-specific state serialized/prototype-backed only when it belongs to that contract.
 
-Localize announcements and summaries. Keep hidden antagonist or objective information restricted to intended recipients. Win conditions should be computed from current authoritative state and remain safe when participants are deleted or disconnected.
+## Антипаттерны
 
-## Cleanup
+- Do not assume system/entity lives one round, expose hidden result state, or leave cleanup to a detached timer.
 
-Remove spawned entities, timers, subscriptions, overlays, temporary CVars, and round-scoped caches. Reset all state that could leak into the next round.
+## Проверка
 
-## Verification
-
-Test activation, late join, no eligible players, disconnect, participant deletion, multiple simultaneous rules, early round end, normal round end, and restart.
+When changed, cover activation, late/no eligible players, disconnect/deletion, simultaneous rules, early/normal end, and restart via targeted owner tests.
 
 ## References
 

@@ -18,6 +18,7 @@ Identify the timer/task owner, cancellation owner, entity/session/map/round life
 - Background work is only for explicitly supported isolated I/O or computation. ECS mutation stays on the correct simulation thread; marshal a background result through the existing mechanism and validate it again before applying.
 - Cancel or invalidate work at entity deletion, component removal, disconnect, map unload, round restart, and system shutdown when that lifetime ends. Define duplicate scheduling behavior so repeated starts cannot apply an effect twice.
 - Handle exceptions at the owning boundary: a faulted callback must not leave an operation or cleanup state permanently active.
+- Use `async void` only for a framework-required event handler that delegates to an observable task path. Do not block a simulation/UI thread with `Task.Wait`, `.Result`, or equivalent waiting unless the current owner API explicitly requires it and its lifetime/deadlock behavior is proven.
 
 ## Выбор подхода
 

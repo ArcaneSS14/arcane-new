@@ -3,31 +3,35 @@ name: external-services
 description: Integrate HTTP APIs, webhooks, external processes, retries, timeouts, caching, and secret-backed configuration safely.
 ---
 
-External systems are unreliable and untrusted. Keep gameplay resilient when they are slow or unavailable.
+## Когда применять
 
-## Configuration and secrets
+Use for HTTP APIs, webhooks, external processes, retries, timeouts, caches, or secret-backed configuration.
 
-Use CVars, environment variables, or repository secret mechanisms. Never commit credentials or production endpoints that contain secrets. Validate URLs and configuration at startup.
+## До изменения
 
-## Requests
+Identify service owner, configuration/secret source, request/response schema, timeout/cancellation owner, idempotency, retry policy, stale-data behavior, simulation-thread boundary, and failure reporting.
 
-Set explicit timeouts, cancellation, bounded response sizes, and supported content types. Validate status codes and response schemas before use. Do not deserialize arbitrary polymorphic payloads.
+## Правила и границы
 
-## Reliability
+- Treat external systems/payloads as unreliable and untrusted. Validate URL/configuration at startup, response status/schema/content type/size before use, and do not deserialize arbitrary polymorphic payloads.
+- Set explicit timeout and cancellation. Retry only idempotent operations with bounded backoff; prevent retry storms and define cache/stale fallback.
+- Do not block the simulation thread on network I/O. Marshal results by the supported owner path and revalidate entity/round state before mutation.
+- Use secret mechanisms, CVars, or environment configuration as established; never commit secrets/endpoints containing secrets, send unnecessary private data, or log secrets/payloads.
+- Keep request handlers task-observable: do not use `async void` except a framework-required event handler, and do not synchronously wait on `Task` from simulation/UI flow. A cancellation, timeout, or exception must leave no partial authoritative mutation or unreleased request state.
+- Stop without a supported extension point: no reflection, engine edits, or parallel service/retry framework.
 
-Define retry policy only for idempotent operations. Use bounded backoff and avoid retry storms. Cache stable data where appropriate and define stale-data behavior.
+## Выбор подхода
 
-## Simulation boundary
+Use an existing service client/configuration owner, bounded cache for stable data, and clear unavailable-service fallback. Prefer failure reporting with safe operator context over user-visible raw remote errors.
 
-Do not block the main simulation thread on network I/O. Apply results through the supported main-thread path and revalidate entity or round state before mutation.
+## Антипаттерны
 
-## Privacy and logging
+- Do not retry non-idempotent mutations, retain stale callback results, or trust remote input as authority.
+- Do not hide timeout/cancellation/outage as success.
 
-Send only required data. Avoid player-identifying or private content unless the feature explicitly requires and documents it. Redact secrets and payloads from logs.
+## Проверка
 
-## Verification
-
-Test timeout, cancellation, invalid certificate or endpoint, non-success status, malformed response, oversized response, duplicate callback, stale result, and service outage.
+When the integration changes, check timeout, cancellation, invalid endpoint/certificate, non-success/malformed/oversized response, duplicate callback, stale result, and outage with targeted owner coverage.
 
 ## References
 

@@ -3,30 +3,34 @@ name: admin-and-permissions
 description: Implement privileged commands, admin UI, role checks, audit logs, and safe operational controls.
 ---
 
-Privileged tooling must fail closed and remain server-authoritative.
+## Когда применять
 
-## Workflow
+Use for privileged commands, admin UI, role/flag checks, player-affecting operations, and audit trails.
 
-1. Identify the exact permission or admin flag required.
-2. Enforce it on the server at every entry point.
-3. Separate read-only diagnostics from mutating operations.
-4. Validate targets and current round/session state.
-5. Record meaningful audit context for destructive or player-affecting actions.
-6. Return localized, user-safe feedback without exposing secrets.
+## До изменения
 
-## Boundaries
+Identify the exact permission/flag, server entry points (command, EUI/BUI, verb, network event), target lifecycle, round/session state, and audit owner.
 
-Client visibility of a button is not authorization. Console command registration, EUI/BUI messages, verbs, and network events must each reach a server-side permission check.
+## Правила и границы
 
-Do not broaden permissions because a nearby command uses a more general flag. Avoid commands that bypass normal system APIs and leave state inconsistent.
+- Privileged tooling fails closed and is server-authoritative. A visible button or client state is never authorization; recheck permission at every server entry point.
+- Keep read-only diagnostics separate from mutation. Validate target, ownership, session/round state, and current permission before each protected operation.
+- Log actor, operation, target, safe important parameters, and outcome for high-impact changes; never log credentials, tokens, private chat, or unnecessary personal data.
+- Return localized player-safe feedback without secrets. Use normal owner APIs so admin work preserves lifecycle and invariants.
+- Stop when required access has no supported extension point: do not bypass modifiers, use reflection, alter engine, or create a parallel admin framework.
 
-## Auditability
+## Выбор подхода
 
-Log actor, operation, target, important parameters, and outcome for high-impact changes. Do not log credentials, tokens, private chat content, or unnecessary personal data.
+Use the narrowest existing permission instead of broadening a flag because a nearby command does. Route mutating functionality through its owner system and an auditable server handler.
 
-## Verification
+## Антипаттерны
 
-Test authorized and unauthorized users, missing sessions, disconnected targets, repeated execution, malformed arguments, and runtime permission changes.
+- Do not trust a client-selected target/result, bypass owner APIs, or treat command registration as a permission check.
+- Do not log secrets or make normal rejection an error.
+
+## Проверка
+
+When privilege behavior changed, cover authorized/unauthorized users, missing session, disconnected target, repeated execution, malformed arguments, and runtime permission changes using the existing owner test path.
 
 ## References
 

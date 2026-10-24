@@ -3,36 +3,34 @@ name: construction-and-machines
 description: Implement construction graphs, machine lifecycle, power, parts, upgrades, examination, and machine UI.
 ---
 
-Machines often combine prototypes, construction, anchoring, power, components, server simulation, UI, and upgrade parts.
+## Когда применять
 
-## Construction
+Use for construction graphs, machines, boards/parts, upgrades, power/anchoring, examination, or machine UI.
 
-Find the current graph and node conventions. Keep steps data-driven. Validate tools, materials, entity replacement, deconstruction, and state transfer. Avoid source-fork graph IDs that do not exist in the destination.
+## До изменения
 
-## Machine lifecycle
+Trace graph/node conventions, prototype contract, machine owner, map initialization, anchoring/power/damage/deconstruction lifecycle, part rating, UI, and targeted owner test.
 
-Define behavior for map initialization, anchoring, unanchoring, power changes, damage, breakage, deconstruction, and deletion. Systems should subscribe to lifecycle events instead of polling every machine each tick.
+## Правила и границы
 
-## Parts and upgrades
+- Keep construction data-driven; validate tools/materials, replacement, deconstruction, and state transfer. Do not import source-fork graph IDs.
+- Subscribe to lifecycle events rather than polling each machine. Define map spawn, anchoring, power loss, damage/breakage, deconstruction, deletion, and cleanup.
+- Use existing board/part-rating APIs. Recalculate derived values at the established part-change event; defaults work without upgrades and every cache has invalidation.
+- Server owns machine state, costs, inventory/output, and access. BUI expresses intent and is revalidated; expose minimal UI state.
+- Stop without a supported extension point: do not bypass access, reflect, change engine, or create a parallel machine system.
 
-Use existing part-rating or machine-board APIs. Recalculate derived values from installed parts at the established event point. Keep prototype defaults valid when no upgraded parts are present. Do not cache a derived value without invalidation.
+## Выбор подхода
 
-## UI and authority
+Extend the current graph/machine owner and prototype fields; use event-driven recalculation and existing BUI flow instead of isolated loops/caches.
 
-The server owns machine state, inventory, costs, output, and access. BUI messages express intent and are revalidated. UI state should expose only values the user needs.
+## Антипаттерны
 
-## Common failures
+- Do not lose contents/ownership on replacement, run unpowered/unanchored machinery, trust client price/output, or let map-spawn skip setup.
+- Do not leave examine text inconsistent with authoritative state.
 
-- upgraded value never recalculated after part change;
-- construction replacement loses ownership or contents;
-- machine runs while unpowered or unanchored;
-- server trusts client-selected output or price;
-- map-spawned machines skip setup;
-- examine text disagrees with actual state.
+## Проверка
 
-## Verification
-
-Test construction, deconstruction, map spawn, power loss, anchoring, part replacement, damage, UI concurrency, and YAML references.
+When affected, check construction/deconstruction, map spawn, power loss, anchoring, part replacement, damage, UI concurrency, and targeted YAML/owner behavior.
 
 ## References
 

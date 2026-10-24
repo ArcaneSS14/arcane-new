@@ -3,44 +3,34 @@ name: commands-and-cvars
 description: Implement commands and CVar-backed configuration with validation, authority, persistence, localized feedback, and compatibility.
 ---
 
-## Console commands
+## Когда применять
 
-Keep parsing, authorization, validation, execution, and feedback distinct. Verify the current command and shell interfaces before implementation.
+Use for console commands, CVar-backed operational configuration, command permissions, runtime settings, or CVar compatibility changes.
 
-Commands affecting players, round state, persistence, or server configuration require permission checks and useful audit logging.
+## До изменения
 
-Command descriptions, help, usage, success, and player-safe errors must use `en-US`; add `ru-RU` only when explicitly requested. Do not expose internal exceptions or raw IDs.
+Find current command registration/shell pattern, server authority/permission owner, exact CVar key, definition, flags, consumers, persistence, and runtime-change lifecycle.
 
-Use the existing command registration and permission pattern. Validate argument count, parsing, ranges, and current world/player state before mutation. A client-visible command or command completion is not authorization; privileged actions must be checked on the server. Follow `admin-and-permissions` for permission and audit requirements when the command is privileged.
+## Правила и границы
 
-## CVars
+- Separate parsing, authorization, validation, execution, and feedback. Server checks privileged commands; client completion/visibility is not authority. Audit player/round/persistence/config mutations.
+- Validate argument count, parsing, ranges, non-finite values, and current state before mutation. Localize descriptions/help/errors in `en-US`; add Russian only on request and never expose raw IDs/internal exceptions.
+- Use a CVar only for global operational/runtime configuration, not per-entity/content state. Use an existing typed `CVarDef<T>` pattern, stable namespaced key, safe typed default, units where needed, and flags verified in the current engine.
+- CVar keys are global operational APIs. Renames need compatibility/migration. Subscribe only for supported live changes; match subscription lifetime to its owner and handle invalid/removed persisted values safely.
+- Stop at a missing supported command/CVar extension point: do not bypass access, use reflection, alter engine, or create a parallel configuration system.
 
-Use a CVar only for a global operational or runtime configuration value. Per-entity/content state belongs in the relevant component or prototype, not a CVar. Before defining one, search the exact key: CVar names share a global namespace regardless of which definition class contains them. Use the current typed `CVarDef<T>` pattern, a stable namespaced key, safe typed default, description including units where needed, and explicit runtime behavior.
+## Выбор подхода
 
-Choose flags from the value's actual ownership and lifecycle; verify their definitions in the current engine rather than treating them as interchangeable:
+Use a component/prototype for content/entity state and a CVar for global behavior. Define replicated values in Shared only when replication is required; never store secrets/private server state in a CVar.
 
-| Flag | Meaning to account for |
-| --- | --- |
-| `SERVER` / `CLIENT` | Which side is allowed to change the value |
-| `SERVERONLY` / `CLIENTONLY` | Which side registers the value |
-| `REPLICATED` | Synchronizes between client and server; define replicated CVars in Shared |
-| `ARCHIVE` | Saves non-default values to the configuration file |
-| `NOTIFY` | Server-side changes notify clients; use only for a Shared definition |
-| `CHEAT` / `NOT_CONNECTED` | Restricts debug changes or changes while connected |
-| `CONFIDENTIAL` | Hides the value from CVar command completion; it is not secret storage |
+## Антипаттерны
 
-Decide whether the value is startup-only or supports runtime changes. Validate bounds and reject invalid/non-finite numeric values before applying timers, rates, sizes, economy values, or paths. Do not replicate private server state or put credentials/secrets in a CVar.
+- Do not broaden permissions, trust client values, use `CONFIDENTIAL` as secret storage, or leave live subscriptions after owner shutdown.
+- Do not invent CVar flags or commands from another fork.
 
-Subscribe only when live changes are supported. For an `EntitySystem`, prefer `Subs.CVar` so the subscription is removed with system lifecycle; use the immediate callback option when initialization must consume the already-loaded value. For other owners, pair subscription and unsubscription explicitly. Persisted client settings must survive restart and handle removed or invalid values safely.
+## Проверка
 
-CVar and command names are operational APIs. Renames require migration or compatibility handling.
-
-## Verification
-
-Build only the affected project. When verification is requested, select focused tests for the changed behavior; do not restore dependencies or run the complete root or module test suites by default.
-
-- Commands: cover parsing, missing/extra arguments, invalid and boundary values, permissions, and user-facing output when affected.
-- CVars: cover default/override behavior, runtime updates, replication, archived persistence, or invalid-value fallback only where the change affects those contracts.
+When changed, cover command parsing/bounds/permissions/output or CVar default/override/live update/replication/archive/invalid fallback as applicable, with an existing owner project/test path only.
 
 ## References
 

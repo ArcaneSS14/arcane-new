@@ -3,36 +3,34 @@ name: containers-and-inventory
 description: Move entities through containers, hands, slots, storage, equipment, and inventories without corrupting ownership or transforms.
 ---
 
-Containers and inventories define entity ownership, visibility, transform parenting, and interaction availability.
+## Когда применять
 
-## Workflow
+Use for containers, slots, hands, storage, equipment, pickup/drop, transfer, and inventory UI.
 
-1. Identify the owning container, slot, hand, or storage system.
-2. Use the established insertion, removal, pickup, drop, and equip APIs.
-3. Validate capacity, whitelist, blacklist, access, body state, and current ownership.
-4. Handle insertion/removal events and side effects once.
-5. Preserve transform and PVS behavior.
-6. Update UI state after authoritative inventory changes.
+## До изменения
 
-## Rules
+Identify the owning container/slot/hand/storage system, item lifecycle, capacity/whitelist/access/body constraints, transform/PVS behavior, UI state, and nearest owner test.
 
-Do not manually parent an entity to simulate container insertion. Do not directly mutate container collections. Use system APIs so lifecycle events, networking, and transform state remain consistent.
+## Правила и границы
 
-For hands and equipment, account for active hand, blocked slots, nested storage, item deletion, body changes, polymorph, and disconnection. Server validation owns protected moves; client drag-and-drop is only an intent.
+- Use established insertion/removal/pickup/drop/equip APIs. Never manually parent to simulate insertion or mutate container collections directly.
+- Validate capacity, whitelist/blacklist, access, body state, and current ownership. Handle insertion/removal events and side effects exactly once.
+- Server owns protected moves; drag-and-drop is intent only. Preserve transform/PVS and refresh UI from authoritative inventory state.
+- Account for active hand, blocked slots, nested storage, deletion, body/polymorph transfer, disconnect, and multiple viewers.
+- Stop when no supported owner API exists: do not bypass access, use reflection, alter engine, or build a parallel inventory implementation.
 
-## Common failures
+## Выбор подхода
 
-- entity exists in two containers;
-- item is parented correctly but not registered in the container;
-- removal event is skipped;
-- PVS leaks contained entities;
-- storage UI shows stale contents;
-- deletion leaves an invalid slot reference;
-- hand transfer duplicates predicted feedback.
+Use the owner system that owns the destination and event flow; model transfers through its APIs, not an independent entity-parenting path.
 
-## Verification
+## Антипаттерны
 
-Test insert, remove, swap, drop, delete, nested storage, full inventory, denied whitelist, body transfer, reconnect, and multiple viewers.
+- Do not place an entity in two containers, skip removal events, leak contained entities through PVS, or retain invalid slots after deletion.
+- Do not duplicate predicted feedback on hand transfer.
+
+## Проверка
+
+When affected, check insert/remove/swap/drop/delete, nested storage, full/denied inventory, body transfer, reconnect, and multiple viewers through existing owner coverage.
 
 ## References
 
