@@ -1,29 +1,31 @@
 ---
 name: eui
-description: Implement EUI sessions, shared state and messages, server lifecycle, and client presentation.
+description: Implement EUI sessions, shared state and messages, server lifecycle, and client windows.
 ---
 
-Use EUI for session-oriented interfaces that are not naturally bound to one world entity or an existing BUI owner.
+## Когда применять
 
-## Shared contract
+Use EUI for a session-oriented interface not owned by one entity: a menu, lobby, administration, or separate client/server session flow. Use BUI for an entity-owned UI.
 
-Define only the serializable state and intent messages needed across the client/server boundary in Shared. Keep them minimal and free of hidden server-only data, UI controls, and server services. Messages describe requested intent, not a claimed result or authorization decision.
+## До изменения
 
-## Server lifecycle
+Find the server-session owner, Shared message/state contract, viewer admission rules, client window, and every open, update, and close path.
 
-The server creates and owns the session, checks authorization before opening it, sends only data the viewer may see, handles messages, revalidates the actor, permission, target, and requested operation for every message, and closes the session. Treat the client and its displayed state as untrusted. Handle disconnects, permission changes, target deletion, and explicit shutdown according to the actual EUI lifecycle.
+## Правила и границы
 
-## Client lifecycle
+The server creates and closes the session, checks viewer authorization before opening it, and sends only data that viewer may see. Each message revalidates sender, permission, target, operation, and current state; disconnect, permission change, target deletion, and shutdown must close or invalidate the session. The client applies the latest state, releases subscriptions on close, and ignores callbacks from an obsolete session. A visible control or enabled button is never authorization.
 
-The client creates presentation, applies the newest session state, sends intent, and disposes windows and subscriptions on close. Do not treat client button state as authorization. Ignore or cancel delayed callbacks for a closed or superseded session so stale results cannot repopulate the wrong window.
+## Выбор подхода
 
-## Choosing EUI or BUI
+Choose BUI when lifecycle and authority naturally belong to an entity; choose EUI when a server session, rather than a world object, owns them. Keep the Shared contract minimal and mutation on Server.
 
-Use BUI when the interaction is clearly owned by an entity and normal range/lifecycle semantics fit. Use EUI for broader admin, debug, lobby, or session-oriented interfaces.
+## Антипаттерны
 
-## Verification
+Do not trust client-side permission, publish hidden viewer data, or retain a window or subscription after its session closes.
 
-Choose focused checks for the changed behavior. For lifecycle or message-flow changes, cover the relevant open/update/rejection/close/disconnect/stale-session cases; do not require every case for an unrelated presentation-only edit. Check affected localization and constrained text layout when those surfaces change. Follow root `AGENTS.md` for verification scope.
+## Проверка
+
+Check open, state update, rejection, close/reopen, disconnect, permission change, target deletion, and stale-update rejection; select focused lifecycle coverage at the owner.
 
 ## References
 

@@ -3,31 +3,29 @@ name: forms-and-input-validation
 description: Validate UI, command, text, numeric, entity, and configuration input with localized feedback and server authority.
 ---
 
-Validation has two layers: client feedback and authoritative server enforcement.
+## Когда применять
 
-## Parsing
+Use for any text, number, entity selection, command, or configuration value received from a player, UI, or external input.
 
-Trim deliberately. Parse numbers with an explicit culture and format policy. Reject ambiguous forms such as integer fields supplied as `1.0` unless the domain permits them. Check length before expensive processing.
+## До изменения
 
-## Domain validation
+Determine the field format and owner, consumer, trust boundary, allowed bounds, localized feedback, and authoritative handler that actually applies the value.
 
-Validate ranges, overflow, whitelists, prototype IDs, entity existence, ownership, access, cooldowns, and cross-field constraints. Normalize case and whitespace only when the domain defines them as insignificant.
+## Правила и границы
 
-Use one authoritative validation source where possible. Do not allow UI and server rules to drift.
+Client validation provides early, clear feedback; the server repeats the exact authoritative validation. Before domain validation, define trimming/normalization, an explicit culture and numeric format, length, bounds, and overflow behavior. Reject ambiguous integer forms such as `1.0` unless the domain permits them, and check length before expensive work. Then validate ranges, overflow, whitelists, prototype IDs, entity existence and ownership, access, cooldowns, current state, and cross-field constraints. Player errors must be safe and localized: never expose internal exceptions, raw IDs, or server-only reasons. Treat markup, paths, URLs, commands, and identifiers as hostile input and use an appropriate allowlist, escaping, or parse policy.
 
-## Feedback
+## Выбор подхода
 
-Return specific player-safe errors in `en-US`; add `ru-RU` only when explicitly requested. Do not expose hidden state, internal exceptions, raw IDs, or server-only reasons.
+Separate parse failure, syntactic validity, and domain validity. Use one authoritative validation source so UI and server rules cannot drift. Use a typed message or contract when input crosses the network; transmit intent, not a client-claimed result.
 
-Variable names and values passed into validation messages must match `en-US`; match Russian too only when Russian is in scope.
+## Антипаттерны
 
-## Security failures
+Do not rely on a disabled control, an implicit current culture, unchecked numeric conversion, or an error message that reveals protected state. Do not concatenate shell, SQL, markup, or resource paths; use structured APIs instead.
 
-Treat rich text, markup, paths, URLs, and command fragments as hostile. Use structured APIs instead of concatenating shell, SQL, markup, or resource paths.
+## Проверка
 
-## Verification commands
-
-Build only the affected project. When verification is requested, choose focused tests for the changed validation boundary (such as BUI, command authority, stale entities, or client/server behavior). Do not restore dependencies or run complete test suites by default. Relevant cases include empty and whitespace input, boundaries, overflow, locale variants when in scope, malformed markup, unauthorized actors, and conflicting fields.
+Keep validation-message variable names and values aligned with the `en-US` contract (and Russian only when it is in scope). Cover empty and whitespace input, bounds, overflow, invalid format, long input, hostile characters, stale entities, unauthorized actors, race/retry, and server rejection after client acceptance.
 
 ## References
 

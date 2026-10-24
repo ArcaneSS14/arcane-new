@@ -1,17 +1,18 @@
 ---
 name: interaction-flow
-description: Implement reusable interactions, verbs, in-hand use, actions, and BUI requests with clear validation and mutation.
+description: Implement reusable interactions, verbs, in-hand use, actions, and authoritative outcomes.
 ---
-
-Use a consistent flow:
-
-1. `On...` receives the event and handles routing flags.
-2. `Try...` is the reusable public API.
-3. `Can...` checks state without mutation.
-4. Execution performs all mutations and side effects.
-
-`Try...` must call its own checks. A UI or verb may perform an early client-side check for feedback, but the authoritative server path must validate again.
-
-Keep `Can...` quiet-capable when callers need non-spamming probes. Do not decrement resources, change components, or spawn entities in `Can...`.
-
-Set handled or cancelled flags only when the system truly consumed the action. Add tests for rejection and repeated invocation when the interaction changes valuable or persistent state.
+## Когда применять
+Use for player action/verb/input flows.
+## До изменения
+Trace the entry point (verb, action, in-hand use, BUI, or event), state owner, server handler, mutation, feedback, and nearest owner-local or integration test. Establish the owner of `handled`/`cancelled` and whether the flow is predicted.
+## Правила и границы
+Route `On...` to `Try...` to `Can...` to one execution path. `Can...` never mutates state, spends resources, or spawns entities, and must support quiet probes without feedback spam. `Try...` repeats its own checks even after verb or UI feedback; the server revalidates actor, target, and current state before protected mutation.
+## Выбор подхода
+Use handled/cancelled flags only with an explicit owner and contract. Perform resources, cooldowns, and persistent mutation through the one owner path after successful validation; presentation is not evidence of success.
+## Антипаттерны
+Do not trust client-claimed success, split valuable or persistent mutation across callers, or turn `Can...` into a mutation path for convenience.
+## Проверка
+Cover rejection, repeated invocation, stale targets, and valuable or persistent changes; for prediction, ensure accept/reject cannot duplicate feedback.
+## References
+No reference is required for ordinary interaction routing.

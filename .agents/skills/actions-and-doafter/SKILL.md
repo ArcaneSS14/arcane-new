@@ -2,43 +2,18 @@
 name: actions-and-doafter
 description: Implement actions, cooldowns, DoAfter flows, interruption, cancellation, and authoritative completion safely.
 ---
-
-Use actions for reusable player abilities and DoAfter flows for interruptible, time-based completion.
-
-## Action lifecycle
-
-1. Find the owner component and system.
-2. Decide whether the action is granted by prototype, component startup, equipment, role, or runtime state.
-3. Keep action identity and event contract in Shared when client prediction or UI needs it.
-4. Validate user, target, cooldown, range, access, and current state on the server.
-5. Start the action or DoAfter exactly once.
-6. Apply resources, cooldowns, and persistent effects only at the correct authoritative point.
-7. Remove or disable the action when its source disappears.
-
-## DoAfter design
-
-Define interruption rules deliberately: movement, damage, hand changes, target movement, target deletion, range, incapacitation, and duplicate requests. Use the established DoAfter event pattern in the current codebase.
-
-Do not mutate valuable state before completion unless rollback is explicit. Completion handlers must revalidate state because the world may have changed during the delay.
-
-## Prediction
-
-Immediate local animation, popup, or sound may be predicted. The final protected outcome remains authoritative. Prevent duplicate feedback when the server confirms or rejects the action.
-
-## Common failures
-
-- action remains after the granting component is removed;
-- cooldown is applied before a rejected attempt;
-- two concurrent DoAfters complete the same operation;
-- target deletion leaves stale state;
-- completion trusts conditions checked only at start;
-- predicted sound or popup plays twice.
-
-## Verification
-
-Test success, cancellation by every configured interrupt, repeated requests, target deletion, disconnect, source removal, cooldown, and rejection under latency.
-
+## Когда применять
+Use actions for reusable abilities and DoAfter for interruptible timed completion.
+## До изменения
+Find the source (prototype, component startup, equipment, role, or runtime), owner system, Shared identity/event contract when prediction or UI needs it, target, and grant/transfer/removal lifecycle.
+## Правила и границы
+Validate user, target, range, access, cooldown, and current state on the server. Start exactly one action/DoAfter; apply resources, cooldowns, and persistent effects at the correct authoritative point; revalidate on completion and remove or disable the action when its source disappears.
+## Выбор подхода
+Define interruption for movement, damage, hand change, target movement/change, target deletion, range loss, incapacitation, and duplicate requests. Do not commit valuable state before completion without explicit rollback. Predict only correctable animation, popup, or sound and prevent duplicate feedback on server confirm/reject.
+## Антипаттерны
+Do not commit protected outcome before completion or duplicate predicted/server feedback.
+## Проверка
+Cover success, every interrupt, deletion, disconnect, cooldown, source removal and latency rejection.
 ## References
-
 - [Action lifecycle](references/action-lifecycle.md): Read this when adding, transferring, removing, or debugging an action across entity, body, or round lifecycle changes.
 - [DoAfter checklist](references/doafter-checklist.md): Read this when adding or changing a DoAfter, its interruption rules, or its completion handler.
