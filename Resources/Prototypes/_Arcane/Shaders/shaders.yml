@@ -11,3 +11,8 @@
     glow_brightness: 10
     outline_width: 1.0
     outline_alpha: 0.2
+
+- type: shader
+  id: LightingHighlights
+  kind: source
+  path: "/Textures/_Arcane/Shaders/lighting_highlights.swsl"

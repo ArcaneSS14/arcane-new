@@ -1,0 +1,14 @@
+uniform sampler2D SCREEN_TEXTURE;
+uniform sampler2D LIGHT_TEXTURE;
+uniform highp float intensity;
+
+void fragment() {
+    highp vec2 screenUV = FRAGCOORD.xy * SCREEN_PIXEL_SIZE;
+    highp vec4 scene = zTextureSpec(SCREEN_TEXTURE, screenUV);
+    highp vec3 light = texture2D(LIGHT_TEXTURE, screenUV).rgb;
+    highp float peak = max(max(light.r, light.g), light.b);
+    highp float highlight = smoothstep(0.6, 1.0, peak);
+
+    scene.rgb += light * highlight * intensity;
+    COLOR = scene;
+}

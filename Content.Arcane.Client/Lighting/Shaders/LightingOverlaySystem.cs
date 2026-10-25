@@ -11,10 +11,14 @@ public sealed partial class LightingOverlaySystem : EntitySystem
     [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     private LightingOverlay? _lightingOverlay;
+    private LightingHighlightsOverlay? _lightingHighlightsOverlay;
 
     public override void Initialize()
     {
         base.Initialize();
+
+        _lightingHighlightsOverlay = new LightingHighlightsOverlay();
+        _overlayManager.AddOverlay(_lightingHighlightsOverlay);
 
         _lightingOverlay = new LightingOverlay(EntityManager, _prototypeManager);
         _overlayManager.AddOverlay(_lightingOverlay);
@@ -24,11 +28,18 @@ public sealed partial class LightingOverlaySystem : EntitySystem
     {
         base.Shutdown();
 
-        if (_lightingOverlay == null)
-            return;
+        if (_lightingHighlightsOverlay != null)
+        {
+            _overlayManager.RemoveOverlay(_lightingHighlightsOverlay);
+            _lightingHighlightsOverlay.Dispose();
+            _lightingHighlightsOverlay = null;
+        }
 
-        _overlayManager.RemoveOverlay(_lightingOverlay);
-        _lightingOverlay.Dispose();
-        _lightingOverlay = null;
+        if (_lightingOverlay != null)
+        {
+            _overlayManager.RemoveOverlay(_lightingOverlay);
+            _lightingOverlay.Dispose();
+            _lightingOverlay = null;
+        }
     }
 }
