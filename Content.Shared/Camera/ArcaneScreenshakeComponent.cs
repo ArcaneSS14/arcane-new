@@ -8,7 +8,7 @@ namespace Content.Shared.Camera;
 public sealed partial class ArcaneScreenshakeComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public HashSet<ArcaneScreenshakeCommand> Commands = new();
+    public List<ArcaneScreenshakeCommand> Commands = new();
 
     public override bool SendOnlyToOwner => true;
 }

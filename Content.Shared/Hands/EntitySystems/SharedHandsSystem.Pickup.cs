@@ -294,7 +294,7 @@ public abstract partial class SharedHandsSystem
             return;
         }
 
-        _interactionSystem.DoContactInteraction(uid, entity, null, true); // Arcane-Edit: _interactionSystem.DoContactInteraction(uid, entity) > _interactionSystem.DoContactInteraction(uid, entity, null, true)
+        _interactionSystem.DoContactInteraction(uid, entity, null, true, interactionParticles: !_thieving.IsStealthy(uid)); // Arcane-Edit: _interactionSystem.DoContactInteraction(uid, entity) > suppress visual particle for stealth pickup
 
         if (log)
             _adminLogger.Add(LogType.Pickup, LogImpact.Low, $"{ToPrettyString(uid):user} picked up {ToPrettyString(entity):entity}");

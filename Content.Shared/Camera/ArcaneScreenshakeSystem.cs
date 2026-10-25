@@ -38,15 +38,19 @@ public sealed partial class ArcaneScreenshakeSystem : EntitySystem
         var query = EntityQueryEnumerator<ArcaneScreenshakeComponent>();
         while (query.MoveNext(out var uid, out var component))
         {
-            foreach (var command in component.Commands.ToArray())
+            var commandsChanged = false;
+            for (var i = component.Commands.Count - 1; i >= 0; i--)
             {
-                if (_timing.CurTime >= command.End)
-                    component.Commands.Remove(command);
+                if (_timing.CurTime >= component.Commands[i].End)
+                {
+                    component.Commands.RemoveAt(i);
+                    commandsChanged = true;
+                }
             }
 
             if (component.Commands.Count == 0)
                 RemCompDeferred<ArcaneScreenshakeComponent>(uid);
-            else
+            else if (commandsChanged)
                 Dirty(uid, component);
         }
     }
@@ -112,7 +116,7 @@ public sealed partial class ArcaneScreenshakeSystem : EntitySystem
         {
             Start = command.Start + pausedTime,
             End = command.End + pausedTime,
-        }).ToHashSet();
+        }).ToList();
         Dirty(entity);
     }
 

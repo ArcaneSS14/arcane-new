@@ -79,6 +79,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         args.Verbs.Add(new ActivationVerb
         {
             Act = () => InteractUI(args.User, (uid, component)), // Arcane-Edit: InteractUI(args.User, uid, component) > InteractUI(args.User, (uid, component))
+            DoContactInteraction = false, // Arcane
             Text = Loc.GetString(component.VerbText),
             // TODO VERB ICON find a better icon
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png")),
@@ -206,13 +207,20 @@ public sealed partial class ActivatableUISystem : EntitySystem
     private void InteractUI(EntityUid user, Entity<ActivatableUIComponent> ui)
     {
         var interactionParticle = false;
-        InteractUI(user, ui, ui, ref interactionParticle);
-        _arcaneInteraction.DoContactInteraction(user, ui, null, true, interactionParticles: interactionParticle);
+        if (InteractUI(user, ui, ui, ref interactionParticle, out var opened) && opened)
+            _arcaneInteraction.DoContactInteraction(user, ui, null, true, interactionParticles: interactionParticle);
     }
     // Arcane-Edit-End
 
-    private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, ref bool interactionParticle, Enum? key = null) // Arcane-Edit: public single interaction path > reports presentation feedback to interaction callers
+    // Arcane-Edit-Start
+    private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, ref bool interactionParticle, Enum? key = null)
     {
+        return InteractUI(user, uiEntity, aui, ref interactionParticle, out _, key);
+    }
+
+    private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, ref bool interactionParticle, out bool opened, Enum? key = null)
+    {
+        opened = false;
         // <Trauma> - replace aui.Key with key, default to the comp's key
         key ??= aui.Key;
         if (key == null || !_uiSystem.HasUi(uiEntity, key))
@@ -272,6 +280,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         SetCurrentSingleUser(uiEntity, user, aui);
         _uiSystem.OpenUi(uiEntity, key, user);
+        opened = true;
         // </Trauma>
 
         //Let the component know a user opened it so it can do whatever it needs to do
@@ -281,6 +290,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         return true;
     }
+    // Arcane-Edit-End
 
     public void SetCurrentSingleUser(EntityUid uid, EntityUid? user, ActivatableUIComponent? aui = null)
     {

@@ -15,7 +15,7 @@ public abstract partial class SharedGravitySystem
     private bool TryArcaneScreenshakeGrid(EntityUid uid)
     {
         if (Timing.CurTime - _arcaneTicker.RoundStartTimeSpan < TimeSpan.FromSeconds(30))
-            return true;
+            return false;
 
         _arcaneScreenshake.Screenshake(Filter.BroadcastGrid(uid), ArcaneGridShake, null);
         return true;
