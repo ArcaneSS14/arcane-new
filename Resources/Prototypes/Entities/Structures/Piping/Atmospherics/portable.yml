@@ -81,6 +81,9 @@
   - type: GuideHelp
     guides:
     - PortableScrubber
+  # Arcane-Start
+  - type: ManualAnchoring
+  # Arcane-End
 
 - type: entity
   id: SpaceHeater
@@ -155,6 +158,9 @@
   - type: GuideHelp
     guides:
     - Thermomachines
+  # Arcane-Start
+  - type: ManualAnchoring
+  # Arcane-End
 
 - type: entity
   parent: SpaceHeater

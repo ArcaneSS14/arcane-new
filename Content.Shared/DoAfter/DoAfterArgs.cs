@@ -29,6 +29,11 @@ public sealed partial class DoAfterArgs
     [DataField]
     public EntityUid? Target;
 
+    // Arcane-Start
+    [DataField]
+    public bool FaceTarget = true;
+    // Arcane-End
+
     public NetEntity? NetTarget;
 
     /// <summary>
@@ -268,6 +273,7 @@ public sealed partial class DoAfterArgs
         User = other.User;
         Delay = other.Delay;
         Target = other.Target;
+        FaceTarget = other.FaceTarget; // Arcane
         Used = other.Used;
         Hidden = other.Hidden;
         ExamineText = other.ExamineText;

@@ -129,79 +129,143 @@ public sealed partial class AnchorableSystem : EntitySystem
 
     private void OnUnanchorComplete(EntityUid uid, AnchorableComponent component, TryUnanchorCompletedEvent args)
     {
+        // Arcane-Edit-Start
         if (args.Cancelled || args.Used is not { } used)
             return;
 
-        var xform = Transform(uid);
-
-        RaiseLocalEvent(uid, new BeforeUnanchoredEvent(args.User, used));
-        _transformSystem.Unanchor(uid, xform);
-        RaiseLocalEvent(uid, new UserUnanchoredEvent(args.User, used));
-
-        _popup.PopupEntity(Loc.GetString("anchorable-unanchored"), uid, args.User);
-
-        _adminLogger.Add(
-            LogType.Unanchor,
-            LogImpact.Low,
-            $"{ToPrettyString(args.User):user} unanchored {ToPrettyString(uid):anchored} using {ToPrettyString(used):using}"
-        );
+        CompleteUnanchor(uid, args.User, used);
+        // Arcane-Edit-End
     }
 
     private void OnAnchorComplete(EntityUid uid, AnchorableComponent component, TryAnchorCompletedEvent args)
     {
+        // Arcane-Edit-Start
         if (args.Cancelled || args.Used is not { } used)
             return;
 
-        var xform = Transform(uid);
-        if (TryComp<PhysicsComponent>(uid, out var anchorBody) &&
-            !TileFree(xform.Coordinates, anchorBody))
+        CompleteAnchor(uid, args.User, used, component);
+        // Arcane-Edit-End
+    }
+
+    // Arcane-Start
+    public bool TryAnchor(EntityUid uid, EntityUid userUid)
+    {
+        AnchorableComponent? anchorable = null;
+        TransformComponent? transform = null;
+        if (!Resolve(uid, ref anchorable, ref transform))
+            return false;
+
+        if (transform.Anchored)
+            return false;
+
+        if (!Valid(uid, userUid, userUid, true, out var failMessage, out _, anchorable, checkTool: false))
         {
-            _popup.PopupEntity(Loc.GetString("anchorable-occupied"), uid, args.User);
-            return;
+            if (failMessage != null)
+                _popup.PopupEntity(Loc.GetString(failMessage), uid, userUid);
+            return false;
         }
 
-        // Snap rotation to cardinal (multiple of 90)
-        var rot = Math.Round(xform.LocalRotation / (Math.PI / 2)) * (Math.PI / 2);
+        if (transform.Anchored || (anchorable.Flags & AnchorableFlags.Anchorable) == 0x0)
+            return false;
+
+        return CompleteAnchor(uid, userUid, userUid, anchorable, transform);
+    }
+
+    public bool TryUnanchor(EntityUid uid, EntityUid userUid)
+    {
+        AnchorableComponent? anchorable = null;
+        TransformComponent? transform = null;
+        if (!Resolve(uid, ref anchorable, ref transform))
+            return false;
+
+        if (!transform.Anchored)
+            return false;
+
+        if (!Valid(uid, userUid, userUid, false, out var failMessage, out _, anchorable, checkTool: false))
+        {
+            if (failMessage != null)
+                _popup.PopupEntity(Loc.GetString(failMessage), uid, userUid);
+            return false;
+        }
+
+        if (!transform.Anchored || (anchorable.Flags & AnchorableFlags.Unanchorable) == 0x0)
+            return false;
+
+        return CompleteUnanchor(uid, userUid, userUid, anchorable, transform);
+    }
+
+    private bool CompleteUnanchor(EntityUid uid, EntityUid userUid, EntityUid usingUid,
+        AnchorableComponent? anchorable = null, TransformComponent? transform = null)
+    {
+        if (!Resolve(uid, ref anchorable, ref transform))
+            return false;
+
+        RaiseLocalEvent(uid, new BeforeUnanchoredEvent(userUid, usingUid));
+        _transformSystem.Unanchor(uid, transform);
+        RaiseLocalEvent(uid, new UserUnanchoredEvent(userUid, usingUid));
+
+        _popup.PopupEntity(Loc.GetString("anchorable-unanchored"), uid, userUid);
+
+        _adminLogger.Add(
+            LogType.Unanchor,
+            LogImpact.Low,
+            $"{ToPrettyString(userUid):user} unanchored {ToPrettyString(uid):anchored} using {ToPrettyString(usingUid):using}"
+        );
+        return true;
+    }
+
+    private bool CompleteAnchor(EntityUid uid, EntityUid userUid, EntityUid usingUid,
+        AnchorableComponent? anchorable = null, TransformComponent? transform = null)
+    {
+        if (!Resolve(uid, ref anchorable, ref transform))
+            return false;
+
+        if (TryComp<PhysicsComponent>(uid, out var anchorBody) &&
+            !TileFree(transform.Coordinates, anchorBody))
+        {
+            _popup.PopupEntity(Loc.GetString("anchorable-occupied"), uid, userUid);
+            return false;
+        }
+
+        var rot = Math.Round(transform.LocalRotation / (Math.PI / 2)) * (Math.PI / 2);
 
         if (TryComp<PullableComponent>(uid, out var pullable) && pullable.Puller != null)
-        {
-            _pulling.TryStopPull(uid, pullable,
-                ignoreGrab: true); // Trauma
-        }
+            _pulling.TryStopPull(uid, pullable, ignoreGrab: true); // Trauma
 
-        // TODO: Anchoring snaps rn anyway!
-        if (component.Snap)
+        if (anchorable.Snap)
         {
-            var coordinates = xform.Coordinates.SnapToGrid(EntityManager);
+            var coordinates = transform.Coordinates.SnapToGrid(EntityManager);
 
             if (AnyUnstackable(uid, coordinates))
             {
-                _popup.PopupEntity(Loc.GetString("construction-step-condition-no-unstackable-in-tile"), uid, args.User);
-                return;
+                _popup.PopupEntity(Loc.GetString("construction-step-condition-no-unstackable-in-tile"), uid, userUid);
+                return false;
             }
 
-            _transformSystem.SetCoordinates(uid, xform, coordinates, rotation: rot);
+            _transformSystem.SetCoordinates(uid, transform, coordinates, rotation: rot);
         }
         else
         {
-            _transformSystem.SetLocalRotationNoLerp(uid, rot, xform);
+            _transformSystem.SetLocalRotationNoLerp(uid, rot, transform);
         }
 
-        RaiseLocalEvent(uid, new BeforeAnchoredEvent(args.User, used));
+        RaiseLocalEvent(uid, new BeforeAnchoredEvent(userUid, usingUid));
 
-        if (!xform.Anchored)
-            _transformSystem.AnchorEntity(uid, xform);
+        if (!transform.Anchored)
+            _transformSystem.AnchorEntity(uid, transform);
 
-        RaiseLocalEvent(uid, new UserAnchoredEvent(args.User, used));
+        RaiseLocalEvent(uid, new UserAnchoredEvent(userUid, usingUid));
 
-        _popup.PopupEntity(Loc.GetString("anchorable-anchored"), uid, args.User);
+        _popup.PopupEntity(Loc.GetString("anchorable-anchored"), uid, userUid);
 
         _adminLogger.Add(
             LogType.Anchor,
             LogImpact.Low,
-            $"{ToPrettyString(args.User):user} anchored {ToPrettyString(uid):anchored} using {ToPrettyString(used):using}"
+            $"{ToPrettyString(userUid):user} anchored {ToPrettyString(uid):anchored} using {ToPrettyString(usingUid):using}"
         );
+        return true;
     }
+    // Arcane-End
 
     /// <summary>
     ///     Tries to toggle the anchored status of this component's owner.
@@ -288,7 +352,8 @@ public sealed partial class AnchorableSystem : EntitySystem
         out string? failMessage,
         out float actualDelay,
         AnchorableComponent? anchorable = null,
-        ToolComponent? usingTool = null)
+        ToolComponent? usingTool = null,
+        bool checkTool = true) // Arcane-Edit: ToolComponent? usingTool = null) > ToolComponent? usingTool = null, bool checkTool = true)
     {
         actualDelay = 0f;
         failMessage = null;
@@ -296,7 +361,7 @@ public sealed partial class AnchorableSystem : EntitySystem
         if (!Resolve(uid, ref anchorable))
             return false;
 
-        if (!Resolve(usingUid, ref usingTool))
+        if (checkTool && !Resolve(usingUid, ref usingTool)) // Arcane-Edit: if (!Resolve(usingUid, ref usingTool)) > if (checkTool && !Resolve(usingUid, ref usingTool))
             return false;
 
         if (anchoring && (anchorable.Flags & AnchorableFlags.Anchorable) == 0x0)
