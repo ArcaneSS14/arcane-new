@@ -149,7 +149,7 @@
     - type: ExplosionEffect
     # Arcane-End
     - type: Explosive
-      explosionType: Transparent
+      explosionType: Default # Arcane-Edit: Transparent > Default
       totalIntensity: 5.0
       intensitySlope: 5
       maxIntensity: 4
