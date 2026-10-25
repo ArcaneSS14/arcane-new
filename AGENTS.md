@@ -23,7 +23,7 @@ Use instructions in this order:
 3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
 4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
 
-More specific instructions add detail to general instructions. Keep explicit task exclusions and access boundaries. Start with targeted discovery and the smallest meaningful verification; expand only for a concrete missing dependency, uncovered risk, or required gate, and explain why the additional scope is necessary. If two applicable instructions still conflict, report the conflict rather than silently overriding a boundary.
+More specific instructions add detail to general instructions. Keep explicit task exclusions and access boundaries. Start with targeted discovery and the smallest meaningful verification; expand only for a concrete missing dependency, uncovered risk, or required gate, and explain why the additional scope is necessary. For equal-priority instructions, apply the one specific to the requested paths and task. If equally applicable instructions remain incompatible, report the conflict and ask for a decision before the affected action; continue independent authorized work rather than silently overriding a boundary.
 
 Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
 
