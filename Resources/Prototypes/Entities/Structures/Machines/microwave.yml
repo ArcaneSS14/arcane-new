@@ -91,6 +91,9 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalGlassBreak
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 5

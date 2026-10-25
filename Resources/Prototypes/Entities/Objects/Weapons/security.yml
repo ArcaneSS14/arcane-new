@@ -85,6 +85,9 @@
     solution: battery
   - type: DrawableSolution
     solution: battery
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     intensitySlope: 1.5

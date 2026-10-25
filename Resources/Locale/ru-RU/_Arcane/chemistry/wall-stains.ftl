@@ -1,0 +1,6 @@
+wall-stain-cleaning-start = Вы начинаете изо всех сил оттирать пятно...
+wall-stain-cleaning-success = Вам удаётся отмыть пятно.
+wall-stain-pour-start = Вы начинаете осторожно выливать содержимое {$container} на стену...
+wall-stain-pour-success = Вы выливаете содержимое {$container} на стену.
+wall-stain-pour-full = Стена слишком пропиталась и больше не впитывает жидкость.
+wall-stain-pour-water-blocked = Простая вода ничего не даст при выливании на стену.
