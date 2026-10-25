@@ -7,7 +7,7 @@ namespace Content.Client.Outline;
 /// <summary>
 /// Resolves interaction outline colors from the player's archived customization settings.
 /// </summary>
-public sealed class InteractionOutlineColorSystem : EntitySystem
+public sealed partial class InteractionOutlineColorSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _configuration = default!;
 

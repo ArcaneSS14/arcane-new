@@ -9,7 +9,7 @@ namespace Content.Client.Radio;
 /// <summary>
 /// Resolves radio channel colors from the player's archived channel overrides.
 /// </summary>
-public sealed class RadioChannelColorSystem : EntitySystem
+public sealed partial class RadioChannelColorSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _configuration = default!;
 

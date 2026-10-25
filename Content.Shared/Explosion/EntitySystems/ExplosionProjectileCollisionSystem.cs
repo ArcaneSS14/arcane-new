@@ -5,9 +5,9 @@ using Robust.Shared.Physics.Events;
 
 namespace Content.Shared.Explosion.EntitySystems;
 
-public sealed class ExplosionProjectileCollisionSystem : EntitySystem
+public sealed partial class ExplosionProjectileCollisionSystem : EntitySystem
 {
-    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private INetManager _net = default!;
 
     public override void Initialize()
     {

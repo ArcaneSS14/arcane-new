@@ -8,7 +8,7 @@ namespace Content.Client.UserInterface.RichText;
 /// <summary>
 /// Applies a radio channel's default or player-selected color to localized radio markup.
 /// </summary>
-public sealed class RadioChannelColorTag : IMarkupTagHandler
+public sealed partial class RadioChannelColorTag : IMarkupTagHandler
 {
     [Dependency] private IEntitySystemManager _systems = default!;
 
