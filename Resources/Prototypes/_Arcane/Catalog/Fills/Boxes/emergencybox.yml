@@ -112,7 +112,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
 
 - type: entity
   parent: BoxSurvivalSlots
