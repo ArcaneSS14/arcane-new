@@ -1,0 +1,26 @@
+ui-options-tab-customization = Customization
+ui-options-runechat = Runechat-style speech
+ui-options-runechat-font-size = Runechat font size
+ui-options-runechat-whisper-font-size = Runechat whisper font size
+ui-options-runechat-font = Runechat font
+ui-options-runechat-whisper-font = Runechat whisper font
+ui-options-runechat-outline = Runechat text outline
+ui-options-runechat-random-colors = Random Runechat colors
+ui-options-runechat-color = Runechat text color
+ui-options-runechat-color-example = Example
+ui-options-runechat-typing-animation = Runechat type animation
+ui-options-runechat-typing-speed = Runechat typing speed
+ui-options-runechat-post-typing-lifetime = Runechat message lifetime after typing
+ui-options-runechat-font-grand9k = Grand9k Pixel Unicode
+ui-options-runechat-font-press-start-2p = Press Start 2P
+ui-options-runechat-font-tiny5 = Tiny5
+ui-options-radio-channel-colors-header = Radio channel colors
+ui-options-use-custom-radio-channel-colors = Use custom radio channel colors
+ui-options-radio-channel-colors-expand = Configure channel colors
+ui-options-radio-channel-colors-example = Example: {$channel}
+ui-options-interaction-outline-header = Interaction outline colors
+ui-options-use-custom-interaction-outline-color = Use custom interaction outline colors
+ui-options-interaction-outline-color-valid = Valid interaction color
+ui-options-interaction-outline-color-invalid = Invalid interaction color
+ui-options-interaction-outline-color-example = Example
+arcane-chat-radio-message-wrap-bolded-language = [radiochannel="{$channelId}"]{$channel} [bold]{$name}[/bold] {$verb}, "[/radiochannel][radiochannel="{$channelId}" lang="{$languageOverride}"][font="{$boldFontType}" size={$fontSize}]{$message}[/font][/radiochannel][radiochannel="{$channelId}"]"[/radiochannel]

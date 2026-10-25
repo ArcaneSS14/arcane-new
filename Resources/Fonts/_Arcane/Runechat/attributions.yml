@@ -1,0 +1,14 @@
+- files: ["Grand9kPixelUnicode.ttf"]
+  license: "CC-BY-SA-3.0"
+  license-url: "http://creativecommons.org/licenses/by-sa/3.0/"
+  copyright: "ctcg_"
+  source: "https://fontstruct.com/fontstructions/show/2619686"
+- files: ["PressStart2P-Regular.ttf"]
+  license: "SIL Open Font License 1.1"
+  license-url: "https://openfontlicense.org"
+  copyright: "Copyright 2012 The Press Start 2P Project Authors (cody@zone38.net), with Reserved Font Name \"Press Start 2P\"."
+- files: ["Tiny5-Regular.ttf"]
+  license: "SIL Open Font License 1.1"
+  license-url: "https://openfontlicense.org"
+  copyright: "Copyright 2022-2024 The Tiny5 Project Authors (https://github.com/Gissio/font_tiny5)"
+  source: "https://github.com/Gissio/font_tiny5"

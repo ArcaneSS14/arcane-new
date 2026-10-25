@@ -1,5 +1,6 @@
 using Robust.Client.UserInterface.RichText; // Trauma
 using System.Numerics;
+using Content.Arcane.Common.CCVar; // Arcane
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Speech;
@@ -79,6 +80,11 @@ namespace Content.Client.Chat.UI
 
         public static SpeechBubble CreateSpeechBubble(SpeechType type, ChatMessage message, EntityUid senderEntity)
         {
+            // Arcane-Start
+            if (IoCManager.Resolve<IConfigurationManager>().GetCVar(ArcaneCVars.ChatRunechat))
+                return new RunechatSpeechBubble(message, senderEntity, type);
+            // Arcane-End
+
             switch (type)
             {
                 case SpeechType.Emote:
@@ -198,6 +204,13 @@ namespace Content.Client.Chat.UI
                 _deathTime = _timing.RealTime + FadeTime;
             }
         }
+
+        // Arcane-Start
+        protected void SetLifetime(TimeSpan lifetime)
+        {
+            _deathTime = _timing.RealTime + lifetime;
+        }
+        // Arcane-End
 
         protected FormattedMessage FormatSpeech(string message, Color? fontColor = null)
         {
