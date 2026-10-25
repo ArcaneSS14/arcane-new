@@ -1,0 +1,14 @@
+- type: loadoutGroup
+  id: SurvivalMime
+  name: loadout-group-survival-mime
+  minLimit: 3
+  hidden: true
+  loadouts:
+  - LoadoutSpeciesPlasma
+  - EmergencyPlasma
+  - EmergencyVapor
+  - EmergencySilicon
+  - EmergencyNitrogen
+  - EmergencyOxygen
+  - LoadoutSpeciesVoxNitrogen
+  - EmergencyWaterVaporMime
