@@ -339,6 +339,15 @@
   id: OrganResomiHead
   components:
   - type: VisualOrganMarkings
+    markingData:
+      layers:
+      - Head
+      - Hair
+      - Face
+      - Snout
+      - SnoutCover
+      - HeadSide
+      - HeadTop
     hideableLayers:
     - enum.HumanoidVisualLayers.Hair
     - enum.HumanoidVisualLayers.Snout
