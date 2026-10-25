@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.xaml,Content.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs"
+applyTo: "**/*.xaml"
 ---
 
 <!--
@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Read the nearest scoped `AGENTS.md` and the XAML, BUI, EUI, appearance, audio, and prediction skills relevant to the change. Keep authority server-side, localize visible text, and clean up UI subscriptions and overlays.
+Review XAML against its code-behind and the applicable route from `AGENTS.md`. Check bindings, control names, localized visible text, and lifecycle cleanup only when the changed UI contract makes each relevant.

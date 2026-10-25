@@ -6,6 +6,13 @@
   defaultSkinTone: "#34a223"
   dollPrototype: AppearanceReptilian
   skinColoration: Hues
+  # Arcane-Start
+  averageHeight: 200
+  averageWeight: 100
+  defaultScale: 1.2
+  minScale: 1
+  maxScale: 1.3
+  # Arcane-End
   maleFirstNames: NamesReptilianMale
   femaleFirstNames: NamesReptilianFemale
   naming: FirstDashFirst

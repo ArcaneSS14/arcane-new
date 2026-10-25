@@ -16,6 +16,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using System.Linq;
+using Content.Arcane.Common.Medical.Wounds; // Arcane
 
 namespace Content.Shared.Medical.Healing;
 
@@ -196,7 +197,7 @@ public sealed partial class HealingSystem
             woundablesQueue.Enqueue(targetedWoundable);
             foreach (var category in _partHealingOrder)
             {
-                if (_body.GetOrgan(ent, category) is {} organ)
+                if (_body.GetOrgan(ent, category) is {} organ && organ != targetedWoundable) // Arcane-Edit: Queue every organ > skip the already queued target.
                     woundablesQueue.Enqueue(organ);
             }
             while (woundablesQueue.Count > 0 && healingLeft.GetTotal() < 0.0)
@@ -217,7 +218,12 @@ public sealed partial class HealingSystem
                     continue;
                 }
 
-                var damageChanged = _damageable.ChangeDamage(targetedWoundable, healingLeft, true, origin: args.User, ignoreBlockers: healedBleed || healing.BloodlossModifier == 0); // GOOBEDIT
+                // Arcane-Edit-Start: Charge the item for healing either damage representation.
+                var treatment = new MedicalHealingEvent(healingLeft, args.User, healedBleed || healing.BloodlossModifier == 0);
+                RaiseLocalEvent(targetedWoundable, ref treatment);
+                var damageChanged = treatment.Consumed ?? _damageable.ChangeDamage(targetedWoundable, healingLeft, true,
+                    origin: args.User, ignoreBlockers: healedBleed || healing.BloodlossModifier == 0);
+                // Arcane-Edit-End
                 healedTotal -= damageChanged;
                 healingLeft -= damageChanged;
             }
@@ -266,7 +272,7 @@ public sealed partial class HealingSystem
         _audio.PlayPredicted(healing.HealingEndSound, ent, ent, AudioParams.Default.WithVariation(0.125f).WithVolume(1f)); // Goob edit
 
         // Logic to determine whether or not to repeat the healing action
-        args.Repeat = IsAnythingToHeal(args.User, ent, (args.Used.Value, healing)); // GOOBEDIT
+        args.Repeat = !dontRepeat && IsAnythingToHeal(args.User, ent, (args.Used.Value, healing)); // Arcane-Edit: Repeat while wounds remain > stop when the last dose is consumed.
         args.Handled = true;
 
         if (args.Repeat || dontRepeat)

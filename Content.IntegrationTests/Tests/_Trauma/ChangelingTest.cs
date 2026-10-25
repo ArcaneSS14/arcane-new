@@ -12,6 +12,10 @@ using Content.Shared.StatusEffectNew;
 using Content.Shared.Temperature.Components;
 using Content.Trauma.Server.Antag;
 using Content.Trauma.Shared.Antag;
+// Arcane-Start
+using Content.Shared.Antag;
+using Content.Shared.Mind;
+// Arcane-End
 
 namespace Content.IntegrationTests.Tests._Trauma;
 
@@ -86,5 +90,17 @@ public sealed partial class ChangelingTest : GameTest
 
         total = _damage.GetTotalDamage(mob).Float();
         Assert.That(total, Is.LessThan(5), "Fleshmend should have healed the ling");
+
+        // Arcane-Start
+        await Server.WaitAssertion(() =>
+        {
+            var mind = SEntMan.System<SharedMindSystem>();
+            mind.WipeMind(mind.GetMind(mob));
+            var antag = SEntMan.System<AntagSelectionSystem>();
+            SDel(antag.FindRule(SProtoMan.Index(Smite).RuleComp)?.Owner);
+            Assert.That(antag.IsAssignedExclusiveAntag(player, EntityUid.Invalid),
+                Is.False, "The test must not leave an exclusive antagonist assignment in the shared pair.");
+        });
+        // Arcane-End
     }
 }

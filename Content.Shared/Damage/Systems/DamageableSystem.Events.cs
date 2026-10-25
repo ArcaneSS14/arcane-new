@@ -251,6 +251,8 @@ public sealed partial class DamageableSystem
             damageDone.DamageDict[type] = newValue - oldValue;
         }
 
+        damageDone.Flags = args.Damage.Flags; // Arcane: Preserve damage flags in applied-damage notifications.
+
         if (!damageDone.Empty)
             OnEntityDamageChanged((ent, damageable), damageDone, args.InterruptsDoAfters, args.Origin);
 

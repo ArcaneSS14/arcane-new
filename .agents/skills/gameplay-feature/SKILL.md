@@ -3,23 +3,40 @@ name: gameplay-feature
 description: Implement complete SS14 features across ownership, ECS, networking, resources, localization, UI, and tests.
 ---
 
-Use this as the routing skill for multi-layer work.
+# gameplay-feature
 
-Before editing, map repository ownership, owner-local paths, inherited files, edit-marker requirements, assembly layers, authority, prototypes, resources, English locale files, UI lifecycle, persistence, and tests.
+## Когда применять
 
-A feature is incomplete when code exists but required English localization, prototypes, assets, UI refresh, validation, or owner tests are missing. Russian localization is required only when explicitly requested.
+Use as routing guidance for a gameplay feature spanning ownership, ECS, authority, networking, UI, resources, localization, or tests.
 
-## Implementation order
+## До изменения
 
-1. Verify repository identity, APIs, ownership, and extension points.
-2. Define data and contracts in the lowest valid assembly.
-3. Implement server authority and validation.
-4. Implement client presentation and prediction-safe feedback.
-5. Add prototypes and resources in the owner root.
-6. Add English localization. Add Russian only when explicitly requested, preserving the existing structure and order.
-7. Add regression coverage in existing owner tests.
-8. Run commands for every changed surface.
+Map owner-local/inherited paths, marker boundary, assembly/authority, public extension points, prototypes/resources, English locale, UI lifecycle, persistence, and existing owner tests.
 
-Mark inherited edits with the current repository marker. Do not add redundant markers in owner-local module or underscore paths.
+## Правила и границы
 
-Choose a build and focused test for each changed behavior, using the owning projects. Use targeted resource validation for changed prototypes and assets. Follow root `AGENTS.md`; do not restore dependencies or run full root and module suites by default. Run broader CI-equivalent checks only when requested or needed to validate a specific release or CI requirement.
+- A feature is incomplete when changed behavior lacks required owner contracts: server validation, prototypes/assets/UI refresh where applicable, English localization, or existing owner coverage.
+- Define data/contracts in the lowest valid layer, implement server authority before presentation, and keep client feedback prediction-safe. Add Russian only on request.
+- Use owner roots and existing infrastructure. Mark inherited edits only with the current marker; do not mark owner-local module/underscore paths.
+- Do not invent API/prototype/resource IDs, bypass access, use reflection, alter engine, or create parallel test/build/UI infrastructure when no supported extension point exists; stop and report the boundary.
+
+### Minimal examples
+
+Correct: complete one vertical slice through existing authority and presentation owners. Prohibited: create a parallel feature framework. Stop: report an unavailable extension point or owner.
+
+## Выбор подхода
+
+Implement the smallest complete vertical slice through existing owners: authoritative system, allowed Shared contract, client presentation, then only affected prototype/resource/locale/test surfaces.
+
+## Антипаттерны
+
+- Do not add code without its needed data/localization/UI/validation owner surfaces.
+- Do not broaden into unrelated feature families, automatic Russian, restore, or full suites.
+
+## Проверка
+
+Choose an affected project/focused owner test and targeted resource validation only for changed surfaces. Report commands actually run; broader CI-equivalent checks require a concrete release/CI risk or request.
+
+## References
+
+- [Feature checklist](references/feature-checklist.md): Read this when planning or reviewing a feature that spans authority, networking, resources, UI, or tests.

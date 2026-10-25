@@ -1,5 +1,5 @@
 ---
-applyTo: "Content.Client/**/*.cs,Content.*.Client/**/*.cs,Modules/*/Content.*.Client*/**/*.cs,**/*.xaml"
+applyTo: "Content.Client/**/*.cs,Content.*.Client/**/*.cs"
 ---
 
 <!--
@@ -8,4 +8,4 @@ SPDX-FileCopyrightText: 2026 PuroSlavKing <103608145+PuroSlavKing@users.noreply.
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-Client code owns presentation, visuals, controls, and UI. Do not move protected decisions client-side. Review UI lifetime and predicted duplicate effects.
+Review client C# against the applicable `AGENTS.md` route. Presentation belongs on the client; protected decisions stay server-authoritative. Request evidence for changed lifetime or prediction behavior only when that behavior is in scope.

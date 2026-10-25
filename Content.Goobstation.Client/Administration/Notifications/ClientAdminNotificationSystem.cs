@@ -7,6 +7,7 @@ using Robust.Client.Player;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Goobstation.Client.Administration.Notifications;
 
@@ -27,6 +28,9 @@ public sealed partial class ClientAdminNotificationsSystem : SharedAdminNotifica
 
     public void OnAdminNotification(AdminNotificationEvent ev)
     {
-        _audio.PlayGlobal(ev.Sound, _player.LocalSession!, new AudioParams().WithVolume(_volume));
+        // Arcane-Edit-Start: Keep administrative notifications audible during hearing effects.
+        EntityManager.System<ContentAudioSystem>().MarkInterfaceAudio(
+            _audio.PlayGlobal(ev.Sound, _player.LocalSession!, new AudioParams().WithVolume(_volume)));
+        // Arcane-Edit-End
     }
 }

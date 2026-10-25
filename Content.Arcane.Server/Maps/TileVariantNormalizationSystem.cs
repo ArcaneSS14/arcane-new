@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Linq;
-using Content.Arcane.Shared.CCVar;
+using Content.Arcane.Common.CCVar;
 using Content.Shared.Maps;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;

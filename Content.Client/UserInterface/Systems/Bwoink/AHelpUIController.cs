@@ -27,6 +27,7 @@ using Robust.Shared.Input.Binding;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Bwoink;
 
@@ -140,7 +141,10 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
         if (message.PlaySound && localPlayer.UserId != message.TrueSender)
         {
             if (_aHelpSound != null && (_bwoinkSoundEnabled || !_adminManager.IsActive()))
-                _audio.PlayGlobal(_aHelpSound, Filter.Local(), false);
+                // Arcane-Edit-Start: Keep administrator messages audible during hearing effects.
+                EntityManager.System<ContentAudioSystem>().MarkInterfaceAudio(
+                    _audio.PlayGlobal(_aHelpSound, Filter.Local(), false));
+                // Arcane-Edit-End
             _clyde.RequestWindowAttention();
         }
 

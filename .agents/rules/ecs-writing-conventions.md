@@ -1,5 +1,5 @@
 
-How entity systems, components, events, and prototypes are written here, and the modern form of that style under `LangVersion` 14.
+How entity systems, components, events, and prototypes are written here, including the current engine-supported generator patterns.
 
 For symbol access and assembly boundaries, see `architecture-and-ownership.md` and `coding-and-api-design.md`. This file covers how ECS code reads.
 
@@ -23,9 +23,11 @@ public sealed partial class FooSystem : EntitySystem
 
 - `namespace` is `Content.Shared/Server/Client.<Domain>`, never shortened.
 - `sealed partial`, one system per concern.
-- Dependencies are `[Dependency] private` fields, not `readonly` in current code. Do not call `IoCManager.Resolve<T>()` inside a system; it hides the dependency and defeats ordering. This is the dominant pattern: `IGameTiming`, `SharedPopupSystem`, and `SharedAudioSystem` appear as dependencies in 709, 483, and 446 declarations.
+- A type declaring `[Dependency]` fields must be `partial`; every containing type must also be `partial`. Injected fields must not be `readonly`. The engine analyzer reports violations, so do not preserve an older `readonly` form merely because it appears nearby.
+- Prefer `[Dependency] private` fields in systems rather than repeated `IoCManager.Resolve<T>()` calls. `EntityQuery<T>` may be injected through `[Dependency]` when a cached query is appropriate; do not also assign it through `GetEntityQuery<T>()` in `Initialize`.
 - Match the field name to what the surrounding files use. `_timing`, `_popup`, `_audio`, and `_transform` are the established names. Full table of frequent dependencies, field-name variants, and common `using` namespaces: `.agents/skills/csharp-style/references/dependency-injection.md`.
-- `SubscribeLocalEvent` in `Initialize` only. Order matters when two handlers must see consistent state, so use `after:` and `before:` rather than relying on registration accident.
+- For a fixed local-event handler whose signature is supported by the generator, `[SubscribeLocalEvent]` is preferred to a matching manual registration in `Initialize`; retain `before:`/`after:` ordering in the attribute. Do not add both forms.
+- Keep explicit `SubscribeLocalEvent` registration when the subscription is conditional, dynamically managed, or otherwise has a lifecycle/order contract the generated subscription cannot preserve. Do not mechanically rewrite existing explicit subscriptions.
 - `Initialize` calls `base.Initialize()` first.
 - Handlers are `private void On<Thing><Event>`.
 - Systems hold no state. Per-entity state belongs in a component.
@@ -187,7 +189,7 @@ Do not add extension methods on `EntityUid`, components, or systems. The existin
 
 ## C# language features in ECS code
 
-Use the C# 14 guidance in `.agents/skills/csharp-style/SKILL.md` for language-specific behavior, including `field`-backed properties, extension blocks, and span overload resolution. In ECS code, keep `[DataField]` and other attribute-driven members in the shape required by their serializers and framework APIs; newer property syntax does not make a field-based contract interchangeable with a property. Do not modernize unrelated ECS code as a side effect.
+Use `.agents/skills/csharp-style/SKILL.md` for current supported language features. In ECS code, keep `[DataField]` and other attribute-driven members in the shape required by their serializers and framework APIs; newer property syntax does not make a field-based contract interchangeable with a property. Do not modernize unrelated ECS code as a side effect.
 
 ## Anchoring
 

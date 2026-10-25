@@ -216,6 +216,9 @@ namespace Content.Server.Database
             profile.FlavorText = humanoid.FlavorText;
             profile.Species = humanoid.Species;
             profile.Age = humanoid.Age;
+            // Arcane-Start: Save character scale settings
+            profile.Scale = humanoid.Scale;
+            // Arcane-End
             profile.Sex = humanoid.Sex.ToString();
             profile.Voice = humanoid.Voice.ToString();
             profile.Gender = humanoid.Gender.ToString();

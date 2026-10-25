@@ -25,6 +25,10 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+// Arcane-Start
+using Content.Arcane.Common.Medical.HealthAnalyzer;
+using Content.Shared.Damage;
+// Arcane-End
 
 namespace Content.Client.HealthAnalyzer.UI;
 
@@ -132,10 +136,14 @@ public sealed partial class HealthAnalyzerControl
                             _entityManager.TryGetComponent<BloodstreamComponent>(target, out var bloodstream) &&
                             state.BloodLevel < bloodstream.BloodlossThreshold;
 
+        // Arcane-Start: Collect diagnostics for the patient before selecting a display mode.
+        var populate = new HealthAnalyzerPopulateEvent(_entityManager.GetEntity(state.Part), _mode == HealthAnalyzerMode.Body);
+        _entityManager.EventBus.RaiseLocalEvent(target, ref populate);
+        // Arcane-End
         switch (_mode)
         {
             case HealthAnalyzerMode.Body:
-                PopulateBody(target, ref state, bloodLevelLow);
+                PopulateBody(target, ref state, bloodLevelLow, populate.DiagnosticDamage); // Arcane-Edit
                 break;
             case HealthAnalyzerMode.Organs:
                 PopulateOrgans(target);
@@ -144,6 +152,17 @@ public sealed partial class HealthAnalyzerControl
                 PopulateChemicals(target);
                 break;
         }
+        // Arcane-Start
+        BpmLabel.Text = populate.Pulse ?? Loc.GetString("health-analyzer-window-entity-unknown-value-text");
+        foreach (var condition in populate.Conditions)
+        {
+            ConditionsListContainer.AddChild(new RichTextLabel
+            {
+                Text = condition,
+                Margin = new Thickness(0, 4),
+            });
+        }
+        // Arcane-End
 
         if (ConditionsListContainer.ChildCount == 0)
         {
@@ -157,8 +176,12 @@ public sealed partial class HealthAnalyzerControl
 
     #region Scan state populate methods
 
-    public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false)
+    // Arcane-Edit-Start
+    public void PopulateBody(EntityUid target, ref HealthAnalyzerUiState state, bool bloodLevelLow = false,
+        DamageSpecifier? diagnosticDamage = null)
+    // Arcane-Edit-End
     {
+        var patient = target; // Arcane: Keep patient conditions separate from the selected part's damage.
         var selectedPart = _entityManager.GetEntity(state.Part);
         if (selectedPart != null)
             target = selectedPart.Value;
@@ -171,14 +194,14 @@ public sealed partial class HealthAnalyzerControl
         PartNameLabel.Visible = isPart;
         DamageLabelHeading.Visible = true;
         DamageLabel.Visible = true;
-        var damage = _damageable.GetAllDamage((target, damageable));
+        var damage = diagnosticDamage ?? _damageable.GetAllDamage((target, damageable)); // Arcane-Edit: Include wounds without hiding ordinary damage.
         DamageLabel.Text = damage.GetTotal().ToString();
 
-        var identity = Identity.Name(target, _entityManager);
+        var identity = Identity.Name(patient, _entityManager); // Arcane-Edit
         if (isPart)
-            PartNameLabel.Text = identity;
+            PartNameLabel.Text = Identity.Name(target, _entityManager); // Arcane-Edit
 
-        var damageSortedGroups = _damageable.GetDamagePerGroup((target, damageable))
+        var damageSortedGroups = damage.GetDamagePerGroup(_prototypes) // Arcane-Edit: Group the displayed damage consistently.
             .OrderByDescending(damage => damage.Value)
             .ToDictionary(x => x.Key, x => x.Value);
 
@@ -186,7 +209,7 @@ public sealed partial class HealthAnalyzerControl
 
         DrawDiagnosticGroups(damageSortedGroups, damagePerType);
 
-        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(target, out var carrier))
+        if (_entityManager.TryGetComponent<DiseaseCarrierComponent>(patient, out var carrier)) // Arcane-Edit
         {
             DrawDiseases(carrier.Diseases.ContainedEntities);
         }
@@ -219,7 +242,7 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        foreach (var part in _body.GetOrgans<WoundableComponent>(target))
+        foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane-Edit
         {
             if (isPart && part.Owner != selectedPart)
                 continue;
@@ -252,6 +275,7 @@ public sealed partial class HealthAnalyzerControl
         }
     }
 
+        // Arcane-Edit-Start: Empty conditions are added after every mode and extension has populated the list.
     public void PopulateOrgans(EntityUid body)
     {
         ReturnButton.Visible = false;
@@ -284,14 +308,6 @@ public sealed partial class HealthAnalyzerControl
             });
         }
 
-        if (ConditionsListContainer.ChildCount == 0)
-        {
-            ConditionsListContainer.AddChild(new RichTextLabel
-            {
-                Text = Loc.GetString("condition-none"),
-                Margin = new Thickness(0, 4),
-            });
-        }
     }
 
     public void PopulateChemicals(EntityUid body)
@@ -320,12 +336,8 @@ public sealed partial class HealthAnalyzerControl
 
         DrawSolutionDiagnostics(solutions);
 
-        ConditionsListContainer.AddChild(new RichTextLabel
-        {
-            Text = Loc.GetString("condition-none"),
-            Margin = new Thickness(0, 4),
-        });
     }
+    // Arcane-Edit-End
 
     #endregion
 

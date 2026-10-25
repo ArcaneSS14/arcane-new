@@ -3,26 +3,53 @@ name: audio
 description: Add data-driven audio with correct prediction, audience, resources, attribution, and verification.
 ---
 
-# Audio
+# audio
 
-Classify the sound before selecting an API: predicted local feedback, PVS world sound, moving entity source, static coordinate source, global notification, client-only UI sound, ambient loop, or music.
+## Когда применять
 
-## Spatial sources and occlusion
+Use for predicted local feedback, PVS world sound, entity-attached or coordinate sound, global notifications, UI-only sound, ambient loops, or music.
 
-- Decide whether the source follows an entity or stays at a map coordinate. For entity-attached audio, account for entity movement, deletion, parent/container changes, and the lifetime of any returned loop stream. For static audio, verify the intended map/grid coordinates and what happens if that grid moves or is removed.
-- Separate audience delivery from audibility: PVS or an explicit player filter selects recipients; spatial distance and occlusion determine what a recipient hears. Check both when choosing playback APIs and range parameters.
-- For spatial audio, inspect the listener-to-source occlusion path when walls or other obstacles matter. In this repository, `SharedContentAudioSystem` configures the engine's occlusion ray mask to `CollisionGroup.Impassable`; the client raycasts against that mask and updates audio occlusion. Walls and other physics entities block/attenuate sound only when their collision layer/collider matches that mask. Do not assume every entity, visual wall, or interaction obstruction affects audio.
-- Check doors and other dynamic occluders in both relevant states when a feature changes their collision behavior. Review the affected collision layers, collider lifecycle, audio flags, and any content occlusion override. `AudioFlags.NoOcclusion` intentionally bypasses the default raycast; do not set it just to hide an unexplained attenuation issue.
-- Global notifications and client-only UI sounds have no world source by default. Do not add entity queries or wall raycasts to them unless the requested behavior is spatial.
+## До изменения
 
-Prefer component fields, prototypes, `SoundSpecifier`, and sound collections over hardcoded paths. Keep client-only playback out of Shared dependencies.
+Classify the sound and identify its audience separately from its audible spatial behavior. Decide whether its source follows an entity or remains at a static coordinate, then trace transform, parent/container, map-transfer, cancellation, and deletion lifetime. Locate the existing `SoundSpecifier`, prototype field, or sound collection before adding a resource path.
 
-Predicted actions must not play the same sound locally and again on authoritative confirmation. Verify source deletion, cancellation, range, audience, occlusion, repetition, and concurrent playback when relevant to the sound type.
+## Правила и границы
 
-Add `en-US` when the audio feature introduces player-visible captions, UI labels, announcements, examine text, or settings. Add `ru-RU` only when explicitly requested.
+- PVS or an explicit player filter selects recipients; range, spatial position, and occlusion determine what a recipient hears. Verify both rather than treating audience delivery as audibility.
+- Choose an entity source when sound must follow that entity's transform and lifetime. Choose a coordinate source only when the coordinate's map/grid lifetime is correct, including grid movement or removal.
+- For spatial sound, verify range, PVS recipients, player filter, occlusion, and relevant collision layers. `AudioFlags.NoOcclusion` deliberately bypasses default occlusion and is appropriate only when that behavior is required, not to hide an unexplained attenuation issue.
+- `SharedContentAudioSystem` configures the engine occlusion ray mask as `CollisionGroup.Impassable`; the client raycasts against that mask when updating audio occlusion. A wall or physics entity blocks/attenuates sound only when its collider/layer participates in that mask. Check dynamic occluders, such as doors, in every affected collision state.
+- Prefer component fields, prototypes, `SoundSpecifier`, and existing sound collections over hardcoded paths. Keep client-only playback out of Shared dependencies.
+- A predicted action must not play the same sound again on authoritative confirmation. For every loop, define the stream owner and stop/clean it up on cancellation, deletion, source removal, and map transfer.
+- Preserve source attribution and asset metadata; do not edit SPDX. Add localization only for genuinely player-visible captions, UI, or settings, with `ru-RU` only on explicit request.
 
-Preserve source attribution and asset-specific license metadata without editing SPDX.
+### Source ledger
 
-## Verification commands
+Claim: `AudioFlags.NoOcclusion` bypasses default occlusion.
+Source: Current branch audio call sites and pinned RobustToolbox declaration.
+Source type: Arcane / RobustToolbox
+Checked against branch: `66cf1fb0a7`
+Volatility: version-bound
+Recheck trigger: Changing audio flags, engine revision, or spatial-audio behavior.
 
-Follow root `AGENTS.md` for verification scope. Build the affected project when code changes; validate only changed audio resources with an available targeted validator. Run a focused integration test when predicted or networked playback behavior is in scope and verification is requested. Do not restore or run full builds by default.
+### Minimal examples
+
+Correct: use the owner SoundSpecifier and choose delivery separately from spatial audibility. Prohibited: play predicted and confirmed audio twice. Stop: report when source lifetime or spatial owner is unknown.
+
+## Выбор подхода
+
+Use predicted local audio for immediate correctable feedback, PVS world delivery for audible in-world events, an entity-attached source for moving lifetime-bound sound, and a static coordinate source for a stable location. Use global notification or UI-only audio only when it intentionally has no world source; do not add entity queries or wall raycasts to those categories without a spatial requirement.
+
+## Антипаттерны
+
+- Do not hardcode a path when an existing specifier, prototype field, or collection is the owner.
+- Do not duplicate predicted and authoritative playback, leak a loop after its owner ends, or apply `NoOcclusion` without the required behavior.
+- Do not assume every visual wall or interaction obstruction occludes audio; verify the relevant collision/occlusion path.
+
+## Проверка
+
+Check source deletion, cancellation, source removal, map transfer, range, audience, occlusion, repetition, and concurrent playback as relevant. Verify player-visible captions/UI/settings only when they are in scope. Follow root `AGENTS.md`: use an affected-project build, targeted resource validator, or focused integration coverage only when code/resources or the requested behavior requires it; do not restore or run full builds by default.
+
+## References
+
+No reference is required for ordinary audio routing; use the owner-local implementation and prototype fields when selecting playback, audience, and loop lifetime.

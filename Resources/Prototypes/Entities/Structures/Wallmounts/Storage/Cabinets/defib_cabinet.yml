@@ -15,6 +15,8 @@
     # Arcane-Start
     - state: light
       shader: unshaded
+      map: ["enum.PowerDeviceVisualLayers.Powered"]
+      visible: false
     # Arcane-End
     - state: fill
       map: ["enum.ItemCabinetVisuals.Layer"]
@@ -42,6 +44,29 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalGlassBreak
+  # Arcane-Start
+  - type: Charger
+    slotId: ItemCabinet
+    chargeRate: 5
+    passiveDraw: 1
+  - type: ApcPowerReceiver
+    powerLoad: 1
+  - type: ExtensionCableReceiver
+  - type: GenericVisualizer
+    visuals:
+      enum.ItemCabinetVisuals.ContainsItem:
+        enum.ItemCabinetVisuals.Layer:
+          True: { visible: true }
+          False: { visible: false }
+      enum.OpenableVisuals.Opened:
+        enum.OpenableVisuals.Layer:
+          True: { state: open }
+          False: { state: closed }
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+  # Arcane-End
 
 - type: entity
   parent: DefibrillatorCabinet

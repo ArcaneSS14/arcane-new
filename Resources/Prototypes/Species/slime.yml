@@ -6,6 +6,7 @@
   defaultSkinTone: "#b8b8b8"
   dollPrototype: AppearanceSlimePerson
   skinColoration: Hues
+  averageWeight: 40 # Arcane
   knowledge: Slimeperson # Trauma
   defaultSoundsBySex:
   - MaleSlime

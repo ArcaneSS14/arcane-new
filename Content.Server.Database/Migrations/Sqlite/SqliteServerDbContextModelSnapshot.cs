@@ -1183,6 +1183,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("INTEGER")
                         .HasColumnName("age");
 
+                    // Arcane-Start: Character scale preference
+                    b.Property<float>("Scale")
+                        .HasColumnType("REAL")
+                        .HasColumnName("scale");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")

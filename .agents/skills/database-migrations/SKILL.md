@@ -3,30 +3,51 @@ name: database-migrations
 description: Change persistent models and SQLite/PostgreSQL migrations without breaking existing servers.
 ---
 
-Persistence is server-only compatibility work.
+# database-migrations
 
-## Workflow
+## Когда применять
 
-1. Find the owning database project and both provider conventions.
-2. Update the model deliberately.
-3. Consider existing rows, nullability, defaults, indexes, uniqueness, and backfills.
-4. Generate matching SQLite and PostgreSQL migrations.
-5. Review generated operations and snapshots.
-6. Test upgrading an existing database, not only creating a new one.
-7. Keep database I/O off frequent gameplay paths.
+Use for persistent models, SQLite/PostgreSQL schema, migrations, provider compatibility, backfills, or upgrade/rollback behavior.
 
-Do not use database entities as gameplay components or shared transport types. Avoid destructive schema changes unless data loss is explicitly accepted.
+## До изменения
 
-Report when migrations were generated but not exercised against both providers.
+Find the database owner, current provider conventions/package versions, model consumers, existing-row shape, nullability/default/index/unique/backfill needs, and rollback/data-loss contract.
 
-## Provider versions in effect
+## Правила и границы
 
-Central package versions live in `Directory.Packages.props`; do not assume an older major version from prior work. Both providers are in use, and their majors change behavior independently.
+- Persistence is server-only compatibility work; database entities are not gameplay components or Shared transport types.
+- Generate/review matching SQLite and PostgreSQL migrations and snapshots. Fresh creation is insufficient: evaluate upgrade from existing schema and `Up`/`Down` separately.
+- Consider existing rows, nullability, defaults, index/uniqueness, backfills, destructive change, rollback, atomicity, corruption, and provider-specific behavior. Report migrations not exercised against both providers.
+- Confirm current EF/provider versions in `Directory.Packages.props`; do not assume old major behavior or build hand-made provider assumptions.
 
-- EF Core and `Microsoft.EntityFrameworkCore.Sqlite.Core` are on 10.x, `Npgsql.EntityFrameworkCore.PostgreSQL` on its own matching major. Confirm the current numbers before writing provider-specific code.
-- EF Core 10 changes several defaults that can silently alter a migration: parameterized collections now use multiple scalar parameters instead of a JSON array, complex-type column names are uniquified, nested complex properties use a full path in the column name, and SQL parameter names are simplified.
-- EF Core 10 also changes `ExecuteUpdateAsync` to accept a regular lambda, which breaks hand-built expression trees.
-- Microsoft.Data.Sqlite 10 assumes UTC: `GetDateTimeOffset` on a value without an offset treats it as UTC, `GetDateTime` with an offset returns UTC, and writing a `DateTimeOffset` into a `REAL` column converts to UTC first.
-- EF tools now require `--framework` for multi-targeted projects.
+### Source ledger
 
-Because existing servers keep their old schema, a migration that is correct for a fresh database can still fail on upgrade. Review the generated `Up`/`Down` operations and the snapshot, and confirm SQLite and PostgreSQL outputs separately.
+Claim: Provider/version behavior must be read from current central package management and both SQLite/PostgreSQL migration conventions, not inferred from an older EF Core major.
+Source: `Directory.Packages.props`, current database projects, and generated migration conventions.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: version-bound
+Recheck trigger: Changing EF Core/provider package versions, target framework, or migration tooling.
+
+- Stop if no supported persistence extension point exists: do not use reflection, alter engine, or create parallel persistence/test infrastructure.
+
+### Minimal examples
+
+Correct: review SQLite and PostgreSQL upgrade migrations separately. Prohibited: accept fresh database creation as upgrade proof. Stop: report unavailable provider migration validation.
+
+## Выбор подхода
+
+Prefer backward-compatible additive migration and explicit backfill/default. Use destructive migration only with explicit accepted data loss and a documented rollback/restore plan.
+
+## Антипаттерны
+
+- Do not treat a fresh database as upgrade proof, silently lose data, or block gameplay hot paths on database I/O.
+- Do not invent provider command/API behavior.
+
+## Проверка
+
+When migration/model changes are made, inspect generated operations/snapshot and exercise existing upgrade coverage for each affected provider if available; report unavailable provider checks rather than claiming them.
+
+## References
+
+- [Migration workflow](references/migration-workflow.md): Read this when changing a persistent model, schema, relationship, index, or migration.

@@ -6,6 +6,7 @@
   defaultSkinTone: "#5a3f2d"
   dollPrototype: AppearanceVulpkanin
   skinColoration: VulpkaninColors
+  averageWeight: 75 # Arcane
   maleFirstNames: names_vulpkanin_male
   femaleFirstNames: names_vulpkanin_female
   lastNames: names_vulpkanin_last

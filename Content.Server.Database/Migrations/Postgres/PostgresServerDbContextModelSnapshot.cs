@@ -1254,6 +1254,12 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("integer")
                         .HasColumnName("age");
 
+                    // Arcane-Start: Character scale preference
+                    b.Property<float>("Scale")
+                        .HasColumnType("real")
+                        .HasColumnName("scale");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")

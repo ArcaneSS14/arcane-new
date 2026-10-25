@@ -190,6 +190,10 @@
       types:
         Asphyxiation: -1.0
     maxSaturation: 15
+  # Arcane-Start
+  - type: HeartCirculation
+    requiresHeart: false
+  # Arcane-End
 
 - type: entity
   parent: OrganBaseOrganic

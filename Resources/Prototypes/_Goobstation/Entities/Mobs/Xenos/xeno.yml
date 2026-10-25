@@ -144,6 +144,10 @@
     understands:
     - Xeno
   - type: Fauna
+  # Arcane-Start
+  - type: Sprinter
+    canSprint: false
+  # Arcane-End
 
 - type: entity
   name: ancient drone

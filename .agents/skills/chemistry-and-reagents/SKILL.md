@@ -3,28 +3,41 @@ name: chemistry-and-reagents
 description: Modify reagents, solutions, reactions, transfers, metabolism, effects, containers, and chemistry UI safely.
 ---
 
-Chemistry is data-driven and frequently crosses prototypes, server simulation, Shared solution state, UI, and localized effects.
+# chemistry-and-reagents
 
-## Reagents and reactions
+## Когда применять
 
-Use existing reagent and reaction prototype types. Verify IDs, quantities, catalysts, temperature or condition requirements, products, and side effects. Keep balance data in prototypes rather than hardcoded branches where possible.
+Use for reagent/reaction prototypes, solution transfer, metabolism, chemistry effects, containers, or chemistry UI.
 
-## Solutions and transfer
+## До изменения
 
-Use solution-system APIs for adding, removing, splitting, transferring, and querying reagents. Do not mutate solution collections directly. Define behavior for insufficient volume, capacity, spills, deleted containers, and concurrent transfers.
+Find the existing reagent/reaction/solution owner, prototype IDs, quantities, catalysts, conditions, products, effects, UI path, and targeted test/validation owner.
 
-## Authority and prediction
+## Правила и границы
 
-The server owns protected reaction outcomes, metabolism, damage, and inventory changes. Client UI may preview known data but must not choose authoritative results.
+- Use existing reagent/reaction prototype types and solution-system APIs for add/remove/split/transfer/query; never mutate solution collections directly.
+- Verify IDs, quantities, catalysts, temperature/conditions, products, side effects, insufficient volume, capacity, spill, deletion, and concurrent transfer semantics. Keep balance author-configurable in prototypes.
+- Server owns reaction outcomes, metabolism, damage, and inventory changes; UI previews known data but does not choose results. Keep Shared solution state and presentation minimal.
+- Define effect conditions, scaling, interval, cap, stacking, and cleanup. Avoid per-tick allocations or repeated costly lookup in metabolism.
+- Stop at a missing supported owner API: do not use reflection, direct collection mutation, engine edits, or a parallel solution system.
 
-## Effects
+### Minimal examples
 
-Reagent effects need clear conditions, scaling, intervals, and maximum behavior. Avoid per-tick allocations and repeated expensive lookups in metabolism paths.
+Correct: transfer solution through the existing solution-system API. Prohibited: mutate reagent collections directly. Stop: report when the solution owner API cannot be established.
 
-## UI and localization
+## Выбор подхода
 
-Keep reagent names, descriptions, alerts, and machine controls localized. Do not expose internal reagent IDs as display text.
+Extend the existing solution/reaction/metabolism owner and prototype contract. Use owner-local UI refresh only as presentation of authoritative state.
 
-## Verification
+## Антипаттерны
 
-Test exact quantities, boundary volumes, reaction order, catalysts, temperature conditions, repeated metabolism, transfer cancellation, and YAML validation.
+- Do not hardcode balance branches, expose reagent IDs as display text, or trust client-selected transfer/result.
+- Do not let a deleted container or canceled transfer retain stale solution state.
+
+## Проверка
+
+When affected, check exact/boundary volume, reaction order, catalyst, temperature, repeated metabolism, transfer cancellation, and targeted prototype/owner validation.
+
+## References
+
+- [Solution safety](references/solution-safety.md): Read this when implementing or reviewing reagent transfer, solution mutation, capacity handling, or chemistry UI refresh.

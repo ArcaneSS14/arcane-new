@@ -22,6 +22,10 @@ using Content.Shared.Timing.Systems;
 using Content.Shared.Traits.Assorted;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
+// Arcane-Start
+using Content.Arcane.Common.Medical.Defibrillator;
+using Robust.Shared.Network;
+// Arcane-End
 
 namespace Content.Shared.Medical;
 
@@ -45,6 +49,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
     [Dependency] private SharedInteractionSystem _interaction = default!;
+    [Dependency] private INetManager _net = default!; // Arcane
 
     private readonly HashSet<EntityUid> _interactors = new();
 
@@ -140,6 +145,10 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
     /// <param name="user">Uid of the entity using the defibrillator.</param>
     public void Zap(Entity<DefibrillatorComponent?> ent, EntityUid target, EntityUid user)
     {
+        // Arcane-Start: Resolve the shock once on the server, including its treatment and outcome.
+        if (_net.IsClient)
+            return;
+        // Arcane-End
         if (!Resolve(ent, ref ent.Comp))
             return;
 
@@ -169,7 +178,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
             _useDelay.TryResetDelay((ent.Owner, useDelay), id: ent.Comp.DelayId);
         }
 
-        _audio.PlayPredicted(ent.Comp.ZapSound, ent, user);
+        _audio.PlayPvs(ent.Comp.ZapSound, ent.Owner); // Arcane-Edit: PlayPredicted > PlayPvs
         Entity<DefibrillatorComponent> defibEnt = (ent, ent.Comp);
         var failedRevive = TryRevive(defibEnt, user, target, true);
 
@@ -182,7 +191,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
         var sound = failedRevive
             ? ent.Comp.FailureSound
             : ent.Comp.SuccessSound;
-        _audio.PlayPredicted(sound, ent.Owner, user);
+        _audio.PlayPvs(sound, ent.Owner); // Arcane-Edit: Include the operator in the authoritative result sound.
 
         var ev = new TargetDefibrillatedEvent(user, target, (ent.Owner, ent.Comp), _interactors);
         RaiseLocalEvent(target, ref ev);
@@ -194,6 +203,10 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
 
     private bool TryRevive(Entity<DefibrillatorComponent> ent, EntityUid user, EntityUid target, bool isOriginal)
     {
+        // Arcane-Start: Apply the delivered shock before checking whether the patient can be revived.
+        var treatment = new DefibrillatorTreatmentEvent(ent.Owner, user, isOriginal);
+        RaiseLocalEvent(target, ref treatment);
+        // Arcane-End
         bool failedRevive = true;
         string? message = null;
         if (_rotting.IsRotten(target))
@@ -211,7 +224,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
             _damageable.TryChangeDamage(target, ent.Comp.ZapHeal, true, origin: user,
                 targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAll); // Trauma
 
-            if (_mobState.IsDead(target, targetMobState) && // is the target currently dead
+            if (treatment.CanRevive && _mobState.IsDead(target, targetMobState) && // Arcane-Edit: Require the shock to restore circulation.
                 TryComp<MobThresholdsComponent>(target, out var targetThresholds) && //do they have a threshold
                 _mobThreshold.TryGetThresholdForState(target, MobState.Dead, out var threshold, targetThresholds) &&
                 _mobThreshold.CheckVitalDamage(target) < threshold) // Trauma - check vital damage instead

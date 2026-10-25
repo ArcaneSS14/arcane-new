@@ -7,6 +7,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Gemini repository guidance
 
-Use `AGENTS.md` as the canonical entry point. Scoped `AGENTS.md` files refine rules by directory. Task instructions and references live in `.agents/skills/`; always-on constraints live in `.agents/rules/`.
+Read `AGENTS.md` before acting. It is the canonical Arcane contract and routes to any scoped `AGENTS.md`, `.agents/rules`, and task-specific skills.
 
-Inspect current code, project references, and the linked owner/project guide in `Modules/CATALOG.md` before proposing changes. Preserve server authority, prediction, localization, resource ownership, and test reporting. `Modules/` contains guidance; Arcane runtime code belongs in root `Content.Arcane.*` projects and resources in existing `_Arcane` paths.
+This file is only a Gemini bootstrap. Do not treat it as a second policy source or duplicate its rules here.

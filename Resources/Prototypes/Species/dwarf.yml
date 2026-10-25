@@ -5,6 +5,11 @@
   prototype: MobDwarf
   dollPrototype: AppearanceDwarf
   skinColoration: HumanToned
+  # Arcane-Start
+  averageHeight: 130
+  minScale: 0.95
+  maxScale: 1.2
+  # Arcane-End
   knowledge: Dwarf # Trauma
   defaultSoundsBySex:
   - UnisexDwarf

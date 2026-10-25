@@ -7,6 +7,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Tag;
 using Content.Shared.Stunnable;
+using Content.Arcane.Common.Medical.Concussion; // Arcane
 
 namespace Content.Goobstation.Shared.Flashbang;
 
@@ -47,7 +48,7 @@ public sealed partial class FlashbangSystem : EntitySystem
     {
         var comp = ent.Comp;
 
-        if (comp is { KnockdownTime: <= 0, StunTime: <= 0 })
+        if (comp is { KnockdownTime: <= 0, StunTime: <= 0, ConcussionDamage: <= 0 }) // Arcane-Edit: Two disabled effects > all three disabled effects.
             return;
 
         var protectionRange = args.Range;
@@ -77,5 +78,14 @@ public sealed partial class FlashbangSystem : EntitySystem
         var stunTime = float.Lerp(comp.StunTime, 0f, ratio);
         if (stunTime > 0f)
             _stun.TryUpdateParalyzeDuration(args.Target, TimeSpan.FromSeconds(stunTime));
+
+        // Arcane-Start: Reuse the resolved range and hearing protection without relaying them twice.
+        var dose = float.Lerp(comp.ConcussionDamage, 0f, ratio);
+        if (dose > 0f)
+        {
+            var concussion = new FlashbangConcussionEvent(dose);
+            RaiseLocalEvent(args.Target, ref concussion);
+        }
+        // Arcane-End
     }
 }

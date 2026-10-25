@@ -1,10 +1,7 @@
 ---
-description: Arcane guidance adapter for YAML, prototypes, maps, workflows, and manifests
-globs: **/*.yml,**/*.yaml
+description: Arcane YAML consumer guidance adapter
+globs: "**/*.yml,**/*.yaml"
 alwaysApply: false
 ---
-Load yaml-and-schema plus the relevant prototype, map, resource, localization, or build skill. Generic YAML validity does not replace domain validation.
 
-Read `.agents/rules/yaml-prototype-conventions.md`. Prototype entry order follows the `.Trauma.cs` suffix for partials: `Item`, `Container`, `Entity`, then the component family.
-
-Apply the canonical marker rule by changed line count, not by YAML entry count. Append additions as one contiguous block where practical, and prefer `!Remove` or a partial over deleting an upstream entry. Never use `Trauma - ` or `<Trauma>` as authorship for our change; see `.cursor/rules/core.mdc`.
+For YAML changes, select `yaml-and-schema` and the actual consumer skill through `AGENTS.md`. Generic YAML validity does not replace validation by the consuming prototype, map, workflow, or manifest owner.

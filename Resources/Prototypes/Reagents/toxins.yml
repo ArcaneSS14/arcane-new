@@ -79,6 +79,11 @@
         damage:
           types:
             Poison: 1.5
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -2
+        lowerCap: 55
+      # Arcane-End
 
 - type: reagent
   id: GastroToxin
@@ -371,6 +376,21 @@
           types:
             Asphyxiation: 5
             Bloodloss: 5
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -7
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lexorin
+          min: 5
+      - !type:ModifyHeartRate
+        amount: -5
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lexorin
+          min: 5
+          inverted: true
+      # Arcane-End
 
 - type: reagent
   id: MindbreakerToxin
@@ -665,6 +685,15 @@
         damage:
           types:
             Poison: 0.6 # Makes it 20 damage per unit.
+      # Arcane-Start
+      - !type:ModifyHeartRate
+        amount: -1.2
+        lowerCap: 55
+        conditions:
+        - !type:ReagentCondition
+          reagent: Lead
+          min: 2.5
+      # Arcane-End
 
 - type: reagent
   id: Bungotoxin

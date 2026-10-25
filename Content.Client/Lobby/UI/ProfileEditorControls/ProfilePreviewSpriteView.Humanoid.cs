@@ -10,6 +10,7 @@ using Content.Shared.Station.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Humanoid; // Arcane
 
 namespace Content.Client.Lobby.UI.ProfileEditorControls;
 
@@ -25,6 +26,7 @@ public sealed partial class ProfilePreviewSpriteView
             return;
 
         EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
+        EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale)); // Arcane
     }
 
     /// <summary>
@@ -55,6 +57,11 @@ public sealed partial class ProfilePreviewSpriteView
         {
             PreviewDummy = EntMan.SpawnEntity(_prototypeManager.Index(HumanoidCharacterProfile.DefaultSpecies).DollPrototype, MapCoordinates.Nullspace);
         }
+
+        // Arcane-Start
+        if (humanoid is not null && EntMan.HasComponent<VisualBodyComponent>(PreviewDummy))
+            EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale));
+        // Arcane-End
 
         if (humanoid != null && jobClothes)
         {

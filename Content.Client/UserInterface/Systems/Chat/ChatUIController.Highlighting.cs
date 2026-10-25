@@ -13,6 +13,7 @@ using Content.Client.CharacterInfo;
 using Content.Client.Gameplay;
 using Robust.Shared.Utility;
 using static Content.Client.CharacterInfo.CharacterInfoSystem;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Chat;
 
@@ -73,7 +74,10 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         var audioParams = AudioParams.Default.WithVolume(volumeDb);
 
         // Play the sound using the audio system
-        _ent.System<AudioSystem>().PlayGlobal(HighlightSoundPath, Filter.Local(), false, audioParams);
+        // Arcane-Edit-Start: Keep mention notifications audible during hearing effects.
+        _ent.System<ContentAudioSystem>().MarkInterfaceAudio(
+            _ent.System<AudioSystem>().PlayGlobal(HighlightSoundPath, Filter.Local(), false, audioParams));
+        // Arcane-Edit-End
     }
     // Goobstation End
 

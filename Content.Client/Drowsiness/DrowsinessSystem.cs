@@ -52,13 +52,9 @@ public sealed partial class DrowsinessSystem : SharedDrowsinessSystem
 
     private void OnStatusEffectPlayerDetached(Entity<DrowsinessStatusEffectComponent> ent, ref StatusEffectRelayedEvent<LocalPlayerDetachedEvent> args)
     {
-        if (_player.LocalEntity is null)
-            return;
-
-        if (!_statusEffects.HasEffectComp<DrowsinessStatusEffectComponent>(_player.LocalEntity.Value))
-        {
-            _overlay.CurrentPower = 0;
-            _overlayMan.RemoveOverlay(_overlay);
-        }
+        // Arcane-Edit-Start: Clear the previous character's effect even when control is detached entirely.
+        _overlay.CurrentPower = 0;
+        _overlayMan.RemoveOverlay(_overlay);
+        // Arcane-Edit-End
     }
 }

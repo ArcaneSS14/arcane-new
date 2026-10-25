@@ -122,6 +122,13 @@
     - TeslaEngine
     - SingularityTeslaEngine
     - Power
+  # Arcane-Start
+  - type: RadarBlip
+    radarColor: cyan
+    scale: 5
+    shape: Ring
+    visibleFromOtherGrids: true
+  # Arcane-End
 
 - type: entity
   id: TeslaMiniEnergyBall

@@ -81,4 +81,12 @@ public sealed partial class BlockingComponent : Component
     [DataField]
     [AutoNetworkedField] // Trauma
     public float ActiveBlockFraction = 1.0f;
+
+    // Arcane-Start
+    /// <summary>
+    /// Movement speed multiplier applied while the shield is raised.
+    /// </summary>
+    [DataField]
+    public float MovementModifier = 0.2f;
+    // Arcane-End
 }

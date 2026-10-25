@@ -3,43 +3,42 @@ name: naming-conventions
 description: Name C# symbols, events, prototypes, FTL keys, resources, and compatibility surfaces consistently.
 ---
 
-Names must communicate ownership, timing, and intent.
+# naming-conventions
 
-## C#
+## Когда применять
 
-Use repository-standard casing and suffixes. Components and systems should be discoverable by type search. Events should state whether they are attempts, pre-change checks, notifications, or completed changes.
+Use when naming or renaming symbols, events, prototypes, FTL keys, resources, CVars, network contracts, or serialized compatibility identifiers.
 
-Do not introduce an abbreviation that is not established project vocabulary.
+## До изменения
 
-A partial class added by a fork should follow the suffix already used for that owner and file family, placed after the semantic suffix: `MobStateSystem.Trauma.cs`, `ActionsSystem.Goob.cs`, `EnergySwordSystem.Arcane.cs`. Before adding a partial, verify that the type can be extended in the same assembly and read the applicable owner and sync rules. Never rename an existing partial to a different fork's suffix or name a new partial after a fork that does not own the code.
+Find owner conventions, exact declarations, consumers, compatibility surface, locale/resource root, and applicable fork/partial naming boundary before selecting a name.
 
-## Fork-suffixed partials as a conflict tool
+## Правила и границы
 
-`Content.Shared`, `Content.Client`, `Content.Server`, and `Content.Common` are the conflict surface, because sync brings upstream edits into the same files. A suffixed partial is how a fork adds behavior without editing a base file.
+- Names communicate owner, timing, and intent. Use repository casing/suffixes and established vocabulary; events state attempt/pre-change/notification/completion semantics.
+- Prototype IDs are stable machine identifiers, FTL keys are lowercase kebab-case with clear owner/feature prefix, and variables describe meaning rather than UI position. File placement does not prevent duplicate keys.
+- Fork-suffixed partials follow current owner/file-family suffix and only extend an eligible same-assembly type; do not rename existing partials to foreign suffixes. Prefer a compatible partial only when supported.
+- Before renaming serialized fields, prototype IDs, map entities, database fields, CVars, locale keys, or network messages, search relevant consumers and provide migration/compatibility alias when required. Russian is in scope only on request.
+- Stop without a supported extension point: do not bypass access, reflection, engine edits, or parallel identifiers to avoid a stable rename/migration.
 
-Before editing a base declaration, check whether a partial can carry the change. An owner-suffixed partial can keep additive behavior out of a shared upstream file when the type and assembly support it. Details: `.agents/rules/fork-trajectory-priority.md`.
+### Minimal examples
 
-## Prototypes and resources
+Correct: preserve a stable prototype/FTL/CVar identifier and search consumers before rename. Prohibited: use display text as a machine ID. Stop: report unproven compatibility/migration path.
 
-Prototype IDs are stable machine identifiers, not display names. Use a feature prefix where collisions are possible. Keep directory names, RSI states, audio collections, map names, and nearby prototypes aligned.
+## Выбор подхода
 
-## Localization
+Choose stable owner-prefixed identifiers for compatibility surfaces and existing partial/resource naming for conflict-sensitive paths. Search every reference only for a public compatibility rename or explicit all-reference task.
 
-FTL keys use lowercase kebab-case and a stable owner or feature prefix. Variable names describe meaning, not UI position.
+## Антипаттерны
 
-Use stable keys and variables in `en-US`. Keep them consistent with `ru-RU` only when Russian localization is explicitly in scope. A module key prefix must make ownership clear. File placement does not protect duplicate keys.
+- Do not invent abbreviations, use display text as an ID, or rename stable contracts without consumer/migration analysis.
+- Do not use a foreign fork suffix or a partial to bypass assembly/access constraints.
 
-## Compatibility
+## Проверка
 
-Before renaming a serialized field, prototype ID, map entity, database field, CVar, locale key, or network message, search code, prototypes, maps, migrations, config, the affected locale, and downstream references; include Russian files only when Russian is in scope. Provide a migration or compatibility alias where required.
+For a C# symbol rename, use targeted consumer search and build the affected owner project. Run resource/localization validation only when resources, FTL, prototype references, or their consumer contract changed; do not run Release/global lint by default.
 
-## Verification commands
+## References
 
-```powershell
-git grep -n "OLD_NAME" -- path/to/relevant/code path/to/relevant/resources path/to/relevant/config
-git grep -n "NEW_NAME" -- path/to/relevant/code path/to/relevant/resources path/to/relevant/config
-dotnet build path/to/affected-project.csproj --no-restore
-git diff --check
-```
-
-Search all references only when the renamed identifier is a public compatibility surface or the task requires finding every reference. For prototype or locale changes, use a targeted validator when available; follow root `AGENTS.md` for verification scope instead of automatically running a Release build or global YAML linter.
+- [C# and event naming](references/csharp-and-event-naming.md): Read this when naming a C# method, event, action, or API whose mutation and cancellation semantics must be clear.
+- [Resource and locale naming](references/resource-and-locale-naming.md): Read this when naming an FTL key, resource path, sprite state, audio collection, or other content identifier.

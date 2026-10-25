@@ -3,25 +3,39 @@ name: xaml-ui
 description: Build localized client XAML controls with correct lifecycle, culture refresh, resource references, ownership, and validation.
 ---
 
-XAML is client presentation. Keep authority and protected validation out of code-behind.
+# xaml-ui
 
-## Structure
+## Когда применять
 
-- Keep static layout and styling in XAML. Build controls in code only for genuinely dynamic content or reusable custom controls.
-- Keep named controls limited to elements code-behind actually accesses. Prefer existing containers, styles, and UI patterns over manual positioning or rebuilding static layout in code.
-- Keep code-behind responsible for view state, presentation-only transformations, and translating input into a typed event or request. Do not make the window a second owner of authoritative or replicated state. Put reusable game behavior in its owning system, not the window.
-- Let a BUI/EUI adapter own open/close lifecycle, message transport, and applying incoming state. The window should not call server services or decide whether an action is authorized.
-- Treat client validation as user feedback. The server validates security-sensitive and authoritative requests.
-- Find a nearby control using the same UI framework. Verify generated names, control types, constructors, and lifecycle APIs before relying on them.
+Use for client XAML controls, BUI/EUI windows, and their presentation code-behind. Gameplay authority, server services, and authoritative validation are outside this skill.
 
-## Lifecycle and localization
+## До изменения
 
-- Subscribe once. Unsubscribe when the window closes or disposes if the event source can outlive the window; prevent duplicate subscriptions after reopen.
-- If an asynchronous result or deferred callback can arrive after close/rebind, cancel it when supported or verify that the window still owns the result before changing controls.
-- Refresh localized labels when culture changes if the window can remain open. Do not cache resolved text beyond the culture in which it was created.
-- Localize visible labels, tooltips, placeholders, feedback, and generated rows. Use `en-US` by default; update `ru-RU` only when explicitly requested.
-- Check long translated strings and culture refresh when Russian is in scope; otherwise verify the English UI states affected by the change.
+Find the owning BUI/EUI flow, existing XAML layout, generated named controls, code-behind, resource URI, subscriptions, and window close/deletion path. Verify generated names, control types, constructors, and lifecycle APIs in current code before using them.
 
-Verify owner paths and edit-marker requirements before changing inherited files. Do not add markers to owner-local module paths. For code-behind boundaries see `.agents/rules/architecture-and-ownership.md`; for BUI contracts and message flow see `.agents/skills/bound-user-interface/SKILL.md`.
+## Правила и границы
 
-Choose the smallest build or UI behavior check that covers the changed surface and follow root `AGENTS.md` and `.agents/skills/testing/references/testing-matrix.md`. Documentation-only changes need diff checks; do not run a full build or every integration test by default.
+Keep static layout, labels, and visual hierarchy in XAML; keep presentation state, wiring, and disposal in code-behind. Create named controls only for elements code-behind actually accesses, and prefer existing containers, styles, and UI patterns over manual positioning. Generate controls in code only for genuinely dynamic content or reusable custom controls. Use current generated names and resource conventions. A window must not call server services, decide authority, or authorize an action. Cancel or release subscriptions, timers, and callbacks on close/dispose and never update a closed window. Resolve localized text at presentation and refresh culture through the existing lifecycle; add Russian only when explicitly requested.
+
+Use `async void` only when the UI framework requires an event handler; delegate to an observable task and cancel or ignore it on close. Do not block the UI thread with `Task.Wait`, `.Result`, or equivalent waiting; a canceled or faulted callback must not leave stale controls or subscriptions.
+
+### Minimal examples
+
+Correct: keep static layout in XAML and authorize on Server owner. Prohibited: update a disposed window callback. Stop: report unknown generated control/lifecycle API.
+
+## Выбор подхода
+
+Choose XAML for static structure and themes/resources, code-behind for narrow state-to-control adaptation, a BUI/EUI contract for data and intent messages, and the gameplay owner for mutation.
+
+## Антипаттерны
+
+Do not duplicate gameplay logic or network validation in a window, create parallel named controls, or leave an event handler active after disposal.
+
+## Проверка
+
+Check creation, state update, close/reopen, disposal, delayed callbacks, resource URI, culture refresh, and absence of server-only data in the presentation layer. When `ru-RU` is explicitly in scope, also check long translated strings.
+
+## References
+
+- [XAML structure](references/xaml-structure.md): Read this when designing or reviewing XAML layout, named controls, code-behind ownership, event subscriptions, or resource URIs.
+- [Testing matrix](../testing/references/testing-matrix.md): Read this when selecting XAML or client UI verification.

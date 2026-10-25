@@ -8,6 +8,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Goobstation.Common.CCVar;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Goobstation.Client.Barks;
 
@@ -17,6 +18,7 @@ public sealed partial class BarkSystem : EntitySystem
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedAudioSystem _sharedAudio = default!;
+    [Dependency] private ContentAudioSystem _contentAudio = default!; // Arcane
 
     private readonly Dictionary<NetEntity, EntityUid> _playingSounds = new();
     private static readonly char[] Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
@@ -160,6 +162,11 @@ public sealed partial class BarkSystem : EntitySystem
         var soundEntity = bark.IsPreview
             ? _sharedAudio.PlayGlobal(sound, filter, false, audioParams)
             : _sharedAudio.PlayEntity(sound, filter, bark.Source!.Value, false, audioParams);
+
+        // Arcane-Start: Voice previews belong to the interface, not the listener's surroundings.
+        if (bark.IsPreview && soundEntity is { } preview)
+            _contentAudio.MarkInterfaceAudio(preview.Entity);
+        // Arcane-End
 
         if (!bark.IsPreview && proto.Stop)
         {

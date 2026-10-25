@@ -1,15 +1,7 @@
 ---
-description: Repository test guidance adapter
-globs: Content.Tests/**/*.cs,Content.IntegrationTests/**/*.cs,Modules/*/Content.*.IntegrationTests/**/*.cs
+description: Arcane test-surface guidance adapter
+globs: "Content.Tests/**/*.cs,Content.IntegrationTests/**/*.cs"
 alwaysApply: false
 ---
 
-Root `AGENTS.md` hard rules apply. Read the nearest scoped `AGENTS.md` and canonical `testing` and `tests-authoring` skills.
-
-Verify repository identity, owner-local module and underscore paths, and edit-marker requirements before changing inherited test files. Do not add redundant owner markers inside owner-local paths.
-
-Use existing owner-local test infrastructure. Verify symbol access and project references. Do not create duplicate test projects, fixtures, CI steps, MSBuild targets, or `module.yml` entries.
-
-Treat `en-US` as structural truth. Verify Russian keys, attributes, variables, selectors, file paths, order, fallback, and culture switching only when Russian localization is explicitly in scope or the behavior under test is Russian-specific.
-
-Run exact canonical commands, preserve failures, never edit SPDX metadata, and never weaken assertions for green CI.
+For test changes, select `testing`, `tests-authoring`, and the affected domain skill through `AGENTS.md`. Use the existing owner test path; choose the smallest check that covers the changed observable risk.

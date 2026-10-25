@@ -6,7 +6,7 @@ on:
   merge_group:
   pull_request:
     types: [ opened, reopened, synchronize, ready_for_review ]
-    branches: [ master, staging, stable ]
+    branches: [ master, staging, stable, 'port/**' ] # Arcane-Edit: Run Debug checks for stacked port PRs.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}

@@ -176,7 +176,7 @@ public sealed partial class SleepingSystem : EntitySystem
 
     private void OnSeeAttempt(Entity<SleepingComponent> ent, ref CanSeeAttemptEvent args)
     {
-        if (ent.Comp.LifeStage <= ComponentLifeStage.Running)
+        if (!args.IgnoreSleeping && ent.Comp.LifeStage <= ComponentLifeStage.Running) // Arcane-Edit: Allow a visual probe for independent blindness.
             args.Cancel();
     }
 

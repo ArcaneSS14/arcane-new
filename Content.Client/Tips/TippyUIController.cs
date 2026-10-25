@@ -14,6 +14,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Timing;
 using static Content.Client.Tips.TippyUI;
+using Content.Client.Audio; // Arcane
 
 namespace Content.Client.Tips;
 
@@ -111,7 +112,10 @@ public sealed partial class TippyUIController : UIController
                 var audioParams = step.FootstepSoundCollection.Params
                     .AddVolume(-7f)
                     .WithVariation(0.1f);
-                _audio.PlayGlobal(step.FootstepSoundCollection, EntityUid.Invalid, audioParams);
+                // Arcane-Edit-Start: Tippy is part of the interface, not the game world.
+                EntityManager.System<ContentAudioSystem>().MarkInterfaceAudio(
+                    _audio.PlayGlobal(step.FootstepSoundCollection, EntityUid.Invalid, audioParams));
+                // Arcane-Edit-End
             }
         }
 

@@ -117,6 +117,10 @@
       amount: 5
     - id: MaterialBones1 # Trauma - Bones on butchering humanoids
       amount: 3
+  # Arcane-Start
+  - type: Sprinter
+    staminaDrainRate: 8
+  # Arcane-End
 
 - type: entity
   parent: OrganBaseOrganic

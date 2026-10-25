@@ -9,6 +9,11 @@ using Content.Trauma.Common.Knowledge.Systems;
 using Robust.Shared.Enums;
 using Robust.Shared.GameObjects.Components.Localization;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using Content.Shared.Sprite;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Systems;
+// Arcane-End
 
 namespace Content.Shared.Humanoid;
 
@@ -20,6 +25,10 @@ public sealed partial class HumanoidProfileSystem
     [Dependency] private BodySystem _body = default!;
     [Dependency] private CommonKnowledgeSystem _knowledge = default!;
     [Dependency] private SharedVisualBodySystem _visualBody = default!;
+    // Arcane-Start
+    [Dependency] private SharedScaleVisualsSystem _scaleVisuals = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    // Arcane-End
 
     public static readonly ProtoId<BarkPrototype> DefaultBarkVoice = "Alto";
 
@@ -34,6 +43,52 @@ public sealed partial class HumanoidProfileSystem
         HumanoidVisualLayers.Eyes,
         HumanoidVisualLayers.Chest
     };
+
+    // Arcane-Start: Apply visual and collision scale from the saved profile
+    public void ApplyGrowth(Entity<HumanoidProfileComponent> ent, float scale)
+    {
+        var species = ProtoMan.Index(ent.Comp.Species);
+        scale = float.IsFinite(scale) ? Math.Clamp(scale, species.MinScale, species.MaxScale) : species.DefaultScale;
+
+        if (MathF.Abs(ent.Comp.Scale - scale) < 1e-4f)
+            return;
+
+        var ratio = float.IsFinite(ent.Comp.Scale) && ent.Comp.Scale > 0f ? scale / ent.Comp.Scale : scale;
+        ent.Comp.Scale = scale;
+        Dirty(ent);
+
+        _scaleVisuals.SetSpriteScale(ent.Owner, _scaleVisuals.GetSpriteScale(ent.Owner) * ratio);
+        SetOrganScale(ent.Owner, scale);
+
+        if (!TryComp<FixturesComponent>(ent.Owner, out var fixtures))
+            return;
+
+        foreach (var (fixtureId, fixture) in fixtures.Fixtures)
+        {
+            if (fixture.Shape.Radius <= 0f)
+                continue;
+
+            _physics.SetRadius(ent.Owner, fixtureId, fixture, fixture.Shape, Math.Clamp(fixture.Shape.Radius * ratio, 0.01f, 0.49f), fixtures);
+        }
+    }
+
+    public void SetGrowthVisualScale(EntityUid uid, System.Numerics.Vector2 scale)
+    {
+        _scaleVisuals.SetSpriteScale(uid, scale);
+        SetOrganScale(uid, scale.X);
+    }
+
+    private void SetOrganScale(EntityUid uid, float scale)
+    {
+        if (!TryComp<BodyComponent>(uid, out var body))
+            return;
+
+        foreach (var organ in _body.EnumerateOrgans<VisualOrganComponent>((uid, body)))
+        {
+            _scaleVisuals.SetSpriteScale(organ.Owner, new System.Numerics.Vector2(scale, scale));
+        }
+    }
+    // Arcane-End
 
     public void SetBarkVoice(Entity<HumanoidProfileComponent> ent, [ForbidLiteral] ProtoId<BarkPrototype>? barkvoiceId)
     {
@@ -101,7 +156,10 @@ public sealed partial class HumanoidProfileSystem
             new(),
             new(),
             ent.Comp.BarkVoice,
-            new(ent.Comp.Knowledge));
+            new(ent.Comp.Knowledge))
+            // Arcane-Start
+            .WithScale(ent.Comp.Scale);
+            // Arcane-End
     }
 
     /// <summary>

@@ -636,6 +636,7 @@
   - type: Metabolizer
     maxReagents: 2
     stages: [ Bloodstream ]
+  - type: HeartRate # Arcane
 
 - type: entity
   parent:

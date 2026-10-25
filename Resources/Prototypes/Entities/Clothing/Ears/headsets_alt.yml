@@ -5,6 +5,10 @@
   name: headset
   description: An updated, modular intercom that fits over the head. Takes encryption keys.
   components:
+  # Arcane-Start
+  - type: ConcussionResistance
+    resistance: 0.4
+  # Arcane-End
   - type: Sprite
     state: icon_alt
   - type: Clothing

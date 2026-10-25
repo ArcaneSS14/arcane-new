@@ -1,6 +1,7 @@
 ---
-description: Arcane guidance adapter for server
-globs: Content.Server/**/*.cs,Content.*.Server/**/*.cs,Modules/*/Content.*.Server*/**/*.cs
+description: Arcane server authority guidance adapter
+globs: "Content.Server/**/*.cs,Content.*.Server/**/*.cs"
 alwaysApply: false
 ---
-Validate client input and keep protected state authoritative.
+
+Use the authority and security guidance selected through `AGENTS.md`. Validate client intent at the server owner and keep protected state authoritative.

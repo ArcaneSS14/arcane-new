@@ -3,33 +3,40 @@ name: damage-status-and-effects
 description: Implement damage, healing, status effects, alerts, movement modifiers, and timed gameplay effects consistently.
 ---
 
-Use the owning damage, status, movement, and alert systems instead of mutating several components independently.
+# damage-status-and-effects
 
-## Damage and healing
+## Когда применять
 
-Choose typed damage specifications and existing APIs. Define armor, resistances, healing limits, dead/critical behavior, and event hooks. Avoid negative-damage shortcuts when a healing API expresses intent more clearly.
+Use for damage/healing, status effects, alerts, movement/action modifiers, or timed gameplay effects.
 
-## Status effects
+## До изменения
 
-Define source, duration, stacking, refresh, maximum intensity, removal, and immunity. Timed effects must handle deletion, round restart, and repeated application. Use components or status APIs according to nearby patterns.
+Find the owner damage/status/movement/alert systems, typed specifications, prototype/serialized contract, prediction path, effect source/duration/stacking, cleanup owner, and targeted test.
 
-## Movement and actions
+## Правила и границы
 
-When an effect changes speed, interaction, actions, vision, or input, subscribe to the established modifier events and refresh calculated state. Do not permanently overwrite base values.
+- Use owner APIs and typed damage specifications; define armor/resistance, healing limit, dead/critical behavior, and event hooks. Do not use negative damage where a healing API states intent.
+- Define source, duration, stacking, refresh, maximum, immunity, removal, and deletion/round-restart behavior. Timers must not remove a newer replacement effect.
+- Use established modifier events and recalculate derived movement/action/vision state; never permanently overwrite a base value.
+- Server owns protected outcome; alerts/icons/sounds/popups are presentation synchronized from authority and must not duplicate predicted feedback.
+- Stop at a missing supported extension point: no reflection, engine edits, direct multi-component mutation, or parallel status framework.
 
-## Alerts and presentation
+### Minimal examples
 
-Keep player alerts, icons, sounds, and popups synchronized with authoritative state. Localize visible text and avoid duplicate predicted feedback.
+Correct: use the owner damage/status API and refresh derived modifiers. Prohibited: overwrite a base speed permanently. Stop: report an unverified effect lifecycle/owner API.
 
-## Common failures
+## Выбор подхода
 
-- effect stacks without bound;
-- timer removes a newer replacement effect;
-- movement modifier is not recalculated after removal;
-- client alert remains after server state ends;
-- damage bypasses existing events or resistances;
-- death or critical state is handled inconsistently.
+Use components/status APIs according to nearby owner patterns; use lifecycle cleanup rather than a detached timer and localize player-visible presentation.
 
-## Verification
+## Антипаттерны
 
-Test apply, refresh, stack, expire, remove, immunity, deletion, reconnect, death/critical state, and interactions with existing modifiers.
+- Do not allow unbounded stacks, bypass resistance/events, retain alerts after state ends, or handle critical/death inconsistently.
+
+## Проверка
+
+When relevant, check apply/refresh/stack/expire/remove/immunity, deletion/reconnect, death/critical state, and interactions with existing modifiers using owner tests.
+
+## References
+
+- [Effect lifecycle](references/effect-lifecycle.md): Read this when adding or changing an effect's application, stack, timer, cleanup, or transfer behavior.

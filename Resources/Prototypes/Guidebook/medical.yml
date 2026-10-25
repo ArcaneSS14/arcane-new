@@ -18,6 +18,11 @@
   id: MedicalDoctor
   name: guide-entry-medicaldoctor
   text: "/ServerInfo/Guidebook/Medical/MedicalDoctor.xml"
+  # Arcane-Start
+  children:
+  - ArcaneResuscitation
+  - ArcaneRespiration
+  # Arcane-End
 
 - type: guideEntry
   id: Cloning

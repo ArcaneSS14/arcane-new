@@ -27,6 +27,12 @@
     <ProjectReference Include="../Content.Medical.Client/Content.Medical.Client.csproj" />
     <ProjectReference Include="../Content.Medical.Server/Content.Medical.Server.csproj" />
     <!-- /Trauma -->
+    <!-- Arcane-Start -->
+    <ProjectReference Include="../Content.Arcane.Client/Content.Arcane.Client.csproj" />
+    <ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" />
+    <ProjectReference Include="../Content.Arcane.Server/Content.Arcane.Server.csproj" />
+    <ProjectReference Include="../Content.Arcane.Shared/Content.Arcane.Shared.csproj" />
+    <!-- Arcane-End -->
     <ProjectReference Include="..\Content.Client\Content.Client.csproj" />
     <ProjectReference Include="..\Content.Server\Content.Server.csproj" />
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />

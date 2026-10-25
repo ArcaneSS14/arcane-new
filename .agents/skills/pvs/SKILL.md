@@ -3,22 +3,41 @@ name: pvs
 description: Work with visibility, network interest, PVS filters, and PVS-sensitive entity behavior.
 ---
 
-PVS determines which entities and events a client receives. It is a bandwidth and visibility mechanism, not authorization.
+# pvs
 
-## Workflow
+## Когда применять
 
-1. Identify why the client needs the entity or event.
-2. Prefer normal world visibility and existing filters.
-3. Use a limited explicit message or UI state when the client needs remote data.
-4. Add PVS overrides only when the entity itself must remain network-visible.
-5. Remove overrides and session-specific visibility when the need ends.
+Use when changing which entities, events, or replicated state a client receives through world visibility, network interest, filters, or a PVS override.
 
-## Review
+## До изменения
 
-Consider parent/child transforms, containers, grids, maps, ghosts, observers, sessions, and map transfer. World audio and effects normally use PVS-scoped recipients. Global delivery needs an explicit gameplay reason and recipient filter.
+Determine why the specific client needs the entity, event, or state. Check whether normal world visibility, a constrained message, or UI state satisfies that need before considering an override. Trace transforms, parents, containers, grids, maps, ghosts/observers, sessions, map transfer, and UI closure for the intended audience and lifetime.
 
-Avoid broad or permanent overrides that retain large entity sets. Do not expose hidden server information merely because an entity is forced into PVS.
+## Правила и границы
 
-## Verification
+- PVS is a bandwidth and visibility mechanism, not an authorization boundary. Do not expose hidden state merely because an entity is visible in PVS.
+- Add an override only when the entity itself must remain network-visible. Use a constrained message or UI state when the client needs remote data but not a visible entity.
+- Limit an override's audience, lifetime, and entity volume. Remove the override and session-specific visibility as soon as the reason ends.
+- Re-evaluate visibility through transforms, parents, containers, grids, maps, ghosts/observers, sessions, map transfer, deletion, and UI closure. World audio and effects normally use PVS-scoped recipients; global delivery needs an explicit gameplay reason and recipient filter.
 
-Test entering and leaving range, reconnecting, observing, container changes, parent changes, map transfer, deletion, and UI closure. Confirm state does not leak to unrelated sessions.
+### Minimal examples
+
+Correct: use an override only when the entity itself must remain visible. Prohibited: use PVS as authorization. Stop: report unknown audience/lifetime owner.
+
+## Выбор подхода
+
+Prefer ordinary world visibility and existing filters. Select a limited message or UI state for remote, viewer-specific data. Select a PVS override only when keeping the actual entity network-visible is necessary, and bind it to the narrowest viewer/session and lifecycle.
+
+## Антипаттерны
+
+- Do not use PVS visibility as permission to disclose protected component state.
+- Do not apply broad or permanent overrides to large entity sets, or leave override/session visibility after its UI or feature closes.
+- Do not choose global delivery only because PVS behavior was not investigated.
+
+## Проверка
+
+Check enter/leave range, reconnect, observer/ghost flow, parent/container changes, grids/maps, map transfer, deletion, UI closure, and absence of state leakage to unrelated sessions.
+
+## References
+
+No reference is required for ordinary PVS routing; inspect the current owner filter or visibility path before adding an override.

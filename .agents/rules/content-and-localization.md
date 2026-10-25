@@ -3,7 +3,7 @@ Store content in the resource root declared by its owner. Base resources belong 
 
 ## Player-visible text
 
-All player-visible text MUST use localization. Do not expose raw enum names, prototype IDs, component names, exception messages, or internal validation details.
+Player-facing prose MUST use localization; do not substitute raw enum names, prototype IDs, component names, exception messages, or internal validation details for user-facing wording. A permission-checked diagnostic/admin interface may display technical IDs as data when its intended contract requires them; this does not permit exposing secrets, unauthorized state, or internal exceptions to players.
 
 ## Discover before placement
 

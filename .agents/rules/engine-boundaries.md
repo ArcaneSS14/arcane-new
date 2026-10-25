@@ -1,9 +1,9 @@
 
 ## Engine access requires an explicit user request
 
-`RobustToolbox/` is off limits unless the user explicitly asks for a change inside the engine in their current request.
+`RobustToolbox/` is an edit boundary unless the user explicitly asks for a change inside the engine in their current request.
 
-Without that explicit request, do not touch the engine in any way. This applies to:
+Without that explicit request, do not modify or operate the engine. This applies to:
 
 - editing, creating, deleting, moving, or renaming any file inside `RobustToolbox/`;
 - running any command whose path or working directory is inside the engine, including `git -C RobustToolbox ...`;
@@ -20,7 +20,7 @@ If the user requests an engine change in one message, that approval covers only 
 
 ## Content work that needs engine knowledge
 
-Reading the engine to confirm a signature is part of normal symbol verification and is not an engine change. Do not modify anything you read. If verification requires inspecting engine sources, read only, and keep the engine unchanged.
+Targeted read-only inspection of engine source is permitted to verify a signature, source-generator contract, or access boundary. Read only the declarations relevant to the content change, keep the submodule unchanged, and report the pin used as evidence. Do not run commands with `RobustToolbox/` as their working directory, validators aside, or treat a private engine implementation as an extension point.
 
 ## Editing the engine after an explicit request
 
@@ -45,7 +45,7 @@ The engine is a git submodule pinned to one commit. Reading the pin from the sup
 git submodule status
 ```
 
-Reading engine sources or running commands inside the submodule requires the explicit request described above.
+Reading engine sources through the superproject is permitted for targeted verification. Running commands inside the submodule still requires the explicit request described above.
 
 The superproject pin and the tags present inside the submodule can disagree. Trust the recorded submodule commit, not a tag you remember.
 

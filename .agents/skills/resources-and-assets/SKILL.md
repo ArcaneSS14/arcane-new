@@ -2,17 +2,48 @@
 name: resources-and-assets
 description: Discover and reuse owner resource structure, then validate paths, RSI, audio, maps, attribution, and localization companions.
 ---
+# resources-and-assets
 
-# Resources And Assets
+## Когда применять
 
-Use the owning resource root. Inspect the existing tree before creating any path. Do not derive directories from repository names, module names, namespaces, or prototype IDs.
+Use for resource paths, RSI, audio, maps, attribution or asset consumers.
 
-Verify the resource owner, the relevant owner-local module or underscore directory, nearby feature files, and exact IDs, keys, paths, states, or collections. Search only the candidate owner path and directly relevant paths; widen only to resolve a demonstrated ownership or collision question.
+## До изменения
 
-Add English text for player-visible content. Add Russian counterparts only when explicitly requested. Preserve attribution and asset metadata without editing SPDX.
+Find the owner from existing owner paths and nearby assets, never a namespace or prototype ID; identify direct prototype, code, map, locale and visualizer consumers.
 
-Do not add repository edit markers inside owner-local module or underscore paths. Add the current repository marker only to inherited text files when ownership requires it and the format supports comments.
+## Правила и границы
 
-Verify RSI metadata, dimensions, states, frame data, case-sensitive paths, audio collections, formats, volume, prediction, and source lifetime.
+Check case-sensitive paths, RSI metadata/states, audio format/resources, source provenance and attribution. Keep player-visible companions localized as requested.
+Check RSI dimensions, states and frame data; check audio collections, format and volume. Add English player-visible text; change ru-RU only when requested. Apply owner-local/inherited edit-marker rules.
 
-Use the exact resource paths and specialized validator commands from the current owner workflow. Validate only changed resource types and directly affected paths. Follow root `AGENTS.md`; do not recursively inventory all resources, restore dependencies, or run unrelated builds and validators by default. Run `git diff --check`.
+### Source ledger
+
+Claim: Asset companions use the repository English-source localization policy, and inherited versus owner-local asset edits follow Arcane marker policy.
+Source: Root `AGENTS.md`, `.agents/rules/content-and-localization.md`, and `.agents/rules/arcane-edit-markers.md`.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing localization, asset ownership, or edit-marker policy.
+
+### Minimal examples
+
+Correct: reuse owner-local RSI/audio resource structure and validate direct paths. Prohibited: create a parallel hierarchy. Stop: report unknown asset provenance/consumer.
+
+## Выбор подхода
+
+Reuse the owner hierarchy and its supported specialized validation path. Consider prediction, audience and audio lifetime only for an audio task.
+
+## Антипаттерны
+
+Do not create parallel resource trees, change SPDX, infer paths, or validate unrelated resources.
+Do not recursively inventory resources.
+
+## Проверка
+
+Verify changed files and direct consumers with the narrowest current validator and final diff.
+Validate only the changed resource type and directly affected paths.
+
+## References
+
+- [Asset validation](references/asset-validation.md): Read this when changing an RSI, audio, map asset, attribution, source provenance, or resource path.

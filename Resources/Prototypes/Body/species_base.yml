@@ -10,6 +10,17 @@
   id: BaseSpeciesMob
   save: false
   components:
+  # Arcane-Start
+  - type: ConcussionThreshold
+    thresholds:
+      0: Sane
+      5: Minor
+      50: Hard
+      100: Overwhelmed
+    healRate: 4
+    speedModifierThresholds:
+      Hard: 0.7
+  # Arcane-End
   # <Trauma>
   - type: BagAccess
   - type: Targeting
@@ -199,6 +210,7 @@
     - FootstepSound
     - DoorBumpOpener
     - AnomalyHost
+  - type: Sprinter # Arcane
 
 - type: entity
   abstract: true

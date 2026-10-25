@@ -356,6 +356,11 @@
 - type: entity
   parent: [ OrganBaseHeart, OrganReptilianInternal, OrganReptilianMetabolizer ]
   id: OrganReptilianHeart
+  # Arcane-Start
+  components:
+  - type: HeartRate
+    normalRate: 78
+  # Arcane-End
 
 - type: entity
   parent: [ OrganBaseStomach, OrganReptilianInternal, OrganReptilianMetabolizer ]

@@ -276,6 +276,10 @@
     pryPowered: true
     force: true
     speedModifier: 2.5
+  # Arcane-Start
+  - type: Sprinter
+    staminaDrainRate: 3
+  # Arcane-End
 
 # Wraith variants
 

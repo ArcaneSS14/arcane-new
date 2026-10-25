@@ -12,6 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   <ItemGroup>
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
     <ProjectReference Include="../Content.Medical.Shared/Content.Medical.Shared.csproj" /> <!-- code too shit, have to do this -->
+    <ProjectReference Include="../Content.Arcane.Common/Content.Arcane.Common.csproj" /> <!-- Arcane -->
   </ItemGroup>
 
   <Import Project="..\RobustToolbox\Imports\Shared.props" />

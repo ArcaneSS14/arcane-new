@@ -2,23 +2,48 @@
 name: prototypes
 description: Create, inherit, compose, localize, and validate YAML prototypes in the correct resource root.
 ---
+# prototypes
 
-## Workflow
+## Когда применять
 
-1. Verify repository identity, resource ownership, and edit-marker boundaries.
-2. Find a current nearby prototype of the same type and owner.
-3. Confirm the owning resource root from `module.yml`.
-4. Verify fields against the destination component schema.
-5. Prefer inheritance or composition over copying a large prototype.
-6. Use stable specific IDs and typed IDs in code.
-7. Add English display text; add or update Russian only when explicitly requested.
-8. Verify every referenced prototype, sprite, state, sound, dataset, map, and locale key.
-9. Search for duplicate IDs and stale references.
+Use for prototype creation, review, inheritance or referenced resources.
 
-Do not place repository-owned prototypes in another owner's root for convenience. Do not expose prototype IDs as fallback player text.
+## До изменения
 
-When Russian prototype localization is explicitly requested, preserve matching keys, attributes, variables, selectors, paths, and ordering.
+Find owner root through Modules/CATALOG.md, owner guide and existing Resources; inspect a nearby type and its component schema.
+Verify repository identity and edit-marker boundaries before inherited edits.
 
-Validate only the changed prototype and directly referenced resources with an available targeted validator. Build the affected project when code changes. Run a focused owner test when lifecycle or map-loading behavior is in scope and verification is requested. Follow root `AGENTS.md`; do not restore dependencies, run a full build, or run the global YAML linter by default.
+## Правила и границы
 
-When verification is requested and the prototype changes server/client lifecycle or map loading, select a focused owner test that covers that path. Do not run the complete integration project by default.
+Verify type, ID, parent, component fields, typed IDs and every locale, sprite, sound, dataset and map reference. Prototype fields are configuration; runtime state belongs to systems/components.
+Add English display text; change Russian only when explicitly requested.
+
+### Source ledger
+
+Claim: Prototype ownership is selected through the current `Modules/CATALOG.md`, owner guidance, and existing resource root; localization follows the repository's English-source policy.
+Source: `Modules/CATALOG.md`, root `AGENTS.md`, applicable owner guide, and the current resource tree.
+Source type: Arcane
+Checked against branch: `66cf1fb0a7`
+Volatility: branch-bound
+Recheck trigger: Changing catalog routing, owner guidance, resource roots, or localization policy.
+
+### Minimal examples
+
+Correct: verify prototype owner/schema before composing inheritance. Prohibited: add a parallel owner root. Stop: report unknown consumer/schema validation.
+
+## Выбор подхода
+
+Use inheritance for shared defaults, composition for reusable component sets, and a separate prototype for distinct identity.
+
+## Антипаттерны
+
+Do not copy large YAML blocks, duplicate IDs, leave stale references, or use prototype IDs as visible fallback text.
+
+## Проверка
+
+Search duplicate IDs and stale consumers; use an existing targeted validator for changed prototypes and direct resources only.
+When lifecycle or map loading changes, choose a focused owner test; do not restore, full-build or run global YAML lint by default.
+
+## References
+
+- [Prototype workflow](references/prototype-workflow.md): Read this when authoring, inheriting, reviewing, or diagnosing a prototype and its referenced resources.

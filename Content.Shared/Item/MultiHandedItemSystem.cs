@@ -32,6 +32,11 @@ public sealed partial class MultiHandedItemSystem : EntitySystem
 
     private void OnEquipped(Entity<MultiHandedItemComponent> ent, ref GotEquippedHandEvent args)
     {
+        // Arcane-Start: Server state already includes the virtual items occupying the other hands.
+        if (_timing.ApplyingState)
+            return;
+        // Arcane-End
+
         for (var i = 0; i < ent.Comp.HandsNeeded - 1; i++)
         {
             _virtualItem.TrySpawnVirtualItemInHand(ent.Owner, args.User);
@@ -40,6 +45,11 @@ public sealed partial class MultiHandedItemSystem : EntitySystem
 
     private void OnUnequipped(Entity<MultiHandedItemComponent> ent, ref GotUnequippedHandEvent args)
     {
+        // Arcane-Start: Let replicated container and entity states remove their own virtual items.
+        if (_timing.ApplyingState)
+            return;
+        // Arcane-End
+
         _virtualItem.DeleteInHandsMatching(args.User, ent.Owner);
     }
 

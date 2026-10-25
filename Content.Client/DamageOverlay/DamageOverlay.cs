@@ -52,6 +52,11 @@ public sealed partial class DamageOverlay : Overlay
 
     public float DeadLevel = 1f;
 
+    // Arcane-Start
+    public bool DrawOxygen = true;
+    public bool DrawCritical = true;
+    // Arcane-End
+
     public DamageOverlay()
     {
         // TODO: Replace
@@ -188,7 +193,7 @@ public sealed partial class DamageOverlay : Overlay
 
         level = (State == MobState.Alive || State == MobState.Dead) ? _oldOxygenLevel : 1f; // Trauma - max level for softcrit too
 
-        if (level > 0f)
+        if (DrawOxygen && level > 0f) // Arcane-Edit: Allow the medical overlay to replace legacy Airloss darkening.
         {
             float outerMaxLevel = 0.6f * distance;
             float outerMinLevel = 0.06f * distance;
@@ -234,7 +239,7 @@ public sealed partial class DamageOverlay : Overlay
 
         level = State != MobState.Dead ? _oldCritLevel : DeadLevel;
 
-        if (level > 0f)
+        if (DrawCritical && level > 0f) // Arcane-Edit: Draw the medical white mask above blindness instead.
         {
             float outerMaxLevel = 2.0f * distance;
             float outerMinLevel = 1.0f * distance;

@@ -4,6 +4,7 @@ using Content.Medical.Common.Body;
 using Content.Medical.Shared.DelayedDeath;
 using Content.Shared.Body;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Medical.Heart; // Arcane
 
 namespace Content.Medical.Shared.Body;
 
@@ -28,6 +29,12 @@ public sealed partial class HeartSystem : EntitySystem
         if (TerminatingOrDeleted(args.Target) || _timing.ApplyingState)
             return;
 
+        // Arcane-Start
+        var ev = new OrganRemovalDeathAttemptEvent();
+        RaiseLocalEvent(uid, ref ev);
+        if (ev.Cancelled)
+            return;
+        // Arcane-End
         // TODO: Add some form of very violent bleeding effect.
         EnsureComp<DelayedDeathComponent>(args.Target);
     }
