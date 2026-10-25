@@ -18,7 +18,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
 
 - type: entity
   parent: BoxSurvivalSlotsEngineering
@@ -40,7 +40,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
   - type: Sprite
     state: box_extend
 
@@ -64,7 +64,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
   - type: Sprite
     state: box_sec
 
@@ -88,7 +88,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
   - type: Sprite
     state: box_med
 
@@ -134,7 +134,7 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
 
 - type: entity
   parent: BoxSurvivalSlotsSyndicate
@@ -156,6 +156,6 @@
       spacepen:
       - SpaceMedipen
   - type: Label
-    currentLabel: reagent-name-water
+    localizedLabel: reagent-name-water
   - type: Sprite
     state: box_syndie
