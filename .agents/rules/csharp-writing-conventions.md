@@ -73,7 +73,9 @@ if (gear is null)
     return null;
 
 if (component is TransformComponent transform)
+{
     var pos = transform.Coordinates;
+}
 
 // Over a null or type test written without a pattern
 if (gear == null)

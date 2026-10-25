@@ -16,7 +16,7 @@ Find current command registration/shell pattern, server authority/permission own
 ## Правила и границы
 
 - Separate parsing, authorization, validation, execution, and feedback. Server checks privileged commands; client completion/visibility is not authority. Audit player/round/persistence/config mutations.
-- Validate argument count, parsing, ranges, non-finite values, and current state before mutation. Localize descriptions/help/errors in `en-US`; add Russian only on request and never expose raw IDs/internal exceptions.
+- Validate argument count, parsing, ranges, non-finite values, and current state before mutation. Localize player-facing descriptions/help/errors in `en-US`; add Russian only on request. Keep internal exceptions, secrets, and unauthorized data out of player output. A permission-checked diagnostic/admin command may display technical IDs when they are part of its intended contract; do not replace useful diagnostics with player prose.
 - Use a CVar only for global operational/runtime configuration, not per-entity/content state. Use an existing typed `CVarDef<T>` pattern, stable namespaced key, safe typed default, units where needed, and flags verified in the current engine.
 - CVar keys are global operational APIs. Renames need compatibility/migration. Subscribe only for supported live changes; match subscription lifetime to its owner and handle invalid/removed persisted values safely.
 - Stop at a missing supported command/CVar extension point: do not bypass access, use reflection, alter engine, or create a parallel configuration system.

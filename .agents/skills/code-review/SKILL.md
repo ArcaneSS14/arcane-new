@@ -18,7 +18,7 @@ Determine intended scope and observable behavior, owner, authority, assembly/acc
 - Trace validation, mutation, dirtying, persistence, lifecycle, presentation, repeated execution, reconnect, and failure paths only for changed surfaces.
 - Check declarations, access modifiers, project/assembly references, public contracts, cleanup, compatibility, resources, and regression behavior relevant to the diff.
 - Verify the English FTL contract: keys, attributes, variables, selectors, paths, and order. Review Russian coverage/parity only when requested or when the issue is Russian-specific.
-- Inspect the complete diff for unrelated paths, SPDX edits, duplicated infrastructure, invented APIs/commands, and unproven verification claims.
+- Inspect the complete diff for unrelated paths, unauthorized SPDX edits under root `AGENTS.md`, duplicated infrastructure, invented APIs/commands, and unproven verification claims.
 - Every finding needs path, concrete declaration/execution evidence, impact, severity, and minimal remediation. A stylistic preference without observable impact is not a defect.
 
 ### Minimal examples

@@ -57,7 +57,7 @@ The rule for any conflicted line: the marker must match who authored the resolve
 
 An incoming Trauma change does not arrive as an Arcane change because it lands in our tree. Do not resolve a conflict by adopting upstream's line and re-marking it as ours, and do not resolve it by keeping a `Trauma - ` marker on a line we authored.
 
-Arcane owner-local paths are the root-level `Content.Arcane.*` projects and existing `_Arcane` resource directories. Do not add Arcane markers there. Existing markers under another fork's underscore directory belong to that fork; preserve them and do not add new Arcane markers there.
+Arcane owner-local paths are the root-level `Content.Arcane.*` projects and existing `Resources/**/_Arcane/**` directories. Do not add Arcane markers there. A foreign underscore directory is not Arcane-owned: preserve upstream markers on unchanged lines, but mark Arcane-authored changes in inherited files according to `.agents/rules/arcane-edit-markers.md`, including `_Trauma` and `_Shitmed` paths.
 
 ### Trajectory
 
