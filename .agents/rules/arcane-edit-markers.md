@@ -340,13 +340,12 @@ An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's
 
 - add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
-- add a marker inside another fork's underscore dir
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked
 - keep an upstream marker on a line we changed. Replacing `Trauma - ` with `Arcane-Edit: <upstream value> > <our value>` is the correct result, not an unauthorized conversion
 - rewrite upstream markers on lines we are not changing, and never convert them in bulk as a side effect of unrelated work
 - mark a line that is not actually changed
 - silently repair or normalize a marker in an inherited file as part of unrelated work
-- change an `SPDX` line while marking
+- change an `SPDX` line as incidental marker cleanup; the exact-request exception is defined in root `AGENTS.md`
 - leave an unbalanced `-Start` / `-End`
 - use an Arcane marker to claim a change authored by another fork
 

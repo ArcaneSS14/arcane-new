@@ -26,7 +26,7 @@ Treat these as owner-local when repository metadata confirms ownership:
 
 Owner-local files do not receive redundant owner edit markers.
 
-Files inherited from an upstream repository and located outside owner-local paths receive the current repository marker around the smallest changed block, unless the change is explicitly upstream-ready.
+Files inherited from an upstream repository and located outside owner-local paths receive the current repository marker around the smallest changed block under `.agents/rules/arcane-edit-markers.md`. An intention to upstream a change does not exempt it from the current destination's marker policy.
 
 ## Dependency rules
 

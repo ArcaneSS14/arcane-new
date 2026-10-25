@@ -36,7 +36,7 @@ Correct: select existing owner test project and focused observable contract. Pro
 
 ## Выбор подхода
 
-Use an owner-local focused test for a local observable contract and integration coverage only when the behavior crosses the relevant root layers. Broaden only when the failure cannot be isolated or the task explicitly requires a CI/full-owner gate.
+Use an owner-local focused test for a local observable contract and integration coverage when the behavior crosses the relevant root layers. Broaden for a concrete uncovered risk, required gate, or explicit request under root `AGENTS.md`; explain why narrower checks are insufficient and respect task exclusions.
 
 ## Антипаттерны
 

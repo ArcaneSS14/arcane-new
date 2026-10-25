@@ -16,7 +16,7 @@ Record `git status --short --branch`, the current branch, and remotes. Record ex
 ## Правила и границы
 
 - Stage only task-related paths and inspect the full staged diff before committing. Do not include generated files, logs, test results, IDE files, or unrelated cleanup unless requested.
-- Never add, edit, delete, normalize, or generate `SPDX-` lines. Report a file requiring human metadata instead of repairing REUSE.
+- Follow the [root SPDX boundary](../../../AGENTS.md#ownership-and-edit-markers): no unsolicited metadata changes or automatic REUSE repair. Only the exact SPDX change specified by the user's current request is an exception; preserve other notices.
 - Do not force-push, `reset --hard`, clean untracked files, rewrite published history, or choose merge/rebase without approval.
 - Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: choose the result that preserves confirmed behavior and intent; an incoming complete implementation may supersede an older Arcane divergence, while partial or unclear equivalence requires escalation.
 - Create commits only with the exact count/message requested by the user. A local task record, local commit, and remote push are distinct states.
@@ -42,11 +42,11 @@ Keep work unstaged while investigating. Stage the smallest reviewed task slice o
 
 - Do not stage user work, create preparatory commits when one commit was requested, or claim a remote update from a local commit.
 - Do not use destructive cleanup or history rewriting to obtain a clean status.
-- Do not alter SPDX or silently drop untracked/user changes.
+- Do not alter SPDX outside the root exact-request exception or silently drop untracked/user changes.
 
 ## Проверка
 
-Before delivery inspect `git status --short --branch`, `git diff --name-status`, `git diff --check`, and final diff. Confirm only requested paths changed, user work remains, no agent SPDX change or duplicate infrastructure appeared, claimed checks ran, and the target remote ref points to the reported commit when publication was requested.
+Before delivery inspect `git status --short --branch`, `git diff --name-status`, `git diff --check`, and final diff. Confirm only requested paths changed, user work remains, no unauthorized SPDX change or duplicate infrastructure appeared, claimed checks ran, and the target remote ref points to the reported commit when publication was requested.
 
 ## References
 

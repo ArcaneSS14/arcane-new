@@ -23,7 +23,7 @@ Use instructions in this order:
 3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
 4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
 
-More specific instructions add detail to general instructions. Root scope and verification limits are ceilings: scoped rules and skills may narrow them, but must not silently expand repository searches, builds, restores, or test runs. If two applicable instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
+More specific instructions add detail to general instructions. Keep explicit task exclusions and access boundaries. Start with targeted discovery and the smallest meaningful verification; expand only for a concrete missing dependency, uncovered risk, or required gate, and explain why the additional scope is necessary. If two applicable instructions still conflict, report the conflict rather than silently overriding a boundary.
 
 Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
 
@@ -216,7 +216,7 @@ git diff --stat
 
 Inspect the final diff for the files changed by the task.
 
-Run full repository verification only when the user explicitly requests full validation, final PR validation, release validation, or a repository-wide audit.
+Run full repository verification when explicitly requested, required by the applicable delivery gate, or needed to cover a concrete risk that targeted checks cannot address. Explain that risk before broadening; full verification is not the default for a local change and must not override an explicit task exclusion.
 
 Do not include large successful build or test logs in model context. Preserve the command result and inspect only relevant warnings or failures.
 

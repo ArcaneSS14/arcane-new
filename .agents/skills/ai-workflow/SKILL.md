@@ -17,7 +17,7 @@ Establish the requested outcome, exclusions, allowed paths, commit/push expectat
 
 - Treat declarations, files, and command output as evidence. Subagent summaries and unverified assumptions are not proof.
 - Verify repository/remote/upstream, branch, and marker scheme only when inherited paths, ownership, project references, synchronization, or automation are in scope.
-- Reuse the existing owner path and infrastructure. Mark inherited changes with the current repository marker; do not mark owner-local module or underscore paths, and do not edit SPDX.
+- Reuse the existing owner path and infrastructure. Mark inherited changes with the current repository marker; Arcane-owned paths need no ownership marker. Follow the [root SPDX boundary](../../../AGENTS.md#ownership-and-edit-markers), including its exact-request exception; do not perform incidental metadata cleanup.
 - English localization is structurally canonical; update Russian only when explicitly requested.
 - Run the narrowest meaningful check first. A missing dependency or tool is a limitation to report, never a pass.
 

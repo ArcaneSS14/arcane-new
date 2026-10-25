@@ -30,11 +30,19 @@ reviews:
   path_filters:
     - "!**/*.DotSettings"
   path_instructions:
+    - path: "**/*"
+      instructions: |
+        Use applicable repository rules as criteria for the reviewed change, not commands to perform
+        an implementation workflow. Do not request commits, tool installation, restore, or delegation
+        merely because a playbook describes them. Require broader verification only for a concrete
+        coverage gap or applicable gate; distinguish missing evidence from a demonstrated defect.
+
     - path: "**/*.cs"
       instructions: |
         Prioritize logical errors, runtime failures, regressions, server-authority mistakes,
         prediction duplication, missing validation, stale network state, forgotten Dirty/DirtyField,
-        wrong Common/Shared/Server/Client placement, unnecessary APIs, dead methods, and missing tests.
+        wrong Common/Shared/Server/Client placement, unnecessary APIs, dead methods, and missing
+        regression coverage for a concrete changed contract.
         Check module ownership before suggesting base or inherited changes.
 
     - path: "**/*.yml"
@@ -94,7 +102,6 @@ reviews:
     - path: ".github/**/*.md"
       instructions: |
         Review repository-facing docs and templates for consistency with AGENTS.md and this .coderabbit.yaml.
-        If a template could improve CodeRabbit output or linked-issue validation, call that out explicitly.
 
     - path: ".github/workflows/**/*.yml"
       instructions: |
@@ -182,11 +189,21 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
-      - ".agents/**/*.md"
-      - ".github/instructions/*.instructions.md"
-      - "AGENTS.md"
-      - "CLAUDE.md"
-      - "GEMINI.md"
+      # These mappings supplement CodeRabbit defaults. Do not import every skill or vendor playbook.
+      - files: ".agents/skills/code-review/references/severity-and-evidence.md"
+        applyTo: "**/*"
+      - files: ".agents/rules/architecture-and-ownership.md"
+        applyTo: "Content.*/**/*.{cs,csproj}, MSBuild/**/*.{props,targets}, Modules/**/*.md"
+      - files: ".agents/rules/coding-and-api-design.md"
+        applyTo: "Content.*/**/*.cs"
+      - files: ".agents/rules/ecs-writing-conventions.md"
+        applyTo: "Content.*/**/*.cs"
+      - files: ".agents/rules/arcane-edit-markers.md"
+        applyTo: "Content.*/**/*.cs, Resources/**/*.{yml,yaml,ftl}"
+      - files: ".agents/rules/content-and-localization.md"
+        applyTo: "Content.*/**/*.cs, Resources/Prototypes/**/*.{yml,yaml}, Resources/Locale/**/*.ftl"
+      - files: ".agents/rules/yaml-prototype-conventions.md"
+        applyTo: "Resources/Prototypes/**/*.{yml,yaml}"
   learnings:
     scope: "local"
   issues:
