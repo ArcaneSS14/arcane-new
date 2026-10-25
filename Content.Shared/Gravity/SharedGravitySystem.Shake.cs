@@ -38,6 +38,9 @@ public abstract partial class SharedGravitySystem
         if (!Resolve(uid, ref gravity, false))
             return;
 
+        if (TryArcaneScreenshakeGrid(uid))
+            return; // Arcane
+
         if (!TryComp<GravityShakeComponent>(uid, out var shake))
         {
             shake = AddComp<GravityShakeComponent>(uid);

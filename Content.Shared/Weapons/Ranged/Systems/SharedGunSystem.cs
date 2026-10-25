@@ -477,6 +477,7 @@ public abstract partial class SharedGunSystem : EntitySystem
         Shoot(gun, ev.Ammo, fromCoordinates, toCoordinates.Value, out var userImpulse, user, throwItems: attemptEv.ThrowItems);
         var shotEv = new GunShotEvent(user, ev.Ammo);
         RaiseLocalEvent(gun, ref shotEv);
+        DoArcaneGunScreenshake(user, gun); // Arcane
 
         UpdateAmmoCount(gun); //GoobStation - Multishot
         if (!userImpulse || !TryComp<PhysicsComponent>(user, out var userPhysics))

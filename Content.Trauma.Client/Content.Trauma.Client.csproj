@@ -12,6 +12,9 @@
 		<ProjectReference Include="../Content.Goobstation.Client/Content.Goobstation.Client.csproj" />
 		<ProjectReference Include="../Content.Trauma.Shared/Content.Trauma.Shared.csproj" />
 		<ProjectReference Include="../Content.Client/Content.Client.csproj" />
+		<!-- Arcane-Start -->
+		<ProjectReference Include="../Content.Arcane.Client/Content.Arcane.Client.csproj" />
+		<!-- Arcane-End -->
 	</ItemGroup>
 
 	<Import Project="../RobustToolbox/Imports/Client.props" />

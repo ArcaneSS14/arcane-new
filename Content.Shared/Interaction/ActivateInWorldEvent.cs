@@ -8,6 +8,8 @@ namespace Content.Shared.Interaction;
 [PublicAPI]
 public sealed class ActivateInWorldEvent : HandledEntityEventArgs
 {
+    public bool InteractionParticle = true; // Arcane
+
     /// <summary>
     ///     Entity that activated the target world entity.
     /// </summary>
