@@ -93,52 +93,28 @@
     species: Vulpkanin
   - type: Inventory
     speciesId: vulpkanin
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _Arcane/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit-female
+      shoes:
+        sizeMaps:
+          32:
+            sprite: _Arcane/Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
     displacements:
       jumpsuit:
         sizeMaps:
           32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            sprite: _Arcane/Mobs/Species/Vulpkanin/displacement.rsi
             state: jumpsuit
-      back:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: back
-      outerClothing:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: outerwear
-      gloves:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: hand
       shoes:
         sizeMaps:
           32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            sprite: _Arcane/Mobs/Species/Vulpkanin/displacement.rsi
             state: shoes
-      head:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: head
-      neck:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: neck
-      eyes:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: eyes
-      belt:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
-            state: belt
 
 - type: entity
   parent:
@@ -237,7 +213,7 @@
   components:
   - type: VisualOrgan
     data:
-      sprite: Mobs/Species/Vulpkanin/parts.rsi
+      sprite: _Arcane/Mobs/Species/Vulpkanin/parts.rsi
   - type: VisualOrganMarkings
     markingData:
       group: Vulpkanin
@@ -248,14 +224,25 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    sprite: _Arcane/Mobs/Species/Vulpkanin/parts.rsi
 
 - type: entity
   parent: [ OrganBaseTorsoSexed, OrganBaseTorsoTailed, OrganVulpkaninExternal ] # Trauma - Tailed torso
   id: OrganVulpkaninTorso
+  # Arcane-Start
+  components:
+  - type: Sprite
+    state: torso_m
+  - type: VisualOrgan
+    data:
+      state: torso_m
+    sexStateOverrides:
+      Male: torso_m
+      Female: torso_f
+  # Arcane-End
 
 - type: entity
-  parent: [ OrganBaseHead, OrganVulpkaninExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganVulpkaninExternal ] # Arcane-Edit: [ OrganBaseHead, OrganVulpkaninExternal ] > [ OrganBaseHeadSexed, OrganBaseHead, OrganVulpkaninExternal ]
   id: OrganVulpkaninHead
   components:
   - type: VisualOrganMarkings
@@ -272,7 +259,7 @@
       Hair:
         sizeMaps:
           32:
-            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            sprite: _Arcane/Mobs/Species/Vulpkanin/displacement.rsi
             state: hair
 
 - type: entity
@@ -314,6 +301,12 @@
 - type: entity
   parent: [ OrganVulpkaninVisual, OrganBaseEyes, OrganVulpkaninInternal ]
   id: OrganVulpkaninEyes
+  # Arcane-Start
+  components:
+  - type: VisualOrgan
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+  # Arcane-End
 
 - type: entity
   parent: [ OrganBaseTongue, OrganVulpkaninInternal ]
