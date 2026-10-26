@@ -22,6 +22,30 @@ public sealed class PopupUIController : UIController, IOnStateEntered<GameplaySt
 
     private PopupRootControl? _popupControl;
 
+    // Arcane-Start
+    private readonly Dictionary<PopupSystem.PopupLabel, PopupTextLayout> _popupLayouts = [];
+
+    private sealed class PopupTextLayout(
+        Font font,
+        string sourceText,
+        float sourceScale,
+        UIBox2 bounds,
+        string text,
+        float scale,
+        Vector2 dimensions)
+    {
+        public bool Matches(Font otherFont, string otherText, float otherScale, UIBox2 otherBounds)
+        {
+            return ReferenceEquals(font, otherFont)
+                   && sourceText == otherText
+                   && sourceScale == otherScale
+                   && bounds.Equals(otherBounds);
+        }
+
+        public (string Text, float Scale, Vector2 Dimensions) Result => (text, scale, dimensions);
+    }
+    // Arcane-End
+
     public override void Initialize()
     {
         base.Initialize();
@@ -46,6 +70,7 @@ public sealed class PopupUIController : UIController, IOnStateEntered<GameplaySt
 
         UIManager.RootControl.RemoveChild(_popupControl);
         _popupControl = null;
+        _popupLayouts.Clear(); // Arcane
     }
 
     public void DrawPopup(PopupSystem.PopupLabel popup, DrawingHandleScreen handle, Vector2 position, float scale, UIBox2 bounds) // Arcane-Edit: without bounds > with bounds
@@ -82,7 +107,9 @@ public sealed class PopupUIController : UIController, IOnStateEntered<GameplaySt
                 break;
         }
 
-        var (text, textScale, dimensions) = LayoutPopupText(handle, font, popup.Text, scale, bounds); // Arcane-Edit: direct dimensions > wrapped layout dimensions
+        // Arcane-Edit-Start
+        var (text, textScale, dimensions) = GetPopupLayout(popup, handle, font, scale, bounds);
+        // Arcane-Edit-End
         var drawPosition = updatedPosition - dimensions / 2f;
         // Arcane-Start
         drawPosition = ClampPopupPosition(drawPosition + popup.RandomOffset, dimensions, bounds);
@@ -92,6 +119,59 @@ public sealed class PopupUIController : UIController, IOnStateEntered<GameplaySt
     }
 
     // Arcane-Start
+    private (string Text, float Scale, Vector2 Dimensions) GetPopupLayout(
+        PopupSystem.PopupLabel popup,
+        DrawingHandleScreen handle,
+        Font font,
+        float scale,
+        UIBox2 bounds)
+    {
+        if (_popupLayouts.TryGetValue(popup, out var cached) && cached.Matches(font, popup.Text, scale, bounds))
+            return cached.Result;
+
+        var (text, layoutScale, dimensions) = LayoutPopupText(handle, font, popup.Text, scale, bounds);
+        _popupLayouts[popup] = new PopupTextLayout(font, popup.Text, scale, bounds, text, layoutScale, dimensions);
+        PrunePopupLayouts();
+        return (text, layoutScale, dimensions);
+    }
+
+    private void PrunePopupLayouts()
+    {
+        if (_popup == null || _popupLayouts.Count <= _popup.WorldLabels.Count + _popup.CursorLabels.Count)
+            return;
+
+        var stale = new List<PopupSystem.PopupLabel>();
+        foreach (var label in _popupLayouts.Keys)
+        {
+            if (IsActivePopup(label))
+                continue;
+
+            stale.Add(label);
+        }
+
+        foreach (var label in stale)
+        {
+            _popupLayouts.Remove(label);
+        }
+    }
+
+    private bool IsActivePopup(PopupSystem.PopupLabel label)
+    {
+        foreach (var active in _popup!.WorldLabels)
+        {
+            if (ReferenceEquals(active, label))
+                return true;
+        }
+
+        foreach (var active in _popup.CursorLabels)
+        {
+            if (ReferenceEquals(active, label))
+                return true;
+        }
+
+        return false;
+    }
+
     private static (string Text, float Scale, Vector2 Dimensions) LayoutPopupText(
         DrawingHandleScreen handle,
         Font font,

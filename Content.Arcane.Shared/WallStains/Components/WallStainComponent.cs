@@ -23,4 +23,6 @@ public sealed partial class WallStainComponent : Component
 
     [DataField, AutoNetworkedField]
     public int SplatSeed;
+
+    public float EvaporationAccumulator;
 }

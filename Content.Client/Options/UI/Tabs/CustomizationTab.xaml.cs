@@ -86,8 +86,7 @@ public sealed partial class CustomizationTab : Control
         var randomColors = UseRandomRunechatColors.Pressed;
         RunechatColorSlider.Slider.Visible = !randomColors;
         RunechatColorSlider.ExampleLabel.Visible = !randomColors;
-        RunechatTypingSpeedSlider.Slider.Disabled = !UseRunechatTypingAnimation.Pressed;
-        RunechatPostTypingLifetimeSlider.Slider.Disabled = !UseRunechatTypingAnimation.Pressed;
+        RunechatTypingSpeedSlider.Slider.Disabled = !UseRunechatTypingAnimation.Pressed; // Arcane
     }
 
     private sealed class OptionRunechatColor : BaseOptionCVar<string>

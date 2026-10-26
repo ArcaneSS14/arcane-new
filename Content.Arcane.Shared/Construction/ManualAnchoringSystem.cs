@@ -50,13 +50,14 @@ public sealed partial class ManualAnchoringSystem : EntitySystem
 
     private void TryStart(EntityUid target, EntityUid user, bool anchor)
     {
-        if (!CanUse(target, user, anchor))
+        if (!CanUse(target, user, anchor) ||
+            !_anchorable.TryGetManualAnchoringDelay(target, user, anchor, out var delay))
             return;
 
         var doAfter = new DoAfterArgs(
             EntityManager,
             user,
-            Comp<AnchorableComponent>(target).Delay,
+            delay,
             new ManualAnchoringDoAfterEvent(anchor),
             target,
             target: target,
@@ -68,6 +69,7 @@ public sealed partial class ManualAnchoringSystem : EntitySystem
             DuplicateCondition = DuplicateConditions.SameEvent,
             BlockDuplicate = true,
             CancelDuplicate = true,
+            FaceTarget = true,
         };
 
         _doAfter.TryStartDoAfter(doAfter);
@@ -79,10 +81,7 @@ public sealed partial class ManualAnchoringSystem : EntitySystem
         if (args.Cancelled || !_net.IsServer || !CanUse(entity.Owner, args.User, args.Anchor))
             return;
 
-        if (args.Anchor)
-            _anchorable.TryAnchor(entity.Owner, args.User);
-        else
-            _anchorable.TryUnanchor(entity.Owner, args.User);
+        _anchorable.CompleteManualAnchoring(entity.Owner, args.User, args.Anchor);
     }
 
     private bool CanUse(EntityUid target, EntityUid user, bool anchor)

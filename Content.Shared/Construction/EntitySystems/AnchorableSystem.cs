@@ -171,6 +171,43 @@ public sealed partial class AnchorableSystem : EntitySystem
         return CompleteAnchor(uid, userUid, userUid, anchorable, transform);
     }
 
+    public bool TryGetManualAnchoringDelay(EntityUid uid, EntityUid userUid, bool anchoring, out TimeSpan delay)
+    {
+        delay = TimeSpan.Zero;
+        AnchorableComponent? anchorable = null;
+        TransformComponent? transform = null;
+        if (!Resolve(uid, ref anchorable, ref transform) || transform.Anchored == anchoring)
+            return false;
+
+        if (!Valid(uid, userUid, userUid, anchoring, out var failMessage, out var actualDelay, anchorable, checkTool: false))
+        {
+            if (failMessage != null)
+                _popup.PopupEntity(Loc.GetString(failMessage), uid, userUid);
+            return false;
+        }
+
+        delay = TimeSpan.FromSeconds(actualDelay);
+        return true;
+    }
+
+    public bool CompleteManualAnchoring(EntityUid uid, EntityUid userUid, bool anchoring)
+    {
+        AnchorableComponent? anchorable = null;
+        TransformComponent? transform = null;
+        if (!Resolve(uid, ref anchorable, ref transform) || transform.Anchored == anchoring)
+            return false;
+
+        if ((anchoring && (anchorable.Flags & AnchorableFlags.Anchorable) == 0x0) ||
+            (!anchoring && (anchorable.Flags & AnchorableFlags.Unanchorable) == 0x0))
+        {
+            return false;
+        }
+
+        return anchoring
+            ? CompleteAnchor(uid, userUid, userUid, anchorable, transform)
+            : CompleteUnanchor(uid, userUid, userUid, anchorable, transform);
+    }
+
     public bool TryUnanchor(EntityUid uid, EntityUid userUid)
     {
         AnchorableComponent? anchorable = null;

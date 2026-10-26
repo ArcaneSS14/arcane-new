@@ -28,6 +28,8 @@ namespace Content.Arcane.Server.WallStains;
 
 public sealed partial class WallStainSystem : EntitySystem
 {
+    private const float EvaporationInterval = 1f;
+
     private static readonly ProtoId<TagPrototype> WindowTag = "Window";
     private static readonly ProtoId<TagPrototype> AirlockTag = "Airlock";
     private static readonly ProtoId<TagPrototype> SoapTag = "Soap";
@@ -106,7 +108,8 @@ public sealed partial class WallStainSystem : EntitySystem
         {
             BreakOnDamage = true,
             BreakOnMove = true,
-            NeedHand = true
+            NeedHand = true,
+            FaceTarget = true
         });
     }
 
@@ -151,7 +154,8 @@ public sealed partial class WallStainSystem : EntitySystem
         {
             BreakOnDamage = true,
             BreakOnMove = true,
-            NeedHand = true
+            NeedHand = true,
+            FaceTarget = true
         }))
             args.Handled = true;
     }
@@ -177,6 +181,7 @@ public sealed partial class WallStainSystem : EntitySystem
                 var volume = solution.Value.Comp.Solution.Volume;
                 _solutions.RemoveAllSolution(solution.Value);
                 _solutions.TryAddReagent(solution.Value, Water, volume, out _);
+                Update(child, stain, solution.Value.Comp.Solution);
             }
             else
                 QueueDel(child);
@@ -232,8 +237,13 @@ public sealed partial class WallStainSystem : EntitySystem
 
     private void Update(EntityUid uid, WallStainComponent component, Solution solution)
     {
-        component.Color = solution.GetColor(ProtoMan).WithAlpha(0.6f);
-        component.FillLevel = component.MaxStainVolume > 0 ? (solution.Volume / component.MaxStainVolume).Float() : 0;
+        var color = solution.GetColor(ProtoMan).WithAlpha(0.6f);
+        var fillLevel = component.MaxStainVolume > 0 ? (solution.Volume / component.MaxStainVolume).Float() : 0;
+        if (component.Color == color && component.FillLevel == fillLevel)
+            return;
+
+        component.Color = color;
+        component.FillLevel = fillLevel;
         Dirty(uid, component);
     }
 
@@ -245,12 +255,28 @@ public sealed partial class WallStainSystem : EntitySystem
         {
             if (!_solutions.TryGetSolution(uid, stain.SolutionName, out var solution))
                 continue;
+
+            stain.EvaporationAccumulator += frameTime;
+            if (stain.EvaporationAccumulator < EvaporationInterval)
+                continue;
+
+            var evaporationFrameTime = stain.EvaporationAccumulator;
+            stain.EvaporationAccumulator = 0f;
             var evaporating = _puddles.GetEvaporationSpeeds(solution.Value.Comp.Solution);
+            var changed = false;
             foreach (var (reagent, speed) in evaporating)
-                _solutions.RemoveReagent(solution.Value, reagent.Id, FixedPoint2.Min(solution.Value.Comp.Solution.GetTotalPrototypeQuantity(reagent), speed * frameTime));
+            {
+                var amount = FixedPoint2.Min(solution.Value.Comp.Solution.GetTotalPrototypeQuantity(reagent), speed * evaporationFrameTime);
+                if (amount <= FixedPoint2.Zero)
+                    continue;
+
+                _solutions.RemoveReagent(solution.Value, reagent.Id, amount);
+                changed = true;
+            }
+
             if (solution.Value.Comp.Solution.Volume <= 0)
                 QueueDel(uid);
-            else
+            else if (changed)
                 Update(uid, stain, solution.Value.Comp.Solution);
         }
     }

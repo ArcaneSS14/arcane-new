@@ -29,10 +29,10 @@ public sealed partial class DoAfterArgs
     [DataField]
     public EntityUid? Target;
 
-    // Arcane-Start
+    // Arcane-Edit-Start
     [DataField]
-    public bool FaceTarget = true;
-    // Arcane-End
+    public bool FaceTarget;
+    // Arcane-Edit-End
 
     public NetEntity? NetTarget;
 
