@@ -160,7 +160,7 @@
       - !type:ModifyBloodLevel
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Arachnid ]
+          type: [ Arachnid, Synth ] # Arcane-Edit: [ Arachnid ] > [ Arachnid, Synth ]
           inverted: true
         amount: 0.4
 

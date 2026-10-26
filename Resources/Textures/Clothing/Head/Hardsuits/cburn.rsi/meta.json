@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Made by \ud835\ude3d\ud835\ude5a\ud835\ude61\ud835\ude56\ud835\ude6e#7441. Vox states by Flareguy for SS14, vulp version made by YERO, feroxi by RedTerror",
+  "copyright": "Made by 𝘽𝙚𝙡𝙖𝙮#7441. Vox states by Flareguy for SS14, vulp version made by YERO, feroxi by RedTerror. Hydrakin sprites by bobbble (discord). Hydrakin states from Goob-Station.",
   "size": {
     "x": 32,
     "y": 32
@@ -41,6 +41,14 @@
     },
     {
       "name": "equipped-head-unshaded-feroxi",
+      "directions": 4
+    },
+    {
+      "name": "equipped-head-hydrakin",
+      "directions": 4
+    },
+    {
+      "name": "equipped-head-unshaded-hydrakin",
       "directions": 4
     }
   ]

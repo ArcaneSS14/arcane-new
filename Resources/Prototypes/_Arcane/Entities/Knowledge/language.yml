@@ -25,3 +25,10 @@
   components:
   - type: LanguageKnowledge
     languageId: Nehina
+
+- type: entity
+  parent: BaseLanguageKnowledge
+  id: LanguageHydraspeak
+  components:
+  - type: LanguageKnowledge
+    languageId: Hydraspeak

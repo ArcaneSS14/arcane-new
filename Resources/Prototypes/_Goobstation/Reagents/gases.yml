@@ -114,7 +114,7 @@
           reagent: BZ
           min: 0.5
         - !type:MetabolizerTypeCondition
-          type: [ Cybernetic ]
+          type: [ Cybernetic, Hydrakin ] # Arcane-Edit: [ Cybernetic ] > [ Cybernetic, Hydrakin ]
           inverted: true
         scaling: true
         ignoreResistances: true
@@ -366,6 +366,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 6
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         reagent: NitrosylPlasmide
         amount: 2.5
       - !type:GenericStatusEffect
@@ -381,6 +386,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 10
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         damage:
           types:
             Asphyxiation: 15

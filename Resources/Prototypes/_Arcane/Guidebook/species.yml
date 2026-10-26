@@ -22,3 +22,13 @@
   id: Feroxi
   name: species-name-feroxi
   text: "/ServerInfo/Guidebook/Mobs/_Arcane/Feroxi.xml"
+
+- type: guideEntry
+  id: Hydrakin
+  name: species-name-hydrakin
+  text: "/ServerInfo/Guidebook/Mobs/_Arcane/Hydrakin.xml"
+
+- type: guideEntry
+  id: Synth
+  name: species-name-synth
+  text: "/ServerInfo/Guidebook/Mobs/_Arcane/Synth.xml"

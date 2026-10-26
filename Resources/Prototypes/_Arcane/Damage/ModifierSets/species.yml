@@ -60,3 +60,11 @@
     Cold: 0.9
     Blunt: 0.9
     Slash: 1.1
+
+- type: damageModifierSet
+  id: Hydrakin
+  coefficients:
+    Heat: 1.15
+    Cold: 0
+    Blunt: 0.9
+    Slash: 1.15

@@ -15,7 +15,7 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/atmospherics.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/atmospherics.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/atmospherics.rsi
+    sprite: Clothing/Head/Hardsuits/atmospherics.rsi
     layers:
     - state: icon
     - state: icon-unshaded
@@ -71,9 +71,9 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/engineering.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/engineering.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/engineering.rsi
+    sprite: Clothing/Head/Hardsuits/engineering.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/engineering.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/engineering.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/engineering.rsi
+    sprite: Clothing/Head/Hardsuits/engineering.rsi
   - type: PointLight
     color: "#ffdbad"
   - type: PressureProtection
@@ -98,7 +98,7 @@
   description: A sturdy helmet designed for complex industrial operations in space. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/spatiohelm.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/spatiohelm.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/spatiohelm.rsi
+    sprite: Clothing/Head/Hardsuits/spatiohelm.rsi
     layers:
     - state: icon
     - state: icon-unshaded
@@ -150,9 +150,9 @@
     damageCoefficient: 0.3
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/salvage.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/salvage.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/salvage.rsi
+    sprite: Clothing/Head/Hardsuits/salvage.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/salvage.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/salvage.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/salvage.rsi
+    sprite: Clothing/Head/Hardsuits/salvage.rsi
   - type: PressureProtection
     highPressureMultiplier: 0.525
     lowPressureMultiplier: 1000
@@ -273,9 +273,9 @@
     damageCoefficient: 0.4
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/security.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security.rsi
+    sprite: Clothing/Head/Hardsuits/security.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/security.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security.rsi
+    sprite: Clothing/Head/Hardsuits/security.rsi
   - type: PointLight
     color: "#ffeead"
   - type: PressureProtection
@@ -353,9 +353,9 @@
     damageCoefficient: 0.4
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/security-warden.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security-warden.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security-warden.rsi
+    sprite: Clothing/Head/Hardsuits/security-warden.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/security-warden.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security-warden.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security-warden.rsi
+    sprite: Clothing/Head/Hardsuits/security-warden.rsi
   - type: PointLight
     color: "#ffeead"
   - type: PressureProtection
@@ -396,9 +396,9 @@
     damageCoefficient: 0.65
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/capspace.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/capspace.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/capspace.rsi
+    sprite: Clothing/Head/Hardsuits/capspace.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/capspace.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/capspace.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/capspace.rsi
+    sprite: Clothing/Head/Hardsuits/capspace.rsi
   - type: PressureProtection
     highPressureMultiplier: 0.3
     lowPressureMultiplier: 1000
@@ -438,9 +438,9 @@
     damageCoefficient: 0.2
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/engineering-white.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/engineering-white.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/engineering-white.rsi
+    sprite: Clothing/Head/Hardsuits/engineering-white.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/engineering-white.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/engineering-white.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/engineering-white.rsi
+    sprite: Clothing/Head/Hardsuits/engineering-white.rsi
   - type: PointLight
     color: "#daffad"
   - type: PressureProtection
@@ -471,9 +471,9 @@
   description: Lightweight medical hardsuit helmet that doesn't restrict your head movements. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/medical.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/medical.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/medical.rsi
+    sprite: Clothing/Head/Hardsuits/medical.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/medical.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/medical.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/medical.rsi
+    sprite: Clothing/Head/Hardsuits/medical.rsi
   - type: PointLight
     color: "#adf1ff"
   - type: PressureProtection
@@ -500,9 +500,9 @@
     damageCoefficient: 0.55
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/rd.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/rd.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/rd.rsi
+    sprite: Clothing/Head/Hardsuits/rd.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/rd.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/rd.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/rd.rsi
+    sprite: Clothing/Head/Hardsuits/rd.rsi
   - type: PointLight
     color: "#d6adff"
   - type: PressureProtection
@@ -538,9 +538,9 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/security-red.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security-red.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security-red.rsi
+    sprite: Clothing/Head/Hardsuits/security-red.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/security-red.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/security-red.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/security-red.rsi
+    sprite: Clothing/Head/Hardsuits/security-red.rsi
   - type: PointLight
     color: "#b7d4de"
   - type: PressureProtection
@@ -579,9 +579,9 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/luxury.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/luxury.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/luxury.rsi
+    sprite: Clothing/Head/Hardsuits/luxury.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/luxury.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/luxury.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/luxury.rsi
+    sprite: Clothing/Head/Hardsuits/luxury.rsi
   - type: PressureProtection
     highPressureMultiplier: 0.525
     lowPressureMultiplier: 1000
@@ -616,9 +616,9 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndicate.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndicate.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndicate.rsi
+    sprite: Clothing/Head/Hardsuits/syndicate.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndicate.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndicate.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndicate.rsi
+    sprite: Clothing/Head/Hardsuits/syndicate.rsi
   - type: PointLight
     color: green
   - type: PressureProtection
@@ -655,9 +655,9 @@
   description: An advanced red hardsuit helmet specifically designed for field medic operations. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndiemedic.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndiemedic.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndiemedic.rsi
+    sprite: Clothing/Head/Hardsuits/syndiemedic.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndiemedic.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndiemedic.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndiemedic.rsi
+    sprite: Clothing/Head/Hardsuits/syndiemedic.rsi
 
 #Syndicate Elite Hardsuit
 - type: entity
@@ -675,9 +675,9 @@
     damageCoefficient: 0.2
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndieelite.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndieelite.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndieelite.rsi
+    sprite: Clothing/Head/Hardsuits/syndieelite.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndieelite.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndieelite.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndieelite.rsi
+    sprite: Clothing/Head/Hardsuits/syndieelite.rsi
   - type: PointLight
     color: red
   - type: PressureProtection
@@ -729,9 +729,9 @@
     damageCoefficient: 0.5
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndiecommander.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndiecommander.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndiecommander.rsi
+    sprite: Clothing/Head/Hardsuits/syndiecommander.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/syndiecommander.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/syndiecommander.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/syndiecommander.rsi
+    sprite: Clothing/Head/Hardsuits/syndiecommander.rsi
   - type: PointLight
     color: green
   - type: PressureProtection
@@ -825,9 +825,9 @@
     damageCoefficient: 0.1
   # </Trauma>
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/wizard.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/wizard.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/wizard.rsi
+    sprite: Clothing/Head/Hardsuits/wizard.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/wizard.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/wizard.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/wizard.rsi
+    sprite: Clothing/Head/Hardsuits/wizard.rsi
   - type: PointLight # Goob edit
     color: "#4d7ae3"
     energy: 10
@@ -969,9 +969,9 @@
   description: A special hardsuit helmet worn by members of an emergency response team. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertleader.rsi
   - type: PointLight
     color: "#addbff"
 
@@ -997,9 +997,9 @@
   description: A special hardsuit helmet worn by members of an emergency response team. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertengineer.rsi
   - type: PointLight
     color: "#f4ffad"
   - type: EyeProtection # goob
@@ -1012,9 +1012,9 @@
   description: A special hardsuit helmet worn by members of an emergency response team. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertmedical.rsi
   - type: PointLight
     color: "#adffec"
 
@@ -1026,9 +1026,9 @@
   description: A special hardsuit helmet worn by members of an emergency response team. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertsecurity.rsi
   - type: PointLight
     color: "#ffadc6"
 
@@ -1040,9 +1040,9 @@
   description: A special hardsuit helmet worn by members of an emergency response team. # Goob edit
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi
+    sprite: Clothing/Head/Hardsuits/ERThelmets/ertjanitor.rsi
   - type: PointLight
     color: "#cbadff"
 
@@ -1107,9 +1107,9 @@
   # </Trauma>
   - type: BreathMask
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hardsuits/deathsquad.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/deathsquad.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/deathsquad.rsi
+    sprite: Clothing/Head/Hardsuits/deathsquad.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hardsuits/deathsquad.rsi # Arcane-Edit: sprite: Clothing/Head/Hardsuits/deathsquad.rsi > sprite: _Arcane/Clothing/Head/Hardsuits/deathsquad.rsi
+    sprite: Clothing/Head/Hardsuits/deathsquad.rsi
   - type: PressureProtection
     highPressureMultiplier: 0.08
     lowPressureMultiplier: 1000
