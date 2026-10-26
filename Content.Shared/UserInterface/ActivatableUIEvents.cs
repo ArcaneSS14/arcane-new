@@ -52,8 +52,6 @@ public sealed class AfterActivatableUIOpenEvent(EntityUid user) : EntityEventArg
     /// The player that opened the UI.
     /// </summary>
     public readonly EntityUid User = user;
-
-    public bool InteractionParticle; // Arcane
 }
 
 /// <summary>

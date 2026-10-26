@@ -613,7 +613,7 @@ public abstract partial class InventorySystem
     {
         foreach (var item in _handsSystem.EnumerateHeld(uid))
         {
-            _interactionSystem.DoContactInteraction(uid, item, null, true, interactionParticles: false); // Arcane-Edit: _interactionSystem.DoContactInteraction(uid, item) > keep forensic contact without visual particle
+            _interactionSystem.DoContactInteraction(uid, item);
         }
     }
 

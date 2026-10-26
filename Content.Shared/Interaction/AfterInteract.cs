@@ -50,8 +50,6 @@ namespace Content.Shared.Interaction
     /// </summary>
     public sealed class AfterInteractEvent : InteractEvent
     {
-        public bool SpawnInteractionParticles = true; // Arcane
-
         public AfterInteractEvent(EntityUid user, EntityUid used, EntityUid? target,
             EntityCoordinates clickLocation, bool canReach) : base(user, used, target, clickLocation, canReach)
         { }
@@ -63,8 +61,6 @@ namespace Content.Shared.Interaction
     /// </summary>
     public sealed class AfterInteractUsingEvent : InteractEvent
     {
-        public bool SpawnInteractionParticles = true; // Arcane
-
         public AfterInteractUsingEvent(EntityUid user, EntityUid used, EntityUid? target,
             EntityCoordinates clickLocation, bool canReach) : base(user, used, target, clickLocation, canReach)
         { }

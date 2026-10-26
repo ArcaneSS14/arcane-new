@@ -21,9 +21,6 @@ public sealed partial class ActivatableUISystem : EntitySystem
     [Dependency] private SharedPopupSystem _popupSystem = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private EntityWhitelistSystem _whitelistSystem = default!;
-    // Arcane-Start
-    [Dependency] private SharedInteractionSystem _arcaneInteraction = default!;
-    // Arcane-End
 
     public override void Initialize()
     {
@@ -78,8 +75,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         args.Verbs.Add(new ActivationVerb
         {
-            Act = () => InteractUI(args.User, (uid, component)), // Arcane-Edit: InteractUI(args.User, uid, component) > InteractUI(args.User, (uid, component))
-            DoContactInteraction = false, // Arcane
+            Act = () => InteractUI(args.User, uid, component),
             Text = Loc.GetString(component.VerbText),
             // TODO VERB ICON find a better icon
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png")),
@@ -93,7 +89,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         args.Verbs.Add(new Verb
         {
-            Act = () => InteractUI(args.User, (uid, component)), // Arcane-Edit: InteractUI(args.User, uid, component) > InteractUI(args.User, (uid, component))
+            Act = () => InteractUI(args.User, uid, component),
             Text = Loc.GetString(component.VerbText),
             // TODO VERB ICON find a better icon
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png")),
@@ -154,7 +150,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         if (component.RequiredItems != null)
             return;
 
-        args.Handled = InteractUI(args.User, uid, component, ref args.InteractionParticle); // Arcane-Edit: InteractUI(args.User, uid, component) > InteractUI(args.User, uid, component, ref args.InteractionParticle)
+        args.Handled = InteractUI(args.User, uid, component);
     }
 
     private void OnInteractUsing(EntityUid uid, ActivatableUIComponent component, InteractUsingEvent args)
@@ -171,7 +167,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
         if (_whitelistSystem.IsWhitelistFail(component.RequiredItems, args.Used))
             return;
 
-        args.Handled = InteractUI(args.User, uid, component, ref args.InteractionParticle); // Arcane-Edit: InteractUI(args.User, uid, component) > InteractUI(args.User, uid, component, ref args.InteractionParticle)
+        args.Handled = InteractUI(args.User, uid, component);
     }
 
     private void OnUIClose(EntityUid uid, ActivatableUIComponent component, BoundUIClosedEvent args)
@@ -197,30 +193,8 @@ public sealed partial class ActivatableUISystem : EntitySystem
             args.Cancel();
     }
 
-    // Arcane-Edit-Start
-    public bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, Enum? key = null)
+    public bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, Enum? key = null) // Trauma - made public, added key
     {
-        var interactionParticle = false;
-        return InteractUI(user, uiEntity, aui, ref interactionParticle, key);
-    }
-
-    private void InteractUI(EntityUid user, Entity<ActivatableUIComponent> ui)
-    {
-        var interactionParticle = false;
-        if (InteractUI(user, ui, ui, ref interactionParticle, out var opened) && opened)
-            _arcaneInteraction.DoContactInteraction(user, ui, null, true, interactionParticles: interactionParticle);
-    }
-    // Arcane-Edit-End
-
-    // Arcane-Edit-Start
-    private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, ref bool interactionParticle, Enum? key = null)
-    {
-        return InteractUI(user, uiEntity, aui, ref interactionParticle, out _, key);
-    }
-
-    private bool InteractUI(EntityUid user, EntityUid uiEntity, ActivatableUIComponent aui, ref bool interactionParticle, out bool opened, Enum? key = null)
-    {
-        opened = false;
         // <Trauma> - replace aui.Key with key, default to the comp's key
         key ??= aui.Key;
         if (key == null || !_uiSystem.HasUi(uiEntity, key))
@@ -228,7 +202,6 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         if (_uiSystem.IsUiOpen(uiEntity, key, user))
         {
-            interactionParticle = false; // Arcane
             _uiSystem.CloseUi(uiEntity, key, user);
             return true;
         }
@@ -280,17 +253,14 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
         SetCurrentSingleUser(uiEntity, user, aui);
         _uiSystem.OpenUi(uiEntity, key, user);
-        opened = true;
         // </Trauma>
 
         //Let the component know a user opened it so it can do whatever it needs to do
         var aae = new AfterActivatableUIOpenEvent(user);
         RaiseLocalEvent(uiEntity, aae);
-        interactionParticle = aae.InteractionParticle; // Arcane
 
         return true;
     }
-    // Arcane-Edit-End
 
     public void SetCurrentSingleUser(EntityUid uid, EntityUid? user, ActivatableUIComponent? aui = null)
     {
