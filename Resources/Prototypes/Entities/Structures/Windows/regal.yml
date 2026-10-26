@@ -5,9 +5,9 @@
   parent: [BaseDeltaPressureReinforcedGlass, Window]
   components:
   - type: Sprite
-    sprite: Structures/Windows/window-regal.rsi
+    sprite: _Arcane/Structures/Windows/window-regal.rsi # Arcane-Edit: sprite: Structures/Windows/window-regal.rsi > sprite: _Arcane/Structures/Windows/window-regal.rsi
   - type: Icon
-    sprite: Structures/Windows/window-regal.rsi
+    sprite: _Arcane/Structures/Windows/window-regal.rsi # Arcane-Edit: sprite: Structures/Windows/window-regal.rsi > sprite: _Arcane/Structures/Windows/window-regal.rsi
   - type: Damageable
     damageModifierSet: RGlass
   - type: Injurable
@@ -27,8 +27,10 @@
           collection: WindowShatter
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    base: window
+  # Arcane-Edit-Start
+  # - type: IconSmooth
+  # base: window
+  # Arcane-Edit-End
   - type: Appearance
   - type: DamageVisuals
     thresholds: [5, 10, 20]
@@ -36,3 +38,30 @@
     trackAllDamage: true
     damageOverlay:
       sprite: Structures/Windows/cracks.rsi
+  # Arcane-Start
+  - type: IconSmooth
+    key: windows-regal
+    states:
+    - !type:CardinalCornerSpriteSmoothing
+      mask: [ windows-regal ]
+      altMask:
+      - windows
+      - windows-reinf
+      - windows-tinted
+      - windows-plasma
+      - windows-plasma-reinf
+      - windows-uranium
+      - windows-uranium-reinf
+      - windows-exo
+      - windows-shuttle
+      - windows-plastitanium
+      - walls-exo
+      - walls-shuttle
+      - walls-plastitanium
+      - walls-material
+      - walls-marble
+      - walls
+      - grilles
+      - doors
+      base: window
+  # Arcane-End

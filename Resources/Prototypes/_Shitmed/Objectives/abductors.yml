@@ -384,7 +384,7 @@
   components:
   - type: Objective
     icon:
-      sprite: Structures/Walls/solid.rsi
+      sprite: _Arcane/Structures/Walls/solid.rsi # Arcane-Edit: sprite: Structures/Walls/solid.rsi > sprite: _Arcane/Structures/Walls/solid.rsi
       state: rgeneric
 
 - type: entity

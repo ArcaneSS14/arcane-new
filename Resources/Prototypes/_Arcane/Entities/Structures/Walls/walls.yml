@@ -31,7 +31,10 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: walls
-    base: plastic
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: plastic
 
 - type: entity
   parent: BaseWall
@@ -52,7 +55,10 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: walls
-    base: necropolis
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: necropolis
   - type: RustRequiresPathStage
     pathStage: 10 # Ascension
   - type: CosmicCorruptible

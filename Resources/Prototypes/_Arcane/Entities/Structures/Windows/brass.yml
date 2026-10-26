@@ -9,7 +9,11 @@
     sprite: _Arcane/Structures/Windows/window-brass.rsi
     state: full
   - type: IconSmooth
-    base: bwindow
+    key: windows
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ windows ]
+      base: bwindow
   - type: Construction
     graph: Window
     node: clockworkWindow

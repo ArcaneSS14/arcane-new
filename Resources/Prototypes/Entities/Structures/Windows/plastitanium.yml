@@ -54,6 +54,33 @@
     pylons:
     - Door
     - Firelock
+  # Arcane-Start
+  - type: IconSmooth
+    key: windows-plastitanium
+    states:
+    - !type:CardinalCornerSpriteSmoothing
+      mask: [ windows-plastitanium ]
+      altMask:
+      - windows
+      - windows-reinf
+      - windows-tinted
+      - windows-plasma
+      - windows-plasma-reinf
+      - windows-uranium
+      - windows-uranium-reinf
+      - windows-exo
+      - windows-shuttle
+      - windows-regal
+      - walls-exo
+      - walls-shuttle
+      - walls-plastitanium
+      - walls-material
+      - walls-marble
+      - walls
+      - grilles
+      - doors
+      base: window
+  # Arcane-End
 
 - type: entity
   id: PlastitaniumWindowSquareBase
@@ -63,13 +90,15 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    sprite: Structures/Windows/window-plastitanium.rsi
+    sprite: _Arcane/Structures/Windows/window-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-plastitanium.rsi
   - type: Icon
-    sprite: Structures/Windows/window-plastitanium.rsi
+    sprite: _Arcane/Structures/Windows/window-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-plastitanium.rsi
     state: full
-  - type: IconSmooth
-    key: walls
-    base: ptwindow
+  # Arcane-Edit-Start
+  # - type: IconSmooth
+  # key: walls
+  # base: ptwindow
+  # Arcane-Edit-End
   - type: Airtight
   - type: Fixtures
     fixtures:
@@ -138,19 +167,28 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    sprite: Structures/Windows/window-diagonal-plastitanium.rsi
-    state: state0
+    # Arcane-Edit-Start
+    sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi
+    # Arcane-Edit-End
   - type: Tag
     tags:
     - Diagonal
     - Window
   - type: Icon
-    sprite: Structures/Windows/window-diagonal-plastitanium.rsi
+    sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi
     state: state0
   - type: IconSmooth
-    mode: Diagonal
-    key: walls
-    base: state
+    # Arcane-Edit-Start
+    states:
+    - !type:DiagonalSpriteSmoothing
+      mask:
+      - walls
+      - windows
+      - grilles
+      - marble
+      - doors
+      base: state
+    # Arcane-Edit-End
   - type: Fixtures
     fixtures:
       fix1:

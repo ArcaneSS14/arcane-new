@@ -9,7 +9,7 @@
   - type: InteractionOutline
   - type: Sprite
     snapCardinals: true
-    sprite: Structures/Power/Generation/ame.rsi
+    sprite: _Arcane/Structures/Power/Generation/ame.rsi # Arcane-Edit: sprite: Structures/Power/Generation/ame.rsi > sprite: _Arcane/Structures/Power/Generation/ame.rsi
     state: control
     layers:
     - state: control
@@ -90,7 +90,7 @@
   - type: PowerMonitoringDevice
     group: Generator
     loadNode: input
-    sprite: Structures/Power/Generation/ame.rsi
+    sprite: _Arcane/Structures/Power/Generation/ame.rsi # Arcane-Edit: sprite: Structures/Power/Generation/ame.rsi > sprite: _Arcane/Structures/Power/Generation/ame.rsi
     state: static
   - type: PowerSupplier
     supplyRate: 0
@@ -136,7 +136,7 @@
   - type: InteractionOutline
   - type: Sprite
     drawdepth: Walls
-    sprite: Structures/Power/Generation/ame.rsi
+    sprite: _Arcane/Structures/Power/Generation/ame.rsi # Arcane-Edit: sprite: Structures/Power/Generation/ame.rsi > sprite: _Arcane/Structures/Power/Generation/ame.rsi
     state: shield_0
     layers:
     - state: shield_0
@@ -179,9 +179,17 @@
   - type: Transform
     anchored: true
   - type: IconSmooth
-    mode: CardinalFlags
-    base: shield_
+    # Arcane-Edit-Start
+    # mode: CardinalFlags
+    # base: shield_
+    # Arcane-Edit-End
     key: ame_shield
+    # Arcane-Start
+    states:
+    - !type:DirectionSpriteSmoothing
+      mask: [ ame_shield ]
+      base: shield_
+    # Arcane-End
   - type: AmeShield
   - type: NodeContainer
     nodes:

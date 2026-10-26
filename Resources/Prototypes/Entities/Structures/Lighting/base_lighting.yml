@@ -20,6 +20,7 @@
     anchored: true
   - type: Pullable
   - type: Clickable
+  - type: WallMount # Arcane
   - type: InteractionOutline
   - type: Sprite
     offset: 0, 1

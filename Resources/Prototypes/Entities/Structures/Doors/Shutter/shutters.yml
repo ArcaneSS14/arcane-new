@@ -105,8 +105,9 @@
   - type: PlacementReplacement
     key: shutters
   - type: IconSmooth
-    key: walls
-    mode: NoSprite
+    # Arcane-Edit-Start
+    key: doors
+    # Arcane-Edit-End
   - type: StructureAligner
   - type: StructureAlignerPylon
 

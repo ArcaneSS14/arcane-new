@@ -6,9 +6,9 @@
   description: Pieces of metal that make the frame of a table.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
     state: full
   - type: Fixtures
     fixtures:
@@ -26,8 +26,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -58,9 +63,9 @@
   components:
   - type: SpriteFade
   - type: Sprite
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
     state: full
   - type: Fixtures
     fixtures:
@@ -79,8 +84,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -111,9 +121,9 @@
   components:
   - type: SpriteFade
   - type: Sprite
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/frame.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/frame.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/frame.rsi > sprite: _Arcane/Structures/Furniture/Tables/frame.rsi
     state: full
   - type: Fixtures
     fixtures:
@@ -131,8 +141,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -162,9 +177,9 @@
   description: A square piece of metal standing on four metal legs.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/generic.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/generic.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/generic.rsi > sprite: _Arcane/Structures/Furniture/Tables/generic.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/generic.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/generic.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/generic.rsi > sprite: _Arcane/Structures/Furniture/Tables/generic.rsi
   - type: Damageable
     damageModifierSet: Metallic
   - type: Injurable
@@ -187,9 +202,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: metaltable
-    base: state_
   - type: Construction
     graph: Table
     node: Table
@@ -201,9 +213,9 @@
   description: A square piece of metal standing on four metal legs. Extra robust.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/reinforced.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/reinforced.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/reinforced.rsi > sprite: _Arcane/Structures/Furniture/Tables/reinforced.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/reinforced.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/reinforced.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/reinforced.rsi > sprite: _Arcane/Structures/Furniture/Tables/reinforced.rsi
   - type: Destructible
     thresholds:
     - trigger:
@@ -226,7 +238,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: metalreinforcedtable
+    # Arcane-Edit-Start
+    key: metaltable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ metaltable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableReinforced
@@ -247,9 +265,9 @@
   description: A square piece of glass, standing on four metal legs.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/glass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/glass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/glass.rsi > sprite: _Arcane/Structures/Furniture/Tables/glass.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/glass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/glass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/glass.rsi > sprite: _Arcane/Structures/Furniture/Tables/glass.rsi
   - type: GlassTable
     climberDamage:
       types:
@@ -278,6 +296,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: glasstable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableGlass
@@ -295,9 +319,9 @@
   description: Cardboard sheets wrapped around a metal table frame.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/card.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/card.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/card.rsi > sprite: _Arcane/Structures/Furniture/Tables/card.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/card.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/card.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/card.rsi > sprite: _Arcane/Structures/Furniture/Tables/card.rsi
   - type: GlassTable #they named it that cause 'it would never be used elsewhere' or something, smh
     climberDamage:
       types:
@@ -329,6 +353,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: cardtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cardtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableCard
@@ -343,9 +373,9 @@
   description: A square piece of glass, standing on four metal legs. Extra robust.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/r_glass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/r_glass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/r_glass.rsi > sprite: _Arcane/Structures/Furniture/Tables/r_glass.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/r_glass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/r_glass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/r_glass.rsi > sprite: _Arcane/Structures/Furniture/Tables/r_glass.rsi
   - type: GlassTable
     climberDamage:
       types:
@@ -376,7 +406,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: reinforcedglasstable
+    # Arcane-Edit-Start
+    key: glasstable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableReinforcedGlass
@@ -394,9 +430,9 @@
   description: A square piece of plasma glass, standing on four metal legs. Pretty!
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/plasma.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/plasma.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/plasma.rsi > sprite: _Arcane/Structures/Furniture/Tables/plasma.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/plasma.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/plasma.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/plasma.rsi > sprite: _Arcane/Structures/Furniture/Tables/plasma.rsi
   - type: GlassTable
     climberDamage:
       types:
@@ -427,7 +463,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: plasmaglasstable
+    # Arcane-Edit-Start
+    key: glasstable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TablePlasmaGlass
@@ -445,9 +487,9 @@
   description: A shiny, corrosion resistant brass table. Steampunk!
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/brass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/brass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/brass.rsi > sprite: _Arcane/Structures/Furniture/Tables/brass.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/brass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/brass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/brass.rsi > sprite: _Arcane/Structures/Furniture/Tables/brass.rsi
   - type: Damageable
     damageModifierSet: Metallic
   - type: Injurable
@@ -471,7 +513,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: brasstable
+    # Arcane-Edit-Start
+    key: metaltable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ metaltable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableBrass
@@ -485,9 +533,9 @@
   description: Do not apply fire to this. Rumour says it burns easily.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/wood.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/wood.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/wood.rsi > sprite: _Arcane/Structures/Furniture/Tables/wood.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/wood.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/wood.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/wood.rsi > sprite: _Arcane/Structures/Furniture/Tables/wood.rsi
   - type: Damageable
     damageModifierSet: Wood
   - type: Destructible
@@ -508,6 +556,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: woodtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ woodtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableWood
@@ -528,9 +582,9 @@
   description: Play em' cowboy.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/carpet.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/carpet.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/carpet.rsi > sprite: _Arcane/Structures/Furniture/Tables/carpet.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/carpet.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/carpet.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/carpet.rsi > sprite: _Arcane/Structures/Furniture/Tables/carpet.rsi
   - type: Damageable
     damageModifierSet: Wood
   - type: Destructible
@@ -553,7 +607,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: woodgambletable
+    # Arcane-Edit-Start
+    key: woodtable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ woodtable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableCarpet
@@ -574,9 +634,9 @@
   description: Literally the sturdiest thing you have ever seen.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/stone.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/stone.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/stone.rsi > sprite: _Arcane/Structures/Furniture/Tables/stone.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/stone.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/stone.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/stone.rsi > sprite: _Arcane/Structures/Furniture/Tables/stone.rsi
   - type: Destructible
     thresholds:
     - trigger:
@@ -590,6 +650,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: stonetable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stonetable ]
+      base: state_
+    # Arcane-End
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepFloor
@@ -605,9 +671,9 @@
   - type: Damageable
     damageModifierSet: Web
   - type: Sprite
-    sprite: Structures/Furniture/Tables/web.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/web.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/web.rsi > sprite: _Arcane/Structures/Furniture/Tables/web.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/web.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/web.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/web.rsi > sprite: _Arcane/Structures/Furniture/Tables/web.rsi
   - type: Destructible
     thresholds:
     - trigger:
@@ -623,6 +689,12 @@
           "/Audio/Weapons/slash.ogg"
   - type: IconSmooth
     key: webtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ webtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: WebStructures
     node: table
@@ -692,6 +764,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: fancytable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ fancytable ]
+      base: state_
+    # Arcane-End
   - type: Tag
     tags:
     - Wooden
@@ -708,14 +786,12 @@
   suffix: Blue
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/blue.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/blue.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/blue.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/blue.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/blue.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/blue.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/blue.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/blue.rsi
   - type: Construction
     graph: Table
     node: TableFancyBlue
-  - type: IconSmooth
-    key: fancytableblue
 
 - type: entity
   id: TableFancySkyBlue
@@ -723,14 +799,12 @@
   suffix: SkyBlue
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/skyblue.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/skyblue.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/skyblue.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/skyblue.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/skyblue.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/skyblue.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/skyblue.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/skyblue.rsi
   - type: Construction
     graph: Table
     node: TableFancySkyBlue
-  - type: IconSmooth
-    key: fancytableskyblue
 
 - type: entity
   id: TableFancyCyan
@@ -738,14 +812,12 @@
   suffix: Cyan
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/cyan.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/cyan.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/cyan.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/cyan.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/cyan.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/cyan.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/cyan.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/cyan.rsi
   - type: Construction
     graph: Table
     node: TableFancyCyan
-  - type: IconSmooth
-    key: fancytablecyan
 
 - type: entity
   id: TableFancyBlack
@@ -753,14 +825,12 @@
   suffix: Black
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/black.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/black.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/black.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/black.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/black.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/black.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/black.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/black.rsi
   - type: Construction
     graph: Table
     node: TableFancyBlack
-  - type: IconSmooth
-    key: fancytableblack
 
 - type: entity
   id: TableFancyRed
@@ -768,14 +838,12 @@
   suffix: Red
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/red.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/red.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/red.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/red.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/red.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/red.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/red.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/red.rsi
   - type: Construction
     graph: Table
     node: TableFancyRed
-  - type: IconSmooth
-    key: fancytablered
 
 - type: entity
   id: TableFancyPurple
@@ -783,14 +851,12 @@
   suffix: Purple
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/purple.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/purple.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/purple.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/purple.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/purple.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/purple.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/purple.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/purple.rsi
   - type: Construction
     graph: Table
     node: TableFancyPurple
-  - type: IconSmooth
-    key: fancytablepurple
 
 - type: entity
   id: TableFancyPink
@@ -798,14 +864,12 @@
   suffix: Pink
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/pink.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/pink.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/pink.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/pink.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/pink.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/pink.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/pink.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/pink.rsi
   - type: Construction
     graph: Table
     node: TableFancyPink
-  - type: IconSmooth
-    key: fancytablepink
 
 - type: entity
   id: TableFancyGreen
@@ -813,14 +877,12 @@
   suffix: Green
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/green.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/green.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/green.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/green.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/green.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/green.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/green.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/green.rsi
   - type: Construction
     graph: Table
     node: TableFancyGreen
-  - type: IconSmooth
-    key: fancytablegreen
 
 - type: entity
   id: TableFancyOrange
@@ -828,14 +890,12 @@
   suffix: Orange
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/orange.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/orange.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/orange.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/orange.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/orange.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/orange.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/orange.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/orange.rsi
   - type: Construction
     graph: Table
     node: TableFancyOrange
-  - type: IconSmooth
-    key: fancytableorange
 
 - type: entity
   id: TableFancyWhite
@@ -843,14 +903,12 @@
   suffix: White
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/Fancy/white.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/white.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/white.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/white.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/Fancy/white.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/Fancy/white.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/Fancy/white.rsi > sprite: _Arcane/Structures/Furniture/Tables/Fancy/white.rsi
   - type: Construction
     graph: Table
     node: TableFancyWhite
-  - type: IconSmooth
-    key: fancytablewhite
 
 #Debug
 
@@ -883,9 +941,9 @@
   description: Do not apply fire to this. Rumour says it burns easily.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/counterwood.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/counterwood.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/counterwood.rsi > sprite: _Arcane/Structures/Furniture/Tables/counterwood.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/counterwood.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/counterwood.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/counterwood.rsi > sprite: _Arcane/Structures/Furniture/Tables/counterwood.rsi
     state: full
   - type: Damageable
     damageModifierSet: Wood
@@ -907,9 +965,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: counterwood
-    base: state_
   - type: Construction
     graph: Table
     node: CounterWood
@@ -924,9 +979,9 @@
   description: Looks like a good place to put a drink down.
   components:
   - type: Sprite
-    sprite: Structures/Furniture/Tables/countermetal.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/countermetal.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/countermetal.rsi > sprite: _Arcane/Structures/Furniture/Tables/countermetal.rsi
   - type: Icon
-    sprite: Structures/Furniture/Tables/countermetal.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/countermetal.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/countermetal.rsi > sprite: _Arcane/Structures/Furniture/Tables/countermetal.rsi
     state: full
   - type: Damageable
     damageModifierSet: Metallic
@@ -950,9 +1005,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: countermetal
-    base: state_
   - type: Construction
     graph: Table
     node: CounterMetal

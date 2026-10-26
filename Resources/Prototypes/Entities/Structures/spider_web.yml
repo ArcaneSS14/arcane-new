@@ -20,7 +20,7 @@
         path:
           "/Audio/Weapons/slash.ogg"
   - type: Sprite
-    sprite: Structures/floor_web.rsi
+    sprite: _Arcane/Structures/floor_web.rsi # Arcane-Edit: sprite: Structures/floor_web.rsi > sprite: _Arcane/Structures/floor_web.rsi
     drawdepth: Overdoors # Trauma
   - type: Appearance
   - type: Clickable
@@ -42,9 +42,12 @@
   - type: SpiderWebObject
   - type: IconSmooth
     key: web
-    additionalKeys:
-    - walls
-    base: web_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ web, walls ]
+      base: web_
+    # Arcane-Edit-End
   - type: Construction
     graph: CobwebsGraph
     node: start

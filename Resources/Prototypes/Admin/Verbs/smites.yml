@@ -4,7 +4,7 @@
   name: admin-smite-super-bonk-lite-name
   description: admin-smite-super-bonk-lite-description
   icon:
-    sprite: Structures/Furniture/Tables/glass.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/glass.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/glass.rsi > sprite: _Arcane/Structures/Furniture/Tables/glass.rsi
     state: full
   effects:
   - !type:AddComponents
@@ -18,7 +18,7 @@
   name: admin-smite-super-bonk-name
   description: admin-smite-super-bonk-description
   icon:
-    sprite: Structures/Furniture/Tables/generic.rsi
+    sprite: _Arcane/Structures/Furniture/Tables/generic.rsi # Arcane-Edit: sprite: Structures/Furniture/Tables/generic.rsi > sprite: _Arcane/Structures/Furniture/Tables/generic.rsi
     state: full
   effects:
   - !type:AddComponents

@@ -38,16 +38,19 @@
   - type: SyncSprite
   - type: Clickable
   - type: Sprite
-    sprite: Tiles/TileEntities/liquid-phoron.rsi
+    sprite: _Arcane/Tiles/TileEntities/liquid-phoron.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-phoron.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-phoron.rsi
     drawdepth: BelowFloor
   - type: Icon
-    sprite: Tiles/TileEntities/liquid-phoron.rsi
+    sprite: _Arcane/Tiles/TileEntities/liquid-phoron.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-phoron.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-phoron.rsi
     state: full
   - type: IconSmooth
     key: phoron
-    base: water
-    additionalKeys:
-    - walls
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ phoron, walls ]
+      base: water
+    # Arcane-Edit-End
   - type: Physics
     bodyType: Static
   - type: Fixtures

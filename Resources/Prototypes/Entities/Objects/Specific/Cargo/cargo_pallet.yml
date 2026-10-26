@@ -26,7 +26,7 @@
   - type: Sprite
     drawdepth: FloorTiles
     layers:
-    - sprite: Structures/catwalk.rsi
+    - sprite: _Arcane/Structures/catwalk.rsi # Arcane-Edit: - sprite: Structures/catwalk.rsi > - sprite: _Arcane/Structures/catwalk.rsi
       state: catwalk_preview
   - type: GuideHelp
     guides:
@@ -63,13 +63,18 @@
   - type: CargoPallet
     palletType: sell
   - type: Sprite
-    sprite: Structures/cargo_pallets.rsi
+    sprite: _Arcane/Structures/cargo_pallets.rsi # Arcane-Edit: sprite: Structures/cargo_pallets.rsi > sprite: _Arcane/Structures/cargo_pallets.rsi
   - type: Icon
-    sprite: Structures/cargo_pallets.rsi
+    sprite: _Arcane/Structures/cargo_pallets.rsi # Arcane-Edit: sprite: Structures/cargo_pallets.rsi > sprite: _Arcane/Structures/cargo_pallets.rsi
     state: cargo_pallet_sell
   - type: IconSmooth
     key: cargo_pallet_sell
-    base: cargo_pallet_sell_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cargo_pallet_sell ]
+      base: cargo_pallet_sell_
+    # Arcane-Edit-End
 
 - type: entity
   id: CargoPalletBuy
@@ -80,10 +85,15 @@
   - type: CargoPallet
     palletType: buy
   - type: Sprite
-    sprite: Structures/cargo_pallets.rsi
+    sprite: _Arcane/Structures/cargo_pallets.rsi # Arcane-Edit: sprite: Structures/cargo_pallets.rsi > sprite: _Arcane/Structures/cargo_pallets.rsi
   - type: Icon
-    sprite: Structures/cargo_pallets.rsi
+    sprite: _Arcane/Structures/cargo_pallets.rsi # Arcane-Edit: sprite: Structures/cargo_pallets.rsi > sprite: _Arcane/Structures/cargo_pallets.rsi
     state: cargo_pallet_buy
   - type: IconSmooth
     key: cargo_pallet_buy
-    base: cargo_pallet_buy_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cargo_pallet_buy ]
+      base: cargo_pallet_buy_
+    # Arcane-Edit-End

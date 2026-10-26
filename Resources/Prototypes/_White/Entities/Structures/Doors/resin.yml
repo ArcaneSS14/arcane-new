@@ -34,8 +34,10 @@
         layer:
         - AirlockLayer
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: walls
-    mode: NoSprite
+    states: []
+    # Arcane-Edit-End
   - type: Door
     canPry: false
     crushDamage:

@@ -13,10 +13,13 @@
     noRot: true
   - type: IconSmooth
     key: stone
-    additionalKeys:
-    - doors
-    index: 0
-    base: stone
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stone, doors ]
+      base: stone
+      index: 0
+    # Arcane-Edit-End
   - type: Icon
     state: full
   - type: Sprite
@@ -288,10 +291,10 @@
   description: A rocky asteroid.
   components:
   - type: Icon
-    sprite: Structures/Walls/stone.rsi
+    sprite: _Arcane/Structures/Walls/stone.rsi # Arcane-Edit: sprite: Structures/Walls/stone.rsi > sprite: _Arcane/Structures/Walls/stone.rsi
     state: full
   - type: Sprite
-    sprite: Structures/Walls/stone.rsi
+    sprite: _Arcane/Structures/Walls/stone.rsi # Arcane-Edit: sprite: Structures/Walls/stone.rsi > sprite: _Arcane/Structures/Walls/stone.rsi
 
 - type: entity
   parent: [ BaseAsteroidRockVisuals, BaseAsteroidRock, BaseAsteroidDestructible ]
@@ -410,10 +413,10 @@
   description: A rocky asteroid.
   components:
   - type: Icon
-    sprite: Structures/Walls/stone-ironrock.rsi
+    sprite: _Arcane/Structures/Walls/stone-ironrock.rsi # Arcane-Edit: sprite: Structures/Walls/stone-ironrock.rsi > sprite: _Arcane/Structures/Walls/stone-ironrock.rsi
     state: full
   - type: Sprite
-    sprite: Structures/Walls/stone-ironrock.rsi
+    sprite: _Arcane/Structures/Walls/stone-ironrock.rsi # Arcane-Edit: sprite: Structures/Walls/stone-ironrock.rsi > sprite: _Arcane/Structures/Walls/stone-ironrock.rsi
 
 - type: entity
   parent: [ BaseIronRockVisuals, BaseAsteroidRock, BaseAsteroidDestructible ]
@@ -495,14 +498,19 @@
       - *SoundStoneBreak
   - type: IconSmooth
     key: stone
-    index: 0
-    base: stone
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stone, doors ]
+      base: stone
+      index: 0
+    # Arcane-Edit-End
   - type: Icon
-    sprite: Structures/Walls/stone-dirt.rsi
+    sprite: _Arcane/Structures/Walls/stone-dirt.rsi # Arcane-Edit: sprite: Structures/Walls/stone-dirt.rsi > sprite: _Arcane/Structures/Walls/stone-dirt.rsi
     state: full
   - type: MiningScannerViewable
   - type: Sprite
-    sprite: Structures/Walls/stone-dirt.rsi
+    sprite: _Arcane/Structures/Walls/stone-dirt.rsi # Arcane-Edit: sprite: Structures/Walls/stone-dirt.rsi > sprite: _Arcane/Structures/Walls/stone-dirt.rsi
 
 # Ore veins
 - type: entity
@@ -624,10 +632,10 @@
   name: snowdrift
   components:
   - type: Icon
-    sprite: Structures/Walls/stone-snow.rsi
+    sprite: _Arcane/Structures/Walls/stone-snow.rsi # Arcane-Edit: sprite: Structures/Walls/stone-snow.rsi > sprite: _Arcane/Structures/Walls/stone-snow.rsi
     state: full
   - type: Sprite
-    sprite: Structures/Walls/stone-snow.rsi
+    sprite: _Arcane/Structures/Walls/stone-snow.rsi # Arcane-Edit: sprite: Structures/Walls/stone-snow.rsi > sprite: _Arcane/Structures/Walls/stone-snow.rsi
 
 - type: entity
   parent: [ BaseVeinCoal, WallRockSnow ]
@@ -678,10 +686,10 @@
   name: sandstone
   components:
   - type: Icon
-    sprite: Structures/Walls/stone-sand.rsi
+    sprite: _Arcane/Structures/Walls/stone-sand.rsi # Arcane-Edit: sprite: Structures/Walls/stone-sand.rsi > sprite: _Arcane/Structures/Walls/stone-sand.rsi
     state: full
   - type: Sprite
-    sprite: Structures/Walls/stone-sand.rsi
+    sprite: _Arcane/Structures/Walls/stone-sand.rsi # Arcane-Edit: sprite: Structures/Walls/stone-sand.rsi > sprite: _Arcane/Structures/Walls/stone-sand.rsi
 
 - type: entity
   parent: [ BaseVeinCoal, WallRockSand ]
@@ -732,10 +740,10 @@
   parent: WallRock
   components:
   - type: Icon
-    sprite: Structures/Walls/stone-chromite.rsi
+    sprite: _Arcane/Structures/Walls/stone-chromite.rsi # Arcane-Edit: sprite: Structures/Walls/stone-chromite.rsi > sprite: _Arcane/Structures/Walls/stone-chromite.rsi
     state: full
   - type: Sprite
-    sprite: Structures/Walls/stone-chromite.rsi
+    sprite: _Arcane/Structures/Walls/stone-chromite.rsi # Arcane-Edit: sprite: Structures/Walls/stone-chromite.rsi > sprite: _Arcane/Structures/Walls/stone-chromite.rsi
 
 - type: entity
   parent: [ BaseVeinCoal, WallRockChromite ]

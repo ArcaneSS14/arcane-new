@@ -5,6 +5,13 @@ using Robust.Client.Graphics;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map.Components;
 
+// Arcane-Start
+using Content.Shared.Physics;
+using Robust.Shared.Graphics;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Systems;
+// Arcane-End
+
 namespace Content.Client.Wall.Systems;
 
 /// <summary>
@@ -112,4 +119,73 @@ public sealed partial class WallMountVisibilitySystem : EntitySystem
         }
         return false;
     }
+
+    // Arcane-Start
+    [Dependency] private TransformSystem _xform = default!;
+    [Dependency] private EntityQuery<MapGridComponent> _gridQuery;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+
+    public float GetVisibilityAlpha(
+        WallMountComponent wallmount,
+        TransformComponent xform,
+        IEye eye,
+        System.Numerics.Matrix3x2 matrix)
+    {
+        if (!DirectionalVisibilityEnabled || !wallmount.DirectionalVisibility)
+            return 1f;
+
+        var worldLightPosition = _xform.GetWorldPosition(xform);
+        var eyeToLight = worldLightPosition - eye.Position.Position;
+        var distance = eyeToLight.Length();
+        var rayLength = distance - 0.05f;
+        if (rayLength > 0f)
+        {
+            var ray = new CollisionRay(
+                eye.Position.Position,
+                eyeToLight / distance,
+                (int) CollisionGroup.Impassable);
+
+            foreach (var hit in _physics.IntersectRayWithPredicate(
+                         xform.MapID,
+                         ray,
+                         maxLength: rayLength,
+                         predicate: uid => !_wallQuery.HasComp(uid)))
+            {
+                return 0f;
+            }
+        }
+
+        if (wallmount.Arc >= Math.Tau)
+            return 1f;
+
+        if (xform.GridUid is not { } gridUid || !_gridQuery.TryGetComponent(gridUid, out var grid))
+            return 1f;
+
+        var tile = _map.TileIndicesFor(gridUid, grid, xform.Coordinates);
+        var localPosition = xform.Coordinates.Position / grid.TileSize;
+        var onVerticalBoundary = MathF.Abs(localPosition.X - MathF.Round(localPosition.X)) < 0.001f;
+        var onHorizontalBoundary = MathF.Abs(localPosition.Y - MathF.Round(localPosition.Y)) < 0.001f;
+
+        var blocked = IsTileBlocked((gridUid, grid), tile)
+                      || onVerticalBoundary && IsTileBlocked((gridUid, grid), tile with { X = tile.X - 1 })
+                      || onHorizontalBoundary && IsTileBlocked((gridUid, grid), tile with { Y = tile.Y - 1 })
+                      || onVerticalBoundary && onHorizontalBoundary
+                      && IsTileBlocked((gridUid, grid), tile with { X = tile.X - 1, Y = tile.Y - 1 });
+
+        if (!blocked)
+            return 1f;
+
+        var (pos, rot) = _xform.GetWorldPositionRotation(xform);
+        var facingAngle = rot + eye.Rotation + wallmount.Direction;
+
+        var entityScreenPos = System.Numerics.Vector2.Transform(pos, matrix);
+        var eyeScreenPos = System.Numerics.Vector2.Transform(eye.Position.Position, matrix);
+        var toEntity = entityScreenPos - eyeScreenPos;
+        var eyeToEntityAngle = (toEntity with { X = -toEntity.X }).ToWorldAngle();
+
+        var angleDiff = Angle.ShortestDistance(eyeToEntityAngle, facingAngle);
+        return Math.Abs(angleDiff) < wallmount.Arc / 2 ? 1f : 0f;
+    }
+
+    // Arcane-End
 }

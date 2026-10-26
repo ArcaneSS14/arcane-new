@@ -16,6 +16,7 @@
   - type: Transform
     anchored: true
   - type: Clickable
+  - type: WallMount # Arcane
   - type: InteractionOutline
   - type: Construction
     graph: LightFixture

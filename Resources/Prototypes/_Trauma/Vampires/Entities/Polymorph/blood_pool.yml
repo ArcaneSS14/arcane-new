@@ -8,7 +8,7 @@
   components:
   - type: Sprite
     layers:
-    - sprite: Fluids/puddle.rsi
+    - sprite: _Arcane/Fluids/puddle.rsi # Arcane-Edit: - sprite: Fluids/puddle.rsi > - sprite: _Arcane/Fluids/puddle.rsi
       state: splat0
     drawdepth: Puddles
     color: "#800000FF"

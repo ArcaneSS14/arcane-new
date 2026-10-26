@@ -4,9 +4,9 @@
   name: reinforced plasma window
   components:
   - type: Sprite
-    sprite: Structures/Windows/window-plasma-reinf.rsi
+    sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi
   - type: Icon
-    sprite: Structures/Windows/window-plasma-reinf.rsi
+    sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi
     state: full
   - type: Damageable
     damageModifierSet: GlassReinforcedPlasmaMod
@@ -30,7 +30,32 @@
             min: 1
             max: 2
   - type: IconSmooth
-    base: rpwindow
+    # Arcane-Edit-Start
+    key: windows-plasma-reinf
+    states:
+    - !type:CardinalCornerSpriteSmoothing
+      mask: [ windows-plasma-reinf ]
+      altMask:
+      - windows
+      - windows-reinf
+      - windows-tinted
+      - windows-plasma
+      - windows-uranium
+      - windows-uranium-reinf
+      - windows-exo
+      - windows-shuttle
+      - windows-plastitanium
+      - windows-regal
+      - walls-exo
+      - walls-shuttle
+      - walls-plastitanium
+      - walls-material
+      - walls-marble
+      - walls
+      - grilles
+      - doors
+      base: window
+    # Arcane-Edit-End
   - type: Construction
     graph: Window
     node: reinforcedPlasmaWindow
@@ -133,18 +158,27 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
-    state: state0
+    # Arcane-Edit-Start
+    sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi
+    # Arcane-Edit-End
   - type: Tag
     tags:
     - Diagonal
     - Window
   - type: IconSmooth
-    mode: Diagonal
-    key: walls
-    base: state
+    # Arcane-Edit-Start
+    states:
+    - !type:DiagonalSpriteSmoothing
+      mask:
+      - walls
+      - windows
+      - grilles
+      - marble
+      - doors
+      base: state
+    # Arcane-Edit-End
   - type: Icon
-    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
+    sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi
     state: state0
   - type: Fixtures
     fixtures:

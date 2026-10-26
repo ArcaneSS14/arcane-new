@@ -45,16 +45,19 @@
   - type: SyncSprite
   - type: Clickable
   - type: Sprite
-    sprite: Tiles/TileEntities/liquid-lava.rsi
+    sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-lava.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi
     drawdepth: BelowFloor
   - type: Icon
-    sprite: Tiles/TileEntities/liquid-lava.rsi
+    sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-lava.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi
     state: full
   - type: IconSmooth
     key: lava
-    base: water
-    additionalKeys:
-    - walls
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ lava, walls ]
+      base: water
+    # Arcane-Edit-End
   - type: Physics
     bodyType: Static
   - type: Fixtures
