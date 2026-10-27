@@ -2,12 +2,35 @@ uniform sampler2D SCREEN_TEXTURE;
 uniform sampler2D LIGHT_TEXTURE;
 uniform highp float intensity;
 
+highp float lightPeak(highp vec2 uv) {
+    highp vec3 light = texture2D(LIGHT_TEXTURE, uv).rgb;
+    return max(max(light.r, light.g), light.b);
+}
+
+highp float surroundingLight(highp vec2 uv, highp float radius) {
+    highp vec2 r = radius * SCREEN_PIXEL_SIZE;
+    highp float sum = 0.0;
+    sum += lightPeak(uv + vec2( r.x, 0.0));
+    sum += lightPeak(uv + vec2(-r.x, 0.0));
+    sum += lightPeak(uv + vec2(0.0,  r.y));
+    sum += lightPeak(uv + vec2(0.0, -r.y));
+    sum += lightPeak(uv + vec2( r.x,  r.y) * 0.7071);
+    sum += lightPeak(uv + vec2(-r.x,  r.y) * 0.7071);
+    sum += lightPeak(uv + vec2( r.x, -r.y) * 0.7071);
+    sum += lightPeak(uv + vec2(-r.x, -r.y) * 0.7071);
+    return sum / 8.0;
+}
+
 void fragment() {
     highp vec2 screenUV = FRAGCOORD.xy * SCREEN_PIXEL_SIZE;
     highp vec4 scene = zTextureSpec(SCREEN_TEXTURE, screenUV);
     highp vec3 light = texture2D(LIGHT_TEXTURE, screenUV).rgb;
     highp float peak = max(max(light.r, light.g), light.b);
     highp float highlight = smoothstep(0.6, 1.0, peak);
+
+    const highp float MIN_HIGHLIGHT = 0.25;
+    highp float crowd = smoothstep(0.5, 1.0, (surroundingLight(screenUV, 24.0) + surroundingLight(screenUV, 64.0)) * 0.5);
+    highlight *= mix(1.0, MIN_HIGHLIGHT, crowd);
 
     scene.rgb += light * highlight * intensity;
     COLOR = scene;
