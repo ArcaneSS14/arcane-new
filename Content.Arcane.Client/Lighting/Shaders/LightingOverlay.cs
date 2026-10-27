@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.Lighting.Shaders;
@@ -25,6 +26,9 @@ public sealed class LightingOverlay : Overlay
     private readonly Action<float> _lightScaleChanged;
     private bool _enableGlowing;
     private bool _useLowResMask;
+    private readonly List<(Vector2 Pos, Color Color, Matrix3x2 Matrix, LightingOverlayComponent Comp)> _visible = new();
+    private const float OverlapRadius = 4f;
+    private const float OverlapStrength = 2f;
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
     public override bool RequestScreenTexture => true;
@@ -58,6 +62,7 @@ public sealed class LightingOverlay : Overlay
         _shader.SetParameter("SCREEN_TEXTURE", ScreenTexture);
         handle.UseShader(_shader);
 
+        _visible.Clear();
         var query = _entityManager.AllEntityQueryEnumerator<LightingOverlayComponent, PointLightComponent, TransformComponent>();
         while (query.MoveNext(out _, out var component, out var pointLight, out var xform))
         {
@@ -73,6 +78,20 @@ public sealed class LightingOverlay : Overlay
 
             var color = component.Color ?? pointLight.Color;
             var (_, _, worldMatrix) = _transformSystem.GetWorldPositionRotationMatrix(xform, xformQuery);
+            _visible.Add((worldPos, color, worldMatrix, component));
+        }
+
+        foreach (var (pos, baseColor, worldMatrix, component) in _visible)
+        {
+            var overlap = 0f;
+            foreach (var other in _visible)
+            {
+                var distance = (other.Pos - pos).Length();
+                if (distance < OverlapRadius)
+                    overlap += 1f - distance / OverlapRadius;
+            }
+
+            var color = baseColor.WithAlpha(baseColor.A / (1f + (overlap - 1f) * OverlapStrength));
             handle.SetTransform(worldMatrix);
 
             var mask = _spriteSystem.Frame0(_useLowResMask && component.SpriteLow != null ? component.SpriteLow : component.Sprite);

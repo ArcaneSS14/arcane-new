@@ -140,18 +140,24 @@ public sealed partial class WallMountVisibilitySystem : EntitySystem
         var rayLength = distance - 0.05f;
         if (rayLength > 0f)
         {
-            var ray = new CollisionRay(
-                eye.Position.Position,
-                eyeToLight / distance,
-                (int) CollisionGroup.Impassable);
-
-            foreach (var hit in _physics.IntersectRayWithPredicate(
-                         xform.MapID,
-                         ray,
-                         maxLength: rayLength,
-                         predicate: uid => !_wallQuery.HasComp(uid)))
+            var inWallTile = xform.GridUid is { } mountGridUid
+                             && _gridQuery.TryGetComponent(mountGridUid, out var mountGrid)
+                             && IsTileBlocked((mountGridUid, mountGrid), _map.TileIndicesFor(mountGridUid, mountGrid, xform.Coordinates));
+            if (!inWallTile)
             {
-                return 0f;
+                var ray = new CollisionRay(
+                    eye.Position.Position,
+                    eyeToLight / distance,
+                    (int) CollisionGroup.Impassable);
+
+                foreach (var hit in _physics.IntersectRayWithPredicate(
+                            xform.MapID,
+                            ray,
+                            maxLength: rayLength,
+                            predicate: uid => !_wallQuery.HasComp(uid)))
+                {
+                    return 0f;
+                }
             }
         }
 
@@ -186,6 +192,5 @@ public sealed partial class WallMountVisibilitySystem : EntitySystem
         var angleDiff = Angle.ShortestDistance(eyeToEntityAngle, facingAngle);
         return Math.Abs(angleDiff) < wallmount.Arc / 2 ? 1f : 0f;
     }
-
     // Arcane-End
 }
