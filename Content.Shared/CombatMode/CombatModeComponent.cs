@@ -47,5 +47,15 @@ namespace Content.Shared.CombatMode
         /// </summary>
         [DataField, AutoNetworkedField]
         public bool ToggleMouseRotator = true;
+
+        // Arcane-Start
+        /// <summary>
+        ///     If true, entering combat mode sets <see cref="MouseRotatorComponent.AngleTolerance"/> to 1 degree
+        ///     and disables <see cref="MouseRotatorComponent.Simple4DirMode"/>.
+        ///     No effect if <see cref="ToggleMouseRotator"/> is false.
+        /// </summary>
+        [DataField, AutoNetworkedField]
+        public bool SmoothRotation = true;
+        // Arcane-End
     }
 }

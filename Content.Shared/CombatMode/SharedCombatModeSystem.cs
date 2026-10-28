@@ -94,7 +94,15 @@ public abstract partial class SharedCombatModeSystem : EntitySystem
     {
         if (value)
         {
-            EnsureComp<MouseRotatorComponent>(uid);
+            // Arcane-Edit-Start: smooth rotation in combat mode
+            var rotator = EnsureComp<MouseRotatorComponent>(uid);
+            if (TryComp<CombatModeComponent>(uid, out var combat) && combat.SmoothRotation)
+            {
+                rotator.AngleTolerance = Angle.FromDegrees(1);
+                rotator.Simple4DirMode = false;
+                Dirty(uid, rotator);
+            }
+            // Arcane-Edit-End
             EnsureComp<NoRotateOnMoveComponent>(uid);
         }
         else
