@@ -61,7 +61,7 @@
       params:
         volume: -5
   - type: TemperatureProtection
-    heatingCoefficient: 0.90
+    coefficient: 0.90
   - type: Armor
     coverage:
     - Torso
@@ -93,7 +93,7 @@
   description: Classic shirt.
   components:
   - type: TemperatureProtection
-    heatingCoefficient: 0.90
+    coefficient: 0.90
 
 - type: entity
   abstract: true
@@ -103,7 +103,7 @@
   description: Bra.
   components:
   - type: TemperatureProtection
-    heatingCoefficient: 0.95
+    coefficient: 0.95
 
 - type: entity
   abstract: true
@@ -121,7 +121,7 @@
       params:
         volume: -5
   - type: TemperatureProtection
-    heatingCoefficient: 0.90
+    coefficient: 0.90
   - type: Armor
     coverage:
     - Foot

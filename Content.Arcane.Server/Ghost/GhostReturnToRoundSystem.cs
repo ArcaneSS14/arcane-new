@@ -43,25 +43,27 @@ public sealed partial class GhostReturnToRoundSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<GhostComponent, PlayerAttachedEvent>(OnGhostAttached);
+        SubscribeLocalEvent<PlayerAttachedEvent>(OnPlayerAttached);
         SubscribeNetworkEvent<GhostReturnToRoundRequestEvent>(OnReturnRequest);
         SubscribeLocalEvent<LateJoinAttemptEvent>(OnLateJoinAttempt);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(_ => _playedNames.Clear());
     }
 
-    private void OnGhostAttached(Entity<GhostComponent> ent, ref PlayerAttachedEvent args)
+    private void OnPlayerAttached(PlayerAttachedEvent args)
     {
+        var uid = args.Entity;
+
         // admin ghosts can already go anywhere
-        if (ent.Comp.CanGhostInteract || HasComp<GhostRespawnComponent>(ent))
+        if (!TryComp<GhostComponent>(uid, out var ghost) || ghost.CanGhostInteract || HasComp<GhostRespawnComponent>(uid))
             return;
 
         // TimeOfDeath is on the server's RealTime clock, the client only knows CurTime
-        var dead = _timing.RealTime - ent.Comp.TimeOfDeath;
+        var dead = _timing.RealTime - ghost.TimeOfDeath;
         var left = TimeSpan.FromSeconds(_cfg.GetCVar(ArcaneCVars.GhostRespawnTime)) - dead;
 
-        var respawn = AddComp<GhostRespawnComponent>(ent);
+        var respawn = AddComp<GhostRespawnComponent>(uid);
         respawn.RespawnAt = _timing.CurTime + (left > TimeSpan.Zero ? left : TimeSpan.Zero);
-        Dirty(ent, respawn);
+        Dirty(uid, respawn);
     }
 
     private void OnReturnRequest(GhostReturnToRoundRequestEvent msg, EntitySessionEventArgs args)
