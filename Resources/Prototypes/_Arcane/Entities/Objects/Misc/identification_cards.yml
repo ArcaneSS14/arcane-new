@@ -12,9 +12,9 @@
   - type: PresetIdCard
     job: InteQVanguardLeader
   - type: Access
+    groups:
+    - InteQ
     tags:
-    - InteQVanguardLeader
-    - InteQVanguard
     - Maintenance
 
 - type: entity

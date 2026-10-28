@@ -1,10 +1,6 @@
 - type: accessGroup
   id: AllAccess
   tags:
-  # Arcane-Start: Orion #16 InteQ access
-  - InteQVanguardLeader
-  - InteQVanguard
-  # Arcane-End
   - EmergencyShuttleRepealAll
   - Captain
   - HeadOfPersonnel
