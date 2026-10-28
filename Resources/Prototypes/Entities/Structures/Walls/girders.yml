@@ -56,6 +56,10 @@
           collection: MetalBreak
   - type: StaticPrice
     price: 30
+  # Arcane-Start: rotate an unanchored girder to orient a secret door
+  - type: Rotatable
+    rotateWhileAnchored: true
+  # Arcane-End
 
 - type: entity
   parent: [ BaseGirder, StructureHealthBarrierWeak ]
