@@ -89,6 +89,9 @@
   - type: RadiationReceiver
   - type: Stamina
   - type: StunVisuals
+  # Arcane-Start
+  - type: Posing
+  # Arcane-End
   - type: MobState
   - type: MobThresholds
     thresholds:
