@@ -76,6 +76,17 @@
     ClothingHeadHatTinfoilHat: 2
     ClothingOuterSuitCsij: 1
     # </Trauma>
+    # Arcane-Start: Cosmic Japan
+    ClothingUniformGi: 2
+    ClothingUniformKimonoBlue: 2
+    ClothingUniformKimonoPink: 2
+    ClothingUniformKimonoPurple: 2
+    ClothingUniformKimonoSky: 2
+    ClothingUniformKimonoGreen: 2
+    ClothingUniformKendoHakama: 1
+    ClothingOuterArmorKendoBogu: 1
+    ClothingHeadHelmetKendoMen: 1
+    # Arcane-End
   contrabandInventory:
     ClothingHeadHatRichard: 1
     ClothingShoesBling: 1

@@ -41,3 +41,23 @@
     sprite: _Arcane/Clothing/Head/Hats/inteq_headband.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Head/Hats/inteq_headband.rsi
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHelmetKendoMen
+  name: men
+  description: The quintessential head armor of the kendo practitioner.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Helmets/men.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Helmets/men.rsi
+  - type: Armor
+    coverage:
+    - Head
+    traumaDeductions:
+      BoneDamage: 0.8
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.8
+        Piercing: 0.9

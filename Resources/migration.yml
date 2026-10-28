@@ -233,7 +233,7 @@ ClothingHeadHatFedoraBlack: null
 ClothingHeadHatFedoraChoc: null
 ClothingHeadHatFezMantis: null
 ClothingHeadPrisonGuard: null
-ClothingUniformMartialGi: null
+ClothingUniformMartialGi: ClothingUniformGi # Arcane-Edit: null > ClothingUniformGi
 ClothingUniformTShirtKhakiPants: null
 ComputerShipyard: null
 CourierBag: null
@@ -306,7 +306,7 @@ ReverseEngineeringMachine: null
 Roboisseur: null
 SalvagePartsSpawnerLow: null
 SalvagePartsSpawnerMid: null
-Shinai: null
+# Shinai: null # Arcane-Edit: Shinai exists again
 ShockCollar: null
 shuttle_manipulator: null
 SignConspiracyBoard: null
@@ -332,7 +332,7 @@ SpeedLoaderSpecialPractice: null
 SuitStorageCorpsman: null
 SuitStorageParamedic: null
 TableWoodReinforced: TableWood
-tatamimat: null
+# tatamimat: null # Arcane-Edit: TatamiMat exists again
 ToyRenault: null
 ToySiobhan: null
 VendingMachineBoozeUnlocked: null
@@ -340,7 +340,7 @@ VendingMachineBoxingDrobe: null
 VendingMachineCourierDrobe: null
 VendingMachineMNKDrobe: null
 VendingMachineRepDrobe: null
-WallPaper: null
+# WallPaper: null # Arcane-Edit: WallPaper exists again
 WarpPointAI: null
 WarpPointArrivals: null
 WarpPointAtmos: null

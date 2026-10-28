@@ -139,3 +139,17 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
+
+- type: construction
+  id: WallPaperRecipe
+  name: construction-name-paper-wall
+  description: construction-desc-paper-wall
+  graph: wallPaper
+  startNode: start
+  targetNode: wallPaper
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
