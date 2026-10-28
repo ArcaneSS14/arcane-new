@@ -626,6 +626,7 @@
     - MedicalClothingStatic
     - EmptyMedkitsStatic
     - SurgeryStatic
+    - EmptyMedicalSprayBottlesStatic # Arcane
     dynamicPacks:
     # <Trauma>
     - Surgery

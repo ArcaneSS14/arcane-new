@@ -26,23 +26,39 @@
       output: PlumbingDispenser
   # </Trauma>
   - type: Sprite
-    sprite: Structures/Machines/mixer.rsi
+    sprite: _Arcane/Structures/Machines/mixer.rsi # Arcane-Edit
     snapCardinals: true
     layers:
     - state: mixer_empty
     - state: mixer_screens
       shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
+      visible: false # Arcane
+    # Arcane-Start
+    - state: mixer_screens_loaded
+      shader: unshaded
+      map: ["mixer_screens_loaded"]
+      visible: false
+    - state: mixer_empty_screen
+      map: ["mixer_empty_screen"]
+    # Arcane-End
   - type: Icon
-    sprite: Structures/Machines/mixer.rsi
+    sprite: _Arcane/Structures/Machines/mixer.rsi # Arcane-Edit
     state: mixer_empty
   - type: ItemMapper
+    sprite: _Arcane/Structures/Machines/mixer.rsi # Arcane
     containerWhitelist: [beakerSlot]
     mapLayers:
       mixer_loaded:
         whitelist:
           components:
           - FitsInDispenser
+      # Arcane-Start
+      mixer_screens_loaded:
+        whitelist:
+          components:
+          - FitsInDispenser
+      # Arcane-End
   - type: ChemMaster
     pillDosageLimit: 20
   - type: Physics
@@ -82,6 +98,11 @@
         enum.PowerDeviceVisualLayers.Powered:
           True: { visible: true }
           False: { visible: false }
+        # Arcane-Start
+        mixer_empty_screen:
+          True: { visible: false }
+          False: { visible: true }
+        # Arcane-End
   # Machine / Construction stuff
   - type: WiresPanel
   - type: Machine

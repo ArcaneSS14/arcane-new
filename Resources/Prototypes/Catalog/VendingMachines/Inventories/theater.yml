@@ -14,6 +14,7 @@
     ClothingOuterCardborg: 2
     ClothingHeadHatSombrero: 2
     ClothingOuterPonchoClassic: 2
+    ClothingHeadHatBunny: 2 # Arcane
     ClothingHeadHatPwig: 2
     ClothingOuterRobesJudge: 2
     ClothingOuterPoncho: 2
@@ -80,7 +81,11 @@
     ClothingShoesBling: 1
     ClothingShoesBootsCowboyFancy: 1
     ClothingOuterDogi: 1
-    ClothingOuterSuitCarp: 1
+    ClothingOuterSuitCarp: 2 # Arcane-Edit: 1 > 2
+    # Arcane-Start
+    ClothingNeckCloakCarp: 1
+    ClothingNeckCloakCarpAlt: 1
+    # Arcane-End
     ClothingMaskSexyClown: 1
     ClothingMaskSexyMime: 1
     ClothingHeadHatCowboyBountyHunter: 1

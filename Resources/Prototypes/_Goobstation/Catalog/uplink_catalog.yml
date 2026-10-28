@@ -6,7 +6,7 @@
   description: uplink-gondola-desc
   productEntity: CrateNPCGondola
   cost:
-    Telecrystal: 30
+    Telecrystal: 15 # Arcane-Edit: 30 > 15
   categories:
     -  UplinkDisruption
 
@@ -687,7 +687,7 @@
   description: uplink-lollypop-bundle-desc
   productEntity: SyndicateLollypopBundle
   cost:
-    Telecrystal: 15
+    Telecrystal: 10 # Arcane-Edit: 15 > 10
   categories:
   - UplinkChemicals
 
@@ -707,7 +707,7 @@
   description: uplink-lollypop-bundle-big-desc
   productEntity: ClothingBackpackDuffelSyndicateFilledCandy
   cost:
-    Telecrystal: 100
+    Telecrystal: 30 # Arcane-Edit: 100 > 30
   categories:
   - UplinkChemicals
 
@@ -928,7 +928,7 @@
   icon: { sprite: /Textures/Objects/Weapons/Guns/Ammunition/Explosives/explosives.rsi, state: blast }
   productEntity: GrenadeBlast
   cost:
-    Telecrystal: 12 # Buying grenades this way is ~14% cheaper than getting them from china-lake bundles
+    Telecrystal: 10 # Buying grenades this way is ~14% cheaper than getting them from china-lake bundles # Arcane-Edit: 12 > 10
   categories:
   - UplinkAmmo
   conditions:
@@ -944,7 +944,7 @@
   icon: { sprite: /Textures/Objects/Weapons/Guns/Ammunition/Explosives/explosives.rsi, state: frag }
   productEntity: GrenadeFrag
   cost:
-    Telecrystal: 12 # Buying grenades this way is ~14% cheaper than getting them from china-lake bundles
+    Telecrystal: 10 # Buying grenades this way is ~14% cheaper than getting them from china-lake bundles # Arcane-Edit: 12 > 10
   categories:
   - UplinkAmmo
   conditions:

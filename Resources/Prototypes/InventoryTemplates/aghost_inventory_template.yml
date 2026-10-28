@@ -63,9 +63,18 @@
     - name: head
       slotTexture: head
       slotFlags: HEAD
-      uiWindowPos: 0,3 # Goobstation - Moved up slightly
+      uiWindowPos: 0,4 # Goobstation - Moved up slightly # Arcane-Edit: 0,3 > 0,4
       strippingWindowPos: 0,0
       displayName: Head
+    # Arcane-Start
+    - name: eyes
+      slotTexture: glasses
+      slotFlags: EYES
+      stripTime: 3
+      uiWindowPos: 0,3
+      strippingWindowPos: 0,0
+      displayName: Eyes
+    # Arcane-End
     - name: neck # Goobstation - For drip reasons.
       slotTexture: neck
       slotFlags: NECK
