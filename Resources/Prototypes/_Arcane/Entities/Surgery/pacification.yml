@@ -1,0 +1,82 @@
+# Pacification operation (Orion #378), modelled on the lobotomy
+
+- type: entity
+  parent: SurgeryBase
+  id: SurgeryPacify
+  name: Pacify patient
+  description: Surgical procedure that makes the patient unable to harm others.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Surgery
+    requirement: SurgeryOpenIncision
+    steps:
+    - SurgeryStepPacify
+    - SurgeryStepCloseIncision
+  - type: SurgeryOrganCondition
+    organ: Brain
+  - type: SurgeryOrganOnAddCondition
+    components:
+      Brain:
+      - type: Pacified
+    inverse: true
+  - type: SurgeryPartCondition
+    parts: [ Head ]
+
+- type: entity
+  parent: SurgeryBase
+  id: SurgeryRemovePacification
+  name: Remove pacification
+  description: Surgical procedure that removes pacification from the patient.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Surgery
+    requirement: SurgeryOpenIncision
+    steps:
+    - SurgeryStepRemovePacification
+    - SurgeryStepCloseIncision
+  - type: SurgeryOrganCondition
+    organ: Brain
+  - type: SurgeryOrganOnAddCondition
+    components:
+      Brain:
+      - type: Pacified
+  - type: SurgeryPartCondition
+    parts: [ Head ]
+
+- type: entity
+  parent: SurgeryStepBase
+  id: SurgeryStepPacify
+  name: Pacify patient
+  description: Use a drill to modify the brain and prevent violent behavior.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SurgeryStep
+    tool:
+    - type: Drill
+    addOrganOnAdd:
+      Brain:
+      - type: Pacified
+    duration: 5
+  - type: Sprite
+    sprite: _Shitmed/Objects/Specific/Medical/Surgery/drill.rsi
+    state: drill
+  - type: SurgeryStepEmoteEffect
+
+- type: entity
+  parent: SurgeryStepBase
+  id: SurgeryStepRemovePacification
+  name: Remove pacification
+  description: Use a hemostat to carefully remove the pacification modification.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SurgeryStep
+    tool:
+    - type: Hemostat
+    duration: 4
+    removeOrganOnAdd:
+      Brain:
+      - type: Pacified
+  - type: Sprite
+    sprite: _Shitmed/Objects/Specific/Medical/Surgery/hemostat.rsi
+    state: hemostat
+  - type: SurgeryStepEmoteEffect
