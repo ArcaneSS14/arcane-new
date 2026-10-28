@@ -17,7 +17,7 @@
       limit: 3
       required: false
     enum.HumanoidVisualLayers.Snout:
-      limit: 1
+      limit: 2 # Arcane-Edit: 1 > 2, snout + tongue
       required: true
       default: [ LizardSnoutRound ]
     enum.HumanoidVisualLayers.HeadTop:
