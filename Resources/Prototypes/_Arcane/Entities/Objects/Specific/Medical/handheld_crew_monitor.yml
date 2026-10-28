@@ -1,0 +1,11 @@
+# Orion #326
+- type: entity
+  parent: HandheldCrewMonitor
+  id: HandheldCrewMonitorBrigmedic
+  name: brigmedic crew monitor
+  description: A hand-held crew monitor showing security and command personnel only.
+  components:
+  - type: CrewMonitoringConsole
+    departments: [ Security, Command ]
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Medical/brigmedic_handheldcrewmonitor.rsi

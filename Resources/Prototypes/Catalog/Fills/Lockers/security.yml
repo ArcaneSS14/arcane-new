@@ -122,6 +122,7 @@
       prob: 0.1
     - id: MedkitOxygenFilled
     - id: MedkitAdvancedFilled
+    - id: HandheldCrewMonitorBrigmedic # Arcane
 
 - type: entity
   id: LockerDetectiveFilled
