@@ -23,7 +23,7 @@ Use instructions in this order:
 3. The applicable repository rules in `.agents/rules` and `CONTRIBUTING.md`.
 4. Only the skills routed by `.agents/CATALOG.md` for the changed surfaces.
 
-More specific instructions add detail to general instructions. Root scope and verification limits are ceilings: scoped rules and skills may narrow them, but must not silently expand repository searches, builds, restores, or test runs. If two applicable instructions still conflict, do not guess: report the conflict and use the instruction that best matches the user's requested scope, unless it would violate a higher-priority instruction.
+More specific instructions add detail to general instructions. Keep explicit task exclusions and access boundaries. Start with targeted discovery and the smallest meaningful verification; expand only for a concrete missing dependency, uncovered risk, or required gate, and explain why the additional scope is necessary. For equal-priority instructions, apply the one specific to the requested paths and task. If equally applicable instructions remain incompatible, report the conflict and ask for a decision before the affected action; continue independent authorized work rather than silently overriding a boundary.
 
 Read the matching scenario when a task crosses layers, changes ownership or build structure, or needs a workflow beyond a routine owner-local change. For routine work, select the smallest set of directly applicable rules and skills. Cross-layer work can require several skills; do not omit a required one just to meet a fixed count.
 
@@ -131,7 +131,7 @@ Our own changes carry Arcane markers only:
 * one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
 * two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
 * over 5 changed lines: keep the active change inside an `Arcane-Edit` block; comment out removed content only when disabling it is the intended behavior
-* merge adjacent Arcane blocks of the same kind into one pair, never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
+* merge only contiguous Arcane blocks of the same kind into one pair; never bridge unchanged or unrelated content, or merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
 * an added `using` goes after all others, inside an Arcane block or trailing `Arcane`
 * never put a bare `-Start` or `-End` on a line instead of a pair
 
@@ -144,7 +144,7 @@ Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`,
 Editing a Trauma file is allowed and often correct. Keep it cheap to reconcile:
 
 1. append to the end of a list rather than inserting into sorted position
-2. gather every addition in one file into a single block
+2. gather contiguous additions in one file into a single block where practical; never bridge unchanged or unrelated content to do so
 3. prefer additive over destructive; achieve removals through a partial or `!Remove`
 4. do not reformat, reorder, re-alphabetize, or tidy neighbouring lines
 5. keep the hunk contiguous
@@ -154,7 +154,7 @@ Changing a line that carries an upstream marker makes that line ours, so the mar
 
 Prefer `Content.Arcane.*` and Arcane resource directories for Arcane-only behavior. Changes intended for the TraumaStation sync trajectory may belong in Trauma-owned or vanilla paths; keep those changes minimal, marked, and consistent with the inherited contribution rules.
 
-When a sync conflict must be resolved, read all three versions and merge semantically. The resolved line takes the marker of whoever wrote it, and our resolution is ours, so it carries an Arcane marker. Never blanket-resolve with `git checkout --ours/--theirs`, `-X ours`, or `-X theirs`, and never `git add -u` a path you did not read.
+When a sync conflict must be resolved, compare base, current, incoming, and both sides' confirmed intent before merging semantically. An Arcane marker records provenance, not an automatic winner: place it only on a line Arcane wrote in the resolution, and preserve an unchanged incoming line's own marker. Escalate an ambiguous map, sprite, or other owner-sensitive conflict. Never blanket-resolve with `git checkout --ours/--theirs`, `-X ours`, or `-X theirs`, and never `git add -u` a path you did not read.
 
 Never add, edit, remove, reorder, normalize, copy, or generate a line containing `SPDX-` in game code, resources, or configuration unless the user's current request provides the exact SPDX change. Agent instruction files under `.agents/`, `.claude/`, `.cursor/`, and `.codex/` carry no SPDX headers.
 
@@ -205,7 +205,7 @@ For a test change, run the directly affected test project or filtered test.
 
 For localization or prototype changes, run only the relevant validation when such a targeted command exists.
 
-For documentation or agent-instruction changes, use diff checks only unless executable behavior changed.
+For documentation or agent-instruction changes, use `git diff --check`, `git diff --stat`, and final diff only unless executable behavior changed. When routing, links, or paths change, also validate the affected links and paths.
 
 Always run:
 
@@ -216,7 +216,7 @@ git diff --stat
 
 Inspect the final diff for the files changed by the task.
 
-Run full repository verification only when the user explicitly requests full validation, final PR validation, release validation, or a repository-wide audit.
+Run full repository verification when explicitly requested, required by the applicable delivery gate, or needed to cover a concrete risk that targeted checks cannot address. Explain that risk before broadening; full verification is not the default for a local change and must not override an explicit task exclusion.
 
 Do not include large successful build or test logs in model context. Preserve the command result and inspect only relevant warnings or failures.
 

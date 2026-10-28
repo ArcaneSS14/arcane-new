@@ -9,6 +9,6 @@
 | XAML | affected client project build; runtime layout check when available and relevant |
 | Database schema | focused migration/upgrade check for the changed provider and path |
 | Packaging | `Content.Packaging` build and requested package path |
-| Documentation/guidance | `git diff --check`; validate changed links or paths when applicable |
+| Documentation/guidance | `git diff --check`, `git diff --stat`, and final diff; validate changed links or paths when applicable |
 
-Follow root `AGENTS.md`. Increase scope only when the changed behavior crosses multiple rows or the user requests broader validation. Do not run a global linter or full build when no targeted check exists unless broader validation was requested.
+Follow root `AGENTS.md`. Start with the smallest check covering the changed contract. Broaden for a concrete uncovered risk, a required gate, or an explicit request, including a full check when narrower checks cannot cover that risk. The absence of a targeted command alone does not justify a global run; explain the coverage gap and respect explicit task exclusions.

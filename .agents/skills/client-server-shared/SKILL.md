@@ -2,13 +2,41 @@
 name: client-server-shared
 description: Place contracts and behavior across authority, prediction, presentation, localization, and assembly boundaries.
 ---
+# client-server-shared
 
-Follow the layer ownership table in `.agents/rules/architecture-and-ownership.md`. Choose from actual dependencies and authority, not from the easiest project reference. Arcane-only behavior belongs in Arcane owner projects; base projects own reusable base behavior.
+## Когда применять
 
-For client-originated messages, trace the actual dispatch path. Confirm framework guarantees from current declarations, then validate remaining authorization, ownership, value bounds, and state requirements on the authoritative server execution path before committing the outcome. A handler may live in Shared when it is safe on both sides; keep hidden or server-only decisions in Server. Shared handlers that also run predictively must not perform irreversible or privileged work.
+Use when behavior crosses Server, Shared, Client, UI, or prediction; not for owner-local behavior.
 
-Keep payloads minimal and represent requested intent rather than a claimed result. Replicate only state the client may know. Prefer typed state that the client localizes over resolved strings in network messages. Player-visible strings require `en-US` localization. Add or update `ru-RU` only when explicitly requested.
+## До изменения
 
-For UI flows, keep XAML and code-behind in Client, serializable cross-boundary contracts in Shared, and authoritative validation/mutation in Server. A BUI/EUI adapter connects the window to the state and message flow; it should not become a second gameplay system.
+Trace entry, contract, authority owner, validation, mutation, consumers, replication, presentation and test owner.
+Choose the layer from authority and real dependencies, never from the easiest project reference. Establish the actual client/server dispatch path before relying on framework behavior.
 
-Before inherited-file changes, verify ownership, assembly boundaries, project references, and marker requirements. Choose verification for the changed behavior and follow root `AGENTS.md`; do not restore, build the full solution, or run every integration test by default.
+## Правила и границы
+
+Server owns protected outcomes. Shared contracts are minimal and safe on both sides. Client presents intent/state; it never authorizes or commits outcomes.
+Put serializable cross-boundary contracts in Shared, authoritative validation and mutation in Server, and windows, code-behind and presentation in Client. A Shared handler that also executes predictively must not perform irreversible or privileged work.
+
+### Minimal examples
+
+Correct: put serializable contract in Shared and protected mutation on Server. Prohibited: perform irreversible work in predicted shared handling. Stop: report an unproven assembly/authority boundary.
+
+## Выбор подхода
+
+Place serializable contracts in Shared, authoritative validation/mutation in Server, presentation in Client.
+On the authoritative server path re-check authorization, actor ownership, value bounds and current state. Send requested intent, never a client-claimed result; omit hidden state and already-resolved localized text from network contracts.
+For BUI/EUI, keep the window and code-behind in Client, the message/state contract in Shared, and authoritative mutation in Server.
+
+## Антипаттерны
+
+- Client validation as security boundary permits forged requests.
+- Resolved text or hidden state in contracts leaks data and localization ownership.
+
+## Проверка
+
+Cover rejection, stale state, ownership and affected cross-layer path.
+
+## References
+
+- [Trust boundary](references/trust-boundary.md): Read this when adding or reviewing a client-originated message, request validation, or replicated response that exposes authority-sensitive state.

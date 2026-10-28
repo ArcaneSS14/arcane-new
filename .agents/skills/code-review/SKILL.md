@@ -3,21 +3,42 @@ name: code-review
 description: Review correctness, access, repository ownership, authority, localization, compatibility, resources, scope, and verification evidence.
 ---
 
-# Code Review
+# code-review
 
-Review observable behavior and architectural validity before style.
+## Когда применять
 
-1. Define intended behavior and scope.
-2. Verify repository identity, owner tag, owner-local paths, and upstream.
-3. Verify edit markers on inherited files and the absence of redundant markers in owner-local module and underscore paths.
-4. Identify projects, assemblies, declarations, and access modifiers.
-5. Trace validation, mutation, dirtying, persistence, lifecycle, and presentation.
-6. Check failure paths, cleanup, repeated execution, and reconnect.
-7. Review the affected English keys, attributes, variables, selectors, paths, and order. Review Russian coverage and parity only when explicitly requested or when the reported issue is Russian-specific.
-8. Verify resources, compatibility surfaces, test ownership, and regression behavior.
-9. Inspect the complete diff for unrelated changes, SPDX edits, and duplicate infrastructure.
-10. Review maintainability and style last.
+Use when reviewing a change for observable correctness, architectural validity, scope, evidence, and actionable defects; review formatting and style last.
 
-Treat inaccessible members, cross-assembly partial assumptions, reversed dependencies, duplicate infrastructure, foreign edit markers, missing inherited-file markers, redundant owner-local markers, missing or out-of-order Russian entries when Russian is in scope, mismatched FTL contracts, stale culture UI, hardcoded text, and unproven test claims as defects.
+## До изменения
 
-Every finding needs a path, declaration or execution sequence, impact, and minimal remediation.
+Determine intended scope and observable behavior, owner, authority, assembly/access boundary, lifecycle, persistence, networking/prediction, resources, and localization impact. For inherited, ownership, project-reference, or synchronization changes, verify repository identity, owner tag, and upstream. For changed inherited paths, identify the applicable edit-marker rule; owner-local module and underscore paths must not gain redundant markers.
+
+## Правила и границы
+
+- Trace validation, mutation, dirtying, persistence, lifecycle, presentation, repeated execution, reconnect, and failure paths only for changed surfaces.
+- Check declarations, access modifiers, project/assembly references, public contracts, cleanup, compatibility, resources, and regression behavior relevant to the diff.
+- Verify the English FTL contract: keys, attributes, variables, selectors, paths, and order. Review Russian coverage/parity only when requested or when the issue is Russian-specific.
+- Inspect the complete diff for unrelated paths, unauthorized SPDX edits under root `AGENTS.md`, duplicated infrastructure, invented APIs/commands, and unproven verification claims.
+- Every finding needs path, concrete declaration/execution evidence, impact, severity, and minimal remediation. A stylistic preference without observable impact is not a defect.
+
+### Minimal examples
+
+Correct: report an evidence-backed observable defect with path and impact. Prohibited: call a style preference a bug. Stop: report insufficient declaration/diff evidence instead of asserting a finding.
+
+## Выбор подхода
+
+Start with correctness/authority/architecture, then lifecycle and safety, then test evidence and scope, then maintainability/style. Report only evidence-backed findings; distinguish a confirmed defect from an unverified risk or a request for clarification.
+
+## Антипаттерны
+
+- Do not review formatting before observable behavior, invent an API/command, or call a preference a bug without impact.
+- Do not require markers on owner-local paths or skip marker review for an actually changed inherited path.
+- Do not claim a test/build result from an unrun command or ignore an unrelated/unauthorized diff path.
+
+## Проверка
+
+Inspect the complete changed-file list and final diff. Confirm each finding's evidence and scope, and state explicitly which verification evidence was unavailable rather than inferring success.
+
+## References
+
+- [Severity and evidence](references/severity-and-evidence.md): Read this when ranking findings or deciding whether observed evidence supports a defect report.

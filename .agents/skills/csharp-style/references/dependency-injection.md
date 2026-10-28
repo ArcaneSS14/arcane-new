@@ -1,7 +1,7 @@
 
 Reference tables for the systems and namespaces that appear most often in this repository. Use them to pick an existing owner and a name that matches its neighbors. They are not a substitute for verifying a declaration before calling it.
 
-Counts are `[Dependency]` declaration sites across `Content.Server`, `Content.Shared`, and `Content.Client`. A declaration count is not an importance score: `_entManager` has 131 declarations against 864 textual mentions, while `_popup` has 229 declarations against 987 mentions, so a frequently *mentioned* field is not necessarily a frequently *injected* one.
+Counts below are an inherited inventory of `[Dependency]` declaration sites and textual mentions across `Content.Server`, `Content.Shared`, and `Content.Client`, not a live measurement or naming requirement. A frequently mentioned name is not necessarily an injected dependency; verify the current declaration and match the surrounding owner rather than refreshing or enforcing repository-wide counts for a local edit.
 
 ## The injection shape
 
@@ -9,7 +9,15 @@ Counts are `[Dependency]` declaration sites across `Content.Server`, `Content.Sh
 [Dependency] private IGameTiming _timing = default!;
 ```
 
-Fields are `private` and **not** `readonly` in current code. `[Dependency] private readonly` appears zero times in the content projects; do not introduce it. `readonly` is acceptable only in a file where every neighbouring dependency already uses it.
+Fields are ordinarily `private` and must not be `readonly` when `[Dependency]` fills them. The declaring type, and every containing type when nested, must be `partial`; current engine analyzers report violations. Preserve a supported protected dependency in an abstract owner when appropriate, but do not use `readonly` for injected state.
+
+`EntityQuery<T>` is a supported dependency shape when a system needs a cached query:
+
+```csharp
+[Dependency] private EntityQuery<FooComponent> _fooQuery = default!;
+```
+
+Do not also initialize that injected query with `GetEntityQuery<T>()` in `Initialize`.
 
 Never resolve inside a method body:
 
@@ -40,7 +48,7 @@ var random = IoCManager.Resolve<IRobustRandom>();
 | `Robust.Shared.GameObjects` | `SharedMapSystem` | `_map` | 73 | 259 |
 | `Robust.Shared.GameObjects` | `SharedUserInterfaceSystem` | `_ui` | 56 | 151 |
 
-`IGameTiming` is injected under three names in active use: `_timing` 331, `_gameTiming` 104, and `_timingManager` elsewhere. Match the file you are editing.
+`_timing` and `_gameTiming` are established `IGameTiming` dependency names. Match the declaration and style in the file you are editing; do not infer a third injected name from an unrelated textual mention.
 
 ### Content-owned
 
@@ -68,7 +76,7 @@ Client-only replacements exist for some shared types. `Content.Client.Popups.Pop
 
 These are all in active use. Match the file you are editing rather than normalizing.
 
-Numbers are `[Dependency]` declarations, then total textual mentions in the same three projects. A declaration count of zero with a nonzero mention count means the field is passed around or used as a local, not injected under that name.
+Numbers are `[Dependency]` declarations, then total textual mentions in the same three projects. Zero dependency declarations does not distinguish an ordinary field from a parameter or local; inspect the declaration before treating a name as an injection convention.
 
 | Type | Common fields | Declarations | Mentions |
 |---|---|---|---|
@@ -81,7 +89,7 @@ Numbers are `[Dependency]` declarations, then total textual mentions in the same
 
 `_entMan`, `_proto`, and `_gameTiming` are the short forms. `_entManager`, `_prototypeManager`, and `_timing` are the long forms. Neither style is deprecated.
 
-Do not follow the `_doAfters` spelling. It has 5 textual mentions and zero `[Dependency]` declarations: it is a local or parameter name, not a field. Same for `_timingManager`.
+`_doAfters` in `Content.Shared/DoAfter/SharedDoAfterSystem.Update.cs` is a `DoAfter[]` buffer field, not an injected `SharedDoAfterSystem`. It does not establish a dependency naming variant. Verify any `_timingManager` declaration before using it as an example; it is not evidence for a third `IGameTiming` convention here.
 
 ## Common usings in systems
 

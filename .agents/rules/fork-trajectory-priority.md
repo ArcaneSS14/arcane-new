@@ -127,7 +127,6 @@ A base edit that is small, marked, and explained is correct. A base edit that is
 - leave an Arcane-authored change in `Content.Trauma.*`, `Resources/_Trauma/**`, `Content.Medical.*`, `Resources/_Shitmed/**`, or a vanilla root path unmarked
 - mark our own change with `Trauma - ` or `<Trauma>`, whatever the surrounding file uses
 - nest an Arcane block inside another fork's marker block, or interleave them
-- add a marker inside another fork's underscore dir
 - keep an upstream marker on a line we changed; it becomes `Arcane-Edit: <old> > <new>`
 - rewrite upstream markers on lines we are not changing
 - rewrite a foreign-fork file in root paths to match this fork's structure

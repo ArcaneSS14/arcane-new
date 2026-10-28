@@ -59,15 +59,15 @@ A multi-line C# change still prefers an owner-local partial file when the additi
 
 ```csharp
 // two or more changed lines
-// Arcane-Edit-Start: 1800 > 3000
-// cost: 3000
-// cooldown: 5
+// Arcane-Edit-Start: preserve map-load ordering
+LoadOwnerState();
+SubscribeOwnerEvents();
 // Arcane-Edit-End
 ```
 
 A bare `# Arcane` is the single-line addition form in YAML.
 
-`# Arcane-Edit: <old> > <new>` records what Arcane replaced. Read `new`, not `old`: if a rebase offers `old`, the correct resolution is to restore `new`.
+`# Arcane-Edit: <old> > <new>` records what Arcane replaced. During a conflict, use it as provenance and compare base, current, and incoming behavior; it never replaces the semantic resolution process in `.agents/rules/merge-conflict-resolution.md`.
 
 ## Added usings
 
@@ -114,9 +114,9 @@ This removal pattern is appropriate only when the commented entries are intentio
 
 ## Merge adjacent markers
 
-Two changes of the same kind are one change when they touch neighbouring lines. Merge them into a single `-Start` / `-End` pair, whatever their sizes.
+Merge same-kind markers only when their changed lines are contiguous. Do not stretch one marker block across an unchanged line, a separate semantic change, or an unrelated blank/section boundary.
 
-Merging keeps one hunk instead of several, which means one place for a rebase to conflict rather than several. Merging is mechanical, and say it happened in the report.
+Contiguous merging keeps one hunk instead of several, which means one place for a rebase to conflict rather than several. State it in the report when it materially changes the marker boundary.
 
 ### Merge two pairs
 
@@ -168,13 +168,12 @@ delayPerUnit: 0.5
 # Arcane-Edit-End
 ```
 
-### Merge inline markers into one pair
+### Merge contiguous inline markers into one pair
 
-Two inline markers near each other are one change too, so put them in a single pair rather than marking each line separately.
+Two adjacent inline markers of the same kind are one change, so put them in a single pair rather than marking each line separately.
 
 ```yaml
 itemOne: 1 # Arcane
-
 itemTwo: 2 # Arcane
 ```
 
@@ -201,10 +200,10 @@ cooldown: 5
 # Arcane-Edit-End
 ```
 
-Note what the merge costs in a rewrite. The inline form records `1800 > 3000` per line, and the block form has nowhere to put those values. When a future sync will need them, keep them in the reason suffix.
+Note what the merge costs in a rewrite. The inline form records `1800 > 3000` per line, and the block form has nowhere to put those values. When a future sync needs that history, keep an accurate reason suffix; do not invent values.
 
 ```yaml
-# Arcane-Edit-Start: mining was too cheap to spam, was 1800
+# Arcane-Edit-Start: preserve balance rationale from prior single-line edits
 cost: 3000
 cooldown: 5
 # Arcane-Edit-End
@@ -289,7 +288,7 @@ A Trauma marker on a line means Trauma wrote that line. When we change that line
 # before, upstream
 cost: 3000 # Trauma - was 1800, its useless for mining
 # after, ours
-cost: 6000 # Arcane-Edit: 1800 > 3000
+cost: 6000 # Arcane-Edit: 3000 > 6000
 ```
 
 That is a legitimate rewrite of an upstream marker, and it is required rather than forbidden: leaving `Trauma - ` on a line we authored claims someone else's authorship for our change and hides our divergence from the next sync.
@@ -302,7 +301,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 - several added lines are wrapped in `Arcane-Start` / `Arcane-End`
 - one changed line carries a trailing `Arcane-Edit: <old> > <new>`
 - several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
-- put a bare `-Start` or `-End` on a line rather than wrapping a pair
+- never put a bare `-Start` or `-End` on a line rather than wrapping a pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work
 
 The Trauma vocabulary has more forms than the Arcane one, because it describes a different job: `// Trauma - reason` for a single line, `// <Trauma>` / `// </Trauma>` for a block, `/* Trauma` ... `*/` for removing a section. Reproducing any of them on our own change is wrong even though the syntax is valid and appears thousands of times in the tree.
@@ -341,13 +340,12 @@ An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's
 
 - add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
-- add a marker inside another fork's underscore dir
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked
 - keep an upstream marker on a line we changed. Replacing `Trauma - ` with `Arcane-Edit: <upstream value> > <our value>` is the correct result, not an unauthorized conversion
 - rewrite upstream markers on lines we are not changing, and never convert them in bulk as a side effect of unrelated work
 - mark a line that is not actually changed
 - silently repair or normalize a marker in an inherited file as part of unrelated work
-- change an `SPDX` line while marking
+- change an `SPDX` line as incidental marker cleanup; the exact-request exception is defined in root `AGENTS.md`
 - leave an unbalanced `-Start` / `-End`
 - use an Arcane marker to claim a change authored by another fork
 

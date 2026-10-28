@@ -2,30 +2,41 @@
 name: transform-and-physics
 description: Work with maps, grids, coordinates, anchoring, movement, fixtures, collisions, and physics safely.
 ---
+# transform-and-physics
 
-Use the coordinate and transform APIs appropriate to the operation. Do not manually mix local, grid, entity, and map coordinates without explicit conversion.
+## Когда применять
 
-## Transform workflow
+Use for coordinate, parent, anchoring, movement, fixture or collision changes; not for state that does not affect transform/physics.
 
-1. Identify the current parent, grid, and map.
-2. Use the transform system for movement, parenting, anchoring, and coordinate conversion.
-3. Preserve attachment semantics when spawning or moving entities.
-4. Account for containers, deletion, and map transfer.
-5. Avoid direct transform-component mutation when a system API exists.
+## До изменения
 
-## Physics workflow
+Identify parent, map, grid, coordinate space, container state, anchoring, fixtures, authoritative owner and test path.
 
-Inspect body type, fixtures, collision layers, masks, density, awake state, and contact events. Keep authoritative collision changes on the server/shared path used nearby. Update fixture state through established physics APIs.
+## Правила и границы
 
-## Common failures
+Use established transform and physics owner APIs. Keep coordinate spaces explicit; containers, anchoring and parent hierarchy affect valid movement and collision changes.
+Identify whether the receiving API expects local, grid, map or world coordinates before converting. Do not directly mutate transform state when the transform owner API preserves parent, anchoring and container invariants.
 
-- using map coordinates where local coordinates are required;
-- detaching an entity unintentionally;
-- moving an entity while inside a container;
-- deleting during an unsafe enumeration;
-- changing only client collision visuals;
-- forgetting grid or parent changes.
+### Minimal examples
 
-## Verification
+Correct: use transform/physics owner API for coordinate or fixture changes. Prohibited: mutate parent/fixture state directly. Stop: report unknown coordinate/authority constraint.
 
-Test grids, map edges, anchoring, unanchored movement, containers, collisions, fixture updates, and deletion during events.
+## Выбор подхода
+
+Select local, grid, map or world coordinates from the receiving API; resolve conversions deliberately before movement or spawning.
+For physics, inspect the existing owner path for body type, fixtures, collision layers, masks, awake state and contact handling. Keep authoritative fixture and collision changes on the server/shared path used by nearby code.
+
+## Антипаттерны
+
+- Mixing coordinate spaces places entities incorrectly.
+- Direct component mutation bypasses hierarchy/physics invariants.
+- Client-only collision changes desync authority.
+- Moving an entity while it is contained, or ignoring anchoring/parent changes, breaks transform hierarchy.
+
+## Проверка
+
+Cover grid/map edges, anchoring, containers, fixture/collision updates and deletion during events.
+
+## References
+
+No reference is required for ordinary transform or physics selection.
