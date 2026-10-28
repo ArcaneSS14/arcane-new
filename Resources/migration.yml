@@ -13,6 +13,9 @@ WallMalign: WallCosmicCult
 WallMalignIndestructible: WallCosmicCult
 WallMalignIndestructibleNoOcclusion: WallCosmicCult
 MalignWindow: WindowCosmicCult
+PowerCellMicroreactor: PowerCellBluespaceReactor
+PowerCellMicroreactorPrinted: PowerCellBluespaceReactorPrinted
+PowerCellAntiqueProto: PowerCellInfinite
 # Arcane-End
 
 # <Trauma> - too lazy to port debugoks multi migration thing

@@ -428,7 +428,7 @@
   - type: ContainerFill
     containers:
       mech-battery-slot:
-      - PowerCellAntiqueProto
+      - PowerCellVortex # Arcane-Edit: replaces PowerCellAntiqueProto
 
 - type: entity
   id: MechSeraphFilled

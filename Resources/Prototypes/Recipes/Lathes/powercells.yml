@@ -52,16 +52,7 @@
     Gold: 200
     Silver: 300
 
-- type: latheRecipe
-  parent: BasePowerCellRecipe
-  id: PowerCellMicroreactor
-  result: PowerCellMicroreactorPrinted
-  completetime: 10
-  materials:
-    Steel: 500
-    Glass: 400
-    Uranium: 200
-    Gold: 100
+# Arcane: PowerCellMicroreactor recipe removed, replaced by PowerCellBluespaceReactor
 
 # Power cages
 - type: latheRecipe

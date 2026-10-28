@@ -8,7 +8,7 @@
   - type: ContainerFill
     containers:
       cell_slot:
-      - PowerCellAntiqueProto
+      - PowerCellVortex # Arcane-Edit: replaces PowerCellAntiqueProto
 
 - type: entity
   abstract: true
@@ -18,4 +18,4 @@
   - type: ContainerFill
     containers:
       cell_slot:
-      - PowerCellMicroreactor
+      - PowerCellBluespaceReactor # Arcane-Edit: replaces PowerCellMicroreactor
