@@ -47,3 +47,4 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [x] #378 Pacification Operation; #252 Organ Things (имя мозга, осмотр «нет мозга»; без мгновенной смерти — в форке DelayedDeath по дизайну Trauma; мозг и так BadFood)
 - [-] #219, #226 Pain Alerts — нет системы боли (нервы Shitmed удалены в медицине Trauma), не портируемо
 - [-] #416 Kidneys Operation — дубль: SurgeryRemove/InsertKidneys уже есть в _Trauma/Surgery
+- [x] #221, #374 Handcuff/Blindness Examine; #315 Armor Examine (римские классы защиты вместо %; список частей тела уже был у Trauma)

@@ -3,6 +3,7 @@ using Content.Medical.Common.Body;
 using Content.Shared.Localizations;
 using Content.Trauma.Common.Armor;
 using System.Linq;
+using Content.Arcane.Common.Localization; // Arcane
 // </Trauma>
 using Content.Shared.Clothing.Components;
 using Content.Shared.Damage;
@@ -142,13 +143,21 @@ public abstract partial class SharedArmorSystem : EntitySystem
         {
             foreach (var coefficientArmor in armorModifiers.Coefficients)
             {
+                // Arcane-Edit-Start: protection classes, one per 10% (Orion #315)
+                var protection = (1f - coefficientArmor.Value) * 100f;
+                var level = (int) MathF.Round(MathF.Abs(protection) / 10f);
+                if (level == 0)
+                    continue;
+
                 msg.PushNewline();
                 // TODO: probably make these prototype fields or have a test that they all exist
                 var armorType = Loc.GetString("armor-damage-type-" + coefficientArmor.Key.Id.ToLower());
-                msg.AddMarkupOrThrow(Loc.GetString("armor-coefficient-value-trauma", // Trauma - better locale string
+                msg.AddMarkupOrThrow(Loc.GetString("armor-coefficient-class-value",
                     ("type", armorType),
-                    ("value", MathF.Abs(1f - coefficientArmor.Value) * 100), ("protect", coefficientArmor.Value < 1f) // Trauma - better values
+                    ("class", RomanNumerals.ToRoman(level)),
+                    ("protect", protection > 0f)
                 ));
+                // Arcane-Edit-End
             }
 
             foreach (var flatArmor in armorModifiers.FlatReductions)
