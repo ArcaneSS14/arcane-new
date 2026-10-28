@@ -1,0 +1,88 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-or-later
+Arcane - extended flavor text preview (Orion #165, #183)
+-->
+<Control xmlns="https://spacestation14.io"
+         xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+         xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+         HorizontalExpand="True" VerticalExpand="True">
+    <BoxContainer Orientation="Horizontal" HorizontalExpand="True" VerticalExpand="True">
+        <PanelContainer HorizontalExpand="False" VerticalExpand="True" MinSize="150 0">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#1A1A1A" />
+            </PanelContainer.PanelOverride>
+            <BoxContainer Orientation="Vertical" VerticalExpand="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <controls:StripeBack>
+                    <Label Name="NameLabel" HorizontalAlignment="Center" StyleClasses="LabelHeadingBigger" Margin="10 0" />
+                </controls:StripeBack>
+                <PanelContainer MinSize="32 128" VerticalExpand="True" Margin="10">
+                    <PanelContainer.PanelOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#2C2C2C" />
+                    </PanelContainer.PanelOverride>
+                    <SpriteView Name="CharacterView" Scale="4 4" MinSize="32 128" Stretch="Fit" />
+                </PanelContainer>
+                <Label Name="DetailsLabel" HorizontalAlignment="Center" StyleClasses="LabelSmall" Margin="10 0" />
+                <BoxContainer Orientation="Horizontal" HorizontalAlignment="Center" SeparationOverride="4" Margin="0 5 0 10">
+                    <Button Name="RotateLeftButton" Text="⬅" StyleClasses="OpenRight" />
+                    <Button Name="RotateRightButton" Text="➡" StyleClasses="OpenLeft" />
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+
+        <controls:Separator StyleClasses="LowDivider" Orientation="Vertical" VerticalExpand="True" />
+
+        <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="10 0">
+            <TabContainer Name="Tabs" HorizontalExpand="True" VerticalExpand="True" MinSize="0 150">
+                <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                    <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                        <RichTextLabel Name="AppearanceText" VerticalExpand="True" Margin="10" />
+                    </ScrollContainer>
+                </PanelContainer>
+                <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                    <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                        <RichTextLabel Name="CharacterText" VerticalExpand="True" Margin="10" />
+                    </ScrollContainer>
+                </PanelContainer>
+                <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                    <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                        <BoxContainer Name="PreferencesContainer" Orientation="Vertical" VerticalExpand="True" Margin="10" />
+                    </ScrollContainer>
+                </PanelContainer>
+                <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                    <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                        <RichTextLabel Name="NsfwText" VerticalExpand="True" Margin="10" />
+                    </ScrollContainer>
+                </PanelContainer>
+            </TabContainer>
+
+            <BoxContainer Orientation="Horizontal" HorizontalExpand="True" VerticalExpand="True" MinSize="0 100" Margin="0 10 0 0">
+                <BoxContainer Name="OocBox" Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="0 0 5 0">
+                    <controls:StripeBack>
+                        <Label Text="{Loc 'humanoid-profile-editor-flavor-ooc-label'}" StyleClasses="LabelSmall" HorizontalAlignment="Center" />
+                    </controls:StripeBack>
+                    <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                        <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                            <RichTextLabel Name="OocText" VerticalExpand="True" Margin="5" />
+                        </ScrollContainer>
+                    </PanelContainer>
+                </BoxContainer>
+                <BoxContainer Name="LinksBox" Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+                    <controls:StripeBack>
+                        <Label Text="{Loc 'humanoid-profile-editor-flavor-links-label-preview'}" StyleClasses="LabelSmall" HorizontalAlignment="Center" />
+                    </controls:StripeBack>
+                    <PanelContainer StyleClasses="Inset" HorizontalExpand="True" VerticalExpand="True">
+                        <ScrollContainer HScrollEnabled="False" VerticalExpand="True">
+                            <BoxContainer Name="LinksContainer" Orientation="Vertical" />
+                        </ScrollContainer>
+                    </PanelContainer>
+                </BoxContainer>
+            </BoxContainer>
+
+            <controls:Separator StyleClasses="LowDivider" Orientation="Horizontal" Margin="0 10" />
+
+            <controls:StripeBack Name="TagsStripe">
+                <Label Name="TagsLabel" StyleClasses="WindowFooterText" HorizontalAlignment="Center" Margin="0 5 0 0" />
+            </controls:StripeBack>
+        </BoxContainer>
+    </BoxContainer>
+</Control>

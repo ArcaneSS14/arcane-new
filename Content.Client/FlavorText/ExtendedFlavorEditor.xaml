@@ -1,0 +1,7 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-or-later
+Arcane - extended flavor text editor (Orion #165, #183)
+-->
+<Control xmlns="https://spacestation14.io" HorizontalExpand="True" VerticalExpand="True">
+    <TabContainer Name="Tabs" HorizontalExpand="True" VerticalExpand="True" />
+</Control>

@@ -26,6 +26,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Preferences; // Arcane
 
 namespace Content.Server.Preferences.Managers
 {
@@ -205,7 +206,23 @@ namespace Content.Server.Preferences.Managers
                 // </Trauma>
             ) // Arcane-Edit
                 // Arcane-Start: Restore saved character scale
-                .WithScale(profile.Scale);
+                .WithScale(profile.Scale)
+                // Arcane-End
+                // Arcane-Start: extended flavor text
+                .WithExtendedFlavor(new ExtendedFlavorText
+                {
+                    Character = profile.CharacterFlavorText,
+                    Ooc = profile.OocFlavorText,
+                    Tags = profile.TagsFlavorText,
+                    Links = profile.LinksFlavorText,
+                    Green = profile.GreenFlavorText,
+                    Yellow = profile.YellowFlavorText,
+                    Red = profile.RedFlavorText,
+                    Nsfw = profile.NsfwFlavorText,
+                    NsfwOoc = profile.NsfwOocFlavorText,
+                    NsfwLinks = profile.NsfwLinksFlavorText,
+                    NsfwTags = profile.NsfwTagsFlavorText,
+                });
                 // Arcane-End
         }
 
