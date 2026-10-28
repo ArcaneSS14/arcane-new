@@ -1,0 +1,8 @@
+# Secure crate for cargo's own secured deliveries (Orion #377)
+- type: entity
+  parent: CratePrivateSecure
+  id: CratePrivateCargoSecure
+  name: secure cargo crate
+  components:
+  - type: AccessReader
+    access: [["Cargo"]]

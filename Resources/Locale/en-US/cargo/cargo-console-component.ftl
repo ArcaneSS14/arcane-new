@@ -55,10 +55,12 @@ cargo-console-fund-transfer-user-unknown = Unknown
 
 cargo-console-paper-reason-default = None
 cargo-console-paper-approver-default = Unknown
-cargo-console-paper-print-name = Order #{$orderNumber}
+# Arcane-Edit: product in the name
+cargo-console-paper-print-name = Order #{$orderNumber} ({$itemName} x{$orderQuantity})
 cargo-console-paper-print-text = [head=2]Order #{$orderNumber}[/head]
     {"[bold]Item:[/bold]"} {$itemName} (x{$orderQuantity})
     {"[bold]Requested by:[/bold]"} {$requester}
+    {"[bold]Deliver to:[/bold]"} {$destination}
 
     {"[head=3]Order Information[/head]"}
     {"[bold]Payer[/bold]:"} {$account} [font="Monospace"]\[{$accountcode}\][/font]
@@ -100,4 +102,5 @@ cargo-acquisition-slip-body = [head=3]Asset Detail[/head]
 
     {"[head=3]Purchase Detail[/head]"}
     {"[bold]Orderer:[/bold]"} {$orderer}
+    {"[bold]Deliver to:[/bold]"} {$destination}
     {"[bold]Reason:[/bold]"} {$reason}

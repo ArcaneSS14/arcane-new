@@ -55,6 +55,15 @@
                        VerticalExpand="True"
                        StyleClasses="LabelSubText"
                        ClipText="True" />
+
+                <!-- Arcane-Start -->
+                <Label Name="DeliveryDestination"
+                       Access="Public"
+                       HorizontalExpand="True"
+                       VerticalExpand="True"
+                       StyleClasses="LabelSubText"
+                       ClipText="True" />
+                <!-- Arcane-End -->
             </BoxContainer>
         </BoxContainer>
 
