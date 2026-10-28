@@ -37,3 +37,4 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [x] #246 Toggleable HUDs (без hunger/thirst иконок — их нет в форке)
 - [x] #260 AGhost action icons
 - [x] #379 Ghost Interaction (просмотр UI кликом, сообщения BUI от призраков блокируются)
+- [x] #415 Ghost storage interaction (eject материалов; mining points закрыты BUI-гардом #379)

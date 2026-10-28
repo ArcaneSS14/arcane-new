@@ -12,6 +12,7 @@ using Content.Server.Stack;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Construction;
 using Content.Shared.Database;
+using Content.Shared.Ghost.Components; // Arcane
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
@@ -53,6 +54,11 @@ public sealed partial class MaterialStorageSystem : SharedMaterialStorageSystem
     {
         if (args.SenderSession.AttachedEntity is not { } player)
             return;
+
+        // Arcane-Start - ghosts can view lathes since Orion #379, but not eject from them
+        if (TryComp<GhostComponent>(player, out var ghost) && !ghost.CanGhostInteract)
+            return;
+        // Arcane-End
 
         var uid = GetEntity(msg.Entity);
 
