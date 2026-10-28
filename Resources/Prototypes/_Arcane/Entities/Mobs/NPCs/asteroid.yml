@@ -43,5 +43,8 @@
   - type: TriggerOnMobstateChange
     mobState:
     - Dead
-  - type: SpawnOnTrigger
-    proto: SmallExplosionInstant
+  - type: ExplosionOnTrigger # small blast on death, the corpse stays
+    maxTileIntensity: 5
+    intensitySlope: 3
+    totalIntensity: 5
+    canCreateVacuum: false

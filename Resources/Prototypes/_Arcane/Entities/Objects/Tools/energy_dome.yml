@@ -132,6 +132,7 @@
       - state: coil
   - type: ExaminableBattery
   - type: Battery
+    netsync: false # connected to the power net, can't be predicted
     maxCharge: 30000 # max supply
     startingCharge: 10000
   - type: PowerNetworkBattery
