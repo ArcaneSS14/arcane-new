@@ -1,3 +1,4 @@
+using Content.Shared.Teleportation.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -10,6 +11,7 @@ public sealed partial class WormholeAnomalySystem : EntitySystem
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private LinkedEntitySystem _linked = default!;
 
     public override void Initialize()
     {
@@ -21,6 +23,20 @@ public sealed partial class WormholeAnomalySystem : EntitySystem
     private void OnMapInit(Entity<WormholeAnomalyComponent> ent, ref MapInitEvent args)
     {
         ent.Comp.NextPulse = _timing.CurTime + ent.Comp.PulseInterval;
+        LinkWithOtherWormholes(ent);
+    }
+
+    /// <summary>
+    /// Wormholes are portals into each other (Orion #345).
+    /// </summary>
+    private void LinkWithOtherWormholes(EntityUid wormhole)
+    {
+        var query = EntityQueryEnumerator<WormholeAnomalyComponent>();
+        while (query.MoveNext(out var other, out _))
+        {
+            if (other != wormhole)
+                _linked.TryLink(wormhole, other);
+        }
     }
 
     public override void Update(float frameTime)
