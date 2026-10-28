@@ -33,6 +33,25 @@
     timeToDecay: 600
     startPrice: 10000
     endPrice: 200
+    # Arcane-Start: reactivation of inert cores
+    reactivationReagentAmount: 5
+    reactivationReagents:
+    - Bluespace
+    hazardousReactivationReagents:
+    - Plasma
+    - UnstableMutagen
+    hazardousFailureChance: 0.65
+    # Arcane-End
+  # Arcane-Start
+  - type: SolutionContainerManager
+    solutions:
+      reactivation:
+        maxVol: 5
+  - type: RefillableSolution
+    solution: reactivation
+  - type: InjectableSolution
+    solution: reactivation
+  # Arcane-End
 
 - type: entity
   parent: BaseAnomalyCore

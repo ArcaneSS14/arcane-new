@@ -63,6 +63,16 @@
     tags:
     - Ore
     - Ingot
+  # Arcane-Start: grinds into bluespace reagent
+  - type: Extractable
+    grindableSolutionName: bluespace
+  - type: SolutionContainerManager
+    solutions:
+      bluespace:
+        reagents:
+        - ReagentId: Bluespace
+          Quantity: 20
+  # Arcane-End
 
 - type: entity
   parent: MaterialBSCrystal
@@ -85,6 +95,14 @@
     stackType: BSCrystalUnprocessed
   - type: UnclaimedOre
     miningPoints: 250
+  # Arcane-Start
+  - type: SolutionContainerManager
+    solutions:
+      bluespace:
+        reagents:
+        - ReagentId: Bluespace
+          Quantity: 5
+  # Arcane-End
 
 - type: entity
   parent: MaterialBSCrystalUnprocessed
