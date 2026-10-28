@@ -2,6 +2,9 @@
   id: MeleeHitIgnore
 
 - type: Tag
+  id: PokerChip
+
+- type: Tag
   id: BluespaceAnomalyCore
 
 - type: Tag
