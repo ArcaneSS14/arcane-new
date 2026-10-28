@@ -24,4 +24,15 @@ public sealed partial class NPCUseActionOnTargetComponent : Component
 
     [DataField]
     public EntityUid? ActionEnt;
+
+    // Arcane-Start
+    /// <summary>
+    /// Additional actions; each attempt picks one of all actions at random.
+    /// </summary>
+    [DataField]
+    public List<EntProtoId<TargetActionComponent>> ExtraActionIds = new();
+
+    [DataField]
+    public List<EntityUid> ExtraActionEnts = new();
+    // Arcane-End
 }
