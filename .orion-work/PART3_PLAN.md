@@ -35,3 +35,4 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [x] #50, #247 Custom Ghost
 - [x] #107, #121 Ghost UI (группировка варпов; StyleNano-стили отделов не перенесены)
 - [x] #246 Toggleable HUDs (без hunger/thirst иконок — их нет в форке)
+- [x] #260 AGhost action icons
