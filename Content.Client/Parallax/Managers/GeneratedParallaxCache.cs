@@ -73,12 +73,30 @@ public sealed partial class GeneratedParallaxCache : IPostInjectInit
 
             // If we're still loading, cancel the active load.
             datum.CancellationSource.Cancel();
+            // Arcane-Start
+            _ = DisposeTextureAfterCompletion(datum.LoadTask);
+            datum.CancellationSource.Dispose();
+            // Arcane-End
 
-            // We should probably be unloading the texture here forcibly,
-            // but the previous code didn't so I won't either.
             _data.Remove(id);
         }
     }
+
+    // Arcane-Start
+    private static async Task DisposeTextureAfterCompletion(Task<Texture> loadTask)
+    {
+        try
+        {
+            var texture = await loadTask;
+            if (!ReferenceEquals(texture, Texture.Transparent) && texture is IDisposable disposable)
+                disposable.Dispose();
+        }
+        catch
+        {
+            // Ignore cancellations and load failures 🥹
+        }
+    }
+    // Arcane-End
 
     private async Task<Texture> LoadTask(string id, ResPath configPath, CancellationToken cancel)
     {

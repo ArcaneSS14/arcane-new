@@ -41,7 +41,13 @@ public sealed partial class ParallaxManager : IParallaxManager
         {
             _sawmill.Debug($"Cancelling loading parallax {name}");
             loading.Cancel();
-            _loadingParallaxes.Remove(name, out _);
+            // Arcane-Edit-Start
+            if (!_loadingParallaxes.TryGetValue(name, out var current) || !ReferenceEquals(current, loading))
+                return;
+
+            _loadingParallaxes.Remove(name);
+            loading.Dispose();
+            // Arcane-Edit-End
             return;
         }
 
@@ -109,7 +115,7 @@ public sealed partial class ParallaxManager : IParallaxManager
 
             cancel.ThrowIfCancellationRequested();
 
-            _loadingParallaxes.Remove(name);
+//            _loadingParallaxes.Remove(name); // Arcane-Edit
 
             _parallaxesLQ[name] = layers[1];
             _parallaxesHQ[name] = layers[0];
@@ -129,6 +135,16 @@ public sealed partial class ParallaxManager : IParallaxManager
         {
             _sawmill.Error($"Failed to loaded parallax {name}: {ex}");
         }
+        // Arcane-Start
+        finally
+        {
+            if (_loadingParallaxes.TryGetValue(name, out var current) && ReferenceEquals(current, token))
+            {
+                _loadingParallaxes.Remove(name);
+                current.Dispose();
+            }
+        }
+        // Arcane-End
     }
 
     private async Task<ParallaxLayerPrepared[]> LoadParallaxLayers(
