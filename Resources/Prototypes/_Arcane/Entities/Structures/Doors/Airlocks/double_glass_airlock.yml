@@ -5,6 +5,7 @@
   name: double glass airlock
   description: It opens, it closes, and maybe crushes you, but it's wider than a normal door.
   components:
+  - type: MultiTileAirlockAirtight # second tile is sealed too (Orion #466)
   - type: Door
     closeTimeOne: 0.55
     closeTimeTwo: 0.3
