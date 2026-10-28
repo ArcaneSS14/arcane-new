@@ -27,6 +27,30 @@
     - CircuitImprinterMachineCircuitboard # Make fun
 
 - type: selectableSet
+  id: HermitInteQ
+  name: selectable-set-hermit-inteq-name
+  description: selectable-set-hermit-inteq-description
+  sprite:
+    sprite: _Arcane/Icons/inteq.rsi
+    state: logo
+  content:
+    - ClothingUniformJumpsuitInteQFormal
+    - ClothingBackpackInteQ
+    - ClothingHeadHelmetSwatInteQ
+    - ClothingMaskNeckGaiter
+    - ClothingEyesGogglessInteQ
+    - ClothingHandsGlovesCombat
+    - ClothingOuterArmorBasic
+    - ClothingShoesBootsCombatFilled
+    - OxygenTankFilled
+    - ClothingBeltInteQWebbing
+    - StimpackMini
+    - BoxSurvival
+    - FlashlightSeclite
+    - WeaponProtoKineticPistol # Pussy-mode
+    - CircuitImprinterMachineCircuitboard # Make fun
+
+- type: selectableSet
   id: HermitSyndicate
   name: selectable-set-hermit-syndicate-name
   description: selectable-set-hermit-syndicate-description
