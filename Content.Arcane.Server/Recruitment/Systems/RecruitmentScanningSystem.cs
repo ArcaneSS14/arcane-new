@@ -3,6 +3,7 @@ using Content.Arcane.Shared.Recruitment.Components;
 using Content.Server.Administration.Logs;
 using Content.Server.Popups;
 using Content.Shared.Database;
+using Content.Arcane.Shared.Recruitment.Events;
 using Content.Shared.DoAfter;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
@@ -48,6 +49,8 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
 
         SubscribeLocalEvent<RecruitmentScanningComponent, RecruitmentAcceptMessage>(OnAccept);
         SubscribeLocalEvent<RecruitmentScanningComponent, RecruitmentDeclineMessage>(OnDecline);
+
+        SubscribeNetworkEvent<RecruitmentRespondConfirmationEvent>(OnRecruitmentResponse);
     }
 
     private void OnMapInit(EntityUid uid, RecruitedComponent comp, MapInitEvent args)
@@ -58,7 +61,6 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         comp.RecruitedAt = _timing.CurTime;
     }
 
-    // TODO: Fix UI doesn't open for target on scan
     private void OnScanAttempt(EntityUid uid, RecruitmentScanningComponent comp, AfterInteractEvent args)
     {
         if (args.Target == null || !args.CanReach || !HasComp<HumanoidProfileComponent>(args.Target))
@@ -66,22 +68,23 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
 
         var target = args.Target.Value;
 
-        if (!TryComp<ActorComponent>(target, out var actor))
+        if (!TryComp(target, out ActorComponent? targetActor))
             return;
 
-        // This will be until we fix UI, also remove this when UI is fixed
         var targetName = Identity.Name(target, EntityManager);
-        _popup.PopupEntity(Loc.GetString("recruitment-start-user-temporal-popup", ("target", targetName)), target, args.User);
-
-/* Doesn't open the UI for the target :(
-// Uncomment this when UI is fixed
-        var targetName = Identity.Name(target, EntityManager);
+        if (TryComp<RecruitedComponent>(target, out var recruitedComp) && recruitedComp.Organization == comp.OrganizationName)
+        {
+            var alreadyInOrganizationMsg = args.User == target
+                ? Loc.GetString("recruitment-already-in-organization-self")
+                : Loc.GetString("recruitment-already-in-organization", ("target", targetName));
+            _popup.PopupEntity(alreadyInOrganizationMsg, uid, args.User);
+            return;
+        }
         _popup.PopupEntity(Loc.GetString("recruitment-start-user", ("target", targetName)), target, args.User);
 
         var userName = Identity.Name(args.User, EntityManager);
         if (args.User != target)
             _popup.PopupEntity(Loc.GetString("recruitment-start-target", ("user", userName)), args.User, target, PopupType.LargeCaution);
-*/
 
         var confirmComp = EnsureComp<RecruitmentConfirmationComponent>(uid);
         confirmComp.Scanner = uid;
@@ -96,21 +99,52 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         }
         confirmComp.ImplantName = implantName;
 
-        var state = new RecruitmentConfirmationBuiState
+        RaiseNetworkEvent(new RecruitmentOpenConfirmationEvent
         {
+            Scanner = GetNetEntity(uid),
             OrganizationName = confirmComp.OrganizationName,
             ImplantName = confirmComp.ImplantName,
-        };
-
-        _ui.SetUiState(uid, RecruitmentConfirmationUiKey.Key, state);
-        _ui.OpenUi(uid, RecruitmentConfirmationUiKey.Key, actor.PlayerSession);
-
+        },
+        targetActor.PlayerSession);
+        _adminLogger.Add(LogType.Action, LogImpact.Low, $"{Identity.Name(args.User, EntityManager)} sent a recruitment request to {targetName} for {comp.OrganizationName}");
         args.Handled = true;
+    }
+
+    private void OnRecruitmentResponse(RecruitmentRespondConfirmationEvent ev, EntitySessionEventArgs args)
+    {
+        if (!TryGetEntity(ev.Scanner, out var scannerUid))
+            return;
+
+        var actor = args.SenderSession.AttachedEntity;
+        if (actor == null)
+            return;
+
+        if (!TryComp<RecruitmentConfirmationComponent>(scannerUid, out var confirmComp) ||
+            !TryComp<RecruitmentScanningComponent>(scannerUid, out var scanComp))
+            return;
+
+        if (confirmComp.Target != actor.Value)
+            return;
+
+        var actorName = Identity.Name(actor.Value, EntityManager, confirmComp.Recruiter);
+        if (ev.Accepted)
+        {
+            _adminLogger.Add(LogType.Action, LogImpact.Low, $"{actorName} accepted a recruitment request to {confirmComp.OrganizationName}");
+            OnAccept(scannerUid.Value, scanComp, new RecruitmentAcceptMessage { Actor = actor.Value });
+        }
+        else
+        {
+            _adminLogger.Add(LogType.Action, LogImpact.Low, $"{actorName} declined a recruitment request to {confirmComp.OrganizationName}");
+            OnDecline(scannerUid.Value, scanComp, new RecruitmentDeclineMessage { Actor = actor.Value });
+        }
     }
 
     private void OnAccept(EntityUid uid, RecruitmentScanningComponent scanComp, RecruitmentAcceptMessage args)
     {
         if (!TryComp<RecruitmentConfirmationComponent>(uid, out var confirmComp))
+            return;
+
+        if (args.Actor != confirmComp.Target)
             return;
 
         var target = confirmComp.Target;
@@ -135,6 +169,9 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
         RemComp<RecruitmentConfirmationComponent>(uid);
 
+        _popup.PopupEntity(Loc.GetString("recruitment-processing-user", ("target", Identity.Name(target, EntityManager, confirmComp.Recruiter))), uid, confirmComp.Recruiter);
+        _popup.PopupEntity(Loc.GetString("recruitment-processing-target", ("user", Identity.Name(confirmComp.Recruiter, EntityManager, target))), uid, target);
+
         var doAfter = new DoAfterArgs(EntityManager, confirmComp.Recruiter, scanComp.DoAfterTime, new RecruitmentScanningDoAfterEvent(), uid, target: target, used: uid)
         {
             BreakOnMove = true,
@@ -155,6 +192,7 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
 
         var targetName = Identity.Name(confirmComp.Target, EntityManager, confirmComp.Recruiter);
         _popup.PopupEntity(Loc.GetString("recruitment-decline", ("target", targetName)), uid, confirmComp.Recruiter);
+        _popup.PopupEntity(Loc.GetString("recruitment-decline-target", ("organization", confirmComp.OrganizationName)), uid, confirmComp.Target);
 
         _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
         RemComp<RecruitmentConfirmationComponent>(uid);
@@ -167,6 +205,14 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
 
         var target = args.Target.Value;
         var name = Identity.Name(target, EntityManager, args.User);
+
+        if (TryComp<RecruitedComponent>(target, out var recruitedComp) &&
+            recruitedComp.Organization == comp.OrganizationName)
+        {
+            var msg = Loc.GetString("recruitment-already-in-organization", ("target", name));
+            _popup.PopupEntity(msg, target, args.User);
+            return;
+        }
 
         if (HasComp<RecruitedComponent>(target) || comp.ScannedEntities.Contains(target))
         {
