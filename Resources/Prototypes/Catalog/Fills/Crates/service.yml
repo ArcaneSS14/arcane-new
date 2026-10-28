@@ -176,6 +176,10 @@
           - id: ClothingMaskMime
           - id: ClothingBeltSuspendersRed
           - id: ClothingBeltSuspendersBlack
+        # Arcane-Start
+        - id: ConfettiGrenade
+          amount: 3
+        # Arcane-End
         - !type:AllSelector # Performer starter kit
           children:
           - id: ClothingUniformJumpskirtPerformer

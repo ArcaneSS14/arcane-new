@@ -82,6 +82,7 @@
   tier: 1
   cost: 7500
   recipeUnlocks:
+    - ConfettiGrenade # Arcane
     - ComputerTelevisionCircuitboard
     - SynthesizerInstrument
     - DawInstrumentMachineCircuitboard
