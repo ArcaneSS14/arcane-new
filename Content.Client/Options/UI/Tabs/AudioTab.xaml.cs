@@ -1,6 +1,7 @@
 // <Trauma>
 using Content.Goobstation.Common.CCVar;
 using Content.Trauma.Common.CCVar;
+using Content.Arcane.Common.CCVar; // Arcane
 // </Trauma>
 using Content.Client.Administration.Managers;
 using Content.Client.Audio;
@@ -45,6 +46,13 @@ public sealed partial class AudioTab : Control
             SliderVolumeSpecial,
             scale: 1f);
         // </Trauma>
+
+        // Arcane-Start
+        Control.AddOptionPercentSlider(
+            ArcaneCVars.RadioBarkVolume,
+            SliderVolumeRadioBarks,
+            scale: 2f);
+        // Arcane-End
 
         Control.AddOptionPercentSlider(
             CVars.MidiVolume,

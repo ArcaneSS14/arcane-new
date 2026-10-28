@@ -50,4 +50,10 @@ public sealed partial class ArcaneCVars
         CVarDef.Create("chat.directional_emotes_max_length", 10000, CVar.SERVER | CVar.REPLICATED);
 
     #endregion
+
+    /// <summary>
+    ///     Volume of radio barks, the sounds played when a radio message arrives.
+    /// </summary>
+    public static readonly CVarDef<float> RadioBarkVolume =
+        CVarDef.Create("audio.radio_bark_volume", 0.5f, CVar.CLIENTONLY | CVar.ARCHIVE);
 }
