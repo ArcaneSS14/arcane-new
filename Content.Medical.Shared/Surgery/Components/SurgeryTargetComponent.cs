@@ -15,4 +15,12 @@ public sealed partial class SurgeryTargetComponent : Component
     /// </summary>
     [DataField]
     public bool SepsisImmune;
+
+    // Arcane-Start
+    /// <summary>
+    /// Speed multiplier when operating on yourself. 1/3 means three times slower.
+    /// </summary>
+    [DataField]
+    public float SelfSurgerySpeedModifier = 1f / 3f;
+    // Arcane-End
 }
