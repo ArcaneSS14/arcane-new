@@ -11,3 +11,7 @@ ghost-role-information-inteq-vanguard-description = Follow the orders of the Int
 ghost-role-information-inteq-vanguard-leader-SIZO-description = You have been assigned as a squad commander to the Sizo-73 facility. Maintain the facility and the morale of your squad, and ensure that the rules are followed.
 ghost-role-information-inteq-vanguard-SIZO-description = Your squad has been assigned to Sizo-73. Maintain the facility and ensure its integrity.
 ghost-role-information-inteq-SIZO-rules = You must NOT leave lavaland without the permission of the administration, or a decent reason. You CAN conflict with the miners to a reasonable extent. Transfer of any equipment and belongings from Sizo-73 is PROHIBITED. Violation of the rules entails permanent blocking of access to Intec roles.
+
+ghost-role-information-inteq-agent-name = InteQ Agent
+ghost-role-information-inteq-agent-description = UGH!? AGH!! BREAK SKULLS, SMASH EVERYTHING!!!
+ghost-role-information-inteq-agent-rules = { ghost-role-information-antagonist-rules } Do not gib anyone. DON'T EVEN TRY!!!

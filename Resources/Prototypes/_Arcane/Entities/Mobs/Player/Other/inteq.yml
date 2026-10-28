@@ -1,6 +1,7 @@
 # Settings
 - type: randomHumanoidSettings
   id: InteQVanguard
+  abstract: true
   randomizeName: false
   speciesBlacklist:
   - Monkey
