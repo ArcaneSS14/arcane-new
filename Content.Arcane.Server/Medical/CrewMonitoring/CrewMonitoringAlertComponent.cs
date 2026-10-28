@@ -18,7 +18,7 @@ public sealed partial class CrewMonitoringAlertComponent : Component
     public TimeSpan AlertInterval = TimeSpan.FromSeconds(30);
 
     [DataField]
-    public SoundSpecifier AlertSound = new SoundPathSpecifier("/Audio/Machines/twobeep.ogg",
+    public SoundSpecifier AlertSound = new SoundPathSpecifier("/Audio/_Arcane/Machines/crew_monitoring_alert.ogg",
         AudioParams.Default.WithVolume(-8f).WithVariation(0.25f));
 
     [DataField]
