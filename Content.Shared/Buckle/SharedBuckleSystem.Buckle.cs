@@ -87,6 +87,14 @@ public abstract partial class SharedBuckleSystem
         if (args.Cancelled || !ent.Comp.Buckled)
             return;
 
+        // Arcane-Start: others can't pull a buckled entity off its strap
+        if (args.Puller != ent.Owner)
+        {
+            args.Cancel();
+            return;
+        }
+        // Arcane-End
+
         if (!CanUnbuckle(ent!, args.Puller, false))
             args.Cancel();
     }

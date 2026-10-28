@@ -8,7 +8,7 @@ namespace Content.IntegrationTests.Tests.Buckle;
 
 public sealed class BuckleDragTest : InteractionTest
 {
-    // Check that dragging a buckled player unbuckles them.
+    // Check that dragging a buckled player does not unbuckle them. // Arcane-Edit
     [Test]
     public async Task BucklePullTest()
     {
@@ -50,11 +50,16 @@ public sealed class BuckleDragTest : InteractionTest
         // Start pulling, and thus unbuckle them
         await PressKey(ContentKeyFunctions.TryPullObject, cursorEntity: urist);
         await RunTicks(5);
-        Assert.That(buckle.Buckled, Is.False);
-        Assert.That(buckle.BuckledTo, Is.Null);
-        Assert.That(strap.BuckledEntities, Is.Empty);
-        Assert.That(puller.Pulling, Is.EqualTo(sUrist));
-        Assert.That(pullable.Puller, Is.EqualTo(SPlayer));
-        Assert.That(pullable.BeingPulled, Is.True);
+        // Arcane-Edit-Start: pulling a buckled entity is blocked
+        Assert.Multiple(() =>
+        {
+            Assert.That(buckle.Buckled, Is.True);
+            Assert.That(buckle.BuckledTo, Is.EqualTo(STarget));
+            Assert.That(strap.BuckledEntities, Is.EquivalentTo(new[] { sUrist }));
+            Assert.That(puller.Pulling, Is.Null);
+            Assert.That(pullable.Puller, Is.Null);
+            Assert.That(pullable.BeingPulled, Is.False);
+        });
+        // Arcane-Edit-End
     }
 }
