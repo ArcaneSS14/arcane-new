@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared.Eye.Blinding.Components; // Arcane
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -241,6 +242,17 @@ public sealed partial class HealthAnalyzerControl
                 Margin = new Thickness(0, 4),
             });
         }
+
+        // Arcane-Start: Orion #374
+        if (_entityManager.TryGetComponent<BlindableComponent>(patient, out var blindable) && blindable.IsBlind)
+        {
+            ConditionsListContainer.AddChild(new RichTextLabel
+            {
+                Text = Loc.GetString("health-analyzer-window-entity-blind-text"),
+                Margin = new Thickness(0, 4),
+            });
+        }
+        // Arcane-End
 
         foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane-Edit
         {
