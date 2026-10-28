@@ -627,6 +627,15 @@
     board: ResearchComputerCircuitboard
   - type: AccessReader
     access: [["Research"]]
+  # Arcane-Start: the console announces unlocked technologies
+  - type: Speech
+    speechSounds: Borg
+    speechVerb: Robotic
+  - type: Grammar
+    attributes:
+      gender: female
+      proper: true
+  # Arcane-End
   - type: PointLight
     radius: 1.5
     energy: 1.6

@@ -18,6 +18,7 @@ public sealed partial class ResearchSystem
         var unusedId = EntityQuery<ResearchServerComponent>(true)
             .Max(s => s.Id) + 1;
         component.Id = unusedId;
+        SetArcaneServerName((uid, component)); // Arcane
         Dirty(uid, component);
     }
 

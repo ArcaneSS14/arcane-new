@@ -72,6 +72,7 @@ public sealed partial class ResearchSystem
                 ("approver", _identity.GetIdentityShortInfo(act, uid) ?? string.Empty)
             );
             _radio.SendRadioMessage(uid, message, component.AnnouncementChannel, uid, escapeMarkup: false);
+            SayTechnologyUnlocked(uid, technologyPrototype, _identity.GetIdentityShortInfo(act, uid) ?? string.Empty); // Arcane
         }
 
         SyncClientWithServer(uid);
