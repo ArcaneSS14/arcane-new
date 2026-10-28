@@ -11,6 +11,14 @@ public sealed partial class SlotBlockComponent : Component
     /// <summary>
     /// Slots that this entity should block.
     /// </summary>
-    [DataField(required: true), AutoNetworkedField]
+    [DataField, AutoNetworkedField] // Arcane-Edit: no longer required, a blocker can only hide slots
     public SlotFlags Slots = SlotFlags.NONE;
+
+    // Arcane-Start
+    /// <summary>
+    /// Slots that stay usable but whose contents are hidden from others in the strip menu.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public SlotFlags HiddenSlots = SlotFlags.NONE;
+    // Arcane-End
 }

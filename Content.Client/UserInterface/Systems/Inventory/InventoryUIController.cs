@@ -87,6 +87,8 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
             _inventoryHotbar.Visible = false;
         }
 
+        UpdateExtraHotbar(); // Arcane
+
         CommandBinds.Unregister<ClientInventorySystem>();
     }
 
@@ -247,6 +249,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         UpdateInventoryHotbar(_playerInventory);
         var shouldBeVisible = !_inventoryHotbar.Visible;
         _inventoryHotbar.Visible = shouldBeVisible;
+        UpdateExtraHotbar(); // Arcane
 
     }
 
@@ -406,6 +409,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         }
 
         UpdateInventoryHotbar(_playerInventory);
+        UpdateExtraHotbar(); // Arcane
     }
 
     private void UnloadSlots()
@@ -421,6 +425,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         }
 
         UpdateInventoryHotbar(null);
+        UpdateExtraHotbar(); // Arcane
     }
 
     private void SpriteUpdated(SlotSpriteUpdate update)

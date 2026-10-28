@@ -6,11 +6,11 @@
   id: Undergarments
   limits:
     enum.HumanoidVisualLayers.UndergarmentTop:
-      limit: 1
+      limit: 0 # Arcane-Edit: 1 > 0, underwear is clothing now; nudityDefault still censors
       required: false
       nudityDefault: [ UndergarmentTopTanktop ]
     enum.HumanoidVisualLayers.UndergarmentBottom:
-      limit: 1
+      limit: 0 # Arcane-Edit: 1 > 0, underwear is clothing now; nudityDefault still censors
       required: false
       nudityDefault: [ UndergarmentBottomBoxers ]
 

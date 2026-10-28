@@ -1,0 +1,154 @@
+# Clothing for the underwear slots (Orion #208)
+
+- type: entity
+  abstract: true
+  parent: [ SolutionFood, Clothing, BaseSlicingRefinable ]
+  id: ClothingUnderclothesBase
+  components:
+  - type: EmitSoundOnPickup
+    sound:
+      path: /Audio/_Goobstation/Items/handling/cloth_pickup.ogg
+      params:
+        volume: -4
+  - type: EmitSoundOnDrop
+    sound:
+      path: /Audio/_Goobstation/Items/handling/cloth_drop.ogg
+      params:
+        volume: -4
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/_Goobstation/Items/handling/cloth_drop.ogg
+      params:
+        volume: -4
+  - type: Sprite
+    state: icon
+  - type: Item
+    size: Small
+  - type: ToolRefinable
+    refineResult:
+    - id: MaterialCloth1
+      amount: 2
+  - type: PhysicalComposition # 50% of the amount of cloth you'd obtain upon slicing
+    materialComposition:
+      Cloth: 100
+  - type: Edible
+    requiresSpecialDigestion: true
+  - type: Solution
+    solution:
+      maxVol: 10
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 10
+  - type: Tag
+    tags:
+    - ClothMade
+    - Recyclable
+    - WhitelistChameleon
+
+- type: entity
+  abstract: true
+  parent: ClothingUnderclothesBase
+  id: ClothingUnderwearBase
+  name: panties
+  description: Panties.
+  components:
+  - type: Clothing
+    quickEquip: true
+    slots:
+    - underwear
+    equipSound:
+      collection: GenericEquip
+      params:
+        volume: -5
+  - type: TemperatureProtection
+    heatingCoefficient: 0.90
+  - type: Armor
+    coverage:
+    - Torso
+
+- type: entity
+  abstract: true
+  parent: ClothingUnderclothesBase
+  id: ClothingUndershirtBase
+  name: undershirt
+  description: Huh.
+  components:
+  - type: Clothing
+    quickEquip: true
+    slots:
+    - undershirt
+    equipSound:
+      collection: GenericEquip
+      params:
+        volume: -5
+  - type: Armor
+    coverage:
+    - Torso
+
+- type: entity
+  abstract: true
+  parent: ClothingUndershirtBase
+  id: ClothingShirtBase
+  name: shirt
+  description: Classic shirt.
+  components:
+  - type: TemperatureProtection
+    heatingCoefficient: 0.90
+
+- type: entity
+  abstract: true
+  parent: ClothingUndershirtBase
+  id: ClothingBraBase
+  name: bra
+  description: Bra.
+  components:
+  - type: TemperatureProtection
+    heatingCoefficient: 0.95
+
+- type: entity
+  abstract: true
+  parent: ClothingUnderclothesBase
+  id: ClothingSocksBase
+  name: socks
+  description: Socks.
+  components:
+  - type: Clothing
+    quickEquip: true
+    slots:
+    - socks
+    equipSound:
+      collection: GenericEquip
+      params:
+        volume: -5
+  - type: TemperatureProtection
+    heatingCoefficient: 0.90
+  - type: Armor
+    coverage:
+    - Foot
+
+- type: entity
+  abstract: true
+  parent: Clothing
+  id: ClothingWristsBase
+  components:
+  - type: Sprite
+    state: icon
+  - type: Clothing
+    slots: [ wrists ]
+    equipSound:
+      path: /Audio/_Goobstation/Items/handling/generic_equip2.ogg
+      params:
+        volume: -4
+  - type: Item
+    size: Small
+    storedRotation: -90
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  abstract: true
+  parent: ClothingWristsBase
+  id: ClothingWristsWatchBase
+  components:
+  - type: Clock

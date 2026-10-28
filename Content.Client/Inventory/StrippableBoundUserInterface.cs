@@ -34,6 +34,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using static Content.Client.Inventory.ClientInventorySystem;
 using static Robust.Client.UserInterface.Control;
+using Content.Shared.Interaction.Components; // Arcane
 
 namespace Content.Client.Inventory
 {
@@ -310,6 +311,17 @@ namespace Content.Client.Inventory
             var button = new SlotButton(new SlotData(slotDef, container));
             button.Pressed += SlotPressed;
 
+            // Arcane-Start: slots covered by other clothing (Orion #208)
+            if (!EntMan.HasComponent<BypassInteractionChecksComponent>(_player.LocalEntity))
+            {
+                var (blocked, hidden) = GetCoveredSlots(invUid, inv);
+                if ((slotDef.SlotFlags & (blocked | hidden)) != 0)
+                    entity = _virtualHiddenEntity;
+
+                button.Blocked = (slotDef.SlotFlags & blocked) != 0;
+            }
+            // Arcane-End
+
             _strippingMenu!.InventoryContainer.AddChild(button);
 
             UpdateEntityIcon(button, entity);
@@ -321,6 +333,27 @@ namespace Content.Client.Inventory
             if (slotDef.StrippingWindowPos.Y > _inventoryDimensions.Y)
                 _inventoryDimensions = new Vector2i(_inventoryDimensions.X, slotDef.StrippingWindowPos.Y);
         }
+
+        // Arcane-Start
+        /// <summary>
+        /// Slots blocked or hidden by the clothing the target is wearing.
+        /// </summary>
+        private (SlotFlags Blocked, SlotFlags Hidden) GetCoveredSlots(EntityUid invUid, InventoryComponent inv)
+        {
+            var blocked = SlotFlags.NONE;
+            var hidden = SlotFlags.NONE;
+            foreach (var slotContainer in inv.Containers)
+            {
+                if (!EntMan.TryGetComponent<SlotBlockComponent>(slotContainer.ContainedEntity, out var block))
+                    continue;
+
+                blocked |= block.Slots;
+                hidden |= block.HiddenSlots;
+            }
+
+            return (blocked, hidden);
+        }
+        // Arcane-End
 
         private void UpdateEntityIcon(SlotControl button, EntityUid? entity)
         {

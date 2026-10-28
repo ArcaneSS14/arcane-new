@@ -48,6 +48,13 @@ public sealed partial class ClientClothingSystem : ClothingSystem
         {"pocket1", "POCKET1"},
         {"pocket2", "POCKET2"},
         {"suitstorage", "SUITSTORAGE"},
+        // Arcane-Start: underwear slots (Orion #208)
+        {"earsright", "EARSRIGHT"},
+        {"underwear", "UNDERWEAR"},
+        {"undershirt", "UNDERSHIRT"},
+        {"socks", "SOCKS"},
+        {"wrists", "WRISTS"},
+        // Arcane-End
     };
 
     [Dependency] private IResourceCache _cache = default!;

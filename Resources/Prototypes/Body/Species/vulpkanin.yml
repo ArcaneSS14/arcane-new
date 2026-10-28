@@ -52,11 +52,11 @@
       limit: 2
       required: false
     enum.HumanoidVisualLayers.UndergarmentTop:
-      limit: 1
+      limit: 0 # Arcane-Edit: 1 > 0, underwear is clothing now; nudityDefault still censors
       required: false
       nudityDefault: [ UndergarmentTopTanktopVulpkanin ]
     enum.HumanoidVisualLayers.UndergarmentBottom:
-      limit: 1
+      limit: 0 # Arcane-Edit: 1 > 0, underwear is clothing now; nudityDefault still censors
       required: false
       nudityDefault: [ UndergarmentBottomBoxersVulpkanin ]
 
@@ -139,6 +139,23 @@
           32:
             sprite: Mobs/Species/Vulpkanin/displacement.rsi
             state: belt
+      # Arcane-Start: underwear slots (Orion #208)
+      underwear:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      undershirt:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      socks:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+      # Arcane-End
 
 - type: entity
   parent:

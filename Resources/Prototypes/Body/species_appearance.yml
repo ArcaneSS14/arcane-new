@@ -25,11 +25,16 @@
     # Underwear & clothing
     - map: [ "enum.HumanoidVisualLayers.UndergarmentBottom" ]
     - map: [ "enum.HumanoidVisualLayers.UndergarmentTop" ]
+    # Arcane-Start: underwear slots (Orion #208)
+    - map: [ "underwear" ]
+    - map: [ "undershirt" ]
+    # Arcane-End
     - map: ["jumpsuit"]
 
     # Extremities
     - map: ["enum.HumanoidVisualLayers.LFoot"]
     - map: ["enum.HumanoidVisualLayers.RFoot"]
+    - map: [ "socks" ] # Arcane: over bare feet, under shoes
     - map: ["enum.HumanoidVisualLayers.LHand"]
     - map: ["enum.HumanoidVisualLayers.RHand"]
 
@@ -38,7 +43,9 @@
 
     # More equipment
     - map: [ "gloves" ]
+    - map: [ "wrists" ] # Arcane
     - map: [ "shoes" ]
+    - map: [ "earsright" ] # Arcane
     - map: [ "ears" ]
     # <Trauma>
     - map: [ "enum.HumanoidVisualEmoteLayers.Blush" ]
