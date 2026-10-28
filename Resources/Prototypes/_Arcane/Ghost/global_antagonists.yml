@@ -1,0 +1,189 @@
+# Public antagonists listed in the ghost warp menu (Orion #107, #121).
+# Matched by entity prototype (and parents), mind role or component; no mob prototypes are edited.
+
+- type: globalAntagonist
+  id: Wizard
+  name: global-antagonist-wizard-name
+  description: global-antagonist-wizard-description
+  weight: 0
+  mindRoles:
+  - MindRoleWizard
+  - MindRoleApprentice
+
+- type: globalAntagonist
+  id: Nukeops
+  name: global-antagonist-nukeops-name
+  description: global-antagonist-nukeops-description
+  weight: 1
+  mindRoles:
+  - MindRoleNukeops
+  - MindRoleNukeopsMedic
+  - MindRoleNukeopsCommander
+
+- type: globalAntagonist
+  id: Loneops
+  name: global-antagonist-loneops-name
+  description: global-antagonist-loneops-description
+  weight: 2
+  mindRoles:
+  - MindRoleLoneops
+
+- type: globalAntagonist
+  id: Ninja
+  name: global-antagonist-ninja-name
+  description: global-antagonist-ninja-description
+  weight: 3
+  mindRoles:
+  - MindRoleNinja
+
+- type: globalAntagonist
+  id: Zombie
+  name: global-antagonist-zombie-name
+  description: global-antagonist-zombie-description
+  weight: 4
+  components:
+  - type: Zombie
+
+- type: globalAntagonist
+  id: Dragon
+  name: global-antagonist-dragon-name
+  description: global-antagonist-dragon-description
+  weight: 5
+  entities:
+  - MobDragon
+
+- type: globalAntagonist
+  id: Revenant
+  name: global-antagonist-revenant-name
+  description: global-antagonist-revenant-description
+  weight: 6
+  entities:
+  - MobRevenant
+
+- type: globalAntagonist
+  id: Slime
+  name: global-antagonist-slime-name
+  description: global-antagonist-slime-description
+  weight: 7
+  entities:
+  - MobAdultSlimes
+
+- type: globalAntagonist
+  id: Spider
+  name: global-antagonist-spider-name
+  description: global-antagonist-spider-description
+  weight: 8
+  entities:
+  - MobSpiderAngryBase
+  - MobGiantSpiderAngry
+  - MobGiantSpiderWizard
+
+- type: globalAntagonist
+  id: SpiderClown
+  name: global-antagonist-spider-clown-name
+  description: global-antagonist-spider-clown-description
+  weight: 9
+  entities:
+  - MobClownSpider
+
+- type: globalAntagonist
+  id: Rats
+  name: global-antagonist-rats-name
+  description: global-antagonist-rats-description
+  weight: 10
+  entities:
+  - MobRatKing
+
+- type: globalAntagonist
+  id: InteQ
+  name: global-antagonist-inteq-name
+  description: global-antagonist-inteq-description
+  weight: 11
+  entities:
+  - InteQVanguard
+
+- type: globalAntagonist
+  id: Blob
+  name: global-antagonist-blob-name
+  description: global-antagonist-blob-description
+  weight: 12
+  entities:
+  - MobMouseCancer
+  - MobBlobPod
+  - MobBlobBlobbernaut
+  - MobObserverBlob
+  - CoreBlobTile
+
+- type: globalAntagonist
+  id: Xenomorph
+  name: global-antagonist-xenomorph-name
+  description: global-antagonist-xenomorph-description
+  weight: 13
+  entities:
+  - MobXenomorphDrone
+  - MobXenomorphHunter
+  - MobXenomorphLarva
+  - MobXenomorphMaid
+  - MobXenomorphPraetorian
+  - MobXenomorphQueen
+  - MobXenomorphSentinel
+
+- type: globalAntagonist
+  id: SlaughterDemon
+  name: global-antagonist-slaughter-demon-name
+  description: global-antagonist-slaughter-demon-description
+  weight: 14
+  entities:
+  - BaseMobSlaughterDemon
+  - PolymorphBloodCrawlJaunt
+
+- type: globalAntagonist
+  id: Bingle
+  name: global-antagonist-bingle-name
+  description: global-antagonist-bingle-description
+  weight: 15
+  entities:
+  - MobBingle
+
+- type: globalAntagonist
+  id: Morph
+  name: global-antagonist-morph-name
+  description: global-antagonist-morph-description
+  weight: 17
+  entities:
+  - MobMorph
+
+- type: globalAntagonist
+  id: Devil
+  name: global-antagonist-devil-name
+  description: global-antagonist-devil-description
+  weight: 18
+  mindRoles:
+  - DevilMindRole
+  - DevilMindRolemidround
+
+- type: globalAntagonist
+  id: Abductor
+  name: global-antagonist-abductor-name
+  description: global-antagonist-abductor-description
+  weight: 19
+  mindRoles:
+  - MindRoleLoneAbductor
+  - MindRoleAbductorAgent
+  - MindRoleAbductorScientist
+
+- type: globalAntagonist
+  id: Contractor
+  name: global-antagonist-contractor-name
+  description: global-antagonist-contractor-description
+  weight: 20
+  mindRoles:
+  - MindRoleContractor
+
+- type: globalAntagonist
+  id: Unknown
+  name: global-antagonist-unknown-name
+  description: global-antagonist-unknown-description
+  weight: 42
+  entities:
+  - MobFloorGoblin

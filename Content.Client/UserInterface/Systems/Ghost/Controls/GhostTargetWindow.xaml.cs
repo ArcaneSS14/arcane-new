@@ -31,6 +31,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls
 
         public void UpdateWarps(IEnumerable<GhostWarp> warps)
         {
+            _warpPoints = warps.Where(w => w.IsWarpPoint).Select(w => w.Entity).ToHashSet(); // Arcane
             // Server COULD send these sorted but how about we just use the client to do it instead
             _warps = warps
                 .OrderBy(w => w.IsWarpPoint)
@@ -55,6 +56,14 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls
 
         private void AddButtons()
         {
+            // Arcane-Start: grouped list when the server sent player details
+            if (_players != null && _antagonists != null)
+            {
+                AddGroupedButtons();
+                return;
+            }
+            // Arcane-End
+
             foreach (var (name, warpTarget) in _warps)
             {
                 var currentButtonRef = new Button
@@ -87,6 +96,8 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls
                 if (child is Button button)
                     button.Visible = ButtonIsVisible(button);
             }
+
+            UpdateGroupedVisibility(); // Arcane
         }
 
         private void OnSearchTextChanged(LineEdit.LineEditEventArgs args)
