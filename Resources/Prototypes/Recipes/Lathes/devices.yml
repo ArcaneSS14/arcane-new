@@ -145,7 +145,7 @@
 
 - type: latheRecipe
   id: ClothingBackpackHolding
-  result: ClothingBackpackHolding
+  result: ClothingBackpackHoldingInert # Arcane-Edit: crafted with a bluespace anomaly core
   completetime: 5
   materials:
     Steel: 2000
@@ -157,12 +157,12 @@
 - type: latheRecipe
   parent: ClothingBackpackHolding
   id: ClothingBackpackSatchelHolding
-  result: ClothingBackpackSatchelHolding
+  result: ClothingBackpackSatchelHoldingInert # Arcane-Edit: crafted with a bluespace anomaly core
 
 - type: latheRecipe
   parent: ClothingBackpackHolding
   id: ClothingBackpackDuffelHolding
-  result: ClothingBackpackDuffelHolding
+  result: ClothingBackpackDuffelHoldingInert # Arcane-Edit: crafted with a bluespace anomaly core
 
 - type: latheRecipe
   parent: ClothingBackpackHolding

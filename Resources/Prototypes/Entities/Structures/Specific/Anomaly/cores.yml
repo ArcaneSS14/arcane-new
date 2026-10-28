@@ -147,6 +147,12 @@
     energy: 3.5
     color: "#00ccff"
     castShadows: false
+  # Arcane-Start: used to craft bags of holding
+  - type: Tag
+    tags:
+    - ForceableFollow
+    - BluespaceAnomalyCore
+  # Arcane-End
 
 - type: entity
   parent: BaseAnomalyCore
