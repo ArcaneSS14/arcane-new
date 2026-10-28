@@ -48,3 +48,4 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [-] #219, #226 Pain Alerts — нет системы боли (нервы Shitmed удалены в медицине Trauma), не портируемо
 - [-] #416 Kidneys Operation — дубль: SurgeryRemove/InsertKidneys уже есть в _Trauma/Surgery
 - [x] #221, #374 Handcuff/Blindness Examine; #315 Armor Examine (римские классы защиты вместо %; список частей тела уже был у Trauma)
+- [x] #437 Red Slime Extract Blacklist; #230 Security Side Cap (с самим предметом — его не было); #174 Enable Barks (дефолт CVar; пресет Trauma и так включал)
