@@ -28,6 +28,10 @@ public sealed partial class JukeboxMenu : FancyWindow
     public event Action? OnStopPressed;
     public event Action<ProtoId<JukeboxPrototype>>? OnSongSelected;
     public event Action<float>? SetTime;
+    // Arcane-Start
+    public event Action<float>? SetVolume;
+    public event Action? OnLoopToggled;
+    // Arcane-End
 
     private EntityUid? _audio;
 
@@ -59,6 +63,10 @@ public sealed partial class JukeboxMenu : FancyWindow
             OnStopPressed?.Invoke();
         };
         PlaybackSlider.OnReleased += PlaybackSliderKeyUp;
+        // Arcane-Start
+        VolumeSlider.OnReleased += VolumeSliderKeyUp;
+        LoopButton.OnPressed += _ => OnLoopToggled?.Invoke();
+        // Arcane-End
 
         SetPlayPauseButton(_audioSystem.IsPlaying(_audio), force: true);
     }
@@ -79,6 +87,24 @@ public sealed partial class JukeboxMenu : FancyWindow
         _lockTimer = 0.5f;
     }
 
+    // Arcane-Start
+    private void VolumeSliderKeyUp(Slider args)
+    {
+        SetVolume?.Invoke(VolumeSlider.Value);
+    }
+
+    public void SetVolumeSlider(float volume)
+    {
+        if (!VolumeSlider.Grabbed)
+            VolumeSlider.SetValueWithoutEvent(volume);
+    }
+
+    public void SetLoopButton(bool loopEnabled)
+    {
+        LoopButton.Pressed = loopEnabled;
+    }
+    // Arcane-End
+
     /// <summary>
     /// Re-populates the list of jukebox prototypes available.
     /// </summary>
@@ -90,6 +116,8 @@ public sealed partial class JukeboxMenu : FancyWindow
         {
             MusicList.AddItem(entry.Name, metadata: entry.ID);
         }
+
+        MusicList.SortItemsByText(); // Arcane
     }
 
     public void SetPlayPauseButton(bool playing, bool force = false)
@@ -134,6 +162,8 @@ public sealed partial class JukeboxMenu : FancyWindow
         {
             DurationLabel.Text = $"00:00 / 00:00";
         }
+
+        VolumeNumberLabel.Text = $"{VolumeSlider.Value:0} %"; // Arcane
 
         if (PlaybackSlider.Grabbed)
             return;
