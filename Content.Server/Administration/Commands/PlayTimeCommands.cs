@@ -10,7 +10,7 @@ namespace Content.Server.Administration.Commands;
 // goob shat up all of this file :)
 public sealed class PlayTimeCommandUtilities
 {
-    private static readonly Regex TimeRegex = new Regex(@"(\d+)([A-Za-z]+)", RegexOptions.Compiled);
+    private static readonly Regex TimeRegex = new Regex(@"(-?\d+)([A-Za-z]+)", RegexOptions.Compiled); // Arcane-Edit: support negative values
 
     private readonly static Dictionary<string, int> Units = new() {
         { "y", 525960 },
