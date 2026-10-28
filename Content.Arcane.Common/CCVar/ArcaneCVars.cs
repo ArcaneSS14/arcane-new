@@ -23,4 +23,10 @@ public sealed partial class ArcaneCVars
 
     #endregion
 
+    /// <summary>
+    ///     Whether space wind spawns subtle visual indicators of air currents.
+    /// </summary>
+    public static readonly CVarDef<bool> SpaceWindVisuals =
+        CVarDef.Create("atmos.space_wind_visuals", true, CVar.SERVERONLY);
+
 }
