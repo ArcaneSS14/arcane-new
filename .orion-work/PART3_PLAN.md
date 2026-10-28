@@ -38,3 +38,4 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [x] #260 AGhost action icons
 - [x] #379 Ghost Interaction (просмотр UI кликом, сообщения BUI от призраков блокируются)
 - [x] #415 Ghost storage interaction (eject материалов; mining points закрыты BUI-гардом #379)
+- [x] #54, #253, #261, #389, #396 Ghost Respawn (свой таймер на CurTime; проверка персонажа по именам, сыгранным до возврата; IgnoreInventoryBlock не перенесён)
