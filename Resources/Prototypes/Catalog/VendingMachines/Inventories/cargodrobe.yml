@@ -18,6 +18,7 @@
     ClothingShoesBootsWinterCargo: 2
     MailBag: 2
   contrabandInventory:
+    ClothingBackpackDelivery: 1 # Arcane
     ToyFigurineCargoTech: 1
     ToyFigurineSalvage: 1
     ToyFigurineQuartermaster: 1
