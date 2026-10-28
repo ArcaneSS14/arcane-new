@@ -68,8 +68,10 @@ public sealed partial class BedSystem : EntitySystem
         _actionsSystem.AddAction(args.Buckle, ref bed.Comp.SleepAction, SleepingSystem.SleepActionId, bed);
         Dirty(bed);
 
+        // Arcane-Edit-Start: double beds strap two entities
         // Single action entity, cannot strap multiple entities to the same bed.
-        DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // Arcane-Edit-End
     }
 
     private void OnUnstrapped(Entity<HealOnBuckleComponent> bed, ref UnstrappedEvent args)
@@ -85,7 +87,10 @@ public sealed partial class BedSystem : EntitySystem
             _sleepingSystem.TryWaking(args.Buckle.Owner);
         }
 
-        RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-Start: keep healing while a double bed is still occupied
+        if (args.Strap.Comp.BuckledEntities.Count == 0)
+            RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-End
     }
 
     private void OnStasisStrapped(Entity<StasisBedComponent> ent, ref StrappedEvent args)

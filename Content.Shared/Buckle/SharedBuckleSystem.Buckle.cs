@@ -146,7 +146,7 @@ public abstract partial class SharedBuckleSystem
             return;
         }
 
-        var delta = (xform.LocalPosition - strapComp.BuckleOffset).LengthSquared();
+        var delta = (xform.LocalPosition - GetBuckleOffset(strapComp, buckle.Owner)).LengthSquared(); // Arcane-Edit: per-entity offset
         if (delta > 1e-5)
             Unbuckle(buckle, (strapUid, strapComp), null);
     }
@@ -209,6 +209,7 @@ public abstract partial class SharedBuckleSystem
         if (TryComp(buckle.Comp.BuckledTo, out StrapComponent? old))
         {
             old.BuckledEntities.Remove(buckle);
+            old.BuckleOffsets.Remove(buckle); // Arcane
             Dirty(buckle.Comp.BuckledTo.Value, old);
         }
 
@@ -389,7 +390,7 @@ public abstract partial class SharedBuckleSystem
         _rotationVisuals.SetHorizontalAngle(buckle.Owner, strap.Comp.Rotation);
 
         var xform = Transform(buckle);
-        var coords = new EntityCoordinates(strap, strap.Comp.BuckleOffset);
+        var coords = new EntityCoordinates(strap, GetBuckleOffset(strap.Comp, buckle.Owner)); // Arcane-Edit: per-entity offset
         _transform.SetCoordinates(buckle, xform, coords, rotation: Angle.Zero);
 
         _joints.SetRelay(buckle, strap);
@@ -481,6 +482,7 @@ public abstract partial class SharedBuckleSystem
 
         _audio.PlayPredicted(strap.Comp.UnbuckleSound, strap, user);
 
+        var buckleOffset = GetBuckleOffset(strap.Comp, buckle.Owner); // Arcane
         SetBuckledTo(buckle, null);
 
         var buckleXform = Transform(buckle);
@@ -495,10 +497,12 @@ public abstract partial class SharedBuckleSystem
             _transform.SetWorldRotationNoLerp((buckle, buckleXform), oldBuckledToWorldRot);
 
             // TODO: This is doing 4 moveevents this is why I left the warning in, if you're going to remove it make it only do 1 moveevent.
-            if (strap.Comp.BuckleOffset != Vector2.Zero)
+            // Arcane-Edit-Start: per-entity offset
+            if (buckleOffset != Vector2.Zero)
             {
-                _transform.SetCoordinates(buckle, buckleXform, oldBuckledXform.Coordinates.Offset(strap.Comp.BuckleOffset));
+                _transform.SetCoordinates(buckle, buckleXform, oldBuckledXform.Coordinates.Offset(buckleOffset));
             }
+            // Arcane-Edit-End
         }
 
         _rotationVisuals.ResetHorizontalAngle(buckle.Owner);
