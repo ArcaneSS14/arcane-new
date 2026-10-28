@@ -29,4 +29,25 @@ public sealed partial class ArcaneCVars
     public static readonly CVarDef<bool> SpaceWindVisuals =
         CVarDef.Create("atmos.space_wind_visuals", true, CVar.SERVERONLY);
 
+    #region Directional emotes
+
+    /// <summary>
+    ///     Enables directional emotes, seen only by the sender and the target.
+    /// </summary>
+    public static readonly CVarDef<bool> DirectionalEmotesEnabled =
+        CVarDef.Create("chat.directional_emotes_enabled", false, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Maximum distance to the target of a directional emote.
+    /// </summary>
+    public static readonly CVarDef<int> DirectionalEmoteRange =
+        CVarDef.Create("chat.directional_emotes_range", 3, CVar.SERVER | CVar.REPLICATED);
+
+    /// <summary>
+    ///     Maximum length of a directional emote.
+    /// </summary>
+    public static readonly CVarDef<int> DirectionalEmoteMaxLength =
+        CVarDef.Create("chat.directional_emotes_max_length", 10000, CVar.SERVER | CVar.REPLICATED);
+
+    #endregion
 }

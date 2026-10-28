@@ -91,6 +91,7 @@
   - type: StunVisuals
   # Arcane-Start
   - type: Posing
+  - type: DirectionalEmoteTarget
   # Arcane-End
   - type: MobState
   - type: MobThresholds
