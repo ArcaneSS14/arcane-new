@@ -80,6 +80,14 @@ public sealed partial class GhostComponent : Component
     [DataField("canInteract"), AutoNetworkedField]
     public bool CanGhostInteract;
 
+    // Arcane-Start
+    /// <summary>
+    /// Whether this ghost can open (view only) activatable UIs by clicking them, Orion #379.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool CanGhostOpenUI = true;
+    // Arcane-End
+
     /// <summary>
     /// Is this ghost player allowed to return to their original body?
     /// </summary>

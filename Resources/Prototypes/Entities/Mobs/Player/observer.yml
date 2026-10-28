@@ -124,6 +124,7 @@
     tags:
     - AllowGhostShownByEvent
     - AllowPortalTraversal
+    - NoConsoleSound # Arcane
     - PreventPortalCollision
 
 - type: entity
