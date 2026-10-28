@@ -11,6 +11,10 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+  # <Trauma>
+  theory:
+    FurnitureKnowledge: 0
+  # </Trauma>
 
 - type: construction
   id: TatamiSingleRecipe
@@ -25,6 +29,10 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+  # <Trauma>
+  theory:
+    FurnitureKnowledge: 0
+  # </Trauma>
 
 - type: construction
   id: TatamiMatRecipe
@@ -39,3 +47,7 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+  # <Trauma>
+  theory:
+    FurnitureKnowledge: 0
+  # </Trauma>

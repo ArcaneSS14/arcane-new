@@ -1,5 +1,5 @@
 alert-level-announcement-full = ────────────────────
-    [bold]ALERT LEVEL: { $name }[/bold]
+    {"["}bold]ALERT LEVEL: { $name }[/bold]
     ────────────────────
     { $announcement }
 

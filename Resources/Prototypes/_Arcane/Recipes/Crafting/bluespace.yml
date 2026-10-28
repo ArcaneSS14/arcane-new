@@ -5,6 +5,10 @@
   targetNode: bag_of_holding
   category: construction-category-storage
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   id: ClothingBackpackSatchelHolding
@@ -13,6 +17,10 @@
   targetNode: bag_of_holding
   category: construction-category-storage
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   id: ClothingBackpackDuffelHolding
@@ -21,6 +29,10 @@
   targetNode: bag_of_holding
   category: construction-category-storage
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>
 
 - type: construction
   id: ClothingBackpackMessengerHolding
@@ -29,3 +41,7 @@
   targetNode: bag_of_holding
   category: construction-category-storage
   objectType: Item
+  # <Trauma>
+  theory:
+    FabricationKnowledge: 0
+  # </Trauma>

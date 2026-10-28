@@ -7,3 +7,12 @@
   - type: Sprite
     sprite: _Arcane/Structures/cryostasis_sleeper.rsi
     offset: "0.01,0.08"
+    layers: # no unshaded overlay states in this sprite
+    - state: sleeper_0
+      map: ["base"]
+  - type: GenericVisualizer
+    visuals:
+      enum.CryostorageVisuals.Full:
+        base:
+          True: { state: sleeper_1 }
+          False: { state: sleeper_0 }

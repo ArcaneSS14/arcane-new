@@ -11,3 +11,11 @@
   - type: TargetObjective
     title: objective-condition-other-alive-title
   - type: PickRandomPerson
+    conditions: # an on-station crew member, like the kill objectives
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - JobRole
+    - !type:AntagonistTagCondition
+      tags:
+      - OnStation

@@ -153,3 +153,7 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+  # <Trauma>
+  theory:
+    WallsKnowledge: 0
+  # </Trauma>

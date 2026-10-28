@@ -6,9 +6,13 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Objects/Medical/Stypticspray.rsi
-    state: icon
+    layers: # the medical sprites have no fill states
+    - state: icon
   - type: Item
     sprite: _Goobstation/Objects/Medical/Stypticspray.rsi
+  - type: SolutionContainerVisuals
+    maxFillLevels: 0
+    inHandsMaxFillLevels: 0
 
 - type: entity
   parent: SprayBottle
@@ -18,9 +22,13 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Objects/Medical/Silverspray.rsi
-    state: icon
+    layers: # the medical sprites have no fill states
+    - state: icon
   - type: Item
     sprite: _Goobstation/Objects/Medical/Silverspray.rsi
+  - type: SolutionContainerVisuals
+    maxFillLevels: 0
+    inHandsMaxFillLevels: 0
 
 - type: entity
   parent: SprayBottle
@@ -30,6 +38,10 @@
   components:
   - type: Sprite
     sprite: _Arcane/Objects/Specific/Medical/Bluespray.rsi
-    state: icon
+    layers: # the medical sprites have no fill states
+    - state: icon
   - type: Item
     sprite: _Arcane/Objects/Specific/Medical/Bluespray.rsi
+  - type: SolutionContainerVisuals
+    maxFillLevels: 0
+    inHandsMaxFillLevels: 0
