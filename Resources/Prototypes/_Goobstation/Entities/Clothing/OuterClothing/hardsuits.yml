@@ -140,6 +140,7 @@
   - type: Tag
     tags:
     - Hardsuit
+    - NoSlimeExtractSlowReset # Arcane
     - WhitelistChameleon
   - type: ClothingGrantComponent
     component:

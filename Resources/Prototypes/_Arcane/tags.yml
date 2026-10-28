@@ -24,3 +24,6 @@
 
 - type: Tag
   id: MegaCell
+
+- type: Tag
+  id: NoSlimeExtractSlowReset # clothing the red slime extract can't coat
