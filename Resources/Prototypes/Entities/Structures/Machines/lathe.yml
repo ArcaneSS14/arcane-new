@@ -245,6 +245,7 @@
     #- ChemistryStatic
     #- SurgeryStatic
     dynamicPacks:
+    - BodyBagsDynamic # Arcane
     - AdvancedTools
     #- ScienceEquipment - Goobstation - Moved to Scifab
     #- ScienceExplosives - Goobstation - Moved to Scifab
@@ -272,6 +273,10 @@
     - TraumaScienceClothing
     # </Trauma>
   - type: EmagLatheRecipes
+    # Arcane-Start: syndicate body bag has no research unlock, so it is a static emag pack
+    emagStaticPacks:
+    - BodyBagsSyndicateStatic
+    # Arcane-End
     emagDynamicPacks:
     - SecurityAmmo
     - SecurityExplosives
