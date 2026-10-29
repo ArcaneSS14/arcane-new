@@ -111,6 +111,8 @@
   - HydroponicsToolMiniHoe
   - HydroponicsToolClippers
   - HydroponicsToolHatchet
+  - ChickenCarrier
+  - RanchIncubatorCircuitboard
   position: 7,-5
 
 - type: technology

@@ -14,7 +14,6 @@
   recipeUnlocks:
   - MagazineShotgunBeanbag
   - BoxBeanbag
-  - MagazineBoxShotgunBeanbagHighCaliber 
   - ModularReceiver
   - BoxLethalshot
   - BoxShotgunSlug
@@ -29,15 +28,8 @@
   - MagazinePistolSubMachineGunTopMountedEmpty
   - MagazineRifle
   - MagazineRifleEmpty
-  - MagazineShotgun
-  - MagazineShotgunEmpty
-  - MagazineShotgunSlug
   - SpeedLoaderMagnum
   - SpeedLoaderMagnumEmpty
-  - MagazineBoxShotgunHighCaliber
-  - MagazineBoxShotgunSlugHighCaliber
-  - MagazineBoxShotgunPracticeHighCaliber
-  - MagazineShotgunLeverRifleEmpty
   - BoxShotgunPractice
   - MagazineBoxMagnumPractice
   - MagazineBoxPistolPractice
@@ -49,6 +41,12 @@
   - MagazinePistolPractice
   - SpeedLoaderMagnumPractice
   - MagazinePistolSubMachineGunPractice
+  - BoxShotgunBreaching
+  - SecurityBola
+  - MagazineBoxGaussgunBullet
+  - MagazineBoxGaussgunDisc
+  - MagazineBoxGaussgunShard
+  - MagazineGaussgun
   position: 0,0
 
 - type: technology
@@ -135,8 +133,6 @@
   - Truncheon
   - ClothingMaskMuzzleSecure
   - ClothingMaskMuzzleShock
-  - WeaponDisabler
-  - WeaponDisablerSMG
   - WeaponBillyClub
   position: 1,1
 
@@ -165,7 +161,6 @@
   - FlashPayload
   - ChemicalPayload
   - ShrapnelPayload
-  - ExplosivePayload
   - CableDetStack1
   - EmptyDetonator
   position: 1,0
@@ -196,7 +191,6 @@
   - MagazineRifleIncendiary
   - MagazinePistolIncendiary
   - MagazinePistolSubMachineGunIncendiary
-  - MagazineBoxShotgunIncendiaryHighCaliber
   - SpeedLoaderMagnumIncendiary
   - MagazineShotgunIncendiary
   - MagazineBoxPistolIncendiary
@@ -211,7 +205,6 @@
   - MagazineBoxMagnumUranium
   - MagazineBoxRifleUranium
   - BoxShotgunUranium
-  - MagazineBoxShotgunUraniumHighCaliber
   # Tranquilizer
   - BoxShellTranquilizer
   # Shuttle
@@ -252,7 +245,6 @@
   - PowerCellIonRevolver
   - EnergyMagRifleIon
   - PowerCellIonSniper
-  - WeaponTemperatureGun
   position: 3,1
 
 - type: technology
@@ -321,7 +313,6 @@
   - WeaponizedLaserManipulation
   - PartsBluespace
   recipeUnlocks:
-  - WeaponAdvancedLaser
   - WeaponEnergyRifle
   - WeaponLaserCellRevolver
   - WeaponLaserCellSMG

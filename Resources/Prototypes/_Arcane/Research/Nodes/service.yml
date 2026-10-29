@@ -54,6 +54,9 @@
   - TapeDeckCircuitboard
   - StationRadioServerCircuitboard
   - StationRadioRigCircuitboard
+  - BoxFolderClipboardEmpty
+  - BoxFolderPlasticClipboardEmpty
+  - TowelColorWhite
   position: 8,-4
 
 - type: technology
@@ -174,6 +177,8 @@
   - EnergyFoodSynthesizerMachineCircuitboard
   - EnergyBoozeDispenserMachineCircuitboard
   - EnergySodaDispenserMachineCircuitboard
+  - DeepFryerCircuitboard
+  - SmartFridgeCircuitboard
   position: 8,-3
 
 - type: technology

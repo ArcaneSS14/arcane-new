@@ -28,6 +28,7 @@
   - TimerTrigger
   - VoiceTrigger
   - ProximitySignaller
+  - PartCapacitor
   position: 12,4
 
 - type: technology
@@ -261,6 +262,22 @@
   - FauxTileAstroIronsand
   - FauxTileAstroIronsandBorderless
   - TileItemBluespace
+  - BohrumReactorReflector
+  - BrassReactorGasChannel
+  - BrassReactorHeatExchanger
+  - CerenkiteReactorFuelRod
+  - GlassReactorGasChannel
+  - GlassReactorHeatExchanger
+  - SteelGasTurbineBlade
+  - SteelGasTurbineStator
+  - SteelReactorGasChannel
+  - SteelReactorHeatExchanger
+  - SteelReactorReflector
+  - HolographicBarrierGeneratorCircuitboard
+  - HolographicFieldGeneratorCircuitboard
+  - CameraElectronics
+  - VoiceSensor
+  - UtilityKnife
   position: 11,4
 
 - type: technology

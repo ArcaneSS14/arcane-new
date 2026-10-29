@@ -23,6 +23,9 @@
   - EDAiCoreElectronics
   - EDIFFElectronics
   - EDWeaponControlsElectronics
+  - BorgModuleArtistry
+  - BorgModuleInflatable
+  - TorsoIPC
   position: -4,4
 
 - type: technology

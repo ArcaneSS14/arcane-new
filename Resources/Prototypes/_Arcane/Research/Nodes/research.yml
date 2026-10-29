@@ -31,6 +31,13 @@
   - ArtifactCrusherMachineCircuitboard
   - ExperimentalCircuitBoard
   - ResearchDataDisk
+  - Circuit
+  - CircuitHousing
+  - CircuitHousingPortable
+  - CircuitEditorConsoleCircuitboard
+  - GeneticsConsoleCircuitboard
+  - GeneticsDisk
+  - HandheldGeneticsScanner
   position: 0,4
 
 - type: technology

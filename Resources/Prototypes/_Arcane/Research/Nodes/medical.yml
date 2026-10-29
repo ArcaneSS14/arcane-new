@@ -82,6 +82,13 @@
   - AdvancedBoneGel
   - ClothingHandsGlovesSurgical
   - VehicleHoverchairSci
+  - ChemistryEmptyVial
+  - ChemistryEmptyVialSmall
+  - ChemiCompilerMachineCircuitboard
+  - Hypoport
+  - MedicalCigCarton
+  - MedicalHyposprayEmpty
+  - ClothingOuterStraightjacket
   position: 7,10
 
 - type: technology
