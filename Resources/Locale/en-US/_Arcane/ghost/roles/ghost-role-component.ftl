@@ -15,3 +15,16 @@ ghost-role-information-inteq-SIZO-rules = You must NOT leave lavaland without th
 ghost-role-information-inteq-agent-name = InteQ Agent
 ghost-role-information-inteq-agent-description = UGH!? AGH!! BREAK SKULLS, SMASH EVERYTHING!!!
 ghost-role-information-inteq-agent-rules = { ghost-role-information-antagonist-rules } Do not gib anyone. DON'T EVEN TRY!!!
+
+ghost-role-information-inteq-vanguard-leader-ert = ERT | InteQ Leader
+ghost-role-information-inteq-vanguard-operative-ert = ERT | InteQ Operative
+ghost-role-information-inteq-vanguard-soldier-ert = ERT | InteQ Vanguard
+ghost-role-information-inteq-vanguard-medic-ert = ERT | InteQ Medic
+
+ghost-role-information-clown-leader-ert = ERT Leader Clown
+ghost-role-information-clown-ert = ERT Clown
+ghost-role-information-clown-ert-description = Have a party till you drop! Please do not destroy the station in the process.
+
+ghost-role-information-assistant-leader-ert = ERT Leader Assistant
+ghost-role-information-assistant-ert = ERT Assistant
+ghost-role-information-assistant-ert-description = Help the station, try not to dye your pants brown.

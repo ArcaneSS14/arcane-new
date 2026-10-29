@@ -12,6 +12,14 @@ InteQVanguard = { job-name-inteq-vanguard }
 job-title-vanguard-leader = { job-name-inteq-vanguard-leader }
 job-title-vanguard = { job-name-inteq-vanguard }
 
+job-name-cburn-leader = CBURN Leader
+job-description-cburn-leader = Take your goal.
+JobCBURNLeader = { job-name-cburn-leader }
+
+job-name-deathsquad-leader = Deathsquad Leader
+job-description-deathsquad-leader = Get them boy.
+JobDeathSquadLeader = { job-name-deathsquad-leader }
+
 job-name-ert-inteq-vanguard-leader = ERT Vanguard Leader
 JobERTInteQVanguardLeader = { job-name-ert-inteq-vanguard-leader }
 job-name-ert-inteq-vanguard = ERT Vanguard

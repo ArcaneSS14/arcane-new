@@ -77,3 +77,12 @@
     lowPressureMultiplier: 1000
   - type: FlashImmunity
   - type: EyeProtection
+
+- type: entity
+  parent: ClothingHeadHelmetCBURN
+  id: ClothingHeadHelmetCBURNLeader
+  name: CBURN leader helmet
+  description: A pressure resistant and fireproof hood worn by special cleanup units.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hardsuits/cburn_leader.rsi
