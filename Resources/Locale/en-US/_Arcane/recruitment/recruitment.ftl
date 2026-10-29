@@ -26,6 +26,7 @@ recruitment-ui-decline = Decline
 
 recruitment-list-ui-title = Organization Database
 recruitment-member-list-organization = Manifest of { $organization }
+recruitment-member-label = Members
 recruitment-member-list-count = Total count: { $count }
 recruitment-member-list-empty = No members found!
 
