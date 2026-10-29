@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Examine;
 using Content.Shared.Eye.Blinding.Components;

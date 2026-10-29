@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 using System.Text;
 
 namespace Content.Arcane.Common.Localization;

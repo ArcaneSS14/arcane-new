@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 // Arcane-Start
 using Content.Goobstation.Shared.Clothing.Components;
 using Content.Shared.Whitelist;

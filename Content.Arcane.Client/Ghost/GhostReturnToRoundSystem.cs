@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 using Content.Arcane.Shared.Ghost;
 using Content.Client.UserInterface.Systems.Ghost.Widgets;
 using Robust.Client.Player;

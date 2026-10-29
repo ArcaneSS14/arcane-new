@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 using Content.Client.Lobby;
 using Content.Client.Lobby.UI;
 using Robust.Client.UserInterface.Controllers;

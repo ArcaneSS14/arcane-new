@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Preferences;
 using Content.Client.Stylesheets;
