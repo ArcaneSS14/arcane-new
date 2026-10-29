@@ -32,10 +32,14 @@ public sealed partial class PdaSkinSystem : EntitySystem
         if (!_sprite.LayerMapTryGet(spriteEnt, PdaVisualizerSystem.PdaVisualLayers.Base, out var baseIndex, false))
             return;
 
-        _sprite.LayerSetRsi(spriteEnt, baseIndex, skin.Sprite, skin.BaseState);
-        _sprite.LayerSetColor(spriteEnt, baseIndex, skin.BaseColor ?? Color.White);
+        // The PDA visualizer keeps setting the PDA type state on the base layer, so it stays on its own RSI and gets hidden.
+        _sprite.LayerSetVisible(spriteEnt, baseIndex, false);
 
         var index = baseIndex + 1;
+        _sprite.AddRsiLayer(spriteEnt, skin.BaseState, skin.Sprite, index);
+        _sprite.LayerSetColor(spriteEnt, index, skin.BaseColor ?? Color.White);
+        index++;
+
         foreach (var layer in skin.Layers)
         {
             _sprite.AddRsiLayer(spriteEnt, layer.State, skin.Sprite, index);
@@ -66,11 +70,9 @@ public sealed partial class PdaSkinSystem : EntitySystem
 
     private void OnAppearanceChange(Entity<PdaScreenComponent> ent, ref AppearanceChangeEvent args)
     {
-        if (args.Sprite is not { } sprite || GetSkin(ent) is not { } skin)
+        if (args.Sprite is not { } sprite)
             return;
 
-        // The PDA visualizer sets the base to the PDA type state, which the skin RSI doesn't have.
-        _sprite.LayerSetRsi((ent, sprite), PdaVisualizerSystem.PdaVisualLayers.Base, skin.Sprite, skin.BaseState);
         UpdateScreen(ent, sprite, args.Component);
     }
 

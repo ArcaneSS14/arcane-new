@@ -10,7 +10,7 @@
   - type: Transform
     anchored: true
   - type: Sprite
-    sprite: /Textures/_Goobstation/Flock/Tiles/featherzone.rsi
+    sprite: /Textures/_Arcane/Tiles/featherzone.rsi
     state: FZTile2
     drawdepth: BelowFloor
     layers:

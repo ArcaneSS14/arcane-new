@@ -34,6 +34,9 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
 
     private void OnMindRemoved(EntityUid uid, MindContainerComponent comp, MindRemovedMessage args)
     {
+        if (TerminatingOrDeleted(uid))
+            return;
+
         EnsureComp<LastMindComponent>(uid).Mind = args.Mind.Owner;
     }
 
