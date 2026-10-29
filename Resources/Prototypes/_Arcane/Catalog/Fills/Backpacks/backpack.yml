@@ -55,7 +55,6 @@
     - id: BoxCleanerGrenades
     - id: MopItem
     - id: Bucket
-    - id: TrashBag
     - id: Soap
     - id: LightReplacer
     - id: SprayBottleSpaceCleaner

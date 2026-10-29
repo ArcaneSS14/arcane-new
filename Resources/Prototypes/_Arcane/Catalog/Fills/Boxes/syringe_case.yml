@@ -4,7 +4,7 @@
   suffix: general, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-general
+    localizedLabel: reagent-general
   - type: StorageFill
     contents:
       - id: CartridgeBicaridine
@@ -20,7 +20,7 @@
   suffix: bicaridine, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-name-bicaridine
+    localizedLabel: reagent-name-bicaridine
   - type: StorageFill
     contents:
       - id: CartridgeBicaridine
@@ -32,7 +32,7 @@
   suffix: dermaline, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-name-dermaline
+    localizedLabel: reagent-name-dermaline
   - type: StorageFill
     contents:
       - id: CartridgeDermaline
@@ -44,7 +44,7 @@
   suffix: saline, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-name-saline
+    localizedLabel: reagent-name-saline
   - type: StorageFill
     contents:
       - id: CartridgeSaline
@@ -56,7 +56,7 @@
   suffix: atropine, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-name-atropine
+    localizedLabel: reagent-name-atropine
   - type: StorageFill
     contents:
       - id: CartridgeAtropine
@@ -68,7 +68,7 @@
   suffix: epinephrine, autoinjector
   components:
   - type: Label
-    currentLabel: reagent-name-epinephrine
+    localizedLabel: reagent-name-epinephrine
   - type: StorageFill
     contents:
       - id: CartridgeEpinephrine
