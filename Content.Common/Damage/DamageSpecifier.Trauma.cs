@@ -99,15 +99,24 @@ public sealed partial class DamageSpecifier
         return result;
     }
 
+    public bool HasFlag(DamageFlags flag)
+    {
+        return (Flags & flag) != 0;
+    }
+
     [Flags, Serializable, NetSerializable]
     public enum DamageFlags : byte
     {
         None = 0,
+        // Damage dealt while user was aiming directly at target
         PreciseHit = 1 << 0,
+        // Damage dealt by marital art combo
         MartialArtCombo = 1 << 1,
         // Arcane-Start
         NoWounds = 1 << 2,
         NoBleeding = 1 << 3,
         // Arcane-End
+        // Damage cannot be blocked/parried
+        NoParry = 1 << 4, // Arcane-Edit: 1 << 2 > 1 << 4; avoid pressure flag overlap.
     }
 }
