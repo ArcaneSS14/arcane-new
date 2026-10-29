@@ -262,6 +262,23 @@
         prototype: NormalSatiationHunger
       Thirst:
         prototype: NormalSatiationThirst
+  # Arcane-Start
+  - type: Mood
+  - type: SatiationMood
+    satiations:
+      Hunger:
+        thresholds:
+          Overfed: HungerOverfed
+          Okay: HungerOkay
+          Peckish: HungerPeckish
+          Starving: HungerStarving
+      Thirst:
+        thresholds:
+          Overhydrated: ThirstOverHydrated
+          Okay: ThirstOkay
+          Thirsty: ThirstThirsty
+          Parched: ThirstParched
+  # Arcane-End
   - type: Barotrauma
     damage:
       types:

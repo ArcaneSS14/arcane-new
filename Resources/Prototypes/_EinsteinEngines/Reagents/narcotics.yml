@@ -45,3 +45,9 @@
           reagent: Morphine
           min: 16
       # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: MorphineBenefit
+      - !type:ChemAddMoodlet
+        moodPrototype: StrongPainkiller
+      # Arcane-End
