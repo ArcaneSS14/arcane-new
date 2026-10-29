@@ -1206,6 +1206,11 @@
   - JackBoots
   - SecurityWinterBoots
   - AdvancedJackBoots
+  # Arcane-Start
+  - JackBootsToeless
+  - JackBootsTall
+  - JackBootsTallHeels
+  # Arcane-End
 
 - type: loadoutGroup
   id: HeadofSecurityEnvirohelm
@@ -1249,6 +1254,7 @@
   - SecurityBeret
   - SecurityHat
   - TrooperHat
+  - BrigmedicBeretDark # Arcane
 
 - type: loadoutGroup
   id: BrigmedicOuterClothing

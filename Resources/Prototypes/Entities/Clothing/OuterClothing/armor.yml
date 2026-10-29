@@ -41,6 +41,10 @@
     knockdownTimeDelta: -3
   - type: StaminaResistance # Goobstation
     damageCoefficient: 0.5
+  # Arcane-Start: price comes from the armor values
+  - type: StaticPrice
+    price: 0
+  # Arcane-End
 
 #Standard armor vest, allowed for security only
 - type: entity

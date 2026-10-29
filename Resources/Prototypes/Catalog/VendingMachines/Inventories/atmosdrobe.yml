@@ -12,7 +12,11 @@
     ClothingHeadsetEngineering: 2
     ClothingHeadHelmetFire: 2
     ClothingOuterSuitFire: 2
-    ClothingOuterWinterAtmos: 2
+    # Arcane-Start
+    ClothingAtmosphericsOveralls: 3
+    ClothingHeadHatsBeretAtmos: 3
+    # Arcane-End
+    ClothingOuterWinterAtmos: 3 # Arcane-Edit: 2 > 3
     ClothingNeckScarfStripedLightBlue: 3
   contrabandInventory:
     ToyFigurineAtmosTech: 1

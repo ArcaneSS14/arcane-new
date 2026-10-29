@@ -3,3 +3,19 @@
   id: SecuritySideCap
   equipment:
     head: ClothingHeadHatSecuritySideCap
+
+# Shoes
+- type: loadout
+  id: JackBootsToeless
+  equipment:
+    shoes: ClothingShoesBootsJackToeless
+
+- type: loadout
+  id: JackBootsTall
+  equipment:
+    shoes: ClothingShoesBootsJackTall
+
+- type: loadout
+  id: JackBootsTallHeels
+  equipment:
+    shoes: ClothingShoesBootsJackTallHeels

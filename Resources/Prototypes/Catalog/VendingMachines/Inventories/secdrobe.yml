@@ -7,6 +7,11 @@
     ClothingBackpackMessengerSecurity: 3 # Frontier
     ClothingUniformJumpsuitSec: 3
     ClothingShoesBootsJack: 3
+    # Arcane-Start
+    ClothingShoesBootsJackToeless: 3
+    ClothingShoesBootsJackTall: 3
+    ClothingShoesBootsJackTallHeels: 3
+    # Arcane-End
     ClothingHeadHatBeretSecurity: 3
     ClothingHeadHatSecuritySideCap: 3 # Arcane
     ClothingHeadHatSecsoft: 3

@@ -927,6 +927,7 @@
   loadouts:
   - ChiefEngineerHead
   - ChiefEngineerBeret
+  - EngineeringBeret # Arcane
 
 - type: loadoutGroup
   id: ChiefEngineerJumpsuit
@@ -1056,6 +1057,7 @@
   minLimit: 0
   loadouts:
   - AtmosphericTechnicianWintercoat
+  - AtmosOveralls # Arcane
 
 - type: loadoutGroup
   id: AtmosphericTechnicianBackpack
@@ -1376,6 +1378,11 @@
   - JackBoots
   - CombatBoots # Goobstation
   - SecurityWinterBoots
+  # Arcane-Start
+  - JackBootsToeless
+  - JackBootsTall
+  - JackBootsTallHeels
+  # Arcane-End
 
 - type: loadoutGroup
   id: SecurityPDA

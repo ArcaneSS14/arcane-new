@@ -201,6 +201,7 @@
   loadouts:
   - ParamedicHead
   - SeniorPhysicianBeret # Goob
+  - ParamedicHeadBeret # Arcane
 
 - type: loadoutGroup
   id: ParamedicJumpsuit

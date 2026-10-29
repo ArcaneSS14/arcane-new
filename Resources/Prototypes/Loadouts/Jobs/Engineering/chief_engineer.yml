@@ -48,7 +48,10 @@
 
 - type: loadout
   id: ChiefEngineerBeret
-  startingGear: EngineeringBeret
+  # Arcane-Edit-Start: own CE beret, was startingGear EngineeringBeret
+  equipment:
+    head: ClothingHeadHatBeretCEngineer
+  # Arcane-Edit-End
 
 
 # Neck
