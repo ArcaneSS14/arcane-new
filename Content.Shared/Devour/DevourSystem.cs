@@ -13,6 +13,7 @@ using Content.Shared.Whitelist;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Serialization;
+using Content.Shared.Destructible; // Arcane
 
 namespace Content.Shared.Devour;
 
@@ -90,6 +91,14 @@ public sealed partial class DevourSystem : EntitySystem
             return;
         }
 
+        // Arcane-Start: indestructible structures, like bitrunning domain walls, can't be eaten
+        if (!CanDevourStructure(target))
+        {
+            _popupSystem.PopupEntity(Loc.GetString("devour-action-popup-message-fail-target-indestructible"), ent.Owner, ent.Owner);
+            return;
+        }
+        // Arcane-End
+
         _popupSystem.PopupEntity(Loc.GetString("devour-action-popup-message-structure"), ent.Owner, ent.Owner);
 
         if (ent.Comp.SoundStructureDevour != null)
@@ -136,11 +145,28 @@ public sealed partial class DevourSystem : EntitySystem
         // Delete if the thing isn't in the stomach storage whitelist (or the stomach whitelist is null/empty)
         else if (args.Args.Target != null)
         {
+            // Arcane-Start
+            if (!CanDevourStructure(args.Args.Target.Value))
+                return;
+            // Arcane-End
+
             PredictedQueueDel(args.Args.Target.Value);
         }
 
         _audioSystem.PlayPredicted(ent.Comp.SoundDevour, ent.Owner, ent.Owner);
     }
+
+    // Arcane-Start
+    private bool CanDevourStructure(EntityUid target)
+    {
+        if (!HasComp<DestructibleComponent>(target))
+            return false;
+
+        var ev = new DestructionAttemptEvent();
+        RaiseLocalEvent(target, ev);
+        return !ev.Cancelled;
+    }
+    // Arcane-End
 
     private void OnGibContents(Entity<DevourerComponent> ent, ref GibbedBeforeDeletionEvent args)
     {

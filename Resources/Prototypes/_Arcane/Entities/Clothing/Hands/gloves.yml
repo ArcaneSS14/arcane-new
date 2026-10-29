@@ -125,3 +125,10 @@
     sprite: _Arcane/Clothing/Hands/Gloves/aliance_assassin.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Hands/Gloves/aliance_assassin.rsi
+
+- type: entity
+  parent: ClothingHandsGlovesDeathsquad
+  id: ClothingHandsGlovesDeathsquadUnremovable
+  suffix: Unremovable
+  components:
+  - type: Unremoveable

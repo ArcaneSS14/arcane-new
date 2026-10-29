@@ -30,3 +30,33 @@
 
 - type: Tag
   id: NoSlimeExtractSlowReset # clothing the red slime extract can't coat
+
+- type: Tag
+  id: CartridgeRifle762
+
+- type: Tag
+  id: MagazineAntiMaterielRifle
+
+- type: Tag
+  id: MagazineHeavyRifleM41
+
+- type: Tag
+  id: MagazineLightMachineGunRPD
+
+- type: Tag
+  id: MagazineSMGP90
+
+- type: Tag
+  id: MagazinePulseShotgun
+
+- type: Tag
+  id: MagazineRifle762
+
+- type: Tag
+  id: MagazineRifle762Sniper
+
+- type: Tag
+  id: PulseBullet
+
+- type: Tag
+  id: ShellShotgunPulse

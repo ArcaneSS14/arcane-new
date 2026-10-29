@@ -24,3 +24,8 @@ job-name-ert-inteq-vanguard-leader = ERT Vanguard Leader
 JobERTInteQVanguardLeader = { job-name-ert-inteq-vanguard-leader }
 job-name-ert-inteq-vanguard = ERT Vanguard
 JobERTInteQVanguard = { job-name-ert-inteq-vanguard }
+
+job-name-bitrunner = Bitrunner
+job-description-bitrunner = Run virtual domains, gather points, and keep the bitrunning network stable.
+job-name-bitrun-avatar = Bitrun Avatar
+job-description-bitrun-avatar = A projected operator body used by a bitrunner inside virtual domains.

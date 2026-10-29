@@ -74,3 +74,9 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
   Не перенесено: #164/#169 защита чата (дублирует ChatFilterSystem Trauma), #395 (дедчат уже идёт через CanSendInGame → фильтр Trauma).
 - [x] #426 — только новости: сервер оставляет базовые теги (`SafeMarkup.Arcane.cs`) вместо экранирования, лимиты 48/4048. Флейвор-части зависят от #183, которого нет.
 - Внимание: port.py применяет патчи с -F2 — в #244 ханк belts.yml лёг не в ту сущность (EMT belt > ERT chest rig). Проверять владельца ханка после каждого порта.
+
+## Итог (2026-10-29)
+- Решение пользователя: остальное из Orion (карты #124/#440/#125/#102/#329, ресрайты, #45, #194) не портировать.
+- [x] Bitrunning из закрытого Trauma-Station PR #3760: код в `Content.Arcane.{Common,Shared,Server,Client}/Bitrunning` и `Content.Arcane.Server/Gravity`, ресурсы в `_Arcane` (RMC14-тайлы и декор — `_Arcane/RMC14`).
+  Оплата в вендоре — в `BitrunningPointsSystem` (без правки ShopVendor Trauma), очки на ID-карте выдаются лениво (без правки identification_cards.yml).
+  Ванильные правки: PortDisconnectedEvent (RemovedPortUid), Devour (не ест неразрушаемое), SSD (NPC не засыпают), платы в CargoBoards.
