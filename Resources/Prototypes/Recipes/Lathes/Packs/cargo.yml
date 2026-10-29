@@ -26,6 +26,9 @@
   - AdvancedMineralScannerEmpty
   - OreBagOfHolding
   - DrillHead # Trauma
+  # Arcane-Start
+  - MarkerBeacon
+  # Arcane-End
 
 - type: latheRecipePack
   id: CargoBoards
@@ -33,3 +36,8 @@
   - OreProcessorIndustrialMachineCircuitboard
   - CargoTelepadMachineCircuitboard
   #- ShuttleGunKineticCircuitboard - Goobstation - Moved to MiningBoards
+  # Arcane-Start
+  - CargoRequestComputerCircuitboard
+  - CargoBountyComputerCircuitboard
+  - MaterialSiloMachineCircuitboard
+  # Arcane-End

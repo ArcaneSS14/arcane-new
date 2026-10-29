@@ -86,6 +86,10 @@
   - ClothingBackpackHarmpack
   # Arcane-Start
   - EnergyDomeTurtle
+  - SurveillanceWirelessCameraBodySecurity
+  - PepperSpray
+  - FlashlightSeclite
+  - SmokeGrenade
   # Arcane-End
 
 - type: latheRecipePack
@@ -151,6 +155,9 @@
   - WeaponLaserCarbine
   - WeaponXrayCannon
 #  - WeaponTemperatureGun # Arcane-Edit
+  # Arcane-Start
+  - RiotBulletShield
+  # Arcane-End
 
 - type: latheRecipePack
   id: SecurityDisablers

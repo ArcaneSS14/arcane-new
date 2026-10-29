@@ -6,6 +6,10 @@ using Content.Client.Research.UI;
 using Content.Goobstation.Common.Research;
 using Content.Goobstation.Client.Research.UI;
 using Content.Shared.Research.Prototypes;
+// Arcane-Start
+using Content.Shared.Research;
+using Robust.Shared.Utility;
+// Arcane-End
 
 namespace Content.Goobstation.Client.Research.UI;
 
@@ -14,10 +18,11 @@ public sealed partial class FancyTechnologyInfoPanel : Control
 {
     [Dependency] private IEntityManager _ent = default!;
     [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private ILocalizationManager _loc = default!; // Arcane
 
     public TechnologyPrototype Prototype;
     public Action<TechnologyPrototype>? BuyAction;
-    public FancyTechnologyInfoPanel(TechnologyPrototype proto, bool hasAccess, ResearchAvailability availability, SpriteSystem sprite)
+    public FancyTechnologyInfoPanel(TechnologyPrototype proto, bool hasAccess, ResearchAvailability availability, ResearchTechnologyLockReason lockReason, SpriteSystem sprite, IPrototypeManager prototype) // Arcane-Edit
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
@@ -30,7 +35,7 @@ public sealed partial class FancyTechnologyInfoPanel : Control
         DisciplineTexture.Texture = sprite.Frame0(_proto.Index(proto.Discipline).Icon);
         TechnologyTexture.Texture = sprite.Frame0(proto.Icon);
 
-        InitializePrerequisites(proto, research, sprite);
+        InitializePrerequisites(proto, research, sprite, lockReason, prototype); // Arcane-Edit
 
         InitializeRecipeUnlocks(proto, lathe, sprite);
 
@@ -49,37 +54,113 @@ public sealed partial class FancyTechnologyInfoPanel : Control
             ResearchAvailability.Unavailable => Color.Crimson,
             _ => null
         };
-        TechnologyCostLabel.SetMessage(
-            Loc.GetString("research-console-tech-cost-label", ("cost", proto.Cost)),
-            defaultColor: color
-        );
+
+        // Arcane-Edit-Start
+        var costMessage = new FormattedMessage();
+        costMessage.AddMarkupOrThrow($"[bold]{Loc.GetString("research-console-tech-cost-title")}[/bold]");
+        foreach (var cost in proto.PointCosts)
+        {
+            costMessage.PushNewline();
+            var pointType = LocalizePointType(cost.Type);
+            costMessage.AddMarkupOrThrow($"• [color=lightgreen]{pointType}[/color]: [color=orchid]{cost.Amount}[/color]");
+        }
+
+        TechnologyCostLabel.SetMessage(costMessage, defaultColor: color);
+        // Arcane-Edit-End
 
         ResearchButton.Disabled = !hasAccess || availability != ResearchAvailability.Available;
         ResearchButton.OnPressed += Bought;
     }
 
-    private void InitializePrerequisites(TechnologyPrototype proto, ResearchSystem research, SpriteSystem sprite)
+    private void InitializePrerequisites(TechnologyPrototype proto, ResearchSystem research, SpriteSystem sprite, ResearchTechnologyLockReason lockReason, IPrototypeManager prototype) // Arcane-Edit
     {
-        NoPrereqLabel.Visible = proto.TechnologyPrerequisites.Count == 0;
-        PrereqsContainer.Visible = !NoPrereqLabel.Visible;
+        // Arcane-Edit-Start
+        RequiredExperimentsContainer.RemoveAllChildren();
+        var hasRequiredExperiments = false;
+
+        foreach (var experimentId in proto.RequiredExperiments)
+        {
+            if (!prototype.TryIndex<ResearchExperimentPrototype>(experimentId, out var experiment))
+                continue;
+
+            var experimentLabel = new RichTextLabel
+            {
+                HorizontalExpand = true,
+                MaxWidth = 400,
+            };
+
+            experimentLabel.SetMessage($"• {Loc.GetString(experiment.Name)}");
+            RequiredExperimentsContainer.AddChild(experimentLabel);
+            hasRequiredExperiments = true;
+        }
+
+        if (lockReason == ResearchTechnologyLockReason.MissingExperiments && hasRequiredExperiments)
+        {
+            MissingExperimentsLabel.Visible = true;
+            var warningMessage = new FormattedMessage();
+            warningMessage.AddMarkupOrThrow(Loc.GetString("research-console-tech-missing-experiments"));
+            MissingExperimentsLabel.SetMessage(warningMessage);
+        }
+        else
+        {
+            MissingExperimentsLabel.Visible = false;
+            MissingExperimentsLabel.SetMessage(string.Empty);
+        }
+
+        RequiredExperimentsBlock.Visible = hasRequiredExperiments;
 
         RequiredTechContainer.RemoveAllChildren();
-        foreach (var techId in proto.TechnologyPrerequisites)
+        var shouldDisplayRequiredTechnologies = lockReason == ResearchTechnologyLockReason.MissingPrerequisites;
+        if (shouldDisplayRequiredTechnologies)
         {
-            var tech = _proto.Index(techId);
-            var description = research.GetTechnologyDescription(tech, true, false, true);
-            RequiredTechContainer.AddChild(new MiniTechnologyCardControl(tech, _proto, sprite, description));
+            foreach (var techId in proto.TechnologyPrerequisites)
+            {
+                if (!_proto.TryIndex(techId, out var tech))
+                    continue;
+
+                var description = research.GetTechnologyDescription(tech, true, false, true);
+                RequiredTechContainer.AddChild(new MiniTechnologyCardControl(tech, _proto, sprite, description));
+            }
         }
+
+        var hasRequiredTechnologies = shouldDisplayRequiredTechnologies && RequiredTechContainer.ChildCount > 0;
+
+        RequiredTechnologiesSection.Visible = hasRequiredTechnologies;
+
+        var hasAnyRequirements = hasRequiredExperiments || hasRequiredTechnologies;
+        NoPrereqLabel.Visible = !hasAnyRequirements;
+        PrereqsContainer.Visible = hasAnyRequirements;
+        // Arcane-Edit-End
     }
+
+    // Arcane-Start
+    private string LocalizePointType(string type)
+    {
+        var key = $"research-point-type-{type.ToLowerInvariant()}";
+        return _loc.TryGetString(key, out var localized) ? localized : type;
+    }
+    // Arcane-End
 
     private void InitializeRecipeUnlocks(TechnologyPrototype proto, LatheSystem lathe, SpriteSystem sprite)
     {
         UnlocksContainer.RemoveAllChildren();
+        var hasRecipeUnlocks = false; // Arcane
         foreach (var recipeId in proto.RecipeUnlocks)
         {
             var recipe = _proto.Index(recipeId);
             UnlocksContainer.AddChild(new MiniRecipeCardControl(proto, recipe, _proto, sprite, lathe));
+            hasRecipeUnlocks = true; // Arcane
         }
+
+        // Arcane-Start
+        var hasGenericUnlocks = proto.GenericUnlocks.Count > 0;
+        var hasVisibleUnlocks = hasRecipeUnlocks || hasGenericUnlocks;
+
+        EmptyUnlocksStripe.Visible = !hasVisibleUnlocks;
+        EmptyUnlocksLabel.Text = !hasVisibleUnlocks
+            ? Loc.GetString("research-console-tech-empty-unlocks")
+            : string.Empty;
+        // Arcane-End
     }
 
     protected override void ExitedTree()

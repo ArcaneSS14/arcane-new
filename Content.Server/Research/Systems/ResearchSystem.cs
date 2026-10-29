@@ -9,6 +9,7 @@ using Content.Shared.Research.Systems;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
+using Robust.Shared.Random; // Arcane
 
 namespace Content.Server.Research.Systems
 {
@@ -22,6 +23,7 @@ namespace Content.Server.Research.Systems
         [Dependency] private UserInterfaceSystem _uiSystem = default!;
         [Dependency] private SharedPopupSystem _popup = default!;
         [Dependency] private RadioSystem _radio = default!;
+        [Dependency] private IRobustRandom _random = default!; // Arcane
 
         public override void Initialize()
         {
@@ -30,7 +32,11 @@ namespace Content.Server.Research.Systems
             InitializeConsole();
             InitializeSource();
             InitializeServer();
-            InitializeArcane(); // Arcane
+            // Arcane-Start
+            InitializeArcane();
+            InitializeExperiments();
+            InitializeDiscovery();
+            // Arcane-End
 
             SubscribeLocalEvent<TechnologyDatabaseComponent, ResearchRegistrationChangedEvent>(OnDatabaseRegistrationChanged);
         }

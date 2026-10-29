@@ -157,7 +157,7 @@
     runningState: building
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - NailsStatic
     - LatheMiscStatic
@@ -322,7 +322,7 @@
     producingSound: /Audio/Machines/circuitprinter.ogg
     idleState: icon
     runningState: building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - SharedBoardsStatic
     - MedicalBoardsStaticGoob
@@ -333,7 +333,7 @@
     - CargoBoardsStatic
     #- MedicalBoardsStatic - Goobstation - Moved to Scifab and Medfab
     - EngineeringBoardsStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     # <Trauma>
     - SharedBoards
     - ReactorCircuitboards
@@ -382,7 +382,8 @@
   - type: Lathe
     idleState: fab-idle
     runningState: fab-active
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
+    - AILawboards # Arcane
     - RoboticsStatic
     - BorgModulesStatic
     - BorgLimbsStatic
@@ -395,7 +396,7 @@
     - CablesStatic
     - PowerCellsStatic
     - TraumaCyberneticsStatic # Trauma
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - Robotics
     - BorgModules
     - MechParts
@@ -497,7 +498,7 @@
     runningState: icon
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     - SecurityEquipmentStatic
     - SecurityPracticeStatic
     - SecurityAmmoStatic
@@ -511,7 +512,7 @@
     - PowerCellsStatic
     - ScienceExplosives
     - GrenadeTriggersStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - SalvageSecurityBoards
     - SalvageSecurityWeapons
     - SecurityEquipment
@@ -567,7 +568,7 @@
       runningState: icon
       unlitIdleState: unlit
       unlitRunningState: unlit-building
-      staticPacks:
+      dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
       - SecurityAmmoStatic
     # - type: EmagLatheRecipes
     #   emagStaticPacks:
@@ -606,7 +607,7 @@
     runningState: icon
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - ParamedHypoStatic
     - MedicalPatchesStatic
@@ -626,8 +627,11 @@
     - MedicalClothingStatic
     - EmptyMedkitsStatic
     - SurgeryStatic
-    - EmptyMedicalSprayBottlesStatic # Arcane
-    dynamicPacks:
+    # Arcane-Start
+    - EmptyMedicalSprayBottlesStatic
+    - AbductorMedical
+    # Arcane-End
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     # <Trauma>
     - Surgery
     - MedicalCybernetics

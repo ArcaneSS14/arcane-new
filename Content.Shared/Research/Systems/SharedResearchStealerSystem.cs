@@ -37,7 +37,7 @@ public abstract partial class SharedResearchStealerSystem : EntitySystem
         args.Handled = true;
 
         // fail fast if theres no techs to steal right now
-        if (database.UnlockedTechnologies.Count == 0)
+        if (database.ResearchedTechnologies.Count == 0) // Arcane-Edit
         {
             _popup.PopupEntity(Loc.GetString("ninja-download-fail"), uid, uid);
             return;

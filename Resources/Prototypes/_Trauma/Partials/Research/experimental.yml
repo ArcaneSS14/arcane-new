@@ -1,6 +1,3 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-- type: technology
-  id: AnomalyCoreHarnessing
-  recipeUnlocks:
-  - ClothingOuterArmorReactiveUnfinished
+# Arcane-Edit: technologies moved to the R&D nodes in _Arcane/Research/Nodes (Orion #320)

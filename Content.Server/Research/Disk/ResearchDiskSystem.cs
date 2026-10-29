@@ -27,6 +27,7 @@ namespace Content.Server.Research.Disk
                 return;
 
             _research.ModifyServerPoints(args.Target.Value, component.Points, server);
+            _research.LogNetworkEvent(args.Target.Value, "disk", Loc.GetString("research-netlog-disk-points-applied", ("points", component.Points)), args.User); // Arcane
             _popupSystem.PopupEntity(Loc.GetString("research-disk-inserted", ("points", component.Points)), args.Target.Value, args.User);
             QueueDel(uid);
             args.Handled = true;
@@ -38,7 +39,11 @@ namespace Content.Server.Research.Disk
                 return;
 
             component.Points = ProtoMan.EnumeratePrototypes<TechnologyPrototype>()
-                .Sum(tech => tech.Cost);
+                // Arcane-Edit-Start
+                .Sum(tech => tech.PointCosts
+                    .Where(cost => cost.Type == "General")
+                    .Sum(cost => cost.Amount));
+                // Arcane-Edit-End
         }
     }
 }

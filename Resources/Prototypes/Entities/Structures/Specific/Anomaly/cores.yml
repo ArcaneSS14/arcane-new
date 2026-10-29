@@ -29,6 +29,7 @@
   - type: Tag
     tags:
     - ForceableFollow
+    - AnomalyCore # Arcane
   - type: AnomalyCore
     timeToDecay: 600
     startPrice: 10000
@@ -51,6 +52,20 @@
     solution: reactivation
   - type: InjectableSolution
     solution: reactivation
+  # Arcane-End
+  # Arcane-Start
+  - type: ResearchAnalyzable
+    supportedMethods:
+    - Deconstruct
+    methodPointRewards:
+      Deconstruct:
+      - type: General
+        amount: 220
+      - type: Experimental
+        amount: 70
+    discoveryTrigger: machine:anomaly-core
+    experimentActions:
+    - analyze_anomaly_core
   # Arcane-End
 
 - type: entity

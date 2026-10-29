@@ -5,6 +5,10 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+// Arcane-Start
+using System.Linq;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Client.Research.UI;
 
@@ -13,7 +17,7 @@ public sealed partial class TechnologyCardControl : Control
 {
     public Action? OnPressed;
 
-    public TechnologyCardControl(TechnologyPrototype technology, IPrototypeManager prototypeManager, SpriteSystem spriteSys, FormattedMessage description, int points, bool hasAccess)
+    public TechnologyCardControl(TechnologyPrototype technology, IPrototypeManager prototypeManager, SpriteSystem spriteSys, FormattedMessage description, List<ResearchPointAmount> pointBalances, bool hasAccess) // Arcane-Edit
     {
         RobustXamlLoader.Load(this);
 
@@ -33,7 +37,12 @@ public sealed partial class TechnologyCardControl : Control
         if (!hasAccess)
             ResearchButton.ToolTip = Loc.GetString("research-console-no-access-popup");
 
-        ResearchButton.Disabled = points < technology.Cost || !hasAccess;
+        // Arcane-Edit-Start
+        var hasSufficientPoints = technology.PointCosts.All(cost =>
+            pointBalances.Any(balance => balance.Type == cost.Type && balance.Amount >= cost.Amount));
+
+        ResearchButton.Disabled = !hasSufficientPoints || !hasAccess;
+        // Arcane-Edit-End
         ResearchButton.OnPressed += _ => OnPressed?.Invoke();
     }
 }

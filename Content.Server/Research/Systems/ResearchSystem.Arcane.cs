@@ -18,28 +18,13 @@ public sealed partial class ResearchSystem
         SubscribeLocalEvent<ResearchServerComponent, ExaminedEvent>(OnServerExamined);
     }
 
-    private void SetArcaneServerName(Entity<ResearchServerComponent> ent)
-    {
-        ent.Comp.ServerName = Loc.GetString("research-server-name", ("id", ent.Comp.Id.ToString("D4")));
-    }
-
-    private void SayTechnologyUnlocked(EntityUid console, TechnologyPrototype technology, string approver)
+    private void SayTechnologyUnlocked(EntityUid console, TechnologyPrototype technology, string cost, string approver)
     {
         var message = Loc.GetString("research-console-unlock-technology-ic",
             ("technology", Loc.GetString(technology.Name)),
-            ("amount", technology.Cost),
+            ("amount", cost),
             ("approver", approver));
 
         _chat.TrySendInGameICMessage(console, message, InGameICChatType.Speak, false);
-    }
-
-    private void OnServerExamined(Entity<ResearchServerComponent> ent, ref ExaminedEvent args)
-    {
-        if (!args.IsInDetailsRange)
-            return;
-
-        args.PushMarkup(Loc.GetString("research-server-examine",
-            ("name", ent.Comp.ServerName),
-            ("points", GetPointsPerSecond(ent, ent.Comp))));
     }
 }

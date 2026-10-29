@@ -12,6 +12,7 @@ using Content.Shared.Emag.Systems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
+using Content.Shared.Research; // Arcane
 
 namespace Content.Server.Research.Systems;
 
@@ -60,19 +61,33 @@ public sealed partial class ResearchSystem
         }
 
         if (!UnlockTechnology(uid, args.Id, act))
-            return;
-
-        if (!_emag.CheckFlag(uid, EmagType.Interaction))
+        // Arcane-Edit-Start
         {
+            _popup.PopupEntity(Loc.GetString("research-console-unlock-failed-popup"), act);
+            return;
+        }
+        // Arcane-Edit-End
 
+        if (!_emag.CheckFlag(uid, EmagType.Interaction) && technologyPrototype.AnnounceOnUnlock) // Arcane-Edit
+        {
+            var costText = FormatResearchPointAmounts(technologyPrototype.PointCosts); // Arcane
             var message = Loc.GetString(
                 "research-console-unlock-technology-radio-broadcast",
                 ("technology", Loc.GetString(technologyPrototype.Name)),
-                ("amount", technologyPrototype.Cost),
+                ("amount", costText), // Arcane-Edit: technologyPrototype.Cost > costText
                 ("approver", _identity.GetIdentityShortInfo(act, uid) ?? string.Empty)
             );
-            _radio.SendRadioMessage(uid, message, component.AnnouncementChannel, uid, escapeMarkup: false);
-            SayTechnologyUnlocked(uid, technologyPrototype, _identity.GetIdentityShortInfo(act, uid) ?? string.Empty); // Arcane
+            // Arcane-Edit-Start: announce on every channel of the technology
+            var announceChannels = technologyPrototype.AnnounceChannels.Count > 0
+                ? technologyPrototype.AnnounceChannels
+                : [component.AnnouncementChannel];
+
+            foreach (var channel in announceChannels)
+            {
+                _radio.SendRadioMessage(uid, message, channel, uid, escapeMarkup: false);
+            }
+            // Arcane-Edit-End
+            SayTechnologyUnlocked(uid, technologyPrototype, costText, _identity.GetIdentityShortInfo(act, uid) ?? string.Empty); // Arcane
         }
 
         SyncClientWithServer(uid);
@@ -92,39 +107,146 @@ public sealed partial class ResearchSystem
         // R&D Console Rework Start
         var allTechs = ProtoMan.EnumeratePrototypes<TechnologyPrototype>().ToList();
         Dictionary<string, ResearchAvailability> techList;
+        // Arcane-Start
+        Dictionary<string, ResearchTechnologyLockReason> lockReasons;
+        List<ResearchConsoleExperimentData> experiments;
+        var networkId = string.Empty;
+        List<ResearchPointAmount> pointBalances = new();
+        List<ResearchLogEntry> logs = new();
+        TechnologyDatabaseComponent? syncedDb = null;
+        // Arcane-End
         var points = 0;
 
         if (TryGetClientServer(uid, out var serverUid, out var server, clientComponent) &&
             TryComp<TechnologyDatabaseComponent>(serverUid, out var db))
         {
+/* // Arcane-Edit
             var unlockedTechs = new HashSet<ProtoId<TechnologyPrototype>>(db.UnlockedTechnologies);
             techList = allTechs.ToDictionary(
                 proto => proto.ID,
                 proto =>
+*/
+            // Arcane-Start
+            syncedDb = db;
+            networkId = server.NetworkId;
+            pointBalances = server.PointBalances.ToList();
+            logs = server.Logs.ToList();
+            var visible = new HashSet<ProtoId<TechnologyPrototype>>(db.VisibleTechnologies);
+            var available = new HashSet<ProtoId<TechnologyPrototype>>(db.AvailableTechnologies);
+            var researched = new HashSet<ProtoId<TechnologyPrototype>>(db.ResearchedTechnologies);
+
+            techList = visible.ToDictionary(
+                techId => techId.ToString(),
+                techId =>
+            // Arcane-End
                 {
-                    if (unlockedTechs.Contains(proto.ID))
+                    if (researched.Contains(techId)) // Arcane-Edit
                         return ResearchAvailability.Researched;
 
+/* // Arcane-Edit
                     var prereqsMet = proto.TechnologyPrerequisites.All(p => unlockedTechs.Contains(p));
                     var canAfford = server.Points >= proto.Cost;
+*/
 
-                    return prereqsMet ?
-                        (canAfford ? ResearchAvailability.Available : ResearchAvailability.PrereqsMet)
+                    // Arcane-Start
+                    if (!available.Contains(techId))
+                        return ResearchAvailability.PrereqsMet;
+
+                    var proto = ProtoMan.Index(techId);
+                    var allCosts = GetTechnologyFinalPointCosts(db, proto);
+                    var canAfford = HasSufficientPoints(serverUid.Value, allCosts, server);
+                    // Arcane-End
+
+                    return canAfford // Arcane-Edit
+                        ? ResearchAvailability.Available // Arcane-Edit
                         : ResearchAvailability.Unavailable;
                 });
+
+            // Arcane-Start
+            lockReasons = ProtoMan.EnumeratePrototypes<TechnologyPrototype>()
+                .Where(proto => db.SupportedDisciplines.Contains(proto.Discipline))
+                .ToDictionary(proto => proto.ID,
+                    proto =>
+                {
+                    var reason = GetTechnologyLockReason(db, proto);
+                    if (reason != ResearchTechnologyLockReason.None)
+                        return reason;
+
+                    var costs = GetTechnologyFinalPointCosts(db, proto);
+
+                    if (!HasSufficientPoints(serverUid.Value, costs, server) && !db.ResearchedTechnologies.Contains(proto.ID))
+                        return ResearchTechnologyLockReason.InsufficientPoints;
+
+                    return reason;
+                });
+
+            experiments = BuildExperimentUiData(db);
+            // Arcane-End
 
             if (clientComponent != null)
                 points = clientComponent.ConnectedToServer ? server.Points : 0;
         }
         else
         {
-            techList = allTechs.ToDictionary(proto => proto.ID, _ => ResearchAvailability.Unavailable);
+            techList = new Dictionary<string, ResearchAvailability>(); // Arcane-Edit
+            // Arcane-Start
+            lockReasons = new Dictionary<string, ResearchTechnologyLockReason>();
+            experiments = new List<ResearchConsoleExperimentData>();
+            // Arcane-End
         }
 
-        _uiSystem.SetUiState(uid, ResearchConsoleUiKey.Key,
-            new ResearchConsoleBoundInterfaceState(points, techList));
+        // Arcane-Edit-Start
+        _uiSystem.SetUiState(uid,
+            ResearchConsoleUiKey.Key,
+            new ResearchConsoleBoundInterfaceState(
+                points,
+                techList,
+                syncedDb?.VisibleTechnologies.ToList() ?? new List<ProtoId<TechnologyPrototype>>(),
+                syncedDb?.AvailableTechnologies.ToList() ?? new List<ProtoId<TechnologyPrototype>>(),
+                syncedDb?.ResearchedTechnologies.ToList() ?? new List<ProtoId<TechnologyPrototype>>(),
+                syncedDb?.CompletedExperiments.ToList() ?? new List<string>(),
+                experiments,
+                lockReasons,
+                networkId,
+                pointBalances,
+                logs));
+        // Arcane-Edit-End
         // R&D Console Rework End
     }
+
+    // Arcane-Start
+    private List<ResearchConsoleExperimentData> BuildExperimentUiData(TechnologyDatabaseComponent database)
+    {
+        var data = new List<ResearchConsoleExperimentData>();
+        foreach (var experiment in ProtoMan.EnumeratePrototypes<ResearchExperimentPrototype>())
+        {
+            if (experiment.Hidden && !database.ActiveExperiments.Contains(experiment.ID) && !database.CompletedExperiments.Contains(experiment.ID))
+                continue;
+
+            var progress = database.ExperimentProgress.FirstOrDefault(p => p.ExperimentId == experiment.ID);
+            var state = ResearchExperimentState.Unavailable;
+
+            if (database.SkippedExperiments.Contains(experiment.ID))
+                state = ResearchExperimentState.Skipped;
+            else if (database.CompletedExperiments.Contains(experiment.ID))
+                state = ResearchExperimentState.Completed;
+            else if (database.ActiveExperiments.Contains(experiment.ID))
+                state = ResearchExperimentState.Active;
+            else if (database.AvailableExperiments.Contains(experiment.ID))
+                state = ResearchExperimentState.Available;
+
+            if (state == ResearchExperimentState.Unavailable)
+                continue;
+
+            var target = progress.Target > 0 ? progress.Target : Math.Max(1, experiment.Objective.Target);
+            data.Add(new ResearchConsoleExperimentData(experiment.ID, progress.Progress, target, state));
+        }
+
+        return data.OrderByDescending(e => e.State == ResearchExperimentState.Active)
+            .ThenBy(e => e.Id)
+            .ToList();
+    }
+    // Arcane-End
 
     private void OnPointsChanged(EntityUid uid, ResearchConsoleComponent component, ref ResearchServerPointsChangedEvent args)
     {

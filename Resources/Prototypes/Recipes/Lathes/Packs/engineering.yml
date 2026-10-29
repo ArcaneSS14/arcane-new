@@ -22,6 +22,14 @@
   - HandheldStationMap
   - ClothingHeadHatWelding
   - ClothingHeadHatCone
+  # Arcane-Start
+  - WelderMini
+  - trayScanner
+  - Crowbar
+  - Shovel
+  - RemoteSignaller
+  - GeigerCounter
+  # Arcane-End
 
 - type: latheRecipePack
   id: AtmosStatic
@@ -47,6 +55,10 @@
   - CellRechargerCircuitboard
   - WeaponCapacitorRechargerCircuitboard
   - FreezerElectronics
+  # Arcane-Start
+  - ScreenTimerElectronics
+  - PowerComputerCircuitboard
+  # Arcane-End
 
 - type: latheRecipePack
   id: EngineeringBoardsStatic
@@ -63,11 +75,21 @@
   - JawsOfLife
   - Fulton
   - FultonBeacon
+  # Arcane-Start
+  - InducerEngineering
+  # Arcane-End
 
 - type: latheRecipePack
   id: AtmosTools
   recipes:
   - HolofanProjector
+  # Arcane-Start
+  - OxygenTank
+  - PlasmaTank
+  - FireExtinguisher
+  - FireExtinguisherMini
+  - ClothingShoesBootsMag
+  # Arcane-End
 
 - type: latheRecipePack
   id: EngineeringWeapons
@@ -92,3 +114,11 @@
   - HolopadMachineCircuitboard
   - TeslaCoilCircuitboard # Arcane: Goob
   - RadiationCollectorCircuitboard # Arcane: Goob
+  # Arcane-Start
+  - CommsComputerCircuitboard
+  - AlertsComputerCircuitboard
+  - BlockGameArcadeComputerCircuitboard
+  - SpaceVillainArcadeComputerCircuitboard
+  - MaterialSiloMachineCircuitboard
+  - TeslaGroundingRod
+  # Arcane-End
