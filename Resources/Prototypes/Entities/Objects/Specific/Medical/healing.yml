@@ -318,6 +318,11 @@
     - Gauze
   - type: Sprite
     state: gauze
+  # Arcane-Start
+  - type: Clothing
+    sprite: _Arcane/Clothing/Hands/Gloves/gauze.rsi
+    slots: gloves
+  # Arcane-End
   - type: Item
     heldPrefix: gauze
     storedRotation: -90

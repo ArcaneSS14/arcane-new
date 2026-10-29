@@ -52,3 +52,14 @@
     sprite: _Arcane/Clothing/Uniforms/Jumpskirt/white_captain.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Uniforms/Jumpskirt/white_captain.rsi
+
+- type: entity
+  parent: ClothingUniformSkirtBase
+  id: ClothingUniformJumpskirtRoll
+  name: roll skirt
+  description: Red skirt with white pompoms.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpskirt/roll.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpskirt/roll.rsi

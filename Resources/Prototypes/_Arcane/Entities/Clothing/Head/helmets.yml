@@ -54,3 +54,15 @@
   - type: Clothing
     sprite: _Arcane/Clothing/Head/Helmets/inteq_tombstone.rsi
   - type: FlashImmunity
+
+- type: entity
+  parent: ClothingHeadHelmetSwat
+  id: ClothingHeadHelmetAllianceAssassin
+  name: alliance assassin helmet
+  description: Lightweight helmet with panoramic visor. It is covered with a protective film that protects the wearer from bright flashes, and the reinforced visor can withstand more than one bullet during your 'stealth' mission.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Helmets/alliance_assassin.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Helmets/alliance_assassin.rsi
+  - type: FlashImmunity

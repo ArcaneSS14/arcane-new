@@ -16,3 +16,12 @@
   - type: Sprite
     sprite: _Arcane/Clothing/Back/Backpacks/delivery.rsi
   - type: AntiRottingContainer # Anti-rotting food, etc.
+
+- type: entity
+  parent: ClothingBackpack
+  id: ClothingBackpackNinja
+  name: space ninja backpack
+  description: A special backpack made for the silent operations of the spider clan.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Backpacks/spaceninja_backpack.rsi

@@ -14,3 +14,19 @@
       collection: FootstepCatwalk
       params:
         volume: -25
+
+- type: entity
+  parent: ClothingShoesMilitaryBase
+  id: ClothingShoesBootsAllianceAssassin
+  name: alliance assassin power boots
+  description: A pair of high-top boots. The sole is covered with a sound-absorbing layer, almost completely reducing the noise of footsteps.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Shoes/Boots/alliance_assassin.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Shoes/Boots/alliance_assassin.rsi
+  - type: FootstepModifier
+    footstepSoundCollection:
+      collection: FootstepCatwalk
+      params:
+        volume: -25

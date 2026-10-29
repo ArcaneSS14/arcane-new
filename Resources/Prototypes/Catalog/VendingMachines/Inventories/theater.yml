@@ -86,6 +86,16 @@
     ClothingUniformKendoHakama: 1
     ClothingOuterArmorKendoBogu: 1
     ClothingHeadHelmetKendoMen: 1
+    # Funny Clothes
+    ClothingUniformJumpsuitClownis: 2
+    ClothingUniformJumpsuitFallout: 2
+    ClothingUniformJumpsuitFallout14: 2
+    ClothingUniformJumpsuitGoku: 1
+    ClothingUniformJumpsuitGokuAlt: 1
+    ClothingUniformJumpsuitRotten: 2
+    ClothingUniformJumpsuitMegaMan: 1
+    ClothingUniformJumpsuitMegaManX: 1
+    ClothingNeckMantleElderLizards: 2
     # Arcane-End
   contrabandInventory:
     ClothingHeadHatRichard: 1

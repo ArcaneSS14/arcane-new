@@ -39,3 +39,17 @@
   - type: ToggleableClothing
     clothingPrototypes: #goobstation change
       head: ClothingHeadHelmetHardsuitSyndicateInteQ
+
+- type: entity
+  parent: ClothingOuterHardsuitSecurity
+  id: ClothingOuterHardsuitOTAAlliance
+  name: OTA alliance hardsuit
+  description: OTA Stormtrooper Hardsuit.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Hardsuits/OTA_alliance_hardsuit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Hardsuits/OTA_alliance_hardsuit.rsi
+  - type: ToggleableClothing
+    clothingPrototypes: #goobstation change
+      head: ClothingHeadHelmetHardsuitOTAAlliance
