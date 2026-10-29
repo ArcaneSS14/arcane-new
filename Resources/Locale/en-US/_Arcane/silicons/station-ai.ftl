@@ -7,3 +7,14 @@ station-ai-hologram-puredata = Pure Data
 station-ai-hologram-rorschach = Rorschach
 station-ai-hologram-seraphim = Seraphim
 station-ai-hologram-tripleaffirmative = Triple Affirmative
+station-ai-hologram-angel = Angel appearance
+station-ai-hologram-borb = Bird appearance
+station-ai-hologram-cloudkat = Cloud Cat form
+station-ai-hologram-frostphoenix = Frost Phoenix form
+
+station-ai-icon-anima = Anima
+station-ai-icon-borb = Bird
+station-ai-icon-darkmatter = Shadow Cat
+station-ai-icon-lamp = Mothmaxxed
+station-ai-icon-liz = Lizard
+station-ai-icon-vox = Vox

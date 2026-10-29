@@ -34,6 +34,14 @@
   - StationAiIconWeird
   - StationAiIconInverted
   # </Trauma>
+  # Arcane-Start
+  - StationAiIconAnima
+  - StationAiIconBorb
+  - StationAiIconDarkMatter
+  - StationAiIconLamp
+  - StationAiIconLizard
+  - StationAiIconVox
+  # Arcane-End
 
 - type: stationAiCustomizationGroup
   id: StationAiHolograms
@@ -45,6 +53,7 @@
   - StationAiHologramFace
   - StationAiHologramCat
   - StationAiHologramDog
+  # Arcane-Start
   - StationAiHologramAlgalone
   - StationAiHologramFractalsnowflake
   - StationAiHologramHensonsnode
@@ -53,7 +62,12 @@
   - StationAiHologramPuredata
   - StationAiHologramRorschach
   - StationAiHologramSeraphim
-  - StationAiHologramTripleaffirmative # Arcane
+  - StationAiHologramTripleaffirmative
+  - StationAiHologramAngel
+  - StationAiHologramBorb
+  - StationAiHologramCloudkat
+  - StationAiHologramPhoenix
+  # Arcane-End
 
 # Iconography
 - type: stationAiCustomization
