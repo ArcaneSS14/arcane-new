@@ -50,3 +50,10 @@ NC-лицензии (#49: 10 RSI, #56: 1, #59: 2) — отдельно отме�
 - [x] #221, #374 Handcuff/Blindness Examine; #315 Armor Examine (римские классы защиты вместо %; список частей тела уже был у Trauma)
 - [x] #437 Red Slime Extract Blacklist; #230 Security Side Cap (с самим предметом — его не было); #174 Enable Barks (дефолт CVar; пресет Trauma и так включал)
 - [-] #235 Barks Pack — пропущен (решение пользователя 2026-10-29: звуки из коммерческих игр без лицензии)
+- [x] #26 CaptainDrobe (миграция DresserCaptainFilled > CaptainDrobe; спрайты InteQ jumpsuit > Jumpsuit)
+- [x] #34 One More AI Skins (без RedDot — уже есть у Trauma)
+- [x] #37 Station Goals (на GameRunLevelChangedEvent; приёмник факса — компонент Arcane; тексты переведены на английский; спец-цели карт Ориона не перенесены)
+- [x] #163 Loadout Things (пассажир, карты, полотенце — в форке отсутствуют/без гейтов)
+- [x] #195 Funny Clothes (ниндзя оставлен с сатчелом форка)
+- [x] #290 Clothing Pack (без ресрайтов поясов/платьев — в фазу ресрайтов; без Armor на берете; у адмирала без языков и доступа blueshield)
+- Отложено в конец по решению пользователя (2026-10-29): ресрайты (+ ванильные PNG из #290) и #45 Species UI; затем #194.
