@@ -13,6 +13,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.ServerProtection; // Arcane
 
 namespace Content.Server.Chat.Systems;
 
@@ -266,6 +267,10 @@ public sealed partial class ChatSystem
 
         // Trauma - add name, empty obfuscation strings and checkLOS
         SendInVoiceRange(ChatChannel.Emotes, name, action, wrappedMessage, "", "", source, range, author, checkLOS: EmoteRespectsLOS);
+        // Arcane-Start
+        var emoteSentEv = new EntityEmoteSentEvent(source);
+        RaiseLocalEvent(ref emoteSentEv);
+        // Arcane-End
         if (!hideLog)
             if (name != Name(source))
                 _adminLogger.Add(LogType.Chat, LogImpact.Low, $"Emote from {source} as {name}: {action}");
