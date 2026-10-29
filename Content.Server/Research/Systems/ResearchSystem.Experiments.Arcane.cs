@@ -1,9 +1,11 @@
 // Arcane-Start
 using Content.Shared.FixedPoint;
 using Content.Goobstation.Shared.Fishing.Components;
+using Content.Server.Construction.Components;
 using Content.Server.Research.Components;
 using Content.Shared.Research;
 using Content.Shared.Research.Prototypes;
+using Content.Shared.Construction.Components;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping.Unary.Components;
@@ -372,6 +374,9 @@ public sealed partial class ResearchSystem
         if (!MatchesExplosiveObjective(subject, objective))
             return false;
 
+        if (!MatchesMachineTierObjective(subject, objective))
+            return false;
+
         foreach (var condition in objective.RequiredConditions)
         {
             if (!MatchesEntityCondition(subject, condition))
@@ -454,6 +459,34 @@ public sealed partial class ResearchSystem
 
         var purity = requiredMoles / gasMix.TotalMoles;
         return purity >= minPurity;
+    }
+
+    private bool MatchesMachineTierObjective(EntityUid subject, ScanEntityExperimentObjective objective)
+    {
+        var hasRequiredParts = objective.RequiredMachineParts.Count > 0;
+        var requiredTier = objective.RequiredMachinePartTier;
+
+        if (!hasRequiredParts && requiredTier == null)
+            return true;
+
+        if (!TryComp<MachineComponent>(subject, out var machine))
+            return false;
+
+        foreach (var partEntity in machine.PartContainer.ContainedEntities)
+        {
+            if (!TryComp<MachinePartComponent>(partEntity, out var part))
+                continue;
+
+            if (hasRequiredParts && !objective.RequiredMachineParts.Contains(part.Part))
+                continue;
+
+            if (requiredTier is { } tier && part.Tier < tier)
+                continue;
+
+            return true;
+        }
+
+        return false;
     }
 
     private bool MatchesEntityCondition(EntityUid subject, ExperimentEntityCondition condition)
