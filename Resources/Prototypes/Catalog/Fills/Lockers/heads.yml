@@ -336,7 +336,7 @@
     - !type:NestedSelector # Trauma
       tableId: LockerFillHeadOfSecurityTrauma
     # - id: WeaponEnergyMagnum # Trauma
-    - id: BookSpaceLaw
+#    - id: BookSpaceLaw # Arcane-Edit: removed
     - id: BoxEncryptionKeySecurity
     - id: CigarGoldCase
       prob: 0.50
@@ -347,7 +347,7 @@
     - id: ClothingShoesBootsJack
     - id: FlashlightSeclite
     - id: DoorRemoteSecurity
-    - id: HoloprojectorSecurity
+#    - id: HoloprojectorSecurity # Arcane-Edit: removed
     - id: RubberStampHos
     - id: BoxHoSCircuitboards
     #- id: WeaponDisabler # Trauma - disablers are in belts

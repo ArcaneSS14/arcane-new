@@ -22,11 +22,11 @@
     wideAnimationRotation: -135
     damage:
       types:
-        Blunt: 12
+        Blunt: 7 # Arcane-Edit: 12 > 7
     soundHit:
       path: /Audio/_Goobstation/Weapons/Baton/woodhit.ogg
   - type: StaminaDamageOnHit
-    damage: 15
+    damage: 18 # Arcane-Edit: 15 > 18
   - type: MeleeThrowOnHit
     distance: 1
     speed: 5
@@ -55,7 +55,7 @@
     storedRotation: 45
     heldPrefix: off
     shape:
-      - 0,0,3,0
+      - 0,0,2,1 # Arcane-Edit: 0,0,3,0 > 0,0,2,1
   - type: Sprite
     sprite: _Goobstation/Objects/Weapons/Melee/telespear.rsi
     layers:

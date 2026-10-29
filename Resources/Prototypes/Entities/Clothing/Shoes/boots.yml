@@ -175,6 +175,12 @@
     sprite: Clothing/Shoes/Boots/winterbootssec.rsi
   - type: Clothing
     sprite: Clothing/Shoes/Boots/winterbootssec.rsi
+  # Arcane-Start
+  - type: ClothingSlowOnDamageModifier
+    modifier: 0.6
+  - type: ModifyStandingUpTime
+    multiplier: 0.6
+  # Arcane-End
   - type: ItemSlots # Goobstation
     slots:
       item:
