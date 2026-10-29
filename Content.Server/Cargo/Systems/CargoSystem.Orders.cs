@@ -242,9 +242,10 @@ namespace Content.Server.Cargo.Systems
             RaiseLocalEvent(station.Value, ref modifyEv);
             cost = modifyEv.Price;
             // </Trauma>
+            var privateCost = GetPrivateOrderCost(order, cost); // Arcane
 
             // Not enough balance
-            if (cost > accountBalance)
+            if (privateCost == null && cost > accountBalance) // Arcane-Edit: cost > accountBalance > privateCost == null && cost > accountBalance
             {
                 _popup.PopupCursor(Loc.GetString("cargo-console-insufficient-funds", ("cost", cost)), args.Actor);
                 PlayDenySound(uid, component);
@@ -290,6 +291,15 @@ namespace Content.Server.Cargo.Systems
                 order.SetApproverData(_identity.GetIdentityShortInfo(player, uid));
             }
 
+            // Arcane-Start
+            if (privateCost is { } charge && !ChangePrivateAccount(order, -charge))
+            {
+                _popup.PopupCursor(Loc.GetString("cargo-console-private-insufficient-funds", ("cost", charge)), args.Actor);
+                PlayDenySound(uid, component);
+                return;
+            }
+            // Arcane-End
+
             order.ApprovingConsole = GetNetEntity(uid);
             order.Approved = true;
 
@@ -308,6 +318,10 @@ namespace Content.Server.Cargo.Systems
                     order.Approver = null;
                     order.ApprovingConsole = null;
                     order.Approved = false;
+                    // Arcane-Start
+                    if (privateCost is { } refund)
+                        ChangePrivateAccount(order, refund);
+                    // Arcane-End
                     return;
                 }
             }
@@ -341,7 +355,7 @@ namespace Content.Server.Cargo.Systems
                 $"{ToPrettyString(player):user} approved order [orderId:{order.OrderId}, quantity:{order.OrderQuantity}, product:{order.Product}, requester:{order.Requester}, reason:{order.Reason}] on account {order.Account} with balance at {accountBalance}");
 
             orderDatabase.Orders[component.Account].Remove(order);
-            UpdateBankAccount((station.Value, bank), -cost, order.Account);
+            UpdateBankAccount((station.Value, bank), privateCost is { } paid ? paid - cost : -cost, order.Account); // Arcane-Edit: -cost > privateCost is { } paid ? paid - cost : -cost
             UpdateOrders(station.Value);
         }
 

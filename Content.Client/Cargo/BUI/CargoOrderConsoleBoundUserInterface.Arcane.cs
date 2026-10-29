@@ -44,6 +44,11 @@ public sealed partial class CargoOrderConsoleBoundUserInterface
             menu.PointCost.Text = Loc.GetString("cargo-console-menu-points-amount", ("amount", cost));
         };
         menu.SecureDelivery.OnToggled += _secureToggled;
+
+        menu.PayPrivately.Text = Loc.GetString("cargo-console-order-private-checkbox");
+        menu.PayPrivately.ToolTip = Loc.GetString("cargo-console-order-private-tooltip");
+        menu.PayPrivately.Pressed = false;
+        menu.PayPrivately.Visible = console.Mode == CargoOrderConsoleMode.DirectOrder;
     }
 }
 // Arcane-End

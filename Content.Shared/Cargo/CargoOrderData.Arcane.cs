@@ -24,5 +24,11 @@ public sealed partial class CargoOrderData
     /// </summary>
     [DataField]
     public int ExtraCost;
+
+    /// <summary>
+    /// Personal bank account paying for the order instead of the department.
+    /// </summary>
+    [DataField]
+    public string? PrivateAccountId;
 }
 // Arcane-End

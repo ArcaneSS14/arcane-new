@@ -58,6 +58,9 @@
             <Control />
             <CheckBox Name="SecureDelivery"
                       Access="Public" />
+            <Control />
+            <CheckBox Name="PayPrivately"
+                      Access="Public" />
             <!-- Arcane-End -->
         </GridContainer>
         <Control VerticalExpand="True"/>

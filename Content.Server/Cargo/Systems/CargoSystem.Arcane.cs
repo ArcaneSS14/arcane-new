@@ -1,5 +1,7 @@
 // Arcane-Start
 using System.Linq;
+using Content.Arcane.Common.CCVar;
+using Content.Arcane.Common.Economy;
 using Content.Server.Storage.EntitySystems;
 using Content.Shared.Cargo;
 using Content.Shared.Cargo.Components;
@@ -25,10 +27,18 @@ public sealed partial class CargoSystem
     /// </summary>
     private string GetRequester(Entity<CargoOrderConsoleComponent> console, CargoConsoleAddOrderMessage args)
     {
-        if (console.Comp.EditableRequesterName && !string.IsNullOrWhiteSpace(args.Requester))
-            return Truncate(args.Requester);
+        var requester = console.Comp.EditableRequesterName && !string.IsNullOrWhiteSpace(args.Requester)
+            ? Truncate(args.Requester)
+            : GenerateRequesterName(args.Actor);
 
-        return GenerateRequesterName(args.Actor);
+        if (!args.PayPrivately || console.Comp.Mode != CargoOrderConsoleMode.DirectOrder)
+            return requester;
+
+        var lookup = new BankAccountLookupEvent(args.Actor);
+        RaiseLocalEvent(ref lookup);
+        return lookup.AccountId == null
+            ? requester
+            : Loc.GetString("cargo-console-private-requester", ("requester", requester));
     }
 
     /// <summary>
@@ -41,6 +51,43 @@ public sealed partial class CargoSystem
             && ProtoMan.Resolve(product.Product, out var productProto)
             && CanBeSecuredDelivery(console, productProto);
         data.ExtraCost = data.SecuredDelivery ? console.Comp.SecureOrderCost : 0;
+
+        if (!args.PayPrivately || console.Comp.Mode != CargoOrderConsoleMode.DirectOrder)
+            return;
+
+        var lookup = new BankAccountLookupEvent(args.Actor);
+        RaiseLocalEvent(ref lookup);
+        if (lookup.AccountId == null)
+        {
+            _popup.PopupCursor(Loc.GetString("cargo-console-no-linked-bank-account"), args.Actor);
+            return;
+        }
+
+        data.PrivateAccountId = lookup.AccountId;
+    }
+
+    /// <summary>
+    /// What the buyer pays for a personal order, null for department orders.
+    /// </summary>
+    private int? GetPrivateOrderCost(CargoOrderData order, int cost)
+    {
+        if (order.PrivateAccountId == null)
+            return null;
+
+        return (int) Math.Round(cost * _cfg.GetCVar(ArcaneCVars.PrivateOrderMarkup), MidpointRounding.AwayFromZero);
+    }
+
+    /// <summary>
+    /// Moves credits on the personal account paying for an order, negative amounts charge it.
+    /// </summary>
+    private bool ChangePrivateAccount(CargoOrderData order, int amount)
+    {
+        if (order.PrivateAccountId is not { } account)
+            return false;
+
+        var ev = new BankAccountChangeEvent(account, amount, $"cargo order {order.OrderId}");
+        RaiseLocalEvent(ref ev);
+        return ev.Handled;
     }
 
     /// <summary>

@@ -179,6 +179,7 @@ namespace Content.Client.Cargo.BUI
                 // Arcane-Start
                 DeliveryDestination = _orderMenu?.DeliveryDestination.Text,
                 SecuredDelivery = _orderMenu?.SecureDelivery.Pressed ?? false,
+                PayPrivately = _orderMenu?.PayPrivately.Pressed ?? false,
                 // Arcane-End
             });
 
