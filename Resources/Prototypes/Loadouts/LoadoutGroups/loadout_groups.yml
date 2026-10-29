@@ -158,6 +158,12 @@
   loadouts:
   - CaptainHead
   - CaptainCap
+  # Arcane-Start
+  - CaptainWhiteBeret
+  - SheriffBeret
+  - CaptainWhiteCap
+  - SheriffCap
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainJumpsuit
@@ -169,6 +175,13 @@
   - CaptainFormalSkirt
   - CaptainJumpsuitMilitary # goob
   - CaptainSummerShirt # also goob
+  # Arcane-Start
+  - CaptainWhiteJumpsuit
+  - CaptainWhiteJumpskirt
+  - CaptainWhiteTurtleneck
+  - CaptainCommandJumpsuit
+  - SheriffJumpsuit
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainNeck
@@ -179,6 +192,12 @@
   - CaptainCloakFormal
   - CaptainMantle
   - VeteranCaptainCloak # goob
+  # Arcane-Start
+  - CaptainWideCloak
+  - CaptainRoyalCloak
+  - CaptainWhiteMantle
+  - CaptainWhiteShoulderMantle
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainBackpack
@@ -196,6 +215,10 @@
   - CaptainOuterClothing
   # - CaptainWintercoat
   - CaptainJacket # Goobstation
+  # Arcane-Start
+  - CaptainWhiteCoat
+  - CaptainSheriffCoat
+  # Arcane-End
 
 #- type: loadoutGroup
 #  id: CaptainJobTrinkets
@@ -1079,6 +1102,7 @@
   minLimit: 0
   loadouts:
   - ResearchDirectorBeret
+  - TinfoilHat # Arcane
 
 - type: loadoutGroup
   id: ResearchDirectorNeck
@@ -1127,6 +1151,7 @@
   #- RoboticistCap
   #- SkullBandana
   - ScientificBeret
+  - TinfoilHat # Arcane
 
 - type: loadoutGroup
   id: ScientistNeck
@@ -1300,6 +1325,7 @@
   - SecurityHat
   - TrooperHat
   - SergeantBeret # Trauma
+  - SecuritySideCap # Arcane
 
 - type: loadoutGroup
   id: SecurityJumpsuit

@@ -68,9 +68,11 @@
   id: QuartermasterMantle
   equipment:
     neck: ClothingNeckMantleQM
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterQM
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterQM
+  # Arcane-Edit-End
 
 - type: startingGear
   id: QuartermasterMantle

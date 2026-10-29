@@ -36,6 +36,8 @@
   id: ResearchDirectorLabCoatPurple
   equipment:
     outerClothing: ClothingOuterCoatRDPurple
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterRD
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterRD
+  # Arcane-Edit-End

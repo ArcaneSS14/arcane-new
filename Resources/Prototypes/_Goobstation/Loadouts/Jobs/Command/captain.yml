@@ -4,9 +4,11 @@
   id: CaptainJacket
   equipment:
     outerClothing: ClothingOuterCapJacket
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterCap
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterCap
+  # Arcane-Edit-End
 
 - type: loadout
   id: CaptainEnvirosuit

@@ -28,17 +28,21 @@
 # Jamjar
 - type: loadout
   id: GlassesJamjar
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: JamjarTimer
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: JamjarTimer
+  # Arcane-Edit-End
   equipment:
     eyes: ClothingEyesGlassesJamjar
 
 # Jensen
 - type: loadout
   id: GlassesJensen
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: JensenTimer
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: JensenTimer
+  # Arcane-Edit-End
   equipment:
     eyes: ClothingEyesGlassesJensen

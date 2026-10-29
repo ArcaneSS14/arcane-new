@@ -19,9 +19,11 @@
   id: ResearchDirectorMantle
   equipment:
     neck: ClothingNeckMantleRD
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterRD
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterRD
+  # Arcane-Edit-End
 
 - type: startingGear
   id: ResearchDirectorMantle
