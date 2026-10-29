@@ -18858,7 +18858,7 @@ entities:
       maxIntensity: 200
     - type: Physics
       bodyType: Static
-    - type: OnUseTimerTrigger
+    - type: TimerTrigger
       delay: 300
     missingComponents:
     - Anchorable

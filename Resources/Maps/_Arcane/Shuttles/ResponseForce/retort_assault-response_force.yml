@@ -273,7 +273,6 @@ entities:
     - type: GasTileOverlay
     - type: RadiationGridResistance
     - type: ImplicitRoof
-    - type: FTLDrive
 - proto: AirAlarm
   entities:
   - uid: 2
