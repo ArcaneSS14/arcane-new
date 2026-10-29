@@ -361,7 +361,7 @@ public sealed partial class ResearchSystem
             if (!EntityManager.ComponentFactory.TryGetRegistration(componentName, out var registration))
                 return false;
 
-            if (!EntityManager.HasComponent(subject, registration.Type))
+            if (!HasComp(subject, registration.Type))
                 return false;
         }
 

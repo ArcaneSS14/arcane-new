@@ -177,7 +177,7 @@ public sealed partial class AnomalySystem
 
         // Arcane-Start
         var fallbackServer = _research.GetServers(grid).OrderBy(server => server.Comp.Id).FirstOrDefault();
-        if (fallbackServer != default && fallbackServer.Owner != EntityUid.Invalid && EntityManager.EntityExists(fallbackServer.Owner))
+        if (fallbackServer != default && fallbackServer.Owner != EntityUid.Invalid && Exists(fallbackServer.Owner))
             _research.LogNetworkEvent(fallbackServer.Owner, "anomaly", Loc.GetString("research-netlog-anomaly-generator-spawned", ("generator", MetaData(uid).EntityName)));
         // Arcane-End
 

@@ -9,7 +9,7 @@ namespace Content.Shared.Research.Prototypes;
 /// <summary>
 /// Prototype definition for experiment progression in research techweb.
 /// </summary>
-[Prototype("researchExperiment")]
+[Prototype]
 public sealed partial class ResearchExperimentPrototype : IPrototype
 {
     [IdDataField]

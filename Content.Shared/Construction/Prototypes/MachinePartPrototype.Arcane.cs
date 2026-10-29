@@ -3,7 +3,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Construction.Prototypes;
 
-[Prototype("machinePart")]
+[Prototype]
 public sealed partial class MachinePartPrototype : IPrototype
 {
     [IdDataField]

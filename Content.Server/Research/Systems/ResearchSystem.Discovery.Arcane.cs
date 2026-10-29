@@ -3,7 +3,6 @@ using System.Linq;
 using Content.Server.Construction.Completions;
 using Content.Shared.Research;
 using Content.Shared.Research.Components;
-using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 using Robust.Shared.Containers;
 
@@ -287,7 +286,7 @@ public sealed partial class ResearchSystem
 
     private string? GetPrototypeId(EntityUid? uid)
     {
-        if (uid == null || !TryComp<MetaDataComponent>(uid.Value, out var meta))
+        if (uid == null || !TryComp(uid.Value, out MetaDataComponent? meta))
             return null;
 
         return meta.EntityPrototype?.ID;
