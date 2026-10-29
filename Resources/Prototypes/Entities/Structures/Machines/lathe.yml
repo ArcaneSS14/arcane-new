@@ -328,10 +328,10 @@
     - MedicalBoardsStaticGoob
     - SecurityBoardsStaticGoob
     # </Trauma>
-    #- ScienceBoardsStatic - Goobstation - Moved to Scifab
+    - ScienceBoardsStatic # Arcane-Edit
     - ServiceBoardsStatic
     - CargoBoardsStatic
-    #- MedicalBoardsStatic - Goobstation - Moved to Scifab and Medfab
+    - MedicalBoardsStatic # Arcane-Edit
     - EngineeringBoardsStatic
     # Arcane-Edit: the dynamicPacks list is merged into the one above
     # <Trauma>
@@ -342,9 +342,16 @@
     - CargoBoards
     - MedicalBoards
     - ServiceBoards
-    #- ScienceBoards - Goobstation - Moved to Scifab
+    - ScienceBoards # Arcane-Edit
     - CameraBoards
-    #- MechBoards - Goobstation - split between departmental lathes
+    # Arcane-Edit-Start: was "#- MechBoards - Goobstation - split between departmental lathes"
+    - MechBoards
+    - MechBoardsCargo
+    - MechBoardsCivilian
+    - MedicalBoardsGoob
+    - MechBoardsScience
+    - MechBoardsSecurity
+    # Arcane-Edit-End
     - ShuttleBoards
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist

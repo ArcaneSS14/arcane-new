@@ -84,15 +84,20 @@ namespace Content.Server.Research.Systems
             return GetServers(client).Select(x => x.Comp.Id).ToArray();
         }
 
-        public HashSet<Entity<ResearchServerComponent>> GetServers(EntityUid client)
+        public List<Entity<ResearchServerComponent>> GetServers(EntityUid client) // Arcane-Edit
         {
             var clientXform = Transform(client);
             if (clientXform.GridUid is not { } grid)
-                return [];
+                return new List<Entity<ResearchServerComponent>>(); // Arcane-Edit
 
-            var set = new HashSet<Entity<ResearchServerComponent>>();
-            _lookup.GetGridEntities(grid, set);
-            return set;
+            // Arcane-Edit-Start
+            var servers = new HashSet<Entity<ResearchServerComponent>>();
+            _lookup.GetGridEntities(grid, servers);
+
+            return servers
+                .OrderBy(ent => ent.Comp.Id)
+                .ToList();
+            // Arcane-Edit-End
         }
 
         public override void Update(float frameTime)

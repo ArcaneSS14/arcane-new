@@ -12,7 +12,7 @@ namespace Content.Server.Research.Systems;
 
 public sealed partial class ResearchSystem
 {
-    private readonly ISawmill _sawmill = Logger.GetSawmill("research.techweb"); // Arcane
+    private readonly ISawmill _sawmill = Logger.GetSawmill("research.tech-web"); // Arcane
 
     /// <summary>
     /// Syncs the primary entity's database to that of the secondary entity's database.
@@ -23,24 +23,28 @@ public sealed partial class ResearchSystem
             return;
 
         primaryDb.MainDiscipline = otherDb.MainDiscipline;
-        primaryDb.CurrentTechnologyCards = otherDb.CurrentTechnologyCards;
-        primaryDb.SupportedDisciplines = otherDb.SupportedDisciplines;
+        // Arcane-Edit-Start
+        primaryDb.CurrentTechnologyCards = new List<string>(otherDb.CurrentTechnologyCards);
+        primaryDb.SupportedDisciplines = new List<ProtoId<TechDisciplinePrototype>>(otherDb.SupportedDisciplines);
+        // Arcane-Edit-End
         // Arcane-Start
         primaryDb.VisibleTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.VisibleTechnologies);
         primaryDb.AvailableTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.AvailableTechnologies);
         primaryDb.ResearchedTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.ResearchedTechnologies);
-        primaryDb.AvailableExperiments = otherDb.AvailableExperiments;
-        primaryDb.UnlockedExperiments = otherDb.UnlockedExperiments;
-        primaryDb.ActiveExperiments = otherDb.ActiveExperiments;
-        primaryDb.CompletedExperiments = otherDb.CompletedExperiments;
-        primaryDb.SkippedExperiments = otherDb.SkippedExperiments;
-        primaryDb.ExperimentProgress = otherDb.ExperimentProgress;
+        primaryDb.AvailableExperiments = new List<string>(otherDb.AvailableExperiments);
+        primaryDb.UnlockedExperiments = new List<string>(otherDb.UnlockedExperiments);
+        primaryDb.ActiveExperiments = new List<string>(otherDb.ActiveExperiments);
+        primaryDb.CompletedExperiments = new List<string>(otherDb.CompletedExperiments);
+        primaryDb.SkippedExperiments = new List<string>(otherDb.SkippedExperiments);
+        primaryDb.ExperimentProgress = otherDb.ExperimentProgress
+            .Select(CloneExperimentProgress)
+            .ToList();
         // Arcane-End
-        primaryDb.UnlockedRecipes = otherDb.UnlockedRecipes;
+        primaryDb.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>(otherDb.UnlockedRecipes); // Arcane-Edit
         // Arcane-Start
-        primaryDb.RevealedTechnologies = otherDb.RevealedTechnologies;
-        primaryDb.DiscoveryProgress = otherDb.DiscoveryProgress;
-        primaryDb.UnlockedInfrastructure = otherDb.UnlockedInfrastructure;
+        primaryDb.RevealedTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.RevealedTechnologies);
+        primaryDb.DiscoveryProgress = new List<TechnologyDiscoveryProgress>(otherDb.DiscoveryProgress);
+        primaryDb.UnlockedInfrastructure = new List<string>(otherDb.UnlockedInfrastructure);
         // Arcane-End
 
         Dirty(primaryUid, primaryDb);
@@ -60,10 +64,26 @@ public sealed partial class ResearchSystem
         if (!Resolve(uid, ref databaseComponent, ref clientComponent, false))
             return;
 
-        if (!TryComp<TechnologyDatabaseComponent>(clientComponent.Server, out var serverDatabase))
+        if (clientComponent.Server is not { } serverUid) // Arcane-Edit
             return;
 
-        Sync(uid, clientComponent.Server.Value, databaseComponent, serverDatabase);
+        // Arcane-Start
+        if (!TryComp(serverUid, out ResearchServerComponent? serverComponent))
+            return;
+
+        var authorityUid = GetNetworkAuthority(serverUid, serverComponent);
+        if (authorityUid != serverUid)
+        {
+            UnregisterClient(uid, serverUid, clientComponent, serverComponent, dirtyServer: false);
+            RegisterClient(uid, authorityUid, clientComponent, dirtyServer: false);
+            return;
+        }
+
+        if (!TryComp<TechnologyDatabaseComponent>(serverUid, out var serverDatabase))
+            return;
+        // Arcane-End
+
+        Sync(uid, serverUid, databaseComponent, serverDatabase); // Arcane-Edit
     }
 
     /// <summary>
@@ -283,4 +303,19 @@ public sealed partial class ResearchSystem
         // Arcane-End
         Dirty(uid, component);
     }
+
+    // Arcane-Start
+    private static ResearchExperimentProgress CloneExperimentProgress(ResearchExperimentProgress source)
+    {
+        return new ResearchExperimentProgress
+        {
+            ExperimentId = source.ExperimentId,
+            Progress = source.Progress,
+            Target = source.Target,
+            UniqueProgressKeys = new HashSet<string>(source.UniqueProgressKeys),
+            ScannedEntities = new HashSet<NetEntity>(source.ScannedEntities),
+            CompletedAt = source.CompletedAt,
+        };
+    }
+    // Arcane-End
 }
