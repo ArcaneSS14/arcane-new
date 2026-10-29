@@ -8,5 +8,5 @@
   - type: ItemSlots
     slots:
       cell_slot:
-        startingItem: PowerCellBluespaceReactor # Arcane-Edit: replaces PowerCellMicroreactor
+        startingItem: PowerCellBluespaceReactor # Arcane-Edit: PowerCellMicroreactor > PowerCellBluespaceReactor
         disableEject: true

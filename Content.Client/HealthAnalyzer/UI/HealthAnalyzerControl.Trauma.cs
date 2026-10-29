@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Shared.Eye.Blinding.Components; // Arcane
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -29,6 +28,7 @@ using Robust.Shared.Utility;
 // Arcane-Start
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Shared.Damage;
+using Content.Shared.Eye.Blinding.Components; // Arcane
 // Arcane-End
 
 namespace Content.Client.HealthAnalyzer.UI;

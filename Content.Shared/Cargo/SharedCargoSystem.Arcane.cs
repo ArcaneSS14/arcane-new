@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.Cargo.Components;
@@ -51,3 +52,4 @@ public abstract partial class SharedCargoSystem
         return Identity.Name(requester, EntityManager);
     }
 }
+// Arcane-End

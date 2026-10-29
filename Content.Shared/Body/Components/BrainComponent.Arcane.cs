@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 namespace Content.Shared.Body.Components;
 
 /// <summary>
@@ -10,3 +11,4 @@ public sealed partial class BrainComponent
     [DataField, AutoNetworkedField]
     public bool Renamed;
 }
+// Arcane-End

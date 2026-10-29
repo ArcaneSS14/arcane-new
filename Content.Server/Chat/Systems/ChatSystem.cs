@@ -255,20 +255,10 @@ public sealed partial class ChatSystem : SharedChatSystem
         // This message may have a radio prefix, and should then be whispered to the resolved radio channel
         if (checkRadioPrefix)
         {
-            if (TryProcessRadioMessage(source, message, out var modMessage, out var channel))
+            if (TryProcessRadioMessage(source, message, out var modMessage, out var channel) && TryUseRadio(source, modMessage, ref message, ref desiredType)) // Arcane-Edit: TryProcessRadioMessage > TryProcessRadioMessage && TryUseRadio
             {
-                // Arcane-Start: without a usable radio the message is just whispered
-                if (!CanUseRadio(source))
-                {
-                    message = modMessage;
-                    desiredType = InGameICChatType.Whisper;
-                }
-                else
-                {
-                // Arcane-End
                 SendEntityWhisper(source, modMessage, range, channel, nameOverride, language, hideLog, ignoreActionBlocker, colorOverride); // Goob edit & Einstein Engines - Language
                 return;
-                } // Arcane
             }
         }
 

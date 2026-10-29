@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
+using Content.Shared.Chat;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Popups;
 
@@ -11,6 +13,19 @@ namespace Content.Server.Chat.Systems;
 public sealed partial class ChatSystem
 {
     [Dependency] private SharedPopupSystem _arcanePopup = default!;
+
+    /// <summary>
+    /// Whether the source can talk on the radio. If not, the message is turned into a plain whisper.
+    /// </summary>
+    private bool TryUseRadio(EntityUid source, string radioMessage, ref string message, ref InGameICChatType type)
+    {
+        if (CanUseRadio(source))
+            return true;
+
+        message = radioMessage;
+        type = InGameICChatType.Whisper;
+        return false;
+    }
 
     private bool CanUseRadio(EntityUid source)
     {
@@ -29,3 +44,4 @@ public sealed partial class ChatSystem
         return true;
     }
 }
+// Arcane-End

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using System.Linq;
 using System.Numerics;
 using Content.Arcane.Common.Ghost;
@@ -156,3 +157,4 @@ public sealed partial class GhostTargetWindow
         }
     }
 }
+// Arcane-End

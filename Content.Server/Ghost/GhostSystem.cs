@@ -526,7 +526,7 @@ namespace Content.Server.Ghost
             // Arcane-Edit-End
             var ghostComponent = Comp<GhostComponent>(ghost);
 
-            if (!ghostProto.Custom && TryComp<GhostSpriteStateComponent>(ghost, out var state)) // Arcane-Edit: custom sprites lack death states  // If more TryComps are added this should be turned into an event
+            if (!ghostProto.Custom && TryComp<GhostSpriteStateComponent>(ghost, out var state)) // Arcane-Edit: TryComp > !ghostProto.Custom && TryComp, custom sprites lack death states  // If more TryComps are added this should be turned into an event
             {
                 _ghostState.SetGhostSprite((ghost, state), mind);
             }

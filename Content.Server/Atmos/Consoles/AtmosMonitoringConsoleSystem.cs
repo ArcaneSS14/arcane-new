@@ -139,7 +139,7 @@ public sealed partial class AtmosMonitoringConsoleSystem : SharedAtmosMonitoring
             var query = AllEntityQuery<AtmosMonitoringConsoleComponent, TransformComponent>();
             while (query.MoveNext(out var ent, out var entConsole, out var entXform))
             {
-                if (entXform?.GridUid == null || !_userInterfaceSystem.IsUiOpen(ent, AtmosMonitoringConsoleUiKey.Key)) // Arcane-Edit
+                if (entXform?.GridUid == null || !_userInterfaceSystem.IsUiOpen(ent, AtmosMonitoringConsoleUiKey.Key)) // Arcane-Edit: GridUid == null > GridUid == null || UI closed
                     continue;
 
                 // Arcane-Start
@@ -150,7 +150,7 @@ public sealed partial class AtmosMonitoringConsoleSystem : SharedAtmosMonitoring
                 }
                 // Arcane-End
 
-                UpdateUIState(ent, atmosNetworks, entConsole, entXform); // Arcane-Edit
+                UpdateUIState(ent, atmosNetworks, entConsole, entXform); // Arcane-Edit: UpdateUIState(ent, ...) > UpdateUIState(ent, atmosNetworks, ...)
             }
         }
     }
@@ -179,16 +179,18 @@ public sealed partial class AtmosMonitoringConsoleSystem : SharedAtmosMonitoring
         // Set the UI state
         _userInterfaceSystem.SetUiState(uid, AtmosMonitoringConsoleUiKey.Key, new AtmosMonitoringConsoleBoundInterfaceState(atmosNetworks));
         // Arcane-Edit-End
-    } // Orion: Also separate
+        // Arcane-Start: sensor entries are gathered once per grid
+    }
 
-    private AtmosMonitoringConsoleEntry[] GetAtmosNetworks(EntityUid gridUid) // Arcane
+    private AtmosMonitoringConsoleEntry[] GetAtmosNetworks(EntityUid gridUid)
     {
+        // Arcane-End
         var atmosNetworks = new List<AtmosMonitoringConsoleEntry>();
         var query = AllEntityQuery<GasPipeSensorComponent, TransformComponent>();
 
-        while (query.MoveNext(out var ent, out _, out var entXform)) // Arcane-Edit
+        while (query.MoveNext(out var ent, out _, out var entXform)) // Arcane-Edit: entSensor > _
         {
-            if (entXform.GridUid != gridUid || !entXform.Anchored) // Arcane-Edit
+            if (entXform.GridUid != gridUid || !entXform.Anchored) // Arcane-Edit: two checks against xform.GridUid > one check against gridUid
                 continue;
 
             var entry = CreateAtmosMonitoringConsoleEntry(ent, entXform);
@@ -197,7 +199,7 @@ public sealed partial class AtmosMonitoringConsoleSystem : SharedAtmosMonitoring
                 atmosNetworks.Add(entry.Value);
         }
 
-        return atmosNetworks.ToArray(); // Arcane-Edit
+        return atmosNetworks.ToArray(); // Arcane-Edit: SetUiState(...) > return
     }
 
     private AtmosMonitoringConsoleEntry? CreateAtmosMonitoringConsoleEntry(EntityUid uid, TransformComponent xform)

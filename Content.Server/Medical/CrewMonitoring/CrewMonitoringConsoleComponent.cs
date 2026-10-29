@@ -1,6 +1,8 @@
 using Content.Shared.Medical.SuitSensors;
-using Content.Shared.Roles; // Arcane
-using Robust.Shared.Prototypes; // Arcane
+// Arcane-Start
+using Content.Shared.Roles;
+using Robust.Shared.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Medical.CrewMonitoring;
 

@@ -1,11 +1,13 @@
 using System.Linq;
 using Content.Shared.DeviceNetwork.Events;
 using Content.Shared.Medical.CrewMonitoring;
-using Content.Shared.Medical.SuitSensors; // Arcane
 using Content.Shared.Pinpointer;
 using Content.Shared.PowerCell;
 using Robust.Server.GameObjects;
-using Robust.Shared.Prototypes; // Arcane
+// Arcane-Start
+using Content.Shared.Medical.SuitSensors;
+using Robust.Shared.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Medical.CrewMonitoring;
 
@@ -57,7 +59,7 @@ public sealed partial class CrewMonitoringConsoleSystem : EntitySystem
             EnsureComp<NavMapComponent>(xform.GridUid.Value);
 
         // Update all sensors info
-        var allSensors = GetVisibleSensors(component).ToList(); // Arcane-Edit
+        var allSensors = GetVisibleSensors(component).ToList(); // Arcane-Edit: ConnectedSensors.Values > GetVisibleSensors(component)
         _uiSystem.SetUiState(uid, CrewMonitoringUIKey.Key, new CrewMonitoringState(allSensors));
     }
 

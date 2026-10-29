@@ -235,7 +235,7 @@ namespace Content.Server.Cargo.Systems
                 PlayDenySound(uid, component);
             }
 
-            var cost = product.Cost * order.OrderQuantity + order.ExtraCost; // Arcane-Edit
+            var cost = product.Cost * order.OrderQuantity + order.ExtraCost; // Arcane-Edit: product cost > product cost + ExtraCost
             var accountBalance = GetBalanceFromAccount((station.Value, bank), order.Account);
             // <Trauma>
             var modifyEv = new ModifyCargoPriceEvent(cost);
@@ -411,7 +411,7 @@ namespace Content.Server.Cargo.Systems
             RemoveOrder(station.Value, targetAccount, args.OrderId, orderDatabase);
         }
 
-        private void OnAddOrderMessageSlipPrinter(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleAddOrderMessage args, CargoProductPrototype product, CargoOrderData extras) // Arcane-Edit: extras
+        private void OnAddOrderMessageSlipPrinter(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleAddOrderMessage args, CargoProductPrototype product, CargoOrderData extras) // Arcane-Edit: (..., product) > (..., product, extras)
         {
             if (!ProtoMan.Resolve(component.Account, out var account))
                 return;
@@ -426,20 +426,20 @@ namespace Content.Server.Cargo.Systems
             var paper = EnsureComp<PaperComponent>(label);
             var msg = new FormattedMessage();
 
-            msg.AddMarkupPermissive(Loc.GetString("cargo-acquisition-slip-body",
+            msg.AddMarkupPermissive(Loc.GetString("cargo-arcane-acquisition-slip-body", // Arcane-Edit: cargo-acquisition-slip-body > cargo-arcane-acquisition-slip-body
                 ("product", product.Name),
                 ("description", product.Description),
                 ("unit", product.Cost),
                 ("amount", args.Amount),
-                ("cost", product.Cost * args.Amount + extras.ExtraCost), // Arcane-Edit
-                ("orderer", extras.Requester), // Arcane-Edit
+                ("cost", product.Cost * args.Amount + extras.ExtraCost), // Arcane-Edit: Cost * Amount > Cost * Amount + ExtraCost
+                ("orderer", extras.Requester), // Arcane-Edit: args.Requester > extras.Requester
                 ("destination", extras.DeliveryDestination ?? Loc.GetString("cargo-console-paper-delivery-destination-default")), // Arcane
                 ("reason", args.Reason)));
             _paperSystem.SetContent((label, paper), msg.ToMarkup());
 
             var slip = EnsureComp<CargoSlipComponent>(label);
             slip.Product = product.ID;
-            slip.Requester = extras.Requester; // Arcane-Edit
+            slip.Requester = extras.Requester; // Arcane-Edit: args.Requester > extras.Requester
             slip.Reason = args.Reason;
             // Arcane-Start
             slip.DeliveryDestination = extras.DeliveryDestination;
@@ -484,7 +484,7 @@ namespace Content.Server.Cargo.Systems
 
             if (component.Mode == CargoOrderConsoleMode.PrintSlip)
             {
-                OnAddOrderMessageSlipPrinter(uid, component, args, product, data); // Arcane-Edit
+                OnAddOrderMessageSlipPrinter(uid, component, args, product, data); // Arcane-Edit: (..., product) > (..., product, data)
                 return;
             }
 
@@ -749,13 +749,13 @@ namespace Content.Server.Cargo.Systems
             if (TryComp<PaperComponent>(printed, out var paper))
             {
                 // fill in the order data
-                var val = Loc.GetString("cargo-console-paper-print-name", ("orderNumber", order.OrderId), ("itemName", product.Name), ("orderQuantity", order.OrderQuantity)); // Arcane-Edit
+                var val = Loc.GetString("cargo-console-arcane-paper-print-name", ("orderNumber", order.OrderId), ("itemName", product.Name), ("orderQuantity", order.OrderQuantity)); // Arcane-Edit: cargo-console-paper-print-name > cargo-console-arcane-paper-print-name
                 _metaSystem.SetEntityName(printed, val);
 
                 var accountProto = ProtoMan.Index(account);
                 _paperSystem.SetContent((printed, paper),
                     Loc.GetString(
-                        "cargo-console-paper-print-text",
+                        "cargo-console-arcane-paper-print-text", // Arcane-Edit: cargo-console-paper-print-text > cargo-console-arcane-paper-print-text
                         ("orderNumber", order.OrderId),
                         ("itemName", product.Name),
                         ("orderQuantity", order.OrderQuantity),

@@ -1,7 +1,6 @@
 // <Trauma>
 using Content.Goobstation.Common.CCVar;
 using Content.Trauma.Common.CCVar;
-using Content.Arcane.Common.CCVar; // Arcane
 // </Trauma>
 using Content.Client.Administration.Managers;
 using Content.Client.Audio;
@@ -12,6 +11,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared;
 using Robust.Shared.Configuration;
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Client.Options.UI.Tabs;
 

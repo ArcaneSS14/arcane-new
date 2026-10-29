@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Robust.Shared.CPUJob.JobQueues; // Arcane
 using Robust.Shared.CPUJob.JobQueues.Queues;
 using Content.Server.Decals;
 using Content.Server.GameTicking.Events;
@@ -20,6 +19,7 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Robust.Shared.CPUJob.JobQueues; // Arcane
 
 namespace Content.Server.Procedural;
 
@@ -236,7 +236,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
             coordinates,
             cancelToken.Token);
 
-        _dungeonJobs[job] = cancelToken; // Arcane-Edit: no exception on a reused job key
+        _dungeonJobs[job] = cancelToken; // Arcane-Edit: Add(job, cancelToken) > indexer, no exception on a reused job key
         _dungeonJobQueue.EnqueueJob(job);
     }
 
@@ -269,7 +269,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
             null,
             cancelToken.Token);
 
-        _dungeonJobs[job] = cancelToken; // Arcane-Edit: no exception on a reused job key
+        _dungeonJobs[job] = cancelToken; // Arcane-Edit: Add(job, cancelToken) > indexer, no exception on a reused job key
         _dungeonJobQueue.EnqueueJob(job);
         await job.AsTask;
 
@@ -281,7 +281,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
         return job.Result!;
     }
 
-    public static Angle GetDungeonRotation(int seed) // Arcane-Edit: static
+    public static Angle GetDungeonRotation(int seed) // Arcane-Edit: public Angle > public static Angle
     {
         // Mask 0 | 1 for rotation seed
         var dungeonRotationSeed = 3 & seed;

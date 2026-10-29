@@ -647,9 +647,9 @@
         Manipulator: 1
         CableHV: 10
       componentRequirements:
-        MegaCell: # Arcane-Edit
+        MegaCell: # Arcane-Edit: PowerCell > MegaCell
           amount: 4
-          defaultPrototype: MegaCellSmall # Arcane-Edit
+          defaultPrototype: MegaCellSmall # Arcane-Edit: PowerCellSmall > MegaCellSmall
 
 - type: entity
   id: SMESAdvancedMachineCircuitboard
@@ -666,9 +666,9 @@
       Manipulator: 2
       CableHV: 20
     componentRequirements:
-      MegaCell: # Arcane-Edit
+      MegaCell: # Arcane-Edit: PowerCell > MegaCell
         amount: 4
-        defaultPrototype: MegaCellHigh # Arcane-Edit
+        defaultPrototype: MegaCellHigh # Arcane-Edit: PowerCellMedium > MegaCellHigh
 
 - type: entity
   id: CellRechargerCircuitboard
@@ -811,9 +811,9 @@
         CableMV: 5
         CableHV: 5
       componentRequirements:
-        MegaCell: # Arcane-Edit
+        MegaCell: # Arcane-Edit: PowerCell > MegaCell
           amount: 1
-          defaultPrototype: MegaCellSmall # Arcane-Edit
+          defaultPrototype: MegaCellSmall # Arcane-Edit: PowerCellSmall > MegaCellSmall
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Glass: 125

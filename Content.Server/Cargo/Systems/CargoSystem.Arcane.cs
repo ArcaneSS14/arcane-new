@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using System.Linq;
 using Content.Server.Storage.EntitySystems;
 using Content.Shared.Cargo;
@@ -79,3 +80,4 @@ public sealed partial class CargoSystem
         return text.Length > MaxOrderTextLength ? text[..MaxOrderTextLength] : text;
     }
 }
+// Arcane-End

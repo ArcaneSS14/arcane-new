@@ -53,7 +53,7 @@ public sealed partial class FlavorPreview : Control
         "https://images.steamusercontent.com",
         "https://media.discordapp.net/attachments",
         "https://cdn.discordapp.com/attachments",
-        "https://eblo.id", // Orion #357
+        "https://eblo.id", // Arcane
     ];
 
     private static readonly Direction[] Directions = [Direction.East, Direction.North, Direction.West, Direction.South];

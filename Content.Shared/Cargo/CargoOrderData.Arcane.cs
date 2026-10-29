@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 namespace Content.Shared.Cargo;
 
 /// <summary>
@@ -26,3 +27,4 @@ public sealed partial class CargoOrderData
     [DataField]
     public int ExtraCost;
 }
+// Arcane-End

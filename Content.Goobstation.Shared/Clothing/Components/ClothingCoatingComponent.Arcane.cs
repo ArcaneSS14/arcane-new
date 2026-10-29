@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using Content.Shared.Whitelist;
 
 namespace Content.Goobstation.Shared.Clothing.Components;
@@ -12,3 +13,4 @@ public sealed partial class ClothingCoatingComponent
     [DataField]
     public EntityWhitelist? Blacklist;
 }
+// Arcane-End

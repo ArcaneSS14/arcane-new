@@ -136,7 +136,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
     private void OnGridSplit(ref GridSplitEvent args)
     {
         // Collect grids
-        var allGrids = new HashSet<EntityUid>(args.NewGrids) { args.Grid }; // Arcane-Edit
+        var allGrids = new HashSet<EntityUid>(args.NewGrids) { args.Grid }; // Arcane-Edit: ToList() + Contains/Add > HashSet
 
         // Refresh affected power cable grids
         foreach (var grid in allGrids)
@@ -201,7 +201,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         foreach (var ent in consoles)
         // Arcane-Edit-End
         {
-            if (!TryComp(ent, out PowerMonitoringCableNetworksComponent? entCableNetworks)) // Arcane-Edit
+            if (!TryComp(ent, out PowerMonitoringCableNetworksComponent? entCableNetworks)) // Arcane-Edit: entXform.GridUid != xform.GridUid > !TryComp(entCableNetworks)
                 continue;
 
             entCableNetworks.AllChunks = allChunks;
@@ -227,7 +227,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         foreach (var ent in consoles)
         // Arcane-Edit-End
         {
-            if (!TryComp(ent, out PowerMonitoringConsoleComponent? entConsole)) // Arcane-Edit
+            if (!TryComp(ent, out PowerMonitoringConsoleComponent? entConsole)) // Arcane-Edit: gridUid != entXform.GridUid > !TryComp(entConsole)
                 continue;
 
             if (!args.Anchored)

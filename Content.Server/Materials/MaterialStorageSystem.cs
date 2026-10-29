@@ -12,11 +12,11 @@ using Content.Server.Stack;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Construction;
 using Content.Shared.Database;
-using Content.Shared.Ghost.Components; // Arcane
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.Ghost.Components; // Arcane
 
 namespace Content.Server.Materials;
 

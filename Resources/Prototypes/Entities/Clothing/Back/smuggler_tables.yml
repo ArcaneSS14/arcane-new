@@ -441,7 +441,7 @@
     - id: SpaceCash100
       weight: 15
     - id: PowerCellHyper
-    - id: PowerCellBluespaceReactor # Arcane-Edit: replaces PowerCellMicroreactor
+    - id: PowerCellBluespaceReactor # Arcane-Edit: PowerCellMicroreactor > PowerCellBluespaceReactor
     - id: PowerCellHigh
 
 - type: entityTable #1x medium

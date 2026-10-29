@@ -5,9 +5,9 @@ using Content.Shared.Hands;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
 using Content.Shared.Popups;
-using Content.Shared.UserInterface; // Arcane
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
+using Content.Shared.UserInterface; // Arcane
 
 namespace Content.Shared.Ghost.Systems;
 
@@ -43,8 +43,7 @@ public abstract partial class SharedGhostSystem : EntitySystem
 
     private void OnAttemptInteract(Entity<GhostComponent> ent, ref InteractionAttemptEvent args)
     {
-        // Arcane-Edit: ghosts may reach activatable UIs, BUI messages stay blocked in SharedInteractionSystem
-        if (!ent.Comp.CanGhostInteract && !(ent.Comp.CanGhostOpenUI && HasComp<ActivatableUIComponent>(args.Target)))
+        if (!ent.Comp.CanGhostInteract && !(ent.Comp.CanGhostOpenUI && HasComp<ActivatableUIComponent>(args.Target))) // Arcane-Edit: !CanGhostInteract > also allow activatable UIs, BUI messages stay blocked
             args.Cancelled = true;
     }
 

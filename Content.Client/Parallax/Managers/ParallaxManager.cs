@@ -115,7 +115,7 @@ public sealed partial class ParallaxManager : IParallaxManager
 
             cancel.ThrowIfCancellationRequested();
 
-//            _loadingParallaxes.Remove(name); // Arcane-Edit
+//            _loadingParallaxes.Remove(name); // Arcane-Edit: removed here > removed in finally
 
             _parallaxesLQ[name] = layers[1];
             _parallaxesHQ[name] = layers[0];

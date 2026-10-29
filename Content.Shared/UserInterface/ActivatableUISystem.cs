@@ -141,7 +141,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
 
     private void OnActivate(EntityUid uid, ActivatableUIComponent component, ActivateInWorldEvent args)
     {
-        if (args.Handled || !args.Complex && !CanGhostOpen(args.User)) // Arcane-Edit
+        if (args.Handled || !args.Complex && !CanGhostOpen(args.User)) // Arcane-Edit: !args.Complex > !args.Complex && !CanGhostOpen
             return;
 
         if (component.VerbOnly)
@@ -214,7 +214,7 @@ public sealed partial class ActivatableUISystem : EntitySystem
             return false;
         // Arcane-End
 
-        if (aui.RequiresComplex && !CanGhostOpen(user)) // Arcane-Edit
+        if (aui.RequiresComplex && !CanGhostOpen(user)) // Arcane-Edit: RequiresComplex > RequiresComplex && !CanGhostOpen
         {
             if (!_blockerSystem.CanComplexInteract(user))
                 return false;

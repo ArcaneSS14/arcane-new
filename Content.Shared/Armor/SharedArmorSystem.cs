@@ -3,7 +3,6 @@ using Content.Medical.Common.Body;
 using Content.Shared.Localizations;
 using Content.Trauma.Common.Armor;
 using System.Linq;
-using Content.Arcane.Common.Localization; // Arcane
 // </Trauma>
 using Content.Shared.Clothing.Components;
 using Content.Shared.Damage;
@@ -13,6 +12,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Silicons.Borgs;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Localization; // Arcane
 
 namespace Content.Shared.Armor;
 

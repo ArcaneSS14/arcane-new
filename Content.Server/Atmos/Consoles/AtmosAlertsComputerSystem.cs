@@ -78,7 +78,7 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
         InitalizeConsole(uid, component);
     }
 
-    private static void OnFocusChangedMessage(EntityUid uid, AtmosAlertsComputerComponent component, AtmosAlertsComputerFocusChangeMessage args) // Arcane-Edit: Static
+    private static void OnFocusChangedMessage(EntityUid uid, AtmosAlertsComputerComponent component, AtmosAlertsComputerFocusChangeMessage args) // Arcane-Edit: private void > private static void
     {
         component.FocusDevice = args.FocusDevice;
     }
@@ -152,7 +152,7 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
         if (!TryGetAtmosDeviceNavMapData(uid, component, xform, out var data))
             return;
 
-//        var netEntity = GetNetEntity(uid); // Arcane-Edit
+//        var netEntity = GetNetEntity(uid); // Arcane-Edit: declared here > declared before the removal branch
         UpdateTrackedDevice(uid, component, gridUid.Value, true); // Arcane
 
         // Arcane-Edit-Start
@@ -162,10 +162,11 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
         foreach (var ent in consoles)
         // Arcane-Edit-End
         {
-            if (!TryComp(ent, out AtmosAlertsComputerComponent? entConsole)) // Arcane-Edit
+            if (!TryComp(ent, out AtmosAlertsComputerComponent? entConsole)) // Arcane-Edit: gridUid != entXform.GridUid > !TryComp(entConsole)
                 continue;
 
-/* // Arcane-Edit
+// Arcane-Edit-Start: removal moved before the console loop
+/*
             if (isAdding)
             {
                 entConsole.AtmosDevices.Add(data.Value);
@@ -177,6 +178,7 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
                 _navMapSystem.RemoveNavMapRegion(gridUid.Value, navMap, netEntity);
             }
 */
+// Arcane-Edit-End
 
             entConsole.AtmosDevices.Add(data.Value); // Arcane
             Dirty(ent, entConsole);
@@ -289,7 +291,7 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
                 continue;
             // Arcane-Edit-End
 
-            if (!entXform.Anchored || entXform.GridUid != gridUid) // Arcane-Edit
+            if (!entXform.Anchored || entXform.GridUid != gridUid) // Arcane-Edit: !Anchored > !Anchored || GridUid != gridUid
                 continue;
 
             if (entDevice.Group != group)

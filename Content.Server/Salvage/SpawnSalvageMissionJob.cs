@@ -159,7 +159,7 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
         var minDungeonOffset = landingPadRadius + 4;
 
         // We'll use the dungeon rotation as the spawn angle
-        var dungeonRotation = DungeonSystem.GetDungeonRotation(_missionParams.Seed); // Arcane-Edit
+        var dungeonRotation = DungeonSystem.GetDungeonRotation(_missionParams.Seed); // Arcane-Edit: _dungeon > DungeonSystem
 
         var maxDungeonOffset = minDungeonOffset + 12;
         var dungeonOffsetDistance = minDungeonOffset + (maxDungeonOffset - minDungeonOffset) * random.NextFloat();

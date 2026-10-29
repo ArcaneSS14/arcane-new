@@ -1,4 +1,3 @@
-using Content.Arcane.Common.GameTicking; // Arcane
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -25,6 +24,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.GameTicking; // Arcane
 
 namespace Content.Server.GameTicking
 {

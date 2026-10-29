@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using Content.Client.Cargo.UI;
 using Content.Shared.Cargo.Components;
 using Robust.Client.UserInterface.Controls;
@@ -47,3 +48,4 @@ public sealed partial class CargoOrderConsoleBoundUserInterface
         menu.SecureDelivery.OnToggled += _secureToggled;
     }
 }
+// Arcane-End
