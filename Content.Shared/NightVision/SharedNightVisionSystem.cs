@@ -3,6 +3,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Overlays;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Toggleable; // Arcane
 
 namespace Content.Shared.NightVision;
 
@@ -13,10 +14,13 @@ namespace Content.Shared.NightVision;
 public abstract partial class SharedNightVisionSystem : EntitySystem
 {
     [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!; // Arcane
 
     [SubscribeLocalEvent]
     private void OnStartup(Entity<NightVisionComponent> ent, ref MapInitEvent args)
     {
+        UpdateVisuals(ent); // Arcane
+
         if (ent.Comp.RelayOverlay)
             return;
 
@@ -109,10 +113,18 @@ public abstract partial class SharedNightVisionSystem : EntitySystem
 
         ent.Comp.Enabled = enabled;
         Dirty(ent);
+        UpdateVisuals((ent, ent.Comp)); // Arcane
         RefreshOverlay(viewer ?? ent);
     }
 
     protected virtual void RefreshOverlay(EntityUid entity) { }
+
+    // Arcane-Start
+    private void UpdateVisuals(Entity<NightVisionComponent> ent)
+    {
+        _appearance.SetData(ent, ToggleableVisuals.Enabled, ent.Comp.Enabled);
+    }
+    // Arcane-End
 }
 
 [ByRefEvent]

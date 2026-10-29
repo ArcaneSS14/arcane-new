@@ -46,6 +46,10 @@
   - ClothingBackpackHolding
   - ClothingBackpackSatchelHolding
   - ClothingBackpackDuffelHolding
+  - ClothingBackpackMessengerHolding # Frontier
+  # Arcane-Start
+  - ClothingEyesNightVisionDiagnosticGoggles
+  # Arcane-End
 
 - type: latheRecipePack
   id: PowerCells

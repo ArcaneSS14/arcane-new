@@ -30,3 +30,8 @@ guide-entry-arcane-rnd-machines = R&D machines
 research-netlog-admin-unlocked-all-technologies = { $user } executed admin unlock-all technologies operation.
 research-netlog-admin-added-points = { $user } added research points: { $type } { $amount }, new balance { $balance }.
 research-netlog-user-admin = NanoTrasen
+research-netlog-emag-device-interference = Device tampering detected { $device }.
+research-netlog-anomaly-vessel-bound = Anomaly { $anomaly } was bound to vessel { $vessel }.
+research-netlog-anomaly-generator-spawned = Anomaly generator { $generator } completed anomaly generation.
+
+research-experiment-completed-ic = Experiment completed { $experiment }.

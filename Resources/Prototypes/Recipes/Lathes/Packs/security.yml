@@ -74,6 +74,14 @@
 - type: latheRecipePack
   id: SecurityEquipment
   recipes:
+  # Arcane-Start
+  - ClothingEyesNightVisionSecurityGoggles
+  - EnergyDomeTurtle
+  - SurveillanceWirelessCameraBodySecurity
+  - PepperSpray
+  - FlashlightSeclite
+  - SmokeGrenade
+  # Arcane-End
   - ClothingBackpackElectropack
   - HoloprojectorSecurity
   - HoloprojectorSecurityAdvanced # Goob

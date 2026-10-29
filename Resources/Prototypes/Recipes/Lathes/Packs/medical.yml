@@ -74,6 +74,9 @@
   - ClothingHandsGlovesLatex
   - ClothingHandsGlovesNitrile
   - ClothingMaskSterile
+  # Arcane-Start
+  - ClothingEyesNightVisionMedicalGoggles
+  # Arcane-End
 
 # These are all empty
 - type: latheRecipePack

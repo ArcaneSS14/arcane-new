@@ -9,6 +9,8 @@ using Content.Shared.Research.Prototypes;
 // Arcane-Start
 using Content.Shared.Research;
 using Robust.Shared.Utility;
+using System.Linq;
+using Content.Shared.Research.Components;
 // Arcane-End
 
 namespace Content.Goobstation.Client.Research.UI;
@@ -22,7 +24,7 @@ public sealed partial class FancyTechnologyInfoPanel : Control
 
     public TechnologyPrototype Prototype;
     public Action<TechnologyPrototype>? BuyAction;
-    public FancyTechnologyInfoPanel(TechnologyPrototype proto, bool hasAccess, ResearchAvailability availability, ResearchTechnologyLockReason lockReason, SpriteSystem sprite, IPrototypeManager prototype) // Arcane-Edit
+    public FancyTechnologyInfoPanel(TechnologyPrototype proto, bool hasAccess, ResearchAvailability availability, ResearchTechnologyLockReason lockReason, SpriteSystem sprite, IPrototypeManager prototype, TechnologyDatabaseComponent? database = null) // Arcane-Edit
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
@@ -58,11 +60,26 @@ public sealed partial class FancyTechnologyInfoPanel : Control
         // Arcane-Edit-Start
         var costMessage = new FormattedMessage();
         costMessage.AddMarkupOrThrow($"[bold]{Loc.GetString("research-console-tech-cost-title")}[/bold]");
+        var finalCosts = database == null
+            ? proto.PointCosts
+            : research.GetTechnologyFinalPointCostsForUi(database, proto);
         foreach (var cost in proto.PointCosts)
         {
             costMessage.PushNewline();
             var pointType = LocalizePointType(cost.Type);
-            costMessage.AddMarkupOrThrow($"• [color=lightgreen]{pointType}[/color]: [color=orchid]{cost.Amount}[/color]");
+            var match = finalCosts.FirstOrDefault(v => v.Type == cost.Type);
+            var finalCost = match == default ? cost.Amount : match.Amount;
+            if (finalCost >= cost.Amount)
+            {
+                costMessage.AddMarkupOrThrow($"• [color=lightgreen]{pointType}[/color]: [color=orchid]{cost.Amount}[/color]");
+                continue;
+            }
+
+            var discountPercent = cost.Amount > 0
+                ? (cost.Amount - finalCost) * 100f / cost.Amount
+                : 0f;
+
+            costMessage.AddMarkupOrThrow($"• [color=lightgreen]{pointType}[/color]: [font size=10][color=lightgray]{ToStrikethrough(cost.Amount.ToString())}[/color][/font] [color=orchid]{finalCost}[/color] [color=yellow]([bold]{discountPercent:0.#}%[/bold])[/color]");
         }
 
         TechnologyCostLabel.SetMessage(costMessage, defaultColor: color);
@@ -138,6 +155,12 @@ public sealed partial class FancyTechnologyInfoPanel : Control
     {
         var key = $"research-point-type-{type.ToLowerInvariant()}";
         return _loc.TryGetString(key, out var localized) ? localized : type;
+    }
+
+    private static string ToStrikethrough(string value)
+    {
+        const char strike = '\u0336';
+        return string.Concat(value.Select(character => $"{character}{strike}")) + '\u200B';
     }
     // Arcane-End
 
