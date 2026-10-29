@@ -33,7 +33,7 @@
 - type: latheRecipePack
   id: CargoBoards
   recipes:
-  - OreProcessorIndustrialMachineCircuitboard
+#  - OreProcessorIndustrialMachineCircuitboard # Arcane-Edit: Redundant
   - CargoTelepadMachineCircuitboard
   #- ShuttleGunKineticCircuitboard - Goobstation - Moved to MiningBoards
   # Arcane-Start

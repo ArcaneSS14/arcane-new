@@ -99,7 +99,7 @@
   id: EngineeringBoards
   recipes:
   - ThermomachineFreezerMachineCircuitBoard
-  - HellfireFreezerMachineCircuitBoard
+#  - HellfireFreezerMachineCircuitBoard # Arcane-Edit: Redundant
   - PortableScrubberMachineCircuitBoard
   - SolarControlComputerCircuitboard
   - SolarTrackerElectronics

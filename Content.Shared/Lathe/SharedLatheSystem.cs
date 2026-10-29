@@ -101,7 +101,7 @@ public abstract partial class SharedLatheSystem : EntitySystem
 
         var materials = _materialStorage.GetStoredMaterials(uid);
 
-        return HasMaterials(materials, recipe, component.MaterialUseMultiplier, amount);
+        return HasMaterials(materials, recipe, component.FinalMaterialMultiplier, amount); // Arcane-Edit: MaterialUseMultiplier > FinalMaterialMultiplier
     }
 
     /// <summary>
@@ -133,7 +133,7 @@ public abstract partial class SharedLatheSystem : EntitySystem
             return false;
         // </Trauma>
 
-        return HasMaterials(materials, recipe, ent.Comp.MaterialUseMultiplier, amount);
+        return HasMaterials(materials, recipe, ent.Comp.FinalMaterialMultiplier, amount); // Arcane-Edit: MaterialUseMultiplier > FinalMaterialMultiplier
     }
 
     /// <summary>

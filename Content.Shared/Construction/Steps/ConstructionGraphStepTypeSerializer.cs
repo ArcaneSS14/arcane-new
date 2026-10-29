@@ -9,7 +9,7 @@ namespace Content.Shared.Construction.Steps
     [TypeSerializer]
     public sealed class ConstructionGraphStepTypeSerializer : ITypeReader<ConstructionGraphStep, MappingDataNode>
     {
-        private Type? GetType(MappingDataNode node)
+        private static Type? GetType(MappingDataNode node) // Arcane-Edit: static
         {
             if (node.Has("material"))
             {
@@ -46,6 +46,11 @@ namespace Content.Shared.Construction.Steps
                 return typeof(PartAssemblyConstructionGraphStep);
             }
 
+            // Arcane-Start
+            if (node.Has("machinePart"))
+                return typeof(MachinePartConstructionGraphStep);
+            // Arcane-End
+
             // See Read below if you are adding new types
             return null;
         }
@@ -81,6 +86,11 @@ namespace Content.Shared.Construction.Steps
 
             if (type == typeof(PartAssemblyConstructionGraphStep))
                 return serializationManager.Read<PartAssemblyConstructionGraphStep>(node, hookCtx, context, notNullableOverride: true);
+
+            // Arcane-Start
+            if (type == typeof(MachinePartConstructionGraphStep))
+                return serializationManager.Read<MachinePartConstructionGraphStep>(node, hookCtx, context, notNullableOverride: true);
+            // Arcane-End
 
             // See GetType above if you are adding new types
             throw new NotImplementedException();

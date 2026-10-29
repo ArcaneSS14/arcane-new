@@ -30,6 +30,10 @@ using Content.Shared.Verbs;
 using Robust.Shared.Containers;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 namespace Content.Shared.Medical.Cryogenics;
 
 public abstract partial class SharedCryoPodSystem : EntitySystem
@@ -74,6 +78,10 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
         SubscribeLocalEvent<CryoPodComponent, ActivatableUIOpenAttemptEvent>(OnActivateUIAttempt);
         SubscribeLocalEvent<CryoPodComponent, EntRemovedFromContainerMessage>(OnEjected);
         SubscribeLocalEvent<CryoPodComponent, EntInsertedIntoContainerMessage>(OnBodyInserted);
+        // Arcane-Start
+        SubscribeLocalEvent<CryoPodComponent, RefreshPartsEvent>(OnRefreshParts);
+        SubscribeLocalEvent<CryoPodComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
 
         InitializeInsideCryoPod();
 
@@ -120,6 +128,11 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
 
         var solutionToInject =
             _solutionContainer.SplitSolution(injectingSolution.Value, entity.Comp.BeakerTransferAmount);
+
+        // Arcane-Start
+        if (entity.Comp.CoolingEfficiency > 1f)
+            solutionToInject.ScaleSolution(entity.Comp.CoolingEfficiency);
+        // Arcane-End
 
         if (solutionToInject.Volume > 0)
         {
@@ -513,4 +526,20 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
 
     [Serializable, NetSerializable]
     public sealed partial class CryoPodDragFinished : SimpleDoAfterEvent;
+
+    // Arcane-Start
+    private static void OnRefreshParts(EntityUid uid, CryoPodComponent component, RefreshPartsEvent args)
+    {
+        var matter = args.GetPartRating(MachinePartIds.MatterBin);
+        var laser = args.GetPartRating(MachinePartIds.MicroLaser);
+        component.BeakerTransferAmount = component.BaseBeakerTransferAmount * RefreshPartsEvent.GetPositiveTierMultiplier(matter);
+        component.CoolingEfficiency = RefreshPartsEvent.GetPositiveTierMultiplier(laser);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, CryoPodComponent component, UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-cryo-transfer", component.BeakerTransferAmount.Float() / component.BaseBeakerTransferAmount.Float());
+        args.AddPercentageUpgrade("machine-upgrade-cryo-cooling", component.CoolingEfficiency);
+    }
+    // Arcane-End
 }

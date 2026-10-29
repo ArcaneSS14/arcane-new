@@ -53,4 +53,12 @@ public sealed partial class EnergyReagentDispenserComponent : Component
     /// </summary>
     [DataField]
     public float RefundEnergyEfficiency = 0.5f;
+
+    // Arcane-Start
+    /// <summary>
+    /// Energy cost multiplier from machine parts.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float EnergyCostMultiplier = 1f;
+    // Arcane-End
 }

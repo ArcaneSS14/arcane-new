@@ -3,8 +3,8 @@
   name: research-technology-parts-name
   description: research-technology-parts-desc
   icon:
-    sprite: Objects/Misc/stock_parts.rsi
-    state: micro_mani
+    sprite: _Arcane/Objects/Misc/stock_parts.rsi
+    state: matter_bin
   discipline: Engineering
   tier: 1
   startingTechnology: true
@@ -17,7 +17,11 @@
   - PowerCellMedium
   - PowerCellHigh
   - MegaCellHigh
-  - MicroManipulatorStockPart
+  - CapacitorStockPart
+  - ScanningModuleStockPart
+  - MicroServoStockPart
+  - MicroLaserStockPart
+  - MatterBinStockPart
   - Igniter
   - ProximitySensor
   - RemoteSignaller
@@ -31,8 +35,8 @@
   name: research-technology-upgraded-parts-name
   description: research-technology-upgraded-parts-desc
   icon:
-    sprite: _Arcane/Objects/Power/mega_cells.rsi
-    state: super
+    sprite: _Arcane/Objects/Misc/stock_parts.rsi
+    state: advanced_matter_bin
   discipline: Engineering
   tier: 1
   announceChannels:
@@ -46,6 +50,12 @@
   recipeUnlocks:
   - PowerCellSuper
   - MegaCellSuper
+  - AdvancedCapacitorStockPart
+  - AdvancedScanningModuleStockPart
+  - NanoServoStockPart
+  - HighPowerMicroLaserStockPart
+  - AdvancedMatterBinStockPart
+  - RapidPartExchanger
   position: 12,5
 
 - type: technology
@@ -53,8 +63,8 @@
   name: research-technology-advanced-parts-name
   description: research-technology-advanced-parts-desc
   icon:
-    sprite: _Arcane/Objects/Power/mega_cells.rsi
-    state: hyper
+    sprite: _Arcane/Objects/Misc/stock_parts.rsi
+    state: super_matter_bin
   discipline: Engineering
   tier: 1
   announceChannels:
@@ -71,6 +81,11 @@
   recipeUnlocks:
   - PowerCellHyper
   - MegaCellHyper
+  - SuperCapacitorStockPart
+  - PhasicScanningModuleStockPart
+  - PicoServoStockPart
+  - UltraHighPowerMicroLaserStockPart
+  - SuperMatterBinStockPart
   position: 12,6
 
 - type: technology
@@ -78,8 +93,8 @@
   name: research-technology-parts-bluespace-name
   description: research-technology-parts-bluespace-desc
   icon:
-    sprite: _Arcane/Objects/Power/mega_cells.rsi
-    state: bluespace
+    sprite: _Arcane/Objects/Misc/stock_parts.rsi
+    state: bluespace_matter_bin
   discipline: Engineering
   tier: 1
   announceChannels:
@@ -98,6 +113,12 @@
   - PowerCellBluespace
   - MegaCellBluespace
   - PowerCellBluespaceReactor
+  - BluespaceCapacitorStockPart
+  - TriphasicScanningModuleStockPart
+  - FemtoServoStockPart
+  - QuadUltraMicroLaserStockPart
+  - BluespaceMatterBinStockPart
+  - BluespaceRapidPartExchanger
   position: 12,7
 
 - type: technology
@@ -123,6 +144,7 @@
     ScanningPointsMachineryTieredScanTier3Any: 2000
   recipeUnlocks:
   - PowerCellVortex
+  # TODO: Tier 5
   position: 12,8
 
 - type: technology
@@ -428,8 +450,6 @@
   technologyPrerequisites:
   - AdvancedParts
   recipeUnlocks:
-  - LatheUpgradeKitHyper
-  - LatheUpgradeKitCryo
   - AutodocUpgradeKitBluespace
   - UpgradeKitTubeSpeed
   position: 11,6
@@ -451,7 +471,6 @@
   technologyPrerequisites:
   - PartsBluespace
   recipeUnlocks:
-  - TurboItemRechargerCircuitboard
   - PowerCageRechargerCircuitboard
   - NuclearCentrifugeMachineCircuitboard
   - PlutoniumReactorFuelRod

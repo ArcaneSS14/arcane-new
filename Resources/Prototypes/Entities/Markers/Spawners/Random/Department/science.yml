@@ -26,7 +26,7 @@
     - PowerCellSmall
     - PowerCellMedium
     - FlashlightLantern
-    - MicroManipulatorStockPart
+    - MicroServoStockPart # Arcane-Edit: Servo
     - Beaker
     chance: 0.8
     offset: 0.2
@@ -61,7 +61,13 @@
       - id: SheetGlass10
       - id: ToolboxElectricalFilled
       - id: ToolboxMechanicalFilled
-      - id: MicroManipulatorStockPart
+      # Arcane-Start
+      - id: CapacitorStockPart
+      - id: ScanningModuleStockPart
+      - id: MicroServoStockPart # Arcane-Edit: Servo
+      - id: MicroLaserStockPart
+      - id: MatterBinStockPart
+      # Arcane-End
     # Rare Group
     - !type:GroupSelector
       weight: 10

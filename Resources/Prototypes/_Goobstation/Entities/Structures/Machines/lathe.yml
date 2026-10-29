@@ -47,7 +47,10 @@
     - AtmosTools
     - EngineeringWeapons
     - PowerCells
-    - MegaCells # Arcane
+    # Arcane-Start
+    - MegaCells
+    - PartsDynamic
+    # Arcane-End
     - Equipment
     - SpecOpsGoogles
     - EngineeringBoards
@@ -192,7 +195,10 @@
     - AtmosTools
     - EngineeringWeapons
     - PowerCells
-    - MegaCells # Arcane
+    # Arcane-Start
+    - MegaCells
+    - PartsDynamic
+    # Arcane-End
     - Chemistry
     - Janitor
     - Equipment

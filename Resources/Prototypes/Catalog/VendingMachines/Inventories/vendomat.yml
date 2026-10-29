@@ -8,7 +8,7 @@
     CableApcStack: 2
     FlashlightLantern: 2
     PowerCellSmallPrinted: 3
-    MicroManipulatorStockPart: 12
+    MicroServoStockPart: 12 # Arcane-Edit: Servo
   contrabandInventory:
     # Arcane-Start
     PowerCellHigh: 1

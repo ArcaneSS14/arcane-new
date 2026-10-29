@@ -33,7 +33,7 @@ public sealed partial class GoobLatheSystem : EntitySystem
             {
                 var add = amount * count;
                 if (recipe.ApplyMaterialDiscount)
-                    add = (int) (add * comp.MaterialUseMultiplier);
+                    add = (int) (add * comp.FinalMaterialMultiplier); // Arcane-Edit: MaterialUseMultiplier > FinalMaterialMultiplier
                 if (!_totalMaterials.ContainsKey(mat))
                     _totalMaterials[mat] = 0;
                 _totalMaterials[mat] += add;

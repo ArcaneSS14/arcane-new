@@ -13,7 +13,11 @@
     stackRequirements:
       Glass: 10
       Steel: 10
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: MachineGCSMediumCircuitboard
@@ -28,7 +32,11 @@
     stackRequirements:
       Glass: 10
       Steel: 10
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: MachineGCSHighCircuitboard
@@ -43,7 +51,11 @@
     stackRequirements:
       Glass: 10
       Steel: 10
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: MachineGCSUltraCircuitboard
@@ -58,4 +70,8 @@
     stackRequirements:
       Glass: 10
       Steel: 10
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End

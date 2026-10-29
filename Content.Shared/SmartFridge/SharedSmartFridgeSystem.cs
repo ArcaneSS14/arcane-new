@@ -11,6 +11,10 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Shared.SmartFridge;
 
@@ -36,6 +40,10 @@ public abstract partial class SharedSmartFridgeSystem : EntitySystem
         SubscribeLocalEvent<SmartFridgeComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAltVerb);
         SubscribeLocalEvent<SmartFridgeComponent, GetDumpableVerbEvent>(OnGetDumpableVerb);
         SubscribeLocalEvent<SmartFridgeComponent, DumpEvent>(OnDump);
+        // Arcane-Start
+        SubscribeLocalEvent<SmartFridgeComponent, RefreshPartsEvent>(OnRefreshParts);
+        SubscribeLocalEvent<SmartFridgeComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
 
         Subs.BuiEvents<SmartFridgeComponent>(SmartFridgeUiKey.Key,
             sub =>
@@ -58,6 +66,12 @@ public abstract partial class SharedSmartFridgeSystem : EntitySystem
         {
             if (!_whitelist.CheckBoth(used, ent.Comp.Blacklist, ent.Comp.Whitelist))
                 continue;
+
+            // Arcane-Start
+            if (container.ContainedEntities.Count >= ent.Comp.Capacity)
+                continue;
+            // Arcane-End
+
             anyInserted = true;
 
             _container.Insert(used, container);
@@ -70,6 +84,20 @@ public abstract partial class SharedSmartFridgeSystem : EntitySystem
 
         return anyInserted;
     }
+
+    // Arcane-Start
+    private void OnRefreshParts(EntityUid uid, SmartFridgeComponent component, RefreshPartsEvent args)
+    {
+        var matterTier = args.GetPartRating(MachinePartIds.MatterBin);
+        component.Capacity = (int) MathF.Round(component.BaseCapacity * RefreshPartsEvent.GetPositiveTierMultiplier(matterTier));
+        Dirty(uid, component);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, SmartFridgeComponent component, UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-smartfridge-capacity", component.Capacity / (float) component.BaseCapacity);
+    }
+    // Arcane-End
 
     private void OnInteractUsing(Entity<SmartFridgeComponent> ent, ref InteractUsingEvent args)
     {

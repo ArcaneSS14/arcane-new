@@ -2,6 +2,7 @@ using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Construction.Prototypes; // Arcane
 
 namespace Content.Shared.Construction.Components;
 
@@ -13,6 +14,14 @@ public sealed partial class MachineBoardComponent : Component
     /// </summary>
     [DataField]
     public Dictionary<ProtoId<StackPrototype>, int> StackRequirements = new();
+
+    // Arcane-Start
+    /// <summary>
+    /// The machine parts needed to construct this machine.
+    /// </summary>
+    [DataField]
+    public Dictionary<ProtoId<MachinePartPrototype>, int> PartRequirements = new();
+    // Arcane-End
 
     /// <summary>
     /// Entities needed to construct this machine, discriminated by tag.

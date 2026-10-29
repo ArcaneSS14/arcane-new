@@ -29,6 +29,9 @@ REMAP = [
     (r'^Content\.Arcane\.Server/Research/Systems/(ResearchSystem\.\w+)\.cs$', r'Content.Server/Research/Systems/\1.Arcane.cs', False),
     (r'^Content\.Arcane\.Shared/Research/(.+)\.cs$', r'Content.Shared/Research/\1.Arcane.cs', True),
     (r'^Content\.Arcane\.Client/Research/UI/(FancyResearchConsoleLogWindow\.xaml(?:\.cs)?)$', r'Content.Goobstation.Client/Research/UI/\1', True),
+    # Machine parts (Orion #385): vanilla machines use these types.
+    (r'^Content\.Arcane\.Shared/Construction/(.+)\.cs$', r'Content.Shared/Construction/\1.Arcane.cs', False),
+    (r'^Content\.Arcane\.Server/Construction/Systems/(ConstructionSystem\.Machine\.Upgrades)\.cs$', r'Content.Server/Construction/\1.Arcane.cs', False),
 ]
 
 

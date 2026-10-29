@@ -1,5 +1,5 @@
 """resolve.py FILE STRATEGY[,STRATEGY...]   strategies per remaining conflict, in order:
-ours | theirs | both (ours then theirs) | usings (header conflict: add the new usings after the file's usings)
+ours | theirs | both (ours then theirs) | pre/post (theirs' additions before/after the base text, around ours) | usings (header conflict: add the new usings after the file's usings)
 """
 import re, sys
 CONF = re.compile(r'^<<<<<<< ours\n(.*?)^\|\|\|\|\|\|\| orion-base\n(.*?)^=======\n(.*?)^>>>>>>> orion-\d+\n', re.S | re.M)
@@ -19,6 +19,12 @@ def rep(m):
         return clean(theirs).lstrip('\n')
     if st == 'both':
         return ours + clean(theirs).lstrip('\n')
+    if st == 'pre':  # theirs added lines before the base text: keep them, then ours
+        assert theirs.endswith(base), 'pre: theirs does not end with base'
+        return clean(theirs[:len(theirs) - len(base)]).lstrip('\n') + ours
+    if st == 'post':  # theirs added lines after the base text: ours, then them
+        assert theirs.startswith(base), 'post: theirs does not start with base'
+        return ours + clean(theirs[len(base):])
     if st == 'usings':
         base_usings = set(re.findall(r'^using [\w.]+;', base, re.M))
         pending_usings.extend(u for u in re.findall(r'^using [\w.]+;', theirs, re.M) if u not in base_usings)

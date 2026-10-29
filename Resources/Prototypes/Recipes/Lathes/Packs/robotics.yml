@@ -51,6 +51,7 @@
   #- BorgModuleAdvancedTopical # Goob
   - BorgModuleAdvancedMining
   # Arcane-Start
+  - BorgModuleRPED
   - BorgModuleMartyr
   - BorgModuleSyndicateWeapon
   # Arcane-End

@@ -12,6 +12,10 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Player;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Goobstation.Shared.Chemistry;
 
@@ -110,6 +114,22 @@ public sealed partial class EnergyReagentDispenserSystem : EntitySystem
 
     private static float GetEnergyCostForReagent(ProtoId<ReagentPrototype> reagentId, FixedPoint2 amount, EnergyReagentDispenserComponent comp)
         => comp.Reagents.TryGetValue(reagentId, out var cost)
-            ? (amount * cost).Float()
+            ? (amount * cost).Float() * comp.EnergyCostMultiplier // Arcane-Edit
             : 0f;
+
+    // Arcane-Start
+    [SubscribeLocalEvent]
+    private void OnPartsRefresh(Entity<EnergyReagentDispenserComponent> ent, ref RefreshPartsEvent args)
+    {
+        var matterBinTier = args.GetPartRating(MachinePartIds.MatterBin);
+        ent.Comp.EnergyCostMultiplier = RefreshPartsEvent.GetLinearMultiplier(matterBinTier, 0.1f, 0.5f, 1.2f);
+        Dirty(ent);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnUpgradeExamine(Entity<EnergyReagentDispenserComponent> ent, ref UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-energy-cost", ent.Comp.EnergyCostMultiplier);
+    }
+    // Arcane-End
 }
