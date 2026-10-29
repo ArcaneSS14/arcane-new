@@ -31,6 +31,9 @@ public sealed partial class GlobalAntagonistPrototype : IPrototype
     [DataField]
     public List<EntProtoId> MindRoles = new();
 
+    /// <summary>
+    /// Component names, only checked for presence.
+    /// </summary>
     [DataField]
-    public ComponentRegistry Components = new();
+    public List<string> Components = new();
 }

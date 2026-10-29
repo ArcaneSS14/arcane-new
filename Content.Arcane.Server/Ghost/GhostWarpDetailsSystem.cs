@@ -105,7 +105,7 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
                 }
             }
 
-            foreach (var (name, _) in antag.Components)
+            foreach (var name in antag.Components)
             {
                 if (EntityManager.ComponentFactory.TryGetRegistration(name, out var reg) && HasComp(uid, reg.Type))
                     return antag;

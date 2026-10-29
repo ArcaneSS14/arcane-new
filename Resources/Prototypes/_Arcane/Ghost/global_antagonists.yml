@@ -42,7 +42,7 @@
   description: global-antagonist-zombie-description
   weight: 4
   components:
-  - type: Zombie
+  - Zombie
 
 - type: globalAntagonist
   id: Dragon
