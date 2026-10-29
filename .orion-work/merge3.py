@@ -24,6 +24,23 @@ def transform(text, src, pr):
     return re.sub(r'Orion-(Start|End|Edit)', r'Arcane-\1', text).replace('// Orion', '// Arcane').replace('# Orion', '# Arcane')
 
 
+# Files moved out of Content.Arcane.* because vanilla partial classes or core code use them (Orion #320).
+REMAP = [
+    (r'^Content\.Arcane\.Server/Research/Systems/(ResearchSystem\.\w+)\.cs$', r'Content.Server/Research/Systems/\1.Arcane.cs', False),
+    (r'^Content\.Arcane\.Shared/Research/(.+)\.cs$', r'Content.Shared/Research/\1.Arcane.cs', True),
+    (r'^Content\.Arcane\.Client/Research/UI/(FancyResearchConsoleLogWindow\.xaml(?:\.cs)?)$', r'Content.Goobstation.Client/Research/UI/\1', True),
+]
+
+
+def remap(dst):
+    for pat, rep, need_exists in REMAP:
+        if re.match(pat, dst):
+            new = re.sub(pat, rep, dst)
+            if not need_exists or os.path.exists(new):
+                return new
+    return dst
+
+
 def main():
     args = sys.argv[1:]
     pr = int(args[0])
@@ -44,7 +61,7 @@ def main():
         if any(re.search(s, src) for s in skips) or (only and not re.search(only, src)):
             res['skipped'].append(src)
             continue
-        dst = path_transform(src) if is_orion(src) else src
+        dst = remap(path_transform(src) if is_orion(src) else src)
         if st == 'D':
             res['deleted'].append(dst)
             continue
