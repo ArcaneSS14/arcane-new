@@ -9,14 +9,11 @@
   - type: MachineBoard
     prototype: ResearchDestructiveAnalyzer
     stackRequirements:
-      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Cable: 5
-    # Arcane-Start
     partRequirements:
       Servo: 2
       ScanningModule: 2
       MicroLaser: 2
-    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -29,10 +26,7 @@
   - type: MachineBoard
     prototype: ResearchExperimentalDestructiveScanner
     stackRequirements:
-      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Glass: 5
       Cable: 5
-    # Arcane-Start
     partRequirements:
       Servo: 2
-    # Arcane-End
