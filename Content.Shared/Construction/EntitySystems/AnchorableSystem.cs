@@ -203,6 +203,13 @@ public sealed partial class AnchorableSystem : EntitySystem
             return false;
         }
 
+        if (!Valid(uid, userUid, userUid, anchoring, out var failMessage, out _, anchorable, checkTool: false))
+        {
+            if (failMessage != null)
+                _popup.PopupEntity(Loc.GetString(failMessage), uid, userUid);
+            return false;
+        }
+
         return anchoring
             ? CompleteAnchor(uid, userUid, userUid, anchorable, transform)
             : CompleteUnanchor(uid, userUid, userUid, anchorable, transform);
