@@ -1,0 +1,488 @@
+1.9.1
+
+### Resources/Prototypes/Catalog/uplink_catalog.yml
+@@ -214,5 +214,5 @@
+-    Telecrystal: 20 # goob - Originally was 65 TC but was not used due to high cost. and the same happened at 40 TC. +2 mags = 30 TC.
++    Telecrystal: 23 # goob - Originally was 65 TC but was not used due to high cost. and the same happened at 40 TC. +2 mags = 30 TC. # Orion-Edit: 20 > 23
+@@ -320,5 +320,5 @@
+-    Telecrystal: 40 # goob
++    Telecrystal: 34 # goob # Orion-Edit: 40 > 34
+@@ -337,5 +337,5 @@
+-    Telecrystal: 30 # goob
++    Telecrystal: 25 #goob # Orion-Edit: 30 > 25
+@@ -356,5 +356,5 @@
+-    Telecrystal: 15 # goob
++    Telecrystal: 18 # goob # Orion-Edit: 15 > 18
+@@ -386,5 +386,5 @@
+-    Telecrystal: 50 # goob unbunde update
++    Telecrystal: 45 # goob unbunde update # Orion-Edit: 50 > 45
+@@ -764,5 +764,5 @@
+-    Telecrystal: 2 # goob - Ammo should be cheap.
++    Telecrystal: 1 # goob - Ammo should be cheap. # Orion-Edit: 2 > 1
+@@ -800,5 +800,5 @@
+-    Telecrystal: 3 # goob
++    Telecrystal: 2 # goob # Orion-Edit: 3 > 2
+@@ -994,4 +994,12 @@
++  # Orion-Start: Low price for traitors
++  conditions:
++  - !type:StoreWhitelistCondition
++    blacklist:
++      tags:
++      - NukeOpsUplink
++      - ContravendUplink
++  # Orion-End
+@@ -1212,5 +1220,5 @@
+-    Telecrystal: 20 # goob - not quite worth 25
++    Telecrystal: 20 # goob - not quite worth 25 # Orion
+@@ -1234,5 +1242,5 @@
+-    Telecrystal: 25 # goob
++    Telecrystal: 11 # goob # Orion-Edit: 25 > 11
+@@ -1252,5 +1260,5 @@
+-    Telecrystal: 20 # goob
++    Telecrystal: 11 # goob # Orion-Edit: 20 > 11
+@@ -1587,5 +1595,5 @@
+-    Telecrystal: 10 # goob
++    Telecrystal: 5 # goob # Orion-Edit: 10 > 5
+@@ -1606,5 +1614,5 @@
+-    Telecrystal: 30 # goob
++    Telecrystal: 23 # goob # Orion-Edit: 30 > 23
+@@ -1646,5 +1654,5 @@
+-    Telecrystal: 30 # goob # Orion-Edit: 40 > 30
++    Telecrystal: 33 # goob # Orion-Edit: 40 > 33
+@@ -1663,5 +1671,5 @@
+-    Telecrystal: 18 # goob - not quite worth any more than that
++    Telecrystal: 12 # goob - not quite worth any more than that # Orion-Edit: 18 > 12
+@@ -1678,4 +1686,11 @@
++  # Orion-Start
++  conditions:
++  - !type:StoreWhitelistCondition
++    blacklist:
++      tags:
++      - NukeOpsUplink
++  # Orion-End
+@@ -1687,5 +1702,5 @@
+-    Telecrystal: 20 # goob # Orion-Edit: 25 > 20
++    Telecrystal: 13 # goob # Orion-Edit: 25 > 13
+@@ -1699,5 +1714,5 @@
+-    Telecrystal: 10 # goob
++    Telecrystal: 20 # goob # Orion-Edit: 10 > 20
+@@ -1892,5 +1907,5 @@
+-    Telecrystal: 8 # goob - holster rework
++    Telecrystal: 2 # goob - holster rework # Orion-Edit: 8 > 2
+@@ -1952,5 +1967,5 @@
+-    Telecrystal: 15 # goob
++    Telecrystal: 24 # goob # Orion-Edit: 15 > 24
+@@ -1963,5 +1978,5 @@
+-    Telecrystal: 25 # goob
++    Telecrystal: 29 # goob # Orion-Edit: 25 > 29
+@@ -1985,5 +2000,5 @@
+-    Telecrystal: 20 # goob - Meh protection no slowdown. Can definitely take a hit or two extra however.
++    Telecrystal: 10 # goob - Meh protection no slowdown. Can definitely take a hit or two extra however. # Orion-Edit: 20 > 10
+@@ -2033,5 +2048,5 @@
+-    Telecrystal: 50 # goob
++    Telecrystal: 60 # goob # Orion-Edit: 50 > 60
+
+### Resources/Prototypes/Entities/Clothing/Hands/gloves.yml
+@@ -547,8 +547,9 @@
+-    attackRate: 10
++    autoAttack: true # Orion
++    attackRate: 8 # Orion-Edit: 10 > 8
+-       Blunt: 3
++       Blunt: 5 # Orion-Edit: 3 > 5
+
+### Resources/Prototypes/Entities/Clothing/Head/helmets.yml
+@@ -673,6 +673,6 @@
+-        Heat: 0.35
+-        Caustic: 0.35
++        Heat: 0.55 # Orion-Edit: 0.35 > 0.55
++        Caustic: 0.75 # Orion-Edit: 0.35 > 0.75
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/armor.yml
+@@ -346,6 +346,6 @@
+-        Heat: 0.3
+-        Caustic: 0.3
++        Heat: 0.6 # Orion-Edit: 0.3 > 0.6
++        Caustic: 0.7 # Orion-Edit: 0.3 > 0.7
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/hardsuits.yml
+@@ -1093,7 +1093,7 @@
+-        Blunt: 0.2
++        Blunt: 0.2 
+-        Piercing: 0.2
++        Piercing: 0.15 # Orion-Edit: 0.2 > 0.15
+
+### Resources/Prototypes/Entities/Objects/Specific/Janitorial/trashbag.yml
+@@ -60,7 +60,9 @@
+-  - type: Clothing
+-    slots: [belt]
+-    sprite: Objects/Specific/Janitorial/trashbag.rsi
++  # Orion-Edit-Start: Removed
++#  - type: Clothing
++#    slots: [belt]
++#    sprite: Objects/Specific/Janitorial/trashbag.rsi
++  # Orion-Edit-End
+@@ -82,4 +84,7 @@
++  - type: Storage # Orion
++    grid:
++    - 0,0,14,5
+
+### Resources/Prototypes/Entities/Objects/Weapons/Bombs/pen.yml
+@@ -27,6 +27,6 @@
+-    maxIntensity: 8
+-    intensitySlope: 5
++    maxIntensity: 12 # Orion-Edit: 8 > 12
++    intensitySlope: 15 # Orion-Edit: 5 > 15
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Boxes/caseless_rifle.yml
+@@ -62,5 +62,5 @@
+-    capacity: 200
++    capacity: 60 # Orion-Edit: 200 > 60
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/heavy_rifle.yml
+@@ -34,3 +34,3 @@
+-        Piercing: 7 # Orion-Edit: 5 > 7
++        Piercing: 6 # Orion-Edit: 5 > 6
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/light_rifle.yml
+@@ -66,6 +66,6 @@
+-        Heat: 4
+-      armorPenetration: 0.15 # Orion
++        Heat: 5 # Orion-Edit: 4 > 5
++      armorPenetration: 0.10 # Orion
+@@ -78,5 +78,5 @@
+-        Radiation: 10
++        Radiation: 5 # Orion-Edit: 10 > 5
+-      armorPenetration: 0.15 # Orion
++      armorPenetration: 0.30 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/magnum.yml
+@@ -71,5 +71,5 @@
+-        Heat: 7
++        Heat: 10 # Orion-Edit: 7 > 10
+@@ -93,5 +93,6 @@
+-      types:
+-        Radiation: 15
++      types: 
++        Radiation: 10 # Orion-Edit: 15 > 10
++      armorPenetration: 0.25 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/pistol.yml
+@@ -60,5 +60,5 @@
+-        Heat: 2
++        Heat: 4 # Orion-Edit: 2 > 4
+@@ -72,3 +72,4 @@
+-        Piercing: 10
++        Piercing: 8 # Orion-Edit: 10 > 8
++      armorPenetration: 0.15 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/rifle.yml
+@@ -66,5 +66,5 @@
+-        Heat: 3 # Orion-Edit: 2 > 3
++        Heat: 5 # Orion-Edit: 2 > 5
+@@ -78,5 +78,5 @@
+-        Radiation: 9
++        Radiation: 5 # Orion-Edit: 9 > 5
+-      armorPenetration: 0.1 # Orion
++      armorPenetration: 0.25 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/shotgun.yml
+@@ -122,6 +122,6 @@
+-        Piercing: 40
+-        Structural: 15
++        Piercing: 45 # Orion-Edit: 40 > 45
++        Structural: 20 # Orion-Edit: 15 > 20
+@@ -156,4 +156,5 @@
++      armorPenetration: -0.1 # Orion
+@@ -180,6 +181,7 @@
+-        Blunt: 3
+-        Heat: 3
++        Blunt: 4 # Orion-Edit: 3 > 4
++        Heat: 6 # Orion-Edit: 3 > 6
++      armorPenetration: -0.1 # Orion
+@@ -233,4 +235,6 @@
++  - type: StaminaDamageOnCollide # Orion
++    damage: 3
+@@ -306,5 +310,5 @@
+-    fireStacks: 1
++    fireStacks: 2 # Orion-Edit: 1 > 2
+@@ -330,6 +334,7 @@
+-        Radiation: 5
++        Radiation: 2 # Orion-Edit: 5 > 2
++      armorPenetration: 0.15 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Battery/battery_guns.yml
+@@ -162,5 +162,5 @@
+-    projectileSpeed: 20 # Orion
++    projectileSpeed: 26 # Orion
+@@ -515,11 +515,11 @@
+-    fireRate: 4 # Goobstation
++    fireRate: 2 # Goobstation # Orion-Edit: 4 > 2
+-    proto: RedLaser
+-    fireCost: 50 # Goobstation
++    proto: RedMediumLaser # Orion-Edit
++    fireCost: 25 # Goobstation # Orion-Edit: 50 > 25
+@@ -767,9 +767,10 @@
++    fireRate: 1.7 # Orion
+-    fireCost: 100
++    fireCost: 40 # Orion-Edit: 100 > 40
+@@ -822,4 +823,5 @@
++    projectileSpeed: 20 # Orion
+@@ -893,4 +895,5 @@
++    projectileSpeed: 20 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/LMGs/lmgs.yml
+@@ -75,8 +75,8 @@
+-    maxAngle: 45
+-    angleIncrease: 3 # Orion-Edit: 4 > 3
++    maxAngle: 50 # Orion-Edit: 45 > 50
++    angleIncrease: 2.5 # Orion-Edit: 4 > 2.5
+-    fireRate: 8
++    fireRate: 7.5 # Orion-Edit: 8 > 7.5
+@@ -180,8 +180,8 @@
+-      maxAngle: 20 # Orion-Edit: 25 > 20
+-      angleIncrease: 3 # Orion-Edit: 4 > 3
++      maxAngle: 25
++      angleIncrease: 3 # Orion-Edit: 4 > 2
+-      fireRate: 8
++      fireRate: 7.5 # Orion-Edit: 8 > 7.5
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Pistols/pistols.yml
+@@ -174,7 +174,7 @@
+-    missChance: 0.4
++    missChance: 0.2 # Orion-Edit: 4 > 2
+-    spreadAddition: 40
++    spreadAddition: 20 # Orion-Edit: 40 > 20
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Projectiles/projectiles.yml
+@@ -1025,5 +1025,5 @@
+-    intensitySlope: 5
++    intensitySlope: 10 # Orion-Edit: 5 > 10
+@@ -1071,5 +1071,5 @@
+-    capacity: 30
++    capacity: 50 # Orion-Edit: 30 > 50
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Rifles/rifles.yml
+@@ -360,5 +360,5 @@
+-    burstFireRate: 10 # Goob
++    burstFireRate: 15 # Goob # Orion-Edit: 10 > 15
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/SMGs/smgs.yml
+@@ -204,4 +204,6 @@
++    maxAngle: 11 # Orion
++    angleIncrease: 1.5 # Orion
+
+### Resources/Prototypes/Entities/Objects/Weapons/Guns/Shotguns/shotguns.yml
+@@ -93,4 +93,5 @@
++    projectileSpeed: 30 # Orion
+@@ -105,5 +106,5 @@
+-    capacity: 7
++    capacity: 9 # Orion-Edit: 7 > 9
+@@ -264,5 +265,5 @@
+-    capacity: 9 # Orion
++    capacity: 8 # Orion
+@@ -283,5 +284,5 @@
+-  description: An old and faithful pump action, the Kammerer is cheap, light, and would probably still function if you left it in the burn chamber for a week. Popular for civilian use, and loved by NanoTrasen for its minuscule price tag. Loads 7 rounds of 12 Gauge. # Goobstation
++  description: An old and faithful pump action, the Kammerer is cheap, light, and would probably still function if you left it in the burn chamber for a week. Popular for civilian use, and loved by NanoTrasen for its minuscule price tag. Loads 12 Gauge rounds. # Goobstation # Orion-Edit
+@@ -301,5 +302,5 @@
+-    spread: 0.6
++    spread: 0.65 # Orion-Edit: 0.6 > 0.65
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/e_sword.yml
+@@ -372,6 +372,6 @@
+-        Slash: 10
+-        Heat: 10
++        Slash: 11 # Orion-Edit: 10 > 11
++        Heat: 11 # Orion-Edit: 10 > 11
+
+### Resources/Prototypes/Entities/Objects/Weapons/security.yml
+@@ -179,5 +179,5 @@
+-    bluntStaminaDamageFactor: 2.0
++    bluntStaminaDamageFactor: 1.5 # Orion-Edit: 2.0 > 1.5
+
+### Resources/Prototypes/Entities/Structures/Storage/Closets/big_boxes.yml
+@@ -92,5 +92,5 @@
+-      movementVisibilityRate: 0.20
++      movementVisibilityRate: 0.17 # Orion-Edit: 20 > 17
+
+### Resources/Prototypes/EstacaoPirata/Catalog/uplink_catalog.yml
+@@ -10,5 +10,5 @@
+-    Telecrystal: 3 # goob
++    Telecrystal: 1 # goob # Orion-Edit: 3 > 1
+
+### Resources/Prototypes/_Goobstation/Catalog/Fills/Crates/syndicate.yml
+@@ -54,4 +54,6 @@
++        - id: SpeedLoaderLightRifle # Orion
++          amount: 10
+
+### Resources/Prototypes/_Goobstation/Catalog/uplink_catalog.yml
+@@ -68,5 +68,5 @@
+-    Telecrystal: 15 # Orion-Edit: 30 > 15
++    Telecrystal: 9 # Orion-Edit: 30 > 9
+@@ -98,5 +98,5 @@
+-    Telecrystal: 30
++    Telecrystal: 21 # Orion-Edit: 30 > 21
+@@ -349,5 +349,5 @@
+-    Telecrystal: 20
++    Telecrystal: 22 # Orion-Edit: 20 > 22
+@@ -360,5 +360,5 @@
+-    Telecrystal: 50
++    Telecrystal: 60 # Orion-Edit: 50 > 60
+@@ -371,5 +371,5 @@
+-    Telecrystal: 20
++    Telecrystal: 15 # Orion-Edit: 20 > 15
+@@ -381,5 +381,5 @@
+-    Telecrystal: 60
++    Telecrystal: 48 # Orion-Edit: 60 > 48
+@@ -491,5 +491,5 @@
+-    Telecrystal: 38 # This + esword = 75 TC
++    Telecrystal: 36 # This + esword = 75 TC # Orion-Edit: 38 > 36
+@@ -553,5 +553,5 @@
+-    Telecrystal: 50
++    Telecrystal: 75 # Orion-Edit: 50 > 75
+@@ -679,5 +679,5 @@
+-    Telecrystal: 30
++    Telecrystal: 45 # Orion-Edit: 30 > 45
+@@ -820,5 +820,5 @@
+-    Telecrystal: 30
++    Telecrystal: 23 # Orion-Edit: 30 > 23
+@@ -1189,5 +1189,5 @@
+-    Telecrystal: 40
++    Telecrystal: 55 # Orion-Edit: 40 > 55
+@@ -1205,5 +1205,5 @@
+-    Telecrystal: 45 # Orion-Edit: 66 > 45
++    Telecrystal: 40 # Orion-Edit: 66 > 40
+@@ -1221,5 +1221,5 @@
+-    Telecrystal: 60
++    Telecrystal: 50 # Orion-Edit: 60 > 50
+@@ -1358,5 +1358,5 @@
+-    Telecrystal: 12
++    Telecrystal: 7 # Orion-Edit: 12 > 7
+@@ -1475,5 +1475,5 @@
+-    Telecrystal: 40 # goob
++    Telecrystal: 19 # goob # Orion-Edit: 40 > 19
+@@ -1684,5 +1684,5 @@
+-    Telecrystal: 35
++    Telecrystal: 31 # Orion-Edit: 35 > 31
+@@ -1694,5 +1694,5 @@
+-    Telecrystal: 70
++    Telecrystal: 76 # Orion-Edit: 70 > 76
+@@ -1808,7 +1808,16 @@
+-  - !type:BuyerSpeciesCondition
+-    whitelist:
+-    - Human
++  # Orion-Edit-Start
++#  - !type:BuyerSpeciesCondition
++#    whitelist:
++#    - Human
++  # Orion-Edit-End
++  # Orion-Start: Another cost for nukies
++  - !type:StoreWhitelistCondition
++    blacklist:
++      tags:
++        - NukeOpsUplink
++        - ContravendUplink
++  # Orion-End
+@@ -1858,5 +1867,5 @@
+-    Telecrystal: 3
++    Telecrystal: 1 # Orion-Edit: 3 > 1
+
+### Resources/Prototypes/_Goobstation/Entities/Clothing/OuterClothing/coats.yml
+@@ -75,11 +75,11 @@
+-        Piercing: 0.7
++        Piercing: 0.5 # Orion-Edit: 0.7 > 0.5
+-    delayDelta: 1.5
+-    knockdownTimeDelta: -1.5
++    delayDelta: 3 # Orion-Edit: 1.5 > 3
++    knockdownTimeDelta: -1 # Orion-Edit: -1.5 > -1
+-    damageCoefficient: 0.7
++    damageCoefficient: 0.65 # Orion-Edit: 0.7 > 0.65
+
+### Resources/Prototypes/_Goobstation/Entities/Clothing/OuterClothing/hardsuits.yml
+@@ -213,8 +213,8 @@
+-        Blunt: 0.1
+-        Slash: 0.1 # holy shit bruv
++        Blunt: 0.2 # Orion-Edit: 0.1 > 0.2
++        Slash: 0.2 # holy shit bruv # Orion-Edit: 0.1 > 0.2
+-        Heat: 0.1
++        Heat: 0.2 # Orion-Edit: 0.1 > 0.2
+@@ -240,5 +240,5 @@
+-    damageCoefficient: 0.4 # Orion-Edit: 0.1 > 0.4
++    damageCoefficient: 0.6 # Orion-Edit: 0.1 > 0.6
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Specific/Mech/mechs.yml
+@@ -150,5 +150,5 @@
+-    baseSprintSpeed: 3.5 #Goobedit
++    baseSprintSpeed: 4 #Goobedit # Orion-Edit: 3.5 > 4
+@@ -224,5 +224,5 @@
+-    baseSprintSpeed: 2 #Goobedit
++    baseSprintSpeed: 2.6 #Goobedit # Orion-Edit: 2 > 2.6
+@@ -350,5 +350,5 @@
+-    baseSprintSpeed: 1 #Goobedit
++    baseSprintSpeed: 1.5 #Goobedit # Orion-Edit: 1 > 1.5
+@@ -423,5 +423,5 @@
+-    baseSprintSpeed: 2.2 
++    baseSprintSpeed: 3 # Orion-Edit: 2.2 > 3
+@@ -499,5 +499,5 @@
+-    baseSprintSpeed: 2.2 #Goobedit
++    baseSprintSpeed: 3.7 #Goobedit # Orion-Edit: 2.2 > 3.7
+@@ -572,5 +572,5 @@
+-    baseSprintSpeed: 1 #Goobedit
++    baseSprintSpeed: 1.5 #Goobedit # Orion-Edit: 1 > 1.5
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Guns/Battery/battery_guns.yml
+@@ -38,5 +38,5 @@
+-    projectileSpeed: 20 # Orion
++    projectileSpeed: 26 # Orion
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Guns/Rifles/rifle.yml
+@@ -114,5 +114,5 @@
+-    fireRate: 6
++    fireRate: 6.5 # Orion-Edit: 6 > 6.5
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Guns/SMGs/smgs.yml
+@@ -25,5 +25,5 @@
+-    fireRate: 12.5 # Reduced fireRate and increased projectileSpeed
++    fireRate: 13.5 # Reduced fireRate and increased projectileSpeed # Orion-Edit: 12.5 > 13.5
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Guns/Shotguns/shotguns.yml
+@@ -36,5 +36,5 @@
+-    fireRate: 1.4
++    fireRate: 1.4 # Orion-Edit: 1.4 > 1.3
+
+### Resources/Prototypes/_Goobstation/Entities/Objects/Weapons/Guns/syringe_gun.yml
+@@ -106,4 +106,8 @@
++  - type: Storage # Orion
++    maxItemSize: Tiny
++    grid:
++    - 0,0,0,1
+
+### Resources/Prototypes/_Orion/Catalog/uplink_catalog.yml
+@@ -16,12 +16,44 @@
+-    Telecrystal: 10
++    Telecrystal: 30
+-    - !type:StoreWhitelistCondition
+-      whitelist:
+-        tags:
+-          - NukeOpsUplink
++  - !type:StoreWhitelistCondition
++    whitelist:
++      tags:
++      - NukeOpsUplink
++
++- type: listing
++  id: NukeOpsUplinkHoloCigar
++  name: uplink-holo-cigar-name
+
+### Resources/Prototypes/_Orion/Entities/Objects/Tools/energy_dome.yml
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/308win.yml
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/30rifle.yml
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Ammunition/Projectiles/50bmg.yml
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Energy/energy.yml
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Shotguns/shotguns.yml
+
+### Resources/Prototypes/_White/Entities/Objects/Weapons/Melee/daggers.yml

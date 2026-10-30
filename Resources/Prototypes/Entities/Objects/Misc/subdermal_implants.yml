@@ -293,7 +293,7 @@
     - type: TriggerOnMobstateChange #activates the timer
       mobState:
       - Dead
-      preventSuicide: true
+      preventSuicide: false # Arcane-Edit: true > false
     - type: TimerTrigger
       delay: 7
       beepSound:
@@ -310,9 +310,11 @@
       - timer
     - type: Explosive
       explosionType: Default
-      totalIntensity: 3500
-      intensitySlope: 15
-      maxIntensity: 70
+      # Arcane-Edit-Start: Orion macrobomb buff (3500/15/70 > 4000/5/50)
+      totalIntensity: 4000
+      intensitySlope: 5
+      maxIntensity: 50
+      # Arcane-Edit-End
       canCreateVacuum: true
 
 - type: entity

@@ -1,0 +1,16 @@
+[Feature] Lavaland Hermit Ghost Role
+
+### Content.Client/Administration/AdminNameOverlay.cs
+@@ -148,5 +148,5 @@ internal sealed class AdminNameOverlay : Overlay
+-        ["SoloAntagonist", "TeamAntagonist", "SiliconAntagonist", "FreeAgent", "InteQ"]; // Europa-Edit - Added InteQ
++        ["SoloAntagonist", "TeamAntagonist", "SiliconAntagonist", "FreeAgent", "InteQ", "GhostRole"]; // Europa-Edit - Added InteQ, GhostRole
+
+### Resources/Prototypes/_Lavaland/Procedural/lavaland_grid_ruins.yml
+@@ -88,5 +88,5 @@
+-  path: /Maps/_Lavaland/Lavaland/ruin_hermit.yml
++  path: /Maps/_Europa/Lavaland/ruin_hermit.yml # Europa-Edit | Get real hermit ghost role
+
+### Resources/Prototypes/_Lavaland/Procedural/ruin_pools.yml
+@@ -38,5 +38,5 @@
+-    Hermit: 5
++    Hermit: 2 # Europa-Edit | 5 > 2

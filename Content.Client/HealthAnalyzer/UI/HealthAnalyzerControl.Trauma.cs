@@ -28,6 +28,7 @@ using Robust.Shared.Utility;
 // Arcane-Start
 using Content.Arcane.Common.Medical.HealthAnalyzer;
 using Content.Shared.Damage;
+using Content.Shared.Eye.Blinding.Components; // Arcane
 // Arcane-End
 
 namespace Content.Client.HealthAnalyzer.UI;
@@ -241,6 +242,17 @@ public sealed partial class HealthAnalyzerControl
                 Margin = new Thickness(0, 4),
             });
         }
+
+        // Arcane-Start: Orion #374
+        if (_entityManager.TryGetComponent<BlindableComponent>(patient, out var blindable) && blindable.IsBlind)
+        {
+            ConditionsListContainer.AddChild(new RichTextLabel
+            {
+                Text = Loc.GetString("health-analyzer-window-entity-blind-text"),
+                Margin = new Thickness(0, 4),
+            });
+        }
+        // Arcane-End
 
         foreach (var part in _body.GetOrgans<WoundableComponent>(patient)) // Arcane-Edit
         {

@@ -36,6 +36,16 @@
                                                Align="Left"
                                                FontColorOverride="{x:Static maths:Color.DarkGray}"
                                                StyleClasses="LabelBig" HorizontalExpand="True" />
+                                        <!-- Arcane-Start: ready manifest -->
+                                        <Button Name="ManifestButton" Access="Public"
+                                                Text="{Loc 'ui-lobby-manifest-button'}"
+                                                StyleClasses="ButtonBig" MinWidth="137" />
+                                        <!-- Arcane-End -->
+                                        <!-- Arcane-Start: custom ghosts -->
+                                        <Button Name="CustomGhostsButton" Access="Public"
+                                                Text="{Loc 'ui-lobby-custom-ghosts-button'}"
+                                                StyleClasses="ButtonBig" MinWidth="137" />
+                                        <!-- Arcane-End -->
                                         <Button Name="ReadyButton" Access="Public" ToggleMode="True"
                                                 Text="{Loc 'ui-lobby-ready-up-button'}"
                                                 StyleClasses="ButtonBig" MinWidth="137" />

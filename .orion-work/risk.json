@@ -1,0 +1,694 @@
+[
+{
+"pr": "208",
+"inh": 43,
+"eu": 507,
+"arc": 0,
+"new": 70,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Clothing",
+"Content.Client/Inventory",
+"Content.Client/Lobby",
+"Content.Client/PDA"
+]
+},
+{
+"pr": "76",
+"inh": 28,
+"eu": 16,
+"arc": 0,
+"new": 2,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Content.Client.csproj",
+"Content.Client/Humanoid",
+"Content.Client/Lobby",
+"Content.Server/Chat"
+]
+},
+{
+"pr": "239",
+"inh": 15,
+"eu": 61,
+"arc": 0,
+"new": 21,
+"risk": "высокий",
+"kinds": [
+"Content.Server/Administration",
+"Resources/Locale",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "183",
+"inh": 14,
+"eu": 10,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Client/FlavorText",
+"Content.Client/Lobby",
+"Content.Server.Database/Migrations",
+"Content.Server.Database/Model.cs"
+]
+},
+{
+"pr": "302",
+"inh": 12,
+"eu": 90,
+"arc": 0,
+"new": 4,
+"risk": "высокий",
+"kinds": [
+"Content.Client/PDA",
+"Content.Server/CartridgeLoader",
+"Content.Server/PDA",
+"Content.Shared/CartridgeLoader"
+]
+},
+{
+"pr": "181",
+"inh": 7,
+"eu": 4,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Server/Research",
+"Content.Shared/Anomaly",
+"Content.Shared/Research",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "275",
+"inh": 6,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Sprite",
+"Content.Shared/Chemistry",
+"Content.Shared/Nutrition",
+"Content.Shared/_Shitcode"
+]
+},
+{
+"pr": "29",
+"inh": 6,
+"eu": 2,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Audio",
+"Content.Server/Audio",
+"Content.Shared/Audio"
+]
+},
+{
+"pr": "350",
+"inh": 6,
+"eu": 43,
+"arc": 0,
+"new": 3,
+"risk": "высокий",
+"kinds": [
+"Content.Shared/Bed",
+"Content.Shared/Buckle",
+"Content.Shared/Rotation",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "351",
+"inh": 6,
+"eu": 4,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Audio",
+"Content.Server/Audio",
+"Content.Shared/Audio"
+]
+},
+{
+"pr": "216",
+"inh": 5,
+"eu": 5,
+"arc": 0,
+"new": 1,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Input",
+"Content.Client/Options",
+"Content.Shared/Input",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "363",
+"inh": 5,
+"eu": 11,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "372",
+"inh": 5,
+"eu": 6,
+"arc": 0,
+"new": 1,
+"risk": "высокий",
+"kinds": [
+"Content.Server/Anomaly",
+"Content.Shared/Anomaly",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "23",
+"inh": 4,
+"eu": 34,
+"arc": 0,
+"new": 19,
+"risk": "высокий",
+"kinds": [
+"Content.Server/NPC",
+"Content.Shared/Abilities",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "233",
+"inh": 4,
+"eu": 7,
+"arc": 0,
+"new": 3,
+"risk": "высокий",
+"kinds": [
+"Content.Server/AlertLevel",
+"Content.Server/Light",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "367",
+"inh": 4,
+"eu": 9,
+"arc": 0,
+"new": 7,
+"risk": "высокий",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "186",
+"inh": 3,
+"eu": 0,
+"arc": 0,
+"new": 10,
+"risk": "высокий",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "232",
+"inh": 3,
+"eu": 11,
+"arc": 0,
+"new": 0,
+"risk": "высокий",
+"kinds": [
+"Content.Client/Lobby",
+"Content.Server/GameTicking"
+]
+},
+{
+"pr": "117",
+"inh": 2,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Shared/CombatMode"
+]
+},
+{
+"pr": "187",
+"inh": 2,
+"eu": 0,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Server/Construction",
+"Content.Shared/Construction"
+]
+},
+{
+"pr": "211",
+"inh": 2,
+"eu": 7,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "220",
+"inh": 2,
+"eu": 0,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Server/GameTicking",
+"Resources/Locale"
+]
+},
+{
+"pr": "256",
+"inh": 2,
+"eu": 11,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Client/Chat",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "381",
+"inh": 2,
+"eu": 31,
+"arc": 0,
+"new": 2,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "383",
+"inh": 2,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Server/Administration",
+"Content.Server/GameTicking"
+]
+},
+{
+"pr": "438",
+"inh": 2,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Shared/_Shitmed"
+]
+},
+{
+"pr": "458",
+"inh": 2,
+"eu": 2,
+"arc": 0,
+"new": 4,
+"risk": "средний",
+"kinds": [
+"Content.Shared/Medical",
+"Resources/Prototypes"
+]
+},
+{
+"pr": "55",
+"inh": 2,
+"eu": 4,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Server/Atmos"
+]
+},
+{
+"pr": "61",
+"inh": 2,
+"eu": 9,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Server/StationEvents"
+]
+},
+{
+"pr": "74",
+"inh": 2,
+"eu": 6,
+"arc": 0,
+"new": 2,
+"risk": "средний",
+"kinds": [
+"Content.Server/AlertLevel"
+]
+},
+{
+"pr": "110",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Server/Administration"
+]
+},
+{
+"pr": "143",
+"inh": 1,
+"eu": 16,
+"arc": 0,
+"new": 2,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "162",
+"inh": 1,
+"eu": 5,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Shared/Weapons"
+]
+},
+{
+"pr": "210",
+"inh": 1,
+"eu": 2,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "245",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Server/Administration"
+]
+},
+{
+"pr": "258",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "27",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "349",
+"inh": 1,
+"eu": 6,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "353",
+"inh": 1,
+"eu": 3,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "356",
+"inh": 1,
+"eu": 106,
+"arc": 0,
+"new": 8,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "376",
+"inh": 1,
+"eu": 12,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Shared/Paper"
+]
+},
+{
+"pr": "402",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Shared/Movement"
+]
+},
+{
+"pr": "420",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Content.Shared/Buckle"
+]
+},
+{
+"pr": "434",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 0,
+"risk": "средний",
+"kinds": [
+"Content.Client/Administration"
+]
+},
+{
+"pr": "450",
+"inh": 1,
+"eu": 0,
+"arc": 0,
+"new": 3,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "63",
+"inh": 1,
+"eu": 55,
+"arc": 0,
+"new": 1,
+"risk": "средний",
+"kinds": [
+"Resources/Prototypes"
+]
+},
+{
+"pr": "17",
+"inh": 0,
+"eu": 7,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "25",
+"inh": 0,
+"eu": 43,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "283",
+"inh": 0,
+"eu": 28,
+"arc": 0,
+"new": 1,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "31",
+"inh": 0,
+"eu": 40,
+"arc": 0,
+"new": 1,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "328",
+"inh": 0,
+"eu": 0,
+"arc": 0,
+"new": 2,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "354",
+"inh": 0,
+"eu": 9,
+"arc": 0,
+"new": 3,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "359",
+"inh": 0,
+"eu": 4,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "370",
+"inh": 0,
+"eu": 45,
+"arc": 0,
+"new": 2,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "375",
+"inh": 0,
+"eu": 3,
+"arc": 0,
+"new": 1,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "38",
+"inh": 0,
+"eu": 21,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "382",
+"inh": 0,
+"eu": 223,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "40",
+"inh": 0,
+"eu": 15,
+"arc": 0,
+"new": 2,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "429",
+"inh": 0,
+"eu": 1,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "445",
+"inh": 0,
+"eu": 0,
+"arc": 0,
+"new": 2,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "57",
+"inh": 0,
+"eu": 12,
+"arc": 0,
+"new": 0,
+"risk": "низкий",
+"kinds": []
+},
+{
+"pr": "64",
+"inh": 0,
+"eu": 0,
+"arc": 0,
+"new": 1,
+"risk": "низкий",
+"kinds": []
+}
+]

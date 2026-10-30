@@ -98,6 +98,7 @@
     prefix: "ghost_"
   - type: GhostHearing
   - type: ShowElectrocutionHUD
+  - type: ToggleableHUD # Arcane
   - type: IntrinsicRadioReceiver
   - type: ActiveRadio
     receiveAllChannels: true
@@ -123,6 +124,7 @@
     tags:
     - AllowGhostShownByEvent
     - AllowPortalTraversal
+    - NoConsoleSound # Arcane
     - PreventPortalCollision
 
 - type: entity

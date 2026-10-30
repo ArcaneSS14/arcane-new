@@ -1,0 +1,21 @@
+# Underwear slots (Orion #208)
+
+- type: inventorySlot
+  id: earsright
+  flags: EARSRIGHT
+
+- type: inventorySlot
+  id: underwear
+  flags: UNDERWEAR
+
+- type: inventorySlot
+  id: undershirt
+  flags: UNDERSHIRT
+
+- type: inventorySlot
+  id: socks
+  flags: SOCKS
+
+- type: inventorySlot
+  id: wrists
+  flags: WRISTS

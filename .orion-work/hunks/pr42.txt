@@ -1,0 +1,14 @@
+[Tweak] Remove Remove Tider Main Syndrome
+
+### Resources/Prototypes/Roles/Jobs/Civilian/assistant.yml
+@@ -88,9 +88,9 @@
+-  special:
+-  - !type:PlaytimeDegrade # MisandryBox - tider main syndrome
+-    since: 600
+-    until: 24600
+-    disarmMalus: true
++#  special: # Europa-Remove
++#  - !type:PlaytimeDegrade # MisandryBox - tider main syndrome
++#    since: 600
++#    until: 24600
++#    disarmMalus: true

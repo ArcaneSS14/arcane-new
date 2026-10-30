@@ -10,12 +10,16 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Components;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Server.Audio.Jukebox;
 
 public sealed partial class JukeboxSystem : SharedJukeboxSystem
 {
     [Dependency] private AppearanceSystem _appearanceSystem = default!;
+    [Dependency] private IGameTiming _timing = default!; // Arcane
+
+    private static readonly TimeSpan LoopRestartMargin = TimeSpan.FromSeconds(0.1); // Arcane
 
     public override void Initialize()
     {
@@ -25,6 +29,10 @@ public sealed partial class JukeboxSystem : SharedJukeboxSystem
         SubscribeLocalEvent<JukeboxComponent, JukeboxPauseMessage>(OnJukeboxPause);
         SubscribeLocalEvent<JukeboxComponent, JukeboxStopMessage>(OnJukeboxStop);
         SubscribeLocalEvent<JukeboxComponent, JukeboxSetTimeMessage>(OnJukeboxSetTime);
+        // Arcane-Start
+        SubscribeLocalEvent<JukeboxComponent, JukeboxSetVolumeMessage>(OnJukeboxSetVolume);
+        SubscribeLocalEvent<JukeboxComponent, JukeboxToggleLoopMessage>(OnJukeboxToggleLoop);
+        // Arcane-End
         SubscribeLocalEvent<JukeboxComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<JukeboxComponent, ComponentShutdown>(OnComponentShutdown);
 
@@ -57,6 +65,22 @@ public sealed partial class JukeboxSystem : SharedJukeboxSystem
             SetTime(ent.AsNullable(), args.SongTime + offset);
         }
     }
+
+    // Arcane-Start
+    private void OnJukeboxSetVolume(Entity<JukeboxComponent> ent, ref JukeboxSetVolumeMessage args)
+    {
+        ent.Comp.Volume = Math.Clamp(args.Volume, JukeboxComponent.MinSlider, JukeboxComponent.MaxSlider);
+        Dirty(ent);
+
+        Audio.SetVolume(ent.Comp.AudioStream, SliderToVolume(ent.Comp.Volume));
+    }
+
+    private void OnJukeboxToggleLoop(Entity<JukeboxComponent> ent, ref JukeboxToggleLoopMessage args)
+    {
+        ent.Comp.LoopEnabled = !ent.Comp.LoopEnabled;
+        Dirty(ent);
+    }
+    // Arcane-End
 
     private void OnPowerChanged(Entity<JukeboxComponent> entity, ref PowerChangedEvent args)
     {
@@ -96,6 +120,20 @@ public sealed partial class JukeboxSystem : SharedJukeboxSystem
                     TryUpdateVisualState((uid, comp));
                 }
             }
+
+            // Arcane-Start: restart a looped track just before it ends
+            if (!comp.LoopEnabled
+                || !TryComp<AudioComponent>(comp.AudioStream, out var audio)
+                || audio.State != AudioState.Playing)
+                continue;
+
+            var length = Audio.GetAudioLength(audio.FileName);
+            if (_timing.CurTime - audio.AudioStart < length - LoopRestartMargin)
+                continue;
+
+            Audio.SetState(comp.AudioStream, AudioState.Stopped, component: audio);
+            Audio.SetState(comp.AudioStream, AudioState.Playing, component: audio);
+            // Arcane-End
         }
     }
 
@@ -163,7 +201,7 @@ public sealed partial class JukeboxSystem : SharedJukeboxSystem
                 return false;
             }
 
-            ent.Comp.AudioStream = Audio.PlayPvs(jukeboxProto.Path, ent, AudioParams.Default.WithMaxDistance(10f))?.Entity;
+            ent.Comp.AudioStream = Audio.PlayPvs(jukeboxProto.Path, ent, AudioParams.Default.WithMaxDistance(10f).WithVolume(SliderToVolume(ent.Comp.Volume)))?.Entity; // Arcane-Edit: volume slider
             Dirty(ent);
             // <Trauma>
             if (ent.Comp.AudioStream is {} audio)

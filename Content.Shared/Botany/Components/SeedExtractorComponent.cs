@@ -17,4 +17,12 @@ public sealed partial class SeedExtractorComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public MinMax BaseSeeds = new(1, 3);
+
+    // Arcane-Start
+    /// <summary>
+    /// Multiplier for the amount of extracted seeds, from machine parts.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float SeedMultiplier = 1f;
+    // Arcane-End
 }

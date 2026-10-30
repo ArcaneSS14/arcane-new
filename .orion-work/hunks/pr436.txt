@@ -1,0 +1,9 @@
+edit
+
+### Resources/Prototypes/Entities/Mobs/Customization/Markings/face.yml
+@@ -91,5 +91,5 @@
+-  bodyPart: Face
++  bodyPart: Eyes  # Orion-Edit - technically this is a face marking, but it needs to be on the eyes layer in order to prevent overlaying glasses
+@@ -105,5 +105,5 @@
+-  bodyPart: Face
++  bodyPart: Eyes # Orion-Edit - technically this is a face marking, but it needs to be on the eyes layer in order to prevent overlaying glasses

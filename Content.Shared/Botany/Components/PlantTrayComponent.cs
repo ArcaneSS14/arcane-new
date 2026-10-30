@@ -82,6 +82,20 @@ public sealed partial class PlantTrayComponent : Component
     [DataField, AutoNetworkedField]
     public float TrayConsumptionMultiplier = 2f;
 
+    // Arcane-Start
+    /// <summary>
+    /// Water, nutrition and consumption values before machine part upgrades. Taken on the first part refresh.
+    /// </summary>
+    [DataField]
+    public float? BaseMaxWaterLevel;
+
+    [DataField]
+    public float? BaseMaxNutritionLevel;
+
+    [DataField]
+    public float? BaseTrayConsumptionMultiplier;
+    // Arcane-End
+
     /// <summary>
     /// Currently planted plant entity (parented to this tray).
     /// </summary>

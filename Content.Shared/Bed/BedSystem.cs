@@ -16,6 +16,10 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Shared.Bed;
 
@@ -48,6 +52,10 @@ public sealed partial class BedSystem : EntitySystem
         SubscribeLocalEvent<StasisBedComponent, UnstrappedEvent>(OnStasisUnstrapped);
         SubscribeLocalEvent<StasisBedComponent, GotEmaggedEvent>(OnStasisEmagged);
         SubscribeLocalEvent<StasisBedComponent, PowerChangedEvent>(OnPowerChanged);
+        // Arcane-Start
+        SubscribeLocalEvent<StasisBedComponent, RefreshPartsEvent>(OnStasisRefreshParts);
+        SubscribeLocalEvent<StasisBedComponent, UpgradeExamineEvent>(OnStasisUpgradeExamine);
+        // Arcane-End
         SubscribeLocalEvent<StasisBedBuckledComponent, GetMetabolicMultiplierEvent>(OnStasisGetMetabolicMultiplier);
     }
 
@@ -68,8 +76,10 @@ public sealed partial class BedSystem : EntitySystem
         _actionsSystem.AddAction(args.Buckle, ref bed.Comp.SleepAction, SleepingSystem.SleepActionId, bed);
         Dirty(bed);
 
+        // Arcane-Edit-Start: double beds strap two entities
         // Single action entity, cannot strap multiple entities to the same bed.
-        DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // Arcane-Edit-End
     }
 
     private void OnUnstrapped(Entity<HealOnBuckleComponent> bed, ref UnstrappedEvent args)
@@ -85,7 +95,10 @@ public sealed partial class BedSystem : EntitySystem
             _sleepingSystem.TryWaking(args.Buckle.Owner);
         }
 
-        RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-Start: keep healing while a double bed is still occupied
+        if (args.Strap.Comp.BuckledEntities.Count == 0)
+            RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-End
     }
 
     private void OnStasisStrapped(Entity<StasisBedComponent> ent, ref StrappedEvent args)
@@ -178,4 +191,18 @@ public sealed partial class BedSystem : EntitySystem
             }
         }
     }
+
+    // Arcane-Start
+    private void OnStasisRefreshParts(EntityUid uid, StasisBedComponent component, RefreshPartsEvent args)
+    {
+        var capacitorTier = args.GetPartRating(MachinePartIds.Capacitor);
+        component.PowerLoad = component.BasePowerLoad * RefreshPartsEvent.GetLinearMultiplier(capacitorTier, 0.1f, 0.5f, 1.2f);
+        _powerReceiver.SetLoad(uid, component.PowerLoad);
+    }
+
+    private static void OnStasisUpgradeExamine(EntityUid uid, StasisBedComponent component, UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-stasis-bed-power", component.PowerLoad / component.BasePowerLoad);
+    }
+    // Arcane-End
 }

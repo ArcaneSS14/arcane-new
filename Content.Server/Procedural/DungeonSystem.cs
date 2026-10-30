@@ -19,6 +19,7 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Robust.Shared.CPUJob.JobQueues; // Arcane
 
 namespace Content.Server.Procedural;
 
@@ -70,6 +71,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
     {
         base.Update(frameTime);
         _dungeonJobQueue.Process();
+        CleanupCompletedJobs(); // Arcane
     }
 
     private void OnRoundCleanup(RoundRestartCleanupEvent ev)
@@ -77,10 +79,25 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
         foreach (var token in _dungeonJobs.Values)
         {
             token.Cancel();
+            token.Dispose(); // Arcane
         }
 
         _dungeonJobs.Clear();
     }
+
+    // Arcane-Start
+    private void CleanupCompletedJobs()
+    {
+        foreach (var (job, token) in _dungeonJobs.ToArray())
+        {
+            if (job.Status != JobStatus.Finished)
+                continue;
+
+            token.Dispose();
+            _dungeonJobs.Remove(job);
+        }
+    }
+    // Arcane-End
 
     private void OnRoundStart(RoundStartingEvent ev)
     {
@@ -107,6 +124,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
         foreach (var token in _dungeonJobs.Values)
         {
             token.Cancel();
+            token.Dispose(); // Arcane
         }
 
         _dungeonJobs.Clear();
@@ -218,7 +236,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
             coordinates,
             cancelToken.Token);
 
-        _dungeonJobs.Add(job, cancelToken);
+        _dungeonJobs[job] = cancelToken; // Arcane-Edit: Add(job, cancelToken) > indexer, no exception on a reused job key
         _dungeonJobQueue.EnqueueJob(job);
     }
 
@@ -251,7 +269,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
             null,
             cancelToken.Token);
 
-        _dungeonJobs.Add(job, cancelToken);
+        _dungeonJobs[job] = cancelToken; // Arcane-Edit: Add(job, cancelToken) > indexer, no exception on a reused job key
         _dungeonJobQueue.EnqueueJob(job);
         await job.AsTask;
 
@@ -263,7 +281,7 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
         return job.Result!;
     }
 
-    public Angle GetDungeonRotation(int seed)
+    public static Angle GetDungeonRotation(int seed) // Arcane-Edit: public Angle > public static Angle
     {
         // Mask 0 | 1 for rotation seed
         var dungeonRotationSeed = 3 & seed;

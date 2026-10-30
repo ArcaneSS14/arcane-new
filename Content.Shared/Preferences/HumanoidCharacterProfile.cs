@@ -27,6 +27,7 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 using Robust.Shared;
 using YamlDotNet.RepresentationModel;
+using Content.Arcane.Common.Preferences; // Arcane
 
 namespace Content.Shared.Preferences
 {
@@ -211,6 +212,7 @@ namespace Content.Shared.Preferences
             // Arcane-Start: Preserve scale settings when profiles are copied
             Scale = other.Scale;
             // Arcane-End
+            ExtendedFlavor = other.ExtendedFlavor; // Arcane
         }
 
         /// <summary>
@@ -691,6 +693,7 @@ namespace Content.Shared.Preferences
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
+            if (!ExtendedFlavor.Equals(other.ExtendedFlavor)) return false; // Arcane
             return Appearance.Equals(other.Appearance);
         }
 
@@ -767,16 +770,11 @@ namespace Content.Shared.Preferences
             }
 
 
-            string flavortext;
+            // Arcane-Edit-Start: keep basic formatting, the examine window renders it
             var maxFlavorTextLength = configManager.GetCVar(CCVars.MaxFlavorTextLength);
-            if (FlavorText.Length > maxFlavorTextLength)
-            {
-                flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText)[..maxFlavorTextLength];
-            }
-            else
-            {
-                flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
-            }
+            var flavortext = ExtendedFlavorText.ValidateText(FlavorText, maxFlavorTextLength);
+            var extendedFlavor = ExtendedFlavor.Validated(configManager);
+            // Arcane-Edit-End
 
             var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
 
@@ -826,6 +824,7 @@ namespace Content.Shared.Preferences
 
             Name = name;
             FlavorText = flavortext;
+            ExtendedFlavor = extendedFlavor; // Arcane
             Age = age;
             Sex = sex;
             Voice = voice;
@@ -948,6 +947,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(_loadouts);
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
+            hashCode.Add(ExtendedFlavor); // Arcane
             hashCode.Add(Species);
             // Arcane-Start: Hash character scale settings
             hashCode.Add(Scale);

@@ -11,12 +11,16 @@
     Plastic: 400
     Gold: 200
 
-- type: latheRecipe
-  parent: BaseUpgradeKit
-  id: LatheUpgradeKitHyper
-  result: LatheUpgradeKitHyper
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: latheRecipe
+#  parent: BaseUpgradeKit
+#  id: LatheUpgradeKitHyper
+#  result: LatheUpgradeKitHyper
+# Arcane-Edit-End
 
-- type: latheRecipe
-  parent: BaseUpgradeKit
-  id: LatheUpgradeKitCryo
-  result: LatheUpgradeKitCryo
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: latheRecipe
+#  parent: BaseUpgradeKit
+#  id: LatheUpgradeKitCryo
+#  result: LatheUpgradeKitCryo
+# Arcane-Edit-End

@@ -1,0 +1,11 @@
+start
+
+### Content.Server/Administration/Commands/PlayTimeCommands.cs
+@@ -70,5 +70,5 @@ public static List<TimeUnit> ConvertToTimeUnits(string timeString)
+-        MatchCollection timeRegex = Regex.Matches(timeString, "(\\d+)([A-Za-z]+)");
++        MatchCollection timeRegex = Regex.Matches(timeString, "(-?\\d+)([A-Za-z]+)"); // Orion-Edit: '-?' to support negative values
+
+### Content.Server/GameTicking/Commands/DelayStartCommand.cs
+@@ -47,5 +47,5 @@ public void Execute(IConsoleShell shell, string argStr, string[] args)
+-            if (!uint.TryParse(args[0], out var seconds) || seconds == 0)
++            if (!int.TryParse(args[0], out var seconds) || seconds == 0) // Orion-Edit: Round start delay is now reducible.

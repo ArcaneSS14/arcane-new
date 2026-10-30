@@ -10,12 +10,16 @@
     state: engineering
   - type: MachineBoard
     prototype: EngineeringTechFab
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
   - type: Tag
     tags:
     - TechfabMachineBoard
@@ -31,12 +35,16 @@
     state: engineering
   - type: MachineBoard
     prototype: CargoTechFab
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
   - type: Tag
     tags:
     - TechfabMachineBoard
@@ -52,12 +60,16 @@
     state: science
   - type: MachineBoard
     prototype: ScienceTechFab
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
   - type: Tag
     tags:
     - TechfabMachineBoard
@@ -73,12 +85,16 @@
     state: service
   - type: MachineBoard
     prototype: ServiceTechFab
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
   - type: Tag
     tags:
     - TechfabMachineBoard
@@ -94,9 +110,13 @@
     - type: MachineBoard
       prototype: TeslaCoil
       stackRequirements:
-        Manipulator: 5
+        # Manipulator: 5 # Arcane-Edit: replaced by machine parts
         Steel: 10
         CableHV: 10
+      # Arcane-Start
+      partRequirements:
+        Servo: 5
+      # Arcane-End
 
 - type: entity
   id: RadiationCollectorCircuitboard
@@ -108,10 +128,14 @@
     - type: MachineBoard
       prototype: RadiationCollector
       stackRequirements:
-        Manipulator: 5
+        # Manipulator: 5 # Arcane-Edit: replaced by machine parts
         Steel: 5
         CableHV: 10
         Plasma: 5
+      # Arcane-Start
+      partRequirements:
+        Servo: 5
+      # Arcane-End
 
 - type: entity
   id: EnergyChemDispenserMachineCircuitboard
@@ -124,7 +148,7 @@
     - type: MachineBoard
       prototype: EnergyChemDispenser
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 5
         Steel: 5
         BSCrystal: 1
@@ -132,6 +156,10 @@
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: TelecomTransmitterCircuitboard

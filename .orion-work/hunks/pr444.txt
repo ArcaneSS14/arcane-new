@@ -1,0 +1,5 @@
+[Fix] Fatal Surveillance Networking
+
+### Content.Server/SurveillanceCamera/Systems/SurveillanceCameraSystem.cs
+@@ -310,5 +310,4 @@ public void ConfigureCameraNetwork(EntityUid uid, ProtoId<DeviceFrequencyPrototy
+-        Dirty(uid, camera);

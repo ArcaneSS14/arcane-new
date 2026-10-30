@@ -1,0 +1,88 @@
+[Feature] Anti Spam AHelp
+
+### Content.Server/Administration/Systems/BwoinkSystem.cs
+@@ -131,4 +131,5 @@
++using Content.Shared.Database;
+@@ -162,4 +163,5 @@ public sealed partial class BwoinkSystem : SharedBwoinkSystem
++        [Dependency] private readonly IBanManager _banManager = default!; // Europa
+@@ -195,4 +197,12 @@ public sealed partial class BwoinkSystem : SharedBwoinkSystem
++        // Europa-Start
++        private readonly TimeSpan _messageCooldown = TimeSpan.FromSeconds(2);
++
++        private readonly Dictionary<NetUserId, Queue<(string Text, TimeSpan Timestamp)>> _recentMessages = new();
++        private const int MaxRecentMessages = 10;
++        private const int SpamCheckMessageCount = 3;
++        // Europa-End
++
+@@ -786,4 +796,16 @@ protected override void OnBwoinkTextMessage(BwoinkTextMessage message, EntitySes
++            // Europa-Start
++            var currentTime = _timing.RealTime;
++
++            if (IsOnCooldown(message.UserId, currentTime))
++                return;
++
++            if (IsSpam(message.UserId, message.Text))
++                _banManager.CreateServerBan(senderSession.UserId, senderSession.Name, null, null, null, 10, NoteSeverity.High, "Косинус синус, ебало на минус. Доспамился в ахелп.");
++
++            AddToRecentMessages(message.UserId, message.Text, currentTime);
++            // Europa-End
++
+@@ -1044,4 +1066,59 @@ private sealed class DiscordRelayInteraction
++
++        // Europa-Start
++        private void AddToRecentMessages(NetUserId channelId, string text, TimeSpan timestamp)
++        {
++            if (!_recentMessages.TryGetValue(channelId, out var userQueue))
++            {
++                userQueue = new Queue<(string, TimeSpan)>();
++                _recentMessages[channelId] = userQueue;
++            }
++
++            userQueue.Enqueue((text, timestamp));
++
++            if (userQueue.Count > MaxRecentMessages)
++                userQueue.Dequeue();
++        }
++
++        private bool IsOnCooldown(NetUserId channelId, TimeSpan currentTime)
++        {
++            if (!_recentMessages.TryGetValue(channelId, out var userQueue) || userQueue.Count == 0)
++                return false;
++
++            var lastMessage = userQueue
++                .OrderByDescending(msg => msg.Timestamp)
++                .FirstOrDefault();
++
++            return (currentTime - lastMessage.Timestamp) < _messageCooldown;
++        }
++
++        private bool IsSpam(NetUserId channelId, string text)
++        {
++            if (!_recentMessages.TryGetValue(channelId, out var userQueue) || userQueue.Count < 5)
++                return false;
++
++            var recentMessages = userQueue
++                .OrderByDescending(msg => msg.Timestamp)
++                .Take(10);
++
++            return recentMessages.All(msg => msg.Text == text);
++        }
++
++        public IEnumerable<(NetUserId Channel, string Text, TimeSpan Timestamp)> GetRecentMessages()
++        {
++            var result = new List<(NetUserId Channel, string Text, TimeSpan Timestamp)>();
++
++            foreach (var kvp in _recentMessages)
++            {
++                var channelId = kvp.Key;
++                foreach (var (text, timestamp) in kvp.Value)
++                {
++                    result.Add((channelId, text, timestamp));
++                }
++            }
++            return result;
++        }
++        // Europa-End
+@@ -1128,3 +1205,3 @@ public enum PlayerStatusType
+-}
++}

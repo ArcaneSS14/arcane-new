@@ -31,6 +31,7 @@
   - type: Icon
     sprite: Structures/Storage/Crates/plastic.rsi
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/plastic.rsi
   - type: Construction
     graph: CratePlastic
@@ -46,7 +47,7 @@
     group: CratePlastic
 
 - type: entity
-  parent: CratePlastic
+  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
   id: CrateFreezer
   name: freezer
   components:
@@ -66,7 +67,7 @@
     group: null
 
 - type: entity
-  parent: CratePlastic
+  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
   id: CrateHydroponics
   name: hydroponics crate
   components:
@@ -76,7 +77,7 @@
     sprite: Structures/Storage/Crates/hydroponics.rsi
 
 - type: entity
-  parent: CratePlastic
+  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
   id: CrateMedical
   name: medical crate
   components:
@@ -97,7 +98,7 @@
     sprite: Structures/Storage/Crates/radiation.rsi
 
 - type: entity
-  parent: CratePlastic
+  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
   id: CrateInternals
   name: oxygen crate
   components:
@@ -347,6 +348,7 @@
   - type: Icon
     sprite: Structures/Storage/Crates/syndicate_secure.rsi
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/syndicate_secure.rsi
   - type: AccessReader
     access: [["SyndicateAgent", "NuclearOperative"]]
@@ -359,6 +361,7 @@
   - type: EntityStorage
     airtight: false
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/livestock.rsi
     layers:
     - state: base
@@ -417,6 +420,7 @@
   name: hamster cage
   components:
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/cage.rsi
     drawdepth: LargeObjects
     snapCardinals: true
@@ -494,6 +498,11 @@
         lid_overlay:
           True: { visible: false }
           False: { visible: true }
+        # Arcane-Start
+        open_overlay:
+          True: { visible: true }
+          False: { visible: false }
+        # Arcane-End
   - type: OverrideSell
   - type: Fixtures
     fixtures:
@@ -517,13 +526,20 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#ad8c27"
+    # Arcane-Edit-Start: the resprite has no separate overlay state
+    # - state: overlay
+    #   color: "#ad8c27"
+    # Arcane-Edit-End
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ad8c27"
       map: [ lid_overlay ]
+    # Arcane-Start
+    - state: overlay-open
+      color: "#ad8c27"
+      map: [ open_overlay ]
+    # Arcane-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -547,13 +563,20 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#92c7e8"
+    # Arcane-Edit-Start: the resprite has no separate overlay state
+    # - state: overlay
+    #   color: "#92c7e8"
+    # Arcane-Edit-End
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#92c7e8"
       map: [ lid_overlay ]
+    # Arcane-Start
+    - state: overlay-open
+      color: "#92c7e8"
+      map: [ open_overlay ]
+    # Arcane-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -577,13 +600,20 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#ba4bf0"
+    # Arcane-Edit-Start: the resprite has no separate overlay state
+    # - state: overlay
+    #   color: "#ba4bf0"
+    # Arcane-Edit-End
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ba4bf0"
       map: [ lid_overlay ]
+    # Arcane-Start
+    - state: overlay-open
+      color: "#ba4bf0"
+      map: [ open_overlay ]
+    # Arcane-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -607,13 +637,20 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#c12d30"
+    # Arcane-Edit-Start: the resprite has no separate overlay state
+    # - state: overlay
+    #   color: "#c12d30"
+    # Arcane-Edit-End
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#c12d30"
       map: [ lid_overlay ]
+    # Arcane-Start
+    - state: overlay-open
+      color: "#c12d30"
+      map: [ open_overlay ]
+    # Arcane-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -637,13 +674,20 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#53b723"
+    # Arcane-Edit-Start: the resprite has no separate overlay state
+    # - state: overlay
+    #   color: "#53b723"
+    # Arcane-Edit-End
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#53b723"
       map: [ lid_overlay ]
+    # Arcane-Start
+    - state: overlay-open
+      color: "#53b723"
+      map: [ open_overlay ]
+    # Arcane-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -666,6 +710,7 @@
   description: A space pirate chest, not for station lubbers.
   components:
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/piratechest.rsi
     layers:
     - state: crate
@@ -717,6 +762,7 @@
   description: A comfy coffin, excellent place for the vampires and corpses.
   components:
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/coffin.rsi
     layers:
     - state: base
@@ -760,6 +806,7 @@
   description: Someone died here...
   components:
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/wooden_grave.rsi
     layers:
     - state: base
@@ -811,6 +858,7 @@
   description: Someone died here...
   components:
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/stone_grave.rsi
     layers:
     - state: base

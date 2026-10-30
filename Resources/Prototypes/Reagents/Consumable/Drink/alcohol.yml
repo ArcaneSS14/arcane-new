@@ -222,6 +222,10 @@
         type: Add
         time: 0.5
       # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: EthanolBenefit
+      # Arcane-End
 
 - type: reagent
   id: Gin

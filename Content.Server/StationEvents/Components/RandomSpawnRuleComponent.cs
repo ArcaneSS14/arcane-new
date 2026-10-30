@@ -14,4 +14,18 @@ public sealed partial class RandomSpawnRuleComponent : Component
     /// </summary>
     [DataField(required: true)]
     public EntProtoId Prototype;
+
+    // Arcane-Start
+    /// <summary>
+    /// Minimum number of entities to spawn.
+    /// </summary>
+    [DataField]
+    public int MinCount = 1;
+
+    /// <summary>
+    /// Maximum number of entities to spawn.
+    /// </summary>
+    [DataField]
+    public int MaxCount = 1;
+    // Arcane-End
 }

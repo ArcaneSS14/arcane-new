@@ -377,10 +377,14 @@ public sealed partial class StationSpawningSystem : EntitySystem
             _humanoidProfile.ApplyProfileTo(entity.Value, profile);
             _metadata.SetEntityName(entity.Value, profile.Name);
 
-            if (profile.FlavorText != "" && _configurationManager.GetCVar(CCVars.FlavorText))
+            // Arcane-Edit-Start: extended flavor text
+            if ((profile.FlavorText != "" || !profile.ExtendedFlavor.IsEmpty) && _configurationManager.GetCVar(CCVars.FlavorText))
             {
-                AddComp<DetailExaminableComponent>(entity.Value).Content = profile.FlavorText;
+                var detail = AddComp<DetailExaminableComponent>(entity.Value);
+                detail.Content = profile.FlavorText;
+                detail.Extended = profile.ExtendedFlavor;
             }
+            // Arcane-Edit-End
         }
 
         if (loadout != null)

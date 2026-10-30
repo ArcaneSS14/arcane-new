@@ -1,0 +1,65 @@
+- type: entity
+  parent: [ BaseMajorContraband, WeaponSubMachineGunC20r ]
+  id: WeaponSubMachineGunInteQSMG
+  name: InteQ submachine gun
+  suffix: SubmachineGun
+  description: Firearm that is often used by the InteQ. Uses .35 auto ammo. It is painted in the InteQ brand color.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Weapons/Guns/SMG/inteq_smg.rsi
+  - type: Clothing
+    sprite: _Arcane/Objects/Weapons/Guns/SMG/inteq_smg.rsi
+  - type: MagazineVisuals
+    magState: mag
+    steps: 6
+    zeroVisible: true
+
+- type: entity
+  parent: [BaseWeaponSubMachineGun, BaseGunWieldable, BaseSecurityContraband]
+  id: WeaponSubMachineGunP90
+  name: P-90
+  description: The P-90 is the EarthGov standard issue SMG. It's known for its compact size and ease of use inside the field. It's usually carried by troops who want a lightweight firearm to rush with.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Weapons/Guns/SMG/p90.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Clothing
+    sprite: _Arcane/Objects/Weapons/Guns/SMG/p90.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Weapons/Guns/SMG/p90.rsi
+  - type: GunWieldBonus
+    minAngle: -10
+    maxAngle: -10
+    angleIncrease: -2
+  - type: Gun
+    angleDecay: 30
+    minAngle: 21
+    maxAngle: 26
+    fireRate: 7
+    soundGunshot:
+      path: /Audio/_Arcane/Weapons/Guns/SMGs/p90.ogg
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        startingItem: MagazineSMGP90
+        insertSound: /Audio/Weapons/Guns/MagIn/smg_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/smg_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - MagazineSMGP90
+      gun_chamber:
+        startingItem: CartridgePistol
+        priority: 1
+        whitelist:
+          tags:
+            - CartridgePistol
+  - type: MagazineVisuals
+    magState: mag
+    steps: 6
+    zeroVisible: true
+  - type: Appearance

@@ -83,6 +83,7 @@
   - TowelColorSilver
   - TowelColorGold
   # </Trauma>
+  - InteQMiniFlag # Arcane
 
 - type: loadoutGroup
   id: AssistiveItems
@@ -160,6 +161,12 @@
   loadouts:
   - CaptainHead
   - CaptainCap
+  # Arcane-Start
+  - CaptainWhiteBeret
+  - SheriffBeret
+  - CaptainWhiteCap
+  - SheriffCap
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainJumpsuit
@@ -171,6 +178,13 @@
   - CaptainFormalSkirt
   - CaptainJumpsuitMilitary # goob
   - CaptainSummerShirt # also goob
+  # Arcane-Start
+  - CaptainWhiteJumpsuit
+  - CaptainWhiteJumpskirt
+  - CaptainWhiteTurtleneck
+  - CaptainCommandJumpsuit
+  - SheriffJumpsuit
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainNeck
@@ -181,6 +195,12 @@
   - CaptainCloakFormal
   - CaptainMantle
   - VeteranCaptainCloak # goob
+  # Arcane-Start
+  - CaptainWideCloak
+  - CaptainRoyalCloak
+  - CaptainWhiteMantle
+  - CaptainWhiteShoulderMantle
+  # Arcane-End
 
 - type: loadoutGroup
   id: CaptainBackpack
@@ -198,6 +218,10 @@
   - CaptainOuterClothing
   # - CaptainWintercoat
   - CaptainJacket # Goobstation
+  # Arcane-Start
+  - CaptainWhiteCoat
+  - CaptainSheriffCoat
+  # Arcane-End
 
 #- type: loadoutGroup
 #  id: CaptainJobTrinkets
@@ -305,6 +329,10 @@
   minLimit: 0
   loadouts:
   - PassengerWintercoat
+  # Arcane-Start: Orion #254 InteQ loadouts
+  - InteQWinter
+  - InteQHoodie
+  # Arcane-End
 
 - type: loadoutGroup
   id: PassengerShoes
@@ -903,6 +931,7 @@
   loadouts:
   - ChiefEngineerHead
   - ChiefEngineerBeret
+  - EngineeringBeret # Arcane
 
 - type: loadoutGroup
   id: ChiefEngineerJumpsuit
@@ -1032,6 +1061,7 @@
   minLimit: 0
   loadouts:
   - AtmosphericTechnicianWintercoat
+  - AtmosOveralls # Arcane
 
 - type: loadoutGroup
   id: AtmosphericTechnicianBackpack
@@ -1079,6 +1109,7 @@
   minLimit: 0
   loadouts:
   - ResearchDirectorBeret
+  - TinfoilHat # Arcane
 
 - type: loadoutGroup
   id: ResearchDirectorNeck
@@ -1087,6 +1118,7 @@
   loadouts:
   - ResearchDirectorMantle
   - ResearchDirectorCloak
+  - ResearchDirectorRoyalCloak # Arcane
 
 - type: loadoutGroup
   id: ResearchDirectorJumpsuit
@@ -1127,6 +1159,7 @@
   #- RoboticistCap
   #- SkullBandana
   - ScientificBeret
+  - TinfoilHat # Arcane
 
 - type: loadoutGroup
   id: ScientistNeck
@@ -1233,6 +1266,7 @@
   - HeadofSecurityFormalSuit
   - HeadofSecurityFormalSkirt
   - HoSSummerShirt # goob
+  - HeadOfSecurityCommandJumpsuit # Arcane
 
 - type: loadoutGroup
   id: HeadofSecurityNeck
@@ -1241,6 +1275,7 @@
   loadouts:
   - HeadofSecurityCloak
   - HeadofSecurityMantle
+  - HeadOfSecurityRoyalCloak # Arcane
   - Bodycam # Goobstation - Body cameras
 
 - type: loadoutGroup
@@ -1300,6 +1335,7 @@
   - SecurityHat
   - TrooperHat
   - SergeantBeret # Trauma
+  - SecuritySideCap # Arcane
 
 - type: loadoutGroup
   id: SecurityJumpsuit
@@ -1347,6 +1383,11 @@
   - JackBoots
   - CombatBoots # Goobstation
   - SecurityWinterBoots
+  # Arcane-Start
+  - JackBootsToeless
+  - JackBootsTall
+  - JackBootsTallHeels
+  # Arcane-End
 
 - type: loadoutGroup
   id: SecurityPDA

@@ -1,0 +1,52 @@
+[Port] Russian Announcement
+
+### Content.Server/Chat/Systems/ChatSystem.cs
+@@ -187,5 +187,6 @@ public sealed partial class ChatSystem : SharedChatSystem
+-    public const string DefaultAnnouncementSound = "/Audio/Announcements/attention.ogg";
++    public const string DefaultAnnouncementSound = "/Audio/_Europa/Announcements/announce.ogg"; // Europa-Edit
++    public const string CentComAnnouncementSound = "/Audio/_Europa/Announcements/centcomm.ogg"; // Europa
+@@ -492,4 +493,5 @@ public void DispatchGlobalAnnouncement(
++            if (sender == Loc.GetString("admin-announce-announcer-default")) announcementSound = new SoundPathSpecifier(CentComAnnouncementSound); // Europa | Support custom alert sound from admin panel
+
+### Resources/Audio/Announcements/attributions.yml
+@@ -63,3 +63,8 @@
+-  source: "https://github.com/tgstation/tgstation/blob/95731342b97167d7883ff091d389f79c36442ee6/sound/ai/default/intercept.ogg"
++  source: "https://github.com/tgstation/tgstation/blob/95731342b97167d7883ff091d389f79c36442ee6/sound/ai/default/intercept.ogg"
++  
++- files: ["aliens.ogg", "attention.ogg", "meteors.ogg", "outbreak7.ogg", "power_off.ogg", "power_on.ogg", "radiation.ogg", "shuttle_dock.ogg", "shuttlecalled.ogg", "shuttlerecalled.ogg", "ventclog.ogg", "war.ogg", "welcome.ogg"]
++  license: "CC-BY-SA-3.0"
++  copyright: "discord:Basia (437113799137427460)"
++  source: "https://github.com/TauCetiStation/TauCetiClassic/pull/10207"
+
+### Resources/Prototypes/AlertLevels/alert_levels.yml
+@@ -125,5 +125,5 @@
+-        path: /Audio/Misc/gamma.ogg
++        path: /Audio/_Europa/Misc/siren.ogg # Europa | Return old gamma sound
+
+### Resources/Prototypes/GameRules/events.yml
+@@ -233,5 +233,5 @@
+-      path: /Audio/Announcements/announce.ogg
++      path: /Audio/_Europa/Announcements/flux.ogg # Europa-Edit
+@@ -256,5 +256,5 @@
+-      path: /Audio/Announcements/announce.ogg
++      path: /Audio/_Europa/Announcements/blusp_anomalies.ogg # Europa-Edit
+@@ -575,5 +575,5 @@
+-      path: /Audio/Announcements/attention.ogg
++      path: /Audio/Announcements/gasleak_start.ogg # Europa-Edit
+@@ -582,4 +582,8 @@
++    endAudio: # Europa
++      path: /Audio/Announcements/gasleak_end.ogg
++      params:
++        volume: -4
+@@ -635,5 +639,5 @@
+-      path: /Audio/Announcements/attention.ogg
++      path: /Audio/_Europa/Announcements/comms_blackout.ogg # Europa-Edit
+@@ -667,5 +671,5 @@
+-      path: /Audio/Announcements/attention.ogg
++      path: /Audio/Announcements/attention.ogg # Europa-Edit
+@@ -687,5 +691,5 @@
+-      path: /Audio/Announcements/aliens.ogg
++      path: /Audio/Announcements/attention.ogg # Europa-Edit
+@@ -946,4 +950,6 @@
++    startAudio: # Europa
++      path: /Audio/_Europa/Adminbuse/i-storm1.ogg

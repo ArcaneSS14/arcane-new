@@ -1,0 +1,9 @@
+HideContextMenu
+
+### Resources/Prototypes/Recipes/Lathes/Packs/science.yml
+@@ -87,4 +87,5 @@
++  - TileItemBluespace # Europa
+
+### Resources/Prototypes/Research/civilianservices.yml
+@@ -168,4 +168,5 @@
++  - TileItemBluespace # Europa

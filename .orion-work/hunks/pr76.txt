@@ -1,0 +1,452 @@
+Sponsor text
+
+### Content.Client/Humanoid/MarkingPicker.xaml.cs
+@@ -12,4 +12,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -33,4 +34,5 @@ public sealed partial class MarkingPicker : Control
++    private ISharedSponsorsManager? _sponsorsManager; // Europa
+@@ -140,4 +142,5 @@ public MarkingPicker()
++        IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Europa
+@@ -243,4 +246,8 @@ public void Populate(string filter)
++            // Europa-Start
++            if (marking.SponsorOnly && _sponsorsManager != null)
++                item.Disabled = !_sponsorsManager.GetClientPrototypes().Contains(marking.ID);
++            // Europa-End
+@@ -562,3 +569,3 @@ private void MarkingRemove()
+-}
++}
+
+### Content.Client/Humanoid/SingleMarkingPicker.xaml.cs
+@@ -9,4 +9,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -23,7 +24,8 @@ public sealed partial class SingleMarkingPicker : BoxContainer
++    private ISharedSponsorsManager? _sponsorsManager; // Europa
+-    
++
+@@ -136,4 +138,5 @@ public SingleMarkingPicker()
++        IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Europa
+@@ -205,4 +208,8 @@ public void PopulateList(string filter)
++            // Europa-Start
++            if (marking.SponsorOnly && _sponsorsManager != null)
++                item.Disabled = !_sponsorsManager.GetClientPrototypes().Contains(marking.ID);
++            // Europa-End
+@@ -311,3 +318,3 @@ private string GetMarkingName(MarkingPrototype marking)
+-}
++}
+
+### Content.Client/Lobby/ClientPreferencesManager.cs
+@@ -20,4 +20,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -39,4 +40,5 @@ public sealed class ClientPreferencesManager : IClientPreferencesManager
++        private ISharedSponsorsManager? _sponsorsManager; // Europa
+@@ -47,4 +49,5 @@ public sealed class ClientPreferencesManager : IClientPreferencesManager
++            IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Europa
+@@ -82,5 +85,8 @@ public void UpdateCharacter(ICharacterProfile profile, int slot)
+-            profile.EnsureValid(_playerManager.LocalSession!, collection);
++            // Europa-Start
++            var sponsorPrototypes = _sponsorsManager?.GetClientPrototypes().ToArray() ?? [];
++            profile.EnsureValid(_playerManager.LocalSession!, collection, sponsorPrototypes);
++            // Europa-End
+@@ -146,3 +152,3 @@ private void HandlePreferencesAndSettings(MsgPreferencesAndSettings message)
+-}
++}
+
+### Content.Client/Lobby/UI/CharacterSetupGui.xaml.cs
+@@ -8,4 +8,5 @@
++using Content.Europa.Interfaces.Client;
+@@ -71,4 +72,12 @@ public CharacterSetupGui(HumanoidProfileEditor profileEditor)
++
++            // Europa-Start
++            if (IoCManager.Instance!.TryResolveType<ISponsorWindowCreator>(out var creator))
++            {
++                SponsorButton.Visible = true;
++                SponsorButton.OnPressed += _ => creator.OpenWindow();
++            }
++            // Europa-End
+@@ -121,3 +130,3 @@ public void ReloadCharacterPickers()
+-}
++}
+
+### Content.Client/Lobby/UI/HumanoidProfileEditor.xaml.cs
+@@ -442,5 +442,5 @@ public HumanoidProfileEditor(
+-            #region Height and Width            
++            #region Height and Width
+@@ -847,4 +847,8 @@ public void RefreshSpecies()
++
++                if (_species[i].SponsorOnly) // Europa
++                    name += " " + Loc.GetString("sponsor-only-text");
++
+
+### Content.Client/Lobby/UI/Loadouts/LoadoutGroupContainer.xaml.cs
+@@ -8,4 +8,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -83,6 +84,17 @@ public void RefreshLoadouts(HumanoidCharacterProfile profile, RoleLoadout loadou
++        // Europa-Start
++        var groupLoadouts = _groupProto.Loadouts;
++        if (collection.TryResolveType<ISharedLoadoutsManager>(out var loadoutsManager) && _groupProto.ID == "Inventory")
++        {
++            groupLoadouts = loadoutsManager.GetClientPrototypes().Select(id => (ProtoId<LoadoutPrototype>) id).ToList();
++        }
++        // Europa-End
++
+-        var validProtos = _groupProto.Loadouts.Select(id => protoMan.Index(id));
++        var validProtos = groupLoadouts.Select(id => protoMan.Index(id)); // Europa-Edit
++
++        // Get all loadout prototypes for this group.
++        //var validProtos = _groupProto.Loadouts.Select(id => protoMan.Index(id));
+@@ -122,12 +134,12 @@ public void RefreshLoadouts(HumanoidCharacterProfile profile, RoleLoadout loadou
+-                /* 
+-                * Determine which element should be displayed first: 
+-                * - If any element is currently selected (its button is pressed), use it. 
+-                * - Otherwise, fallback to the first element in the list. 
+-                * 
+-                * This moves the selected item outside of the sublist for better usability, 
+-                * making it easier for players to quickly toggle loadout options (e.g. clothing, accessories) 
+-                * without having to search inside expanded subgroups. 
++                /*
++                * Determine which element should be displayed first:
++                * - If any element is currently selected (its button is pressed), use it.
++                * - Otherwise, fallback to the first element in the list.
++                *
++                * This moves the selected item outside of the sublist for better usability,
++                * making it easier for players to quickly toggle loadout options (e.g. clothing, accessories)
++                * without having to search inside expanded subgroups.
+@@ -202,6 +214,6 @@ private void UpdateToggleColor(Button toggle, BoxContainer subList)
+-    /// This method was extracted from RefreshLoadouts because the logic for creating 
+-    /// individual loadout items is used multiple times inside that method, and duplicating 
++    /// This method was extracted from RefreshLoadouts because the logic for creating
++    /// individual loadout items is used multiple times inside that method, and duplicating
+
+### Content.Goobstation.Server/JoinQueue/JoinQueueManager.cs
+@@ -73,5 +73,5 @@ public void Initialize()
+-        _player.PlayerStatusChanged += OnPlayerStatusChanged;
++        // _player.PlayerStatusChanged += OnPlayerStatusChanged; // Europa
+@@ -110,9 +110,9 @@ private async void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs
+-            OnPlayerConnected(e.Session);
++            // OnPlayerConnected(e.Session); // Europa
+-
++    /* Europa-Remove-Start
+@@ -143,5 +143,6 @@ private async void OnPlayerConnected(ICommonSession session)
+-    }
++    } Europa-Remove-End
++    */
+
+### Content.Server/Chat/Managers/ChatManager.cs
+@@ -200,4 +200,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -226,4 +227,5 @@ internal sealed partial class ChatManager : IChatManager
++    private ISharedSponsorsManager? _sponsorsManager; // Europa
+@@ -241,4 +243,5 @@ internal sealed partial class ChatManager : IChatManager
++        IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Europa
+@@ -446,4 +449,11 @@ private void SendOOC(ICommonSession player, string message)
++        // Europa-Start
++        if (_sponsorsManager != null && _sponsorsManager.TryGetServerOocColor(player.UserId, out var oocColor))
++        {
++            wrappedMessage = Loc.GetString("chat-manager-send-ooc-patron-wrap-message", ("patronColor", oocColor), ("playerName", player.Name), ("message", FormattedMessage.EscapeText(message)));
++        }
++        // Europa-End
++
+@@ -590,3 +600,3 @@ public enum OOCChatType : byte
+-}
++}
+
+### Content.Server/Connection/ConnectionManager.cs
+@@ -125,5 +125,7 @@
+-using Content.Goobstation.Common.CCVar; // Goobstation - Queue
++using Content.Goobstation.Common.CCVar;
++using Content.Europa.Interfaces.Shared;
++using Content.Europa.Interfaces.Server; // Europa
+@@ -137,5 +139,5 @@ public interface IConnectionManager
+-        Task<bool> HasPrivilegedJoin(NetUserId userId); // Goobstation - Queue
++        Task<bool> HavePrivilegedJoin(NetUserId userId); // Europa-Replace
+@@ -170,5 +172,7 @@ public sealed partial class ConnectionManager : IConnectionManager
++        private ISharedSponsorsManager? _sponsorsMgr; // Europa
++        private GameTicker? _ticker; // Europa
+@@ -186,4 +190,6 @@ public void Initialize()
++            IoCManager.Instance!.TryResolveType(out _sponsorsMgr); // Europa
++
+@@ -349,5 +355,8 @@ session.Status is SessionStatus.Connected or SessionStatus.InGame
+-            if (_cfg.GetCVar(CCVars.PanicBunkerEnabled) && adminData == null)
++            // Europa-Start | Allow privileged players bypass bunker
++            var isPrivileged = await HavePrivilegedJoin(e.UserId);
++            if (_cfg.GetCVar(CCVars.PanicBunkerEnabled) && adminData == null && !isPrivileged)
++            // Europa-End
+@@ -396,6 +405,13 @@ session.Status is SessionStatus.Connected or SessionStatus.InGame
+-            var isPrivileged = await HasPrivilegedJoin(userId); // Goobstation - Queue
+-            var isQueueEnabled = _cfg.GetCVar(GoobCVars.QueueEnabled); // Goobstation - Queue
++            // Europa-Start
++            var wasInGame = _ticker != null &&
++                            _ticker.PlayerGameStatuses.TryGetValue(userId, out var status) &&
++                            status == PlayerGameStatus.JoinedGame;
++            var adminBypass = _cfg.GetCVar(CCVars.AdminBypassMaxPlayers) && adminData != null;
++            // Europa-End
++
++            // var isPrivileged = await HasPrivilegedJoin(userId); // Goobstation - Queue. Europa-Replaced
++            var isQueueEnabled = IoCManager.Instance!.TryResolveType<IServerJoinQueueManager>(out var mgr) && mgr.IsEnabled;
+@@ -405,5 +421,8 @@ session.Status is SessionStatus.Connected or SessionStatus.InGame
+-            if (softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !isPrivileged && !isQueueEnabled) // Goobstation - Queue
++            // Europa-Start
++
++            if ((softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass) && !wasInGame && !isQueueEnabled)
++            // Europa-End
+@@ -475,4 +494,5 @@ private bool HasTemporaryBypass(NetUserId user)
++        /*
+@@ -483,4 +503,19 @@ public async Task<bool> HasPrivilegedJoin(NetUserId userId) // Goobstation - Que
++        */
++
++        // Europa-Start | Make these conditions in one place, for checks in the connection and in the queue
++        public async Task<bool> HavePrivilegedJoin(NetUserId userId)
++        {
++            var adminBypass = _cfg.GetCVar(CCVars.AdminBypassMaxPlayers) && await _db.GetAdminDataForAsync(userId) != null;
++            var havePriorityJoin = _sponsorsMgr != null && _sponsorsMgr.HaveServerPriorityJoin(userId); // Europa
++            var wasInGame = EntitySystem.TryGet<GameTicker>(out var ticker) &&
++                            ticker.PlayerGameStatuses.TryGetValue(userId, out var status) &&
++                            status == PlayerGameStatus.JoinedGame;
++            return adminBypass ||
++                   havePriorityJoin || // Europa
++                   wasInGame;
++        }
++        // Europa-End
+
+### Content.Server/GameTicking/GameTicker.Player.cs
+@@ -29,4 +29,5 @@
++using Content.Europa.Interfaces.Server;
+@@ -84,4 +85,9 @@ private async void PlayerStatusChanged(object? sender, SessionStatusEventArgs ar
++                    // Europa-Start
++                    if (!IoCManager.Instance!.TryResolveType<IServerJoinQueueManager>(out _))
++                        Timer.Spawn(0, () => _playerManager.JoinGame(args.Session));
++                    // Europa-End
++
+
+### Content.Server/GameTicking/GameTicker.StatusShell.cs
+@@ -24,5 +24,6 @@
+-using Content.Goobstation.Common.JoinQueue; // Goobstation - Queue
++using Content.Goobstation.Common.JoinQueue;
++using Content.Europa.Interfaces.Server; // Europa
+@@ -63,9 +64,19 @@ private void GetStatusResponse(JsonNode jObject)
++                // Europa-Start
++                var players = IoCManager.Instance?.TryResolveType<IServerJoinQueueManager>(out var joinQueueManager) ?? false
++                    ? joinQueueManager.ActualPlayersCount
++                    : _playerManager.PlayerCount;
++
++                players = _cfg.GetCVar(CCVars.AdminsCountInReportedPlayerCount)
++                    ? players
++                    : players - _adminManager.ActiveAdmins.Count();
++                // Europa-End
+-                jObject["players"] = _joinQueue.ActualPlayersCount; // Goobstation - Queue
+-                jObject["queue"] = _joinQueue.PlayerInQueueCount; // Goobstation - Queue
++                jObject["players"] = players; // Corvax-Queue
++                // jObject["players"] = _joinQueue.ActualPlayersCount; // Goobstation - Queue. Europa-Replaced
++                // jObject["queue"] = _joinQueue.PlayerInQueueCount; // Goobstation - Queue. Europa-Replaced
+
+### Content.Server/Preferences/Managers/ServerPreferencesManager.cs
+@@ -37,4 +37,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -63,4 +64,5 @@ public sealed class ServerPreferencesManager : IServerPreferencesManager, IPostI
++        private ISharedSponsorsManager? _sponsors; // Europa
+@@ -71,8 +73,9 @@ public sealed class ServerPreferencesManager : IServerPreferencesManager, IPostI
+-        private int MaxCharacterSlots => _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
++        // private int MaxCharacterSlots => _cfg.GetCVar(CCVars.GameMaxCharacterSlots); // Europa
++            IoCManager.Instance!.TryResolveType(out _sponsors); // Europa
+@@ -94,5 +97,5 @@ private async void HandleSelectCharacterMessage(MsgSelectCharacter message)
+-            if (index < 0 || index >= MaxCharacterSlots)
++            if (index < 0 || index >= GetMaxUserCharacterSlots(userId)) // Europa
+@@ -134,5 +137,5 @@ public async Task SetProfile(NetUserId userId, int slot, ICharacterProfile profi
+-            if (slot < 0 || slot >= MaxCharacterSlots)
++            if (slot < 0 || slot >= GetMaxUserCharacterSlots(userId)) // Europa
+@@ -140,5 +143,10 @@ public async Task SetProfile(NetUserId userId, int slot, ICharacterProfile profi
+-            profile.EnsureValid(session, _dependencies);
++            // Europa-Start
++            var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes)
++                ? prototypes.ToArray()
++                : [];
++            profile.EnsureValid(session, _dependencies, sponsorPrototypes);
++            // Europa-End
+@@ -180,5 +188,5 @@ private async void HandleDeleteCharacterMessage(MsgDeleteCharacter message)
+-            if (slot < 0 || slot >= MaxCharacterSlots)
++            if (slot < 0 || slot >= GetMaxUserCharacterSlots(userId)) // Europa
+@@ -282,4 +290,14 @@ async Task LoadPrefs()
++                    // Europa-Start | Remove sponsor markings from expired sponsors
++                    var collection = IoCManager.Instance!;
++                    foreach (var (_, profile) in prefs.Characters)
++                    {
++                        var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes)
++                            ? prototypes.ToArray()
++                            : [];
++                        profile.EnsureValid(session, collection, sponsorPrototypes);
++                    }
++                    // Europa-End
+@@ -302,5 +320,5 @@ public void FinishLoad(ICommonSession session)
+-                MaxCharacterSlots = MaxCharacterSlots
++                MaxCharacterSlots = GetMaxUserCharacterSlots(session.UserId) // Europa
+@@ -317,4 +335,13 @@ public bool HavePreferencesLoaded(ICommonSession session)
++        // Europa-Start | Calculate total available users slots with sponsors
++        private int GetMaxUserCharacterSlots(NetUserId userId)
++        {
++            var maxSlots = _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
++            var extraSlots = _sponsors?.GetServerExtraCharSlots(userId) ?? 0;
++            return maxSlots + extraSlots;
++        }
++        // Europa-End
++
+@@ -380,7 +407,9 @@ private PlayerPreferences SanitizePreferences(ICommonSession session, PlayerPref
++            var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes) ? prototypes.ToArray() : []; // Europa
++
+-                return new KeyValuePair<int, ICharacterProfile>(p.Key, p.Value.Validated(session, collection));
++                return new KeyValuePair<int, ICharacterProfile>(p.Key, p.Value.Validated(session, collection, sponsorPrototypes));
+@@ -413,3 +442,3 @@ void IPostInjectInit.PostInject()
+-}
++}
+
+### Content.Shared/Humanoid/HumanoidCharacterAppearance.cs
+@@ -211,5 +211,5 @@ public static Color ClampColor(Color color)
+-    public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearance appearance, string species, Sex sex)
++    public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearance appearance, string species, Sex sex, string[] sponsorPrototypes)
+@@ -228,4 +228,14 @@ public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearanc
++        // Europa-Start
++        if (proto.TryIndex(hairStyleId, out MarkingPrototype? hairProto) &&
++            hairProto.SponsorOnly &&
++            !sponsorPrototypes.Contains(hairStyleId))
++        {
++            hairStyleId = HairStyles.DefaultHairStyle;
++        }
++        // Europa-End
++
++
+@@ -233,4 +243,13 @@ public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearanc
++        // Europa-Start
++        if (proto.TryIndex(facialHairStyleId, out MarkingPrototype? facialHairProto) &&
++            facialHairProto.SponsorOnly &&
++            !sponsorPrototypes.Contains(facialHairStyleId))
++        {
++            facialHairStyleId = HairStyles.DefaultFacialHairStyle;
++        }
++        // Europa-End
++
+@@ -247,4 +266,5 @@ public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearanc
++            markingSet.FilterSponsor(sponsorPrototypes, markingManager); // Europa
+@@ -299,3 +319,3 @@ public HumanoidCharacterAppearance Clone()
+-}
++}
+
+### Content.Shared/Humanoid/Markings/MarkingPrototype.cs
+@@ -41,4 +41,9 @@ public sealed partial class MarkingPrototype : IPrototype
++        // Europa-Start
++        [DataField("sponsorOnly")]
++        public bool SponsorOnly = false;
++        // Europa-End
++
+
+### Content.Shared/Humanoid/Markings/MarkingsSet.cs
+@@ -214,4 +214,41 @@ public void EnsureSpecies(string species, Color? skinColor, MarkingManager? mark
++    // Europa-Start
++    /// <summary>
++    ///     Filters sponsor markings unavailable for not sponsors check that from their prototype and allowed param
++    /// </summary>
++    /// <param name="sponsorMarkings">Sponsor markings that allowed to have.</param>
++    /// <param name="markingManager">Markings manager.</param>
++    /// <param name="prototypeManager">Prototype manager.</param>
++    public void FilterSponsor(string[] sponsorMarkings, MarkingManager? markingManager = null, IPrototypeManager? prototypeManager = null)
++    {
++        IoCManager.Resolve(ref markingManager);
++        IoCManager.Resolve(ref prototypeManager);
++
++        var toRemove = new List<(MarkingCategories category, string id)>();
++        foreach (var (category, list) in Markings)
++        {
++            foreach (var marking in list)
++            {
++                if (prototypeManager.TryIndex<MarkingPrototype>(marking.MarkingId, out var proto) && !proto.SponsorOnly)
++                {
++                    continue;
++                }
++
++                var allowedToHave = sponsorMarkings.Contains(marking.MarkingId);
++                if (!allowedToHave)
++                {
++                    toRemove.Add((category, marking.MarkingId));
++                }
++            }
++        }
++
++        foreach (var marking in toRemove)
++        {
++            Remove(marking.category, marking.id);
++        }
++    }
++    // Europa-End
++
+
+### Content.Shared/Humanoid/Prototypes/SpeciesPrototype.cs
+@@ -69,4 +69,12 @@ public sealed partial class SpeciesPrototype : IPrototype
++    // Europa-Start
++    /// <summary>
++    /// Whether the species is available only for sponsors
++    /// </summary>
++    [DataField]
++    public bool SponsorOnly { get; private set; } = false;
++    // Europa-End
++
+
+### Content.Shared/Humanoid/SharedHumanoidAppearanceSystem.cs
+@@ -52,4 +52,5 @@
++using Content.Europa.Interfaces.Shared;
+@@ -74,4 +75,5 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
++    private ISharedSponsorsManager? _sponsors;
+@@ -81,4 +83,5 @@ public override void Initialize()
++        IoCManager.Instance!.TryResolveType(out _sponsors); // Europa
+@@ -113,5 +116,6 @@ public HumanoidCharacterProfile FromStream(Stream stream, ICommonSession session
+-        profile.EnsureValid(session, collection!);
++        var sponsorPrototypes = _sponsors != null && _sponsors.TryGetServerPrototypes(session.UserId, out var prototypes) ? prototypes.ToArray() : []; // Europa
++        profile.EnsureValid(session, collection!, sponsorPrototypes);
+
+### Content.Shared/Preferences/HumanoidCharacterProfile.cs
+@@ -556,5 +556,5 @@ public bool MemberwiseEquals(ICharacterProfile maybeOther)
+-        public void EnsureValid(ICommonSession session, IDependencyCollection collection)
++        public void EnsureValid(ICommonSession session, IDependencyCollection collection, string[] sponsorPrototypes)
+@@ -567,4 +567,12 @@ public void EnsureValid(ICommonSession session, IDependencyCollection collection
++            // Europa-Start | Reset to human if player not sponsor
++            if (speciesPrototype.SponsorOnly && !sponsorPrototypes.Contains(Species.Id))
++            {
++                Species = SharedHumanoidAppearanceSystem.DefaultSpecies;
++                speciesPrototype = prototypeManager.Index(Species);
++            }
++            // Europa-End
++
+@@ -646,5 +654,5 @@ public void EnsureValid(ICommonSession session, IDependencyCollection collection
+-            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
++            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex, sponsorPrototypes); // Europa
+@@ -776,8 +784,8 @@ public List<ProtoId<TraitPrototype>> GetValidTraits(IEnumerable<ProtoId<TraitPro
+-        public ICharacterProfile Validated(ICommonSession session, IDependencyCollection collection)
++        public ICharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[] sponsorPrototypes)
+-            profile.EnsureValid(session, collection);
++            profile.EnsureValid(session, collection, sponsorPrototypes);
+
+### Content.Shared/Preferences/ICharacterProfile.cs
+@@ -31,10 +31,10 @@ public interface ICharacterProfile
+-        void EnsureValid(ICommonSession session, IDependencyCollection collection);
++        void EnsureValid(ICommonSession session, IDependencyCollection collection, string[] sponsorPrototypes); // Europa
+-        ICharacterProfile Validated(ICommonSession session, IDependencyCollection collection);
++        ICharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[] sponsorPrototypes); // Europa
+-}
++}
+
+### Content.Shared/Preferences/Loadouts/Effects/GroupLoadoutEffect.cs
+@@ -24,5 +24,5 @@ public sealed partial class GroupLoadoutEffect : LoadoutEffect
+-    public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout loadout, ICommonSession? session, IDependencyCollection collection, [NotNullWhen(false)] out FormattedMessage? reason)
++    public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout loadout, LoadoutPrototype proto, ICommonSession? session, IDependencyCollection collection, [NotNullWhen(false)] out FormattedMessage? reason) // Europa
+@@ -31,5 +31,5 @@ public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout load
+-            if (effect.Validate(profile, loadout, session, collection, out reason))
++            if (effect.Validate(profile, loadout, proto, session, collection, out reason)) // Europa
+@@ -40,3 +40,3 @@ public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout load
+-}
+
+### Content.Shared/Preferences/Loadouts/Effects/JobRequirementLoadoutEffect.cs
+
+### Content.Shared/Preferences/Loadouts/Effects/LoadoutEffect.cs
+
+### Content.Shared/Preferences/Loadouts/Effects/PointsCostLoadoutEffect.cs
+
+### Content.Shared/Preferences/Loadouts/Effects/SpeciesLoadoutEffect.cs
+
+### Content.Shared/Preferences/Loadouts/RoleLoadout.cs

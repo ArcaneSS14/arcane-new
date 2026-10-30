@@ -14,6 +14,10 @@
       - !type:Satiate
         satiationType: Hunger
         factor: 3
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: TastyEffect
+      # Arcane-End
   plantMetabolism:
   - !type:PlantAdjustNutrition
     amount: 1.5
@@ -94,6 +98,10 @@
           reagent: Nutriment
           min: 0.1
         factor: 1
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: SweetenerEffect
+      # Arcane-End
   plantMetabolism:
   - !type:PlantAdjustNutrition
     amount: 0.1

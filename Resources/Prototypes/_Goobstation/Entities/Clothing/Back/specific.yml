@@ -98,6 +98,10 @@
     zeroNoAmmo: true
   - type: Clothing
     slots: BACK
+    # Arcane-Start
+    equipDelay: 2
+    unequipDelay: 2
+    # Arcane-End
     sprite: _Goobstation/Clothing/Back/Backpacks/lmg_backpack.rsi
     clothingVisuals:
       back:

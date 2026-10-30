@@ -1,0 +1,22 @@
+[Tweak] Station Time In Ingame Info
+
+### Content.Server/GameTicking/GameTicker.Lobby.cs
+@@ -60,4 +60,5 @@
++using Content.Shared._Orion.Time;
+@@ -65,4 +66,6 @@ namespace Content.Server.GameTicking
++        [Dependency] private readonly TimeSystem _timeSystem = default!; // Orion
++
+@@ -131,4 +134,9 @@ private string GetInfoText(bool isInGameInfo = false)
++
++            // Orion-Start
++            var stationTime = _timeSystem.GetStationTime();
++            // Orion-End
++
+@@ -145,5 +153,7 @@ private string GetInfoText(bool isInGameInfo = false)
+-                ("desc", desc));
++                ("desc", desc),
++                ("stationTime", stationTime.Time.ToString(@"hh\:mm")), // Orion
++                ("stationDate", stationTime.Date.ToString("dd.MM.yyyy"))); // Orion
+@@ -252,3 +262,3 @@ public bool UserHasJoinedGame(NetUserId userId)
+-}
++}

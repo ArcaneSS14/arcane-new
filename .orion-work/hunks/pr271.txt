@@ -1,0 +1,16 @@
+[Fix] Larva Burst Death
+
+### Content.Server/_White/Xenomorphs/Larva/XenomorphLarvaSystem.cs
+@@ -3,4 +3,5 @@
++using Content.Server.Mobs;
+@@ -25,4 +26,5 @@ public sealed class XenomorphLarvaSystem : EntitySystem
++    [Dependency] private readonly DeathgaspSystem _deathgasp = default!; // Orion
+@@ -78,5 +80,11 @@ private void OnLarvaBurstDoAfter(EntityUid uid, XenomorphLarvaComponent componen
+-        _mobState.ChangeMobState(victim, MobState.Dead); // Orion
++        // Orion-Start
++        if (!_mobState.IsDead(victim))
++        {
++            _mobState.ChangeMobState(victim, MobState.Dead);
++            _deathgasp.Deathgasp(victim);
++        }
++        // Orion-End

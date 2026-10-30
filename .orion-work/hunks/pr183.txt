@@ -1,0 +1,438 @@
+Merge branch 'master' into FlavorNSFWUpdate
+
+### Content.Client/FlavorText/FlavorText.xaml.cs
+@@ -19,6 +19,6 @@ public sealed partial class FlavorText : Control
+-        public Action<string>? OnFlavorOOCTextChanged;
++        public Action<string>? OnOOCTextChanged;
+@@ -26,5 +26,9 @@ public sealed partial class FlavorText : Control
+-        public Action<string>? OnNSFWTextChanged;
++        public Action<string>? OnNsfwTextChanged;
++        public Action<string>? OnNsfwOOCTextChanged;
++        public Action<string>? OnNsfwLinksTextChanged;
++        public Action<string>? OnNsfwTagsTextChanged;
++        public Action<int>? OnTabChanged;
+@@ -42,5 +46,6 @@ public FlavorText()
+-            FlavorTabs.SetTabTitle(5, Loc.GetString("flavor-tab-preview"));
++            FlavorTabs.SetTabTitle(5, Loc.GetString("flavor-tab-nsfw-ooc-flavor"));
++            FlavorTabs.SetTabTitle(6, Loc.GetString("flavor-tab-preview"));
+@@ -74,5 +79,16 @@ public FlavorText()
+-            CNSFWTextInput.OnTextChanged += _ => NSFWTextChanged();
++            CNSFWTextInput.OnTextChanged += _ => NsfwTextChanged();
++
++            CFlavorNSFWOOCTextInput.Placeholder = new Rope.Leaf(loc.GetString("ooc-flavor-text-placeholder"));
++            CFlavorNSFWOOCTextInput.OnTextChanged += _ => FlavorNsfwOOCTextChanged();
++
++            CNSFWLinksTextInput.Placeholder = new Rope.Leaf(loc.GetString("links-flavor-text-placeholder"));
++            CNSFWLinksTextInput.OnTextChanged += _ => NsfwLinksTextChanged();
++
++            CNSFWTagsTextInput.Placeholder = new Rope.Leaf(loc.GetString("tags-flavor-text-placeholder"));
++            CNSFWTagsTextInput.OnTextChanged += _ => NsfwTagsTextChanged();
++
++            PreviewTabs.OnTabChanged += FlavorTabChanged;
+@@ -86,5 +102,5 @@ public void FlavorTextChanged()
+-            OnFlavorOOCTextChanged?.Invoke(Rope.Collapse(CFlavorOOCTextInput.TextRope).Trim());
++            OnOOCTextChanged?.Invoke(Rope.Collapse(CFlavorOOCTextInput.TextRope).Trim());
+@@ -119,7 +135,27 @@ public void LinksTextChanged()
+-        public void NSFWTextChanged()
++        public void NsfwTextChanged()
++        {
++            OnNsfwTextChanged?.Invoke(Rope.Collapse(CNSFWTextInput.TextRope).Trim());
++        }
++
++        public void FlavorNsfwOOCTextChanged()
++        {
++            OnNsfwOOCTextChanged?.Invoke(Rope.Collapse(CFlavorNSFWOOCTextInput.TextRope).Trim());
++        }
++
++        public void NsfwLinksTextChanged()
++        {
++            OnNsfwLinksTextChanged?.Invoke(Rope.Collapse(CNSFWLinksTextInput.TextRope).Trim());
++        }
++
++        public void NsfwTagsTextChanged()
++        {
++            OnNsfwTagsTextChanged?.Invoke(Rope.Collapse(CNSFWTagsTextInput.TextRope).Trim());
++        }
++
++        public void FlavorTabChanged(int tab)
+-            OnNSFWTextChanged?.Invoke(Rope.Collapse(CNSFWTextInput.TextRope).Trim());
++            OnTabChanged?.Invoke(tab);
+
+### Content.Client/Lobby/UI/HumanoidProfileEditor.xaml.cs
+@@ -231,4 +231,7 @@ public sealed partial class HumanoidProfileEditor : BoxContainer
++        private TextEdit? _nsfwLinksTextEdit;
++        private TextEdit? _nsfwOOCTextEdit;
++        private TextEdit? _nsfwTagsTextEdit;
+@@ -736,4 +739,7 @@ public void RefreshFlavorText()
++                _nsfwOOCTextEdit = _flavorText.CFlavorNSFWOOCTextInput;
++                _nsfwLinksTextEdit = _flavorText.CNSFWLinksTextInput;
++                _nsfwTagsTextEdit = _flavorText.CNSFWTagsTextInput;
+@@ -742,5 +748,5 @@ public void RefreshFlavorText()
+-                _flavorText.OnFlavorOOCTextChanged += OnFlavorOOCTextChange;
++                _flavorText.OnOOCTextChanged += OnFlavorOOCTextChange;
+@@ -749,5 +755,9 @@ public void RefreshFlavorText()
+-                _flavorText.OnNSFWTextChanged += OnNSFWFlavorTextChange;
++                _flavorText.OnNsfwTextChanged += OnNSFWFlavorTextChange;
++                _flavorText.OnNsfwLinksTextChanged += OnNsfwLinksFlavorTextChange;
++                _flavorText.OnNsfwOOCTextChanged += OnFlavorNsfwOOCTextChange;
++                _flavorText.OnNsfwTagsTextChanged += OnNsfwTagsFlavorTextChange;
++                _flavorText.OnTabChanged += OnTabChanged;
+@@ -759,5 +769,5 @@ public void RefreshFlavorText()
+-                _flavorText.OnFlavorOOCTextChanged -= OnFlavorOOCTextChange;
++                _flavorText.OnOOCTextChanged -= OnFlavorOOCTextChange;
+@@ -766,5 +776,9 @@ public void RefreshFlavorText()
+-                _flavorText.OnNSFWTextChanged -= OnNSFWFlavorTextChange;
++                _flavorText.OnNsfwTextChanged -= OnNSFWFlavorTextChange;
++                _flavorText.OnNsfwLinksTextChanged -= OnNsfwLinksFlavorTextChange;
++                _flavorText.OnNsfwOOCTextChanged -= OnFlavorNsfwOOCTextChange;
++                _flavorText.OnNsfwTagsTextChanged -= OnNsfwTagsFlavorTextChange;
++                _flavorText.OnTabChanged -= OnTabChanged;
+@@ -783,4 +797,7 @@ public void RefreshFlavorText()
++                _nsfwLinksTextEdit = null;
++                _nsfwOOCTextEdit = null;
++                _nsfwTagsTextEdit = null;
+@@ -790,5 +807,5 @@ public void RefreshFlavorText()
+-                private void UpdateFlavorPreview()
++        private void UpdateFlavorPreview()
+@@ -797,18 +814,21 @@ private void UpdateFlavorPreview()
+-            _flavorText.PreviewOOCText.SetMessage(Profile.OOCFlavorText);
++            _flavorText.PreviewOOCText.SetMessage(Profile.OocFlavorText);
++            _flavorText.PreviewNSFWOOCText.SetMessage(Profile.NsfwOOCFlavorText);
++            _flavorText.PreviewNSFWTagsText.Text = Profile.NsfwTagsFlavorText;
+-            ProcessLinks(Profile.LinksFlavorText);
++            ProcessLinks(Profile.LinksFlavorText, _flavorText.PreviewLinksContainer);
++            ProcessLinks(Profile.NsfwLinksFlavorText, _flavorText.PreviewNSFWLinksContainer);
+-            CreateGYRBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-green"), Color.Green);
+-            CreateGYRTextLabel(Profile.GreenFlavorText);
+-            CreateGYRBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-yellow"), Color.Yellow);
+-            CreateGYRTextLabel(Profile.YellowFlavorText);
+-            CreateGYRBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-red"), Color.Red);
+-            CreateGYRTextLabel(Profile.RedFlavorText);
++            CreateGyrBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-green"), Color.Green);
++            CreateGyrTextLabel(Profile.GreenFlavorText);
++            CreateGyrBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-yellow"), Color.Yellow);
++            CreateGyrTextLabel(Profile.YellowFlavorText);
++            CreateGyrBigTextLabel(Loc.GetString($"humanoid-profile-editor-gyr-red"), Color.Red);
++            CreateGyrTextLabel(Profile.RedFlavorText);
+-            _flavorText.PreviewNSFWText.SetMessage(Profile.NSFWFlavorText);
++            _flavorText.PreviewNSFWText.SetMessage(Profile.NsfwFlavorText);
+@@ -820,5 +840,36 @@ private void UpdateFlavorPreview()
+-        private void CreateGYRBigTextLabel(string text, Color color)
++        private void UpdateNsfwPreviewVisibility(bool showNsfw)
++        {
++            if (_flavorText == null)
++                return;
++
++            if (_flavorText.PreviewOOCText.Visible == !showNsfw)
++                return;
++
++            _flavorText!.PreviewOOCText.Visible = !showNsfw;
++            _flavorText!.PreviewNSFWOOCText.Visible = showNsfw;
++
++            _flavorText!.PreviewLinksContainer.Visible = !showNsfw;
++            _flavorText!.PreviewNSFWLinksContainer.Visible = showNsfw;
++
++            _flavorText!.PreviewTagsText.Visible = !showNsfw;
++            _flavorText!.PreviewNSFWTagsText.Visible = showNsfw;
++        }
++
++        private void OnTabChanged(int tab)
++        {
++            switch (tab)
++            {
++                case 3:
++                    UpdateNsfwPreviewVisibility(true);
++                    break;
++                default:
++                    UpdateNsfwPreviewVisibility(false);
++                    break;
++            }
++        }
++
++        private void CreateGyrBigTextLabel(string text, Color color)
+@@ -833,5 +884,5 @@ private void CreateGYRBigTextLabel(string text, Color color)
+-        private void CreateGYRTextLabel(string text)
++        private void CreateGyrTextLabel(string text)
+@@ -844,10 +895,11 @@ private void CreateGYRTextLabel(string text)
+-        private void ProcessLinks(string linksText)
++        private void ProcessLinks(string linksText, BoxContainer linksContainer)
+-            if (_flavorText?.PreviewLinksContainer == null)
++            if (linksContainer == null)
+-            _flavorText.PreviewLinksContainer.RemoveAllChildren();
++            linksContainer.RemoveAllChildren();
++
+@@ -858,9 +910,9 @@ private void ProcessLinks(string linksText)
+-                    CreateLinkButton(link);
++                    CreateLinkButton(link, linksContainer);
+-                    CreateLinkTextLabel(link);
++                    CreateLinkTextLabel(link, linksContainer);
+@@ -874,5 +926,5 @@ private bool IsValidUrl(string url)
+-        private void CreateLinkButton(string url)
++        private void CreateLinkButton(string url, BoxContainer linksContainer)
+@@ -882,13 +934,13 @@ private void CreateLinkButton(string url)
+-                StyleClasses = { StyleNano.ButtonOpenBoth }
++                StyleClasses = { StyleBase.ButtonOpenBoth },
+-            _flavorText?.PreviewLinksContainer.AddChild(button);
++            linksContainer.AddChild(button);
+-        private void CreateLinkTextLabel(string text)
++        private void CreateLinkTextLabel(string text, BoxContainer linksContainer)
+@@ -897,8 +949,8 @@ private void CreateLinkTextLabel(string text)
+-                FontColorOverride = Color.Gray
++                FontColorOverride = Color.Gray,
+-            _flavorText?.PreviewLinksContainer.AddChild(label);
++            linksContainer.AddChild(label);
+@@ -920,4 +972,37 @@ private void OpenLink(string url)
++
++        private void OnFlavorNsfwOOCTextChange(string content)
++        {
++            if (Profile is null)
++                return;
++
++            Profile = Profile.WithNsfwOOCFlavorText(content);
++            SetDirty();
++
++            UpdateFlavorPreview();
++        }
++
++        private void OnNsfwLinksFlavorTextChange(string content)
++        {
++            if (Profile is null)
++                return;
++
++            Profile = Profile.WithNsfwLinksText(content);
++            SetDirty();
++
++            UpdateFlavorPreview();
++        }
++
++        private void OnNsfwTagsFlavorTextChange(string content)
++        {
++            if (Profile is null)
++                return;
++
++            Profile = Profile.WithNsfwTagsText(content);
++            SetDirty();
++
++            UpdateFlavorPreview();
++        }
+@@ -1620,5 +1705,5 @@ private void OnNSFWFlavorTextChange(string content)
+-            Profile = Profile.WithNSFWPreferencesText(content);
++            Profile = Profile.WithNsfwPreferencesText(content);
+@@ -1871,47 +1956,38 @@ private void UpdateFlavorTextEdit()
+-            {
+-            }
+-            {
+-                _flavorTextOOCEdit.TextRope = new Rope.Leaf(Profile?.OOCFlavorText ?? "");
+-            }
++                _flavorTextOOCEdit.TextRope = new Rope.Leaf(Profile?.OocFlavorText ?? "");
+-            {
+-            }
+-            {
+-            }
+-            {
+-            }
+-            {
+-            }
+-            {
+-            }
+-            {
+-            }
+-            {
+-                _nsfwTextEdit.TextRope = new Rope.Leaf(Profile?.NSFWFlavorText ?? "");
+-            }
++                _nsfwTextEdit.TextRope = new Rope.Leaf(Profile?.NsfwFlavorText ?? "");
++
++            if (_nsfwOOCTextEdit != null)
++                _nsfwOOCTextEdit.TextRope = new Rope.Leaf(Profile?.NsfwOOCFlavorText ?? "");
++
++            if (_nsfwLinksTextEdit != null)
++                _nsfwLinksTextEdit.TextRope = new Rope.Leaf(Profile?.NsfwLinksFlavorText ?? "");
++
++            if (_nsfwTagsTextEdit != null)
++                _nsfwTagsTextEdit.TextRope = new Rope.Leaf(Profile?.NsfwTagsFlavorText ?? "");
+
+### Content.Client/_Orion/DetailExaminable/DetailExaminableWindow.xaml.cs
+@@ -1,4 +1,5 @@
++using Content.Client._Orion.StyleSheets;
+@@ -40,4 +41,6 @@ public DetailExaminableWindow()
++
++        PreviewTabs.OnTabChanged += OnTabChanged;
+@@ -68,4 +71,43 @@ private void UpdateSpriteDirection()
++    private void UpdateNsfwPreviewVisibility(bool toggleNsfw)
++    {
++        // Return if nothing changes
++        if (PreviewTagsText.Visible == !toggleNsfw)
++            return;
++
++        var config = IoCManager.Resolve<IConfigurationManager>();
++        var showLinks = config.GetCVar(CCVars.FlavorLinksEnabled);
++        var showOOC = config.GetCVar(CCVars.FlavorOocEnabled);
++
++        if (showLinks)
++        {
++            PreviewLinksContainer.Visible = !toggleNsfw;
++            PreviewNSFWLinksContainer.Visible = toggleNsfw;
++        }
++
++        if (showOOC)
++        {
++            PreviewOOCText.Visible = !toggleNsfw;
++            PreviewNSFWOOCText.Visible = toggleNsfw;
++        }
++
++        PreviewTagsText.Visible = !toggleNsfw;
++        PreviewNSFWTagsText.Visible = toggleNsfw;
++    }
++
++    private void OnTabChanged(int tab)
++    {
++        switch (tab)
++        {
++            case 3:
++                UpdateNsfwPreviewVisibility(true);
++                break;
++            default:
++                UpdateNsfwPreviewVisibility(false);
++                break;
++        }
++    }
++
+@@ -103,14 +145,19 @@ public void UpdateState(DetailExaminableEuiState state, IEntityManager entManage
+-        PreviewAppearanceText.SetMessage(GetContentWithEmptyMessage(state.FlavorText, "detail-examinable-empty-flavor"));
++        PreviewAppearanceText.SetMarkup(GetContentWithEmptyMessage(state.FlavorText, "detail-examinable-empty-flavor"));
+-            PreviewOOCText.SetMessage(GetContentWithEmptyMessage(state.OOCFlavorText, "detail-examinable-empty-ooc"));
++        {
++            PreviewOOCText.SetMarkup(GetContentWithEmptyMessage(state.OOCFlavorText, "detail-examinable-empty-ooc"));
++
++            if (showNsfw)
++                PreviewNSFWOOCText.SetMarkup(GetContentWithEmptyMessage(state.NsfwOOCFlavorText, "detail-examinable-empty-ooc"));
++        }
+-            PreviewTraitsText.SetMessage(GetContentWithEmptyMessage(state.CharacterFlavorText, "detail-examinable-empty-character"));
++            PreviewTraitsText.SetMarkup(GetContentWithEmptyMessage(state.CharacterFlavorText, "detail-examinable-empty-character"));
+-            PreviewNSFWText.SetMessage(GetContentWithEmptyMessage(state.NSFWFlavorText, "detail-examinable-empty-nsfw"));
++            PreviewNSFWText.SetMarkup(GetContentWithEmptyMessage(state.NsfwFlavorText, "detail-examinable-empty-nsfw"));
+@@ -119,22 +166,27 @@ public void UpdateState(DetailExaminableEuiState state, IEntityManager entManage
+-            CreateGYRTextLabel(GetContentWithEmptyMessage(state.GreenFlavorText, "detail-examinable-empty-green"));
++            CreateGyrTextLabel(GetContentWithEmptyMessage(state.GreenFlavorText, "detail-examinable-empty-green"));
+-            CreateGYRTextLabel(GetContentWithEmptyMessage(state.YellowFlavorText, "detail-examinable-empty-yellow"));
++            CreateGyrTextLabel(GetContentWithEmptyMessage(state.YellowFlavorText, "detail-examinable-empty-yellow"));
+-            CreateGYRTextLabel(GetContentWithEmptyMessage(state.RedFlavorText, "detail-examinable-empty-red"));
++            CreateGyrTextLabel(GetContentWithEmptyMessage(state.RedFlavorText, "detail-examinable-empty-red"));
++        PreviewNSFWTagsText.Text = state.NsfwTagsFlavorText;
+-            ProcessLinks(state.LinksFlavorText);
++            ProcessLinks(state.LinksFlavorText, PreviewLinksContainer);
++
++            if (showNsfw)
++                ProcessLinks(state.NsfwLinksFlavorText, PreviewNSFWLinksContainer);
++            PreviewNSFWLinksContainer?.RemoveAllChildren();
+@@ -150,21 +202,18 @@ private static string GetContentWithEmptyMessage(string content, string emptyMes
+-    private void CreateGYRTextLabel(string text)
++    private void CreateGyrTextLabel(string text)
+-            Text = text + "\n",
++        label.SetMarkup(text + "\n");
+-    private void ProcessLinks(string linksText)
++    private void ProcessLinks(string linksText, BoxContainer linksContainer)
+-        if (PreviewLinksContainer == null)
+-            return;
+-
+-        PreviewLinksContainer.RemoveAllChildren();
++        linksContainer.RemoveAllChildren();
+@@ -174,7 +223,8 @@ private void ProcessLinks(string linksText)
+-                FontColorOverride = Color.Gray
++                FontColorOverride = Color.Gray,
+-            PreviewLinksContainer.AddChild(emptyLabel);
++
++            linksContainer.AddChild(emptyLabel);
+@@ -185,9 +235,9 @@ private void ProcessLinks(string linksText)
+-                CreateLinkButton(link);
++                CreateLinkButton(link, linksContainer);
+-                CreateLinkTextLabel(link);
++                CreateLinkTextLabel(link, linksContainer);
+@@ -216,5 +266,5 @@ private static bool IsValidUrl(string url)
+-    private void CreateLinkButton(string url)
++    private void CreateLinkButton(string url, BoxContainer linksContainer)
+@@ -229,8 +279,8 @@ private void CreateLinkButton(string url)
+-        PreviewLinksContainer.AddChild(button);
++        linksContainer.AddChild(button);
+-    private void CreateLinkTextLabel(string text)
++    private void CreateLinkTextLabel(string text, BoxContainer linksContainer)
+@@ -242,5 +292,5 @@ private void CreateLinkTextLabel(string text)
+-        PreviewLinksContainer.AddChild(label);
++        linksContainer.AddChild(label);
+@@ -275,12 +325,10 @@ private Control CreateSectionHeader(string text, Color? color = null, bool useSt
+-        if (useStripeBack)
+-        {
+-            var stripe = new StripeBack();
+-            stripe.AddChild(label);
+-            return stripe;
+-        }
++        if (!useStripeBack)
++            return label;
+-        return label;
++        var stripe = new StripeBack();
++        stripe.AddChild(label);
++        return stripe;
+
+### Content.Client/_Orion/StyleSheets/RichTextExtensions.cs
+@@ -0,0 +1,59 @@
++using System.Linq;
++using System.Text.RegularExpressions;
++using Robust.Client.UserInterface.Controls;
++using Robust.Client.UserInterface.RichText;
++using Robust.Shared.Utility;
++
++namespace Content.Client._Orion.StyleSheets;
++
++//
++// License-Identifier: GPL-3.0-or-later
++//
++
++/// <summary>
++/// Extension methods for RichTextLabel to support safe BBCode formatting.
++/// Only allows whitelisted tags to prevent client crashes.
++/// </summary>
++public static class RichTextExtensions
++{
++    private static readonly Regex TagRegex = new(@"\[/?(?<tag>[a-zA-Z]+)(?:=[^\\\]]+)?\]", RegexOptions.Compiled);
++
++    private static readonly Type[] AllowedTags = new[]
++    {
++        typeof(BoldItalicTag), // [bolditalic]
++        typeof(BoldTag), // [bold]
++        typeof(ColorTag), // [color=Red] / [color=#FF0000]
++        typeof(ItalicTag), // [italic]
++    };
++
++    /// <summary>
++    /// Sanitizes the input string by removing unsupported BBCode tags (e.g. [font=...]), keeping only whitelisted ones.
++    /// Prevents client crashes caused by malicious or malformed BBCode.
++    /// </summary>
++    /// <param name="text">Input text containing BBCode tags.</param>
+
+### Content.Server.Database/Migrations/Postgres/20251126190823_FlavorExtendedNSFW.Designer.cs
+
+### Content.Server.Database/Migrations/Postgres/20251126190823_FlavorExtendedNSFW.cs
+
+### Content.Server.Database/Migrations/Postgres/PostgresServerDbContextModelSnapshot.cs
+
+### Content.Server.Database/Migrations/Sqlite/20251126190850_FlavorExtendedNSFW.Designer.cs
+
+### Content.Server.Database/Migrations/Sqlite/20251126190850_FlavorExtendedNSFW.cs
+
+### Content.Server.Database/Migrations/Sqlite/SqliteServerDbContextModelSnapshot.cs
+
+### Content.Server.Database/Model.cs
+
+### Content.Server/Database/ServerDbBase.cs
+
+### Content.Server/_Orion/DetailExaminable/DetailExaminableSystem.cs
+
+### Content.Shared/CCVar/CCVars.Ic.cs
+
+### Content.Shared/DetailExaminable/DetailExaminableComponent.cs
+
+### Content.Shared/Preferences/HumanoidCharacterProfile.cs
+
+### Content.Shared/_Orion/CCVar/CCVars.Flavor.cs
+
+### Content.Shared/_Orion/DetailExaminable/DetailExaminableEuiState.cs

@@ -46,6 +46,11 @@
       path: /Audio/Weapons/Guns/Hits/bullet_hit.ogg
   - type: TimedDespawn
     lifetime: 10
+  # Arcane-Start
+  - type: Tracer
+    color: "#FFFFFFFF"
+    length: 3
+  # Arcane-End
 
 - type: entity
   parent: BaseBullet
@@ -85,6 +90,11 @@
     damage:
       types:
         Blunt: 1
+  # Arcane-Start
+  - type: Tracer
+    color: "#CCCCCCFF"
+    length: 3
+  # Arcane-End
 
 - type: entity
   parent: BaseBullet
@@ -104,6 +114,11 @@
     energy: 7.0
   - type: IgniteOnCollide
     fireStacks: 0.5 # Trauma - was 0.25
+  # Arcane-Start
+  - type: Tracer
+    color: "#D1B479FF"
+    length: 3
+  # Arcane-End
 
 - type: entity
   parent: BaseBullet
@@ -120,6 +135,11 @@
       types:
         Ballistic: 11 # Trauma - was Piercing
     increaseOnly: true # Trauma - apply modifiers, but ignore decreases
+  # Arcane-Start
+  - type: Tracer
+    color: "#71C978FF"
+    length: 3
+  # Arcane-End
 
 - type: entity
   parent: BaseBullet
@@ -140,3 +160,8 @@
     damage:
       types:
         Radiation: 11
+  # Arcane-Start
+  - type: Tracer
+    color: "#71C978FF"
+    length: 3
+  # Arcane-End

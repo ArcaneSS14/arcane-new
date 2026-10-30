@@ -1,0 +1,6 @@
+[Fix] Interdyne Freezer Broke Test
+
+### Resources/Prototypes/_Orion/Entities/Structures/Storage/Crates/crates.yml
+@@ -307,5 +307,5 @@
+-  parent: [ CrateFreezer, CrateBaseSecure ]
++  parent: [ CrateBaseSecure, CrateFreezer ]

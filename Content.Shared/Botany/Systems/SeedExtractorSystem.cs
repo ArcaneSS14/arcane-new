@@ -6,6 +6,10 @@ using Content.Shared.Popups;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Timing;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Shared.Botany.Systems;
 
@@ -49,7 +53,7 @@ public sealed partial class SeedExtractorSystem : EntitySystem
         args.Handled = true;
 
         var random = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        var amount = ent.Comp.BaseSeeds.NextFloat(random);
+        var amount = ent.Comp.BaseSeeds.NextFloat(random) * ent.Comp.SeedMultiplier; // Arcane-Edit
         var coords = Transform(ent).Coordinates;
 
         for (var i = 0; i < amount; i++)
@@ -58,4 +62,19 @@ public sealed partial class SeedExtractorSystem : EntitySystem
                 _botany.SpawnSeedPacket(plantData, produce.PlantProtoId.Value, snapshot, coords, args.User);
         }
     }
+
+    // Arcane-Start
+    [SubscribeLocalEvent]
+    private void OnPartsRefresh(Entity<SeedExtractorComponent> ent, ref RefreshPartsEvent args)
+    {
+        ent.Comp.SeedMultiplier = MathF.Max(1f, args.GetPartRating(MachinePartIds.Servo, 1f));
+        Dirty(ent);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnUpgradeExamine(Entity<SeedExtractorComponent> ent, ref UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-seed-extraction", ent.Comp.SeedMultiplier);
+    }
+    // Arcane-End
 }

@@ -1,0 +1,129 @@
+[Port] Music Slider
+
+### Content.Client/Audio/Jukebox/JukeboxBoundUserInterface.cs
+@@ -53,4 +53,5 @@ protected override void Open()
++        _menu.SetVolume += SetVolume; // Europa
+@@ -66,4 +67,5 @@ public void Reload()
++        _menu.SetVolumeSlider(jukebox.Volume); // Europa
+@@ -106,3 +108,25 @@ public void SetTime(float time)
++
++    // Europa-Start
++    /// First applies the volume locally for prediction (if components are available),
++    /// then sends a message to the server for synchronization.
++    /// Uses MapToRange to convert the slider value to the actual audio component volume range.
++    /// </summary>
++    /// <param name="volume">Volume value from the UI slider (typically from 0 to 1).</param>
++
++    public void SetVolume(float volume)
++    {
++        var sentVolume = volume;
++
++        // Prediction
++        if (EntMan.TryGetComponent(Owner, out JukeboxComponent? jukebox) &&
++            EntMan.TryGetComponent(jukebox.AudioStream, out AudioComponent? audioComp))
++        {
++            audioComp.Volume = SharedJukeboxSystem.MapToRange(volume, jukebox.MinSlider, jukebox.MaxSlider, jukebox.MinVolume, jukebox.MaxVolume);
++        }
++
++        SendMessage(new JukeboxSetVolumeMessage(sentVolume));
++    }
++    // Europa-End
+
+### Content.Client/Audio/Jukebox/JukeboxMenu.xaml.cs
+@@ -36,4 +36,5 @@ public sealed partial class JukeboxMenu : FancyWindow
++    public event Action<float>? SetVolume; // Europa
+@@ -67,4 +68,7 @@ public JukeboxMenu()
++        VolumeSlider.OnReleased += VolumeSliderKeyUp; /// Europa
++
++        VolumeSlider.MaxValue = 100f; /// Europa
+@@ -87,4 +91,12 @@ private void PlaybackSliderKeyUp(Slider args)
++    // Europa-Start
++    private void VolumeSliderKeyUp(Slider args)
++    {
++        SetVolume?.Invoke(VolumeSlider.Value);
++        _lockTimer = 0.5f;
++    }
++    // Europa-End
++
+@@ -98,4 +110,5 @@ public void Populate(IEnumerable<JukeboxPrototype> jukeboxProtos)
++        MusicList.SortItemsByText(); // Europa
+@@ -123,4 +136,11 @@ public void SetSelectedSong(string name, float length)
++    // Europa-Start
++    public void SetVolumeSlider(float volume)
++    {
++        VolumeSlider.Value = volume;
++    }
++    // Europa-End
++
+@@ -133,4 +153,5 @@ protected override void FrameUpdate(FrameEventArgs args)
++        VolumeSlider.Disabled = _lockTimer > 0f; // Europa
+@@ -143,7 +164,12 @@ protected override void FrameUpdate(FrameEventArgs args)
++        VolumeNumberLabel.Text = $"{VolumeSlider.Value.ToString("0.##")} %"; // Europa
++
++        if (VolumeSlider.Grabbed) // Europa
++            return;
++
+
+### Content.Server/Audio/Jukebox/JukeboxSystem.cs
+@@ -49,4 +49,5 @@
++using Robust.Shared.Audio.Systems;
+@@ -69,4 +70,5 @@ public override void Initialize()
++        SubscribeLocalEvent<JukeboxComponent, JukeboxSetVolumeMessage>(OnJukeboxSetVolume); // Europa
+@@ -99,5 +101,5 @@ private void OnJukeboxPlay(EntityUid uid, JukeboxComponent component, ref Jukebo
+-            component.AudioStream = Audio.PlayPvs(jukeboxProto.Path, uid, AudioParams.Default.WithMaxDistance(10f).WithVolume(-6f))?.Entity; // Goobstation - the jukebox doesn't break your ears anymore
++            component.AudioStream = Audio.PlayPvs(jukeboxProto.Path, uid, AudioParams.Default.WithMaxDistance(10f).WithVolume(MapToRange(component.Volume, component.MinSlider, component.MaxSlider, component.MinVolume, component.MaxVolume)))?.Entity; // Europa
+@@ -118,4 +120,16 @@ private void OnJukeboxSetTime(EntityUid uid, JukeboxComponent component, Jukebox
++    // Europa-Start
++    private void OnJukeboxSetVolume(EntityUid uid, JukeboxComponent component, JukeboxSetVolumeMessage args)
++    {
++        SetJukeboxVolume(uid, component, args.Volume);
++
++        if (!TryComp<AudioComponent>(component.AudioStream, out var audioComponent))
++            return;
++
++        Audio.SetVolume(component.AudioStream, MapToRange(args.Volume, component.MinSlider, component.MaxSlider, component.MinVolume, component.MaxVolume));
++    }
++    // Europa-End
++
+@@ -173,4 +187,12 @@ public override void Update(float frameTime)
++    // Europa-Start
++    private void SetJukeboxVolume(EntityUid uid, JukeboxComponent component, float volume)
++    {
++        component.Volume = volume;
++        Dirty(uid, component);
++    }
++    // Europa-End
++    
+
+### Content.Shared/Audio/Jukebox/JukeboxComponent.cs
+@@ -44,4 +44,13 @@ public sealed partial class JukeboxComponent : Component
++    // Europa-Start
++    [ViewVariables, AutoNetworkedField]
++    public float Volume = 50f;
++
++    public float MinVolume = -30f;
++    public float MaxVolume = 0f;
++    public float MinSlider = 0f;
++    public float MaxSlider = 100f;
++    // Europa-End
+@@ -67,4 +76,12 @@ public sealed class JukeboxSetTimeMessage(float songTime) : BoundUserInterfaceMe
++// Europa-Start 
++[Serializable, NetSerializable]
++public sealed class JukeboxSetVolumeMessage(float volume) : BoundUserInterfaceMessage
++{
++    public float Volume { get; } = volume;
++}
++// Europa-End
++
+
+### Content.Shared/Audio/Jukebox/SharedJukeboxSystem.cs
+@@ -12,3 +12,10 @@ public abstract class SharedJukeboxSystem : EntitySystem
+-}
++
++    // Europa-Start
++    public static float MapToRange(float value, float leftMin, float leftMax, float rightMin, float rightMax)
++    {
++        return rightMin + (value - leftMin) * (rightMax - rightMin) / (leftMax - leftMin);
++    }
++    // Europa-End
++}

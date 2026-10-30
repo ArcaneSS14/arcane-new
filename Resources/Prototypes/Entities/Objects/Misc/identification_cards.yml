@@ -44,6 +44,15 @@
     - WhitelistChameleonIdCard
   - type: StealTarget
     stealGroup: IDCard
+  # Arcane-Start
+  - type: BankCard
+  - type: ActivatableUI
+    key: enum.BankCardUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.BankCardUiKey.Key:
+        type: BankCardBoundUserInterface
+  # Arcane-End
 
 #IDs with layers
 
@@ -1012,6 +1021,7 @@
     groups:
     - AllAccess
     - Silicon
+    - InteQ # Arcane
     tags:
     # <Trauma>
     - NanotrasenRepresentative

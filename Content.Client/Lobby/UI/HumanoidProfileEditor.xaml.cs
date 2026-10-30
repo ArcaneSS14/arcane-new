@@ -358,6 +358,7 @@ namespace Content.Client.Lobby.UI
                 return;
 
             SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
+            UpdateFlavorPreview(); // Arcane
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

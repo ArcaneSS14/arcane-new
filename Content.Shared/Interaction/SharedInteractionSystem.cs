@@ -164,6 +164,18 @@ namespace Content.Shared.Interaction
         {
             _uiQuery.TryComp(ev.Target, out var aUiComp);
 
+            // Arcane-Start - ghosts only ever open UIs, never send messages to them
+            if (TryComp<GhostComponent>(ev.Actor, out var ghost) && !ghost.CanGhostInteract)
+            {
+                if (ev.Message is not OpenBoundInterfaceMessage
+                    || !ghost.CanGhostOpenUI
+                    || aUiComp is { SingleUser: true } or { BlockSpectators: true })
+                    ev.Cancel();
+
+                return;
+            }
+            // Arcane-End
+
             if (!_actionBlockerSystem.CanInteract(ev.Actor, ev.Target))
             {
                 // We permit ghosts to open uis unless explicitly blocked

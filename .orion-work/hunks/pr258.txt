@@ -1,0 +1,8 @@
+[Tweak] Remove Salvage Vendor Access
+
+### Resources/Prototypes/Entities/Structures/Machines/vending_machines.yml
+@@ -1817,6 +1817,6 @@
+-  - type: AccessReader
+-    access: [["Salvage"]]
++#  - type: AccessReader # Orion-Edit: Removed
++#    access: [["Salvage"]]

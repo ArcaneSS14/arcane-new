@@ -1,0 +1,53 @@
+remove unused FTL
+
+### Content.Server/Research/Systems/ResearchSystem.Server.cs
+@@ -32,9 +32,4 @@ private void OnServerStartup(EntityUid uid, ResearchServerComponent component, C
+-        // Orion-Start
+-        var formattedId = component.Id.ToString("D4");
+-        component.ServerName = Loc.GetString("research-server-name", ("id", formattedId));
+-        // Orion-End
+-
+
+### Content.Shared/Research/Components/ResearchServerComponent.cs
+@@ -40,5 +40,5 @@ public sealed partial class ResearchServerComponent : Component
+-    public string ServerName = ""; // Orion-Edit | Better server name
++    public string ServerName = "RND-Server"; // Orion-Edit | Fix name
+
+### Resources/Prototypes/Entities/Structures/Machines/lathe.yml
+@@ -593,4 +593,7 @@
++    # Orion-Start
++    - ChemistryBoards
++    # Orion-End
+@@ -880,4 +883,5 @@
++    - ChemistryBoards
+
+### Resources/Prototypes/Recipes/Lathes/Packs/medical.yml
+@@ -89,5 +89,5 @@
+-  - ChemDispenserMachineCircuitboard
++#  - ChemDispenserMachineCircuitboard # Orion-Remove
+
+### Resources/Prototypes/_Goobstation/Entities/Specific/ghostbar.yml
+@@ -128,4 +128,8 @@
++    # Orion-Start
++    - ChemistryBoards
++    - BodyBagsDynamic
++    # Orion-End
+
+### Resources/Prototypes/_Goobstation/Entities/Structures/Machines/lathe.yml
+@@ -198,4 +198,5 @@
++    - ChemistryBoards
+
+### Resources/Prototypes/_Orion/Entities/Structures/Machines/lathe.yml
+@@ -59,4 +59,5 @@
++    - ServiceBoardsEvilStatic
+@@ -69,4 +70,7 @@
++    # Orion-Start
++    - ChemistryBoards
++    # Orion-End
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/Packs/chemistry.yml
+@@ -0,0 +1,4 @@
++- type: latheRecipePack
++  id: ChemistryBoards
++  recipes:
++  - EnergyChemDispenserMachineCircuitboard

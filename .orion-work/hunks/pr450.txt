@@ -1,0 +1,15 @@
+Merge branch 'master' into new-problems
+
+### Resources/Prototypes/Entities/Structures/Machines/smartfridge.yml
+@@ -100,4 +100,5 @@
++      - !type:EmptyAllContainersBehaviour # Orion: Fix SmartFridge
+@@ -115,4 +116,5 @@
++      - !type:EmptyAllContainersBehaviour # Orion: Fix SmartFridge
+
+### Resources/Prototypes/_Goobstation/Entities/Mobs/Species/tajaran.yml
+@@ -112,5 +112,5 @@
+-    speciesId: reptilian
++#    speciesId: reptilian # Orion-Edit: We don't want to see tails from lizards on suits.
+@@ -189,5 +189,5 @@
+-    speciesId: reptilian
++#    speciesId: reptilian # Orion-Edit: We don't want to see tails from lizards on suits.

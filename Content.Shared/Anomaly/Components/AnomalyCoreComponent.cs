@@ -1,12 +1,17 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+// Arcane-Start
+using Content.Shared.FixedPoint;
+using Content.Shared.Chemistry.Reagent;
+using Robust.Shared.Prototypes;
+// Arcane-End
 
 namespace Content.Shared.Anomaly.Components;
 
 /// <summary>
 /// This component exists for a limited time, and after it expires it modifies the entity, greatly reducing its value and changing its visuals
 /// </summary>
-[RegisterComponent, NetworkedComponent, Access(typeof(SharedAnomalyCoreSystem))]
+[RegisterComponent, NetworkedComponent, Access(typeof(SharedAnomalyCoreSystem), typeof(SharedAnomalySystem))] // Arcane-Edit: SharedAnomalySystem sets decay data
 [AutoGenerateComponentState]
 public sealed partial class AnomalyCoreComponent : Component
 {
@@ -49,4 +54,45 @@ public sealed partial class AnomalyCoreComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     [AutoNetworkedField]
     public int Charge = 5;
+
+    // Arcane-Start: decay into an inert prototype and reactivation with reagents
+    /// <summary>
+    /// Inert core this core turns into when it decays.
+    /// </summary>
+    [DataField]
+    public EntProtoId? DecayPrototype;
+
+    /// <summary>
+    /// Active core this inert core turns back into when reactivated.
+    /// </summary>
+    [DataField]
+    public EntProtoId? ReactivationPrototype;
+
+    /// <summary>
+    /// Anomaly that can spawn as a hazardous side effect of reactivation.
+    /// </summary>
+    [DataField]
+    public EntProtoId? HazardousAnomalyPrototype;
+
+    /// <summary>
+    /// Reagents that safely reactivate an inert core.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<ReagentPrototype>> ReactivationReagents = new();
+
+    /// <summary>
+    /// Reagents that reactivate an inert core but may cause a hazardous side effect.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<ReagentPrototype>> HazardousReactivationReagents = new();
+
+    /// <summary>
+    /// Amount of reagent consumed per reactivation attempt.
+    /// </summary>
+    [DataField]
+    public FixedPoint2 ReactivationReagentAmount = FixedPoint2.New(5);
+
+    [DataField]
+    public float HazardousFailureChance = 0.65f;
+    // Arcane-End
 }

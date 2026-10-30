@@ -1,0 +1,2 @@
+M	Content.Goobstation.Server/Chemistry/Components/EnergyReagentDispenserComponent.cs
+M	Content.Goobstation.Server/Chemistry/EntitySystems/EnergyReagentDispenserSystem.cs

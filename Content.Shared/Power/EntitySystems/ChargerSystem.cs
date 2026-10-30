@@ -8,6 +8,7 @@ using Content.Shared.Storage.Components;
 using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+using Content.Shared.Construction.Events; // Arcane
 
 namespace Content.Shared.Power.EntitySystems;
 
@@ -36,6 +37,10 @@ public sealed partial class ChargerSystem : EntitySystem
         SubscribeLocalEvent<ChargerComponent, EmpDisabledRemovedEvent>(OnEmpRemoved);
         SubscribeLocalEvent<InsideChargerComponent, RefreshChargeRateEvent>(OnRefreshChargeRate);
         SubscribeLocalEvent<InsideChargerComponent, BatteryStateChangedEvent>(OnStatusChanged);
+        // Arcane-Start
+        SubscribeLocalEvent<ChargerComponent, RefreshPartsEvent>(OnPartsRefresh);
+        SubscribeLocalEvent<ChargerComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
     }
 
     private void OnStartup(Entity<ChargerComponent> ent, ref ComponentStartup args)
@@ -186,6 +191,29 @@ public sealed partial class ChargerSystem : EntitySystem
 
         UpdateStatus((chargerUid, chargerComp));
     }
+
+    // Arcane-Start
+    private void OnPartsRefresh(EntityUid uid, ChargerComponent component, RefreshPartsEvent args)
+    {
+        component.BaseChargeRate ??= component.ChargeRate;
+        var capacitorTier = args.GetPartRating(component.ChargePart);
+        component.ChargeRate = component.BaseChargeRate.Value * RefreshPartsEvent.GetPositiveTierMultiplier(capacitorTier);
+        Dirty(uid, component);
+
+        var ent = (uid, component);
+        RefreshAllBatteries(ent);
+        UpdateStatus(ent);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, ChargerComponent component, UpgradeExamineEvent args)
+    {
+        var efficiency = component.BaseChargeRate is not { } baseRate || baseRate <= 0f
+            ? 1f
+            : component.ChargeRate / baseRate;
+
+        args.AddPercentageUpgrade("machine-upgrade-charging-efficiency", efficiency);
+    }
+    // Arcane-End
 
     private void RefreshAllBatteries(Entity<ChargerComponent> ent)
     {

@@ -3,6 +3,7 @@ using Content.Shared.Item;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
+using Content.Shared.Construction.Prototypes; // Arcane
 
 namespace Content.Server.Kitchen.Components
 {
@@ -11,6 +12,11 @@ namespace Content.Server.Kitchen.Components
     {
         [DataField]
         public float CookTimeMultiplier = 1;
+
+        // Arcane-Start
+        [ViewVariables(VVAccess.ReadWrite)]
+        public float BaseCookTimeMultiplier = 1;
+        // Arcane-End
 
         [DataField]
         public float BaseHeatMultiplier = 100;
@@ -83,6 +89,11 @@ namespace Content.Server.Kitchen.Components
         [DataField]
         public int Capacity = 10;
 
+        // Arcane-Start
+        [ViewVariables(VVAccess.ReadWrite)]
+        public int BaseCapacity = 10;
+        // Arcane-End
+
         [DataField]
         public ProtoId<ItemSizePrototype> MaxItemSize = "Normal";
 
@@ -97,6 +108,17 @@ namespace Content.Server.Kitchen.Components
         /// </summary>
         [DataField]
         public float ExplosionChance = .1f;
+
+        // Arcane-Start
+        [ViewVariables(VVAccess.ReadWrite)]
+        public float BaseExplosionChance = .1f;
+
+        [DataField]
+        public ProtoId<MachinePartPrototype> MicroLaserPart = "MicroLaser";
+
+        [DataField]
+        public ProtoId<MachinePartPrototype> MatterBinPart = "MatterBin";
+        // Arcane-End
 
         /// <summary>
         /// Chance of lightning occurring when we microwave a metallic object

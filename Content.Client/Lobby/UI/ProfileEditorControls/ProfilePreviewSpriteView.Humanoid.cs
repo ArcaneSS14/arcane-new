@@ -75,6 +75,12 @@ public sealed partial class ProfilePreviewSpriteView
                 GiveDummyLoadout(loadout);
             }
         }
+        // Arcane-Start: without job clothes the preview still wears the chosen underwear
+        else if (humanoid != null && previewEntity == null)
+        {
+            GiveDummyUnderwear(humanoid, job ?? GetPreferredJob(humanoid));
+        }
+        // Arcane-End
     }
 
     /// <summary>

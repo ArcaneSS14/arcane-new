@@ -5,6 +5,7 @@ using Content.Shared.Administration;
 using Content.Shared.Database;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
+using Content.Arcane.Common.ServerProtection; // Arcane
 
 namespace Content.Server.Administration.Commands;
 
@@ -20,6 +21,7 @@ public sealed partial class ChangeCvarCommand : IConsoleCommand
     [Dependency] private IConfigurationManager _configurationManager = default!;
     [Dependency] private IAdminLogManager _adminLogManager = default!;
     [Dependency] private CVarControlManager _cVarControlManager = default!;
+    [Dependency] private IEntityManager _entityManager = default!; // Arcane
 
     /// <summary>
     /// Searches the list of cvars for a cvar that matches the search string.
@@ -178,6 +180,13 @@ public sealed partial class ChangeCvarCommand : IConsoleCommand
                 }
 
                 var oldValue = _configurationManager.GetCVar<object>(cvar);
+                // Arcane-Start: record who toggles protection cvars before their change handlers run
+                if (cvar.StartsWith("protection.", StringComparison.OrdinalIgnoreCase))
+                {
+                    var protectionEv = new ProtectionCVarChangedEvent(cvar, shell.Player, oldValue, parsed);
+                    _entityManager.EventBus.RaiseEvent(EventSource.Local, ref protectionEv);
+                }
+                // Arcane-End
                 _configurationManager.SetCVar(cvar, parsed);
                 _adminLogManager.Add(LogType.AdminCommands,
                     LogImpact.Extreme,

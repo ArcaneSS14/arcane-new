@@ -11,6 +11,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared;
 using Robust.Shared.Configuration;
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Client.Options.UI.Tabs;
 
@@ -45,6 +46,13 @@ public sealed partial class AudioTab : Control
             SliderVolumeSpecial,
             scale: 1f);
         // </Trauma>
+
+        // Arcane-Start
+        Control.AddOptionPercentSlider(
+            ArcaneCVars.RadioBarkVolume,
+            SliderVolumeRadioBarks,
+            scale: 2f);
+        // Arcane-End
 
         Control.AddOptionPercentSlider(
             CVars.MidiVolume,

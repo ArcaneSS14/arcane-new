@@ -5,5 +5,9 @@
         <Button Name="ReturnToBodyButton" Text="{Loc ghost-gui-return-to-body-button}" />
         <Button Name="GhostWarpButton" Text="{Loc ghost-gui-ghost-warp-button}" />
         <Button Name="GhostRolesButton" />
+        <!-- Arcane-Start -->
+        <Button Name="ReturnToRoundButton" Access="Public" Disabled="True" Visible="False"
+                ToolTip="{Loc ghost-gui-return-to-round-button-tooltip}" />
+        <!-- Arcane-End -->
     </BoxContainer>
 </widgets:GhostGui>

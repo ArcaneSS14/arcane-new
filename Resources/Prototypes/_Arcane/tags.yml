@@ -1,4 +1,67 @@
 - type: Tag
+  id: AnomalyCore
+
+- type: Tag
+  id: MeleeHitIgnore
+
+- type: Tag
+  id: PokerChip
+
+- type: Tag
+  id: BluespaceAnomalyCore
+
+- type: Tag
+  id: InertBagOfHoldingBackpack
+
+- type: Tag
+  id: InertBagOfHoldingSatchel
+
+- type: Tag
+  id: InertBagOfHoldingDuffel
+
+- type: Tag
+  id: InertBagOfHoldingMessenger
+
+- type: Tag
+  id: Wakizashi
+
+- type: Tag
+  id: MegaCell
+
+- type: Tag
+  id: NoSlimeExtractSlowReset # clothing the red slime extract can't coat
+
+- type: Tag
+  id: CartridgeRifle762
+
+- type: Tag
+  id: MagazineAntiMaterielRifle
+
+- type: Tag
+  id: MagazineHeavyRifleM41
+
+- type: Tag
+  id: MagazineLightMachineGunRPD
+
+- type: Tag
+  id: MagazineSMGP90
+
+- type: Tag
+  id: MagazinePulseShotgun
+
+- type: Tag
+  id: MagazineRifle762
+
+- type: Tag
+  id: MagazineRifle762Sniper
+
+- type: Tag
+  id: PulseBullet
+
+- type: Tag
+  id: ShellShotgunPulse
+
+- type: Tag
   id: EmergencyWaterVaporTank
 
 - type: Tag

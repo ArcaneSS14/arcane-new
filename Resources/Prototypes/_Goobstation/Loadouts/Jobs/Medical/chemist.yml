@@ -11,9 +11,11 @@
 
 - type: loadout
   id: ChemistUshanka
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterChemist
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterChemist
+  # Arcane-Edit-End
   equipment:
     head: ClothingHeadHatUshanka
 

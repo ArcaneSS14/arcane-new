@@ -13,6 +13,9 @@ WallMalign: WallCosmicCult
 WallMalignIndestructible: WallCosmicCult
 WallMalignIndestructibleNoOcclusion: WallCosmicCult
 MalignWindow: WindowCosmicCult
+PowerCellMicroreactor: PowerCellBluespaceReactor
+PowerCellMicroreactorPrinted: PowerCellBluespaceReactorPrinted
+PowerCellAntiqueProto: PowerCellInfinite
 # Arcane-End
 
 # <Trauma> - too lazy to port debugoks multi migration thing
@@ -200,6 +203,31 @@ WallXenoResinThick: WallResin
 # RadiationCollectorFlatpack: null
 # Arcane-Edit-End
 
+# Arcane-Start: machine parts (Orion #385)
+MicroManipulatorStockPart: MicroServoStockPart
+
+AutolatheHyperConvection: Autolathe
+ProtolatheHyperConvection: Protolathe
+CircuitImprinterHyperConvection: CircuitImprinter
+OreProcessorIndustrial: OreProcessor
+TurboItemRecharger: WeaponCapacitorRecharger
+GasThermoMachineHellfireFreezer: GasThermoMachineFreezer
+GasThermoMachineHellfireHeater: GasThermoMachineHeater
+AutolatheHyperConvectionMachineCircuitboard: AutolatheMachineCircuitboard
+ProtolatheHyperConvectionMachineCircuitboard: ProtolatheMachineCircuitboard
+CircuitImprinterHyperConvectionMachineCircuitboard: CircuitImprinterMachineCircuitboard
+OreProcessorIndustrialMachineCircuitboard: OreProcessorMachineCircuitboard
+TurboItemRechargerCircuitboard: WeaponCapacitorRechargerCircuitboard
+HellfireFreezerMachineCircuitBoard: ThermomachineFreezerMachineCircuitBoard
+HellfireHeaterMachineCircuitBoard: ThermomachineHeaterMachineCircuitBoard
+LatheUpgradeKitHyper: null
+GasThermoMachineHellfireFreezerAlt1: GasThermoMachineFreezerAlt1
+GasThermoMachineHellfireFreezerAlt2: GasThermoMachineFreezerAlt2
+GasThermoMachineHellfireHeaterAlt1: GasThermoMachineHeaterAlt1
+GasThermoMachineHellfireHeaterAlt2: GasThermoMachineHeaterAlt2
+LatheUpgradeKitCryo: null
+# Arcane-End
+
 AirlockBoxerGlassLocked: AirlockServiceGlassLocked
 AirlockClownGlassLocked: AirlockServiceGlassLocked
 AirlockClownLocked: AirlockServiceGlassLocked
@@ -233,7 +261,7 @@ ClothingHeadHatFedoraBlack: null
 ClothingHeadHatFedoraChoc: null
 ClothingHeadHatFezMantis: null
 ClothingHeadPrisonGuard: null
-ClothingUniformMartialGi: null
+ClothingUniformMartialGi: ClothingUniformGi # Arcane-Edit: null > ClothingUniformGi
 ClothingUniformTShirtKhakiPants: null
 ComputerShipyard: null
 CourierBag: null
@@ -306,7 +334,7 @@ ReverseEngineeringMachine: null
 Roboisseur: null
 SalvagePartsSpawnerLow: null
 SalvagePartsSpawnerMid: null
-Shinai: null
+# Shinai: null # Arcane-Edit: Shinai exists again
 ShockCollar: null
 shuttle_manipulator: null
 SignConspiracyBoard: null
@@ -332,7 +360,7 @@ SpeedLoaderSpecialPractice: null
 SuitStorageCorpsman: null
 SuitStorageParamedic: null
 TableWoodReinforced: TableWood
-tatamimat: null
+# tatamimat: null # Arcane-Edit: TatamiMat exists again
 ToyRenault: null
 ToySiobhan: null
 VendingMachineBoozeUnlocked: null
@@ -340,7 +368,7 @@ VendingMachineBoxingDrobe: null
 VendingMachineCourierDrobe: null
 VendingMachineMNKDrobe: null
 VendingMachineRepDrobe: null
-WallPaper: null
+# WallPaper: null # Arcane-Edit: WallPaper exists again
 WarpPointAI: null
 WarpPointArrivals: null
 WarpPointAtmos: null
@@ -508,8 +536,8 @@ SalvagePartsT2Spawner: SalvageLootSpawner
 #SuperCapacitorStockPart: CapacitorStockPart
 #QuadraticCapacitorStockPart: CapacitorStockPart
 #NanoManipulatorStockPart: MicroManipulatorStockPart
-PicoManipulatorStockPart: MicroManipulatorStockPart
-FemtoManipulatorStockPart: MicroManipulatorStockPart
+#PicoManipulatorStockPart: MicroManipulatorStockPart # Arcane-Edit
+#FemtoManipulatorStockPart: MicroManipulatorStockPart # Arcane-Edit
 #AdvancedMatterBinStockPart: MatterBinStockPart
 #SuperMatterBinStockPart: MatterBinStockPart
 #BluespaceMatterBinStockPart: MatterBinStockPart
@@ -1048,8 +1076,8 @@ SuitStorageBasic: SuitStorageEVA
 ClothingNeckCloakMiner: null
 
 # 2025-05-22
-MatterBinStockPart: MicroManipulatorStockPart
-CapacitorStockPart: MicroManipulatorStockPart
+#MatterBinStockPart: MicroManipulatorStockPart # Arcane-Edit
+#CapacitorStockPart: MicroManipulatorStockPart # Arcane-Edit
 
 # 2025-05-26 Turrets
 WeaponEnergyTurretStation: WeaponEnergyTurretSecurity
@@ -1579,3 +1607,29 @@ AsimovCircuitBoard: CrewsimovCircuitBoard
 # 2026-09-24
 ClothingShoesTourist: ClothingShoesSandalsBlack
 ClothingShoesWizard: ClothingShoesSandalsBrown
+
+# Arcane-Start: Orion #16 InteQ migrations
+InteQLaserShield: EnergyShieldInteQ
+DefaultStationBeaconInteQSizo37: DefaultStationBeaconInteQSizo73
+
+MagazineBoxLight57x28InteQ: MagazineBoxPistolInteQ
+MagazineBoxLight762x39InteQ: MagazineBoxLightRifleInteQ
+
+AirlockHatchBasik: AirlockHatchInteQVanguardLocked
+
+BackmenVendingMachineCigs: RandomVending
+BackmenVendingMachineCola: RandomVending
+BackmenVendingMachineDonut: RandomVending
+BackmenVendingMachineShamblersJuice: RandomVending
+BackmenVendingMachineSnackGreen: RandomVending
+BackmenVendingMachineSovietSoda: RandomVending
+
+FloorHardCatwalkDarkIron: Catwalk
+
+PrinterDoc: null
+Shower: null
+
+AntiPsychicKnife: null
+
+DresserCaptainFilled: CaptainDrobe
+# Arcane-End

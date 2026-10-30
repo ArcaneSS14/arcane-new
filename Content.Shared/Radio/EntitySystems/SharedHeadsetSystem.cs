@@ -31,7 +31,8 @@ public abstract class SharedHeadsetSystem : EntitySystem
 
     protected virtual void OnGotEquipped(EntityUid uid, HeadsetComponent component, GotEquippedEvent args)
     {
-        component.IsEquipped = args.SlotFlags.HasFlag(component.RequiredSlot);
+        component.IsEquipped = args.SlotFlags.HasFlag(component.RequiredSlot)
+                               || args.SlotFlags.HasFlag(component.AdditionalSlot); // Arcane-Edit: right ear
         Dirty(uid, component);
     }
 

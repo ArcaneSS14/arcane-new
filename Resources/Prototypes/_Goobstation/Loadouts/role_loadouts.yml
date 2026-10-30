@@ -13,6 +13,12 @@
   - NanotrasenRepresentativePDA
   - Glasses
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   - AssistiveItems
   - Survival
@@ -43,6 +49,12 @@
   - AssistiveItems
   - Survival
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   # Plasmaman
   - RoboticistEnvirohelm
@@ -62,6 +74,12 @@
   - AssistiveItems
   - SurvivalSecurity
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathToolSecurity
   - BrigmedicEnvirohelm
   - BrigmedicEnvirosuit
@@ -76,6 +94,12 @@
   - AssistiveItems
   - Survival
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   - Glasses
   - GroupTankHarness
@@ -99,6 +123,12 @@
   - ClownBackpack
   - SurvivalSecurity
   - GroupSpeciesBreathToolSecurity
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
 
 - type: roleLoadout
   id: JobCommandMaid
@@ -106,6 +136,12 @@
   - CommonBackpack
   - Survival
   - GroupSpeciesBreathTool
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
 
 - type: roleLoadout
   id: JobPartyMaker
@@ -114,6 +150,12 @@
   - CommonBackpack
   - Survival
   - GroupSpeciesBreathTool
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
 
 - type: roleLoadout
   id: JobVirologist
@@ -129,6 +171,12 @@
   - AssistiveItems
   - SurvivalMedical
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathToolMedical
   - VirologyEnvirohelm
   - VirologyEnvirosuit

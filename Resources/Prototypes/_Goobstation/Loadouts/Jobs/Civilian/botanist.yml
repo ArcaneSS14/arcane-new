@@ -11,9 +11,11 @@
 
 - type: loadout
   id: BotanistBeret
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterBotanist
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterBotanist
+  # Arcane-Edit-End
   equipment:
     head: ClothingHeadHatBeretSeniorBotanist
 

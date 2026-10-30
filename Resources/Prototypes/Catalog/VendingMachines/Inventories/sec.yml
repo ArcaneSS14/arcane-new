@@ -6,6 +6,7 @@
     GrenadeFlashBang: 4
     TearGasGrenade: 4
     ClusterBangFull: 2
+    SmokeGrenade: 2 # Arcane
     GrenadeStinger: 4
     Flash: 5
     Tourniquet: 5
@@ -47,6 +48,7 @@
     WeaponMeleeNeedle: 2
     FoodDonutHomer: 12
     FoodBoxDonut: 2
+    ConfettiGrenade: 2 # Arcane
     #box evidence
   # <Trauma>
   emaggedInventory:

@@ -1,5 +1,12 @@
 - type: entity
   parent: BaseLanguageKnowledge
+  id: LanguageOldFastCodes
+  components:
+  - type: LanguageKnowledge
+    languageId: OldFastCodes
+
+- type: entity
+  parent: BaseLanguageKnowledge
   id: LanguageMarish
   components:
   - type: LanguageKnowledge

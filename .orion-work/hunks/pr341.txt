@@ -1,0 +1,194 @@
+Merge branch 'shot-in-head' of https://github.com/OSAS-corp/Local-OS-14 into shot-in-head
+
+### Resources/Prototypes/Catalog/Fills/Lockers/dressers.yml
+@@ -106,7 +106,11 @@
+-      - id: ClothingHeadHatBeretEngineering
++#      - id: ClothingHeadHatBeretEngineering # Orion-Edit: Replaced
++      # Orion-Start
++      - id: ClothingHeadHatBeretEngineering
++      - id: ClothingHeadHatBeretCEngineer
++      # Orion-End
+
+### Resources/Prototypes/Entities/Clothing/Head/hats.yml
+@@ -221,9 +221,9 @@
+-      Dismemberment: 0.2
+-      OrganDamage: 0.2
+-      BoneDamage: 0.2
+-      VeinsDamage: 0
+-      NerveDamage: 0
++      Dismemberment: 0.4 # Orion-Edit: 0.2 > 0.4
++      OrganDamage: 0.5 # Orion-Edit: 0.2 > 0.5
++      BoneDamage: 0.4 # Orion-Edit: 0.2 > 0.4
++      VeinsDamage: 0.2 # Orion-Edit: 0 > 0.2
++      NerveDamage: 0.2 # Orion-Edit: 0 > 0.2
+@@ -345,5 +345,5 @@
+-  parent: [ClothingHeadHatArmored, ClothingHeadHatBeretRND, BaseSecurityCommandContraband] # Goob edit
++  parent: [ClothingHeadHatArmoredPlus, ClothingHeadHatBeretRND, BaseSecurityCommandContraband] # Goob edit # Orion-Edit
+@@ -457,5 +457,5 @@
+-  parent: [ ClothingHeadHatArmored, ClothingHeadHatBeretRND, BaseCommandContraband ] #goob
++  parent: [ ClothingHeadHatArmoredPlus, ClothingHeadHatBeretRND, BaseCommandContraband ] #goob # Orion-Edit
+@@ -491,5 +491,5 @@
+-  parent: [ ClothingHeadHatArmored, ClothingHeadBase, BaseCentcommContraband ] #goob
++  parent: [ ClothingHeadHatArmoredCC, ClothingHeadBase, BaseCentcommContraband ] #goob # Orion-Edit
+@@ -607,5 +607,5 @@
+-  parent: [ClothingHeadHatArmored, ClothingHeadBase, BaseCommandContraband] #goob
++  parent: [ClothingHeadHatArmoredPlus, ClothingHeadBase, BaseCommandContraband] #goob # Orion-Edit
+@@ -1371,5 +1371,5 @@
+-  parent: [ClothingHeadHatArmored, ClothingHeadBase, BaseCommandContraband] #goob # Orion-Edit: Add comm contra
++  parent: [ClothingHeadHatArmoredPlus, ClothingHeadBase, BaseCommandContraband] #goob # Orion-Edit: Add comm contra and armor
+@@ -1396,5 +1396,5 @@
+-  parent: [ ClothingHeadHatArmored, ClothingHeadBase, BaseCentcommContraband ] #goob
++  parent: [ ClothingHeadHatArmoredCC, ClothingHeadBase, BaseCentcommContraband ] #goob # Orion-Edit
+
+### Resources/Prototypes/Entities/Clothing/Head/helmets.yml
+@@ -231,5 +231,5 @@
+-        Slash: 0.35
++        Slash: 0.25 # Orion-Edit: 0.35 > 0.25
+@@ -237,5 +237,5 @@
+-    damageCoefficient: 0.75
++    damageCoefficient: 0.6 # Orion-Edit: 0.75 > 0.6
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/armor.yml
+@@ -573,5 +573,5 @@
+-        Heat: 0.3
++        Heat: 0.4 # Orion-Edit: 0.3 > 0.4
+
+### Resources/Prototypes/_Goobstation/Entities/Clothing/Head/hats.yml
+@@ -39,8 +39,8 @@
+-        Blunt: 0.3
+-        Slash: 0.3
+-        Piercing: 0.3
+-        Heat: 0.3
++        Blunt: 0.35 # Orion-Edit: 0.3 > 0.35
++        Slash: 0.35 # Orion-Edit: 0.3 > 0.35
++        Piercing: 0.4 # Orion-Edit: 0.3 > 0.4
++        Heat: 0.5 # Orion-Edit: 0.3 > 0.5
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Head/hats.yml
+@@ -1,4 +1,27 @@
++# standard for cap, hos and InteQ
+-  parent: [ClothingHeadBase, BaseMinorContraband]
++  abstract: true
++  parent: [ClothingHeadBase] 
++  id: ClothingHeadHatArmoredPlus
++  components:
++  - type: Armor
++    coverage:
++    - Head
++    traumaDeductions:
++      Dismemberment: 0.3
++      OrganDamage: 0.4
++      BoneDamage: 0.3
++      VeinsDamage: 0.1
++      NerveDamage: 0.1
++    modifiers:
++      coefficients:
++        Blunt: 0.6
++        Slash: 0.6
++        Piercing: 0.6
++        Heat: 0.7
++
++
++- type: entity
++  parent: [ClothingHeadHatArmoredPlus, BaseMinorContraband]
+@@ -9,23 +32,8 @@
+-  - type: Armor
+-    coverage:
+-    - Head
+-    traumaDeductions:
+-      Dismemberment: 0.2
+-      OrganDamage: 0.2
+-      BoneDamage: 0.2
+-      VeinsDamage: 0
+-      NerveDamage: 0
+-    modifiers:
+-      coefficients:
+-        Blunt: 0.7
+-        Slash: 0.7
+-        Piercing: 0.7
+-        Heat: 0.8
+-  id: ClothingHeadInteQHonorableBeret 
++  id: ClothingHeadInteQHonorableBeret
+@@ -59,5 +67,5 @@
+-  parent: [ ClothingHeadBase, BaseCommandContraband ]
++  parent: [ ClothingHeadHatArmoredPlus, BaseCommandContraband ]
+@@ -68,19 +76,4 @@
+-  - type: Armor
+-    coverage:
+-    - Head
+-    traumaDeductions:
+-      Dismemberment: 0.2
+-      OrganDamage: 0.2
+-      BoneDamage: 0.2
+-      VeinsDamage: 0
+-      NerveDamage: 0
+-    modifiers:
+-      coefficients:
+-        Blunt: 0.7
+-        Slash: 0.7
+-        Piercing: 0.7
+-        Heat: 0.8
+@@ -159,5 +152,5 @@
+-  parent: ClothingHeadBase
++  parent: ClothingHeadHatArmored
+@@ -170,5 +163,5 @@
+-  parent: ClothingHeadBase
++  parent: ClothingHeadHatArmored
+@@ -180,4 +173,19 @@
++- type: entity
++  parent: ClothingHeadHatSecurityTrooper
++  id: ClothingHeadHatBeretSecurityMedic
++  name: security medic beret
++  description: A robust beret with the medical insignia emblazoned on it. Uses reinforced fabric to offer sufficient protection.
++  components:
++  - type: Sprite
++    sprite: _Orion/Clothing/Head/Hats/beret_security_medic.rsi
++  - type: Clothing
++    sprite: _Orion/Clothing/Head/Hats/beret_security_medic.rsi
++  - type: Tag
++    tags:
++      - HamsterWearable
++      - WhitelistChameleon
++
+@@ -193,4 +201,5 @@
++      - WhitelistChameleon
+@@ -207,18 +216,5 @@
+-
+-- type: entity
+-  parent: ClothingHeadHatSecurityTrooper
+-  id: ClothingHeadHatBeretSecurityMedic
+-  name: security medic beret
+-  description: A robust beret with the medical insignia emblazoned on it. Uses reinforced fabric to offer sufficient protection.
+-  components:
+-  - type: Sprite
+-    sprite: _Orion/Clothing/Head/Hats/beret_security_medic.rsi
+-  - type: Clothing
+-    sprite: _Orion/Clothing/Head/Hats/beret_security_medic.rsi
+-  - type: Tag
+-    tags:
+-      - HamsterWearable
++      - WhitelistChameleon
+@@ -235,2 +231,3 @@
++      - WhitelistChameleon
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Head/helmets.yml
+@@ -70,8 +70,8 @@
+-        Blunt: 0.60
+-        Slash: 0.65
+-        Piercing: 0.65
+-        Heat: 0.65
++        Blunt: 0.4
++        Slash: 0.25
++        Piercing: 0.3
++        Heat: 0.4
+@@ -110,10 +110,10 @@
+-        Blunt: 0.8
+-        Slash: 0.8
+-        Piercing: 0.9
+-        Heat: 0.8
++        Blunt: 0.4
++        Slash: 0.4
++        Piercing: 0.3
++        Heat: 0.5
+-    damageCoefficient: 0.8
++    damageCoefficient: 0.6

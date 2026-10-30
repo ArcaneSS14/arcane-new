@@ -10,6 +10,10 @@ using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Shared.Botany.Systems;
 
@@ -405,6 +409,35 @@ public sealed partial class PlantTraySystem : EntitySystem
 
         return ent.Comp.NutritionLevel <= ent.Comp.MaxNutritionLevel * 0.1f;
     }
+
+    // Arcane-Start
+    [SubscribeLocalEvent]
+    private void OnRefreshParts(Entity<PlantTrayComponent> ent, ref RefreshPartsEvent args)
+    {
+        ent.Comp.BaseMaxWaterLevel ??= ent.Comp.MaxWaterLevel;
+        ent.Comp.BaseMaxNutritionLevel ??= ent.Comp.MaxNutritionLevel;
+        ent.Comp.BaseTrayConsumptionMultiplier ??= ent.Comp.TrayConsumptionMultiplier;
+
+        var bin = args.GetPartRating(MachinePartIds.MatterBin);
+        var servo = args.GetPartRating(MachinePartIds.Servo);
+        ent.Comp.MaxWaterLevel = ent.Comp.BaseMaxWaterLevel.Value * RefreshPartsEvent.GetPositiveTierMultiplier(bin);
+        ent.Comp.MaxNutritionLevel = ent.Comp.BaseMaxNutritionLevel.Value * RefreshPartsEvent.GetPositiveTierMultiplier(bin);
+        ent.Comp.TrayConsumptionMultiplier = ent.Comp.BaseTrayConsumptionMultiplier.Value * RefreshPartsEvent.GetLinearMultiplier(servo, 0.1f, 0.5f, 1.2f);
+        Dirty(ent);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnUpgradeExamine(Entity<PlantTrayComponent> ent, ref UpgradeExamineEvent args)
+    {
+        if (ent.Comp.BaseMaxWaterLevel is not { } water || ent.Comp.BaseMaxNutritionLevel is not { } nutrition
+            || ent.Comp.BaseTrayConsumptionMultiplier is not { } consumption)
+            return;
+
+        args.AddPercentageUpgrade("machine-upgrade-hydro-water", ent.Comp.MaxWaterLevel / water);
+        args.AddPercentageUpgrade("machine-upgrade-hydro-nutrition", ent.Comp.MaxNutritionLevel / nutrition);
+        args.AddPercentageUpgrade("machine-upgrade-hydro-nutrition-consume", ent.Comp.TrayConsumptionMultiplier / consumption);
+    }
+    // Arcane-End
 }
 
 /// <summary>

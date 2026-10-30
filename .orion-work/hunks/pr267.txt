@@ -1,0 +1,11 @@
+[Fix] Unknown Death Summary
+
+### Content.Client/RoundEnd/RoundEndSummaryWindow.cs
+@@ -376,10 +376,5 @@ private BoxContainer MakePlayerManifestTab(RoundEndMessageEvent.RoundEndPlayerIn
+-                    // Orion-Edit-Start: Localization
+-                    deathLabel.SetMarkup(playerInfo.PlayerNetEntity != null
+-                        ? Loc.GetString("round-end-summary-window-death-unknown",
+-                            ("entity", _entityManager.GetEntity(playerInfo.PlayerNetEntity.Value)))
+-                        : Loc.GetString("round-end-summary-window-death-unknown-null"));
+-                    // Orion-Edit-End
++                    deathLabel.SetMarkup(Loc.GetString("round-end-summary-window-death-unknown"));

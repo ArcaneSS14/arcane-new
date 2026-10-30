@@ -11,9 +11,13 @@
   - type: MachineBoard
     prototype: KitchenDeepFryer
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Steel: 10
       CableHV: 4
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -26,13 +30,17 @@
   - type: MachineBoard
     prototype: ChemiCompiler
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Glass: 2
       Cable: 2
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -42,5 +50,9 @@
   components:
   - type: MachineBoard
     prototype: AbductorBiofabricator
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End

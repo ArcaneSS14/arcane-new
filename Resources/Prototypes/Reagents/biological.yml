@@ -49,6 +49,22 @@
           Toxin: -1.25 # Trauma
           Brute: -3
           Burn: -1.25
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: DrankBloodVampiric
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Bloodsucker ]
+      - !type:ChemAddMoodlet
+        moodPrototype: DrankBlood
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Bloodsucker ]
+          inverted: true
+        - !type:ReagentCondition
+          reagent: Blood
+          min: 0.1
+      # Arcane-End
     Bloodstream: # Don't inject someone else's blood into yourself! Your own blood won't actually metabolise.
       effects:
       - !type:HealthChange
@@ -189,6 +205,10 @@
       - !type:Satiate
         satiationType: Thirst
         factor: -0.5
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: DrankZombieBlood
+      # Arcane-End
     Bloodstream:
       effects:
       - !type:HealthChange
@@ -307,6 +327,10 @@
       - !type:Satiate
         satiationType: Thirst
         factor: 0.5
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: DrankVomit
+      # Arcane-End
   footstepSound:
     collection: FootstepBlood
     params:

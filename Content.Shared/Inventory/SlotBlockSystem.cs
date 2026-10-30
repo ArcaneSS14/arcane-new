@@ -1,4 +1,5 @@
 using Content.Shared.Inventory.Events;
+using Content.Shared.Interaction.Components; // Arcane
 
 namespace Content.Shared.Inventory;
 
@@ -20,6 +21,9 @@ public sealed partial class SlotBlockSystem : EntitySystem
         if (args.Args.Cancelled || (args.Args.SlotFlags & ent.Comp.Slots) == 0)
             return;
 
+        if (HasComp<BypassInteractionChecksComponent>(args.Args.User)) // Arcane: admin ghosts reach blocked slots
+            return;
+
         args.Args.Reason = Loc.GetString("slot-block-component-blocked", ("item", ent));
         args.Args.Cancel();
     }
@@ -27,6 +31,9 @@ public sealed partial class SlotBlockSystem : EntitySystem
     private void OnUnequipAttempt(Entity<SlotBlockComponent> ent, ref InventoryRelayedEvent<IsUnequippingTargetAttemptEvent> args)
     {
         if (args.Args.Cancelled || (args.Args.SlotFlags & ent.Comp.Slots) == 0)
+            return;
+
+        if (HasComp<BypassInteractionChecksComponent>(args.Args.User)) // Arcane: admin ghosts reach blocked slots
             return;
 
         args.Args.Reason = Loc.GetString("slot-block-component-blocked", ("item", ent));

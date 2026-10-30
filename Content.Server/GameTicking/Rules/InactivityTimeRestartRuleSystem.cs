@@ -42,6 +42,7 @@ public sealed partial class InactivityTimeRestartRuleSystem : GameRuleSystem<Ina
             return;
 
         component.TimerCancel.Cancel();
+        component.TimerCancel.Dispose(); // Arcane
         component.TimerCancel = new CancellationTokenSource();
         Timer.Spawn(component.InactivityMaxTime, () => TimerFired(uid, component), component.TimerCancel.Token);
     }

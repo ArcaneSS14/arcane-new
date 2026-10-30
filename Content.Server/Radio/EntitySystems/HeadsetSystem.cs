@@ -52,14 +52,20 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
 
     private void OnSpeak(EntityUid uid, WearingHeadsetComponent component, EntitySpokeEvent args)
     {
-        if (args.Channel != null
-            && TryComp(component.Headset, out EncryptionKeyHolderComponent? keys)
-            && keys.Channels.Contains(args.Channel.ID)
-            && _whitelist.IsWhitelistPassOrNull(args.Channel.SendWhitelist, uid)) // Goobstation - Whitelisted channels
+        // Arcane-Edit-Start: speak through whichever worn headset has the channel
+        if (args.Channel == null || !_whitelist.IsWhitelistPassOrNull(args.Channel.SendWhitelist, uid)) // Goobstation - Whitelisted channels
+            return;
+
+        foreach (var headset in GetWornHeadsets(uid))
         {
-            _radio.SendRadioMessage(uid, args.Message, args.Channel, component.Headset);
+            if (!TryComp(headset, out EncryptionKeyHolderComponent? keys) || !keys.Channels.Contains(args.Channel.ID))
+                continue;
+
+            _radio.SendRadioMessage(uid, args.Message, args.Channel, headset);
             args.Channel = null; // prevent duplicate messages from other listeners.
+            return;
         }
+        // Arcane-Edit-End
     }
 
     protected override void OnGotEquipped(EntityUid uid, HeadsetComponent component, GotEquippedEvent args)
@@ -67,7 +73,7 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
         base.OnGotEquipped(uid, component, args);
         if (component.IsEquipped && component.Enabled)
         {
-            EnsureComp<WearingHeadsetComponent>(args.EquipTarget).Headset = uid;
+            UpdateWearingHeadset(args.EquipTarget); // Arcane-Edit
             UpdateRadioChannels(uid, component);
         }
     }
@@ -76,7 +82,7 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
     {
         base.OnGotUnequipped(uid, component, args);
         RemComp<ActiveRadioComponent>(uid);
-        RemComp<WearingHeadsetComponent>(args.EquipTarget);
+        UpdateWearingHeadset(args.EquipTarget); // Arcane-Edit: the other ear may still have one
     }
 
     public void SetEnabled(EntityUid uid, bool value, HeadsetComponent? component = null)
@@ -95,11 +101,11 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
             RemCompDeferred<ActiveRadioComponent>(uid);
 
             if (component.IsEquipped)
-                RemCompDeferred<WearingHeadsetComponent>(Transform(uid).ParentUid);
+                UpdateWearingHeadset(Transform(uid).ParentUid); // Arcane-Edit
         }
         else if (component.IsEquipped)
         {
-            EnsureComp<WearingHeadsetComponent>(Transform(uid).ParentUid).Headset = uid;
+            UpdateWearingHeadset(Transform(uid).ParentUid); // Arcane-Edit
             UpdateRadioChannels(uid, component);
         }
     }
@@ -111,6 +117,9 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
         // to have an ActiveRadioComponent
 
         var parent = Transform(uid).ParentUid;
+
+        if (IsDuplicateReceive(uid, parent, args.Channel)) // Arcane
+            return;
 
         if (parent.IsValid())
         {

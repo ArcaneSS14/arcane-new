@@ -1,0 +1,82 @@
+Update migration.yml
+
+### Resources/migration.yml
+@@ -303,22 +303,24 @@ AirlockZookeeperLocked: AirlockServiceLocked
+-BenchParkBambooMiddle: null
+-BenchParkLeft: null
+-BenchParkMiddle: null
+-BenchParkRight: null
+-BenchPewLeft: null
+-BenchPewMiddle: null
+-BenchPewRight: null
++# Orion-Edit-Start: Returned for mapping
++#BenchParkBambooMiddle: null
++#BenchParkLeft: null
++#BenchParkMiddle: null
++#BenchParkRight: null
++#BenchPewLeft: null
++#BenchPewMiddle: null
++#BenchPewRight: null
+-BenchSofaLeft: null
+-BenchSofaRight: null
+-BenchSteelLeft: null
+-BenchSteelMiddle: null
+-BenchSteelRight: null
+-BenchSteelWhiteLeft: null
+-BenchSteelWhiteMiddle: null
+-BenchSteelWhiteRight: null
++#BenchSofaLeft: null
++#BenchSofaRight: null
++#BenchSteelLeft: null
++#BenchSteelMiddle: null
++#BenchSteelRight: null
++#BenchSteelWhiteLeft: null
++#BenchSteelWhiteMiddle: null
++#BenchSteelWhiteRight: null
++# Orion-Edit-End
+@@ -361,5 +363,5 @@ GunSafeVulcanRifle: null
+-KvassTankFull: null
++#KvassTankFull: null # Orion-Edit: Removed
+@@ -371,21 +373,21 @@ PaintingSpoon: null
+-PosterContrabandBreadLies: null
++#PosterContrabandBreadLies: null # Orion-Edit: Removed
+-PosterLegitBarDrinks: null
+-PosterLegitBotanyFood: null
++#PosterLegitBarDrinks: null # Orion-Edit: Removed
++#PosterLegitBotanyFood: null # Orion-Edit: Removed
+-PosterLegitEatMeat: null
++#PosterLegitEatMeat: null # Orion-Edit: Removed
+-PosterLegitHotDonkExplosion: null
++#PosterLegitHotDonkExplosion: null # Orion-Edit: Removed
+-PosterLegitPieSlice: null
+-PosterLegitPizzaHope: null
++#PosterLegitPieSlice: null # Orion-Edit: Removed
++#PosterLegitPizzaHope: null # Orion-Edit: Removed
+@@ -624,8 +626,8 @@ TransmitterSubspaceStockPart: null
+-ClothingHeadHatHoodRad: null
++#ClothingHeadHatHoodRad: null # Orion-Edit: Removed
+-SpaceMedipen: null
++#SpaceMedipen: null # Orion-Edit: Removed
+@@ -671,6 +673,6 @@ ActionVehicleHorn: null
+-SpawnVehicleMotobike: null
+-SpawnVehicleATV: null
++#SpawnVehicleMotobike: null # Orion-Edit: Removed
++#SpawnVehicleATV: null # Orion-Edit: Removed
+@@ -892,6 +894,6 @@ CentcomIDCardSyndie: null
+-AntimovCircuitBoard: null
+-OverlordCircuitBoard: null
++#AntimovCircuitBoard: null # Orion-Edit: Removed
++#OverlordCircuitBoard: null # Orion-Edit: Removed
+@@ -1016,5 +1018,5 @@ FoodCondimentPacketFrostoil: FoodCondimentPacketColdsauce
+-WeaponSubMachineGunVector: null
++#WeaponSubMachineGunVector: null # Orion-Edit: Removed
+@@ -1027,7 +1029,7 @@ PosterContrabandBustyBackdoorExoBabes6: PosterContrabandBustyBackdoorXenoBabes6
+-MagazineBoxAntiMaterielBig: null
+-MagazineBoxCaselessRifle10x24: null
+-MagazineBoxCaselessRifleBig: null
++#MagazineBoxAntiMaterielBig: null # Orion-Edit: Removed
++#MagazineBoxCaselessRifle10x24: null # Orion-Edit: Removed
++#MagazineBoxCaselessRifleBig: null # Orion-Edit: Removed
+@@ -1060,5 +1062,5 @@ ClothingMaskBlushingMime: ClothingMaskSexyMime
+-CrateMaterialSilo: null
++#CrateMaterialSilo: null # Orion-Edit: Removed

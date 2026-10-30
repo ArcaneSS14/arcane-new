@@ -1,0 +1,29 @@
+One more comment
+
+### Content.Client/Administration/UI/CustomControls/AdminLogLabel.cs
+@@ -7,6 +7,8 @@
++using Content.Shared.Database;
++using Robust.Shared.Utility;
+@@ -18,6 +20,13 @@ public AdminLogLabel(ref SharedAdminLog log, HSeparator separator)
++        // Orion-Start
++        var impactColor = GetImpactColor(log.Impact);
++        var impactText = $"[color={impactColor}]█[/color]";
+-        SetMessage($"{log.Date:HH:mm:ss}: {log.Message}");
++        var formatted = new FormattedMessage();
++        formatted.AddMarkupOrThrow($"{impactText} [bold]{log.Date:HH:mm:ss}[/bold]: {log.Message}");
++        // Orion-End
++
++        SetMessage(formatted); // Orion-Edit
+@@ -38,3 +47,13 @@ protected override void Dispose(bool disposing)
+-}
++    // Orion-Start
++    private static string GetImpactColor(LogImpact impact) => impact switch
++    {
++        LogImpact.Extreme => "red",
++        LogImpact.High => "orange",
++        LogImpact.Medium => "yellow",
++        LogImpact.Low => "lightgreen",
++        _ => "gray"
++    };
++    // Orion-End
++}

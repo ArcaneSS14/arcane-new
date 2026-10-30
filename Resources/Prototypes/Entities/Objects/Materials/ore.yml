@@ -11,6 +11,18 @@
   - type: Tag
     tags:
     - Ore
+  # Arcane-Start
+  - type: ResearchAnalyzable
+    supportedMethods:
+    - Deconstruct
+    methodPointRewards:
+      Deconstruct:
+      - type: General
+        amount: 250
+      - type: Experimental
+        amount: 30
+    discoveryTrigger: machine:ore-sample
+  # Arcane-End
   - type: Fixtures
     fixtures:
       fix1:

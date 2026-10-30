@@ -1,0 +1,12 @@
+A	Resources/Locale/ru-RU/_Orion/reagents/consumable/drink/drinks.ftl
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_orion/catalog/cargo/cargo-food.ftl
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_orion/entities/objects/consumable/drinks/drinks.ftl
+A	Resources/Locale/ru-RU/ss14-ru/prototypes/_orion/structures/storage/tanks/tanks.ftl
+A	Resources/Prototypes/_Orion/Catalog/Cargo/cargo_food.yml
+A	Resources/Prototypes/_Orion/Entities/Objects/Consumable/Drinks/drinks.yml
+A	Resources/Prototypes/_Orion/Entities/Structures/Storage/Tanks/tanks.yml
+A	Resources/Prototypes/_Orion/Reagents/Consumable/Drink/drinks.yml
+A	Resources/Textures/_Orion/Objects/Consumable/Drinks/kvass.rsi/icon.png
+A	Resources/Textures/_Orion/Objects/Consumable/Drinks/kvass.rsi/meta.json
+A	Resources/Textures/_Orion/Structures/Storage/kvass.rsi/kvass.png
+A	Resources/Textures/_Orion/Structures/Storage/kvass.rsi/meta.json

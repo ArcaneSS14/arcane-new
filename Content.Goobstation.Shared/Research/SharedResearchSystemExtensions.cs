@@ -18,9 +18,18 @@ public static class SharedResearchSystemExtensions
         var allTech = prototypeManager.EnumeratePrototypes<TechnologyPrototype>()
             .Where(p => p.Discipline == techDiscipline.ID && !p.Hidden).ToList();
 
-        var percentage = (float) component.UnlockedTechnologies
-            .Where(x => prototypeManager.Index<TechnologyPrototype>(x).Discipline == techDiscipline.ID)
-            .Count() / (float) allTech.Count * 100f;
+        // Arcane-Edit-Start
+        if (allTech.Count == 0)
+            return 0;
+
+        var researchedVisible = component.ResearchedTechnologies.Count(x =>
+        {
+            var proto = prototypeManager.Index(x);
+            return proto.Discipline == techDiscipline.ID && !proto.Hidden;
+        });
+
+        var percentage = researchedVisible / (float) allTech.Count * 100f;
+        // Arcane-Edit-End
 
         return (int) Math.Clamp(percentage, 0, 100);
     }

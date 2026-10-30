@@ -1,0 +1,195 @@
+Unshitcode
+
+### Content.Server/_Orion/Explosion/Components/DecalGrenadeComponent.cs
+@@ -0,0 +1,28 @@
++using Content.Server._Orion.Explosion.EntitySystems;
++
++namespace Content.Server._Orion.Explosion.Components;
++
++/// <summary>
++/// Grenades that, when triggered, explode into decals.
++/// </summary>
++[RegisterComponent, Access(typeof(DecalGrenadeSystem))]
++public sealed partial class DecalGrenadeComponent : Component
++{
++    /// <summary>
++    /// The kinds of decals to spawn on explosion.
++    /// </summary>
++    [DataField]
++    public List<string> DecalPrototypes = new();
++
++    /// <summary>
++    /// The number of decals to spawn upon explosion.
++    /// </summary>
++    [DataField]
++    public int DecalCount = 25;
++
++    /// <summary>
++    /// The radius in which decals will spawn around the explosion center.
++    /// </summary>
++    [DataField]
++    public float DecalRadius = 3f;
++}
+
+### Content.Server/_Orion/Explosion/EntitySystems/DecalGrenadeSystem.cs
+@@ -0,0 +1,69 @@
++using System.Numerics;
++using Content.Server._Orion.Explosion.Components;
++using Content.Server.Decals;
++using Content.Server.Explosion.EntitySystems;
++using Robust.Shared.Random;
++
++namespace Content.Server._Orion.Explosion.EntitySystems
++{
++    public sealed class DecalGrenadeSystem : EntitySystem
++    {
++        [Dependency] private readonly IRobustRandom _random = default!;
++        [Dependency] private readonly DecalSystem _decalSystem = default!;
++
++        public override void Initialize()
++        {
++            base.Initialize();
++
++            SubscribeLocalEvent<DecalGrenadeComponent, TriggerEvent>(OnFragTrigger);
++        }
++
++        /// <summary>
++        /// Triggered when the grenade explodes, spawns decals around the explosion.
++        /// </summary>
++        private void OnFragTrigger(Entity<DecalGrenadeComponent> entity, ref TriggerEvent args)
++        {
++            var component = entity.Comp;
++
++            if (component.DecalPrototypes.Count == 0)
++                return;
++
++            SpawnDecals(entity.Owner, component);
++            args.Handled = true;
++        }
++
++        /// <summary>
++        /// Spawns decals in radius around the grenade explosion.
++        /// </summary>
++        private void SpawnDecals(EntityUid grenadeUid, DecalGrenadeComponent component)
++        {
++            if (!TryComp(grenadeUid, out TransformComponent? grenadeXform))
++                return;
++
++            var grenadePosition = grenadeXform.Coordinates;
++
++            for (var i = 0; i < component.DecalCount; i++)
++            {
++                var radius = component.DecalRadius * (_random.NextFloat() + 0.1f);
++                var angle = _random.NextFloat() * MathF.Tau;
++
++                var offset = new Vector2(
++                    radius * MathF.Cos(angle),
++                    radius * MathF.Sin(angle));
++
++                var decalPosition = grenadePosition.Offset(offset);
++
++                if (component.DecalPrototypes.Count == 0)
++                    continue;
++
++                var decalPrototype = component.DecalPrototypes[_random.Next(component.DecalPrototypes.Count)];
++
++                _decalSystem.TryAddDecal(
++                    decalPrototype,
++                    decalPosition,
++                    out _,
++                    cleanable: true);
++            }
++        }
++    }
++}
+
+### Resources/Prototypes/Catalog/Fills/Crates/service.yml
+@@ -188,4 +188,6 @@
++    - id: ConfettiGrenade # Orion
++      amount: 3
+
+### Resources/Prototypes/Research/civilianservices.yml
+@@ -123,4 +123,5 @@
++    - ConfettiGrenade # Orion
+
+### Resources/Prototypes/_Orion/Decals/confetti.yml
+@@ -0,0 +1,31 @@
++- type: decal
++  id: Confetti1
++  tags: ["station", "dirty"]
++  defaultCleanable: true
++  sprite:
++    sprite: _Orion/Decals/confetti.rsi
++    state: confetti1
++
++- type: decal
++  id: Confetti2
++  tags: ["station", "dirty"]
++  defaultCleanable: true
++  sprite:
++    sprite: _Orion/Decals/confetti.rsi
++    state: confetti2
++
++- type: decal
++  id: Confetti3
++  tags: ["station", "dirty"]
++  defaultCleanable: true
++  sprite:
++    sprite: _Orion/Decals/confetti.rsi
++    state: confetti3
++
++- type: decal
++  id: Confetti4
++  tags: ["station", "dirty"]
++  defaultCleanable: true
++  sprite:
++    sprite: _Orion/Decals/confetti.rsi
++    state: confetti4
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Throwable/grenades.yml
+@@ -0,0 +1,28 @@
++- type: entity
++  parent: [GrenadeBase]
++  id: ConfettiGrenade
++  name: confetti grenade
++  description: Grenade that creates a small but devastating confetti explosion.
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Weapons/Grenades/confetti.rsi
++  - type: DecalGrenade
++    decalPrototypes:
++    - Confetti1
++    - Confetti2
++    - Confetti3
++    - Confetti4
++    decalCount: 25
++    decalRadius: 3
++  - type: DeleteOnTrigger
++#  - type: SpawnOnTrigger
++#    proto: ExplosionEffectGrenadeShockWave
++  - type: SoundOnTrigger
++    sound: /Audio/_Orion/Effects/yay_fnaf.ogg
++  - type: OnUseTimerTrigger
++    beepSound:
++      path: "/Audio/Effects/beep1.ogg"
++      params:
++        volume: 5
++    initialBeepDelay: 0
++    beepInterval: 2 # 2 beeps total (at 0 and 2)
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/Packs/service.yml
+@@ -0,0 +1,4 @@
++- type: latheRecipePack
++  id: OrionService
++  recipes:
++  - ConfettiGrenade
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/service.yml
+@@ -0,0 +1,7 @@
++- type: latheRecipe
++  id: ConfettiGrenade
++  result: ConfettiGrenade
++  completetime: 3
++  materials:
++    Steel: 20
++    Plastic: 500

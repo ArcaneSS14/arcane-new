@@ -1,0 +1,10 @@
+- type: alertLevel
+  id: Amber
+  name: alert-level-amber
+  announcement: alert-level-amber-announcement
+  instructions: alert-level-amber-instructions
+  sound: /Audio/Misc/notice1.ogg
+  color: Orange
+  emergencyLightColor: Orange
+  forceEnableEmergencyLights: true
+  shuttleTime: 600

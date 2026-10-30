@@ -100,6 +100,7 @@
   - type: PowerCellSlot
     cellSlotId: charger_slot
     # fitsInCharger is true i dont think this will ever affect anything negatively but it lets it function
+  - type: MegaCellSlot # Arcane
   - type: ItemSlots
     slots:
       charger_slot:
@@ -107,6 +108,7 @@
         name: power-cell-slot-component-slot-name-default
         whitelist:
           tags:
+          - MegaCell # Arcane
           - PowerCell
           - PowerCellSmall
         blacklist:
@@ -208,60 +210,62 @@
     size: Ginormous
   - type: MultiHandedItem
 
-- type: entity
-  parent: BaseItemRecharger
-  id: TurboItemRecharger
-  name: turbo recharger
-  description: An overclocked recharger. Not recommended for use around asthmatics.
-  components:
-  # <Trauma>
-  - type: ItemSlotRenderer
-    mapping:
-      charger_slot: enum.PowerChargerVisualLayers.ItemDisplay
-  # </Trauma>
-  - type: Sprite
-    sprite: Structures/Power/turbo_recharger.rsi
-    layers:
-    # WWDP Edit begin
-    - map: ["enum.PowerChargerVisualLayers.Base"]
-      state: "empty"
-    - map: ["enum.PowerChargerVisualLayers.Light"]
-      state: "light-off"
-      shader: "unshaded"
-    - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
-      shader: "FlickerHologram"
-      color: "#ffffffaa"
-      offset: 0,0.45
-      scale: 0.5,0.5
-    # WWDP Edit end
-  - type: Machine
-    board: TurboItemRechargerCircuitboard
-  - type: Charger
-    chargeRate: 100
-  - type: ItemSlots
-    slots:
-      charger_slot:
-        ejectOnInteract: true
-        whitelist:
-          tags:
-          # <Trauma>
-          - FitsInCharger
-          # </Trauma>
-          - Stunbaton
-          components:
-          - BatteryAmmoProvider
-          - PowerCell
-        blacklist:
-          tags:
-          - PotatoBattery
-          # <Trauma>
-          - WizardWand
-          components:
-          - MaterialEnergy
-          # </Trauma>
-  - type: Item
-    size: Ginormous
-  - type: MultiHandedItem
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseItemRecharger
+#  id: TurboItemRecharger
+#  name: turbo recharger
+#  description: An overclocked recharger. Not recommended for use around asthmatics.
+#  components:
+#  # <Trauma>
+#  - type: ItemSlotRenderer
+#    mapping:
+#      charger_slot: enum.PowerChargerVisualLayers.ItemDisplay
+#  # </Trauma>
+#  - type: Sprite
+#    sprite: Structures/Power/turbo_recharger.rsi
+#    layers:
+#    # WWDP Edit begin
+#    - map: ["enum.PowerChargerVisualLayers.Base"]
+#      state: "empty"
+#    - map: ["enum.PowerChargerVisualLayers.Light"]
+#      state: "light-off"
+#      shader: "unshaded"
+#    - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
+#      shader: "FlickerHologram"
+#      color: "#ffffffaa"
+#      offset: 0,0.45
+#      scale: 0.5,0.5
+#    # WWDP Edit end
+#  - type: Machine
+#    board: TurboItemRechargerCircuitboard
+#  - type: Charger
+#    chargeRate: 100
+#  - type: ItemSlots
+#    slots:
+#      charger_slot:
+#        ejectOnInteract: true
+#        whitelist:
+#          tags:
+#          # <Trauma>
+#          - FitsInCharger
+#          # </Trauma>
+#          - Stunbaton
+#          components:
+#          - BatteryAmmoProvider
+#          - PowerCell
+#        blacklist:
+#          tags:
+#          - PotatoBattery
+#          # <Trauma>
+#          - WizardWand
+#          components:
+#          - MaterialEnergy
+#          # </Trauma>
+#  - type: Item
+#    size: Ginormous
+#  - type: MultiHandedItem
+# Arcane-Edit-End
 
 - type: entity
   parent: [ BaseItemRecharger, BaseWallmount ]

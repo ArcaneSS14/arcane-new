@@ -31,6 +31,8 @@
   id: WardenCoatBlue
   equipment:
     outerClothing: ClothingOuterCoatWardenBlue
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: SeniorWarden
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: SeniorWarden
+  # Arcane-Edit-End

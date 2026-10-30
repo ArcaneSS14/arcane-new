@@ -1,0 +1,16 @@
+[Tweak] Main Menu Borders
+
+### Content.Client/MainMenu/UI/MainMenuControl.xaml.cs
+@@ -33,9 +33,19 @@ public MainMenuControl(IResourceCache resCache, IConfigurationManager configMan)
++/* // Orion-Remove
++*/
++
++        // Orion-Start
++        var borderUpTexture = resCache.GetResource<TextureResource>("/Textures/Logo/space-station-14.png");
++        BorderUp.Texture = borderUpTexture;
++
++        var borderDownTexture = resCache.GetResource<TextureResource>("/Textures/Logo/logo.png");
++        BorderDown.Texture = borderDownTexture;
++        // Orion-End
+-}
++}

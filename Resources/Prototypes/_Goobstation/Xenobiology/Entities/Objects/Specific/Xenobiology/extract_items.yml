@@ -172,6 +172,11 @@
       color: "#ff3333"
   - type: ClothingCoating
     coatingName: clothing-coating-xenobio-volatile
+    # Arcane-Start
+    blacklist:
+      tags:
+      - NoSlimeExtractSlowReset
+    # Arcane-End
     components:
     - type: VeryFlammable
     - type: SlowdownResistance

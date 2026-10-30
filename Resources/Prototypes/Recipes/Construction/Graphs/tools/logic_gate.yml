@@ -60,8 +60,20 @@
         doAfter: 1
     - to: memory_cell
       steps:
-      - material: Manipulator
-        amount: 2
+      # Arcane-Start
+      - machinePart: Servo
+        name: construction-graph-tag-servo
+        icon:
+          sprite: "Objects/Misc/stock_parts.rsi"
+          state: "micro_mani"
+        doAfter: 1
+      - machinePart: Servo
+        name: construction-graph-tag-servo
+        icon:
+          sprite: "Objects/Misc/stock_parts.rsi"
+          state: "micro_mani"
+        doAfter: 1
+      # Arcane-End
       - material: Cable
         amount: 2
         doAfter: 1
@@ -128,7 +140,8 @@
         doAfter: 2
       completed:
       - !type:SpawnPrototype
-        prototype: MicroManipulatorStockPart
+        prototype: MicroServoStockPart # Arcane-Edit: Servo
+        amount: 2 # Arcane
       - !type:SpawnPrototype
         prototype: CableApcStack1
         amount: 2

@@ -1,0 +1,146 @@
+[Tweak] Adaptation ScannableForPoints
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Belt/belts.yml
+@@ -55,4 +55,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Eyes/glasses.yml
+@@ -12,2 +12,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Hands/gloves.yml
+@@ -30,4 +30,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Masks/masks.yml
+@@ -29,2 +29,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Neck/cloaks.yml
+@@ -5,6 +5,8 @@
+-    - type: Sprite
+-      sprite: _Orion/Clothing/Neck/Cloaks/inteq_cloak.rsi
++  - type: Sprite
++    sprite: _Orion/Clothing/Neck/Cloaks/inteq_cloak.rsi
++  - type: ScannableForPoints # Goob
++    points: 1
+@@ -14,8 +16,8 @@
+-    - type: Sprite
+-      sprite: _Orion/Clothing/Neck/Cloaks/wide_captain_cloak.rsi
+-    - type: StealTarget
+-      stealGroup: HeadCloak
++  - type: Sprite
++    sprite: _Orion/Clothing/Neck/Cloaks/wide_captain_cloak.rsi
++  - type: StealTarget
++    stealGroup: HeadCloak
+@@ -25,8 +27,8 @@
+-    - type: Sprite
+-      sprite: _Orion/Clothing/Neck/Cloaks/royal_captain.rsi
+-    - type: StealTarget
+-      stealGroup: HeadCloak
++  - type: Sprite
++    sprite: _Orion/Clothing/Neck/Cloaks/royal_captain.rsi
++  - type: StealTarget
++    stealGroup: HeadCloak
+@@ -36,6 +38,6 @@
+-    - type: Sprite
+-      sprite: _Orion/Clothing/Neck/Cloaks/syndicate_admiral.rsi
++  - type: Sprite
++    sprite: _Orion/Clothing/Neck/Cloaks/syndicate_admiral.rsi
+
+### Resources/Prototypes/_Orion/Entities/Clothing/OuterClothing/armor.yml
+@@ -22,4 +22,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+@@ -58,4 +60,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+@@ -74,4 +78,6 @@
++  - type: ScannableForPoints # Goob
++    points: 2
+
+### Resources/Prototypes/_Orion/Entities/Clothing/OuterClothing/coat.yml
+@@ -20,4 +20,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/OuterClothing/softsuits.yml
+@@ -13,2 +13,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Shoes/boots.yml
+@@ -15,2 +15,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Objects/Devices/encryption_keys.yml
+@@ -5,11 +5,13 @@
+-    - type: EncryptionKey
+-      channels:
+-      - InteQ
+-      defaultChannel: InteQ
+-    - type: Sprite
+-      sprite: _Orion/Objects/Devices/encryption_keys.rsi
+-      layers:
+-      - state: crypt_brown
+-      - state: inteq_label
++  - type: EncryptionKey
++    channels:
++    - InteQ
++    defaultChannel: InteQ
++  - type: Sprite
++    sprite: _Orion/Objects/Devices/encryption_keys.rsi
++    layers:
++    - state: crypt_brown
++    - state: inteq_label
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Objects/Devices/inteq_uplink.yml
+@@ -22,2 +22,4 @@
++  - type: ScannableForPoints # Goob
++    points: 3
+
+### Resources/Prototypes/_Orion/Entities/Objects/Misc/language_manuals.yml
+@@ -38,4 +38,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+@@ -54,2 +56,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Objects/Misc/paper.yml
+@@ -10,4 +10,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+@@ -36,2 +38,4 @@
++  - type: ScannableForPoints # Goob
++    points: 5
+
+### Resources/Prototypes/_Orion/Entities/Objects/Tools/blueprint.yml
+@@ -5,4 +5,6 @@
++  - type: ScannableForPoints # Goob
++    points: 3
+@@ -25,4 +27,6 @@
++  - type: ScannableForPoints # Goob
++    points: 3
+
+### Resources/Prototypes/_Orion/Entities/Objects/Tools/energy_dome.yml
+@@ -37,4 +37,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Melee/USHM.yml
+@@ -27,2 +27,4 @@
++  - type: ScannableForPoints # Goob
++    points: 1
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Melee/plasma_sword.yml
+@@ -57,4 +57,6 @@
++  - type: ScannableForPoints # Goob
++    points: 1

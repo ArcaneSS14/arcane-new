@@ -1,0 +1,11 @@
+SUBJ: funny mini flag
+MB: ecbec3137c1c74028967089d05969b0a2c75f036
+
+ .../en-US/_Orion/preferences/loadout-groups.ftl    |  3 ++
+ .../ru-RU/_Orion/preferences/loadout-groups.ftl    |  3 ++
+ Resources/Prototypes/Loadouts/loadout_groups.yml   |  5 +++
+ Resources/Prototypes/Loadouts/role_loadouts.yml    |  1 +
+ .../_Orion/Loadouts/Miscellaneous/inteq.yml        | 43 ++++++++++++++++++++++
+ .../_Orion/Loadouts/Miscellaneous/trinkets.yml     |  9 +++++
+ .../Prototypes/_Orion/Loadouts/loadout_groups.yml  | 16 ++++++--
+ 7 files changed, 76 insertions(+), 4 deletions(-)

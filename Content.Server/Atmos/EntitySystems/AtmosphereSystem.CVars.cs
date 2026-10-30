@@ -1,6 +1,7 @@
 using Content.Goobstation.Common.CCVar;
 using Content.Shared.CCVar;
 using Robust.Shared.Configuration;
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -9,6 +10,7 @@ namespace Content.Server.Atmos.EntitySystems
         [Dependency] private IConfigurationManager _cfg = default!;
 
         public bool SpaceWind { get; private set; }
+        public bool SpaceWindVisuals { get; private set; } // Arcane
         public float SpaceWindPressureForceDivisorThrow { get; private set; }
         public float SpaceWindPressureForceDivisorPush { get; private set; }
         public float SpaceWindMaxVelocity { get; private set; }
@@ -46,6 +48,7 @@ namespace Content.Server.Atmos.EntitySystems
         private void InitializeCVars()
         {
             Subs.CVar(_cfg, CCVars.SpaceWind, value => SpaceWind = value, true);
+            Subs.CVar(_cfg, ArcaneCVars.SpaceWindVisuals, value => SpaceWindVisuals = value, true); // Arcane
             Subs.CVar(_cfg, CCVars.SpaceWindPressureForceDivisorThrow, value => SpaceWindPressureForceDivisorThrow = value, true);
             Subs.CVar(_cfg, CCVars.SpaceWindPressureForceDivisorPush, value => SpaceWindPressureForceDivisorPush = value, true);
             Subs.CVar(_cfg, CCVars.SpaceWindMaxVelocity, value => SpaceWindMaxVelocity = value, true);

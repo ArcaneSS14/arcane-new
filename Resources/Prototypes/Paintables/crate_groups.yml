@@ -9,6 +9,11 @@
     radiation: CrateRadiation
     science: CrateScience
     surgery: CrateSurgery
+    # Arcane-Start
+    hydroponics: CrateHydroponics
+    medical: CrateMedical
+    oxygen: CrateInternals
+    # Arcane-End
 
 - type: paintableGroup
   id: CratePlastic
@@ -16,9 +21,11 @@
   defaultStyle: basic
   styles:
     basic: CratePlastic
-    hydroponics: CrateHydroponics
-    medical: CrateMedical
-    oxygen: CrateInternals
+    # Arcane-Edit-Start: steel crates since the resprite
+    # hydroponics: CrateHydroponics
+    # medical: CrateMedical
+    # oxygen: CrateInternals
+    # Arcane-Edit-End
 
 - type: paintableGroup
   id: CrateSecure

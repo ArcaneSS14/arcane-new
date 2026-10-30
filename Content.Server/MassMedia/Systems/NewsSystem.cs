@@ -28,6 +28,7 @@ using Robust.Shared.Utility;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Content.Shared.MassMedia; // Arcane
 
 namespace Content.Server.MassMedia.Systems;
 
@@ -174,7 +175,7 @@ public sealed partial class NewsSystem : SharedNewsSystem
         var authorName = _identity.GetIdentityShortInfo(msg.Actor, ent);
 
         var title = FormattedMessage.EscapeText(msg.Title.Trim()); // Goob Sanitize Text
-        var content = FormattedMessage.EscapeText(msg.Content.Trim()); // Goob Sanitize Text
+        var content = SafeMarkup.SanitizeBasic(msg.Content.Trim()); // Goob Sanitize Text | Arcane-Edit: EscapeText > SafeMarkup.SanitizeBasic, players may format news
 
         if (TryAddNews(ent, title, content, out var article, authorName, msg.Actor))
         {

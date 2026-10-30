@@ -1,0 +1,267 @@
+up2
+
+### Resources/Prototypes/Entities/Clothing/Back/backpacks.yml
+@@ -407,4 +407,7 @@
++  - type: Construction # Orion
++    graph: BagOfHoldingBackpack
++    node: bag_of_holding
+
+### Resources/Prototypes/Entities/Clothing/Back/duffel.yml
+@@ -310,4 +310,7 @@
++  - type: Construction # Orion
++    graph: BagOfHoldingDuffel
++    node: bag_of_holding
+
+### Resources/Prototypes/Entities/Clothing/Back/satchel.yml
+@@ -214,4 +214,7 @@
++  - type: Construction # Orion
++    graph: BagOfHoldingSatchel
++    node: bag_of_holding
+
+### Resources/Prototypes/Entities/Structures/Specific/Anomaly/cores.yml
+@@ -201,4 +201,9 @@
++  - type: Tag # Orion
++    tags:
++    - ForceableFollow
++    - AnomalyCore
++    - BluespaceAnomalyCore
+
+### Resources/Prototypes/Recipes/Lathes/devices.yml
+@@ -176,5 +176,5 @@
+-  result: ClothingBackpackHolding
++  result: ClothingBackpackHoldingInert # Orion-Edit: Inert
+@@ -187,5 +187,5 @@
+-  result: ClothingBackpackSatchelHolding
++  result: ClothingBackpackSatchelHoldingInert # Orion-Edit: Inert
+@@ -198,5 +198,5 @@
+-  result: ClothingBackpackDuffelHolding
++  result: ClothingBackpackDuffelHoldingInert # Orion-Edit: Inert
+
+### Resources/Prototypes/_NF/Entities/Clothing/Back/messenger.yml
+@@ -510,4 +510,7 @@
++  - type: Construction # Orion
++    graph: BagOfHoldingMessenger
++    node: bag_of_holding
+
+### Resources/Prototypes/_NF/Recipes/Lathes/devices.yml
+@@ -10,5 +10,5 @@
+-  result: ClothingBackpackMessengerHolding
++  result: ClothingBackpackMessengerHoldingInert # Orion-Edit: Inert
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Back/backpacks.yml
+@@ -26,2 +26,19 @@
++
++- type: entity
++  parent: BaseItem
++  id: ClothingBackpackHoldingInert
++  name: inert bag of holding
++  description: What is currently just an unwieldy block of metal with a slot ready to accept a bluespace anomaly core.
++  components:
++  - type: Sprite
++    sprite: Clothing/Back/Backpacks/holding.rsi
++    state: holding-broken
++  - type: Item
++    size: Ginormous
++    sprite: Clothing/Back/Backpacks/holding.rsi
++    heldPrefix: broken
++  - type: Tag
++    tags:
++    - InertBagOfHoldingBackpack
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Back/duffel.yml
+@@ -34,2 +34,19 @@
++
++- type: entity
++  parent: BaseItem
++  id: ClothingBackpackDuffelHoldingInert
++  name: inert duffelbag of holding
++  description: What is currently just an unwieldy block of metal with a slot ready to accept a bluespace anomaly core.
++  components:
++  - type: Sprite
++    sprite: Clothing/Back/Duffels/holding.rsi
++    state: broken
++  - type: Item
++    size: Ginormous
++    sprite: Clothing/Back/Duffels/holding.rsi
++    heldPrefix: broken
++  - type: Tag
++    tags:
++    - InertBagOfHoldingDuffel
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Back/messengers.yml
+@@ -35,2 +35,19 @@
++
++- type: entity
++  parent: BaseItem
++  id: ClothingBackpackMessengerHoldingInert
++  name: inert messenger bag of holding
++  description: What is currently just an unwieldy block of metal with a slot ready to accept a bluespace anomaly core.
++  components:
++  - type: Sprite
++    sprite: _NF/Clothing/Back/Messenger/holding.rsi
++    state: broken
++  - type: Item
++    size: Ginormous
++    sprite: _NF/Clothing/Back/Messenger/holding.rsi
++    heldPrefix: broken
++  - type: Tag
++    tags:
++    - InertBagOfHoldingMessenger
+
+### Resources/Prototypes/_Orion/Entities/Clothing/Back/satchel.yml
+@@ -7,2 +7,19 @@
++
++- type: entity
++  parent: BaseItem
++  id: ClothingBackpackSatchelHoldingInert
++  name: inert satchel of holding
++  description: What is currently just an unwieldy block of metal with a slot ready to accept a bluespace anomaly core.
++  components:
++  - type: Sprite
++    sprite: Clothing/Back/Satchels/holding.rsi
++    state: broken
++  - type: Item
++    size: Ginormous
++    sprite: Clothing/Back/Satchels/holding.rsi
++    heldPrefix: broken
++  - type: Tag
++    tags:
++    - InertBagOfHoldingSatchel
+
+### Resources/Prototypes/_Orion/Recipes/Crafting/Graphs/bluespace.yml
+@@ -0,0 +1,83 @@
++- type: constructionGraph
++  id: BagOfHoldingBackpack
++  start: start
++  graph:
++  - node: start
++    edges:
++    - to: bag_of_holding
++      steps:
++      - tag: InertBagOfHoldingBackpack
++        name: construction-graph-tag-inert-bag-backpack
++        icon:
++          sprite: Clothing/Back/Backpacks/holding.rsi
++          state: holding-broken
++      - tag: BluespaceAnomalyCore
++        name: construction-graph-tag-bluespace-anomaly-core
++        icon:
++          sprite: Structures/Specific/Anomalies/Cores/bluespace_core.rsi
++          state: core
++  - node: bag_of_holding
++    entity: ClothingBackpackHolding
++
++- type: constructionGraph
++  id: BagOfHoldingSatchel
++  start: start
++  graph:
++  - node: start
++    edges:
++    - to: bag_of_holding
++      steps:
++      - tag: InertBagOfHoldingSatchel
++        name: construction-graph-tag-inert-bag-satchel
++        icon:
++          sprite: Clothing/Back/Satchels/holding.rsi
++          state: broken
++      - tag: BluespaceAnomalyCore
++        name: construction-graph-tag-bluespace-anomaly-core
++        icon:
++          sprite: Structures/Specific/Anomalies/Cores/bluespace_core.rsi
++          state: core
++  - node: bag_of_holding
++    entity: ClothingBackpackSatchelHolding
++
++- type: constructionGraph
++  id: BagOfHoldingDuffel
++  start: start
++  graph:
++  - node: start
++    edges:
++    - to: bag_of_holding
++      steps:
++      - tag: InertBagOfHoldingDuffel
++        name: construction-graph-tag-inert-bag-duffel
++        icon:
++          sprite: Clothing/Back/Duffels/holding.rsi
++          state: broken
++      - tag: BluespaceAnomalyCore
++        name: construction-graph-tag-bluespace-anomaly-core
++        icon:
++          sprite: Structures/Specific/Anomalies/Cores/bluespace_core.rsi
++          state: core
++  - node: bag_of_holding
++    entity: ClothingBackpackDuffelHolding
++
++- type: constructionGraph
++  id: BagOfHoldingMessenger
++  start: start
++  graph:
++  - node: start
++    edges:
++    - to: bag_of_holding
++      steps:
++      - tag: InertBagOfHoldingMessenger
++        name: construction-graph-tag-inert-bag-messenger
++        icon:
++          sprite: _NF/Clothing/Back/Messenger/holding.rsi
++          state: broken
++      - tag: BluespaceAnomalyCore
++        name: construction-graph-tag-bluespace-anomaly-core
++        icon:
++          sprite: Structures/Specific/Anomalies/Cores/bluespace_core.rsi
++          state: core
++  - node: bag_of_holding
++    entity: ClothingBackpackMessengerHolding
+
+### Resources/Prototypes/_Orion/Recipes/Crafting/bluespace.yml
+@@ -0,0 +1,31 @@
++- type: construction
++  id: ClothingBackpackHolding
++  graph: BagOfHoldingBackpack
++  startNode: start
++  targetNode: bag_of_holding
++  category: construction-category-storage
++  objectType: Item
++
++- type: construction
++  id: ClothingBackpackSatchelHolding
++  graph: BagOfHoldingSatchel
++  startNode: start
++  targetNode: bag_of_holding
++  category: construction-category-storage
++  objectType: Item
++
++- type: construction
++  id: ClothingBackpackDuffelHolding
++  graph: BagOfHoldingDuffel
++  startNode: start
++  targetNode: bag_of_holding
++  category: construction-category-storage
++  objectType: Item
++
++- type: construction
++  id: ClothingBackpackMessengerHolding
++  graph: BagOfHoldingMessenger
++  startNode: start
++  targetNode: bag_of_holding
++  category: construction-category-storage
++  objectType: Item
+
+### Resources/Prototypes/_Orion/tags.yml
+@@ -76,2 +76,17 @@
++
++- type: Tag
++  id: BluespaceAnomalyCore
++
++- type: Tag
++  id: InertBagOfHoldingBackpack
++
++- type: Tag
++  id: InertBagOfHoldingSatchel
++
++- type: Tag
++  id: InertBagOfHoldingDuffel
++
++- type: Tag
++  id: InertBagOfHoldingMessenger

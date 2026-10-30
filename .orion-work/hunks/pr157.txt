@@ -1,0 +1,96 @@
+yip yip
+
+### Content.Client/PDA/PdaMenu.xaml.cs
+@@ -29,4 +29,5 @@
++using Content.Shared._Orion.Time;
+@@ -58,7 +59,8 @@ public sealed partial class PdaMenu : PdaWindow
+-        
++
++        private TimeSystem _timeSystem = default!; // Orion
+@@ -68,4 +70,5 @@ public PdaMenu()
++            _timeSystem = _entitySystem.GetEntitySystem<TimeSystem>(); // Orion
+@@ -142,7 +145,17 @@ public PdaMenu()
+-                var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
+-                _clipboard.SetText((stationTime.ToString("hh\\:mm\\:ss")));
++                // Orion-Edit-Start
++                var stationTime = _timeSystem.GetStationTime();
++                _clipboard.SetText(stationTime.Time.ToString("hh\\:mm\\:ss"));
++                // Orion-Edit-End
++            };
++
++            // Orion-Start
++            StationDateButton.OnPressed += _ =>
++            {
++                var stationDate = _timeSystem.GetStationTime().Date;
++                _clipboard.SetText(stationDate.ToString("dd.MM.yyyy"));
++            // Orion-End
+@@ -151,5 +164,5 @@ public PdaMenu()
+-            
++
+@@ -191,10 +204,12 @@ public void UpdateState(PdaUpdateState state)
+-            
+-            var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
++
++/*            // Orion-Edit-Start | Optimization
++            var stationTime = _timeSystem.GetStationTime();
+-                ("time", stationTime.ToString("hh\\:mm\\:ss"))));
++                ("time", stationTime.Time.ToString("hh\\:mm\\:ss"))));
++*/            // Orion-Edit-End
+@@ -367,9 +382,14 @@ protected override void Draw(DrawingHandleScreen handle)
+-            var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
++            // Orion-Edit-Start
++            var stationTime = _timeSystem.GetStationTime();
++            var stationDate = stationTime.Date;
+-                ("time", stationTime.ToString("hh\\:mm\\:ss"))));
++                ("time", stationTime.Time.ToString("hh\\:mm\\:ss"))));
++            StationDateLabel.SetMarkup(Loc.GetString("comp-pda-ui-station-date",
++                ("date", stationDate.ToString("dd.MM.yyyy"))));
++            // Orion-Edit-End
+-}
++}
+
+### Content.Shared/_Orion/Time/TimeSystem.cs
+@@ -0,0 +1,43 @@
++using Content.Shared.GameTicking;
++using Robust.Shared.Timing;
++
++namespace Content.Shared._Orion.Time;
++
++//
++// License-Identifier: AGPL-3.0-or-later
++//
++
++public sealed class TimeSystem : EntitySystem
++{
++    [Dependency] private readonly IGameTiming _timing = default!;
++
++    private TimeSpan _roundStart = TimeSpan.Zero;
++
++    public override void Initialize()
++    {
++        base.Initialize();
++
++        SubscribeNetworkEvent<TickerLobbyStatusEvent>(OnLobbyStatus);
++    }
++
++    private void OnLobbyStatus(TickerLobbyStatusEvent ev)
++    {
++        _roundStart = ev.RoundStartTimeSpan;
++    }
++
++    public (TimeSpan Time, DateTime Date) GetStationTime()
++    {
++        var elapsed = _timing.CurTime - _roundStart;
++        if (elapsed < TimeSpan.Zero)
++            elapsed = TimeSpan.Zero;
++
++        var timeOfDay = TimeSpan.FromTicks(elapsed.Ticks % TimeSpan.TicksPerDay);
++
++        var today = DateTime.UtcNow.Date;
++        var futureYear = today.Year + 500;
++        var day = Math.Min(today.Day, DateTime.DaysInMonth(futureYear, today.Month));
++        var stationDate = new DateTime(futureYear, today.Month, day);
++
++        return (timeOfDay, stationDate);
++    }
++}

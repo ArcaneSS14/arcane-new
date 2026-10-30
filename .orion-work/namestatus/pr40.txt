@@ -1,0 +1,17 @@
+A	Resources/Locale/en-US/_europa/stacks/stacks.ftl
+A	Resources/Locale/ru-RU/_europa/prototypes/entities/objects/misc/tiles.ftl
+A	Resources/Locale/ru-RU/_europa/prototypes/entities/tiles/bluespace.ftl
+A	Resources/Locale/ru-RU/_europa/stacks/stacks.ftl
+M	Resources/Prototypes/Recipes/Lathes/Packs/science.yml
+M	Resources/Prototypes/Research/civilianservices.yml
+A	Resources/Prototypes/_Europa/Entities/Objects/Misc/tiles.yml
+A	Resources/Prototypes/_Europa/Entities/Tiles/bluespace.yml
+A	Resources/Prototypes/_Europa/Recipes/Construction/Graphs/structures/bluespacefloor.yml
+A	Resources/Prototypes/_Europa/Recipes/Construction/structures.yml
+A	Resources/Prototypes/_Europa/Recipes/Lathes/Misc.yml
+A	Resources/Prototypes/_Europa/Recipes/Reactions/chemicals.yml
+A	Resources/Prototypes/_Europa/Stacks/floor_tile_stacks.yml
+A	Resources/Textures/_Europa/Objects/Tiles/bluespace.rsi/bluespace.png
+A	Resources/Textures/_Europa/Objects/Tiles/bluespace.rsi/meta.json
+A	Resources/Textures/_Europa/Tiles/Misc/bluespace_tile.rsi/bluespace.png
+A	Resources/Textures/_Europa/Tiles/Misc/bluespace_tile.rsi/meta.json

@@ -22,6 +22,10 @@
       - id: FoodSnackLollypopTrash # Goobstation - Lollypops
       - id: FoodPacketLollypopTrash # Goobstation - Lollypops
       - id: BrokenBottle
+      # Arcane-Start
+      - id: FoodPacketInteQCookiesTrash
+      - id: FoodPacketOrioCookiesTrash
+      # Arcane-End
     - !type:GroupSelector
       weight: 5
       children:

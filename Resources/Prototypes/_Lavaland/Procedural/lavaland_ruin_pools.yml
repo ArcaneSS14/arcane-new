@@ -25,6 +25,10 @@
     Shelter: 1
     Ratvar: 1
     MiningPost: 3
+    # Arcane-Start: Orion #16, #23
+    InteQSizo: 1
+    BroodmotherArena: 1
+    # Arcane-End
     AbductorDebris: 1
     CultBase: 1
     Hunter: 1

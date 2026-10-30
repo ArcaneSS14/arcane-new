@@ -1,0 +1,63 @@
+Fix YAML Test
+
+### Resources/Prototypes/Access/misc.yml
+@@ -19,4 +19,8 @@
++  - UnitedEarthGovernmentGeneral
++  - UnitedEarthGovernmentMedic
++  - UnitedEarthGovernmentSpecialist
++  - UnitedEarthGovernmentCommand
+
+### Resources/Prototypes/Entities/Markers/Spawners/Random/posters.yml
+@@ -52,4 +52,16 @@
++      # Europa-Start
++      - PosterContrabandInteQRecruitment
++      - PosterContrabandInteQWorkship
++      - PosterContrabandInteQWorkship2
++      - PosterContrabandInteQ
++      - PosterContrabandInteQNoSex
++      - PosterContrabandInteQVulp
++      - PosterContrabandInteQJulie
++      - PosterContrabandLustyXenomorph
++      - PosterContrabandBustyBackdoorXenoBabes6
++      - PosterContrabandBreadLies
++      # Europa-End
+@@ -116,11 +128,4 @@
+-      - PosterContrabandInteQRecruitment # Europa-Start
+-      - PosterContrabandInteQWorkship
+-      - PosterContrabandInteQWorkship2
+-      - PosterContrabandInteQ
+-      - PosterContrabandInteQNoSex
+-      - PosterContrabandInteQVulp
+-      - PosterContrabandInteQJulie # Europa-End
+@@ -145,4 +150,26 @@
++      # Europa-Start
++      - PosterLegitBarDrinks
++      - PosterLegitBotanyFood
++      - PosterLegitHotDonkExplosion
++      - PosterLegitEatMeat
++      - PosterLegitMoreBread
++      - PosterLegitPieSlice
++      - PosterLegitPizzaHope
++      - PosterLegitUnitedEarthGovernment1
++      - PosterLegitUnitedEarthGovernment2
++      - PosterLegitUnitedEarthGovernment3
++      - PosterLegitUnitedEarthGovernment4
++      - PosterLegitUnitedEarthGovernment5
++      - PosterLegitUnitedEarthGovernment6
++      - PosterLegitUnitedEarthGovernment7
++      - PosterLegitUnitedEarthGovernment8
++      - PosterLegitUnitedEarthGovernment9
++      - PosterLegitUnitedEarthGovernment10
++      - PosterLegitUnitedEarthGovernment11
++      - PosterLegitUnitedEarthGovernment12
++      - PosterLegitUnitedEarthGovernment13
++      # Europa-End
+
+### Resources/migration.yml
+@@ -953,7 +953,7 @@ WeaponSubMachineGunVectorRubber: null
+-# 2025-02-18
+-PosterContrabandLustyExomorph: PosterContrabandRealExomorph
+-PosterContrabandBustyBackdoorExoBabes6: PosterContrabandRouny
++# 2025-02-18 | Europa-Edit
++PosterContrabandLustyExomorph: PosterContrabandLustyXenomorph
++PosterContrabandBustyBackdoorExoBabes6: PosterContrabandBustyBackdoorXenoBabes6

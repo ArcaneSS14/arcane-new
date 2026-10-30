@@ -72,6 +72,23 @@
           32:
             sprite: Mobs/Species/Human/displacement.rsi
             state: dwarfism
+      # Arcane-Start: underwear slots (Orion #208)
+      underwear:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: dwarfism
+      undershirt:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: dwarfism
+      socks:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: dwarfism
+      # Arcane-End
   - type: InitialBody
     organs:
       Torso: OrganDwarfTorso

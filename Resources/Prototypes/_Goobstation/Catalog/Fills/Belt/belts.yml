@@ -113,8 +113,12 @@
   components:
   - type: EntityTableContainerFill
     containers:
-      storagebase: !type:NestedSelector
-        tableId: BeltSecurityNoBatonEntityTable
+      # Arcane-Edit-Start: the judo belt grid only fits two handcuffs
+      storagebase: !type:AllSelector
+        children:
+        - id: Handcuffs
+          amount: 2
+      # Arcane-Edit-End
 
 - type: entity
   id: ClothingBeltHolsterFilledChaplain

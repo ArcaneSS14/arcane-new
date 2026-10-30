@@ -423,12 +423,24 @@ namespace Content.Server.Construction
             RaiseLocalEvent(uid, ref goidaEv);
             RaiseLocalEvent(newUid, ref goidaEv);
             // </Trauma>
-            QueueDel(uid);
+            // Arcane-Edit-Start: a node can build a new entity next to the original instead of replacing it
+            var keepOriginal = GetCurrentNode(uid, construction)?.KeepOriginalEntity == true;
+            if (!keepOriginal)
+                QueueDel(uid);
+            // Arcane-Edit-End
 
             // If ChangeEntity has ran, then the entity uid has changed and the
             // new entity should be initialized by this point.
             var afterChangeEv = new AfterConstructionChangeEntityEvent(construction.Graph, construction.Node, previousNode);
             RaiseLocalEvent(newUid, ref afterChangeEv);
+
+            // Arcane-Start: the kept entity stays on the node it was on
+            if (keepOriginal && previousNode != null)
+            {
+                construction.Node = previousNode;
+                ClearPathfinding(uid, construction);
+            }
+            // Arcane-End
 
             return newUid;
         }

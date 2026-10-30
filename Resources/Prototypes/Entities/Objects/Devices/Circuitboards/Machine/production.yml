@@ -7,24 +7,31 @@
     - type: MachineBoard
       prototype: Autolathe
       stackRequirements:
-        Manipulator: 4
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
         Glass: 1
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 3
+        Servo: 1
+      # Arcane-End
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: AutolatheHyperConvectionMachineCircuitboard
-  name: hyper convection autolathe machine board
-  description: A machine printed circuit board for a hyper convection autolathe.
-  components:
-  - type: MachineBoard
-    prototype: AutolatheHyperConvection
-    stackRequirements:
-      Manipulator: 4
-      Glass: 1
-    tagRequirements:
-      Igniter:
-        amount: 1
-        defaultPrototype: Igniter
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: AutolatheHyperConvectionMachineCircuitboard
+#  name: hyper convection autolathe machine board
+#  description: A machine printed circuit board for a hyper convection autolathe.
+#  components:
+#  - type: MachineBoard
+#    prototype: AutolatheHyperConvection
+#    stackRequirements:
+#      Manipulator: 4
+#      Glass: 1
+#    tagRequirements:
+#      Igniter:
+#        amount: 1
+#        defaultPrototype: Igniter
+# Arcane-Edit-End
 
 - type: entity
   id: ProtolatheMachineCircuitboard
@@ -36,32 +43,39 @@
     state: science
   - type: MachineBoard
     prototype: Protolathe
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      Servo: 2
+    # Arcane-End
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: ProtolatheHyperConvectionMachineCircuitboard
-  name: hyper convection protolathe machine board
-  description: A machine printed circuit board for a hyper convection protolathe.
-  components:
-  - type: Sprite
-    state: science
-  - type: MachineBoard
-    prototype: ProtolatheHyperConvection
-    stackRequirements:
-      Manipulator: 4
-    tagRequirements:
-      GlassBeaker:
-        amount: 2
-        defaultPrototype: Beaker
-      Igniter:
-        amount: 1
-        defaultPrototype: Igniter
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: ProtolatheHyperConvectionMachineCircuitboard
+#  name: hyper convection protolathe machine board
+#  description: A machine printed circuit board for a hyper convection protolathe.
+#  components:
+#  - type: Sprite
+#    state: science
+#  - type: MachineBoard
+#    prototype: ProtolatheHyperConvection
+#    stackRequirements:
+#      Manipulator: 4
+#    tagRequirements:
+#      GlassBeaker:
+#        amount: 2
+#        defaultPrototype: Beaker
+#      Igniter:
+#        amount: 1
+#        defaultPrototype: Igniter
+# Arcane-Edit-End
 
 - type: entity
   id: BiofabricatorMachineCircuitboard
@@ -74,8 +88,12 @@
   - type: MachineBoard
     prototype: Biofabricator
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Glass: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: SecurityTechFabCircuitboard
@@ -87,12 +105,17 @@
       state: security
     - type: MachineBoard
       prototype: SecurityTechFab
-      stackRequirements:
-        Manipulator: 4
+      # stackRequirements: # Arcane-Edit: machine parts only
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 2
+        Servo: 2
+      # Arcane-End
     - type: Tag # Trauma
       tags:
       - TechfabMachineBoard
@@ -108,8 +131,13 @@
       state: security
     - type: MachineBoard
       prototype: AmmoTechFab
-      stackRequirements:
-        Manipulator: 2
+      # stackRequirements: # Arcane-Edit: machine parts only
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 2
+        Servo: 2
+      # Arcane-End
 
 - type: entity
   id: MedicalTechFabCircuitboard
@@ -121,12 +149,17 @@
       state: medical
     - type: MachineBoard
       prototype: MedicalTechFab
-      stackRequirements:
-        Manipulator: 4
+      # stackRequirements: # Arcane-Edit: machine parts only
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 2
+        Servo: 2
+      # Arcane-End
     - type: StealTarget
       stealGroup: MedicalTechFabCircuitboard
     - type: Tag # Trauma
@@ -143,32 +176,39 @@
     state: science
   - type: MachineBoard
     prototype: CircuitImprinter
-    stackRequirements:
-      Manipulator: 2
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 1
+      Servo: 1
+    # Arcane-End
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: CircuitImprinterHyperConvectionMachineCircuitboard
-  name: hyper convection circuit imprinter machine board
-  description: A machine printed circuit board for a hyper convection circuit imprinter.
-  components:
-  - type: Sprite
-    state: science
-  - type: MachineBoard
-    prototype: CircuitImprinterHyperConvection
-    stackRequirements:
-      Manipulator: 2
-    tagRequirements:
-      GlassBeaker:
-        amount: 2
-        defaultPrototype: Beaker
-      Igniter:
-        amount: 1
-        defaultPrototype: Igniter
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: CircuitImprinterHyperConvectionMachineCircuitboard
+#  name: hyper convection circuit imprinter machine board
+#  description: A machine printed circuit board for a hyper convection circuit imprinter.
+#  components:
+#  - type: Sprite
+#    state: science
+#  - type: MachineBoard
+#    prototype: CircuitImprinterHyperConvection
+#    stackRequirements:
+#      Manipulator: 2
+#    tagRequirements:
+#      GlassBeaker:
+#        amount: 2
+#        defaultPrototype: Beaker
+#      Igniter:
+#        amount: 1
+#        defaultPrototype: Igniter
+# Arcane-Edit-End
 
 - type: entity
   id: ExosuitFabricatorMachineCircuitboard
@@ -180,8 +220,14 @@
   - type: MachineBoard
     prototype: ExosuitFabricator
     stackRequirements:
-      Manipulator: 4
-      Glass: 5
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+      Glass: 1 # Arcane-Edit: 5 > 1
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      Servo: 1
+      MicroLaser: 1
+    # Arcane-End
   - type: GuideHelp
     guides:
     - Robotics
@@ -211,11 +257,18 @@
   - type: MachineBoard
     prototype: Biogenerator
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+      Cable: 1 # Arcane
+      Glass: 1 # Arcane
     tagRequirements:
       GlassBeaker:
         amount: 1
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 1
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   id: UniformPrinterMachineCircuitboard
@@ -224,8 +277,12 @@
   components:
   - type: MachineBoard
     prototype: UniformPrinter
-    stackRequirements:
-      Manipulator: 3
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   id: VaccinatorMachineCircuitboard
@@ -237,12 +294,16 @@
   - type: MachineBoard
     prototype: Vaccinator
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Cable: 5
     tagRequirements:
         GlassBeaker:
           amount: 1
           defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   id: DiagnoserMachineCircuitboard
@@ -275,8 +336,12 @@
     - type: MachineBoard
       prototype: MachineArtifactAnalyzer
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 5
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: ArtifactCrusherMachineCircuitboard
@@ -289,9 +354,13 @@
   - type: MachineBoard
     prototype: MachineArtifactCrusher
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Glass: 1
       Steel: 5
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   id: StationTeleporterMachineCircuitboard
@@ -304,9 +373,13 @@
   - type: MachineBoard
     prototype: StationTeleporter
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Cable: 5
       PlasmaGlass: 10
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -319,9 +392,13 @@
     - type: MachineBoard
       prototype: MachineAnomalyVessel
       stackRequirements:
-        Manipulator: 3
+        # Manipulator: 3 # Arcane-Edit: replaced by machine parts
         Cable: 1
         PlasmaGlass: 10
+      # Arcane-Start
+      partRequirements:
+        Servo: 3
+      # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -334,10 +411,14 @@
   - type: MachineBoard
     prototype: MachineAnomalyVesselExperimental
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Cable: 5
       PlasmaGlass: 15
       MetalRod: 4
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -350,9 +431,13 @@
     - type: MachineBoard
       prototype: MachineAnomalySynchronizer
       stackRequirements:
-        Manipulator: 7
+        # Manipulator: 7 # Arcane-Edit: replaced by machine parts
         PlasmaGlass: 5
         Cable: 5
+      # Arcane-Start
+      partRequirements:
+        Servo: 7
+      # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -365,9 +450,13 @@
     - type: MachineBoard
       prototype: MachineAPE
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         Cable: 1
         Glass: 1
+      # Arcane-Start
+      partRequirements:
+        Servo: 2
+      # Arcane-End
 
 - type: entity
   id: ThermomachineFreezerMachineCircuitBoard
@@ -380,8 +469,14 @@
   - type: MachineBoard
     prototype: GasThermoMachineFreezer
     stackRequirements:
-      Manipulator: 4
-      Cable: 5
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+      Cable: 1 # Arcane-Edit: 5 > 1
+      Glass: 1 # Arcane
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      MicroLaser: 2
+    # Arcane-End
   - type: Construction
     deconstructionTarget: null
     graph: ThermomachineBoard
@@ -398,48 +493,58 @@
   - type: MachineBoard
     prototype: GasThermoMachineHeater
     stackRequirements:
-      Manipulator: 4
-      Cable: 5
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+      Cable: 1 # Arcane-Edit: 5 > 1
+      Glass: 1 # Arcane
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      MicroLaser: 2
+    # Arcane-End
   - type: Construction
     graph: ThermomachineBoard
     deconstructionTarget: null
     node: heater
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: HellfireFreezerMachineCircuitBoard
-  name: hellfire freezer machine board
-  description: Looks like you could use a screwdriver to change the board type.
-  components:
-  - type: Sprite
-    state: engineering
-  - type: MachineBoard
-    prototype: GasThermoMachineHellfireFreezer
-    stackRequirements:
-      Manipulator: 4
-      Plasma: 1
-  - type: Construction
-    deconstructionTarget: null
-    graph: ThermomachineBoard
-    node: hellfirefreezer
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: HellfireFreezerMachineCircuitBoard
+#  name: hellfire freezer machine board
+#  description: Looks like you could use a screwdriver to change the board type.
+#  components:
+#  - type: Sprite
+#    state: engineering
+#  - type: MachineBoard
+#    prototype: GasThermoMachineHellfireFreezer
+#    stackRequirements:
+#      Manipulator: 4
+#      Plasma: 1
+#  - type: Construction
+#    deconstructionTarget: null
+#    graph: ThermomachineBoard
+#    node: hellfirefreezer
+# Arcane-Edit-End
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: HellfireHeaterMachineCircuitBoard
-  name: hellfire heater machine board
-  description: Looks like you could use a screwdriver to change the board type.
-  components:
-  - type: Sprite
-    state: engineering
-  - type: MachineBoard
-    prototype: GasThermoMachineHellfireHeater
-    stackRequirements:
-      Manipulator: 4
-      Plasma: 1
-  - type: Construction
-    graph: ThermomachineBoard
-    deconstructionTarget: null
-    node: hellfireheater
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: HellfireHeaterMachineCircuitBoard
+#  name: hellfire heater machine board
+#  description: Looks like you could use a screwdriver to change the board type.
+#  components:
+#  - type: Sprite
+#    state: engineering
+#  - type: MachineBoard
+#    prototype: GasThermoMachineHellfireHeater
+#    stackRequirements:
+#      Manipulator: 4
+#      Plasma: 1
+#  - type: Construction
+#    graph: ThermomachineBoard
+#    deconstructionTarget: null
+#    node: hellfireheater
+# Arcane-Edit-End
 
 - type: entity
   id: CondenserMachineCircuitBoard
@@ -452,8 +557,12 @@
   - type: MachineBoard
     prototype: BaseGasCondenser
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Glass: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   id: PortableScrubberMachineCircuitBoard
@@ -466,9 +575,14 @@
   - type: MachineBoard
     prototype: PortableScrubber
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Cable: 5
       Glass: 2
+    # Arcane-Start
+    partRequirements:
+      MicroLaser: 2
+      Capacitor: 2
+    # Arcane-End
 
 - type: entity
   id: SpaceHeaterMachineCircuitBoard
@@ -481,8 +595,13 @@
   - type: MachineBoard
     prototype: SpaceHeater
     stackRequirements:
-      Manipulator: 3
-      Cable: 5
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
+      Cable: 3 # Arcane-Edit: 5 > 3
+    # Arcane-Start
+    partRequirements:
+      MicroLaser: 2
+      Capacitor: 2
+    # Arcane-End
 
 - type: entity
   id: CloningPodMachineCircuitboard
@@ -495,9 +614,13 @@
     - type: MachineBoard
       prototype: CloningPod
       stackRequirements:
-        Manipulator: 4
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
         Glass: 1
-        Cable: 1
+        # Cable: 1 # Arcane-Edit: replaced by machine parts
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: MedicalScannerMachineCircuitboard
@@ -510,9 +633,13 @@
     - type: MachineBoard
       prototype: MedicalScanner
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 5
         Cable: 1
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: CrewMonitoringServerMachineCircuitboard
@@ -539,6 +666,11 @@
       stackRequirements:
         Glass: 5
         Cable: 1
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 2
+        MicroLaser: 1
+      # Arcane-End
 
 - type: entity
   id: ChemMasterMachineCircuitboard
@@ -551,13 +683,17 @@
     - type: MachineBoard
       prototype: ChemMaster
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 1
         Cable: 1
       tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: ChemDispenserMachineCircuitboard
@@ -570,13 +706,18 @@
     - type: MachineBoard
       prototype: ChemDispenserEmpty
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 1
-        Steel: 3
+        # Steel: 3 # Arcane-Edit: replaced by machine parts
       tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 2
+        Capacitor: 2
+      # Arcane-End
 
 - type: entity
   id: BiomassReclaimerMachineCircuitboard
@@ -589,13 +730,17 @@
   - type: MachineBoard
     prototype: BiomassReclaimer
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Steel: 5
     tagRequirements:
       Knife:
         amount: 2
         defaultPrototype: KitchenKnife
         examineName: construction-insert-info-examine-name-knife
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   id: HydroponicsTrayMachineCircuitboard
@@ -609,12 +754,17 @@
       prototype: HydroponicsTrayEmpty
       stackRequirements:
         # replacing the console screen
-        Glass: 5
-        Cable: 2
+        Glass: 1 # Arcane-Edit: 5 > 1
+        # Cable: 2 # Arcane-Edit: replaced by machine parts
       tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 2
+        Servo: 2
+      # Arcane-End
 
 - type: entity
   id: SeedExtractorMachineCircuitboard
@@ -627,10 +777,14 @@
     - type: MachineBoard
       prototype: SeedExtractor
       stackRequirements:
-        Manipulator: 3
+        # Manipulator: 3 # Arcane-Edit: replaced by machine parts
         # replacing the console screen
         Glass: 1
-        Cable: 2
+        # Cable: 2 # Arcane-Edit: replaced by machine parts
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: SMESMachineCircuitboard
@@ -644,12 +798,16 @@
     - type: MachineBoard
       prototype: SMESBasicEmpty
       stackRequirements:
-        Manipulator: 1
-        CableHV: 10
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
+        CableHV: 5 # Arcane-Edit: 10 > 5
       componentRequirements:
-        PowerCell:
+        MegaCell: # Arcane-Edit: PowerCell > MegaCell
           amount: 4
-          defaultPrototype: PowerCellSmall
+          defaultPrototype: MegaCellSmall # Arcane-Edit: PowerCellSmall > MegaCellSmall
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: SMESAdvancedMachineCircuitboard
@@ -663,12 +821,16 @@
   - type: MachineBoard
     prototype: SMESAdvancedEmpty
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       CableHV: 20
     componentRequirements:
-      PowerCell:
+      MegaCell: # Arcane-Edit: PowerCell > MegaCell
         amount: 4
-        defaultPrototype: PowerCellMedium
+        defaultPrototype: MegaCellHigh # Arcane-Edit: PowerCellMedium > MegaCellHigh
+    # Arcane-Start
+    partRequirements:
+      Capacitor: 1
+    # Arcane-End
 
 - type: entity
   id: CellRechargerCircuitboard
@@ -682,8 +844,12 @@
     - type: MachineBoard
       prototype: PowerCellRecharger
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         Cable: 5
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End
     - type: PhysicalComposition
       materialComposition:
         Steel: 25
@@ -708,9 +874,13 @@
     - type: MachineBoard
       prototype: PowerCageRecharger
       stackRequirements:
-        Manipulator: 4
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
         Steel: 5
         Cable: 10
+      # Arcane-Start
+      partRequirements:
+        Servo: 4
+      # Arcane-End
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Steel: 25
@@ -733,8 +903,13 @@
     - type: MachineBoard
       prototype: BorgCharger
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         Cable: 5
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 2
+        Servo: 1
+      # Arcane-End
     - type: PhysicalComposition
       materialComposition:
         Steel: 25
@@ -759,8 +934,12 @@
     - type: MachineBoard
       prototype: WeaponCapacitorRecharger
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         CableMV: 5
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End
     - type: PhysicalComposition
       materialComposition:
         Steel: 25
@@ -773,30 +952,32 @@
       - AugmentStationBoard
       - RechargingBoard
 
-- type: entity
-  id: TurboItemRechargerCircuitboard
-  parent: BaseMachineCircuitboard
-  name: turbo recharger machine board
-  description: A machine printed circuit board for a turbo recharger.
-  components:
-  - type: Sprite
-    sprite: Objects/Misc/module.rsi
-    state: charger_APC
-  - type: MachineBoard
-    prototype: TurboItemRecharger
-    stackRequirements:
-      Manipulator: 2
-      CableMV: 5
-  - type: PhysicalComposition #Goobstation - Recycle update
-    materialComposition:
-      Steel: 25
-      Glass: 125
-      Gold: 25
-  - type: Tag # Trauma
-    tags:
-    - DroneUsable
-    - AugmentStationBoard
-    - RechargingBoard
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  id: TurboItemRechargerCircuitboard
+#  parent: BaseMachineCircuitboard
+#  name: turbo recharger machine board
+#  description: A machine printed circuit board for a turbo recharger.
+#  components:
+#  - type: Sprite
+#    sprite: Objects/Misc/module.rsi
+#    state: charger_APC
+#  - type: MachineBoard
+#    prototype: TurboItemRecharger
+#    stackRequirements:
+#      Manipulator: 2
+#      CableMV: 5
+#  - type: PhysicalComposition #Goobstation - Recycle update
+#    materialComposition:
+#      Steel: 25
+#      Glass: 125
+#      Gold: 25
+#  - type: Tag # Trauma
+#    tags:
+#    - DroneUsable
+#    - AugmentStationBoard
+#    - RechargingBoard
+# Arcane-Edit-End
 
 - type: entity
   id: SubstationMachineCircuitboard
@@ -807,13 +988,17 @@
     - type: MachineBoard
       prototype: SubstationBasicEmpty
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         CableMV: 5
         CableHV: 5
       componentRequirements:
-        PowerCell:
+        MegaCell: # Arcane-Edit: PowerCell > MegaCell
           amount: 1
-          defaultPrototype: PowerCellSmall
+          defaultPrototype: MegaCellSmall # Arcane-Edit: PowerCellSmall > MegaCellSmall
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Glass: 125
@@ -867,8 +1052,12 @@
     - type: MachineBoard
       prototype: PortableGeneratorPacman
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         CableHV: 5
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Glass: 125
@@ -887,8 +1076,12 @@
   - type: MachineBoard
     prototype: Thruster
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Steel: 5
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: GyroscopeMachineCircuitboard
@@ -900,8 +1093,12 @@
   - type: MachineBoard
     prototype: Gyroscope
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Glass: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   id: PortableGeneratorSuperPacmanMachineCircuitboard
@@ -913,8 +1110,12 @@
     - type: MachineBoard
       prototype: PortableGeneratorSuperPacman
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         CableHV: 10
+      # Arcane-Start
+      partRequirements:
+        Servo: 2
+      # Arcane-End
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Glass: 125
@@ -933,8 +1134,12 @@
     - type: MachineBoard
       prototype: PortableGeneratorJrPacman
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Cable: 10
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
     - type: PhysicalComposition #Goobstation - Recycle update
       materialComposition:
         Glass: 125
@@ -951,12 +1156,17 @@
   components:
     - type: MachineBoard
       prototype: KitchenReagentGrinder
-      stackRequirements:
-        Manipulator: 4
+      # stackRequirements: # Arcane-Edit: machine parts only
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       tagRequirements:
         GlassBeaker:
           amount: 1
           defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+        MatterBin: 1
+      # Arcane-End
 
 - type: entity
   id: HotplateMachineCircuitboard
@@ -969,8 +1179,12 @@
   - type: MachineBoard
     prototype: ChemistryHotplate
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Glass: 1
+    # Arcane-Start
+    partRequirements:
+      MicroLaser: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -983,9 +1197,13 @@
   - type: MachineBoard
     prototype: KitchenElectricGrill
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Glass: 2
       Cable: 5
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: StasisBedMachineCircuitboard
@@ -997,9 +1215,14 @@
     - type: MachineBoard
       prototype: StasisBed
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         Cable: 3
         Steel: 2
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: ElectrolysisUnitMachineCircuitboard
@@ -1012,8 +1235,14 @@
   - type: MachineBoard
     prototype: MachineElectrolysisUnit
     stackRequirements:
-      Manipulator: 2
-      Cable: 1
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+      Cable: 5 # Arcane-Edit: 1 > 5
+      Glass: 1 # Arcane
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+      Capacitor: 2
+    # Arcane-End
 
 - type: entity
   id: CentrifugeMachineCircuitboard
@@ -1026,8 +1255,12 @@
   - type: MachineBoard
     prototype: MachineCentrifuge
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Steel: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   id: MaterialSiloMachineCircuitboard
@@ -1039,8 +1272,12 @@
   - type: MachineBoard
     prototype: MachineMaterialSilo
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Cable: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   id: OreProcessorMachineCircuitboard
@@ -1052,21 +1289,29 @@
     - type: MachineBoard
       prototype: OreProcessor
       stackRequirements:
-        Manipulator: 4
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
         Glass: 1
+      # Arcane-Start
+      partRequirements:
+        MatterBin: 1
+        MicroLaser: 1
+        Servo: 1
+      # Arcane-End
 
-- type: entity
-  parent: BaseMachineCircuitboard
-  id: OreProcessorIndustrialMachineCircuitboard
-  name: industrial ore processor machine board
-  components:
-  - type: Sprite
-    state: supply
-  - type: MachineBoard
-    prototype: OreProcessorIndustrial
-    stackRequirements:
-      Manipulator: 4
-      Glass: 1
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  parent: BaseMachineCircuitboard
+#  id: OreProcessorIndustrialMachineCircuitboard
+#  name: industrial ore processor machine board
+#  components:
+#  - type: Sprite
+#    state: supply
+#  - type: MachineBoard
+#    prototype: OreProcessorIndustrial
+#    stackRequirements:
+#      Manipulator: 4
+#      Glass: 1
+# Arcane-Edit-End
 
 - type: entity
   id: SheetifierMachineCircuitboard
@@ -1075,8 +1320,13 @@
   components:
   - type: MachineBoard
     prototype: Sheetifier
-    stackRequirements:
-      Manipulator: 2
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+      MatterBin: 2
+    # Arcane-End
 
 - type: entity
   id: MicrowaveMachineCircuitboard
@@ -1088,9 +1338,15 @@
     - type: MachineBoard
       prototype: KitchenMicrowave
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 2
         Cable: 2
+      # Arcane-Start
+      partRequirements:
+        MicroLaser: 1
+        MatterBin: 1
+        Capacitor: 1
+      # Arcane-End
     - type: Tag
       tags:
       - DroneUsable # Goobstation
@@ -1106,9 +1362,15 @@
     - type: MachineBoard
       prototype: SyndicateMicrowave
       stackRequirements:
-        Manipulator: 1
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
         Glass: 2
         Cable: 2
+      # Arcane-Start
+      partRequirements:
+        MicroLaser: 1
+        MatterBin: 1
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: FatExtractorMachineCircuitboard
@@ -1119,13 +1381,17 @@
       state: service
     - type: MachineBoard
       prototype: FatExtractor
-      stackRequirements:
-        Manipulator: 1
+      # stackRequirements: # Arcane-Edit: machine parts only
+        # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       componentRequirements:
         Utensil:
           amount: 1
           defaultPrototype: ForkPlastic
           examineName: construction-insert-info-examine-name-utensil
+      # Arcane-Start
+      partRequirements:
+        MicroLaser: 1
+      # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1135,8 +1401,15 @@
   - type: MachineBoard
     prototype: MachineFlatpacker
     stackRequirements:
-      Manipulator: 3
-      Steel: 1
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
+      # Steel: 1 # Arcane-Edit: replaced by machine parts
+      Plasteel: 5 # Arcane
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      MicroLaser: 2
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   id: EmitterCircuitboard
@@ -1148,9 +1421,14 @@
     - type: MachineBoard
       prototype: Emitter
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         CableHV: 5
         Glass: 2
+      # Arcane-Start
+      partRequirements:
+        MicroLaser: 1
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: SurveillanceCameraRouterCircuitboard
@@ -1232,9 +1510,13 @@
   - type: MachineBoard
     prototype: GasRecycler
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Steel: 10
       Plasma: 5
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   id: BoozeDispenserMachineCircuitboard
@@ -1252,6 +1534,11 @@
           GlassBeaker:
             amount: 1
             defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 2
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: CargoTelepadMachineCircuitboard
@@ -1264,9 +1551,13 @@
     - type: MachineBoard
       prototype: CargoTelepad
       stackRequirements:
-        Manipulator: 2
+        # Manipulator: 2 # Arcane-Edit: replaced by machine parts
         Steel: 5
         BSCrystal: 2 # Goobstation
+      # Arcane-Start
+      partRequirements:
+        Servo: 1
+      # Arcane-End
 
 - type: entity
   id: MailTeleporterMachineCircuitboard
@@ -1279,8 +1570,14 @@
   - type: MachineBoard
     prototype: CargoMailTeleporter
     stackRequirements:
-      Manipulator: 2
-      Steel: 5
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+      # Steel: 5 # Arcane-Edit: replaced by machine parts
+      Glass: 1 # Arcane
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 2
+      ScanningModule: 1
+    # Arcane-End
 
 - type: entity
   id: SodaDispenserMachineCircuitboard
@@ -1298,6 +1595,11 @@
           GlassBeaker:
             amount: 1
             defaultPrototype: Beaker
+      # Arcane-Start
+      partRequirements:
+        Servo: 2
+        Capacitor: 1
+      # Arcane-End
 
 - type: entity
   id: TelecomServerCircuitboard
@@ -1324,10 +1626,15 @@
   - type: MachineBoard
     prototype: SalvageMagnet
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Steel: 5
       CableHV: 5
       Cable: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+      MatterBin: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1340,10 +1647,14 @@
   - type: MachineBoard
     prototype: GravityGeneratorMiniUncharged
     stackRequirements:
-      Manipulator: 7
+      # Manipulator: 7 # Arcane-Edit: replaced by machine parts
       Steel: 5
       CableHV: 5
       Uranium: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 7
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1354,11 +1665,15 @@
   - type: MachineBoard
     prototype: StationAnchor
     stackRequirements:
-      Manipulator: 7
+      # Manipulator: 7 # Arcane-Edit: replaced by machine parts
       Steel: 10
       Glass: 5
       CableHV: 8
       Uranium: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 7
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1368,8 +1683,12 @@
   - type: MachineBoard
     prototype: ReagentGrinderIndustrial
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Glass: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1396,8 +1715,12 @@
     prototype: CutterMachine
     stackRequirements:
       Steel: 2
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Cable: 1
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -1411,8 +1734,12 @@
     prototype: SmartFridge
     stackRequirements:
       Glass: 5
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
     tagRequirements:
         GlassBeaker:
           amount: 2
           defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      MatterBin: 1
+    # Arcane-End

@@ -1,0 +1,590 @@
+{
+"17": {
+"verdict": "KEEP",
+"reason": "Orion-контент (мудрости/события), в базе нет"
+},
+"29": {
+"verdict": "KEEP",
+"reason": "регулятор громкости музыкального автомата (UI+BUI)"
+},
+"57": {
+"verdict": "KEEP",
+"reason": "обновление карты InteQ_Sizo (_Europa)"
+},
+"85": {
+"verdict": "CUT",
+"reason": "чистка Goob-voice чата"
+},
+"162": {
+"verdict": "KEEP",
+"reason": "покерные фишки/коробка/стеки"
+},
+"210": {
+"verdict": "KEEP",
+"reason": "PriceGun из Goobstation"
+},
+"239": {
+"verdict": "KEEP",
+"reason": "MeatSpike: визуалайзер/компонент/система/UI"
+},
+"302": {
+"verdict": "KEEP",
+"reason": "распад/реактивация ядер аномалий"
+},
+"350": {
+"verdict": "KEEP",
+"reason": "возврат свистка (Whistle)"
+},
+"356": {
+"verdict": "KEEP",
+"reason": "Mothroach (новый моб _Orion)"
+},
+"372": {
+"verdict": "KEEP",
+"reason": "реагент Bluespace для реактивации ядер"
+},
+"381": {
+"verdict": "KEEP",
+"reason": "дополнение к покеру + KnockOn для столов"
+},
+"23": {
+"verdict": "KEEP",
+"reason": "паттерны-призывы голиафа + руина BroodmotherArena"
+},
+"31": {
+"verdict": "KEEP",
+"reason": "EnergyDome в лате-паке, в базе нет"
+},
+"61": {
+"verdict": "KEEP",
+"reason": "RandomSpawnRule MinCount/MaxCount"
+},
+"93": {
+"verdict": "CUT",
+"reason": "YAML-фикс Orion-постеров/доступов UEG"
+},
+"182": {
+"verdict": "CUT",
+"reason": "возврат к апстриму (RND-Server, медпак)"
+},
+"211": {
+"verdict": "KEEP",
+"reason": "еда Orio + упаковка"
+},
+"248": {
+"verdict": "CUT",
+"reason": "косметический спрайт bleed-алерта"
+},
+"311": {
+"verdict": "CUT",
+"reason": "удаляет ChangelogOrion.yml, которого нет в базе"
+},
+"351": {
+"verdict": "KEEP",
+"reason": "джукбокс: loop + позиция трека"
+},
+"359": {
+"verdict": "KEEP",
+"reason": "картинка лобби (_Orion webp)"
+},
+"373": {
+"verdict": "CUT",
+"reason": "Orion-баланс патч (TC/урон/броня)"
+},
+"382": {
+"verdict": "KEEP",
+"reason": "декали для маппинга (таблички/стрелки)"
+},
+"25": {
+"verdict": "KEEP",
+"reason": "фикс спрайтов modsuit (_Europa)"
+},
+"38": {
+"verdict": "KEEP",
+"reason": "кириллица для карандашей"
+},
+"63": {
+"verdict": "KEEP",
+"reason": "варианты BodyBag + lathe-рецепты"
+},
+"143": {
+"verdict": "KEEP",
+"reason": "система DecalGrenade + граната конфетти"
+},
+"183": {
+"verdict": "KEEP",
+"reason": "NSFW-флейвор (OOC/ссылки/теги + БД)"
+},
+"216": {
+"verdict": "KEEP",
+"reason": "система позирования спрайта для фото"
+},
+"283": {
+"verdict": "KEEP",
+"reason": "система вербовки через имплант (BUI)"
+},
+"341": {
+"verdict": "CUT",
+"reason": "Orion-баланс брони шляп"
+},
+"353": {
+"verdict": "KEEP",
+"reason": "визуальные трейсеры снарядов"
+},
+"363": {
+"verdict": "KEEP",
+"reason": "EdgeConnection для сцепленных спрайтов компьютеров"
+},
+"375": {
+"verdict": "KEEP",
+"reason": "нин objective Protect Crewmember"
+},
+"429": {
+"verdict": "KEEP",
+"reason": "аудио reptilian_hiss (бинарь)"
+},
+"26": {
+"verdict": "CUT",
+"reason": "миграция DresserCaptainFilled→CaptainDrobe ломает базу"
+},
+"41": {
+"verdict": "CUT",
+"reason": "Floodlight уже наследует HandheldLight в базе"
+},
+"76": {
+"verdict": "KEEP",
+"reason": "спонсорские привилегии (слоты/вход)"
+},
+"157": {
+"verdict": "CUT",
+"reason": "PDA-время уже есть в базе (PdaMenu)"
+},
+"207": {
+"verdict": "CUT",
+"reason": "Trauma-языки уже аддитивные (Knowledge)"
+},
+"232": {
+"verdict": "KEEP",
+"reason": "ready-manifest в лобби (кто на какие джобы)"
+},
+"298": {
+"verdict": "CUT",
+"reason": "фикс UI рекрутинга без самой системы"
+},
+"349": {
+"verdict": "KEEP",
+"reason": "сумка доставки + AntiRottingContainer"
+},
+"354": {
+"verdict": "KEEP",
+"reason": "квас (реагент/стакан/бак/груз)"
+},
+"370": {
+"verdict": "KEEP",
+"reason": "голограммы ИИ + bugborg-шасси"
+},
+"376": {
+"verdict": "KEEP",
+"reason": "хамелеон-штамп (uplink-предмет)"
+},
+"466": {
+"verdict": "CUT",
+"reason": "fan airtight для широких шлюзов, которых нет в базе"
+},
+"14": {
+"verdict": "CUT",
+"reason": "орионовские постеры/миграции _Europa, no-op без их контента"
+},
+"27": {
+"verdict": "KEEP",
+"reason": "буфф макробомбы применим к базе"
+},
+"39": {
+"verdict": "CUT",
+"reason": "замены аудио на /Audio/_Europa, без них нечего"
+},
+"55": {
+"verdict": "KEEP",
+"reason": "визуал space wind отсутствует в базе"
+},
+"74": {
+"verdict": "KEEP",
+"reason": "амбер-алерт и рамки в анонсах"
+},
+"99": {
+"verdict": "CUT",
+"reason": "Orion-пресеты + удаление MalignRiftSpawn, который база использует"
+},
+"113": {
+"verdict": "CUT",
+"reason": "нерф Goob-blob-пода по значениям Orion"
+},
+"138": {
+"verdict": "CUT",
+"reason": "Orion-контент; ScannableForPoints в базе уже есть"
+},
+"153": {
+"verdict": "CUT",
+"reason": "убирает Chemistry у психолога — баланс Orion"
+},
+"178": {
+"verdict": "CUT",
+"reason": "рефакторинг Orion-гайдбуков; GuideHelp уже в базе"
+},
+"188": {
+"verdict": "CUT",
+"reason": "чинит Orion-правку BaseSecretDoorAssembly — в базе работает"
+},
+"233": {
+"verdict": "KEEP",
+"reason": "звук аварийных ламп по уровню тревоги"
+},
+"259": {
+"verdict": "CUT",
+"reason": "правки фракций InteQ/Xenoborg — Orion/Goob-специфика"
+},
+"275": {
+"verdict": "KEEP",
+"reason": "перф/анти-краш Hunger/Thirst/SpriteFade"
+},
+"284": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф (TG Banners)"
+},
+"312": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф (Lobby Server Info)"
+},
+"325": {
+"verdict": "CUT",
+"reason": "раскомментирует Goob-роли, которых нет в базе"
+},
+"343": {
+"verdict": "CUT",
+"reason": "документ-принтер в _Orion/NTR-дереве, нет в базе"
+},
+"366": {
+"verdict": "CUT",
+"reason": "косметика аркады под Orion-стейты"
+},
+"402": {
+"verdict": "KEEP",
+"reason": "exists-guard для RelativeEntity (краш-фикс)"
+},
+"420": {
+"verdict": "KEEP",
+"reason": "запрет тянуть пристёгнутого"
+},
+"438": {
+"verdict": "KEEP",
+"reason": "SelfSurgerySpeedModifier + защита от нулевой скорости"
+},
+"447": {
+"verdict": "CUT",
+"reason": "гарды TerminatingOrDeleted уже в ToggleableClothingSystem"
+},
+"19": {
+"verdict": "CUT",
+"reason": "нет AdvertiseComponent/AdvertiseSystem в базе — патч ни к чему"
+},
+"34": {
+"verdict": "CUT",
+"reason": "Orion-иконки/голограммы ИИ, в базе нет"
+},
+"40": {
+"verdict": "KEEP",
+"reason": "исследование и печать блюспейс-плитки"
+},
+"60": {
+"verdict": "CUT",
+"reason": "теобромин-твик под Orion-структуру YAML"
+},
+"79": {
+"verdict": "CUT",
+"reason": "удаление pride-контента — локальная политика Orion"
+},
+"100": {
+"verdict": "CUT",
+"reason": "дефолт ui.layout=Separated из Orion UI-оверхола"
+},
+"116": {
+"verdict": "CUT",
+"reason": "отключение штрафа просроченной почты; Mail-системы нет в базе"
+},
+"144": {
+"verdict": "CUT",
+"reason": "замена тайлов на ассеты WWhiteDreamProject"
+},
+"160": {
+"verdict": "CUT",
+"reason": "станц. время требует _Orion Time-инфраструктуры"
+},
+"181": {
+"verdict": "KEEP",
+"reason": "озвучка разблокировки технологий"
+},
+"208": {
+"verdict": "KEEP",
+"reason": "слоты белья/носков/запястий + показ одежды"
+},
+"245": {
+"verdict": "KEEP",
+"reason": "AdminWho доступен всем без флага"
+},
+"265": {
+"verdict": "CUT",
+"reason": "лицензионная чистка NC-ассетов Orion"
+},
+"276": {
+"verdict": "CUT",
+"reason": "формат строк лицензии Orion-атрибуций"
+},
+"287": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф"
+},
+"313": {
+"verdict": "CUT",
+"reason": "база уже активирует камеры через ActiveMonitors"
+},
+"327": {
+"verdict": "CUT",
+"reason": "правка Goob GrabIntent, которого нет в базе"
+},
+"345": {
+"verdict": "CUT",
+"reason": "правка Orion WormholeAnomalySystem, аномалии нет в базе"
+},
+"367": {
+"verdict": "KEEP",
+"reason": "сумки-холдинга инертны + крафт с ядром bluespace"
+},
+"406": {
+"verdict": "CUT",
+"reason": "конфиг CodeRabbit/openai.yaml — не относится к контенту"
+},
+"427": {
+"verdict": "CUT",
+"reason": "основное уже в базе; остаток косметика pry"
+},
+"439": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф (start)"
+},
+"448": {
+"verdict": "CUT",
+"reason": "фикс Sandevistan уже в текущем коде"
+},
+"20": {
+"verdict": "CUT",
+"reason": "Hermit уже в пуле руин; правки _Europa-специфичны"
+},
+"35": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф (+4 hair)"
+},
+"42": {
+"verdict": "CUT",
+"reason": "нет PlaytimeDegrade на ассистенте — no-op"
+},
+"64": {
+"verdict": "KEEP",
+"reason": "убирает жор еды у NPC через HTN"
+},
+"87": {
+"verdict": "CUT",
+"reason": "снятие доступа РНД-консоли — политика Orion"
+},
+"106": {
+"verdict": "CUT",
+"reason": "удаление Goob-гайдбука + баланс ивентов Orion"
+},
+"117": {
+"verdict": "KEEP",
+"reason": "плавный поворот мыши в бою (SmoothRotation)"
+},
+"148": {
+"verdict": "CUT",
+"reason": "косметика главного меню с логотипами Orion"
+},
+"166": {
+"verdict": "CUT",
+"reason": "рефактор Orion-собственного TimeSystem"
+},
+"186": {
+"verdict": "KEEP",
+"reason": "рецепт секретных дверей через каркас"
+},
+"220": {
+"verdict": "KEEP",
+"reason": "режим игры в Discord-уведомлении"
+},
+"256": {
+"verdict": "KEEP",
+"reason": "направленные емоды + индикатор набора"
+},
+"267": {
+"verdict": "CUT",
+"reason": "в базе простая строка death-unknown без битой локализации"
+},
+"279": {
+"verdict": "CUT",
+"reason": "битая строка asteroid_plating в attributions нет в базе"
+},
+"305": {
+"verdict": "CUT",
+"reason": "слота earsright в базе нет"
+},
+"322": {
+"verdict": "CUT",
+"reason": "правки LastMindStored и Goob TemporaryMindSystem"
+},
+"328": {
+"verdict": "KEEP",
+"reason": "фикс дюпа энергии EnergyReagentDispenser"
+},
+"357": {
+"verdict": "CUT",
+"reason": "allowlist ссылок eblo.id в DetailExaminable Orion"
+},
+"380": {
+"verdict": "CUT",
+"reason": "BaseSiloUtilizer — Goob-прототип; в базе уже силоз"
+},
+"412": {
+"verdict": "CUT",
+"reason": "отключает печать NanoTask — регресс Orion"
+},
+"434": {
+"verdict": "KEEP",
+"reason": "цветной маркер в админ-логах"
+},
+"444": {
+"verdict": "CUT",
+"reason": "метода ConfigureCameraNetwork нет в базе"
+},
+"450": {
+"verdict": "KEEP",
+"reason": "SmartFridge EmptyAllContainersBehaviour"
+},
+"21": {
+"verdict": "CUT",
+"reason": "нет категории Farts в базе — no-op"
+},
+"37": {
+"verdict": "CUT",
+"reason": "нет stationGoal/FTL-целей в базе — no-op"
+},
+"52": {
+"verdict": "CUT",
+"reason": "CI-автокл Orion (_Europa changelog) базе не нужен"
+},
+"66": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф"
+},
+"97": {
+"verdict": "CUT",
+"reason": "база уже имеет SkippedFirstProcess=true в Hotspot"
+},
+"110": {
+"verdict": "KEEP",
+"reason": "анти-спам AHelp (кулдаун + авто-бан)"
+},
+"118": {
+"verdict": "CUT",
+"reason": "массовое удаление скольжения — баланс Orion, база сохраняет слип"
+},
+"152": {
+"verdict": "CUT",
+"reason": "база уже имеет StationAlertLevelLock — дубль"
+},
+"177": {
+"verdict": "CUT",
+"reason": "порядок parent в _Orion-прототипе сундука"
+},
+"187": {
+"verdict": "KEEP",
+"reason": "окна строятся на решётке (KeepOriginalEntity)"
+},
+"227": {
+"verdict": "CUT",
+"reason": "чистка патрон-link UI под _RMC14; свой LinkAccount в базе"
+},
+"258": {
+"verdict": "KEEP",
+"reason": "снятие доступа Salvage Vendor (QoL)"
+},
+"271": {
+"verdict": "CUT",
+"reason": "правит _White-ксеноморфов Orion"
+},
+"282": {
+"verdict": "CUT",
+"reason": "selectable_sets и мануалы отсутствуют в базе"
+},
+"307": {
+"verdict": "CUT",
+"reason": "переделка лобби с кнопками Collapse/Expand Orion UI"
+},
+"324": {
+"verdict": "CUT",
+"reason": "база уже имеет свой сплит крита (MobStateSystem.Trauma)"
+},
+"331": {
+"verdict": "UNCERTAIN",
+"reason": "пустой дифф (fixsecretdoor)"
+},
+"365": {
+"verdict": "CUT",
+"reason": "комментирует миграции _Orion-прототипов"
+},
+"383": {
+"verdict": "KEEP",
+"reason": "поддержка отрицательных в playtime-команде"
+},
+"417": {
+"verdict": "CUT",
+"reason": "правит SlimeLatchSystem, которой нет в базе"
+},
+"436": {
+"verdict": "CUT",
+"reason": "маркинги face.yml с bodyPart: Face нет в базе"
+},
+"445": {
+"verdict": "KEEP",
+"reason": "фикс застревания скорости аритмии"
+},
+"458": {
+"verdict": "KEEP",
+"reason": "призраки без CanGhostInteract не трогают криокапсулу"
+},
+"6": {
+"verdict": "CUT",
+"reason": "1592/2490 ids уже в базе (Orion-ветка форка)"
+},
+"30": {
+"verdict": "CUT",
+"reason": "id уже в базе"
+},
+"154": {
+"verdict": "CUT",
+"reason": "id уже в базе"
+},
+"176": {
+"verdict": "CUT",
+"reason": "id уже в базе"
+},
+"191": {
+"verdict": "CUT",
+"reason": "id уже в базе"
+},
+"355": {
+"verdict": "CUT",
+"reason": "2/2 id уже в базе"
+},
+"442": {
+"verdict": "CUT",
+"reason": "36/49 ids уже в базе"
+}
+}

@@ -1,0 +1,12 @@
+# Invisible airtight blocker for the extra tiles of multi-tile airlocks (Orion #466).
+- type: entity
+  id: PhantomAirtight
+  name: phantom airtight blocker
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: Transform
+    anchored: true
+  - type: Airtight
+    noAirWhenFullyAirBlocked: false
+    fixVacuum: false

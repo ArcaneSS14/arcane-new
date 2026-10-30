@@ -7,6 +7,7 @@ using Content.Shared.Whitelist;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
+using Content.Shared.Toggleable; // Arcane
 
 namespace Content.Goobstation.Shared.Overlays;
 
@@ -18,6 +19,7 @@ public abstract partial class SwitchableOverlaySystem<TComp, TEvent> : EntitySys
     [Dependency] private SharedActionsSystem _actions = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private INetManager _net = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!; // Arcane
 
     public override void Initialize()
     {
@@ -159,6 +161,7 @@ public abstract partial class SwitchableOverlaySystem<TComp, TEvent> : EntitySys
             return;
 
         component.IsActive = state.IsActive;
+        UpdateVisuals(uid, component); // Arcane
 
         RaiseSwitchableOverlayToggledEvent(uid,
             component.IsEquipment ? Transform(uid).ParentUid : uid,
@@ -180,6 +183,7 @@ public abstract partial class SwitchableOverlaySystem<TComp, TEvent> : EntitySys
     private void OnInit(EntityUid uid, TComp component, ComponentInit args)
     {
         component.PulseAccumulator = component.PulseTime;
+        UpdateVisuals(uid, component); // Arcane
     }
 
     private void OnMapInit(EntityUid uid, TComp component, MapInitEvent args)
@@ -208,13 +212,25 @@ public abstract partial class SwitchableOverlaySystem<TComp, TEvent> : EntitySys
         if (component.PulseTime > 0f)
         {
             component.PulseAccumulator = activate ? 0f : component.PulseTime;
+            UpdateVisuals(uid, component); // Arcane
             return;
         }
 
         component.IsActive = activate;
+        UpdateVisuals(uid, component); // Arcane
         _actions.SetToggled(component.ToggleActionEntity, activate); // WD EDIT - it's white dream system but okay
         Dirty(uid, component);
     }
+
+    // Arcane-Start
+    private void UpdateVisuals(EntityUid uid, TComp component)
+    {
+        if (!TryComp<AppearanceComponent>(uid, out var appearance))
+            return;
+
+        _appearance.SetData(uid, ToggleableVisuals.Enabled, component.IsActive, appearance);
+    }
+    // Arcane-End
 
     private void RaiseSwitchableOverlayToggledEvent(EntityUid uid, EntityUid user, bool activated)
     {

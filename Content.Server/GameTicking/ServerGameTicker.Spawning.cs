@@ -24,6 +24,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.GameTicking; // Arcane
 
 namespace Content.Server.GameTicking
 {
@@ -214,6 +215,16 @@ namespace Content.Server.GameTicking
                 // This does not utilize overflow job slots, so if the character profile
                 // had no available job priorities (ie Captain on Dev) set, then the player will spawn as a ghost
             }
+
+            // Arcane-Start
+            if (lateJoin)
+            {
+                var attempt = new LateJoinAttemptEvent(player, character.Name);
+                RaiseLocalEvent(ref attempt);
+                if (attempt.Cancelled)
+                    return;
+            }
+            // Arcane-End
 
             // We raise this event to allow other systems to handle spawning this player themselves. (e.g. late-join wizard, etc)
             var bev = new PlayerBeforeSpawnEvent(player, character, jobId, lateJoin, station);

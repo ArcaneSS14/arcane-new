@@ -15,6 +15,12 @@
   - AssistiveItems
   - Survival
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   - ScientistEnvirohelm
   - ScientistEnvirosuit
@@ -28,6 +34,12 @@
   - Glasses
   - Survival
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   - BotanistEnvirohelm
   - BotanistEnvirosuit
@@ -47,6 +59,12 @@
   - DClassShoes
   - Survival
   - Trinkets
+  # Arcane-Start: underwear (Orion #208)
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+  # Arcane-End
   - GroupSpeciesBreathTool
   - DClassEnvirohelm
   - DClassEnvirosuit

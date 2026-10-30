@@ -1,0 +1,454 @@
+IT WORKS
+
+### Content.Server/Administration/Systems/BwoinkSystem.cs
+@@ -198,5 +198,5 @@ public sealed partial class BwoinkSystem : SharedBwoinkSystem
+-        private readonly TimeSpan _messageCooldown = TimeSpan.FromSeconds(2);
++        private readonly TimeSpan _messageCooldown = TimeSpan.FromSeconds(1);
+
+### Resources/Audio/_Orion/Misc/attributions.yml
+@@ -3,2 +3,7 @@
++
++- files: ["delta.ogg"]
++  license: "CC-BY-SA-3.0"
++  copyright: "Taken from Wizden https://github.com/space-wizards/space-station-14/blob/master/Resources/Audio/Misc/delta.ogg, upgraded by UmbiMax"
++  source: "https://github.com/space-wizards/space-station-14/pull/8226/commits/92529612a94e576a85b85f4762a3619859972871#diff-5df104702f68acafc1cc806a80ce616d623fccbea9fff74cfdf02435d2559331"
+
+### Resources/Prototypes/AlertLevels/alert_levels.yml
+@@ -113,5 +113,5 @@
+-      sound: /Audio/Misc/notice1.ogg
++      sound: /Audio/_Orion/Misc/code_danger.ogg # Orion-Edit
+@@ -130,5 +130,5 @@
+-      sound: /Audio/Misc/notice1.ogg
++      sound: /Audio/_Orion/Misc/code_danger.ogg # Orion-Edit
+@@ -137,5 +137,5 @@
+-        path: /Audio/_Orion/Announcements/rising.ogg
++        path: /Audio/_Orion/Announcements/beep_beep.ogg
+@@ -189,5 +189,5 @@
+-        path: /Audio/_Orion/Announcements/2_tone_alarm.ogg
++        path: /Audio/_Orion/Announcements/angry.ogg
+@@ -201,5 +201,5 @@
+-        path: /Audio/Misc/delta.ogg
++        path: /Audio/_Orion/Misc/delta.ogg # Orion-Edit
+@@ -211,10 +211,10 @@
+-        path: /Audio/_Orion/Announcements/overload.ogg
++        path: /Audio/_Orion/Misc/soundlight/delta_light.ogg
+-          volume: -12
++          volume: -6
+-      alarmInterval: 45
++      alarmInterval: 2.7
+@@ -237,5 +237,5 @@
+-      alarmInterval: 60
++      alarmInterval: 8
+@@ -270,5 +270,5 @@
+-        path: /Audio/_Orion/Announcements/alien.ogg
++        path: /Audio/_Orion/Announcements/angry.ogg
+@@ -276,4 +276,4 @@
+-      alarmInterval: 60
++      alarmInterval: 20
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/chemvend.yml
+@@ -14,5 +14,5 @@
+-    Jug: 4
++    Jug: 15 # Orion-Edit: 4 > 15
+@@ -46,5 +46,5 @@
+-    Jug: 4
++    Jug: 15 # Orion-Edit: 4 > 15
+@@ -68,5 +68,5 @@
+-    PlasmaChemistryVial: 1
++    JugPlasma: 1 # Orion-Edit: Vial was replaced with a jug
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/theater.yml
+@@ -71,4 +71,5 @@
++    ClothingHeadHatBunny: 2 # Orion
+@@ -147,4 +148,9 @@
++    # Orion-Start
++    ClothingOuterSuitCarp: 2
++    ClothingNeckCloakCarp: 1
++    ClothingNeckCloakCarpAlt: 1
++    # Orion-End
+
+### Resources/Prototypes/Catalog/VendingMachines/Inventories/winterdrobe.yml
+@@ -45,4 +45,5 @@
++    ClothingHeadHatUshanka: 3 # Orion
+
+### Resources/Prototypes/Catalog/uplink_catalog.yml
+@@ -681,5 +681,5 @@
+-    Telecrystal: 5 # goob - Ammo should be cheap. 96 dmg per TC.
++    Telecrystal: 4 # goob - Ammo should be cheap. 96 dmg per TC. # Orion-Edit: 5 > 4
+@@ -714,7 +714,7 @@
+-  productEntity: MagazineBoxLightRifle
++  productEntity: MagazineBoxRifle762 # Orion-Edit: .30 > 7.62
+-    Telecrystal: 9 # goob
++    Telecrystal: 6 # goob # Orion-Edit: 9 > 6
+@@ -870,5 +870,5 @@
+-    Telecrystal: 40 # goob
++    Telecrystal: 20 # goob # Orion-Edit: 40 > 20
+@@ -1011,5 +1011,5 @@
+-    Telecrystal: 20 # goob
++    Telecrystal: 10 # goob # Orion-Edit: 20 > 10
+@@ -1036,5 +1036,5 @@
+-    Telecrystal: 20 # goob - total meme item.
++    Telecrystal: 15 # goob - total meme item. # Orion-Edit 20 > 15
+@@ -1303,5 +1303,5 @@
+-    Telecrystal: 70 # goob
++    Telecrystal: 60 # goob # Orion-Edit: 70 > 60
+@@ -1471,5 +1471,5 @@
+-    Telecrystal: 40 # goob
++    Telecrystal: 30 # goob # Orion-Edit: 40 > 30
+@@ -1500,5 +1500,5 @@
+-    Telecrystal: 15 # goob - can be useful, but does nothing on its own
++    Telecrystal: 20 # goob - can be useful, but does nothing on its own # Orion-Edit: 15 > 20
+@@ -1512,5 +1512,5 @@
+-    Telecrystal: 25 # goob
++    Telecrystal: 20 # goob # Orion-Edit: 25 > 20
+@@ -1608,5 +1608,5 @@
+-    Telecrystal: 20 # goob # goob - traitor suicide implants
++    Telecrystal: 10 # goob # goob - traitor suicide implants # Orion-Edit: 20 > 10
+@@ -1952,5 +1952,5 @@
+-    Telecrystal: 130 # goob
++    Telecrystal: 100 # goob # Orion-Edit: 130 > 100
+
+### Resources/Prototypes/Entities/Clothing/Eyes/hud.yml
+@@ -298,7 +298,13 @@
++  # Orion-Start
++  - type: ShowDiseaseIcons
++    lowThreshold: 1
++    mediumThreshold: 20
++    highThreshold: 40
++  # Orion-End
+-  parent: [ClothingEyesBase, ShowSecurityIcons, ShowMedicalIcons]
++  parent: ClothingEyesHudMultiversal # Orion-Edit: Change for future innovations
+@@ -309,11 +315,11 @@
+-  - type: ShowHealthBars
+-    damageContainers:
+-    - Biological
+-    - Inorganic
++#  - type: ShowHealthBars # Orion-Edit: Removed
++#    damageContainers:
++#    - Biological
++#    - Inorganic
+-  - type: ShowSyndicateIcons
++#  - type: ShowSyndicateIcons # Orion-Edit: Inherited from parent
+
+### Resources/Prototypes/Entities/Clothing/Hands/gloves.yml
+@@ -547,5 +547,5 @@
+-    attackRate: 4
++    attackRate: 6 # Orion-Edit: 4 > 6
+
+### Resources/Prototypes/Entities/Clothing/OuterClothing/hardsuits.yml
+@@ -1002,6 +1002,6 @@
+-    walkModifier: 0.9
+-    sprintModifier: 0.9
++    walkModifier: 1 # Orion-Edit: 0.9 > 1
++    sprintModifier: 1 # Orion-Edit: 0.9 > 1
+
+### Resources/Prototypes/Entities/Objects/Shields/shields.yml
+@@ -648,7 +648,7 @@
+-          - state: shield-inhand-left
++          - state: inhand-left-shield # Orion-Edit: Bugfix
+-          - state: shield-inhand-right
++          - state: inhand-right-shield # Orion-Edit: Bugfix
+
+### Resources/Prototypes/Entities/Objects/Weapons/Melee/fireaxe.yml
+@@ -76,4 +76,5 @@
++      armorPenetration: 0.4 # Orion
+@@ -129,4 +130,5 @@
++      armorPenetration: 0.4 # Orion
+
+### Resources/Prototypes/Entities/Structures/Machines/chem_master.yml
+@@ -57,5 +57,5 @@
+-    sprite: Structures/Machines/mixer.rsi
++    sprite: _Orion/Structures/Machines/mixer.rsi # Orion-Edit
+@@ -64,8 +64,19 @@
++      visible: false # Orion-Edit: Added for power-based visibility
++    # Orion-Start
++    - state: mixer_screens_loaded
++      shader: unshaded
++      map: ["mixer_screens_loaded"]
++      visible: false
++    - state: mixer_empty_screen
++      map: ["mixer_empty_screen"]
++      visible: true
++    # Orion-End
+-    sprite: Structures/Machines/mixer.rsi
++    sprite: _Orion/Structures/Machines/mixer.rsi # Orion-Edit
++    sprite: _Orion/Structures/Machines/mixer.rsi # Orion
+@@ -74,4 +85,10 @@
++  # Orion-Start
++      mixer_screens_loaded:
++        whitelist:
++          components:
++          - FitsInDispenser
++  # Orion-End
+@@ -118,5 +135,7 @@
+-  # Machine / Construction stuff
++        mixer_empty_screen: # Orion
++          True: { visible: false }
++          False: { visible: true }
+
+### Resources/Prototypes/Entities/Structures/Machines/lathe.yml
+@@ -869,4 +869,7 @@
++    # Orion-Start
++    - EmptyMedicalSprayBottlesStatic
++    # Orion-End
+
+### Resources/Prototypes/InventoryTemplates/aghost_inventory_template.yml
+@@ -77,7 +77,16 @@
+-      uiWindowPos: 0,3 # Goobstation - Moved up slightly
++      uiWindowPos: 0,4 # Goobstation - Moved up slightly # Orion-Edit: 0,3 > 0,4
++    # Orion-Start
++    - name: eyes
++      slotTexture: glasses
++      slotFlags: EYES
++      stripTime: 3
++      uiWindowPos: 0,3
++      strippingWindowPos: 0,0
++      displayName: Eyes
++    # Orion-End
+
+### Resources/Prototypes/Roles/Jobs/Fun/misc_startinggear.yml
+@@ -265,4 +265,5 @@
++    eyes: ClothingEyesHudMultiversal # Orion
+
+### Resources/Prototypes/_EinsteinEngines/Catalog/uplink_catalog.yml
+@@ -8,5 +8,5 @@
+-    Telecrystal: 4
++    Telecrystal: 10 # Orion-Edit: 4 > 10
+
+### Resources/Prototypes/_Goobstation/Catalog/uplink_catalog.yml
+@@ -67,5 +67,5 @@
+-    Telecrystal: 30
++    Telecrystal: 15 # Orion-Edit: 30 > 15
+@@ -83,6 +83,6 @@
+-  name: Box of Reagent Grenades
+-  description: Contains 2 Glue grenades and 2 Lube Grenades
++  name: uplink-box-reagent-grenades-name # Orion-Edit: Localization
++  description: uplink-box-reagent-grenades-desc # Orion-Edit: Localization
+@@ -501,5 +501,5 @@
+-    Telecrystal: 150
++    Telecrystal: 130 # Orion-Edit: 150 > 130
+@@ -836,5 +836,5 @@
+-    Telecrystal: 15
++    Telecrystal: 10 # Orion-Edit: 15 > 10
+@@ -856,5 +856,5 @@
+-    Telecrystal: 100
++    Telecrystal: 30 # Orion-Edit: 100 > 30
+@@ -1080,5 +1080,5 @@
+-    Telecrystal: 66
++    Telecrystal: 45 # Orion-Edit: 66 > 45
+@@ -1121,5 +1121,5 @@
+-    Telecrystal: 12 # Buying granades this way is ~14% cheaper than getting them from china-lake bundles
++    Telecrystal: 10 # Buying granades this way is ~14% cheaper than getting them from china-lake bundles # Orion-Edit: 12 > 10
+@@ -1132,5 +1132,5 @@
+-    Telecrystal: 12 # Buying granades this way is ~14% cheaper than getting them from china-lake bundles
++    Telecrystal: 10 # Buying granades this way is ~14% cheaper than getting them from china-lake bundles # Orion-Edit: 12 > 10
+@@ -1312,5 +1312,5 @@
+-    Telecrystal: 6 # 12% cheaper than the bundle, coherency with china
++    Telecrystal: 4 # 12% cheaper than the bundle, coherency with china # Orion-Edit: 6 > 4
+@@ -1322,5 +1322,5 @@
+-    Telecrystal: 6 # 12% cheaper than the bundle, coherency with china
++    Telecrystal: 5 # 12% cheaper than the bundle, coherency with china # Orion-Edit: 6 > 5
+
+### Resources/Prototypes/_Goobstation/Entities/Clothing/Neck/cloaks.yml
+@@ -35,5 +35,5 @@
+-  parent: [ ClothingNeckBase, BaseMagicalContraband ]
++  parent: ClothingNeckBase # Orion-Edit: "BaseMagicalContraband" removed
+@@ -46,5 +46,5 @@
+-  parent: [ ClothingNeckBase, BaseMagicalContraband ]
++  parent: ClothingNeckBase # Orion-Edit: "BaseMagicalContraband" removed
+
+### Resources/Prototypes/_Orion/Entities/Objects/Specific/chemical-containers.yml
+@@ -0,0 +1,14 @@
++- type: entity
++  parent: Jug
++  suffix: plasma
++  id: JugPlasma
++  categories: [ HideSpawnMenu ]
++  components:
++  - type: Label
++    currentLabel: reagent-name-plasma
++  - type: SolutionContainerManager
++    solutions:
++      beaker:
++        reagents:
++        - ReagentId: Plasma
++          Quantity: 200
+
+### Resources/Prototypes/_Orion/Entities/Objects/Specific/medicalsprays.yml
+@@ -0,0 +1,35 @@
++- type: entity
++  parent: SprayBottle
++  id: SprayBottleRedEmpty
++  name: red spray bottle
++  suffix: Empty, Styptic powder
++  components:
++  - type: Sprite
++    sprite: _Goobstation/Objects/Medical/Stypticspray.rsi
++    state: icon
++  - type: Item
++    sprite: _Goobstation/Objects/Medical/Stypticspray.rsi
++
++- type: entity
++  parent: SprayBottle
++  id: SprayBottleOrangeEmpty
++  name: orange spray bottle
++  suffix: Empty, Styptic powder
++  components:
++  - type: Sprite
++    sprite: _Goobstation/Objects/Medical/Silverspray.rsi
++    state: icon
++  - type: Item
++    sprite: _Goobstation/Objects/Medical/Silverspray.rsi
++
++- type: entity
++  parent: SprayBottle
++  id: SprayBottleBlueEmpty
++  name: blue spray bottle
++  suffix: Empty, Blue
++  components:
++  - type: Sprite
++    sprite: _Orion/Objects/Medical/Bluespray.rsi
++    state: icon
++  - type: Item
++    sprite: _Orion/Objects/Medical/Bluespray.rsi
+
+### Resources/Prototypes/_Orion/Entities/Objects/Weapons/Guns/Pistols/Pistols.yml
+@@ -119,5 +119,5 @@
+-    maxAngle: 15
++    maxAngle: 13
+@@ -154,6 +154,6 @@
+-    angleIncrease: 5
+-    fireRate: 5
++    angleIncrease: 2
++    fireRate: 4.5
+
+### Resources/Prototypes/_Orion/Entities/Structures/Dispensers/chem.yml
+@@ -6,5 +6,6 @@
+-    state: industrial-working
++  - type: ItemMapper
++    sprite: _Orion/Structures/Dispensers/mini_dispensers.rsi
+@@ -12,5 +13,5 @@
+-  parent: ReagentDispenserBase
++  parent: [ReagentDispenserBase, BaseMachinePowered]
+@@ -21,6 +22,31 @@
+-    state: industrial
++    layers:
++    - state: industrial-off
++    - state: industrial-working
++      shader: unshaded
++      map: ["enum.PowerDeviceVisualLayers.Powered"]
++      visible: false
++  - type: Icon
++    sprite: _Orion/Structures/Dispensers/dispenser.rsi
++    state: industrial
++  - type: Appearance
++  - type: ItemMapper
++    sprite: _Orion/Structures/Dispensers/dispenser.rsi
++    containerWhitelist: [beakerSlot]
++    mapLayers:
++      industrial_loaded:
++        whitelist:
++          components:
++          - FitsInDispenser
++  - type: GenericVisualizer
++    visuals:
++      enum.PowerDeviceVisuals.Powered:
++        enum.PowerDeviceVisualLayers.Powered:
++          True: { visible: true }
++          False: { visible: false }
++  - type: ApcPowerReceiver
++    powerLoad: 65
+@@ -70,30 +96,30 @@
+-      Chlorine: 12
++      Chlorine: 9
+-      Hydrogen: 3
++      Hydrogen: 6
+-      Lithium: 12
+-      Mercury: 12
++      Lithium: 6
++      Mercury: 7
+-      Phosphorus: 5
++      Phosphorus: 15
+-      Radium: 15
+-      Silicon: 3
++      Radium: 7
++      Silicon: 4
+-      Puncturase: 15
+-      Pyrazine: 15
++      Puncturase: 20
++      Pyrazine: 10
+-      Aloxadone: 10
++      Leporazine: 10
+-      Ephedrine: 10
++      Ephedrine: 20
+
+### Resources/Prototypes/_Orion/Entities/Structures/Doors/Airlocks/Double/double_glass_airlock.yml
+@@ -0,0 +1,60 @@
++- type: entity
++  parent: Airlock
++  id: DoubleGlassAirlock
++  name: Double Glass Airlock
++  description: It opens, it closes, and maybe crushes you, but it's bigger than normal door.
++  components:
++  - type: Door
++    closeTimeOne: 0.55
++    closeTimeTwo: 0.3
++    openTimeOne: 0.55
++    openTimeTwo: 0.3
++    occludes: false
++  - type: Occluder
++    enabled: false
++  - type: Sprite
++    sprite: _Orion/Structures/Doors/Airlocks/Double/double_glass_airlock.rsi
++    snapCardinals: false
++    offset: 0.5,0
++  - type: AnimationPlayer
++  - type: Fixtures
++    fixtures:
++      fix1:
++        shape:
++          !type:PhysShapeAabb
++          bounds: "-0.49,-0.49,1.49,0.49"
++        density: 100
++        mask:
++        - FullTileMask
++        layer:
++        - GlassAirlockLayer
++  - type: Destructible
++    thresholds:
++    - trigger:
++        !type:DamageTrigger
++        damage: 750
++      behaviors:
++      - !type:DoActsBehavior
++        acts: ["Destruction"]
++      - !type:PlaySoundBehavior
++        sound:
++          collection: MetalSlam
++  - type: LayerChangeOnWeld
++    unWeldedLayer: GlassAirlockLayer
++    weldedLayer: GlassLayer
++  - type: Rotatable
++    rotateWhileAnchored: false
++  - type: Transform
++    noRot: false
++  - type: Construction
++    graph: Airlock
++    node: glassAirlock
++  - type: RadiationBlocker
++    resistance: 2
++  - type: MeleeSound
++    soundGroups:
++      Brute:
++        collection: GlassSmack
++  - type: Tag
++    tags:
++      - GlassAirlock
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/Packs/medical.yml
+@@ -0,0 +1,6 @@
++- type: latheRecipePack
++  id: EmptyMedicalSprayBottlesStatic
++  recipes:
+
+### Resources/Prototypes/_Orion/Recipes/Lathes/medical.yml

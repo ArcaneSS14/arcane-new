@@ -1,0 +1,82 @@
+# Species window categories (Orion #45). Descriptions come from the species guide entries.
+
+- type: speciesInfo
+  id: Human
+  category: Classic
+
+- type: speciesInfo
+  id: Arachnid
+  category: Classic
+
+- type: speciesInfo
+  id: Diona
+  category: Classic
+
+- type: speciesInfo
+  id: Moth
+  category: Classic
+
+- type: speciesInfo
+  id: Reptilian
+  category: Classic
+
+- type: speciesInfo
+  id: SlimePerson
+  category: Classic
+
+- type: speciesInfo
+  id: Vox
+  category: Classic
+
+- type: speciesInfo
+  id: Vulpkanin
+  category: Classic
+  description: /ServerInfo/Guidebook/Mobs/Vulpkanin.xml
+
+- type: speciesInfo
+  id: Resomi
+  category: Classic
+
+- type: speciesInfo
+  id: Tajaran
+  category: Classic
+
+- type: speciesInfo
+  id: Oni
+  category: Unusual
+
+- type: speciesInfo
+  id: Dwarf
+  category: Unusual
+
+- type: speciesInfo
+  id: Rodentia
+  category: Unusual
+
+- type: speciesInfo
+  id: IPC
+  category: Unusual
+
+- type: speciesInfo
+  id: Shadowkin
+  category: Unusual
+
+- type: speciesInfo
+  id: Chitinid
+  category: Unusual
+
+- type: speciesInfo
+  id: Feroxi
+  category: Unusual
+
+- type: speciesInfo
+  id: Hydrakin
+  category: Unusual
+
+- type: speciesInfo
+  id: Synth
+  category: Unusual
+
+- type: speciesInfo
+  id: Plasmaman
+  category: Unusual

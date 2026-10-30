@@ -1,0 +1,21 @@
+- type: entity
+  parent: ClothingBeltKatanaSheath
+  id: ClothingBeltKatanaSheathFilled
+  suffix: Filled
+  components:
+  - type: ContainerFill
+    containers:
+      item:
+      - Katana
+      item2:
+      - Wakizashi
+
+- type: entity
+  id: ClothingBeltCentCommSheathFilledUP
+  parent: ClothingBeltCentCommSheath
+  suffix: Filled
+  components:
+  - type: ContainerFill
+    containers:
+      item:
+      - NavyOfficerSabre

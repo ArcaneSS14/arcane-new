@@ -1,0 +1,9 @@
+[Tweak] Nerf Blob Pod
+
+### Resources/Prototypes/_Goobstation/Blob/blob_mobs.yml
+@@ -90,5 +90,5 @@
+-          Piercing: 5
++          Piercing: 3 # Europa-Edit | 5 > 3
+@@ -117,5 +117,5 @@
+-        50: Dead
++        15: Dead # Europa-Edit 50 > 15

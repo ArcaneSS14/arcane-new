@@ -6,7 +6,7 @@
   dollPrototype: AppearanceHydrakin
   defaultSkinTone: "#ffffff"
   skinColoration: Hues
-  averageWeight: 80 # Arcane
+  averageWeight: 80
   maleFirstNames: NamesHydrakin
   femaleFirstNames: NamesHydrakin
   naming: FirstDashFirst

@@ -3,24 +3,49 @@ using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using System.Linq;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Server.Research.Systems;
 
 public sealed partial class ResearchSystem
 {
+    private readonly ISawmill _sawmill = Logger.GetSawmill("research.tech-web"); // Arcane
+
     /// <summary>
     /// Syncs the primary entity's database to that of the secondary entity's database.
     /// </summary>
-    public void Sync(EntityUid primaryUid, EntityUid otherUid, TechnologyDatabaseComponent? primaryDb = null, TechnologyDatabaseComponent? otherDb = null)
+    private void Sync(EntityUid primaryUid, EntityUid otherUid, TechnologyDatabaseComponent? primaryDb = null, TechnologyDatabaseComponent? otherDb = null) // Arcane-Edit: Was public
     {
         if (!Resolve(primaryUid, ref primaryDb) || !Resolve(otherUid, ref otherDb))
             return;
 
         primaryDb.MainDiscipline = otherDb.MainDiscipline;
-        primaryDb.CurrentTechnologyCards = otherDb.CurrentTechnologyCards;
-        primaryDb.SupportedDisciplines = otherDb.SupportedDisciplines;
-        primaryDb.UnlockedTechnologies = otherDb.UnlockedTechnologies;
-        primaryDb.UnlockedRecipes = otherDb.UnlockedRecipes;
+        // Arcane-Edit-Start
+        primaryDb.CurrentTechnologyCards = new List<string>(otherDb.CurrentTechnologyCards);
+        primaryDb.SupportedDisciplines = new List<ProtoId<TechDisciplinePrototype>>(otherDb.SupportedDisciplines);
+        // Arcane-Edit-End
+        // Arcane-Start
+        primaryDb.VisibleTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.VisibleTechnologies);
+        primaryDb.AvailableTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.AvailableTechnologies);
+        primaryDb.ResearchedTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.ResearchedTechnologies);
+        primaryDb.AvailableExperiments = new List<string>(otherDb.AvailableExperiments);
+        primaryDb.UnlockedExperiments = new List<string>(otherDb.UnlockedExperiments);
+        primaryDb.ActiveExperiments = new List<string>(otherDb.ActiveExperiments);
+        primaryDb.CompletedExperiments = new List<string>(otherDb.CompletedExperiments);
+        primaryDb.SkippedExperiments = new List<string>(otherDb.SkippedExperiments);
+        primaryDb.ExperimentProgress = otherDb.ExperimentProgress
+            .Select(CloneExperimentProgress)
+            .ToList();
+        // Arcane-End
+        primaryDb.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>(otherDb.UnlockedRecipes); // Arcane-Edit
+        // Arcane-Start
+        primaryDb.RevealedTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.RevealedTechnologies);
+        primaryDb.DiscoveryProgress = new List<TechnologyDiscoveryProgress>(otherDb.DiscoveryProgress);
+        primaryDb.UnlockedInfrastructure = new List<string>(otherDb.UnlockedInfrastructure);
+        // Arcane-End
 
         Dirty(primaryUid, primaryDb);
 
@@ -34,22 +59,38 @@ public sealed partial class ResearchSystem
     ///     syncs against the research server, and the server against the local database.
     /// </summary>
     /// <returns>Whether it could sync or not</returns>
-    public void SyncClientWithServer(EntityUid uid, TechnologyDatabaseComponent? databaseComponent = null, ResearchClientComponent? clientComponent = null)
+    private void SyncClientWithServer(EntityUid uid, TechnologyDatabaseComponent? databaseComponent = null, ResearchClientComponent? clientComponent = null) // Arcane-Edit: Was public
     {
         if (!Resolve(uid, ref databaseComponent, ref clientComponent, false))
             return;
 
-        if (!TryComp<TechnologyDatabaseComponent>(clientComponent.Server, out var serverDatabase))
+        if (clientComponent.Server is not { } serverUid) // Arcane-Edit
             return;
 
-        Sync(uid, clientComponent.Server.Value, databaseComponent, serverDatabase);
+        // Arcane-Start
+        if (!TryComp(serverUid, out ResearchServerComponent? serverComponent))
+            return;
+
+        var authorityUid = GetNetworkAuthority(serverUid, serverComponent);
+        if (authorityUid != serverUid)
+        {
+            UnregisterClient(uid, serverUid, clientComponent, serverComponent, dirtyServer: false);
+            RegisterClient(uid, authorityUid, clientComponent, dirtyServer: false);
+            return;
+        }
+
+        if (!TryComp<TechnologyDatabaseComponent>(serverUid, out var serverDatabase))
+            return;
+        // Arcane-End
+
+        Sync(uid, serverUid, databaseComponent, serverDatabase); // Arcane-Edit
     }
 
     /// <summary>
     /// Tries to add a technology to a database, checking if it is able to
     /// </summary>
     /// <returns>If the technology was successfully added</returns>
-    public bool UnlockTechnology(EntityUid client,
+    private bool UnlockTechnology(EntityUid client, // Arcane-Edit: Was public
         string prototypeid,
         EntityUid user,
         ResearchClientComponent? component = null,
@@ -65,7 +106,7 @@ public sealed partial class ResearchSystem
     /// Tries to add a technology to a database, checking if it is able to
     /// </summary>
     /// <returns>If the technology was successfully added</returns>
-    public bool UnlockTechnology(EntityUid client,
+    private bool UnlockTechnology(EntityUid client, // Arcane-Edit: Was public
         TechnologyPrototype prototype,
         EntityUid user,
         ResearchClientComponent? component = null,
@@ -77,16 +118,17 @@ public sealed partial class ResearchSystem
         if (!TryGetClientServer(client, out var serverEnt, out _, component))
             return false;
 
-        if (!CanServerUnlockTechnology(client, prototype, clientDatabase, component))
+        if (!CanServerUnlockTechnology(client, prototype, out var finalCosts, clientDatabase, component)) // Arcane-Edit
             return false;
 
         AddTechnology(serverEnt.Value, prototype);
         //TrySetMainDiscipline(prototype, serverEnt.Value); // Goobstation commented
-        ModifyServerPoints(serverEnt.Value, -prototype.Cost);
+        TryConsumePoints(serverEnt.Value, finalCosts); // Arcane-Edit
         UpdateTechnologyCards(serverEnt.Value);
 
         _adminLog.Add(LogType.Action, LogImpact.Medium,
             $"{ToPrettyString(user):player} unlocked {prototype.ID} (discipline: {prototype.Discipline}, tier: {prototype.Tier}) at {ToPrettyString(client)}, for server {ToPrettyString(serverEnt.Value)}.");
+        LogNetworkEvent(serverEnt.Value, "technology", Loc.GetString("research-netlog-technology-unlocked", ("technology", Loc.GetString(prototype.Name)), ("user", GetResearchLogUserName(user))), user); // Arcane
         return true;
     }
 
@@ -119,15 +161,34 @@ public sealed partial class ResearchSystem
                 RaiseLocalEvent(generic.PurchaseEvent);
         }
 
-        component.UnlockedTechnologies.Add(technology.ID);
-        var addedRecipes = new List<string>();
-        foreach (var unlock in technology.RecipeUnlocks)
+        // Arcane-Edit-Start
+        var addedRecipes = technology.RecipeUnlocks
+            .Select(recipe => recipe.Id)
+            .Where(recipe => !component.UnlockedRecipes.Contains(recipe))
+            .ToList();
+
+        if (!component.ResearchedTechnologies.Contains(technology.ID))
+            component.ResearchedTechnologies.Add(technology.ID);
+
+        foreach (var experiment in technology.UnlockedExperiments)
         {
-            if (component.UnlockedRecipes.Contains(unlock))
+            if (component.CompletedExperiments.Contains(experiment) || component.SkippedExperiments.Contains(experiment))
                 continue;
-            component.UnlockedRecipes.Add(unlock);
-            addedRecipes.Add(unlock);
+
+            if (!component.AvailableExperiments.Contains(experiment))
+                component.AvailableExperiments.Add(experiment);
         }
+        // Arcane-Edit-End
+
+        // Arcane-Start
+        foreach (var infrastructure in technology.InfrastructureUnlocks)
+        {
+            if (!component.UnlockedInfrastructure.Contains(infrastructure))
+                component.UnlockedInfrastructure.Add(infrastructure);
+        }
+
+        RecalculateTechnologyState(uid, component);
+        // Arcane-End
         Dirty(uid, component);
 
         var ev = new TechnologyDatabaseModifiedEvent(addedRecipes);
@@ -139,26 +200,82 @@ public sealed partial class ResearchSystem
     ///     taking parent technologies into account.
     /// </summary>
     /// <returns>Whether it could be unlocked or not</returns>
-    public bool CanServerUnlockTechnology(EntityUid uid,
-        TechnologyPrototype technology,
-        TechnologyDatabaseComponent? database = null,
-        ResearchClientComponent? client = null)
+    private bool CanServerUnlockTechnology(EntityUid uid, TechnologyPrototype technology, out List<ResearchPointAmount> finalCosts, TechnologyDatabaseComponent? database = null, ResearchClientComponent? client = null) // Arcane-Edit: Was public
     {
+        // Arcane-Start
+        finalCosts = technology.PointCosts
+            .Select(cost => new ResearchPointAmount
+            {
+                Type = cost.Type,
+                Amount = cost.Amount,
+            })
+            .ToList();
+        // Arcane-End
 
         if (!Resolve(uid, ref client, ref database, false))
             return false;
 
-        if (!TryGetClientServer(uid, out _, out var serverComp, client))
+        if (!TryGetClientServer(uid, out var serverUid, out var serverComp, client)) // Arcane-Edit
             return false;
 
-        if (!IsTechnologyAvailable(database, technology))
+        // Arcane-Start
+        if (!TryComp<TechnologyDatabaseComponent>(serverUid, out var serverDatabase))
             return false;
 
-        if (technology.Cost > serverComp.Points)
+        if (!CanUnlockTechnology(serverDatabase, technology))
             return false;
+
+        for (var i = 0; i < finalCosts.Count; i++)
+        {
+            if (finalCosts[i].Type != "General")
+                continue;
+
+            var updated = finalCosts[i];
+            updated.Amount = GetTechnologyFinalCost(serverDatabase, technology);
+            finalCosts[i] = updated;
+            break;
+        }
+
+        return HasSufficientPoints(serverUid.Value, finalCosts, serverComp);
+        // Arcane-End
+    }
+
+    // Arcane-Start
+    public override bool CanUnlockTechnology(TechnologyDatabaseComponent component, TechnologyPrototype tech)
+    {
+        if (!component.VisibleTechnologies.Contains(tech.ID))
+        {
+            _sawmill.Debug($"Cannot unlock {tech.ID}: not visible.");
+            return false;
+        }
+
+        if (component.ResearchedTechnologies.Contains(tech.ID))
+        {
+            _sawmill.Debug($"Cannot unlock {tech.ID}: already researched.");
+            return false;
+        }
+
+        if (!tech.AllRequiredTechnologies.All(prereq => component.ResearchedTechnologies.Contains(prereq)))
+        {
+            _sawmill.Debug($"Cannot unlock {tech.ID}: prerequisites not completed.");
+            return false;
+        }
+
+        if (!HasRequiredExperiments(component, tech))
+        {
+            _sawmill.Debug($"Cannot unlock {tech.ID}: required experiments not completed.");
+            return false;
+        }
+
+        if (!component.AvailableTechnologies.Contains(tech.ID))
+        {
+            _sawmill.Debug($"Cannot unlock {tech.ID}: tech is not available.");
+            return false;
+        }
 
         return true;
     }
+    // Arcane-End
 
     private void OnDatabaseRegistrationChanged(EntityUid uid, TechnologyDatabaseComponent component, ref ResearchRegistrationChangedEvent args)
     {
@@ -167,8 +284,38 @@ public sealed partial class ResearchSystem
         component.MainDiscipline = null;
         component.CurrentTechnologyCards = new List<string>();
         component.SupportedDisciplines = new List<ProtoId<TechDisciplinePrototype>>();
-        component.UnlockedTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        // Arcane-Start
+        component.VisibleTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.AvailableTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.ResearchedTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.AvailableExperiments = new List<string>();
+        component.UnlockedExperiments = new List<string>();
+        component.ActiveExperiments = new List<string>();
+        component.CompletedExperiments = new List<string>();
+        component.SkippedExperiments = new List<string>();
+        component.ExperimentProgress = new List<ResearchExperimentProgress>();
+        // Arcane-End
         component.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>();
+        // Arcane-Start
+        component.RevealedTechnologies = new List<ProtoId<TechnologyPrototype>>();
+        component.DiscoveryProgress = new List<TechnologyDiscoveryProgress>();
+        component.UnlockedInfrastructure = new List<string>();
+        // Arcane-End
         Dirty(uid, component);
     }
+
+    // Arcane-Start
+    private static ResearchExperimentProgress CloneExperimentProgress(ResearchExperimentProgress source)
+    {
+        return new ResearchExperimentProgress
+        {
+            ExperimentId = source.ExperimentId,
+            Progress = source.Progress,
+            Target = source.Target,
+            UniqueProgressKeys = new HashSet<string>(source.UniqueProgressKeys),
+            ScannedEntities = new HashSet<NetEntity>(source.ScannedEntities),
+            CompletedAt = source.CompletedAt,
+        };
+    }
+    // Arcane-End
 }

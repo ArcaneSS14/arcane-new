@@ -11,7 +11,7 @@
   - type: MachineBoard
     prototype: ServiceEnergyChemDispenser
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Glass: 5
       Steel: 5
       BSCrystal: 1
@@ -19,6 +19,10 @@
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   parent: EnergyFoodSynthesizerMachineCircuitboard

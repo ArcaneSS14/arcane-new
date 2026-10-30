@@ -150,7 +150,11 @@ namespace Content.Shared.Movement.Systems
             args.State = new InputMoverComponentState()
             {
                 CanMove = entity.Comp.CanMove,
-                RelativeEntity = GetNetEntity(entity.Comp.RelativeEntity),
+                // Arcane-Edit-Start: don't network a deleted relative entity
+                RelativeEntity = entity.Comp.RelativeEntity is { } relative && Exists(relative)
+                    ? GetNetEntity(relative)
+                    : null,
+                // Arcane-Edit-End
                 LerpTarget = entity.Comp.LerpTarget,
                 HeldMoveButtons = entity.Comp.HeldMoveButtons,
                 RelativeRotation = entity.Comp.RelativeRotation,
