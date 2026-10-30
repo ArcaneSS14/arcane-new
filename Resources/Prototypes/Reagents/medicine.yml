@@ -605,11 +605,21 @@
         conditions:
         - !type:TemperatureCondition
           max: 293.15
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         amount: 1000000 # thermal energy, not temperature!
       - !type:AdjustTemperature
         conditions:
         - !type:TemperatureCondition
           min: 293.15
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         amount: -1000000
       - !type:PopupMessage
         type: Local
@@ -833,7 +843,25 @@
         - !type:Satiate
           satiationType: Thirst
           factor: 6
+          # Arcane-Start
+          conditions: # saline is too salty for Feroxi
+          - !type:MetabolizerTypeCondition
+            type: [ Feroxi ]
+            inverted: true
+        - !type:Satiate
+          satiationType: Thirst
+          factor: 2
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type: [ Feroxi ]
+          # Arcane-End
         - !type:ModifyBloodLevel
+          # Arcane-Start
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type: [ Synth ]
+            inverted: true
+          # Arcane-End
           amount: 12 # Goobstation - buffed by two times due to shitmed changes
 
 - type: reagent

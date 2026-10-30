@@ -1,3 +1,8 @@
-﻿- type: font
+- type: font
   id: Supernatural
   path: /Fonts/_Arcane/supernatural.ttf
+
+# Used by the Schechi (Resomi) language font.
+- type: font
+  id: Schoolbell
+  path: /Fonts/_Arcane/Schoolbell/Schoolbell.ttf

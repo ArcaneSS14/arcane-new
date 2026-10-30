@@ -2,3 +2,8 @@
   id: SaturationScale
   kind: source
   path: "/Textures/_Arcane/Shaders/saturationscale.swsl"
+
+- type: shader
+  id: Flap
+  kind: source
+  path: "/Textures/_Arcane/Shaders/flap.swsl"

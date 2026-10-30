@@ -1,0 +1,17 @@
+- type: entity
+  parent: BaseAction
+  id: ActionHydrakinCoolOff
+  name: Cool off
+  description: Dispel some of your body heat.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+    useDelay: 5
+    itemIconStyle: BigAction
+  - type: Sprite
+    sprite: _Arcane/Actions/hydrakin_cooldown.rsi
+    layers:
+    - state: hydra_cooldown
+  - type: InstantAction
+    event: !type:HydrakinCoolOffActionEvent

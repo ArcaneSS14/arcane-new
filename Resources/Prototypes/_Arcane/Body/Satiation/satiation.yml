@@ -1,0 +1,14 @@
+- type: satiation
+  id: ChitinidHunger
+  parent: NormalSatiationHunger
+  baseChangeRate: -0.0467 # needs to eat more to survive
+
+- type: satiation
+  id: RodentiaHunger
+  parent: NormalSatiationHunger
+  baseChangeRate: -0.0467 # 33% faster than usual
+
+- type: satiation
+  id: FeroxiThirst
+  parent: NormalSatiationThirst
+  baseChangeRate: -0.2 # 100% faster than usual

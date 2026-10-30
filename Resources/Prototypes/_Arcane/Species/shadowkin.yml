@@ -1,0 +1,17 @@
+- type: species
+  id: Shadowkin
+  name: species-name-shadowkin
+  roundStart: true
+  prototype: MobShadowkin
+  dollPrototype: AppearanceShadowkin
+  defaultSkinTone: "#FFFFFF"
+  skinColoration: Hues
+  # Arcane-Start
+  averageWeight: 70
+  defaultScale: 0.9
+  minScale: 0.8
+  maxScale: 0.95
+  # Arcane-End
+  naming: First
+  maleFirstNames: NamesShadowkin
+  femaleFirstNames: NamesShadowkin

@@ -1,0 +1,371 @@
+// SPDX-FileCopyrightText: 2024 Adeinitas <147965189+adeinitas@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Danger Revolution! <142105406+DangerRevolution@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 Timemaster99 <57200767+Timemaster99@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2024 VMSolidus <evilexecutive@gmail.com>
+// SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 GoobBot <uristmchands@proton.me>
+// SPDX-FileCopyrightText: 2025 SX-7 <sn1.test.preria.2002@gmail.com>
+// SPDX-FileCopyrightText: 2025 gluesniffler <159397573+gluesniffler@users.noreply.github.com>
+// SPDX-FileCopyrightText: 2025 gluesniffler <linebarrelerenthusiast@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+using Content.Shared.Actions;
+using Content.Shared.Bed.Sleep;
+using Content.Shared.Climbing.Events;
+using Content.Shared.Cuffs.Components;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Events;
+using Content.Shared.Damage.Systems;
+using Content.Shared.DoAfter;
+using Content.Shared.Gravity;
+using Content.Shared.Hands.Components;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Interaction.Components;
+using Content.Shared.Inventory.VirtualItem;
+using Content.Shared.Mobs;
+using Content.Shared.Movement.Systems;
+using Content.Shared.Popups;
+using Content.Shared.Physics;
+using Content.Shared.Standing;
+using Content.Shared.Stunnable;
+using Content.Shared.Zombies;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Systems;
+
+namespace Content.Arcane.Shared.Flight;
+
+public abstract partial class SharedFlightSystem : EntitySystem
+{
+    [Dependency] private SharedActionsSystem _actionsSystem = default!;
+    [Dependency] private SharedGravitySystem _gravity = default!;
+    [Dependency] private SharedVirtualItemSystem _virtualItem = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private MovementSpeedModifierSystem _movementSpeed = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedPopupSystem _popupSystem = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<FlightComponent>();
+        while (query.MoveNext(out var uid, out var component))
+        {
+            if (!component.On)
+                continue;
+
+            component.TimeUntilFlap -= frameTime;
+
+            if (component.TimeUntilFlap <= 0f)
+            {
+                _audio.PlayPredicted(component.FlapSound, uid, uid);
+                component.TimeUntilFlap = component.FlapInterval;
+            }
+        }
+    }
+
+    #region Core Functions
+    [SubscribeLocalEvent]
+    private void OnStartup(EntityUid uid, FlightComponent component, ComponentStartup args)
+    {
+        _actionsSystem.AddAction(uid, ref component.ToggleActionEntity, component.ToggleAction?.Id);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnShutdown(EntityUid uid, FlightComponent component, ComponentShutdown args)
+    {
+        _actionsSystem.RemoveAction(uid, component.ToggleActionEntity);
+        component.ActivationPending = false;
+        if (!TerminatingOrDeleted(uid))
+            ToggleActive(uid, false, component);
+    }
+
+    public void ToggleActive(EntityUid uid, bool active, FlightComponent component, bool gracefulStop = true)
+    {
+        if (component.On == active)
+            return;
+
+        component.On = active;
+        component.TimeUntilFlap = 0f;
+        _actionsSystem.SetToggled(component.ToggleActionEntity, component.On);
+        RaiseLocalEvent(uid, new FlightEvent(uid, component.On, component.IsAnimated));
+        _gravity.RefreshWeightless(uid);
+        _movementSpeed.RefreshWeightlessModifiers(uid);
+        ToggleCollisionMasks(uid, component);
+        UpdateHands(uid, active);
+
+        if (component.CanFail && !gracefulStop)
+            _damageable.TryChangeDamage(uid, component.FailDamageSpecifier);
+
+        Dirty(uid, component);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnToggleFlight(EntityUid uid, FlightComponent component, ToggleFlightEvent args)
+    {
+        if (component.On)
+        {
+            ToggleActive(uid, false, component);
+            return;
+        }
+
+        if (component.ActivationPending || !CanFly(uid))
+            return;
+
+        var doAfter = new DoAfterArgs(
+            EntityManager,
+            uid,
+            TimeSpan.FromSeconds(component.ActivationDelay),
+            new FlightDoAfterEvent(),
+            uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+        };
+
+        if (!_doAfter.TryStartDoAfter(doAfter))
+            return;
+
+        component.ActivationPending = true;
+        args.Handled = true;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnFlightDoAfter(EntityUid uid, FlightComponent component, ref FlightDoAfterEvent args)
+    {
+        if (!component.ActivationPending)
+            return;
+
+        component.ActivationPending = false;
+        if (args.Cancelled || component.On || !CanFly(uid))
+            return;
+
+        ToggleActive(uid, true, component);
+    }
+
+    private void ToggleCollisionMasks(EntityUid uid, FlightComponent component)
+    {
+        if (component.On)
+            DisableCollisionMasks(uid, component);
+        else
+            EnableCollisionMasks(uid, component);
+    }
+
+    private void DisableCollisionMasks(EntityUid uid, FlightComponent component)
+    {
+        if (!component.On || !component.ChangeCollisionMasks)
+            return;
+
+        if (TryComp(uid, out FixturesComponent? fixtureComponent))
+        {
+            foreach (var (key, fixture) in fixtureComponent.Fixtures)
+            {
+                var newMask = (fixture.CollisionMask
+                    & (int) ~CollisionGroup.HighImpassable
+                    & (int) ~CollisionGroup.MidImpassable)
+                    | (int) CollisionGroup.InteractImpassable;
+
+                if (fixture.CollisionMask == newMask)
+                    continue;
+
+                component.ChangedFixtures.Add((key, fixture.CollisionMask));
+                _physics.SetCollisionMask(uid,
+                    key,
+                    fixture,
+                    newMask,
+                    manager: fixtureComponent);
+            }
+        }
+        return;
+    }
+
+    private void EnableCollisionMasks(EntityUid uid, FlightComponent component)
+    {
+        if (component.On || !component.ChangeCollisionMasks)
+            return;
+
+        // Restore normal collision masks
+        if (TryComp(uid, out FixturesComponent? fixtureComponent))
+            foreach (var (key, originalMask) in component.ChangedFixtures)
+                if (fixtureComponent.Fixtures.TryGetValue(key, out var fixture))
+                    _physics.SetCollisionMask(uid, key, fixture, originalMask, fixtureComponent);
+
+        component.ChangedFixtures.Clear();
+    }
+
+    private void UpdateHands(EntityUid uid, bool flying)
+    {
+        if (!TryComp<HandsComponent>(uid, out var handsComponent))
+            return;
+
+        if (flying)
+            BlockHands(uid, handsComponent);
+        else
+            FreeHands(uid);
+    }
+
+    private void BlockHands(EntityUid uid, HandsComponent handsComponent)
+    {
+        var freeHands = 0;
+        foreach (var hand in _hands.EnumerateHands((uid, handsComponent)))
+        {
+            if (!_hands.TryGetHeldItem((uid, handsComponent), hand, out var held))
+            {
+                freeHands++;
+                continue;
+            }
+
+            // Is this entity removable? (they might have handcuffs on)
+            if (HasComp<UnremoveableComponent>(held) && held != uid)
+                continue;
+
+            _hands.DoDrop((uid, handsComponent), hand);
+            freeHands++;
+            if (freeHands == 2)
+                break;
+        }
+        if (_virtualItem.TrySpawnVirtualItemInHand(uid, uid, out var virtItem1))
+            EnsureComp<UnremoveableComponent>(virtItem1.Value);
+
+        if (_virtualItem.TrySpawnVirtualItemInHand(uid, uid, out var virtItem2))
+            EnsureComp<UnremoveableComponent>(virtItem2.Value);
+    }
+
+    private void FreeHands(EntityUid uid) => _virtualItem.DeleteInHandsMatching(uid, uid);
+
+    [SubscribeLocalEvent]
+    private void OnRefreshWeightlessMoveSpeed(EntityUid uid, FlightComponent component, ref RefreshWeightlessModifiersEvent args)
+    {
+        if (!component.On)
+            return;
+
+        args.ModifyAcceleration(component.SpeedModifier);
+        args.ModifyFriction(component.FrictionModifier, component.FrictionNoInputModifier);
+    }
+
+    #endregion
+
+    #region Conditionals
+
+    private bool CanFly(EntityUid uid)
+    {
+        var ev = new FlightAttemptEvent();
+        RaiseLocalEvent(uid, ref ev);
+
+        return !ev.Cancelled;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnCuffableFlightAttempt(EntityUid uid, CuffableComponent component, ref FlightAttemptEvent args)
+    {
+        if (component.CanStillInteract)
+            return;
+
+        _popupSystem.PopupClient(Loc.GetString("no-flight-while-restrained"), uid, uid, PopupType.Medium);
+        args.Cancel();
+    }
+
+    [SubscribeLocalEvent]
+    private void OnZombieFlightAttempt(EntityUid uid, ZombieComponent component, ref FlightAttemptEvent args)
+    {
+        _popupSystem.PopupClient(Loc.GetString("no-flight-while-zombified"), uid, uid, PopupType.Medium);
+        args.Cancel();
+    }
+
+    [SubscribeLocalEvent]
+    private void OnStandingStateFlightAttempt(EntityUid uid, StandingStateComponent component, ref FlightAttemptEvent args)
+    {
+        if (component.Standing)
+            return;
+
+        _popupSystem.PopupClient(Loc.GetString("no-flight-while-lying"), uid, uid, PopupType.Medium);
+        args.Cancel();
+    }
+
+    #endregion
+
+    #region Misc.Handlers
+    [SubscribeLocalEvent]
+    private void OnMobStateChangedEvent(EntityUid uid, FlightComponent component, MobStateChangedEvent args)
+    {
+        if (!component.On || args.NewMobState is not (MobState.Critical or MobState.Dead))
+            return;
+
+        ToggleActive(args.Target, false, component, gracefulStop: false);
+    }
+    [SubscribeLocalEvent]
+    private void OnSleep(EntityUid uid, FlightComponent component, ref SleepStateChangedEvent args)
+    {
+        if (!component.On
+            || !args.FellAsleep)
+            return;
+
+        ToggleActive(uid, false, component, gracefulStop: false);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnDowned(EntityUid uid, FlightComponent component, ref DownedEvent args)
+    {
+        if (!component.On)
+            return;
+
+        ToggleActive(uid, false, component, gracefulStop: false);
+        // We need this crap because standingsys only raises shit on server lmao
+        RaiseNetworkEvent(new ToggleFlightVisualsEvent(GetNetEntity(uid), false, component.IsAnimated));
+    }
+
+    [SubscribeLocalEvent]
+    private void OnEntityZombified(EntityUid uid, FlightComponent component, ref EntityZombifiedEvent args)
+    {
+        if (!component.On)
+            return;
+
+        ToggleActive(uid, false, component, gracefulStop: false);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnKnockedDown(EntityUid uid, FlightComponent component, ref KnockedDownEvent args)
+    {
+        if (!component.On)
+            return;
+
+        ToggleActive(uid, false, component, gracefulStop: false);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnStunned(EntityUid uid, FlightComponent component, ref StunnedEvent args)
+    {
+        if (!component.On)
+            return;
+
+        ToggleActive(uid, false, component, gracefulStop: false);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnAttemptClimb(EntityUid uid, FlightComponent component, AttemptClimbEvent args)
+    {
+        if (!component.On)
+            return;
+
+        args.Cancelled = true;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnIsWeightless(Entity<FlightComponent> ent, ref IsWeightlessEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        args.Handled = true;
+        args.IsWeightless = ent.Comp.On;
+    }
+
+
+    #endregion
+}

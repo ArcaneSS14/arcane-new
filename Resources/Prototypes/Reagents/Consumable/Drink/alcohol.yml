@@ -150,7 +150,7 @@
           reagent: Ethanol
           min: 15
         - !type:MetabolizerTypeCondition # Goob - added Cybernetic
-          type: [ Dwarf, Cybernetic ]
+          type: [ Dwarf, Cybernetic, Synth ] # Arcane-Edit: [ Dwarf, Cybernetic ] > [ Dwarf, Cybernetic, Synth ]
           inverted: true
         damage:
           types:
@@ -207,6 +207,12 @@
           inverted: true
       - !type:Drunk
         boozePower: 2
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Synth ]
+          inverted: true
+        # Arcane-End
       # Arcane-Start
       - !type:ModifyHeartRate
         amount: -1.5

@@ -1,7 +1,7 @@
 - type: marking
   id: ScarEyeRight
   bodyPart: Head
-  groupWhitelist: [Human]
+  groupWhitelist: [Human, Feroxi] # Arcane-Edit: [Human] > [Human, Feroxi]
   sprites:
   - sprite: Mobs/Customization/scars.rsi
     state: scar_eye_right
@@ -14,7 +14,7 @@
 - type: marking
   id: ScarEyeLeft
   bodyPart: Head
-  groupWhitelist: [Human]
+  groupWhitelist: [Human, Feroxi] # Arcane-Edit: [Human] > [Human, Feroxi]
   sprites:
   - sprite: Mobs/Customization/scars.rsi
     state: scar_eye_left
@@ -27,7 +27,7 @@
 - type: marking
   id: ScarTopSurgeryShort
   bodyPart: Chest
-  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona]
+  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona, Feroxi] # Arcane-Edit: [Human, Reptilian, Moth, Arachnid, Diona] > [Human, Reptilian, Moth, Arachnid, Diona, Feroxi]
   sexRestriction: [Male]
   sprites:
   - sprite: Mobs/Customization/scars.rsi
@@ -41,7 +41,7 @@
 - type: marking
   id: ScarTopSurgeryLong
   bodyPart: Chest
-  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona]
+  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona, Feroxi] # Arcane-Edit: [Human, Reptilian, Moth, Arachnid, Diona] > [Human, Reptilian, Moth, Arachnid, Diona, Feroxi]
   sexRestriction: [Male]
   sprites:
   - sprite: Mobs/Customization/scars.rsi
@@ -55,7 +55,7 @@
 - type: marking
   id: ScarChest
   bodyPart: Chest
-  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona]
+  groupWhitelist: [Human, Reptilian, Moth, Arachnid, Diona, Feroxi] # Arcane-Edit: [Human, Reptilian, Moth, Arachnid, Diona] > [Human, Reptilian, Moth, Arachnid, Diona, Feroxi]
   sprites:
   - sprite: Mobs/Customization/scars.rsi
     state: scar_chest

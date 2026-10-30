@@ -124,6 +124,7 @@
   - EmergencyNitrogen
   - EmergencyOxygen
   - LoadoutSpeciesVoxNitrogen
+  - EmergencyWaterVapor # Arcane
 
 # nitrogen or oxygen tank, depending on what your species needs
 - type: loadoutGroup
@@ -133,6 +134,7 @@
   loadouts:
   - LoadoutSpeciesEVANitrogen
   - LoadoutSpeciesEVAOxygen
+  - LoadoutSpeciesEVAWaterVapor # Arcane
 
 # vox get a nitrogen tank, other species get nothing
 - type: loadoutGroup
@@ -149,6 +151,7 @@
   loadouts:
   - LoadoutSpeciesPocketDoubleNitrogen
   - LoadoutSpeciesPocketDoubleOxygen
+  - LoadoutSpeciesPocketDoubleWaterVapor # Arcane
 
 # Command
 - type: loadoutGroup
@@ -666,6 +669,7 @@
   - EmergencyNitrogenClown
   - EmergencyOxygenClown
   - LoadoutSpeciesVoxNitrogen
+  - EmergencyWaterVaporClown # Arcane
 
 - type: loadoutGroup
   id: ClownJobTrinkets
@@ -1096,6 +1100,7 @@
   - EmergencyNitrogenExtended
   - EmergencyOxygenExtended
   - LoadoutSpeciesVoxNitrogen
+  - EmergencyWaterVaporExtended # Arcane
 
 # Science
 - type: loadoutGroup
@@ -1464,6 +1469,7 @@
   - LoadoutSpeciesVoxNitrogen
   - LoadoutSpeciesPlasma # Goobstation
   - EmergencySilicon
+  - EmergencyWaterVaporSecurity # Arcane
 
 # Wildcards
 - type: loadoutGroup
@@ -1561,6 +1567,7 @@
   - LoadoutSpeciesVoxNitrogen
   - LoadoutSpeciesPlasma # Goobstation
   - EmergencySilicon
+  - EmergencyWaterVaporSyndicate # Arcane
 
 - type: loadoutGroup
   id: SurvivalMilitaryDouble # Survival box mostly used by ERT/deathsquad

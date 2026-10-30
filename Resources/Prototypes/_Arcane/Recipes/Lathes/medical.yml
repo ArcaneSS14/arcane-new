@@ -55,3 +55,11 @@
     Silver: 100
     Gold: 100
     Plasma: 200
+  
+- type: entity
+  id: SynthBloodpack
+  result: SynthBloodpack1
+  completetime: 1
+  materials:
+    Plastic: 25
+    Diamond: 10
