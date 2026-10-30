@@ -5,6 +5,6 @@
   components:
   - type: MachineBoard
     stackRequirements: !Clear
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Cable: 5
       BSCrystal: 1

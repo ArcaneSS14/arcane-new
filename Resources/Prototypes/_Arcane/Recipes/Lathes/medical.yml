@@ -55,8 +55,8 @@
     Silver: 100
     Gold: 100
     Plasma: 200
-  
-- type: entity
+
+- type: latheRecipe
   id: SynthBloodpack
   result: SynthBloodpack1
   completetime: 1

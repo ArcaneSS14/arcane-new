@@ -5,6 +5,8 @@
   - type: LanguageKnowledge
     languageId: OldFastCodes
 
+- type: entity
+  parent: BaseLanguageKnowledge
   id: LanguageMarish
   components:
   - type: LanguageKnowledge
