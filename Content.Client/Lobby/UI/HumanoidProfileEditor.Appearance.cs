@@ -218,6 +218,17 @@ public sealed partial class HumanoidProfileEditor
         }
     }
 
+    // Arcane-Start: species window
+    /// <summary>
+    /// Picks a species the same way the species dropdown does.
+    /// </summary>
+    public void SelectSpecies(string newSpecies)
+    {
+        SetSpecies(newSpecies);
+        RefreshSpecies();
+    }
+    // Arcane-End
+
     private void SetSpecies(string newSpecies)
     {
         Profile = Profile?.WithSpecies(newSpecies);
