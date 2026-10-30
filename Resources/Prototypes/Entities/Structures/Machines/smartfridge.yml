@@ -106,6 +106,7 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalGlassBreak
+      - !type:EmptyAllContainersBehaviour # Arcane
   - type: Damageable
     damageModifierSet: Metallic
   - type: DamageOnHighSpeedImpact
