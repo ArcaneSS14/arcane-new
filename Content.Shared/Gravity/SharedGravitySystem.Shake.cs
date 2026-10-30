@@ -38,17 +38,23 @@ public abstract partial class SharedGravitySystem
         if (!Resolve(uid, ref gravity, false))
             return;
 
-        if (TryArcaneScreenshakeGrid(uid))
-            return; // Arcane
-
+        // Arcane-Edit-Start
         if (!TryComp<GravityShakeComponent>(uid, out var shake))
         {
             shake = AddComp<GravityShakeComponent>(uid);
             shake.NextShake = Timing.CurTime;
         }
 
+        if (TryArcaneScreenshakeGrid(uid))
+        {
+            shake.ShakeTimes = 0;
+            Dirty(uid, shake);
+            return;
+        }
+
         shake.ShakeTimes = 10;
         Dirty(uid, shake);
+        // Arcane-Edit-End
     }
 
     protected virtual void ShakeGrid(EntityUid uid, GravityComponent? comp = null) {}
