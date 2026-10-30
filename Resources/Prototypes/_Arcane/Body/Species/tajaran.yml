@@ -218,7 +218,7 @@
     - enum.HumanoidVisualLayers.Tail
 
 - type: entity
-  parent: [ OrganBaseHeadSexed, OrganBaseHeadBald, OrganTajaranExternal ] # Trauma - bald
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganTajaranExternal ]
   id: OrganTajaranHead
   components:
   - type: VisualOrganMarkings
