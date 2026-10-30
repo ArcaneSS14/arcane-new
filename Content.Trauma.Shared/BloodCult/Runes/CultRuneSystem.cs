@@ -25,6 +25,7 @@ using Content.Trauma.Shared.BloodCult.Empower;
 using Content.Trauma.Shared.BloodCult.Examine;
 using Content.Trauma.Shared.BloodCult.Gamerule;
 using Content.Trauma.Shared.BloodCult.Runes;
+using Content.Trauma.Shared.BloodCult.Spells;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
@@ -40,6 +41,7 @@ public sealed partial class CultRuneSystem : EntitySystem
     [Dependency] private AreaSystem _area = default!;
     [Dependency] private BloodCultSystem _cult = default!;
     [Dependency] private BloodCultExamineSystem _cultExamine = default!;
+    [Dependency] private BloodCultSpellsSystem _cultSpells = default!;
     [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -235,7 +237,7 @@ public sealed partial class CultRuneSystem : EntitySystem
         if (!_useDelay.TryResetDelay(ent.Owner))
             return "The rune's magic is on cooldown!";
 
-        var cultists = _cult.GatherCultists(ent, ent.Comp.RuneActivationRange);
+        var cultists = _cult.GetRuneInvokers(ent, ent.Comp.RuneActivationRange);
         if (cultists.Count < ent.Comp.RequiredInvokers)
         {
             var diff = ent.Comp.RequiredInvokers - cultists.Count;
@@ -378,6 +380,7 @@ public sealed partial class CultRuneSystem : EntitySystem
             newDamage *= empowered.RuneDamageMultiplier;
         }
 
-        _damage.ChangeDamage(user, newDamage, increaseOnly: true, targetPart: TargetBodyPart.Arms, canMiss: false);
+        var targetArm = _cultSpells.ChooseTargetArm(user);
+        _damage.ChangeDamage(user, newDamage, increaseOnly: true, targetPart: targetArm, canMiss: false);
     }
 }

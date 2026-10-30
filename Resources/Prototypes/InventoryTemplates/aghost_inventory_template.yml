@@ -18,52 +18,12 @@
       uiWindowPos: 2,2
       strippingWindowPos: 2,3
       displayName: ID
-    - name: pocket1 # Goobstation - Pocket 1
-      slotTexture: pocket
-      fullTextureName: template_small
-      slotFlags: POCKET
-      slotGroup: MainHotbar
-      stripTime: 3
-      uiWindowPos: 0,3
-      strippingWindowPos: 0,4
-      displayName: Pocket 1
-      stripHidden: true
-    - name: pocket2 # Goobstation - Pocket 2
-      slotTexture: pocket
-      fullTextureName: template_small
-      slotFlags: POCKET
-      slotGroup: MainHotbar
-      stripTime: 3
-      uiWindowPos: 2,3
-      strippingWindowPos: 1,4
-      displayName: Pocket 2
-      stripHidden: true
-    - name: pocket3 # Goobstation - Pocket 3
-      slotTexture: pocket
-      fullTextureName: template_small
-      slotFlags: POCKET
-      slotGroup: MainHotbar
-      stripTime: 3
-      uiWindowPos: 4,3
-      strippingWindowPos: 2,4
-      displayName: Pocket 3
-      stripHidden: true
-    - name: pocket4 # Goobstation - Pocket 4
-      slotTexture: pocket
-      fullTextureName: template_small
-      slotFlags: POCKET
-      slotGroup: MainHotbar
-      stripTime: 3
-      uiWindowPos: 6,3
-      strippingWindowPos: 3,4
-      displayName: Pocket 4
-      stripHidden: true
 
     # For drip reasons.
     - name: head
       slotTexture: head
       slotFlags: HEAD
-      uiWindowPos: 0,4 # Goobstation - Moved up slightly # Arcane-Edit: 0,3 > 0,4
+      uiWindowPos: 0,4 # Arcane-Edit: 0,3 > 0,4
       strippingWindowPos: 0,0
       displayName: Head
     # Arcane-Start
@@ -75,12 +35,6 @@
       strippingWindowPos: 0,0
       displayName: Eyes
     # Arcane-End
-    - name: neck # Goobstation - For drip reasons.
-      slotTexture: neck
-      slotFlags: NECK
-      uiWindowPos: 0,2
-      strippingWindowPos: 0,1
-      displayName: Neck
     - name: mask
       slotTexture: mask
       slotFlags: MASK
