@@ -1,0 +1,19 @@
+- type: entity
+  name: screenshake debug doohickey
+  parent: BaseItem
+  id: ArcaneDebugScreenshake
+  description: Applies a local camera shake when used.
+  suffix: Arcane, DEBUG
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/debug.rsi
+    state: icon
+  - type: ArcaneScreenshakeUserOnTrigger
+    translation:
+      trauma: 0.4
+      decayRate: 1.4
+      frequency: 0.04
+  - type: TriggerOnUse
+  - type: Item
+    size: Tiny
+    sprite: Objects/Weapons/Melee/debug.rsi

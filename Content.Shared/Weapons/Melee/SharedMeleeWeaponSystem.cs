@@ -706,6 +706,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             if (damageResult.GetTotal() > FixedPoint2.Zero)
             {
                 DoDamageEffect(targets, user, targetXform);
+                DoArcaneMeleeScreenshake(user, targets); // Arcane
                 ResetUndamagedSwingsCount((meleeUid, component));
             }
             else
@@ -900,6 +901,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
         {
             if (appliedDamage.GetTotal() > FixedPoint2.Zero)
             {
+                DoArcaneMeleeScreenshake(user, targets); // Arcane
                 DoDamageEffect(targets, user, Transform(targets[0]));
                 ResetUndamagedSwingsCount((meleeUid, component));
             }
