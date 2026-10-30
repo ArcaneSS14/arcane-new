@@ -81,7 +81,7 @@
           reagent: BZ
           min: 0.5
         - !type:MetabolizerTypeCondition
-          type: [ Cybernetic ]
+          type: [ Cybernetic, Hydrakin ] # Arcane-Edit: [ Cybernetic ] > [ Cybernetic, Hydrakin ]
           inverted: true
         scaling: true
         ignoreResistances: true
@@ -316,6 +316,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 6
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         reagent: NitrosylPlasmide
         amount: 2.5
       - !type:GenericStatusEffect
@@ -331,6 +336,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 10
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         damage:
           types:
             Asphyxiation: 15
@@ -349,7 +359,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -384,7 +394,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:

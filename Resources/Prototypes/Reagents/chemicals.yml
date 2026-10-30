@@ -126,6 +126,12 @@
     Bloodstream:
       effects:
       - !type:HealthChange
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Synth ]
+          inverted: true
+        # Arcane-End
         damage:
           types:
             Cellular: 1 #it's a carcinogen, reckon this is fine

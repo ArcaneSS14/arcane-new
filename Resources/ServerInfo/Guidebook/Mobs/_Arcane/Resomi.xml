@@ -1,0 +1,26 @@
+<Document>
+  # Resomi
+
+  <Box>
+    <GuideEntityEmbed Entity="AppearanceResomi" Caption=""/>
+  </Box>
+
+  Resomi are a small avian-like species that hail from an icy world. They have a set of ammonia-based biology unlike most other species.
+
+  ## Benefits
+
+  - They are immune to all cold damage, and are unbothered by the cold.
+  - They can digest raw meat and other uncooked animal proteins.
+
+  ## Drawbacks
+
+  - They take 30% more Heat and 15% more Blunt, Slash and Piercing damage.
+  - They find temperatures most other species find comfortable to be unbearably hot, and their movement becomes sluggish in the cold.
+  - They have ammonia-based blood.
+
+  ## Special
+
+  - Due to their small size, they can be stuffed into duffelbags.
+  - Their unarmed attacks deal Slash damage.
+
+</Document>

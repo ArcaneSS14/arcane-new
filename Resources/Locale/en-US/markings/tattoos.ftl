@@ -60,3 +60,11 @@ marking-TattooEyeshadowVoxLarge = Eyeshadow (Large)
 
 marking-TattooVoxTailRing-tattoo_vox_tail_ring = Tail Ring
 marking-TattooVoxTailRing = Tail Ring
+
+# Arcane-Start
+marking-TattooEyeVulpkaninRight-tattoo_eye_vulpkanin_r = Right Eye
+marking-TattooEyeVulpkaninRight = Right Eye
+
+marking-TattooEyeVulpkaninLeft-tattoo_eye_vulpkanin_l = Left Eye
+marking-TattooEyeVulpkaninLeft = Left Eye
+# Arcane-End

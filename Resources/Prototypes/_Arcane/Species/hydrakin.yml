@@ -1,0 +1,22 @@
+- type: species
+  id: Hydrakin
+  name: species-name-hydrakin
+  roundStart: true
+  prototype: MobHydrakin
+  dollPrototype: AppearanceHydrakin
+  defaultSkinTone: "#ffffff"
+  skinColoration: Hues
+  averageWeight: 80 # Arcane
+  maleFirstNames: NamesHydrakin
+  femaleFirstNames: NamesHydrakin
+  naming: FirstDashFirst
+  sexes:
+  - Unsexed
+  - Male
+  - Female
+  defaultSoundsBySex:
+  - UnisexHydrakin
+  - UnisexHydrakin
+  - UnisexHydrakin
+  voices:
+  - UnisexHydrakin

@@ -1,0 +1,49 @@
+- type: entity
+  parent: BaseAction
+  id: ActionHarpyPlayMidi
+  name: Play MIDI
+  description: Sing your heart out! Right click yourself to set an instrument.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+  - type: Sprite
+    layers:
+    - texture: _Arcane/Interface/Actions/harpy_sing.png
+  - type: InstantAction
+    event: !type:OpenUiActionEvent
+      key: enum.InstrumentUiKey.Key
+
+- type: entity
+  parent: BaseAction
+  id: ActionSyrinxChangeVoiceMask
+  name: Set name
+  description: Change the name others hear to something else.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigAction
+  - type: Sprite
+    layers:
+    - texture: _Arcane/Interface/Actions/harpy_sing.png
+  - type: InstantAction
+    event: !type:VoiceMaskSetNameEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionToggleFlight
+  name: Fly
+  description: Make use of your wings to fly. Beat the flightless bird allegations.
+  components:
+  - type: Action
+    checkCanInteract: false
+  - type: Sprite
+    sprite: _Arcane/Interface/Actions/flight.rsi
+    layers:
+    - state: flight_off
+      map: ["enum.ActionVisuals.Icon"]
+    - state: flight_on
+      map: ["enum.ActionVisuals.IconToggled"]
+      visible: false
+  - type: InstantAction
+    event: !type:ToggleFlightEvent

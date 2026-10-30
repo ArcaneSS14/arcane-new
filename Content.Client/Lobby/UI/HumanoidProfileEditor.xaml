@@ -86,7 +86,7 @@
                                 <!-- Arcane-Start: Character scale control -->
                                 <BoxContainer HorizontalExpand="True">
                                     <Label Name="ScaleLabel" MinWidth="110" />
-                                    <Slider Name="ScaleSlider" MinValue="0.5" Value="1" MaxValue="1.5" HorizontalExpand="True" Margin="5 0 5 0" />
+                                    <Slider Name="ScaleSlider" MinValue="120" Value="170" MaxValue="230" HorizontalExpand="True" Margin="5 0 5 0" />
                                     <Button Name="ScaleReset" Text="{Loc 'ui-options-bind-reset'}" />
                                 </BoxContainer>
                                 <Label Name="WeightLabel" />

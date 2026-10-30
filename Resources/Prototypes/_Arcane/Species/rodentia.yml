@@ -1,0 +1,24 @@
+- type: species
+  id: Rodentia
+  name: species-name-rodentia
+  roundStart: true
+  prototype: MobRodentia
+  dollPrototype: AppearanceRodentia
+  defaultSkinTone: "#747474"
+  skinColoration: Hues
+  # Arcane-Start
+  defaultScale: 0.9
+  minScale: 0.85
+  maxScale: 0.95
+  # Arcane-End
+  naming: FirstLast
+  maleFirstNames: NamesRodentiaMale
+  femaleFirstNames: NamesRodentiaFemale
+  lastNames: NamesRodentiaLast
+  defaultSoundsBySex:
+  - MaleRodentia
+  - FemaleRodentia
+  - MaleRodentia
+  voices:
+  - MaleRodentia
+  - FemaleRodentia
