@@ -64,6 +64,9 @@
           Stable: { state: anomaly-1 }
           Decaying: { state: anomaly-2 }
           Growing: { state: anomaly-3 }
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 20
@@ -103,6 +106,9 @@
     enabled: false
   - type: Machine
     board: AnomalyVesselExperimentalCircuitboard
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 50

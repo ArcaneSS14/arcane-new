@@ -315,6 +315,12 @@
     gasType: CarbonDioxide
     # Full tank is 25 moles of gas
     moleRatio: 0.5
+  # Arcane-Start
+  - type: ManualAnchoring
+  # Arcane-End
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     tileBreakScale: 0

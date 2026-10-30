@@ -1,0 +1,11 @@
+- type: entity
+  id: ArcaneWallStain
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+    anchored: false
+  - type: WallStain
+  - type: SolutionContainerManager
+    solutions:
+      stain:
+        maxVol: 5

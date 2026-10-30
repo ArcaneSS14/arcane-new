@@ -34,6 +34,19 @@ namespace Content.Client.Examine
 
         private List<Verb> _verbList = new();
 
+        // Arcane-Start
+        private static readonly Type[] ExamineMarkupTags =
+        [
+            typeof(Robust.Client.UserInterface.RichText.BoldItalicTag),
+            typeof(Robust.Client.UserInterface.RichText.BoldTag),
+            typeof(Robust.Client.UserInterface.RichText.BulletTag),
+            typeof(Robust.Client.UserInterface.RichText.ColorTag),
+            typeof(Robust.Client.UserInterface.RichText.HeadingTag),
+            typeof(Robust.Client.UserInterface.RichText.ItalicTag),
+            typeof(Content.Client.UserInterface.RichText.RadioChannelColorTag),
+        ];
+        // Arcane-End
+
         public const string StyleClassEntityTooltip = "entity-tooltip";
 
         private EntityUid _examinedEntity;
@@ -279,7 +292,7 @@ namespace Content.Client.Examine
                     continue;
 
                 var richLabel = new RichTextLabel() { Margin = new Thickness(4, 4, 0, 4)};
-                richLabel.SetMessage(message);
+                richLabel.SetMessage(message, ExamineMarkupTags); // Arcane-Edit: SetMessage(message) > SetMessage(message, ExamineMarkupTags)
                 vBox.AddChild(richLabel);
                 break;
             }

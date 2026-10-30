@@ -34,6 +34,7 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
     [Dependency] private SharedInteractionSystem _interactionSystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private InteractionOutlineColorSystem _outlineColors = default!; // Arcane
 
     /// <summary>
     ///     Whether to currently draw the outline. The outline may be temporarily disabled by other systems
@@ -49,6 +50,7 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
 
     public override void Shutdown()
     {
+        _outlineColors.ColorsChanged -= RefreshOutlineColors; // Arcane
         foreach (var shader in _shaderCache.Values)
         {
             shader.Dispose();
@@ -63,6 +65,7 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
         base.Initialize();
 
         Subs.CVar(_configManager, CCVars.OutlineEnabled, SetCvarEnabled);
+        _outlineColors.ColorsChanged += RefreshOutlineColors; // Arcane
         SubscribeLocalEvent<InteractionOutlineComponent, ComponentShutdown>(OnShutdown);
         UpdatesAfter.Add(typeof(SharedEyeSystem));
     }
@@ -233,6 +236,7 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
     private void SetOutlinePostShader(Entity<SpriteComponent?> sprite, bool inRange, int renderScale)
     {
         var shader = GetShader(inRange, renderScale);
+        shader.SetParameter("outline_color", _outlineColors.GetOutlineColor(inRange)); // Arcane
         if (_sprite.TryGetPostShader(sprite, ContentPostShaderIds.InteractionOutline, out var entry) &&
             entry.Shader == shader)
         {
@@ -264,4 +268,14 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
         instance.SetParameter("outline_width", DefaultWidth * renderScale);
         return instance;
     }
+
+    // Arcane-Start
+    private void RefreshOutlineColors()
+    {
+        foreach (var ((inRange, _), shader) in _shaderCache)
+        {
+            shader.SetParameter("outline_color", _outlineColors.GetOutlineColor(inRange));
+        }
+    }
+    // Arcane-End
 }

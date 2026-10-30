@@ -192,6 +192,11 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             doAfter.StartTime = GameTiming.CurTime;
             doAfter.Completed = false;
         }
+
+        // Arcane-Start
+        if (doAfter.Args.FaceTarget)
+            _forcedFacing.RefreshForcedFacing(doAfter.Args.User);
+        // Arcane-End
     }
 
     private bool ShouldCancel(DoAfter doAfter)

@@ -10,6 +10,11 @@ public sealed partial class CCVars
     public static readonly CVarDef<bool> HudHeldItemShow =
         CVarDef.Create("hud.held_item_show", true, CVar.ARCHIVE | CVar.CLIENTONLY);
 
+    // Arcane-Start
+    public static readonly CVarDef<bool> HudCursorCooldownShow =
+        CVarDef.Create("hud.cursor_cooldown_show", true, CVar.ARCHIVE | CVar.CLIENTONLY);
+    // Arcane-End
+
     public static readonly CVarDef<bool> CombatModeIndicatorsPointShow =
         CVarDef.Create("hud.combat_mode_indicators_point_show", true, CVar.ARCHIVE | CVar.CLIENTONLY);
 

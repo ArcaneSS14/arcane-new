@@ -70,8 +70,10 @@ public abstract partial class SharedChatSystem
             ? (speech.Bold ? "chat-radio-message-wrap-bold" : "chat-radio-message-wrap")
             : (speech.Bold ? "chat-manager-entity-say-bold-wrap-message" : "chat-manager-entity-say-wrap-message"));
 
+        // Arcane-Edit-Start
         if (speech.Bold && language.SpeechOverride.BoldFontId is { })
-            finalWrapId = isRadio ? "chat-radio-message-wrap-bolded-language" : "chat-manager-entity-say-bolded-language-wrap-message";
+            finalWrapId = isRadio ? "arcane-chat-radio-message-wrap-bolded-language" : "chat-manager-entity-say-bolded-language-wrap-message";
+        // Arcane-Edit-End
 
         if (!isRadio && chatType is { } chat && language.SpeechOverride.MessageWrapOverrides.TryGetValue(chat, out var wrapOverride))
             finalWrapId = wrapOverride;
@@ -95,6 +97,10 @@ public abstract partial class SharedChatSystem
 
         return Loc.GetString(finalWrapId,
             ("color", channel is { } ? channel.Color : color),
+            // Arcane-Start
+            ("channelId", channel?.ID ?? string.Empty),
+            ("languageOverride", language.SpeechOverride.Color is null ? string.Empty : (baseColor ?? color).ToHex()),
+            // Arcane-End
             ("entityName", entityName),
             ("languageColor", baseColor ?? color),
             ("fontType", fonts.FontType),

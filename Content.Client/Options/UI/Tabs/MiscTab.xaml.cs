@@ -59,6 +59,7 @@ public sealed partial class MiscTab : Control
         Control.AddOptionCheckBox(GoobCVars.DetailedExamine, DetailedExamineCheckBox);
         // </Trauma>
         Control.AddOptionCheckBox(CCVars.HudHeldItemShow, ShowHeldItemCheckBox);
+        Control.AddOptionCheckBox(CCVars.HudCursorCooldownShow, ShowCursorCooldownCheckBox); // Arcane
         Control.AddOptionCheckBox(CCVars.CombatModeIndicatorsPointShow, ShowCombatModeIndicatorsCheckBox);
         Control.AddOptionCheckBox(CCVars.OpaqueStorageWindow, OpaqueStorageWindowCheckBox);
         Control.AddOptionCheckBox(GoobCVars.AutoFocusSearchOnBuildMenu, AutoFocusSearchOnBuildMenuCheckBox); // Goobstation Change

@@ -36,6 +36,9 @@
   - type: DeviceLinkSink
     ports:
     - Trigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
   - type: ExplodeOnTrigger
     keysIn:
@@ -55,6 +58,9 @@
         damage: 50
       behaviors:
       - !type:ExplodeBehavior
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive # Powerful explosion in a very small radius. Doesn't break underplating.
     explosionType: DemolitionCharge
     totalIntensity: 60
@@ -144,6 +150,9 @@
       path: /Audio/Effects/Cargo/buzz_two.ogg
       params:
         volume: -6
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Cryo
     totalIntensity: 120

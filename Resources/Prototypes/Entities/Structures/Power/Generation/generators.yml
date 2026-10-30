@@ -59,6 +59,9 @@
         sound:
           collection: MetalBreak
       - !type:ExplodeBehavior
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     # Same as AME, but numbers still picked from a hat.
