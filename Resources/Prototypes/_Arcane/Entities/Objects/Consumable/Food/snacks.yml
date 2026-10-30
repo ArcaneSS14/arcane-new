@@ -59,7 +59,9 @@
       right:
       - state: trash-inhand-right
         color: "#112b7b"
+
 - type: entity
+  parent: FoodSnackBase
   id: FoodSnackCoalCrunch
   name: coal crunch
   description: Cracker rounds fashioned from refined coal. Delicious to Synths!

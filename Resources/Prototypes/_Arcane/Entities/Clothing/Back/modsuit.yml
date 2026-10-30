@@ -16,12 +16,3 @@
 - type: entity
   parent: [ ClothingModsuitSuspicious, ClothingModsuitStandardPowerCell ]
   id: ClothingModsuitSuspiciousPowerCell
-  components:
-  - type: ItemSlots
-    slots:
-      cell_slot:
-        name: power-cell-slot-component-slot-name-default
-        startingItem: PowerCellHigh
-        whitelist:
-          components:
-            - PowerCell

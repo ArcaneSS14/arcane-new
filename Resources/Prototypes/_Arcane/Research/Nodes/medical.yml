@@ -89,6 +89,7 @@
   - MedicalCigCarton
   - MedicalHyposprayEmpty
   - ClothingOuterStraightjacket
+  - SynthBloodpack
   position: 7,10
 
 - type: technology
