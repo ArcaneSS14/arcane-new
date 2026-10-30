@@ -7,10 +7,9 @@
   dollPrototype: AppearanceArachnid
   skinColoration: Hues
   # Arcane-Start
-  averageHeight: 180
   averageWeight: 80
   defaultScale: 1.1
-  maxScale: 1.4
+  maxScale: 1.3
   # Arcane-End
   maleFirstNames: NamesArachnidFirst
   femaleFirstNames: NamesArachnidFirst

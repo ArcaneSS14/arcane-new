@@ -6,6 +6,12 @@
   dollPrototype: AppearanceChitinid
   defaultSkinTone: "#ffda93"
   skinColoration: Hues
+  # Arcane-Start
+  averageWeight: 70
+  defaultScale: 0.95
+  minScale: 0.9
+  maxScale: 1
+  # Arcane-End
   naming: First
   maleFirstNames: NamesChitinidFirstMale
   femaleFirstNames: NamesChitinidFirstFemale
