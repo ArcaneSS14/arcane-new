@@ -41,6 +41,8 @@
   id: HoPLongcoat
   equipment:
     outerClothing: ClothingOuterCoatHoPLong
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterHoP
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterHoP
+  # Arcane-Edit-End

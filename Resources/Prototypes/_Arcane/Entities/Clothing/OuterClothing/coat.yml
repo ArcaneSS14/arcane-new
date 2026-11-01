@@ -52,3 +52,36 @@
     sprite: _Arcane/Clothing/OuterClothing/Coats/inteq_hoodie.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/OuterClothing/Coats/inteq_hoodie.rsi
+
+- type: entity
+  parent: ClothingOuterCapJacket
+  id: ClothingOuterCoatCaptainWhite
+  name: white captain jacket
+  description: White captain formal jacket, inlaid with gold.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Coats/captain_white.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Coats/captain_white.rsi
+
+- type: entity
+  parent: ClothingOuterCapJacket
+  id: ClothingOuterCoatCaptainSheriff
+  name: sheriff jacket
+  description: Sheriff formal jacket, inlaid with gold.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Coats/captain_sheriff.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Coats/captain_sheriff.rsi
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatTraumaTeam
+  name: Trauma Team coat
+  description: Made from high-tech materials, this jacket perfectly combines practicality and aesthetics. With the passage of time and the change of owners, its functions and purposes were lost. The only clear element is the green symbol, indelibly painted by some idiot.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Coats/traumateam_coat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Coats/traumateam_coat.rsi

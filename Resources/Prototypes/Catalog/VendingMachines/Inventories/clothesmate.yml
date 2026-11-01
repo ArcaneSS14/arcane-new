@@ -58,7 +58,47 @@
     ClothingUniformJumpskirtCasualRed: 2
     ClothingUniformJumpsuitCasualGreen: 2
     ClothingUniformJumpskirtCasualGreen: 2
+    # Arcane-Start
+    ClothingUniformJumpsuitTurtleneckBlack: 2
+    ClothingUniformJumpsuitTurtleneckBlue: 2
+    ClothingUniformJumpsuitTurtleneckAzure: 2
+    ClothingUniformJumpsuitTurtleneckGreen: 2
+    ClothingUniformJumpsuitTurtleneckYellow: 2
+    ClothingUniformJumpsuitTurtleneckOrange: 2
+    ClothingUniformJumpsuitTurtleneckRed: 2
+    ClothingUniformJumpsuitTurtleneckWhite: 2
+    ClothingUniformJumpsuitTurtleneckBrown: 2
+    ClothingUniformJumpsuitTurtleneckGrey: 2
+    ClothingUniformJumpsuitTurtleneckAquamarine: 2
+    ClothingUniformJumpsuitTurtleneckPurple: 2
+    ClothingUniformJumpsuitTurtleneckPink: 2
+    ClothingUniformJumpskirtTurtleneckBlack: 2
+    ClothingUniformJumpskirtTurtleneckBlue: 2
+    ClothingUniformJumpskirtTurtleneckAzure: 2
+    ClothingUniformJumpskirtTurtleneckGreen: 2
+    ClothingUniformJumpskirtTurtleneckYellow: 2
+    ClothingUniformJumpskirtTurtleneckOrange: 2
+    ClothingUniformJumpskirtTurtleneckRed: 2
+    ClothingUniformJumpskirtTurtleneckWhite: 2
+    ClothingUniformJumpskirtTurtleneckBrown: 2
+    ClothingUniformJumpskirtTurtleneckGrey: 2
+    ClothingUniformJumpskirtTurtleneckAquamarine: 2
+    ClothingUniformJumpskirtTurtleneckPurple: 2
+    ClothingUniformJumpskirtTurtleneckPink: 2
+    # Arcane-End
     # DO NOT ADD MORE, USE UNIFORM DYING
+    # Arcane-Start
+    ClothingUniformJumpskirtRoll: 2
+    ClothingUniformJumpsuitAviator: 2
+    ClothingUniformJumpsuitDoom: 2
+    ClothingUniformJumpsuitGalaxyBlue: 2
+    ClothingUniformJumpsuitGalaxyRed: 2
+    ClothingUniformJumpsuitGreaser: 4
+    ClothingUniformJumpsuitGreaserCult: 4
+    ClothingUniformJumpsuitGreaserJulie: 4
+    ClothingUniformJumpsuitGreaserSnakes: 4
+    ClothingUniformJumpsuitGreaserSpider: 4
+    # Arcane-End
     ClothingShoesColorBlack: 8
     ClothingShoesColorBrown: 4
     ClothingShoesColorWhite: 3
@@ -119,10 +159,16 @@
     ClothingNeckPonchoSmallPurple: 3
     ClothingNeckPonchoSmallBlack: 3
     ClothingNeckPonchoSmallWhite: 3
+    ClothingNeckDarkGreyCloak: 2
+    ClothingNeckGothicCloak: 2
     # Arcane-End
     # </Trauma>
     # DO NOT ADD MORE, USE UNIFORM DYING
   contrabandInventory:
+    # Arcane-Start
+    ClothingUniformJumpsuitBiker: 1
+    ClothingUniformJumpsuitJacket: 1
+    # Arcane-End
     ClothingMaskNeckGaiter: 2
     # <Trauma>
     ClothingUniformJumpsuitTacticool: 2 # was 1

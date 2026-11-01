@@ -13,3 +13,13 @@
       whitelist:
         tags:
           - NukeOpsUplink
+
+- type: listing
+  id: UplinkRubberStampChameleon
+  name: uplink-stamp-chameleon-name
+  description: uplink-stamp-chameleon-desc
+  productEntity: RubberStampChameleon
+  cost:
+    Telecrystal: 20
+  categories:
+  - UplinkDeception
