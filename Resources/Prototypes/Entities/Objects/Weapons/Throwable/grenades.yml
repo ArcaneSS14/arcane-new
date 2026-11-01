@@ -100,6 +100,9 @@
   - type: ExplodeOnTrigger
     keysIn:
     - timer
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Minibomb
     totalIntensity: 150
@@ -128,6 +131,9 @@
   - type: ExplodeOnTrigger
     keysIn:
     - timer
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Minibomb
     totalIntensity: 400

@@ -12,6 +12,9 @@
     layers:
     - state: frag
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 40
@@ -37,6 +40,9 @@
     layers:
     - state: frag
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 2 # max 30 per tile
@@ -84,6 +90,9 @@
     layers:
     - state: grenade
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Clake
     totalIntensity: 150 # a ~3 tile radius
@@ -126,6 +135,9 @@
     layers:
     - state: grenade
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     totalIntensity: 120
@@ -165,6 +177,9 @@
     sound: /Audio/Items/smoke_grenade_smoke.ogg
     positional: true
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     totalIntensity: 0.01 # a little pop
@@ -210,6 +225,9 @@
     layers:
     - state: ball
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: DemolitionCharge
     maxIntensity: 9

@@ -269,6 +269,9 @@
         nodeGroupID: ExCable
   - type: CableVisualizer
     statePrefix: excable_
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: DemolitionCharge
     totalIntensity: 10
