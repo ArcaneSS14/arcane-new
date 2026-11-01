@@ -281,10 +281,10 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var board = BuildScores();
         var average = _recentWaits.Count > 0 ? _recentWaits.Average() : -1;
         var preset = _ticker.CurrentPreset ?? _ticker.Preset;
-        var mode = preset == null ? "Unknown" : Loc.GetString(preset.ModeTitle);
+        var mode = preset == null ? string.Empty : Loc.GetString(preset.ModeTitle);
         var elapsed = _ticker.RunLevel >= GameRunLevel.InRound
             ? (int) (_timing.CurTime - _ticker.RoundStartTimeSpan).TotalMinutes : 0;
-        var mapName = _maps.GetSelectedMap()?.MapName ?? "Unknown";
+        var mapName = _maps.GetSelectedMap()?.MapName ?? string.Empty;
         var playerCount = ActualPlayersCount;
         var maximumPlayers = _cfg.GetCVar(CCVars.SoftMaxPlayers);
         var leaderboardNames = longest.Select(p => p.Value.Name).ToList();

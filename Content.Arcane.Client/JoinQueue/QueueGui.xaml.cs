@@ -50,8 +50,8 @@ public sealed partial class QueueGui : Control
         }
 
         ServerInfo.Text = Loc.GetString("queue-server-info",
-            ("map", msg.MapName),
-            ("mode", msg.GameMode),
+            ("map", string.IsNullOrWhiteSpace(msg.MapName) ? Loc.GetString("generic-unknown-title") : msg.MapName),
+            ("mode", string.IsNullOrWhiteSpace(msg.GameMode) ? Loc.GetString("generic-unknown-title") : msg.GameMode),
             ("players", msg.ServerPlayerCount),
             ("max", msg.MaxPlayerCount),
             ("duration", msg.RoundDurationMinutes));
