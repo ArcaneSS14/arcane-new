@@ -38,6 +38,7 @@
     - type: Injurable
       damageContainer: Box
     - type: Sprite
+      offset: "0.0,0.25" # Arcane
       noRot: true
       sprite: Structures/Storage/closet.rsi
       layers:
