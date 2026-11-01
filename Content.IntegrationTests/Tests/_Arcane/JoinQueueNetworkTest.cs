@@ -14,6 +14,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
+using Robust.Shared.Localization;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using ServerQueue = Content.Arcane.Server.JoinQueue.JoinQueueSystem;
@@ -135,6 +136,36 @@ public sealed class JoinQueueNetworkTest : GameTest
         {
             Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
             Assert.Throws<KeyNotFoundException>(() => Server.ResolveDependency<UserDbDataManager>().GetLoadTask(session));
+        });
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task QueueDisplaysThePublicGameMode(bool secret)
+    {
+        string realMode = string.Empty;
+        string publicMode = string.Empty;
+        await Server.WaitPost(() =>
+        {
+            var ticker = SEntMan.System<ServerGameTicker>();
+            var actual = ticker.FindGamePreset("sandbox");
+            var decoy = secret ? ticker.FindGamePreset("secret") : null;
+            Assert.That(actual, Is.Not.Null);
+            if (secret)
+                Assert.That(decoy, Is.Not.Null);
+            realMode = actual!.ModeTitle.Id;
+            publicMode = decoy?.ModeTitle.Id ?? realMode;
+            ticker.SetGamePreset(actual, decoy: decoy);
+        });
+
+        await ConnectQueued();
+        await Client.WaitAssertion(() =>
+        {
+            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
+            var text = gui.FindControl<Label>("ServerInfo").Text;
+            Assert.That(text, Does.Contain(Loc.GetString(publicMode)));
+            if (secret)
+                Assert.That(text, Does.Not.Contain(Loc.GetString(realMode)), "A queued client must not learn the hidden game mode.");
         });
     }
 
