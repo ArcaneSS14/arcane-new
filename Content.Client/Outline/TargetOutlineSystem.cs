@@ -29,6 +29,7 @@ public sealed partial class TargetOutlineSystem : EntitySystem
     [Dependency] private SharedTransformSystem _transformSystem = default!;
     [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
     [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private InteractionOutlineColorSystem _outlineColors = default!; // Arcane
 
     private bool _enabled = false;
 
@@ -86,6 +87,14 @@ public sealed partial class TargetOutlineSystem : EntitySystem
 
         _shaderTargetValid = ProtoMan.Index(ShaderTargetValid).InstanceUnique();
         _shaderTargetInvalid = ProtoMan.Index(ShaderTargetInvalid).InstanceUnique();
+        _outlineColors.ColorsChanged += RefreshOutlineColors; // Arcane
+        RefreshOutlineColors(); // Arcane
+    }
+
+    public override void Shutdown()
+    {
+        _outlineColors.ColorsChanged -= RefreshOutlineColors; // Arcane
+        base.Shutdown();
     }
 
     public void Disable()
@@ -195,4 +204,12 @@ public sealed partial class TargetOutlineSystem : EntitySystem
 
         _highlightedSprites.Clear();
     }
+
+    // Arcane-Start
+    private void RefreshOutlineColors()
+    {
+        _shaderTargetValid?.SetParameter("outline_color", _outlineColors.GetOutlineColor(true));
+        _shaderTargetInvalid?.SetParameter("outline_color", _outlineColors.GetOutlineColor(false));
+    }
+    // Arcane-End
 }

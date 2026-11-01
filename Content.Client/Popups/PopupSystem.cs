@@ -17,6 +17,10 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Replays;
+// Arcane-Start
+using System.Numerics;
+using Robust.Shared.Random;
+// Arcane-End
 
 namespace Content.Client.Popups;
 
@@ -30,6 +34,7 @@ public sealed partial class PopupSystem : SharedPopupSystem
     [Dependency] private IReplayRecordingManager _replayRecording = default!;
     [Dependency] private ExamineSystemShared _examine = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private IRobustRandom _random = default!; // Arcane
 
     public IReadOnlyCollection<WorldPopupLabel> WorldLabels => _aliveWorldLabels.Values;
     public IReadOnlyCollection<CursorPopupLabel> CursorLabels => _aliveCursorLabels.Values;
@@ -43,9 +48,12 @@ public sealed partial class PopupSystem : SharedPopupSystem
     /// </summary>
     private readonly List<IPopupPredictionInstance> _predictionInstances = new();
 
-    public const float MinimumPopupLifetime = 0.7f;
-    public const float MaximumPopupLifetime = 5f;
-    public const float PopupLifetimePerCharacter = 0.04f;
+    public const float MaximumPopupRandomOffsetMagnitude = 20f; // Arcane
+    // Arcane-Edit-Start
+    public const float MinimumPopupLifetime = 1f;
+    public const float MaximumPopupLifetime = 4f;
+    public const float PopupLifetimePerCharacter = 0.1f;
+    // Arcane-Edit-End
 
     // <Trauma>
     private static readonly Dictionary<PopupType, string> FontSizeDict = new()
@@ -126,6 +134,7 @@ public sealed partial class PopupSystem : SharedPopupSystem
         {
             Text = message,
             Type = type,
+            RandomOffset = _random.NextVector2(MaximumPopupRandomOffsetMagnitude), // Arcane
         };
 
         _aliveWorldLabels.Add(popupData, label);
@@ -169,6 +178,7 @@ public sealed partial class PopupSystem : SharedPopupSystem
         {
             Text = message,
             Type = type,
+            RandomOffset = _random.NextVector2(MaximumPopupRandomOffsetMagnitude), // Arcane
         };
 
         _aliveCursorLabels.Add(popupData, label);
@@ -388,6 +398,7 @@ public sealed partial class PopupSystem : SharedPopupSystem
         public PopupType Type = PopupType.Small;
         public string Text { get; set; } = string.Empty;
         public float TotalTime { get; set; }
+        public Vector2 RandomOffset = Vector2.Zero; // Arcane
         public int Repeats = 1;
     }
 

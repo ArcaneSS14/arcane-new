@@ -112,7 +112,7 @@ public sealed class PopupOverlay : Overlay
                 continue;
 
             var pos = Vector2.Transform(mapPos.Position, matrix);
-            _controller.DrawPopup(popup, worldHandle, pos, scale);
+            _controller.DrawPopup(popup, worldHandle, pos, scale, args.ViewportBounds); // Arcane-Edit: without bounds > with bounds
         }
     }
 }

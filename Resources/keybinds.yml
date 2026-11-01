@@ -682,6 +682,9 @@ binds:
 - function: Sprint
   type: State
   key: Space
+- function: NamePeek
+  type: State
+  key: Alt
 # Arcane-End
 # Arcane-Start: posing
 - function: TogglePosing

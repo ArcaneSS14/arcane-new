@@ -126,6 +126,9 @@
       whitelist:
         components:
           - GasTank
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Minibomb # Mostly a pressure wave explosive so primarily blunt damage
     maxIntensity: 100

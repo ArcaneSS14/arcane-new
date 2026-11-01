@@ -1,0 +1,26 @@
+ui-options-tab-customization = Настройка
+ui-options-runechat = Реплики в стиле Runechat
+ui-options-runechat-font-size = Размер шрифта Runechat
+ui-options-runechat-whisper-font-size = Размер шрифта шёпота Runechat
+ui-options-runechat-font = Шрифт Runechat
+ui-options-runechat-whisper-font = Шрифт шёпота Runechat
+ui-options-runechat-outline = Обводка текста Runechat
+ui-options-runechat-random-colors = Случайные цвета Runechat
+ui-options-runechat-color = Цвет текста Runechat
+ui-options-runechat-color-example = Пример
+ui-options-runechat-typing-animation = Анимация печати Runechat
+ui-options-runechat-typing-speed = Скорость печати Runechat
+ui-options-runechat-post-typing-lifetime = Время сообщения Runechat после печати
+ui-options-runechat-font-grand9k = Grand9k Pixel Unicode
+ui-options-runechat-font-press-start-2p = Press Start 2P
+ui-options-runechat-font-tiny5 = Tiny5
+ui-options-radio-channel-colors-header = Цвета радиоканалов
+ui-options-use-custom-radio-channel-colors = Использовать пользовательские цвета радиоканалов
+ui-options-radio-channel-colors-expand = Настроить цвета каналов
+ui-options-radio-channel-colors-example = Пример: {$channel}
+ui-options-interaction-outline-header = Цвета контура взаимодействия
+ui-options-use-custom-interaction-outline-color = Использовать пользовательские цвета контура взаимодействия
+ui-options-interaction-outline-color-valid = Цвет доступного взаимодействия
+ui-options-interaction-outline-color-invalid = Цвет недоступного взаимодействия
+ui-options-interaction-outline-color-example = Пример
+arcane-chat-radio-message-wrap-bolded-language = [radiochannel="{$channelId}"]{$channel} [bold]{$name}[/bold] {$verb}, "[/radiochannel][radiochannel="{$channelId}" lang="{$languageOverride}"][font="{$boldFontType}" size={$fontSize}]{$message}[/font][/radiochannel][radiochannel="{$channelId}"]"[/radiochannel]
