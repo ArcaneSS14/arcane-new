@@ -80,6 +80,11 @@ namespace Content.Server.Cargo.Systems
 
             var orderId = GenerateOrderId(orderDatabase);
             var data = new CargoOrderData(orderId, product, slip.OrderQuantity, slip.Requester, slip.Reason, slip.Account);
+            // Arcane-Start
+            data.DeliveryDestination = slip.DeliveryDestination;
+            data.SecuredDelivery = slip.SecuredDelivery;
+            data.ExtraCost = slip.ExtraCost;
+            // Arcane-End
 
             if (!TryAddOrder(stationUid.Value, ent.Comp.Account, data, orderDatabase))
             {
@@ -121,6 +126,11 @@ namespace Content.Server.Cargo.Systems
 
             if (_emag.CheckFlag(ent, EmagType.Interaction))
                 return;
+
+            // Arcane-Start
+            ent.Comp.EditableRequesterName = true;
+            Dirty(ent);
+            // Arcane-End
 
             args.Handled = true;
         }
@@ -225,16 +235,17 @@ namespace Content.Server.Cargo.Systems
                 PlayDenySound(uid, component);
             }
 
-            var cost = product.Cost * order.OrderQuantity;
+            var cost = product.Cost * order.OrderQuantity + order.ExtraCost; // Arcane-Edit: product cost > product cost + ExtraCost
             var accountBalance = GetBalanceFromAccount((station.Value, bank), order.Account);
             // <Trauma>
             var modifyEv = new ModifyCargoPriceEvent(cost);
             RaiseLocalEvent(station.Value, ref modifyEv);
             cost = modifyEv.Price;
             // </Trauma>
+            var privateCost = GetPrivateOrderCost(order, cost); // Arcane
 
             // Not enough balance
-            if (cost > accountBalance)
+            if (privateCost == null && cost > accountBalance) // Arcane-Edit: cost > accountBalance > privateCost == null && cost > accountBalance
             {
                 _popup.PopupCursor(Loc.GetString("cargo-console-insufficient-funds", ("cost", cost)), args.Actor);
                 PlayDenySound(uid, component);
@@ -280,6 +291,15 @@ namespace Content.Server.Cargo.Systems
                 order.SetApproverData(_identity.GetIdentityShortInfo(player, uid));
             }
 
+            // Arcane-Start
+            if (privateCost is { } charge && !ChangePrivateAccount(order, -charge))
+            {
+                _popup.PopupCursor(Loc.GetString("cargo-console-private-insufficient-funds", ("cost", charge)), args.Actor);
+                PlayDenySound(uid, component);
+                return;
+            }
+            // Arcane-End
+
             order.ApprovingConsole = GetNetEntity(uid);
             order.Approved = true;
 
@@ -298,6 +318,10 @@ namespace Content.Server.Cargo.Systems
                     order.Approver = null;
                     order.ApprovingConsole = null;
                     order.Approved = false;
+                    // Arcane-Start
+                    if (privateCost is { } refund)
+                        ChangePrivateAccount(order, refund);
+                    // Arcane-End
                     return;
                 }
             }
@@ -331,7 +355,7 @@ namespace Content.Server.Cargo.Systems
                 $"{ToPrettyString(player):user} approved order [orderId:{order.OrderId}, quantity:{order.OrderQuantity}, product:{order.Product}, requester:{order.Requester}, reason:{order.Reason}] on account {order.Account} with balance at {accountBalance}");
 
             orderDatabase.Orders[component.Account].Remove(order);
-            UpdateBankAccount((station.Value, bank), -cost, order.Account);
+            UpdateBankAccount((station.Value, bank), privateCost is { } paid ? paid - cost : -cost, order.Account); // Arcane-Edit: -cost > privateCost is { } paid ? paid - cost : -cost
             UpdateOrders(station.Value);
         }
 
@@ -401,7 +425,7 @@ namespace Content.Server.Cargo.Systems
             RemoveOrder(station.Value, targetAccount, args.OrderId, orderDatabase);
         }
 
-        private void OnAddOrderMessageSlipPrinter(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleAddOrderMessage args, CargoProductPrototype product)
+        private void OnAddOrderMessageSlipPrinter(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleAddOrderMessage args, CargoProductPrototype product, CargoOrderData extras) // Arcane-Edit: (..., product) > (..., product, extras)
         {
             if (!ProtoMan.Resolve(component.Account, out var account))
                 return;
@@ -416,20 +440,26 @@ namespace Content.Server.Cargo.Systems
             var paper = EnsureComp<PaperComponent>(label);
             var msg = new FormattedMessage();
 
-            msg.AddMarkupPermissive(Loc.GetString("cargo-acquisition-slip-body",
+            msg.AddMarkupPermissive(Loc.GetString("cargo-arcane-acquisition-slip-body", // Arcane-Edit: cargo-acquisition-slip-body > cargo-arcane-acquisition-slip-body
                 ("product", product.Name),
                 ("description", product.Description),
                 ("unit", product.Cost),
                 ("amount", args.Amount),
-                ("cost", product.Cost * args.Amount),
-                ("orderer", args.Requester),
+                ("cost", product.Cost * args.Amount + extras.ExtraCost), // Arcane-Edit: Cost * Amount > Cost * Amount + ExtraCost
+                ("orderer", extras.Requester), // Arcane-Edit: args.Requester > extras.Requester
+                ("destination", extras.DeliveryDestination ?? Loc.GetString("cargo-console-paper-delivery-destination-default")), // Arcane
                 ("reason", args.Reason)));
             _paperSystem.SetContent((label, paper), msg.ToMarkup());
 
             var slip = EnsureComp<CargoSlipComponent>(label);
             slip.Product = product.ID;
-            slip.Requester = args.Requester;
+            slip.Requester = extras.Requester; // Arcane-Edit: args.Requester > extras.Requester
             slip.Reason = args.Reason;
+            // Arcane-Start
+            slip.DeliveryDestination = extras.DeliveryDestination;
+            slip.SecuredDelivery = extras.SecuredDelivery;
+            slip.ExtraCost = extras.ExtraCost;
+            // Arcane-End
             slip.OrderQuantity = args.Amount;
             slip.Account = component.Account;
         }
@@ -459,15 +489,20 @@ namespace Content.Server.Cargo.Systems
             if (!GetAvailableProducts((uid, component)).Contains(args.CargoProductId))
                 return;
 
+            // Arcane-Start
+            var requester = GetRequester((uid, component), args);
+            var orderId = component.Mode == CargoOrderConsoleMode.PrintSlip ? 0 : GenerateOrderId(orderDatabase); // slips get an id once inserted
+            var data = new CargoOrderData(orderId, product, args.Amount, requester, args.Reason, component.Account);
+            SetOrderExtras(data, (uid, component), args, product);
+            // Arcane-End
+
             if (component.Mode == CargoOrderConsoleMode.PrintSlip)
             {
-                OnAddOrderMessageSlipPrinter(uid, component, args, product);
+                OnAddOrderMessageSlipPrinter(uid, component, args, product, data); // Arcane-Edit: (..., product) > (..., product, data)
                 return;
             }
 
             var targetAccount = component.Mode == CargoOrderConsoleMode.SendToPrimary ? bank.PrimaryAccount : component.Account;
-
-            var data = GetOrderData(args, product, GenerateOrderId(orderDatabase), component.Account);
 
             if (!TryAddOrder(stationUid.Value, targetAccount, data, orderDatabase))
             {
@@ -721,23 +756,26 @@ namespace Content.Server.Cargo.Systems
                 }
             }
 
+            item = PackSecureDelivery(order, ProtoMan.Index(account), item, spawn); // Arcane
+
             // Create a sheet of paper to write the order details on
             var printed = Spawn(paperProto, spawn);
             if (TryComp<PaperComponent>(printed, out var paper))
             {
                 // fill in the order data
-                var val = Loc.GetString("cargo-console-paper-print-name", ("orderNumber", order.OrderId));
+                var val = Loc.GetString("cargo-console-arcane-paper-print-name", ("orderNumber", order.OrderId), ("itemName", product.Name), ("orderQuantity", order.OrderQuantity)); // Arcane-Edit: cargo-console-paper-print-name > cargo-console-arcane-paper-print-name
                 _metaSystem.SetEntityName(printed, val);
 
                 var accountProto = ProtoMan.Index(account);
                 _paperSystem.SetContent((printed, paper),
                     Loc.GetString(
-                        "cargo-console-paper-print-text",
+                        "cargo-console-arcane-paper-print-text", // Arcane-Edit: cargo-console-paper-print-text > cargo-console-arcane-paper-print-text
                         ("orderNumber", order.OrderId),
                         ("itemName", product.Name),
                         ("orderQuantity", order.OrderQuantity),
                         ("requester", order.Requester),
                         ("reason", string.IsNullOrWhiteSpace(order.Reason) ? Loc.GetString("cargo-console-paper-reason-default") : order.Reason),
+                        ("destination", order.DeliveryDestination ?? Loc.GetString("cargo-console-paper-delivery-destination-default")), // Arcane
                         ("account", Loc.GetString(accountProto.Name)),
                         ("accountcode", Loc.GetString(accountProto.Code)),
                         ("approver", string.IsNullOrWhiteSpace(order.Approver) ? Loc.GetString("cargo-console-paper-approver-default") : order.Approver)));

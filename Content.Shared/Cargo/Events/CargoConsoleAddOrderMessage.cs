@@ -13,6 +13,12 @@ public sealed class CargoConsoleAddOrderMessage : BoundUserInterfaceMessage
     public string CargoProductId;
     public int Amount;
 
+    // Arcane-Start: Orion #377
+    public string? DeliveryDestination;
+    public bool SecuredDelivery;
+    public bool PayPrivately;
+    // Arcane-End
+
     public CargoConsoleAddOrderMessage(string requester, string reason, string cargoProductId, int amount)
     {
         Requester = requester;
