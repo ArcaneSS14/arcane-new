@@ -1,0 +1,190 @@
+# Visual assignments only: preserve fills, access, materials and cooling.
+
+- type: entity
+  id: CrateMaterialGold
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateMaterialSilver
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateEngineeringFirefighterBackpackTank
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateAirGrenade
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateCargoParcelWrap
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateSalvageEquipment
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateCrusherDagger
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateSeismicCharge
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateCrusher
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFulton
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateSalvageHardsuit
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateCrusherGlaive
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateSupremeSalvagerCloak
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFoodPizza
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFoodPizzaLarge
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFoodMRE
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFoodIceCream
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateFoodSnowcone
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateMedicalSupplies
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateServiceTheatre
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+    offset: 0, 0.25
+
+- type: entity
+  id: CrateCybersunJuggernautBundle
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-night_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-night_secure.rsi
+    offset: 0, 0.25

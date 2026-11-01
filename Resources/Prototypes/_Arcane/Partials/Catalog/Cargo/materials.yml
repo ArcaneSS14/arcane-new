@@ -1,0 +1,13 @@
+# Use EMPTY thematic containers; cargo still creates exactly the original product.
+
+- type: cargoProduct
+  id: MaterialGold
+  container:
+    entity: CrateGolden
+    containerId: entity_storage
+
+- type: cargoProduct
+  id: MaterialSilver
+  container:
+    entity: CrateSilver
+    containerId: entity_storage

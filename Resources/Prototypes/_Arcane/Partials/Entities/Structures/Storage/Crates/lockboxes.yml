@@ -1,0 +1,177 @@
+# Orion #170/#366: separate tinted open/closed lids.
+# Prepend cleared layers with !Index:0: partial sequence merges otherwise reverse painter order.
+
+- type: entity
+  id: CrateBaseLockBox
+  components:
+  - type: GenericVisualizer
+    visuals:
+      enum.StorageVisuals.Open:
+        open_overlay:
+          True: { visible: true }
+          False: { visible: false }
+
+- type: entity
+  id: CrateLockBoxEngineering
+  components:
+  - type: Sprite
+    layers: !Clear
+    - !Index:0
+      state: base
+    - !Index:0
+      state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - !Index:0
+      state: overlay-closed
+      color: "#ad8c27"
+      map: [lid_overlay]
+    - !Index:0
+      state: overlay-open
+      color: "#ad8c27"
+      visible: false
+      map: [open_overlay]
+    - !Index:0
+      state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - !Index:0
+      state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+    - !Index:0
+      state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      offset: "-0.46875,0.03125"
+      map: ["enum.PaperLabelVisuals.Layer"]
+
+- type: entity
+  id: CrateLockBoxMedical
+  components:
+  - type: Sprite
+    layers: !Clear
+    - !Index:0
+      state: base
+    - !Index:0
+      state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - !Index:0
+      state: overlay-closed
+      color: "#92c7e8"
+      map: [lid_overlay]
+    - !Index:0
+      state: overlay-open
+      color: "#92c7e8"
+      visible: false
+      map: [open_overlay]
+    - !Index:0
+      state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - !Index:0
+      state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+    - !Index:0
+      state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      offset: "-0.46875,0.03125"
+      map: ["enum.PaperLabelVisuals.Layer"]
+
+- type: entity
+  id: CrateLockBoxScience
+  components:
+  - type: Sprite
+    layers: !Clear
+    - !Index:0
+      state: base
+    - !Index:0
+      state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - !Index:0
+      state: overlay-closed
+      color: "#ba4bf0"
+      map: [lid_overlay]
+    - !Index:0
+      state: overlay-open
+      color: "#ba4bf0"
+      visible: false
+      map: [open_overlay]
+    - !Index:0
+      state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - !Index:0
+      state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+    - !Index:0
+      state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      offset: "-0.46875,0.03125"
+      map: ["enum.PaperLabelVisuals.Layer"]
+
+- type: entity
+  id: CrateLockBoxSecurity
+  components:
+  - type: Sprite
+    layers: !Clear
+    - !Index:0
+      state: base
+    - !Index:0
+      state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - !Index:0
+      state: overlay-closed
+      color: "#c12d30"
+      map: [lid_overlay]
+    - !Index:0
+      state: overlay-open
+      color: "#c12d30"
+      visible: false
+      map: [open_overlay]
+    - !Index:0
+      state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - !Index:0
+      state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+    - !Index:0
+      state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      offset: "-0.46875,0.03125"
+      map: ["enum.PaperLabelVisuals.Layer"]
+
+- type: entity
+  id: CrateLockBoxService
+  components:
+  - type: Sprite
+    layers: !Clear
+    - !Index:0
+      state: base
+    - !Index:0
+      state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - !Index:0
+      state: overlay-closed
+      color: "#53b723"
+      map: [lid_overlay]
+    - !Index:0
+      state: overlay-open
+      color: "#53b723"
+      visible: false
+      map: [open_overlay]
+    - !Index:0
+      state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - !Index:0
+      state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+    - !Index:0
+      state: paper
+      sprite: Structures/Storage/Crates/labels.rsi
+      offset: "-0.46875,0.03125"
+      map: ["enum.PaperLabelVisuals.Layer"]
