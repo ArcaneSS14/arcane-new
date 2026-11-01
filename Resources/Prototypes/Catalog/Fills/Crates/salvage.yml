@@ -1,5 +1,5 @@
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSalvageEquipment
   name: "salvage equipment crate"
   suffix: Filled
@@ -95,7 +95,7 @@
           prob: 0.0001
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusherDagger
   name: crusher dagger crate
   description: Contains 4 crusher daggers for use by salvage.
@@ -108,7 +108,7 @@
 
 # Salvage rewards
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSeismicCharge
   name: seismic charge crate
   description: Contains 6 seismic charges for use by salvage.
@@ -135,7 +135,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusher
   name: crusher crate
   description: Contains 2 crushers for use by salvage.
@@ -147,7 +147,7 @@
         amount: 2
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateFulton
   name: fulton crate
   description: Contains a fulton beacon and 8 fultons.
@@ -172,7 +172,7 @@
         id: JetpackVoidFilled
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSalvageHardsuit
   name: mining hardsuit crate
   description: Contains a mining hardsuit, breath mask, and one tank of both oxygen and nitrogen.
@@ -187,7 +187,7 @@
         - id: NitrogenTankFilled
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusherGlaive
   name: crusher glaive crate
   description: Contains a crusher glaive for use by salvage.
@@ -198,7 +198,7 @@
         id: WeaponCrusherGlaive
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMiningSecure # Arcane-Edit: CrateGenericSteel > CrateMiningSecure
   id: CrateSupremeSalvagerCloak
   name: supreme salvager cloak crate
   description: Contains a cloak only to be worn by supreme salvagers. Wearing it undeservedly will result in your doom.

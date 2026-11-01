@@ -8,4 +8,5 @@
   - type: Icon
     sprite: _Goobstation/Objects/Storage/binglecrate.rsi
   - type: Sprite
+    offset: "0.0,0.0" # Arcane
     sprite: _Goobstation/Objects/Storage/binglecrate.rsi
