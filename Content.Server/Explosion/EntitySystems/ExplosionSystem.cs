@@ -361,10 +361,12 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
 
         _audio.PlayStatic(sound, filter, mapEntityCoords, true, sound.Params);
         // Arcane-Edit-Start
+        var screenshakeRange = iterationIntensity.Count * 4f;
+        var screenshakeFilter = Filter.Empty().AddInRange(pos, screenshakeRange);
         DoArcaneExplosionScreenshake(
-            filter,
+            screenshakeFilter,
             pos,
-            audioRange,
+            screenshakeRange,
             iterationIntensity.Count < queued.Proto.SmallSoundIterationThreshold);
         // Arcane-Edit-End
 
