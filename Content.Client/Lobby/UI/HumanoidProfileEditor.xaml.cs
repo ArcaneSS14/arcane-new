@@ -300,6 +300,7 @@ namespace Content.Client.Lobby.UI
 
             _markingsModel.MarkingsChanged += (_, _) => OnMarkingChange();
             _markingsModel.MarkingsReset += OnMarkingChange;
+            _markingsModel.PreviewChanged += UpdateMarkingPreview; // Arcane: display only, without setting the dirty flag.
 
             #endregion Markings
 
@@ -357,7 +358,7 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
+            SpriteView.LoadPreview(GetMarkingPreviewProfile(), JobOverride, ShowClothes.Pressed); // Arcane
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();
@@ -419,7 +420,7 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.ReloadProfilePreview(Profile);
+            UpdateMarkingPreview(); // Arcane
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

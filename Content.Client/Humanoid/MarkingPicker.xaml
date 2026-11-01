@@ -1,3 +1,7 @@
 <Control xmlns="https://spacestation14.io">
-    <TabContainer Name="OrganTabs" />
+    <BoxContainer Orientation="Vertical">
+        <CheckBox Name="AnimatedPreview" Text="{Loc 'marking-grid-preview-animated'}"
+                  ToolTip="{Loc 'marking-grid-preview-animated-tooltip'}" />
+        <TabContainer Name="OrganTabs" VerticalExpand="True" />
+    </BoxContainer>
 </Control>

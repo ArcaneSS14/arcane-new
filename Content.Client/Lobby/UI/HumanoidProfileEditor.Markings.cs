@@ -1,3 +1,5 @@
+using Content.Shared.Preferences;
+
 namespace Content.Client.Lobby.UI;
 
 public sealed partial class HumanoidProfileEditor
@@ -23,4 +25,20 @@ public sealed partial class HumanoidProfileEditor
         ReloadProfilePreview();
         SetDirty();
     }
+
+    // <Arcane>
+    private void UpdateMarkingPreview()
+    {
+        if (Profile == null)
+            return;
+
+        SpriteView.ReloadProfilePreview(GetMarkingPreviewProfile());
+    }
+
+    private HumanoidCharacterProfile GetMarkingPreviewProfile()
+    {
+        var profile = Profile!;
+        return profile.WithCharacterAppearance(profile.Appearance.WithMarkings(_markingsModel.GetPreviewMarkings()));
+    }
+    // </Arcane>
 }

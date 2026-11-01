@@ -15,6 +15,7 @@ namespace Content.Client.Humanoid;
 [GenerateTypedNameReferences]
 public sealed partial class LayerMarkingPicker : BoxContainer
 {
+    [Dependency] private MarkingManager _markingManager = default!; // Arcane
     private readonly IReadOnlyDictionary<string, MarkingPrototype> _allMarkings;
     private readonly ProtoId<OrganCategoryPrototype> _organ;
     private readonly HumanoidVisualLayers _layer;
@@ -25,6 +26,7 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     public LayerMarkingPicker(MarkingsViewModel markingsModel, ProtoId<OrganCategoryPrototype> organ, HumanoidVisualLayers layer, IReadOnlyDictionary<string, MarkingPrototype> allMarkings)
     {
         RobustXamlLoader.Load(this);
+        IoCManager.InjectDependencies(this); // Arcane
 
         _markingsModel = markingsModel;
         _allMarkings = allMarkings;
@@ -76,6 +78,10 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     {
         foreach (var marking in _allMarkings.Values.OrderBy(marking => Loc.GetString($"marking-{marking.ID}")))
         {
+            // Arcane: the still row controls both versions; retain standalone animations without an available still row.
+            if (_markingManager.TryGetStillMarking(marking.ID, out var still) && _allMarkings.ContainsKey(still))
+                continue;
+
             var item = new LayerMarkingItem(_markingsModel, _organ, _layer, marking, true);
             Items.AddChild(item);
         }
@@ -108,6 +114,6 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     {
         base.Resized();
 
-        Items.Columns = (int)(Width / _columnWidth);
+        Items.Columns = Math.Max(1, (int)(Width / _columnWidth)); // Arcane: the initial/narrow layout still needs one column.
     }
 }
