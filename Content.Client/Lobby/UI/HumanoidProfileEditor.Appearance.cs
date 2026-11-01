@@ -200,6 +200,10 @@ public sealed partial class HumanoidProfileEditor
         for (var i = 0; i < _species.Count; i++)
         {
             var name = Loc.GetString(_species[i].Name);
+            // Arcane-Start: mark sponsor-only species
+            if (_species[i].SponsorOnly)
+                name += " " + Loc.GetString("sponsor-only-text");
+            // Arcane-End
             SpeciesButton.AddItem(name, i);
 
             if (Profile?.Species.Equals(_species[i].ID) == true)

@@ -28,6 +28,7 @@ using Robust.Shared.Utility;
 using Robust.Shared;
 using YamlDotNet.RepresentationModel;
 using Content.Arcane.Common.Preferences; // Arcane
+using Content.Arcane.Common.Sponsors; // Arcane
 
 namespace Content.Shared.Preferences
 {
@@ -697,7 +698,7 @@ namespace Content.Shared.Preferences
             return Appearance.Equals(other.Appearance);
         }
 
-        public void EnsureValid(ICommonSession session, IDependencyCollection collection)
+        public void EnsureValid(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var configManager = collection.Resolve<IConfigurationManager>();
             var prototypeManager = collection.Resolve<IPrototypeManager>();
@@ -707,6 +708,14 @@ namespace Content.Shared.Preferences
                 Species = HumanoidCharacterProfile.DefaultSpecies;
                 speciesPrototype = prototypeManager.Index(Species);
             }
+
+            // Arcane-Start: reset sponsor-only species for non-sponsors
+            if (speciesPrototype.SponsorOnly && (sponsorPrototypes == null || !sponsorPrototypes.Contains(Species.Id)))
+            {
+                Species = HumanoidCharacterProfile.DefaultSpecies;
+                speciesPrototype = prototypeManager.Index(Species);
+            }
+            // Arcane-End
 
             var sex = Sex switch
             {
@@ -776,7 +785,7 @@ namespace Content.Shared.Preferences
             var extendedFlavor = ExtendedFlavor.Validated(configManager);
             // Arcane-Edit-End
 
-            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
+            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex, sponsorPrototypes); // Arcane-Edit: added sponsorPrototypes
 
             var prefsUnavailableMode = PreferenceUnavailable switch
             {
@@ -911,10 +920,10 @@ namespace Content.Shared.Preferences
             return result;
         }
 
-        public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection)
+        public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var profile = new HumanoidCharacterProfile(this);
-            profile.EnsureValid(session, collection);
+            profile.EnsureValid(session, collection, sponsorPrototypes);
             return profile;
         }
 
@@ -1049,7 +1058,7 @@ namespace Content.Shared.Preferences
             }
 
             var collection = IoCManager.Instance;
-            profile.EnsureValid(session, collection!);
+            profile.EnsureValid(session, collection!, SponsorPrototypes.Get(session, collection)); // Arcane-Edit: resolve sponsor prototypes on import
             return profile;
         }
     }
