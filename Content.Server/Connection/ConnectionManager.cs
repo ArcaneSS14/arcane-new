@@ -18,6 +18,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
+using Content.Goobstation.Common.CCVar; // Arcane
 
 /*
  * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
@@ -29,6 +30,11 @@ namespace Content.Server.Connection
     {
         void Initialize();
         void PostInit();
+
+        // Arcane-Start
+        /// <summary>Checks existing Trauma soft-cap exemptions. Other connection checks still apply.</summary>
+        Task<bool> HasPrivilegedJoin(NetUserId user);
+        // Arcane-End
 
         /// <summary>
         /// Temporarily allow a user to bypass regular connection requirements.
@@ -297,13 +303,17 @@ namespace Content.Server.Connection
                             status == PlayerGameStatus.JoinedGame;
             var adminBypass = _cfg.GetCVar(CCVars.AdminBypassMaxPlayers) && adminData != null;
             var softPlayerCount = _plyMgr.PlayerCount;
+            // Arcane-Start
+            if (_cfg.GetCVar(GoobCVars.QueueEnabled) && _ticker != null)
+                softPlayerCount = _ticker.AdmittedPlayerCount;
+            // Arcane-End
 
             if (!_cfg.GetCVar(CCVars.AdminsCountForMaxPlayers))
             {
                 softPlayerCount -= _adminManager.ActiveAdmins.Count();
             }
 
-            if ((softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass) && !wasInGame)
+            if ((softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass) && !wasInGame && !_cfg.GetCVar(GoobCVars.QueueEnabled)) // Arcane-Edit: defer only Full to the enabled content queue
             {
                 return (ConnectionDenyReason.Full, Loc.GetString("soft-player-cap-full"), null);
             }
