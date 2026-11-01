@@ -178,8 +178,9 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
         {
             _hasQueueRows = true;
             _refreshTimer = RefreshInterval;
-            RefreshQueueRows();
         }
+
+        RefreshQueueRows();
     }
 
     private void RefreshQueueRows()
