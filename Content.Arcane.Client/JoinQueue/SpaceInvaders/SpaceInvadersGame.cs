@@ -383,7 +383,7 @@ public sealed class SpaceInvadersGame
 
     private bool TryHitCore(Bullet bullet)
     {
-        if (!Overlaps(bullet.X, bullet.Y, 4f, 10f, CoreX, CoreY, 44f, 28f))
+        if (CoreHealth <= 0 || !Overlaps(bullet.X, bullet.Y, 4f, 10f, CoreX, CoreY, 44f, 28f))
             return false;
 
         CoreHealth--;
