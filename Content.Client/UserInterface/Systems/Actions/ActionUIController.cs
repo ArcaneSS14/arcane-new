@@ -654,7 +654,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         }
 
         if (updateSlots)
-            _container?.SetActionData(_actionsSystem, _actions.ToArray());
+            OnActionsUpdated(); // Arcane-Edit: keep pinned positions after ordinary slot edits
     }
 
     private void DragAction()
@@ -685,7 +685,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             SetAction(dragged, swapAction, false);
 
         if (_actionsSystem != null)
-            _container?.SetActionData(_actionsSystem, _actions.ToArray());
+            OnActionsUpdated(); // Arcane-Edit: reconcile pins after ordinary drag/drop
 
         _menuDragHelper.EndDrag();
     }

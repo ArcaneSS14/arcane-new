@@ -18,6 +18,7 @@ using Robust.Shared.Input;
 using Robust.Shared.Map;
 using Robust.Client.Input;
 using Content.Arcane.Shared.Actions;
+using Content.Shared.Actions;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -246,6 +247,44 @@ public sealed class ActionBarPortTest : InteractionTest
         await FlushPinRequest();
         await Server.WaitAssertion(() => Assert.That(ServerSession!.ContentData()!.PinnedActions["ActionToggleLight"], Is.EqualTo(3)));
         await Client.WaitAssertion(() => Assert.That(CEntMan.System<PinnedActionsSystem>().GetPosition("ActionToggleLight"), Is.EqualTo(3)));
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", false));
+        await FlushPinRequest();
+    }
+
+    [Test]
+    public async Task RemovingAnEarlierButtonKeepsThePinnedIndexAndHotkey()
+    {
+        var flashlight = await PlaceInHands("FlashlightLantern");
+        await Server.WaitPost(() =>
+        {
+            EntityUid? extra = null;
+            EntProtoId prototype = "ActionToggleInternals";
+            Assert.That(SEntMan.System<SharedActionsSystem>().AddAction(SPlayer, ref extra, prototype.Id, SPlayer), Is.True);
+        });
+        await Pair.RunUntilSynced();
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true, 7));
+        await FlushPinRequest();
+        Content.Client.UserInterface.Systems.Actions.Controls.ActionButton earlier = null!;
+        EntityUid? pinned = null;
+        string? hotkey = null;
+        await Client.WaitAssertion(() =>
+        {
+            var ui = Client.ResolveDependency<IUserInterfaceManager>();
+            var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>()!;
+            pinned = bar.ActionsContainer[7].Action;
+            hotkey = bar.ActionsContainer[7].Label.Text;
+            Assert.That(pinned, Is.Not.Null);
+            Assert.That(CEntMan.GetComponent<ActionComponent>(pinned!.Value).Container, Is.EqualTo(ToClient(flashlight)));
+            earlier = bar.ActionsContainer.GetButtons().Take(7).First(button => button.Action != null
+                && !ui.GetUIController<ActionBarUIController>().IsPinned(button.Action.Value));
+        });
+        await ClickControl(earlier, EngineKeyFunctions.UIRightClick);
+        await Client.WaitAssertion(() =>
+        {
+            var bar = Client.ResolveDependency<IUserInterfaceManager>().GetActiveUIWidgetOrNull<ActionsBar>()!;
+            Assert.That(bar.ActionsContainer[7].Action?.Owner, Is.EqualTo(pinned));
+            Assert.That(bar.ActionsContainer[7].Label.Text, Is.EqualTo(hotkey));
+        });
         await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", false));
         await FlushPinRequest();
     }
