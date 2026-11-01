@@ -1,0 +1,9 @@
+arcane-actions-settings = Actions bar
+arcane-actions-lock-drag = Only drag actions while the actions menu is open
+arcane-actions-free-placement = Allow free placement of the actions bar and hotbar buttons
+arcane-actions-reset-layout = Reset action layout
+arcane-actions-reset-layout-tooltip = Return the actions bar and every hotbar button to their default positions.
+arcane-actions-bar-drag-handle-tooltip = Drag to move the actions bar. Drop a detached button near the bar to return it. Hold Shift while dropping a button to clear its slot. Right click to reset the layout.
+arcane-action-pinned = Pinned. Middle click to unpin.
+arcane-action-pinned-unavailable = Pinned, currently unavailable. Middle click to unpin.
+ui-options-function-toggle-action-pin = Pin action on the hotbar

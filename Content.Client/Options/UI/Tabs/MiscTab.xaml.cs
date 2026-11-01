@@ -12,12 +12,14 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared;
 using Robust.Shared.Prototypes;
+using Robust.Client.UserInterface.Controls; // Arcane
 
 namespace Content.Client.Options.UI.Tabs;
 
 [GenerateTypedNameReferences]
 public sealed partial class MiscTab : Control
 {
+    public static event Action<MiscTab, BoxContainer>? PopulateOptions; // Arcane
     // <Trauma>
     [Dependency] private ILinkAccountManager _linkAccount = default!;
     //[Dependency] private IPlayerManager _playerManager = default!; // no longer used
@@ -67,6 +69,7 @@ public sealed partial class MiscTab : Control
         Control.AddOptionCheckBox(CCVars.StaticStorageUI, StaticStorageUI);
         Control.AddOptionCheckBox(CCVars.InterfaceChatFollowButton, ChatFollowButton);
 
+        PopulateOptions?.Invoke(this, OptionsList); // Arcane
         Control.Initialize();
     }
 }

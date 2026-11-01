@@ -1,5 +1,11 @@
 version: 1 # Not used right now, whatever.
 binds:
+# Arcane-Start
+- function: ToggleActionPin
+  type: State
+  key: MouseMiddle
+  canFocus: true
+# Arcane-End
 # <Trauma>
 - function: NetBandwidth
   type: State

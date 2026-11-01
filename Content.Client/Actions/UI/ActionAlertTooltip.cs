@@ -15,6 +15,7 @@ namespace Content.Client.Actions.UI
 
         private readonly RichTextLabel _cooldownLabel;
         private readonly IGameTiming _gameTiming;
+        private readonly BoxContainer _content; // Arcane
 
         /// <summary>
         /// Current cooldown displayed in this tooltip. Set to null to show no cooldown.
@@ -34,6 +35,7 @@ namespace Content.Client.Actions.UI
                 Orientation = LayoutOrientation.Vertical,
                 RectClipContent = true
             });
+            _content = vbox; // Arcane
             var nameLabel = new RichTextLabel
             {
                 MaxWidth = TooltipTextMaxWidth,
@@ -76,6 +78,18 @@ namespace Content.Client.Actions.UI
                 vbox.AddChild(requiresLabel);
             }
         }
+
+        // Arcane-Start
+        /// <summary>
+        /// Adds presentation hints while retaining the tooltip's dynamic examine text and cooldown.
+        /// </summary>
+        public void AddFooter(string text)
+        {
+            var footer = new RichTextLabel { MaxWidth = TooltipTextMaxWidth, StyleClasses = { StyleClass.TooltipDesc } };
+            footer.SetMessage(FormattedMessage.FromUnformatted(text));
+            _content.AddChild(footer);
+        }
+        // Arcane-End
 
         protected override void FrameUpdate(FrameEventArgs args)
         {
