@@ -97,10 +97,8 @@ public sealed partial class GyrussControl : QueueMiniGameControl
         QueueMiniGameDrawHelpers.UpdateParticles(_particles, args.DeltaSeconds);
     }
 
-    protected override void Draw(DrawingHandleScreen handle)
+    protected override void DrawGame(DrawingHandleScreen handle)
     {
-        base.Draw(handle);
-
         var gw = GyrussGame.GameW;
         var gh = GyrussGame.GameH;
 

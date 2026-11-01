@@ -122,10 +122,8 @@ public sealed partial class GoGoShitcurityControl : QueueMiniGameControl
         QueueMiniGameDrawHelpers.UpdateParticles(_particles, args.DeltaSeconds);
     }
 
-    protected override void Draw(DrawingHandleScreen handle)
+    protected override void DrawGame(DrawingHandleScreen handle)
     {
-        base.Draw(handle);
-
         var gw = GoGoShitcurityGame.GameW;
         var gh = GoGoShitcurityGame.GameH;
 
@@ -210,7 +208,7 @@ public sealed partial class GoGoShitcurityControl : QueueMiniGameControl
         if (_game.ShieldCharges <= 0)
             return;
 
-        var shield = new Color(90, 185, 255, 65 + _game.ShieldCharges * 35);
+        var shield = new Color(90, 185, 255, (byte) (65 + _game.ShieldCharges * 35));
         handle.DrawRect(new UIBox2(x - 5f, y - 5f, x + size + 5f, y + size + 5f), shield, false);
     }
 

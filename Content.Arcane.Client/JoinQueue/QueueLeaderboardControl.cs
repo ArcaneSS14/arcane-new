@@ -236,11 +236,6 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
 
 internal static class QueueLeaderboardRows
 {
-    public static BoxContainer MakeRow(string name, string value, out Label valueLabel, float valueWidth = 56f)
-    {
-        return MakeRow(name, value, out valueLabel, out _, valueWidth);
-    }
-
     public static BoxContainer MakeRow(string name, string value, out Label valueLabel, out Label nameLabel, float valueWidth = 56f)
     {
         var row = new BoxContainer

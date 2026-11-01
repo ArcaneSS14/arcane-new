@@ -1,3 +1,5 @@
+using System.Numerics;
+using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Client.UserInterface;
 using Robust.Shared.Timing;
@@ -29,6 +31,24 @@ public abstract partial class QueueMiniGameControl : Control, IQueueMiniGameScor
 
     protected abstract void UpdateRunningGame(FrameEventArgs args, bool space);
 
+    protected abstract void DrawGame(DrawingHandleScreen handle);
+
+    protected sealed override void Draw(DrawingHandleScreen handle)
+    {
+        base.Draw(handle);
+
+        var previous = handle.GetTransform();
+        handle.SetTransform(Matrix3x2.CreateScale(UIScale) * previous);
+        try
+        {
+            DrawGame(handle);
+        }
+        finally
+        {
+            handle.SetTransform(previous);
+        }
+    }
+
     protected virtual void UpdateIdleGame(FrameEventArgs args)
     {
     }
@@ -42,7 +62,22 @@ public abstract partial class QueueMiniGameControl : Control, IQueueMiniGameScor
     }
 
     protected bool IsKeyDown(Keyboard.Key key)
-        => _input.IsKeyDown(key);
+        => HasGameKeyboardFocus() && _input.IsKeyDown(key);
+
+    private bool HasGameKeyboardFocus()
+    {
+        var focused = UserInterfaceManager.KeyboardFocused;
+        if (focused == null)
+            return true;
+
+        for (var control = focused; control != null; control = control.Parent)
+        {
+            if (control == this)
+                return true;
+        }
+
+        return false;
+    }
 
     protected void RaiseBulletFired()
         => BulletFired?.Invoke();
@@ -57,10 +92,14 @@ public abstract partial class QueueMiniGameControl : Control, IQueueMiniGameScor
     {
         base.FrameUpdate(args);
 
+        var heldSpace = _input.IsKeyDown(Keyboard.Key.Space);
         if (!VisibleInTree)
+        {
+            _wasSpace = heldSpace;
             return;
+        }
 
-        var space = IsKeyDown(Keyboard.Key.Space);
+        var space = HasGameKeyboardFocus() && heldSpace;
         var pressedSpace = space && !_wasSpace;
 
         if (!_started)
@@ -82,7 +121,7 @@ public abstract partial class QueueMiniGameControl : Control, IQueueMiniGameScor
 
         UpdateSharedGame(args);
         ReportFinalScore();
-        _wasSpace = space;
+        _wasSpace = heldSpace;
     }
 
     private void StartOrResetGame()

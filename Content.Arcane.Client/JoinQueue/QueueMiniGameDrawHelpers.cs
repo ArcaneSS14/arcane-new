@@ -61,7 +61,7 @@ internal static class QueueMiniGameDrawHelpers
     public static void DrawArcadeFrame(DrawingHandleScreen handle, float width, float height, float time)
     {
         var pulse = 0.55f + MathF.Sin(time * 4.5f) * 0.18f;
-        var glow = new Color(255, 205, 105, 45 + (int)(pulse * 35f));
+        var glow = new Color(255, 205, 105, (byte) (45 + (int) (pulse * 35f)));
         handle.DrawRect(new UIBox2(0, 0, width, height), glow, false);
         handle.DrawRect(new UIBox2(1, 1, width - 1, height - 1), FrameOuter, false);
         handle.DrawRect(new UIBox2(4, 4, width - 4, height - 4), FrameInner, false);

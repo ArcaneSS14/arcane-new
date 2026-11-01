@@ -172,7 +172,7 @@ public sealed partial class QueueCritterWalk : LayoutContainer
             QueueIndex = queueIndex,
             ZoneStart = zoneStart,
             ZoneEnd = zoneEnd,
-            FacingDirection = RsiDirection.East,
+            FacingDirection = Critter.GetRsiDirection(1, Critter.GetActiveState(idleState, movingState, true)),
             IdleState = idleState,
             MovingState = movingState,
             CurFrame = 0,
@@ -182,6 +182,7 @@ public sealed partial class QueueCritterWalk : LayoutContainer
             Box = box,
         };
 
+        critter.UpdateSpriteFrame();
         UpdateNameLabelStyle(critter);
         SetPosition(box, new Vector2(OffScreenSpawn, 0));
 
@@ -219,7 +220,11 @@ public sealed partial class QueueCritterWalk : LayoutContainer
 
         foreach (var (name, critter) in _critters)
         {
-            if (!critter.Leaving && _totalPlayers > 0)
+            if (critter.Leaving)
+            {
+                critter.TargetX = Width + SpriteDisplaySize;
+            }
+            else if (_totalPlayers > 0)
             {
                 var reversedIndex = _totalPlayers - 1 - critter.QueueIndex;
                 critter.ZoneStart = (float) reversedIndex / _totalPlayers * usableWidth;
@@ -236,9 +241,13 @@ public sealed partial class QueueCritterWalk : LayoutContainer
                 critter.XPosition += direction * Math.Min(step, Math.Abs(dx));
 
                 var activeState = Critter.GetActiveState(critter.IdleState, critter.MovingState, true);
-                critter.FacingDirection = Critter.GetRsiDirection(direction, activeState);
+                var facing = Critter.GetRsiDirection(direction, activeState);
+                var turned = critter.FacingDirection != facing;
+                critter.FacingDirection = facing;
 
                 critter.SetMoving(true);
+                if (turned)
+                    critter.UpdateSpriteFrame();
             }
             else if (!critter.Leaving)
             {
