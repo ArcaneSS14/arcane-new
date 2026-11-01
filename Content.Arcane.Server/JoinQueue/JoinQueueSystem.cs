@@ -54,6 +54,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
 
     internal int PlayerInQueueCount => _queue.Entries.Count(e => e.Session != null);
     internal int ActualPlayersCount => _players.Sessions.Count(IsAdmitted);
+    internal double AverageQueueWait => _recentWaits.Count > 0 ? _recentWaits.Average() : -1;
 
     public override void Initialize()
     {
@@ -143,7 +144,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
         if (!_queue.MarkReady(session.UserId, session))
             return;
         if (privileged && _queue.Remove(session.UserId, session, out var entry))
-            Admit(entry);
+            Admit(entry, countTowardsEstimate: false);
         ProcessQueue();
     }
 
@@ -210,7 +211,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var maximum = Math.Max(0, _cfg.GetCVar(CCVars.SoftMaxPlayers));
         while (count < maximum && _queue.TryTake(out var entry))
         {
-            if (entry.Session is not { } session || !IsCurrentConnected(session) || !Admit(entry))
+            if (entry.Session is not { } session || !IsCurrentConnected(session) || !Admit(entry, countTowardsEstimate: true))
                 continue;
             if (_cfg.GetCVar(CCVars.AdminsCountForMaxPlayers) || !_admins.IsAdmin(session))
                 count++;
@@ -218,7 +219,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
         SendUpdates();
     }
 
-    private bool Admit(JoinQueueState<ICommonSession>.Entry entry)
+    private bool Admit(JoinQueueState<ICommonSession>.Entry entry, bool countTowardsEstimate)
     {
         if (entry.Session is not { } session || !IsCurrentConnected(session)
             || _pending.TryGetValue(session.UserId, out var existing) && ReferenceEquals(existing, session))
@@ -226,9 +227,12 @@ public sealed partial class JoinQueueSystem : EntitySystem
 
         var waited = WaitSeconds(entry);
         RecordWait(entry);
-        _recentWaits.Enqueue(waited);
-        while (_recentWaits.Count > 20)
-            _recentWaits.Dequeue();
+        if (countTowardsEstimate)
+        {
+            _recentWaits.Enqueue(waited);
+            while (_recentWaits.Count > 20)
+                _recentWaits.Dequeue();
+        }
         ClearScores(session.UserId);
         _pending[session.UserId] = session;
         Timer.Spawn(0, () =>
@@ -279,9 +283,9 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var names = entries.Select(e => e.Session!.Name).Take(1000).ToList();
         var waits = entries.Take(1000).Select(e => (float) WaitSeconds(e)).ToList();
         var board = BuildScores();
-        var average = _recentWaits.Count > 0 ? _recentWaits.Average() : -1;
+        var average = AverageQueueWait;
         var preset = _ticker.CurrentPreset ?? _ticker.Preset;
-        var mode = preset == null ? string.Empty : Loc.GetString(preset.ModeTitle);
+        var mode = preset == null ? string.Empty : preset.ModeTitle.Id;
         var elapsed = _ticker.RunLevel >= GameRunLevel.InRound
             ? (int) (_timing.CurTime - _ticker.RoundStartTimeSpan).TotalMinutes : 0;
         var mapName = _maps.GetSelectedMap()?.MapName ?? string.Empty;

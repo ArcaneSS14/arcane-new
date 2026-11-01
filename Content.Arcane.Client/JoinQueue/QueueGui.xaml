@@ -17,7 +17,7 @@
                                                  Margin="12 8" />
     </Control>
 
-    <Control HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Control Name="QueueCenterPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
         <PanelContainer StyleClasses="AngleRect" />
         <BoxContainer Orientation="Vertical" MinSize="300 0" Margin="12 8">
             <!-- Header -->

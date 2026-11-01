@@ -171,11 +171,9 @@ public sealed partial class ServerGameTicker
         var status = ready ? PlayerGameStatus.ReadyToPlay : PlayerGameStatus.NotReadyToPlay;
         foreach (var playerUserId in _playerGameStatuses.Keys)
         {
-            // Arcane-Edit-Start: only admitted sessions participate in round readiness.
-            if (!_playerManager.TryGetSessionById(playerUserId, out var playerSession) || playerSession.Status != SessionStatus.InGame)
+            if (!_playerManager.TryGetSessionById(playerUserId, out var playerSession) || playerSession.Status != SessionStatus.InGame) // Arcane-Edit: only admitted sessions participate in round readiness.
                 continue;
-            _playerGameStatuses[playerUserId] = status;
-            // Arcane-Edit-End
+            _playerGameStatuses[playerUserId] = status; // Arcane-Edit: moved after the admitted-session check.
             RaiseNetworkEvent(GetStatusMsg(playerSession), playerSession.Channel);
         }
     }
