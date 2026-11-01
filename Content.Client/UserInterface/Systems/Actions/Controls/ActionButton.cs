@@ -17,7 +17,8 @@ using Direction = Robust.Shared.Maths.Direction;
 
 namespace Content.Client.UserInterface.Systems.Actions.Controls;
 
-public sealed class ActionButton : Control, IEntityControl
+[Virtual] // Arcane
+public class ActionButton : Control, IEntityControl // Arcane-Edit: sealed > extensible slot presentation
 {
     public const string StyleClassActionHighlightRect = "ActionHighlightRect";
 
@@ -308,15 +309,15 @@ public sealed class ActionButton : Control, IEntityControl
         return true;
     }
 
-    public void UpdateData(EntityUid? actionId, ActionsSystem system)
+    public virtual void UpdateData(EntityUid? actionId, ActionsSystem system) // Arcane-Edit
     {
-        Action = system.GetAction(actionId);
+        Action = system.GetAction(actionId, logError: false); // Arcane-Edit: unavailable slots may outlive their actions
 
         Label.Visible = Action != null;
         UpdateIcons();
     }
 
-    public void ClearData()
+    public virtual void ClearData() // Arcane-Edit
     {
         Action = null;
         Cooldown.Visible = false;

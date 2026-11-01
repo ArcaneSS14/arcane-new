@@ -78,6 +78,13 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     public bool IsDragging => _menuDragHelper.IsDragging;
 
+    // Arcane-Start
+    public IActionBarCustomization? Customization { get; set; }
+    public bool IsActionsMenuOpen => _window is { IsOpen: true };
+
+    public void RefreshSlots() => OnActionsUpdated();
+    // Arcane-End
+
     /// <summary>
     /// Action slot we are currently selecting a target for.
     /// </summary>
@@ -267,6 +274,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
     private void TriggerAction(int index)
     {
         if (!_actions.TryGetValue(index, out var actionId) ||
+            actionId is { } slot && Customization?.IsUnavailable(slot) == true || // Arcane
             _actionsSystem?.GetAction(actionId) is not {} action)
         {
             return;
@@ -407,6 +415,10 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             if (_actions.FirstOrDefault(x => IdsEqual(x, savedAction)) is { } action)
             {
                 newActions.Add(action);
+                // Arcane-Start
+                if (savedAction is { } previous)
+                    Customization?.RemapSlot(previous, action);
+                // Arcane-End
             }
         }
         var addedActions = _actions.Except(newActions);
@@ -427,6 +439,11 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (action.Comp.Toggled && EntityManager.TryGetComponent<TargetActionComponent>(actionId, out var target))
             StartTargeting((action, action, target));
 
+        // Arcane-Start
+        if (Customization?.TryRestoreSlot(action, _actions) == true)
+            return;
+        // Arcane-End
+
         if (_actions.Contains(action))
             return;
 
@@ -441,11 +458,20 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (actionId == SelectingTargetFor)
             StopTargeting();
 
+        // Arcane-Start
+        if (Customization?.KeepRemovedSlot(actionId) == true)
+            return;
+        // Arcane-End
         _actions.RemoveAll(x => x == actionId);
     }
 
     private void OnActionsUpdated()
     {
+        // Arcane-Start
+        Customization?.UpdateSlots(_actions);
+        if (SelectingTargetFor is { } action && Customization?.IsUnavailable(action) == true)
+            StopTargeting();
+        // Arcane-End
         QueueWindowUpdate();
 
         if (_actionsSystem != null)
@@ -628,7 +654,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         }
 
         if (updateSlots)
-            _container?.SetActionData(_actionsSystem, _actions.ToArray());
+            OnActionsUpdated(); // Arcane-Edit: keep pinned positions after ordinary slot edits
     }
 
     private void DragAction()
@@ -641,6 +667,14 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         EntityUid? swapAction = null;
         var currentlyHovered = UIManager.MouseGetControl(_input.MouseScreenPosition);
+        // Arcane-Start
+        if (Customization?.HandleDrop(dragged, currentlyHovered, UIManager.MousePositionScaled.Position, _actions) == true)
+        {
+            OnActionsUpdated();
+            _menuDragHelper.EndDrag();
+            return;
+        }
+        // Arcane-End
         if (currentlyHovered is ActionButton button)
         {
             swapAction = button.Action;
@@ -651,7 +685,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             SetAction(dragged, swapAction, false);
 
         if (_actionsSystem != null)
-            _container?.SetActionData(_actionsSystem, _actions.ToArray());
+            OnActionsUpdated(); // Arcane-Edit: reconcile pins after ordinary drag/drop
 
         _menuDragHelper.EndDrag();
     }
@@ -701,6 +735,14 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void OnActionPressed(GUIBoundKeyEventArgs args, ActionButton button)
     {
+        // Arcane-Start
+        if (Customization?.HandlePressed(args, button, _actions) == true)
+        {
+            args.Handle();
+            OnActionsUpdated();
+            return;
+        }
+        // Arcane-End
         if (args.Function == EngineKeyFunctions.UIRightClick)
         {
             SetAction(button, null);
@@ -719,7 +761,10 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         args.Handle();
         if (button.Action != null)
         {
-            _menuDragHelper.MouseDown(button);
+            // Arcane-Edit-Start
+            if (Customization?.CanDrag != false)
+                _menuDragHelper.MouseDown(button);
+            // Arcane-Edit-End
             return;
         }
 
@@ -749,7 +794,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         _menuDragHelper.EndDrag();
 
-        if (button.Action is not {} action)
+        if (button.Action is not {} action || Customization?.IsUnavailable(action) == true) // Arcane-Edit
             return;
 
         // TODO: make this an event
@@ -796,6 +841,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private bool OnMenuContinueDrag(float frameTime)
     {
+        Customization?.UpdateDragHint(_menuDragHelper.Dragged, UIManager.MousePositionScaled.Position); // Arcane
         LayoutContainer.SetPosition(_dragShadow, UIManager.MousePositionScaled.Position - new Vector2(32, 32));
         _dragShadow.Visible = true;
         return true;
@@ -803,6 +849,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void OnMenuEndDrag()
     {
+        Customization?.UpdateDragHint(null, Vector2.Zero); // Arcane
         _dragShadow.Texture = null;
         _dragShadow.Visible = false;
         UpdateActionBarBackgrounds();
@@ -878,6 +925,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void ClearActions()
     {
+        Customization?.ClearSlots(_actions); // Arcane
         _container?.ClearActionData();
     }
 
@@ -886,12 +934,14 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actionsSystem == null)
             return;
 
+        Customization?.ClearSlots(_actions); // Arcane
         _actions.Clear();
         foreach (var assign in assignments)
         {
             _actions.Add(assign.ActionId);
         }
 
+        Customization?.UpdateSlots(_actions); // Arcane
         _container?.SetActionData(_actionsSystem, _actions.ToArray());
     }
 
@@ -977,12 +1027,14 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             return;
 
         LoadDefaultActions();
-        _container?.SetActionData(_actionsSystem, _actions.ToArray());
-        QueueWindowUpdate();
+        // Arcane-Edit-Start: reconcile pins when a new body links its actions
+        OnActionsUpdated();
+        // Arcane-Edit-End
     }
 
     private void OnComponentUnlinked()
     {
+        Customization?.ClearSlots(_actions); // Arcane
         _container?.ClearActionData();
         QueueWindowUpdate();
         StopTargeting();
@@ -996,6 +1048,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         var actions = _actionsSystem.GetClientActions().Where(action => action.Comp.AutoPopulate).ToList();
         actions.Sort(ActionComparer);
 
+        Customization?.ClearSlots(_actions); // Arcane
         _actions.Clear();
         foreach (var (action, _) in actions)
         {
