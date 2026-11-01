@@ -1,0 +1,61 @@
+<!-- Arcane-Start -->
+<tabs:CustomizationTab xmlns="https://spacestation14.io"
+                       xmlns:tabs="clr-namespace:Content.Client.Options.UI.Tabs"
+                       xmlns:ui="clr-namespace:Content.Client.Options.UI">
+    <BoxContainer Orientation="Vertical">
+        <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
+            <BoxContainer Orientation="Vertical" Margin="8">
+                <CheckBox Name="UseRunechat"
+                          Text="{Loc 'ui-options-runechat'}"/>
+                <ui:OptionDropDown Name="RunechatFontDropDown"
+                                   Title="{Loc 'ui-options-runechat-font'}"/>
+                <Label Name="RunechatFontPreview" Margin="0 0 0 5"/>
+                <ui:OptionSlider Name="RunechatFontSizeSlider"
+                                 Title="{Loc 'ui-options-runechat-font-size'}"/>
+                <ui:OptionDropDown Name="RunechatWhisperFontDropDown"
+                                   Title="{Loc 'ui-options-runechat-whisper-font'}"/>
+                <Label Name="RunechatWhisperFontPreview" Margin="0 0 0 5"/>
+                <ui:OptionSlider Name="RunechatWhisperFontSizeSlider"
+                                 Title="{Loc 'ui-options-runechat-whisper-font-size'}"/>
+                <CheckBox Name="UseRunechatOutline"
+                          Text="{Loc 'ui-options-runechat-outline'}"/>
+                <CheckBox Name="UseRandomRunechatColors"
+                          Text="{Loc 'ui-options-runechat-random-colors'}"/>
+                <ui:OptionColorSlider Name="RunechatColorSlider"
+                                      Title="{Loc 'ui-options-runechat-color'}"
+                                      Example="{Loc 'ui-options-runechat-color-example'}"/>
+                <CheckBox Name="UseRunechatTypingAnimation"
+                          Text="{Loc 'ui-options-runechat-typing-animation'}"/>
+                <ui:OptionSlider Name="RunechatTypingSpeedSlider"
+                                 Title="{Loc 'ui-options-runechat-typing-speed'}"/>
+                <ui:OptionSlider Name="RunechatPostTypingLifetimeSlider"
+                                 Title="{Loc 'ui-options-runechat-post-typing-lifetime'}"/>
+
+                <Label Text="{Loc 'ui-options-radio-channel-colors-header'}"
+                       StyleClasses="LabelKeyText"/>
+                <CheckBox Name="UseCustomRadioChannelColors"
+                          Text="{Loc 'ui-options-use-custom-radio-channel-colors'}"/>
+                <Collapsible Margin="0 5">
+                    <CollapsibleHeading Title="{Loc 'ui-options-radio-channel-colors-expand'}" DefaultCursorShape="Hand"/>
+                    <CollapsibleBody Margin="10 0 0 0">
+                        <BoxContainer Name="RadioChannelColorsContainer" Orientation="Vertical"/>
+                    </CollapsibleBody>
+                </Collapsible>
+
+                <Label Text="{Loc 'ui-options-interaction-outline-header'}"
+                       StyleClasses="LabelKeyText"
+                       Margin="0 10 0 0"/>
+                <CheckBox Name="UseCustomInteractionOutlineColors"
+                          Text="{Loc 'ui-options-use-custom-interaction-outline-color'}"/>
+                <ui:OptionColorSlider Name="ValidInteractionOutlineColorSlider"
+                                      Title="{Loc 'ui-options-interaction-outline-color-valid'}"
+                                      Example="{Loc 'ui-options-interaction-outline-color-example'}"/>
+                <ui:OptionColorSlider Name="InvalidInteractionOutlineColorSlider"
+                                      Title="{Loc 'ui-options-interaction-outline-color-invalid'}"
+                                      Example="{Loc 'ui-options-interaction-outline-color-example'}"/>
+            </BoxContainer>
+        </ScrollContainer>
+        <ui:OptionsTabControlRow Name="Control" Access="Public" />
+    </BoxContainer>
+</tabs:CustomizationTab>
+<!-- Arcane-End -->

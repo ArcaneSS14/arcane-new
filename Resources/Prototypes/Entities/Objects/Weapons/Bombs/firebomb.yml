@@ -37,6 +37,9 @@
   - type: RandomTimerTrigger
     min: 1 # Trauma 0 > 1
     max: 5 # Trauma 15 > 5
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive # Weak explosion in a very small radius. Ignites surrounding entities.
     explosionType: FireBomb
     totalIntensity: 25

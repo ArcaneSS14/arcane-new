@@ -164,6 +164,14 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
             explosive.CanCreateVacuum,
             user);
 
+        // Arcane-Start
+        if (totalIntensity > 0 && explosive.IntensitySlope > 0 && ProtoMan.HasIndex(explosive.ExplosionType))
+        {
+            var ev = new ExplosiveTriggeredEvent();
+            RaiseLocalEvent(uid, ref ev);
+        }
+        // Arcane-End
+
         if (explosive.DeleteAfterExplosion ?? delete)
             QueueDel(uid);
     }

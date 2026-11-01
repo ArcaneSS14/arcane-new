@@ -242,6 +242,7 @@ public sealed partial class EncryptionKeySystem : EntitySystem
 
             examineEvent.PushMarkup(Loc.GetString(channelFTLPattern,
                 ("color", proto.Color),
+                ("channelId", proto.ID), // Arcane
                 ("key", key),
                 ("id", proto.LocalizedName),
                 ("freq", proto.Frequency),
@@ -255,6 +256,7 @@ public sealed partial class EncryptionKeySystem : EntitySystem
                 var msg = Loc.GetString("examine-headset-default-channel",
                 ("prefix", SharedChatSystem.DefaultChannelPrefix),
                 ("channel", proto.LocalizedName),
+                ("channelId", proto.ID), // Arcane
                 ("color", proto.Color));
                 examineEvent.PushMarkup(msg);
             }
@@ -262,6 +264,7 @@ public sealed partial class EncryptionKeySystem : EntitySystem
             {
                 var msg = Loc.GetString("examine-encryption-default-channel",
                 ("channel", proto.LocalizedName),
+                ("channelId", proto.ID), // Arcane
                 ("color", proto.Color));
                 examineEvent.PushMarkup(msg);
             }

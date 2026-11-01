@@ -64,13 +64,16 @@ namespace Content.Client.Hands
             base.DisposeBehavior();
 
             _renderBackbuffer.Dispose();
+            DisposeArcaneCooldown(); // Arcane
         }
 
         protected override bool BeforeDraw(in OverlayDrawArgs args)
         {
-            if (!_cfg.GetCVar(CCVars.HudHeldItemShow))
-                return false;
-
+            // Arcane-Edit-Start
+            // Keep this overlay alive for the cooldown indicator when the held-item sprite is disabled.
+            // if (!_cfg.GetCVar(CCVars.HudHeldItemShow))
+            //     return false;
+            // Arcane-Edit-End
             return base.BeforeDraw(in args);
         }
 
@@ -82,6 +85,16 @@ namespace Content.Client.Hands
             if (mousePos.Window == WindowId.Invalid)
                 return;
 
+            _hands ??= _entMan.System<HandsSystem>();
+            var handEntity = _hands.GetActiveHandEntity();
+
+            DrawArcaneCooldown(args, handEntity, mousePos);
+
+            // Arcane-Start
+            if (!_cfg.GetCVar(CCVars.HudHeldItemShow))
+                return;
+            // Arcane-End
+
             var screen = args.ScreenHandle;
             var offset = _cfg.GetCVar(CCVars.HudHeldItemOffset);
             var offsetVec = new Vector2(offset, offset);
@@ -91,9 +104,6 @@ namespace Content.Client.Hands
                 screen.DrawTexture(IconOverride, mousePos.Position - IconOverride.Size / 2 + offsetVec, Color.White.WithAlpha(0.75f));
                 return;
             }
-
-            _hands ??= _entMan.System<HandsSystem>();
-            var handEntity = _hands.GetActiveHandEntity();
 
             // Goob edit start
             if (_player.LocalEntity is { } player)

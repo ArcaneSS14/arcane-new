@@ -36,6 +36,9 @@
   - type: Damageable
   - type: Injurable
     damageContainer: Inorganic
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     intensitySlope: 2

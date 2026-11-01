@@ -49,6 +49,9 @@
       - !type:ExplodeBehavior
     # the 50 damage destruction node is inherited from the parent
     # idea here is to prevent you from just beating it until it explodes.
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: DemolitionCharge
     totalIntensity: 60
@@ -78,6 +81,9 @@
     state: coilex-10
   - type: Stack
     count: 10
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive # TODO: some how make stacking logic handle the explosion scaling. Maybe also something for lingering stacks.
     explosionType: DemolitionCharge
     totalIntensity: 30
@@ -97,6 +103,9 @@
     state: coilex-10
   - type: Stack
     count: 1
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: DemolitionCharge
     totalIntensity: 10

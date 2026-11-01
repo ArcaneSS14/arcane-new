@@ -13,6 +13,9 @@
   name: disposable ballistic turret
   suffix: Syndicate, Disposable
   components:
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: NpcFactionMember
     factions:
     - Syndicate
