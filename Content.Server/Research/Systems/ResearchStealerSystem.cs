@@ -30,10 +30,10 @@ public sealed partial class ResearchStealerSystem : SharedResearchStealerSystem
         var count = _random.Next(comp.MinToSteal, comp.MaxToSteal + 1);
         for (var i = 0; i < count; i++)
         {
-            if (database.UnlockedTechnologies.Count == 0)
+            if (database.ResearchedTechnologies.Count == 0) // Arcane-Edit
                 break;
 
-            var toRemove = _random.Pick(database.UnlockedTechnologies);
+            var toRemove = _random.Pick(database.ResearchedTechnologies); // Arcane-Edit
             if (_research.TryRemoveTechnology((target, database), toRemove))
                 ev.Techs.Add(toRemove);
         }

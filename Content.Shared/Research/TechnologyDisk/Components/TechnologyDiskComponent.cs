@@ -43,4 +43,18 @@ public sealed partial class TechnologyDiskComponent : Component
         [2] = 135,
         [3] = 1000,
     };
+
+    // Arcane-Start
+    /// <summary>
+    /// Optional technology snapshot that can be imported into another network.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<TechnologyPrototype>>? StoredTechnologies;
+
+    /// <summary>
+    /// Optional point snapshot for network transfer workflows.
+    /// </summary>
+    [DataField]
+    public List<ResearchPointAmount>? StoredPointBalances;
+    // Arcane-End
 }

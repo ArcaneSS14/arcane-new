@@ -150,6 +150,17 @@ public abstract partial class SharedMaterialStorageSystem : EntitySystem
         return ent.Comp.MaterialWhiteList.Contains(material);
     }
 
+    // Arcane-Start
+    public void SetStorageLimit(EntityUid uid, int? storageLimit, MaterialStorageComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        component.StorageLimit = storageLimit;
+        Dirty(uid, component);
+    }
+    // Arcane-End
+
     /// <summary>
     /// Checks if the specified material can be changed by the specified volume.
     /// </summary>
