@@ -284,7 +284,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var waits = entries.Take(1000).Select(e => (float) WaitSeconds(e)).ToList();
         var board = BuildScores();
         var average = AverageQueueWait;
-        var preset = _ticker.CurrentPreset ?? _ticker.Preset;
+        var preset = _ticker.Decoy ?? _ticker.CurrentPreset ?? _ticker.Preset;
         var mode = preset == null ? string.Empty : preset.ModeTitle.Id;
         var elapsed = _ticker.RunLevel >= GameRunLevel.InRound
             ? (int) (_timing.CurTime - _ticker.RoundStartTimeSpan).TotalMinutes : 0;
