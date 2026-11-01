@@ -138,6 +138,8 @@ public sealed class ActionBarPortTest : InteractionTest
         var layout = ui.GetUIController<ActionsBarLayoutUIController>();
         EntityUid? action = null;
         string? hotkey = null;
+        System.Numerics.Vector2 originalBar = default;
+        System.Numerics.Vector2 detachedButton = default;
         try
         {
             await Client.WaitPost(() =>
@@ -146,6 +148,7 @@ public sealed class ActionBarPortTest : InteractionTest
                 var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>()!;
                 action = bar.ActionsContainer[0].Action;
                 hotkey = bar.ActionsContainer[0].Label.Text;
+                originalBar = bar.GlobalPosition;
                 Assert.That(bar.Parent!.Size.X, Is.GreaterThan(0));
                 Assert.That(bar.Parent.Size.Y, Is.GreaterThan(0));
                 layout.SetBarPosition(new(100000, 100000));
@@ -181,6 +184,24 @@ public sealed class ActionBarPortTest : InteractionTest
                 while (hovered != null && hovered != button)
                     hovered = hovered.Parent;
                 Assert.That(hovered, Is.SameAs(button), "A detached button must remain reachable outside the bar's flow rectangle.");
+                detachedButton = button.GlobalPosition;
+            });
+            await Client.WaitPost(() => config.SetCVar(ActionBarCVars.FreePlacement, false));
+            await Pair.ReallyBeIdle(10);
+            await Client.WaitAssertion(() =>
+            {
+                var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>()!;
+                Assert.That(System.Numerics.Vector2.Distance(bar.GlobalPosition, originalBar), Is.LessThan(1));
+                Assert.That(bar.ActionsContainer[0].GlobalPosition, Is.Not.EqualTo(detachedButton));
+                Assert.That(layout.SlotPositions.ContainsKey(0), Is.True, "Disabling free placement must retain saved coordinates.");
+            });
+            await Client.WaitPost(() => config.SetCVar(ActionBarCVars.FreePlacement, true));
+            await Pair.ReallyBeIdle(10);
+            await Client.WaitAssertion(() =>
+            {
+                var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>()!;
+                Assert.That(System.Numerics.Vector2.Distance(bar.ActionsContainer[0].GlobalPosition, detachedButton), Is.LessThan(1));
+                Assert.That(bar.ActionsContainer[0].Action?.Owner, Is.EqualTo(action));
             });
         }
         finally
@@ -218,6 +239,10 @@ public sealed class ActionBarPortTest : InteractionTest
             try
             {
                 var customization = ui.GetUIController<ActionBarUIController>();
+                using var otherButton = new Content.Client.UserInterface.Systems.Actions.Controls.ActionButton(CEntMan);
+                Assert.That(customization.HandleDrop(bar.ActionsContainer[index], otherButton, System.Numerics.Vector2.Zero, slots), Is.False);
+                Assert.That(slots[index], Is.EqualTo(granted));
+                Assert.That(CEntMan.System<PinnedActionsSystem>().IsPinned("ActionToggleLight"), Is.True);
                 Assert.That(customization.HandleDrop(bar.ActionsContainer[index], null, System.Numerics.Vector2.Zero, slots), Is.True);
                 Assert.That(slots[index], Is.Null);
                 customization.UpdateSlots(slots);

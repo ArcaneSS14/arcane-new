@@ -288,7 +288,7 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
                     return true;
                 }
             }
-            else if (movedPrototype is { } removed && _savedPins.IsPinned(removed))
+            else if (target is not ActionButton && movedPrototype is { } removed && _savedPins.IsPinned(removed))
             {
                 _savedPins.SetPinned(removed, false, notify: false);
                 slots[source] = null;

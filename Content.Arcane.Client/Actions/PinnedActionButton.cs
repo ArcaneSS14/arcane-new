@@ -4,6 +4,7 @@ using Content.Client.UserInterface.Systems.Actions.Controls;
 using Content.Shared.Input;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
+using Robust.Client.Input;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 
@@ -17,6 +18,7 @@ public sealed class PinnedActionButton : ActionButton
     private readonly IEntityManager _entities;
     private readonly ActionBarUIController _customization;
     private readonly IPrototypeManager _prototypes;
+    private readonly IInputManager _input;
     private readonly PanelContainer _pin;
     private readonly TextureRect _placeholder;
     private EntityUid? _slot;
@@ -27,6 +29,7 @@ public sealed class PinnedActionButton : ActionButton
         _entities = entities;
         _customization = customization;
         _prototypes = IoCManager.Resolve<IPrototypeManager>();
+        _input = IoCManager.Resolve<IInputManager>();
         _pin = new PanelContainer
         {
             MouseFilter = MouseFilterMode.Ignore,
@@ -77,10 +80,11 @@ public sealed class PinnedActionButton : ActionButton
             return null;
 
         return new ActionAlertTooltip(FormattedMessage.FromUnformatted(entityPrototype.Name),
-            FormattedMessage.FromUnformatted(entityPrototype.Description), PinStatus());
+            FormattedMessage.FromUnformatted(entityPrototype.Description), FormattedMessage.EscapeText(PinStatus()));
     }
 
-    private string PinStatus() => Loc.GetString(_unavailable ? "arcane-action-pinned-unavailable" : "arcane-action-pinned");
+    private string PinStatus() => Loc.GetString(_unavailable ? "arcane-action-pinned-unavailable" : "arcane-action-pinned",
+        ("key", _input.GetKeyFunctionButtonString(ContentKeyFunctions.ToggleActionPin)));
 
     public override void UpdateData(EntityUid? actionId, ActionsSystem system)
     {
