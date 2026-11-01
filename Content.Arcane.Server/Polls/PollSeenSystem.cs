@@ -60,15 +60,25 @@ public sealed partial class PollSeenSystem : EntitySystem
         if (!_pending.Add(key))
             return;
 
+        var acknowledged = false;
         try
         {
             var user = args.SenderSession.UserId;
             var added = await _db.MarkPollSeenAsync(message.PollId, user);
             var seen = added || (await _db.GetSeenPollIdsAsync(user)).Contains(message.PollId);
             if (channel.IsConnected)
+            {
                 RaiseNetworkEvent(new PollSeenAcknowledgedEvent(message.PollId, seen), channel);
+                acknowledged = true;
+            }
             if (added && await _polls.GetPoll(message.PollId) is { } updated)
                 _net.ServerSendToAll(new MsgPollUpdated { Poll = updated });
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"Failed to record view of poll {message.PollId}: {exception}");
+            if (!acknowledged && channel.IsConnected)
+                RaiseNetworkEvent(new PollSeenAcknowledgedEvent(message.PollId, false), channel);
         }
         finally
         {

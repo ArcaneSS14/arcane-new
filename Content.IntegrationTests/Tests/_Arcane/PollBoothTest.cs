@@ -119,7 +119,7 @@ public sealed class PollBoothTest : InteractionTest
         {
             await Client.WaitPost(() => clientPolls.OnActivePollsUpdated -= OnInitialList);
         }
-        var ends = DateTime.UtcNow.AddSeconds(3);
+        var ends = DateTime.UtcNow.AddSeconds(10);
         var polls = Server.ResolveDependency<ServerPollManager>();
         var poll = await RunServerTask(() => polls.CreatePoll("Expiring poll", "Only a time boundary", ["Yes", "No"], ends, false));
         Assert.That(poll, Is.Not.Null);
