@@ -1,0 +1,11 @@
+- type: playTimeTracker
+  id: InteQVanguardLeader
+
+- type: playTimeTracker
+  id: InteQVanguard
+
+- type: playTimeTracker
+  id: JobERTInteQVanguardLeader
+
+- type: playTimeTracker
+  id: JobERTInteQVanguard

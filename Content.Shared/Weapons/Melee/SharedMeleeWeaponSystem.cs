@@ -736,6 +736,8 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
         var resistanceBypass = GetResistanceBypass(meleeUid, user, component);
         var entities = GetEntityList(ev.Entities);
 
+        entities = entities.Where(e => !_tag.HasTag(e, MeleeHitIgnore)).ToList(); // Arcane
+
         if (entities.Count == 0)
         {
             if (meleeUid == user)
@@ -803,6 +805,11 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             if (beforeEvent.Cancelled)
                 continue;
             // </Trauma>
+
+            // Arcane-Start
+            if (_tag.HasTag(entity, MeleeHitIgnore))
+                continue;
+            // Arcane-End
 
             targets.Add(entity);
         }
@@ -947,7 +954,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
                 range,
                 ignore,
                 false)
-                .Where(x => !_tag.HasTag(x.HitEntity, WideSwingIgnore)) // Goobstation
+                .Where(x => !_tag.HasAnyTag(x.HitEntity, WideSwingIgnore, MeleeHitIgnore)) // Goobstation | Arcane-Edit: HasTag(WideSwingIgnore) > HasAnyTag(WideSwingIgnore, MeleeHitIgnore)
                 .ToList();
 
             if (res.Count != 0)

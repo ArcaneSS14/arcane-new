@@ -32,6 +32,7 @@ public abstract partial class SharedMeleeWeaponSystem
     private EntityQuery<InteractionRelayComponent> _relayQuery;
 
     public static readonly ProtoId<TagPrototype> WideSwingIgnore = "WideSwingIgnore"; // for mice
+    public static readonly ProtoId<TagPrototype> MeleeHitIgnore = "MeleeHitIgnore"; // Arcane
     public static readonly EntProtoId MeleeKnowledge = "MeleeKnowledge";
 
     private float _shoveRange;
