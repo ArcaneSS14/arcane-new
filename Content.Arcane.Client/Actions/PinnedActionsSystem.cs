@@ -11,7 +11,7 @@ namespace Content.Arcane.Client.Actions;
 /// </summary>
 public sealed partial class PinnedActionsSystem : EntitySystem
 {
-    private readonly HashSet<EntProtoId> _pinned = new();
+    private readonly Dictionary<EntProtoId, int> _pinned = new();
 
     /// <summary>
     ///     Raised when the pinned actions changed and the action bar has to be rebuilt.
@@ -20,13 +20,17 @@ public sealed partial class PinnedActionsSystem : EntitySystem
 
     public bool IsPinned(EntProtoId prototype)
     {
-        return _pinned.Contains(prototype);
+        return _pinned.ContainsKey(prototype);
     }
 
     public IEnumerable<EntProtoId> GetPinned()
     {
-        return _pinned.ToArray();
+        return _pinned.Keys.ToArray();
     }
+
+    public IEnumerable<KeyValuePair<EntProtoId, int>> GetPositions() => _pinned.ToArray();
+
+    public int? GetPosition(EntProtoId prototype) => _pinned.TryGetValue(prototype, out var position) ? position : null;
 
     public override void Initialize()
     {
@@ -39,11 +43,12 @@ public sealed partial class PinnedActionsSystem : EntitySystem
     /// <summary>
     ///     Pins or unpins an action prototype, the pin is kept across bodies and reconnects.
     /// </summary>
-    public void SetPinned(EntProtoId prototype, bool pinned)
+    public void SetPinned(EntProtoId prototype, bool pinned, int? position = null, bool notify = true)
     {
         if (pinned)
         {
-            if (!_pinned.Add(prototype))
+            var slot = position ?? GetPosition(prototype) ?? PinnedActionPositions.FirstFree(_pinned);
+            if (GetPosition(prototype) == slot || !PinnedActionPositions.Place(_pinned, prototype, slot))
                 return;
         }
         else if (!_pinned.Remove(prototype))
@@ -51,17 +56,19 @@ public sealed partial class PinnedActionsSystem : EntitySystem
             return;
         }
 
-        RaiseNetworkEvent(new SetPinnedActionMessage(prototype, pinned));
-        PinsChanged?.Invoke();
+        RaiseNetworkEvent(new SetPinnedActionMessage(prototype, pinned, GetPosition(prototype) ?? -1));
+        if (notify)
+            PinsChanged?.Invoke();
     }
 
     private void OnState(PinnedActionsStateMessage args)
     {
-        if (_pinned.SetEquals(args.Pinned))
+        if (_pinned.Count == args.Pinned.Count && _pinned.All(pair => args.Pinned.TryGetValue(pair.Key, out var slot) && slot == pair.Value))
             return;
 
         _pinned.Clear();
-        _pinned.UnionWith(args.Pinned);
+        foreach (var (prototype, slot) in args.Pinned)
+            _pinned.Add(prototype, slot);
 
         PinsChanged?.Invoke();
     }

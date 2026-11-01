@@ -9,8 +9,6 @@ namespace Content.Arcane.Server.Actions;
 /// </summary>
 public sealed partial class PinnedActionsSystem : EntitySystem
 {
-    private const int MaxPinned = 32;
-
     [Dependency] private IPrototypeManager _prototypes = default!;
 
     public override void Initialize()
@@ -33,8 +31,8 @@ public sealed partial class PinnedActionsSystem : EntitySystem
         {
             if (!message.Pinned)
                 data.PinnedActions.Remove(message.Prototype);
-            else if (data.PinnedActions.Count < MaxPinned)
-                data.PinnedActions.Add(message.Prototype);
+            else if (data.PinnedActions.ContainsKey(message.Prototype) || data.PinnedActions.Count < PinnedActionPositions.MaxPins)
+                PinnedActionPositions.Place(data.PinnedActions, message.Prototype, message.Slot);
         }
 
         // Rejections also resynchronize the optimistic client.

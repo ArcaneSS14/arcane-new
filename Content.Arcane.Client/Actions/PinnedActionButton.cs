@@ -66,7 +66,7 @@ public sealed class PinnedActionButton : ActionButton
     {
         if (args.Function != ContentKeyFunctions.ToggleActionPin || _slot is not { } slot)
             return;
-        _customization.TogglePin(slot);
+        _customization.TogglePin(slot, GetPositionInParent());
         args.Handle();
     }
 

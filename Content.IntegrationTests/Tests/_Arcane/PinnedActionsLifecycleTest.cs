@@ -12,6 +12,8 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class PinnedActionsLifecycleTest : InteractionTest
 {
+    private const int PinnedSlot = 7;
+    private string? _hotkey;
     protected override string PlayerPrototype => "MobHuman";
     public override PoolSettings PoolSettings => new() { Connected = true, DummyTicker = false, Dirty = true };
 
@@ -27,12 +29,19 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
         });
         await PlaceInHands("FlashlightLantern");
         await Pair.RunUntilSynced();
-        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true));
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true, PinnedSlot));
         await Pair.ReallyBeIdle(2);
         await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() =>
+        {
+            var bar = Client.ResolveDependency<IUserInterfaceManager>().GetActiveUIWidgetOrNull<ActionsBar>()!;
+            Assert.That(bar.ActionsContainer[PinnedSlot].Action, Is.Not.Null);
+            _hotkey = bar.ActionsContainer[PinnedSlot].Label.Text;
+        });
         await Server.WaitAssertion(() =>
         {
-            Assert.That(ServerSession!.ContentData()!.PinnedActions.Contains("ActionToggleLight"), Is.True);
+            Assert.That(ServerSession!.ContentData()!.PinnedActions.ContainsKey("ActionToggleLight"), Is.True);
+            Assert.That(ServerSession.ContentData()!.PinnedActions["ActionToggleLight"], Is.EqualTo(PinnedSlot));
             var body = SEntMan.SpawnEntity("MobHuman", SEntMan.GetCoordinates(PlayerCoords));
             SEntMan.System<SharedMindSystem>().TransferTo(mind, body);
         });
@@ -52,7 +61,7 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             Assert.That(Server.PlayerMan.PlayerCount, Is.EqualTo(1));
-            Assert.That(ServerSession!.ContentData()!.PinnedActions.Contains("ActionToggleLight"), Is.True);
+            Assert.That(ServerSession!.ContentData()!.PinnedActions.ContainsKey("ActionToggleLight"), Is.True);
             SEntMan.System<SharedMindSystem>().WipeMind(mind);
         });
     }
@@ -64,15 +73,17 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
         var customization = ui.GetUIController<ActionBarUIController>();
         var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>();
         Assert.That(bar, Is.Not.Null);
-        var found = false;
+        var pinned = bar!.ActionsContainer[PinnedSlot];
+        Assert.That(pinned.Action, Is.Null);
+        Assert.That(pinned.Modulate, Is.EqualTo(Color.Gray));
+        Assert.That(pinned.Label.Visible, Is.True);
+        Assert.That(pinned.Label.Text, Is.EqualTo(_hotkey));
+        Assert.That(CEntMan.System<PinnedActionsSystem>().GetPosition("ActionToggleLight"), Is.EqualTo(PinnedSlot));
         foreach (var button in bar!.ActionsContainer.GetButtons())
         {
             // A placeholder carries a prototype and a key label, but cannot grant an action to the new body.
-            if (button.Label.Visible && button.Action == null && button.Modulate == Color.Gray)
-                found = true;
             if (button.Action is { } action)
                 Assert.That(customization.GetPrototype(action.Owner)?.Id, Is.Not.EqualTo("ActionToggleLight"));
         }
-        Assert.That(found, Is.True, "The remembered action must be visible as an unavailable slot.");
     }
 }

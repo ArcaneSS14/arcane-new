@@ -40,10 +40,10 @@ public sealed class ContentPlayerData
 
     // Arcane-Start
     /// <summary>
-    /// Action prototype pins retained in player data across bodies and reconnects, until server restart.
+    /// Action prototypes and their slot numbers retained across bodies and reconnects, until server restart.
     /// </summary>
     [ViewVariables]
-    public HashSet<EntProtoId> PinnedActions { get; } = new();
+    public Dictionary<EntProtoId, int> PinnedActions { get; } = new();
     // Arcane-End
 
     public ContentPlayerData(NetUserId userId, string name)

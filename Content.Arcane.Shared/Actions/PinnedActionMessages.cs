@@ -8,10 +8,11 @@ namespace Content.Arcane.Shared.Actions;
 ///     prototype, so that they can be restored for any body the player takes.
 /// </summary>
 [Serializable, NetSerializable]
-public sealed class SetPinnedActionMessage(EntProtoId prototype, bool pinned) : EntityEventArgs
+public sealed class SetPinnedActionMessage(EntProtoId prototype, bool pinned, int slot) : EntityEventArgs
 {
     public EntProtoId Prototype { get; } = prototype;
     public bool Pinned { get; } = pinned;
+    public int Slot { get; } = slot;
 }
 
 /// <summary>
@@ -24,7 +25,7 @@ public sealed class RequestPinnedActionsMessage : EntityEventArgs;
 ///     The authoritative set of action prototypes a player has pinned.
 /// </summary>
 [Serializable, NetSerializable]
-public sealed class PinnedActionsStateMessage(HashSet<EntProtoId> pinned) : EntityEventArgs
+public sealed class PinnedActionsStateMessage(Dictionary<EntProtoId, int> pinned) : EntityEventArgs
 {
-    public HashSet<EntProtoId> Pinned { get; } = pinned;
+    public Dictionary<EntProtoId, int> Pinned { get; } = pinned;
 }

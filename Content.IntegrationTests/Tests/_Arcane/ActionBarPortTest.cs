@@ -16,6 +16,8 @@ using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Input;
 using Robust.Shared.Map;
+using Robust.Client.Input;
+using Content.Arcane.Shared.Actions;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -41,7 +43,7 @@ public sealed class ActionBarPortTest : InteractionTest
         });
         await ClickControl(button, ContentKeyFunctions.ToggleActionPin);
         await FlushPinRequest();
-        await Server.WaitAssertion(() => Assert.That(ServerSession!.ContentData()!.PinnedActions.Contains("ActionToggleLight"), Is.True));
+        await Server.WaitAssertion(() => Assert.That(ServerSession!.ContentData()!.PinnedActions.ContainsKey("ActionToggleLight"), Is.True));
         await Client.WaitAssertion(() =>
         {
             var bar = Client.ResolveDependency<IUserInterfaceManager>().GetActiveUIWidgetOrNull<ActionsBar>()!;
@@ -106,7 +108,7 @@ public sealed class ActionBarPortTest : InteractionTest
         EntProtoId[] accepted = [];
         await Server.WaitAssertion(() =>
         {
-            accepted = ServerSession!.ContentData()!.PinnedActions.ToArray();
+            accepted = ServerSession!.ContentData()!.PinnedActions.Keys.ToArray();
             Assert.That(accepted, Has.Length.EqualTo(32));
         });
         await Client.WaitAssertion(() =>
@@ -191,5 +193,60 @@ public sealed class ActionBarPortTest : InteractionTest
         // PVS catch-up alone can advance no ticks. Flush client -> server -> client before checking a reply.
         await Pair.ReallyBeIdle(2);
         await Pair.RunUntilSynced();
+    }
+
+    [Test]
+    public async Task ClearingAPinnedSlotUnpinsItAndKeepsTheGrantedActionAvailable()
+    {
+        var flashlight = await PlaceInHands("FlashlightLantern");
+        await Pair.RunUntilSynced();
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true));
+        await FlushPinRequest();
+        await Client.WaitAssertion(() =>
+        {
+            var ui = Client.ResolveDependency<IUserInterfaceManager>();
+            var bar = ui.GetActiveUIWidgetOrNull<ActionsBar>()!;
+            var slots = bar.ActionsContainer.GetButtons().Select(button => button.Action?.Owner).ToList();
+            var index = slots.FindIndex(action => action != null && CEntMan.GetComponent<ActionComponent>(action.Value).Container == ToClient(flashlight));
+            Assert.That(index, Is.GreaterThanOrEqualTo(0));
+            var granted = slots[index]!.Value;
+            var config = Client.ResolveDependency<IConfigurationManager>();
+            config.SetCVar(ActionBarCVars.FreePlacement, true);
+            var input = Client.ResolveDependency<IInputManager>();
+            input.KeyDown(new KeyEventArgs(Keyboard.Key.Shift, false, false, false, true, false, 0));
+            try
+            {
+                var customization = ui.GetUIController<ActionBarUIController>();
+                Assert.That(customization.HandleDrop(bar.ActionsContainer[index], null, System.Numerics.Vector2.Zero, slots), Is.True);
+                Assert.That(slots[index], Is.Null);
+                customization.UpdateSlots(slots);
+                Assert.That(slots.Contains(granted), Is.False);
+                Assert.That(customization.IsUnavailable(granted), Is.False, "Removing a hotbar slot must not revoke the item's action.");
+                Assert.That(CEntMan.System<PinnedActionsSystem>().IsPinned("ActionToggleLight"), Is.False);
+            }
+            finally
+            {
+                input.KeyUp(new KeyEventArgs(Keyboard.Key.Shift, false, false, false, false, false, 0));
+            }
+        });
+        await FlushPinRequest();
+        await Server.WaitAssertion(() => Assert.That(ServerSession!.ContentData()!.PinnedActions, Is.Empty));
+    }
+
+    [Test]
+    public async Task ServerRejectsUnboundedPinPositions()
+    {
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true, 3));
+        await FlushPinRequest();
+        await Client.WaitPost(() =>
+        {
+            CEntMan.EntityNetManager.SendSystemNetworkMessage(new SetPinnedActionMessage("ActionToggleLight", true, int.MaxValue));
+            CEntMan.EntityNetManager.SendSystemNetworkMessage(new SetPinnedActionMessage("ActionToggleLight", true, -1));
+        });
+        await FlushPinRequest();
+        await Server.WaitAssertion(() => Assert.That(ServerSession!.ContentData()!.PinnedActions["ActionToggleLight"], Is.EqualTo(3)));
+        await Client.WaitAssertion(() => Assert.That(CEntMan.System<PinnedActionsSystem>().GetPosition("ActionToggleLight"), Is.EqualTo(3)));
+        await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", false));
+        await FlushPinRequest();
     }
 }

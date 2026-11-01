@@ -166,17 +166,50 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
             DeletePlaceholder(prototype, placeholder);
         }
 
-        foreach (var prototype in _savedPins.GetPinned())
+        foreach (var (prototype, position) in _savedPins.GetPositions())
         {
-            if (represented.Contains(prototype) || _placeholders.ContainsKey(prototype))
-                continue;
+            EntityUid? chosen = position < slots.Count && slots[position] is { } preferred && GetPrototype(preferred) == prototype
+                ? preferred : null;
+            foreach (var slot in slots)
+            {
+                if (chosen != null)
+                    break;
+                if (slot is { } action && GetPrototype(action) == prototype)
+                    chosen = action;
+            }
+            if (chosen == null)
+            {
+                foreach (var action in EntityManager.System<ActionsSystem>().GetClientActions())
+                {
+                    if (GetPrototype(action) != prototype)
+                        continue;
+                    chosen = action.Owner;
+                    _pins.Pin(action, prototype, action.Comp.Container);
+                    break;
+                }
+            }
+            if (chosen == null)
+            {
+                var placeholder = EntityManager.Spawn();
+                _pins.Pin(placeholder, prototype, null);
+                _pins.SetUnavailable(placeholder);
+                _placeholders[prototype] = placeholder;
+                chosen = placeholder;
+            }
 
-            var placeholder = EntityManager.Spawn();
-            _pins.Pin(placeholder, prototype, null);
-            _pins.SetUnavailable(placeholder);
-            _placeholders.Add(prototype, placeholder);
-            slots.Add(placeholder);
+            for (var i = 0; i < slots.Count; i++)
+            {
+                if (i != position && slots[i] == chosen)
+                    slots[i] = null;
+            }
+            while (slots.Count <= position)
+                slots.Add(null);
+            if (slots[position] is { } displaced && displaced != chosen)
+                slots.Add(displaced);
+            slots[position] = chosen;
         }
+        while (slots.Count > 0 && slots[^1] == null)
+            slots.RemoveAt(slots.Count - 1);
     }
 
     public void ClearSlots(IList<EntityUid?> slots)
@@ -215,12 +248,12 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
         return args.Function == EngineKeyFunctions.UIRightClick && IsPinned(action);
     }
 
-    public void TogglePin(EntityUid action)
+    public void TogglePin(EntityUid action, int position)
     {
         if (GetPrototype(action) is not { } prototype || _savedPins == null)
             return;
 
-        _savedPins.SetPinned(prototype, !_savedPins.IsPinned(prototype));
+        _savedPins.SetPinned(prototype, !_savedPins.IsPinned(prototype), position);
         _actions.RefreshSlots();
     }
 
@@ -231,6 +264,37 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
 
         if (!_input.IsKeyDown(Keyboard.Key.Shift) && _container.TryHandleSlotDrop(dragged, target, mouse))
             return true;
+
+        // A deliberate slot move must update the saved pin before the owner redraws its action list.
+        if (_savedPins != null && _container.TryGetButtonIndex(dragged, out var source) && source < slots.Count
+            && slots[source] is { } moved)
+        {
+            var movedPrototype = GetPrototype(moved);
+            if (target is ActionButton other && _container.TryGetButtonIndex(other, out var destination))
+            {
+                var replaced = destination < slots.Count ? slots[destination] : null;
+                var replacedPrototype = replaced is { } uid ? GetPrototype(uid) : null;
+                if (movedPrototype is { } moving && _savedPins.IsPinned(moving)
+                    || replacedPrototype is { } replacing && _savedPins.IsPinned(replacing))
+                {
+                    while (slots.Count <= destination)
+                        slots.Add(null);
+                    slots[source] = replaced;
+                    slots[destination] = moved;
+                    if (movedPrototype is { } from && _savedPins.IsPinned(from))
+                        _savedPins.SetPinned(from, true, destination, notify: false);
+                    if (replacedPrototype is { } to && _savedPins.IsPinned(to))
+                        _savedPins.SetPinned(to, true, source, notify: false);
+                    return true;
+                }
+            }
+            else if (movedPrototype is { } removed && _savedPins.IsPinned(removed))
+            {
+                _savedPins.SetPinned(removed, false, notify: false);
+                slots[source] = null;
+                return true;
+            }
+        }
 
         if (target != _grip || dragged.Parent == _container || dragged.Action is not { } action)
             return false;
