@@ -10,7 +10,6 @@ namespace Content.Goobstation.Client.Polls.UI;
 public sealed partial class PollVotingWindow : FancyWindow
 {
     [Dependency] private PollManager _pollManager = default!;
-    public static event Action<int>? PollDisplayed; // Arcane
 
     public PollVotingWindow()
     {
@@ -88,7 +87,7 @@ public sealed partial class PollVotingWindow : FancyWindow
             PollsList.AddChild(pollControl);
             // Arcane-Start
             if (IsOpen)
-                PollDisplayed?.Invoke(poll.PollId);
+                _pollManager.NotifyPollDisplayed(poll.PollId);
             // Arcane-End
         }
     }

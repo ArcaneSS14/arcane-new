@@ -1,7 +1,6 @@
 using System.Linq;
 using Content.Arcane.Shared.Polls;
 using Content.Goobstation.Client.Polls;
-using Content.Goobstation.Client.Polls.UI;
 using Content.Goobstation.Shared.Polls;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
@@ -53,7 +52,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         _polls.OnActivePollsUpdated += OnPolls;
         _polls.OnPollUpdated += OnPoll;
         _polls.OnPollClosed += OnClosed;
-        PollVotingWindow.PollDisplayed += OnDisplayed;
+        _polls.PollDisplayed += OnDisplayed;
         _net.Disconnect += OnDisconnect;
         SubscribeNetworkEvent<PollSeenAcknowledgedEvent>(OnAcknowledged);
     }
@@ -64,7 +63,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         _polls.OnActivePollsUpdated -= OnPolls;
         _polls.OnPollUpdated -= OnPoll;
         _polls.OnPollClosed -= OnClosed;
-        PollVotingWindow.PollDisplayed -= OnDisplayed;
+        _polls.PollDisplayed -= OnDisplayed;
         _net.Disconnect -= OnDisconnect;
         base.Shutdown();
     }
