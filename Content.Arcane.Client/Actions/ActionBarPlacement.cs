@@ -71,7 +71,7 @@ public sealed class ActionBarPlacement : IDisposable
             return;
 
         _anchor.MinSize = _bar.DesiredSize;
-        var position = _layout.BarPosition is { } custom
+        var position = _layout.FreePlacementEnabled && _layout.BarPosition is { } custom
             ? Clamp(custom)
             : _anchor.GlobalPosition - _space.GlobalPosition;
         _container.SetBarPlacement(_bar, position);

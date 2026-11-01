@@ -136,6 +136,9 @@ public sealed class ArcaneActionButtonContainer : ActionButtonContainer
 
     private bool HasDetachedSlots()
     {
+        if (!Layout.FreePlacementEnabled)
+            return false;
+
         foreach (var slot in Layout.SlotPositions.Keys)
         {
             if (slot < ChildCount)

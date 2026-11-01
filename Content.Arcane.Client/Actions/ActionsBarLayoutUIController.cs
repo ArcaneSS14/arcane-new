@@ -34,7 +34,13 @@ public sealed partial class ActionsBarLayoutUIController : UIController
         base.Initialize();
 
         LoadSaved();
-        _cfg.OnValueChanged(ActionBarCVars.FreePlacement, enabled => FreePlacementEnabled = enabled, true);
+        _cfg.OnValueChanged(ActionBarCVars.FreePlacement, OnFreePlacementChanged, true);
+    }
+
+    private void OnFreePlacementChanged(bool enabled)
+    {
+        FreePlacementEnabled = enabled;
+        LayoutChanged?.Invoke();
     }
 
     public override void FrameUpdate(FrameEventArgs args)

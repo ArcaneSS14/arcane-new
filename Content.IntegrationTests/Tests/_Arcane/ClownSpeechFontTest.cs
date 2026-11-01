@@ -26,7 +26,11 @@ public sealed class ClownSpeechFontTest : InteractionTest
             Assert.That(SEntMan.GetComponent<ClothingSpeechFontComponent>(mask).Enabled, Is.False);
             Assert.That(SEntMan.System<InventorySystem>().TryEquip(SPlayer, mask, "mask", force: true), Is.True);
             Assert.That(WrappedSpeech(), Does.Not.Contain("LDFComicSans"));
-            Toggle(mask);
+        });
+        await Pair.RunUntilSynced();
+        await ToggleFromClient();
+        await Server.WaitAssertion(() =>
+        {
             Assert.That(WrappedSpeech(), Does.Contain("LDFComicSans"));
             var font = new SpeechFontOverrideEvent(SPlayer, "Default");
             SEntMan.EventBus.RaiseLocalEvent(SPlayer, ref font);
@@ -43,10 +47,10 @@ public sealed class ClownSpeechFontTest : InteractionTest
             Assert.That(WrappedSpeech(), Does.Not.Contain("LDFComicSans"));
             Assert.That(SEntMan.System<InventorySystem>().TryEquip(SPlayer, mask, "mask", force: true), Is.True);
             Assert.That(WrappedSpeech(), Does.Contain("LDFComicSans"));
-            Toggle(mask);
-            Assert.That(WrappedSpeech(), Does.Not.Contain("LDFComicSans"));
         });
         await Pair.RunUntilSynced();
+        await ToggleFromClient();
+        await Server.WaitAssertion(() => Assert.That(WrappedSpeech(), Does.Not.Contain("LDFComicSans")));
         await Client.WaitAssertion(() =>
             Assert.That(CEntMan.GetComponent<ClothingSpeechFontComponent>(CTarget!.Value).Enabled, Is.False));
     }
@@ -57,9 +61,16 @@ public sealed class ClownSpeechFontTest : InteractionTest
         return chat.WrapPublicMessage(SPlayer, "Speaker", "Hello", chat.GetSpeechVerb(SPlayer, "Hello"));
     }
 
-    private void Toggle(EntityUid mask)
+    private async Task ToggleFromClient()
     {
-        SEntMan.System<SharedVerbSystem>().GetLocalVerbs(mask, SPlayer, typeof(AlternativeVerb))
-            .Single(verb => verb.Text == Loc.GetString("arcane-clothing-speech-font-toggle")).Act!.Invoke();
+        await Client.WaitPost(() =>
+        {
+            var verbs = CEntMan.System<Content.Client.Verbs.VerbSystem>();
+            var verb = verbs.GetLocalVerbs(CTarget!.Value, CPlayer, typeof(AlternativeVerb))
+                .Single(verb => verb.Text == Loc.GetString("arcane-clothing-speech-font-toggle"));
+            verbs.ExecuteVerb(CTarget.Value, verb);
+        });
+        await Pair.ReallyBeIdle(2);
+        await Pair.RunUntilSynced();
     }
 }
