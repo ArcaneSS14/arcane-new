@@ -94,7 +94,7 @@
         id: SheetPlasma
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateGolden # Arcane-Edit: CrateGenericSteel > CrateGolden
   id: CrateMaterialGold
   name: gold crate
   description: 30 bars of gold.
@@ -105,7 +105,7 @@
         id: IngotGold
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateSilver # Arcane-Edit: CrateGenericSteel > CrateSilver
   id: CrateMaterialSilver
   name: silver crate
   description: 30 bars of silver.

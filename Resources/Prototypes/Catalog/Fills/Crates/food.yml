@@ -1,5 +1,5 @@
 - type: entity
-  parent: CratePlastic
+  parent: CrateFreezerKitchen # Arcane-Edit: CratePlastic > CrateFreezerKitchen
   id: CrateFoodPizza
   name: emergency pizza delivery
   description: Help do your part to end station hunger by distributing pizza to underfunded departments! Includes 4 pizzas.
@@ -15,7 +15,7 @@
           prob: 0.01
 
 - type: entity
-  parent: CratePlastic
+  parent: CrateFreezerKitchen # Arcane-Edit: CratePlastic > CrateFreezerKitchen
   id: CrateFoodMRE
   name: MRE crate
   description: A military style meal fit to feed a whole department.
@@ -52,7 +52,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateFreezer
+  parent: CrateFreezerKitchen # Arcane-Edit: CrateFreezer > CrateFreezerKitchen
   id: CrateFoodIceCream
   name: ice cream delivery
   description: An assortment of ice cream delights for any occasion! Includes 16 frozen treats.
@@ -77,7 +77,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateFreezer
+  parent: CrateFreezerKitchen # Arcane-Edit: CrateFreezer > CrateFreezerKitchen
   id: CrateFoodSnowcone
   name: snowcone delivery
   description: A freezer packed with refreshing snowcones for a hard working crew, or even a lazy one! Includes 16 snowcones.

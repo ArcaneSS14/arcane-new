@@ -9,7 +9,7 @@
       totalPrice: 250
 
 - type: entity
-  parent: CrateSyndicate
+  parent: CrateCybersunNightSecure # Arcane-Edit: CrateSyndicate > CrateCybersunNightSecure
   id: CrateCybersunJuggernautBundle
   name: Cybersun juggernaut bundle
   suffix: Filled
