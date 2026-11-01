@@ -1,7 +1,7 @@
 using Lidgren.Network;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization;
-using System.IO; // Arcane
+using System.IO;
 
 namespace Content.Arcane.Shared.JoinQueue;
 
