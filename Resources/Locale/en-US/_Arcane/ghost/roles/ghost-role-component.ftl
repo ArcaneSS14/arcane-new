@@ -15,3 +15,8 @@ ghost-role-information-inteq-SIZO-rules = You must NOT leave lavaland without th
 ghost-role-information-inteq-agent-name = InteQ Agent
 ghost-role-information-inteq-agent-description = UGH!? AGH!! BREAK SKULLS, SMASH EVERYTHING!!!
 ghost-role-information-inteq-agent-rules = { ghost-role-information-antagonist-rules } Do not gib anyone. DON'T EVEN TRY!!!
+
+ghost-role-information-skeleton-bartender-name = Skeleton Bartender
+ghost-role-information-skeleton-bartender-description = Keep the beach bar running, serve drinks, and make sure guests have a good time.
+ghost-role-information-skeleton-pirate-bitrunning-name = Skeleton Pirate
+ghost-role-information-skeleton-pirate-bitrunning-description = You are a pirate hostile to bitrunners. Raid them and prevent them from safely finishing their run.

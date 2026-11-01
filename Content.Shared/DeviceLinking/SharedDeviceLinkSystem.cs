@@ -415,8 +415,10 @@ public abstract partial class SharedDeviceLinkSystem : EntitySystem
         {
             foreach (var (sourcePort, sinkPort) in ports)
             {
-                RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(sourcePort));
-                RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sinkPort));
+                // Arcane-Edit-Start: tell each side which entity was unlinked
+                RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(sourcePort, sinkUid));
+                RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sinkPort, sourceUid));
+                // Arcane-Edit-End
             }
         }
 

@@ -40,4 +40,8 @@
   - CargoRequestComputerCircuitboard
   - CargoBountyComputerCircuitboard
   - MaterialSiloMachineCircuitboard
+  - QuantumConsoleCircuitboard
+  - QuantumServerMachineCircuitboard
+  - NetpodMachineCircuitboard
+  - ByteforgeMachineCircuitboard
   # Arcane-End
