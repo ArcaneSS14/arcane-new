@@ -75,10 +75,11 @@
         AppendStyleClass="{x:Static style:StyleClass.ButtonSquare}"
         />
     <!-- <EE> TODO: kill-->
+    <!-- Arcane-Edit: LanguageButton Icon _EinsteinEngines/Interface/language.png > _Arcane/Interface/language.png -->
     <ui:MenuButton
         Name="LanguageButton"
         Access="Public"
-        Icon="{xe:Tex '/Textures/_EinsteinEngines/Interface/language.png'}"
+        Icon="{xe:Tex '/Textures/_Arcane/Interface/language.png'}"
         BoundKey = "{x:Static it:TraumaKeyFunctions.OpenLanguageMenu}"
         ToolTip="Open the Language Menu"
         MinSize="42 64"
