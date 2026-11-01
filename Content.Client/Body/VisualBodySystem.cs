@@ -94,6 +94,8 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
         {
             _displacement.EnsureDisplacementIsNotOnSprite((target, Comp<SpriteComponent>(target)), ent.Comp.Layer);
         }
+
+        RaiseLayersChanged(target); // Arcane
     }
 
     private void RemoveVisual(Entity<VisualOrganComponent> ent, EntityUid target)
@@ -108,6 +110,7 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
         _sprite.LayerSetRsiState(target, index, RSI.StateId.Invalid);
 
         _displacement.EnsureDisplacementIsNotOnSprite((target, Comp<SpriteComponent>(target)), ent.Comp.Layer);
+        RaiseLayersChanged(target); // Arcane
     }
 
     private void OnMarkingsGotInserted(Entity<VisualOrganMarkingsComponent> ent, ref OrganGotInsertedEvent args)
@@ -268,6 +271,7 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
             applied.Add(marking);
         }
         ent.Comp.AppliedMarkings = applied;
+        RaiseLayersChanged(target.Owner); // Arcane
     }
 
     private void RemoveMarkings(Entity<VisualOrganMarkingsComponent> ent, Entity<SpriteComponent?> target)
@@ -302,7 +306,17 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
                 _sprite.RemoveLayer(target, index);
             }
         }
+
+        RaiseLayersChanged(target.Owner); // Arcane
     }
+
+    // <Arcane>
+    private void RaiseLayersChanged(EntityUid body)
+    {
+        var ev = new VisualBodyLayersChangedEvent();
+        RaiseLocalEvent(body, ref ev);
+    }
+    // </Arcane>
 
     private void OnMarkingsChangedVisibility(Entity<VisualOrganMarkingsComponent> ent, ref BodyRelayedEvent<HumanoidLayerVisibilityChangedEvent> args)
     {

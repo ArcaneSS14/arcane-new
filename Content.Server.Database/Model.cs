@@ -458,6 +458,7 @@ namespace Content.Server.Database
         public int Age { get; set; }
         // Arcane-Start: Persist character scale settings
         public float Scale { get; set; } = 1f;
+        public bool EarsAboveHair { get; set; } // Arcane
         // Arcane-End
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value

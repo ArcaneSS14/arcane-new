@@ -301,6 +301,8 @@ namespace Content.Client.Lobby.UI
             _markingsModel.MarkingsChanged += (_, _) => OnMarkingChange();
             _markingsModel.MarkingsReset += OnMarkingChange;
             _markingsModel.PreviewChanged += UpdateMarkingPreview; // Arcane: display only, without setting the dirty flag.
+            Markings.ShowEarsAboveHairOption = true; // Arcane
+            Markings.EarsAboveHairChanged += OnEarsAboveHairChanged; // Arcane
 
             #endregion Markings
 

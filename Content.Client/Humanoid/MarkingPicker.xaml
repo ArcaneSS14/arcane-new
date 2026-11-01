@@ -2,6 +2,7 @@
     <BoxContainer Orientation="Vertical">
         <CheckBox Name="AnimatedPreview" Text="{Loc 'marking-grid-preview-animated'}"
                   ToolTip="{Loc 'marking-grid-preview-animated-tooltip'}" />
+        <CheckBox Name="EarsAboveHairToggle" Text="{Loc 'markings-ears-above-hair'}" Visible="False" />
         <TabContainer Name="OrganTabs" VerticalExpand="True" />
     </BoxContainer>
 </Control>

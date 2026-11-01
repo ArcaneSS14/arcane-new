@@ -16,7 +16,7 @@ public sealed partial class DisplacementMapSystem : EntitySystem
     private static readonly ProtoId<ShaderPrototype> UnshadedID = "unshaded";
     public static readonly ProtoId<ShaderPrototype> DisplacedUnshaded = "DisplacedDrawUnshaded";
 
-    private static string? BuildDisplacementLayerKey(object key)
+    public static string? BuildDisplacementLayerKey(object key) // Arcane: layer ordering must move this helper with its target.
     {
         return key.ToString() is null ? null : $"{key}-displacement";
     }

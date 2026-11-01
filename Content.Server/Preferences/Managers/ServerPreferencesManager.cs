@@ -191,7 +191,8 @@ namespace Content.Server.Preferences.Managers
                 (
                     Color.FromHex(profile.EyeColor),
                     Color.FromHex(profile.SkinColor),
-                    markings
+                    markings,
+                    profile.EarsAboveHair // Arcane
                 ),
                 spawnPriority,
                 jobs,
