@@ -11,4 +11,3 @@ public interface IQueueMiniGameScoreSource
     int Lives { get; }
     int Wave { get; }
 }
-

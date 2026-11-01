@@ -508,4 +508,3 @@ public sealed class GoGoShitcurityGame
         Heal,
     }
 }
-

@@ -277,4 +277,3 @@ public sealed class GyrussGame
         public bool IsPlayer = isPlayer;
     }
 }
-

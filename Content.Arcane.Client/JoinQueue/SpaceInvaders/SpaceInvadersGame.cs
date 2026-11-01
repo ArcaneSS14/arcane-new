@@ -415,4 +415,3 @@ public sealed class SpaceInvadersGame
         public bool IsPlayer = isPlayer;
     }
 }
-

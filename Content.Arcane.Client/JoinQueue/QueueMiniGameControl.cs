@@ -101,4 +101,3 @@ public abstract partial class QueueMiniGameControl : Control, IQueueMiniGameScor
         ScoreChanged?.Invoke(Score);
     }
 }
-

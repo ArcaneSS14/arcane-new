@@ -396,4 +396,3 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
         _spaceInvadersButton.Disabled = disabled;
     }
 }
-

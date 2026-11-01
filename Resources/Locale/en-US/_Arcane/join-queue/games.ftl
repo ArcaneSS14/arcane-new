@@ -25,4 +25,3 @@ queue-leaderboard-you = {$name} (you)
 queue-leaderboard-time-seconds = {$seconds}s
 queue-leaderboard-time-minutes = {$minutes}m {$seconds}s
 queue-leaderboard-time-hours = {$hours}h {$minutes}m
-

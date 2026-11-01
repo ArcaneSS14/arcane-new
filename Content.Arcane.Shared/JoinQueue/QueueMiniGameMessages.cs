@@ -38,4 +38,3 @@ public sealed class QueueMiniGameScoreMessage : NetMessage
         buffer.Write(Score);
     }
 }
-

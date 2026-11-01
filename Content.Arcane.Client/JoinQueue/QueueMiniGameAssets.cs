@@ -36,4 +36,3 @@ internal static class QueueMiniGameAssets
         return state.GetFrame(RsiDirection.South, 0);
     }
 }
-

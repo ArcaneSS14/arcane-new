@@ -123,4 +123,3 @@ internal struct MiniGameParticle(float x, float y, float vx, float vy, float lif
     public float Lifetime = lifetime;
     public Color Color = color;
 }
-

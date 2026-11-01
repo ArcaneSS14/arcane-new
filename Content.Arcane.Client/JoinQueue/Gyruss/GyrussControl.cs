@@ -252,4 +252,3 @@ public sealed partial class GyrussControl : QueueMiniGameControl
         return new Vector2(point.X, point.Y);
     }
 }
-

@@ -61,4 +61,3 @@ public sealed partial class QueueGui : Control
         QueueTimeLeaderboard.UpdateQueuePlayers(msg.QueueWaitLeaderboardNames, msg.QueueWaitLeaderboardSeconds, msg.YourName);
     }
 }
-

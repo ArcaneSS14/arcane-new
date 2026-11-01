@@ -241,4 +241,3 @@ public sealed partial class SpaceInvadersControl : QueueMiniGameControl
             Loc.GetString("queue-minigame-restart"), new Color(170, 170, 190));
     }
 }
-

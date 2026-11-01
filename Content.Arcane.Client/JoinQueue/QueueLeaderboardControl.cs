@@ -272,4 +272,3 @@ internal static class QueueLeaderboardRows
         return row;
     }
 }
-

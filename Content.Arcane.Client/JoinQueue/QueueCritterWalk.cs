@@ -266,4 +266,3 @@ public sealed partial class QueueCritterWalk : LayoutContainer
                 RemoveChild(critter.Box);
     }
 }
-
