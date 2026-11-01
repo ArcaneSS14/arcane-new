@@ -123,6 +123,7 @@
     - id: MedkitOxygenFilled
     - id: MedkitAdvancedFilled
     # Arcane-Start
+    - id: HandheldCrewMonitorBrigmedic
     - id: ClothingHeadHatBeretSecurityMedic
       prob: 0.5
     # Arcane-End

@@ -40,9 +40,14 @@
 - type: latheRecipePack
   id: PowerCells
   recipes:
-  - PowerCellMicroreactor
   - PowerCellHigh
   - PowerCellHyper
+  # Arcane-Start
+  - PowerCellSuper
+  - PowerCellBluespace
+  - PowerCellBluespaceReactor
+  - PowerCellVortex
+  # Arcane-End
 
 - type: latheRecipePack
   id: ScienceWeapons

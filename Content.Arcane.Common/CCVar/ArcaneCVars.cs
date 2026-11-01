@@ -23,6 +23,19 @@ public sealed partial class ArcaneCVars
 
     #endregion
 
+    /// <summary>
+    ///     Whether space wind spawns subtle visual indicators of air currents.
+    /// </summary>
+    public static readonly CVarDef<bool> SpaceWindVisuals =
+        CVarDef.Create("atmos.space_wind_visuals", true, CVar.SERVERONLY);
+
+
+    /// <summary>
+    ///     Volume of radio barks, the sounds played when a radio message arrives.
+    /// </summary>
+    public static readonly CVarDef<float> RadioBarkVolume =
+        CVarDef.Create("audio.radio_bark_volume", 0.5f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
     #region Client customization
 
     public static readonly CVarDef<bool> ChatRunechat =
@@ -81,5 +94,4 @@ public sealed partial class ArcaneCVars
         CVarDef.Create("radio.channel_colors", string.Empty, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     #endregion
-
 }

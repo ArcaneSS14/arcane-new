@@ -10,6 +10,10 @@
     PowerCellSmallPrinted: 3
     MicroManipulatorStockPart: 12
   contrabandInventory:
+    # Arcane-Start
+    PowerCellHigh: 1
+    MegaCellHigh: 1
+    # Arcane-End
     ProximitySensor: 1
     LeftArmBorg: 1
   emaggedInventory: # goob

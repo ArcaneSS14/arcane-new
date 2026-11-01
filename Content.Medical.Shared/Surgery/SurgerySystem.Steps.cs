@@ -703,8 +703,10 @@ public sealed partial class SurgerySystem
         var ev = new SurgeryDoAfterEvent(surgeryId, stepId, toolUsed);
         var duration = GetSurgeryDuration(step, user, body, speed);
 
-        if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
-            duration = duration / surgerySpeedMod.SpeedModifier;
+        // Arcane-Edit-Start: already applied in GetSurgeryDuration
+        // if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
+        //     duration = duration / surgerySpeedMod.SpeedModifier;
+        // Arcane-Edit-End
 
         var doAfter = new DoAfterArgs(EntityManager, user, TimeSpan.FromSeconds(duration), ev, body, part)
         {
@@ -746,7 +748,12 @@ public sealed partial class SurgerySystem
         if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
             speed *= surgerySpeedMod.SpeedModifier;
 
-        return stepComp.Duration / speed;
+        // Arcane-Start: self-surgery penalty
+        if (user == target && TryComp<SurgeryTargetComponent>(target, out var surgeryTarget))
+            speed *= surgeryTarget.SelfSurgerySpeedModifier;
+        // Arcane-End
+
+        return stepComp.Duration / MathF.Max(speed, 0.01f); // Arcane-Edit: guard against zero speed
     }
 
     private (Entity<SurgeryComponent> Surgery, int Step)? GetNextStep(EntityUid body, EntityUid part, Entity<SurgeryComponent?> surgery, List<EntityUid> requirements, EntityUid user)

@@ -23,6 +23,9 @@
   id: Wakizashi
 
 - type: Tag
+  id: MegaCell
+
+- type: Tag
   id: EmergencyWaterVaporTank
 
 - type: Tag

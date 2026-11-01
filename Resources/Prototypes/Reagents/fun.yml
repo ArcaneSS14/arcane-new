@@ -137,6 +137,10 @@
         - !type:TagCondition
           inverted: true
           tag: Bee
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: BuzzochloricBeesEffect
+      # Arcane-End
 
 - type: reagent
   id: GroundBee

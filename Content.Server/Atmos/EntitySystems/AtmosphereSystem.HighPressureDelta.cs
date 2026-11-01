@@ -21,6 +21,7 @@ public sealed partial class AtmosphereSystem
     [Dependency] private EntityQuery<MovedByPressureComponent> _movedByPressureQuery = default!;
 
     private static readonly ProtoId<SoundCollectionPrototype> DefaultSpaceWindSounds = "SpaceWind";
+    private static readonly EntProtoId SpaceWindVisualProto = "SpaceWindVisual"; // Arcane
 
     private const int SpaceWindSoundCooldownCycles = 75;
 
@@ -121,6 +122,19 @@ public sealed partial class AtmosphereSystem
                 var coordinates = _mapSystem.ToCenterCoordinates(tile.GridIndex, tile.GridIndices);
                 _audio.PlayPvs(SpaceWindSound, coordinates, SpaceWindSound.Params.WithVolume(MathHelper.Clamp(tile.PressureDifference / 10, 10, 100)));
             }
+
+            // Arcane-Start: space wind visuals
+            if (SpaceWindVisuals && _spaceWindSoundCooldown == 0)
+            {
+                var location = _mapSystem.ToCenterCoordinates(tile.GridIndex, tile.GridIndices);
+                var visual = SpawnAtPosition(SpaceWindVisualProto, location);
+                if (tile.PressureDirection != AtmosDirection.Invalid)
+                {
+                    var angle = tile.PressureDirection.ToAngle() + XformSystem.GetWorldRotation(gridAtmosphere) - Angle.FromDegrees(90);
+                    XformSystem.SetLocalRotation(visual, angle);
+                }
+            }
+            // Arcane-End
         }
 
 

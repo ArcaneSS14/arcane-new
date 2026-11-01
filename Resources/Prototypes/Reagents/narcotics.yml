@@ -80,6 +80,10 @@
       - !type:ModifyHeartRate
         amount: 5.5
       # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: StrongStimulant
+      # Arcane-End
 
 - type: reagent
   id: Ephedrine
@@ -144,6 +148,10 @@
         amount: 3
         higherCap: 230
       # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: StrongStimulant
+      # Arcane-End
 
 - type: reagent
   id: Pax
@@ -162,6 +170,10 @@
         key: Pacified
         component: Pacified
         time: 4
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: PaxEffect
+      # Arcane-End
 
 - type: reagent
   id: Stimulants
@@ -280,6 +292,10 @@
         amount: 2
         autoStabilisation: true
       # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: StrongStimulant
+      # Arcane-End
 
 - type: reagent
   id: THC
@@ -378,6 +394,10 @@
         effectProto: StatusEffectOpiated
         type: Add
         time: 6
+      # Arcane-End
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: SpaceDrugsBenefit
       # Arcane-End
 
 - type: reagent
@@ -559,6 +579,10 @@
         - !type:ReagentCondition
           reagent: TearGas
           min: 4
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: TearGasEffect
+      # Arcane-End
 
 - type: reagent
   id: StrawberryIce
@@ -718,6 +742,10 @@
         effectProto: StatusEffectSeeingRainbow
         type: Add
         time: 5
+      # Arcane-Start
+      - !type:ChemAddMoodlet
+        moodPrototype: PsicodineEffect
+      # Arcane-End
 
 - type: reagent
   id: Nyctalon
