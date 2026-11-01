@@ -84,6 +84,10 @@
   parent: UnsensoredClothingUniformBase
   id: UnsensoredClothingUniformEnvirosuitBase
   components:
+  # Arcane-Edit-Start
+  - type: GlowShielding
+    reduction: 0.6
+  # Arcane-Edit-End
   - type: IgniteFromGasImmunity
     parts:
     - Torso

@@ -30,12 +30,8 @@
 - type: entity
   parent: ClothingHeadEnvirohelm
   id: ClothingHeadEnvirohelmEmpty
-  suffix: Empty
-  components:
-  - type: ItemSlots
-    slots:
-      cell_slot:
-        name: power-cell-slot-component-slot-name-default
+  suffix: Legacy # Arcane-Edit: retain the ID for existing maps, without a cell slot.
+  categories: [ HideSpawnMenu ] # Arcane-Edit
 
 - type: entity
   parent: ClothingHeadEnvirohelmBase

@@ -214,6 +214,10 @@
   id: ClothingOuterHardsuitBase
   name: base hardsuit
   components:
+  # Arcane-Edit-Start
+  - type: GlowShielding
+    reduction: 0.7
+  # Arcane-Edit-End
   - type: PressureProtection
     highPressureMultiplier: 0.3
   - type: ClothingSpeedModifier

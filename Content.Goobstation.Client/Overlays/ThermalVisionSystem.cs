@@ -28,7 +28,10 @@ public sealed partial class ThermalVisionSystem : EquipmentHudSystem<ThermalVisi
         SubscribeLocalEvent<ThermalVisionComponent, SwitchableOverlayToggledEvent>(OnToggle);
 
         _thermalOverlay = new ThermalVisionOverlay();
-        _overlay = new BaseSwitchableOverlay<ThermalVisionComponent>();
+        _overlay = new BaseSwitchableOverlay<ThermalVisionComponent>
+        {
+            RestrictToPlayerViewport = true // Arcane-Edit
+        };
     }
 
     protected override void OnRefreshEquipmentHud(Entity<ThermalVisionComponent> ent,

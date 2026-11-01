@@ -58,7 +58,7 @@ public sealed partial class LightDetectionSystem : SharedLightDetectionSystem
 
     public override void Update(float frameTime)
     {
-        if (_nextUpdate < _timing.CurTime)
+        if (_timing.CurTime < _nextUpdate) // Arcane-Edit: update at the configured interval.
             return;
 
         _nextUpdate = _timing.CurTime + TimeSpan.FromSeconds(UpdateFrequency);
