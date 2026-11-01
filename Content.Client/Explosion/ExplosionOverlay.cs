@@ -6,6 +6,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Client.Explosion;
 
@@ -14,7 +15,7 @@ public sealed partial class ExplosionOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> UnshadedShader = "unshaded";
 
-    [Dependency] private IRobustRandom _robustRandom = default!;
+    [Dependency] private IGameTiming _timing = default!; // Arcane-Edit: IRobustRandom _robustRandom > IGameTiming _timing
     [Dependency] private IEntityManager _entMan = default!;
     [Dependency] private IPrototypeManager _proto = default!;
     private readonly SharedTransformSystem _transformSystem;
@@ -23,6 +24,8 @@ public sealed partial class ExplosionOverlay : Overlay
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowFOV;
 
     private ShaderInstance _shader;
+
+    private const double FireFrameDelay = 0.05; // Arcane
 
     public ExplosionOverlay(SharedAppearanceSystem appearanceSystem)
     {
@@ -113,7 +116,7 @@ public sealed partial class ExplosionOverlay : Overlay
                 if (!gridBounds.Contains(centre))
                     continue;
 
-                var texture = _robustRandom.Pick(frames);
+                var texture = frames[(int) (_timing.RealTime.TotalSeconds / FireFrameDelay) % frames.Length]; // Arcane-Edit: random frame > animated frame
                 drawHandle.DrawTextureRect(texture, Box2.CenteredAround(centre, new Vector2(tileSize, tileSize)), textures.FireColor);
             }
         }
