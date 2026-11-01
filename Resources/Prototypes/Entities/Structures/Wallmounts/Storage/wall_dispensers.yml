@@ -88,6 +88,9 @@
       types:
         Heat: 20
   - type: PacifismDangerousAttack
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     totalIntensity: 50

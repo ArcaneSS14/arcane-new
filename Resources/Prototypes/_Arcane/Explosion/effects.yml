@@ -1,0 +1,51 @@
+- type: entity
+  id: ExplosionEffectGrenade
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: _Arcane/Effects/grenade_explosion.rsi
+    state: grenade
+  - type: TimedDespawn
+    lifetime: 0.6
+
+- type: entity
+  id: ExplosionEffectGrenadeShockWave
+  categories: [HideSpawnMenu]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.5
+  - type: ExplosionShockWave
+
+- type: entity
+  id: ExplosionEffectShrapnel1
+  categories: [HideSpawnMenu]
+  components:
+  - type: CollisionWake
+  - type: Physics
+    bodyType: Dynamic
+    fixedRotation: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.25,0.25,0.25"
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0
+  - type: Sprite
+    sprite: _Arcane/Effects/shrapnel.rsi
+    state: shrapnel_bright1
+  - type: TimedDespawn
+    lifetime: 0.5
+  - type: DeleteOnCollide
+
+- type: entity
+  parent: ExplosionEffectShrapnel1
+  id: ExplosionEffectShrapnel2
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    state: shrapnel_bright2

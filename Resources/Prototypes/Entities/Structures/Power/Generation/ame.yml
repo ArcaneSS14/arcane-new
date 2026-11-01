@@ -58,6 +58,9 @@
       whitelistFailPopup: ame-controller-component-fuel-slot-fail-whitelist
       lockedFailPopup: ame-controller-component-fuel-slot-fail-locked
       insertSuccessPopup: ame-controller-component-fuel-slot-success-insert
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     intensitySlope: 5
