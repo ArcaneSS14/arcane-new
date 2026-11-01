@@ -4,6 +4,7 @@ using Content.Goobstation.Client.Polls;
 using Content.Goobstation.Client.Polls.UI;
 using Content.Goobstation.Shared.Polls;
 using Robust.Shared.Network;
+using Robust.Shared.Timing;
 
 namespace Content.Arcane.Client.Polls;
 
@@ -14,15 +15,36 @@ public sealed partial class PollSeenSystem : EntitySystem
 {
     [Dependency] private PollManager _polls = default!;
     [Dependency] private IClientNetManager _net = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private readonly HashSet<int> _seen = new();
     private readonly HashSet<int> _shown = new();
     private INetChannel? _requestedChannel;
     private bool _stateReady;
+    private bool _lastUnseen;
+    private TimeSpan _nextTimeCheck;
 
     public event Action? OnUnseenChanged;
 
-    public bool HasUnseenPolls => _polls.ActivePolls.Values.Any(p => IsAvailable(p) && !_seen.Contains(p.PollId));
+    public bool HasUnseenPolls => _stateReady && _polls.ActivePolls.Values.Any(p => IsAvailable(p) && !_seen.Contains(p.PollId));
+
+    public override void FrameUpdate(float frameTime)
+    {
+        base.FrameUpdate(frameTime);
+        if (_timing.RealTime < _nextTimeCheck)
+            return;
+        _nextTimeCheck = _timing.RealTime + TimeSpan.FromSeconds(1);
+        RefreshUnseen();
+    }
+
+    private void RefreshUnseen()
+    {
+        var unseen = HasUnseenPolls;
+        if (_lastUnseen == unseen)
+            return;
+        _lastUnseen = unseen;
+        OnUnseenChanged?.Invoke();
+    }
 
     public override void Initialize()
     {
@@ -74,7 +96,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         _stateReady = true;
         foreach (var id in _shown.ToArray())
             OnDisplayed(id);
-        OnUnseenChanged?.Invoke();
+        RefreshUnseen();
     }
 
     private void OnDisplayed(int id)
@@ -85,7 +107,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         if (!_stateReady || !_seen.Add(id))
             return;
         RaiseNetworkEvent(new MarkPollSeenEvent(id));
-        OnUnseenChanged?.Invoke();
+        RefreshUnseen();
     }
 
     private void OnAcknowledged(PollSeenAcknowledgedEvent message)
@@ -94,11 +116,11 @@ public sealed partial class PollSeenSystem : EntitySystem
             _seen.Add(message.PollId);
         else
             _seen.Remove(message.PollId);
-        OnUnseenChanged?.Invoke();
+        RefreshUnseen();
     }
 
-    private void OnPoll(PollData poll) => OnUnseenChanged?.Invoke();
-    private void OnClosed(int id) => OnUnseenChanged?.Invoke();
+    private void OnPoll(PollData poll) => RefreshUnseen();
+    private void OnClosed(int id) => RefreshUnseen();
 
     private void OnDisconnect(object? sender, NetDisconnectedArgs args)
     {
@@ -106,6 +128,6 @@ public sealed partial class PollSeenSystem : EntitySystem
         _stateReady = false;
         _seen.Clear();
         _shown.Clear();
-        OnUnseenChanged?.Invoke();
+        RefreshUnseen();
     }
 }

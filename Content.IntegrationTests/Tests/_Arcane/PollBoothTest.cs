@@ -9,6 +9,7 @@ using Content.Shared.Mind;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Network;
 using Robust.Client.UserInterface;
+using Robust.Client.GameObjects;
 using ClientPollManager = Content.Goobstation.Client.Polls.PollManager;
 using ServerPollManager = Content.Goobstation.Server.Polls.PollManager;
 
@@ -99,6 +100,54 @@ public sealed class PollBoothTest : InteractionTest
         {
             await Client.WaitPost(() => polls.OnActivePollsUpdated -= OnList);
         }
+    }
+
+    [Test]
+    public async Task AlertDisappearsWhenTheLastUnseenPollExpiresWithoutAnUpdateMessage()
+    {
+        var clientPolls = Client.ResolveDependency<ClientPollManager>();
+        var initialList = new TaskCompletionSource();
+        void OnInitialList(List<PollData> data) => initialList.TrySetResult();
+        await Client.WaitPost(() => clientPolls.OnActivePollsUpdated += OnInitialList);
+        NetEntity booth;
+        try
+        {
+            booth = await SpawnTarget("PollBooth");
+            await Pump(initialList.Task);
+        }
+        finally
+        {
+            await Client.WaitPost(() => clientPolls.OnActivePollsUpdated -= OnInitialList);
+        }
+        var ends = DateTime.UtcNow.AddSeconds(3);
+        var polls = Server.ResolveDependency<ServerPollManager>();
+        var poll = await RunServerTask(() => polls.CreatePoll("Expiring poll", "Only a time boundary", ["Yes", "No"], ends, false));
+        Assert.That(poll, Is.Not.Null);
+        await ReceiveList(clientPolls.RequestActivePolls);
+
+        var visible = false;
+        while (DateTime.UtcNow < ends)
+        {
+            await Pair.ReallyBeIdle(2);
+            await Client.WaitPost(() => visible = CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible);
+            if (visible)
+                break;
+            await Task.Delay(25);
+        }
+        Assert.That(visible, Is.True, "The available unseen poll must first show the alert.");
+
+        var deadline = ends.AddSeconds(4);
+        while (DateTime.UtcNow < deadline)
+        {
+            await Pair.ReallyBeIdle(2);
+            await Client.WaitPost(() => visible = CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible);
+            if (!visible)
+                break;
+            await Task.Delay(25);
+        }
+        Assert.That(DateTime.UtcNow, Is.GreaterThanOrEqualTo(ends));
+        Assert.That(visible, Is.False, "Expiry alone must refresh the sprite without a new poll message.");
+        Assert.That(await Server.ResolveDependency<IServerDbManager>().GetPollSeenCountAsync(poll!.PollId), Is.Zero);
     }
 
     private async Task<T> RunServerTask<T>(Func<Task<T>> call)
