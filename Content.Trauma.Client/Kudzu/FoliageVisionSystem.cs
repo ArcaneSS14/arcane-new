@@ -25,6 +25,14 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         SubscribeLocalEvent<HideableFoliageComponent, ComponentShutdown>((uid, _, args) => OnKudzuComponentShutdown(uid, args));
     }
 
+    // Arcane-Edit-Start: restore ordinary layering before the local vision owner is torn down.
+    public override void Shutdown()
+    {
+        SetFoliageIgnoringVision(false);
+        base.Shutdown();
+    }
+    // Arcane-Edit-End
+
     // Attaches detaches
     private void OnLocalPlayerAttached(LocalPlayerAttachedEvent args)
     {
@@ -33,7 +41,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void OnLocalPlayerDetached(LocalPlayerDetachedEvent args)
     {
-        UpdatePlayerFoliageIgnoringVision();
+        SetFoliageIgnoringVision(false); // Arcane-Edit: the old body may still be LocalEntity during this event.
     }
 
     // Player Startup/Shutdown
@@ -46,7 +54,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
     private void OnPlayerComponentShutdown(EntityUid uid, ComponentShutdown args)
     {
         if (uid == _player.LocalEntity)
-            UpdatePlayerFoliageIgnoringVision();
+            SetFoliageIgnoringVision(false); // Arcane-Edit: HasComp is still true during shutdown.
     }
 
     // Kudzu Startup/Shutdown
@@ -57,7 +65,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void OnKudzuComponentShutdown(EntityUid uid, ComponentShutdown args)
     {
-        UpdateFoliageDrawDepth(uid);
+        UpdateFoliageDrawDepth(uid, forceVisible: true); // Arcane-Edit
     }
 
     private void RefreshEveryPieceOfFoliage()
@@ -70,12 +78,12 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         }
     }
 
-    private void UpdateFoliageDrawDepth(EntityUid uid, SpriteComponent? sprite = null)
+    private void UpdateFoliageDrawDepth(EntityUid uid, SpriteComponent? sprite = null, bool forceVisible = false) // Arcane-Edit
     {
         if (!Resolve(uid, ref sprite, false))
             return;
 
-        var drawDepth = _enabled
+        var drawDepth = _enabled && !forceVisible // Arcane-Edit
             ? DrawDepth.Default + LowDrawDepth
             : DrawDepth.Default + HighDrawDepth;
         _sprite.SetDrawDepth((uid, sprite), drawDepth);
@@ -83,11 +91,18 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void UpdatePlayerFoliageIgnoringVision()
     {
-        var previousEnabled = _enabled;
         var attached = _player.LocalEntity;
         var shouldHaveFoliageIgnoringVision = attached != null && HasComp<FoliageIgnoringVisionComponent>(attached.Value);
-        _enabled = shouldHaveFoliageIgnoringVision;
-        if (previousEnabled != _enabled)
-            RefreshEveryPieceOfFoliage();
+        SetFoliageIgnoringVision(shouldHaveFoliageIgnoringVision); // Arcane-Edit
     }
+
+    // Arcane-Edit-Start
+    private void SetFoliageIgnoringVision(bool enabled)
+    {
+        if (_enabled == enabled)
+            return;
+        _enabled = enabled;
+        RefreshEveryPieceOfFoliage();
+    }
+    // Arcane-Edit-End
 }

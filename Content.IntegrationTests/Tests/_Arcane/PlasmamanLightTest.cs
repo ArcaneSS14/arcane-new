@@ -108,6 +108,7 @@ public sealed class PlasmamanLightTest : InteractionTest
 
     private async Task AssertGlow(float factor, Color color)
     {
+        await Pair.RunUntilSynced();
         await Server.WaitAssertion(() =>
         {
             Assert.That(SEntMan.GetComponent<BodyGlowComponent>(SPlayer).Factor, Is.EqualTo(factor).Within(0.0001f));
@@ -119,6 +120,12 @@ public sealed class PlasmamanLightTest : InteractionTest
                 Assert.That(light.Radius, Is.EqualTo(3f * factor).Within(0.0001f));
                 Assert.That(light.Energy, Is.EqualTo(1.5f * factor).Within(0.0001f));
             }
+        });
+        await Client.WaitAssertion(() =>
+        {
+            var light = CEntMan.GetComponent<ClientPointLightComponent>(CPlayer);
+            Assert.That(light.Enabled, Is.EqualTo(factor > 0f));
+            Assert.That(light.Color, Is.EqualTo(color));
         });
     }
 
