@@ -10,6 +10,7 @@ namespace Content.Goobstation.Client.Polls.UI;
 public sealed partial class PollVotingWindow : FancyWindow
 {
     [Dependency] private PollManager _pollManager = default!;
+    public static event Action<int>? PollDisplayed; // Arcane
 
     public PollVotingWindow()
     {
@@ -85,6 +86,10 @@ public sealed partial class PollVotingWindow : FancyWindow
             _pollManager.RequestPollDetails(poll.PollId);
             var pollControl = new PollControl(poll, _pollManager);
             PollsList.AddChild(pollControl);
+            // Arcane-Start
+            if (IsOpen)
+                PollDisplayed?.Invoke(poll.PollId);
+            // Arcane-End
         }
     }
 
@@ -274,6 +279,15 @@ public sealed class PollControl : BoxContainer
             };
             metaBox.AddChild(multiLabel);
         }
+
+        // Arcane-Start
+        metaBox.AddChild(new Label
+        {
+            Text = Loc.GetString("arcane-poll-control-seen-by", ("count", _poll.SeenCount)),
+            FontColorOverride = new Color(0.7f, 0.7f, 0.8f),
+            StyleClasses = { "LabelSubText" }
+        });
+        // Arcane-End
 
         var separator = new BoxContainer
         {

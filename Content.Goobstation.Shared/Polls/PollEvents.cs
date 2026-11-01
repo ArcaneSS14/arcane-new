@@ -15,6 +15,7 @@ public sealed class MsgActivePollsResponse : NetMessage
 {
     public override MsgGroups MsgGroup => MsgGroups.Command;
     public List<PollData> Polls { get; set; } = new();
+    public List<int> SeenPollIds { get; set; } = new(); // Arcane
 
     public override void ReadFromBuffer(NetIncomingMessage buffer, IRobustSerializer serializer)
     {
@@ -22,6 +23,12 @@ public sealed class MsgActivePollsResponse : NetMessage
         Polls = new List<PollData>(count);
         for (var i = 0; i < count; i++)
             Polls.Add(ReadPollData(buffer));
+        // Arcane-Start
+        var seenCount = buffer.ReadVariableInt32();
+        SeenPollIds = new List<int>(seenCount);
+        for (var i = 0; i < seenCount; i++)
+            SeenPollIds.Add(buffer.ReadVariableInt32());
+        // Arcane-End
     }
 
     public override void WriteToBuffer(NetOutgoingMessage buffer, IRobustSerializer serializer)
@@ -29,6 +36,11 @@ public sealed class MsgActivePollsResponse : NetMessage
         buffer.WriteVariableInt32(Polls.Count);
         foreach (var poll in Polls)
             WritePollData(buffer, poll);
+        // Arcane-Start
+        buffer.WriteVariableInt32(SeenPollIds.Count);
+        foreach (var id in SeenPollIds)
+            buffer.WriteVariableInt32(id);
+        // Arcane-End
     }
 
     internal static PollData ReadPollData(NetIncomingMessage buffer)
@@ -43,6 +55,7 @@ public sealed class MsgActivePollsResponse : NetMessage
             AllowMultipleChoices = buffer.ReadBoolean()
         };
         buffer.ReadPadBits();
+        poll.SeenCount = buffer.ReadVariableInt32(); // Arcane
 
         var hasEndTime = buffer.ReadBoolean();
         buffer.ReadPadBits();
@@ -79,6 +92,7 @@ public sealed class MsgActivePollsResponse : NetMessage
         buffer.Write(poll.Active);
         buffer.Write(poll.AllowMultipleChoices);
         buffer.WritePadBits();
+        buffer.WriteVariableInt32(poll.SeenCount); // Arcane
 
         buffer.Write(poll.EndTime != null);
         buffer.WritePadBits();
