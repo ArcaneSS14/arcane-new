@@ -81,6 +81,7 @@ public sealed partial class QueueCritterWalk : LayoutContainer
             if (_critters.TryGetValue(name, out var existing))
             {
                 existing.QueueIndex = i;
+                existing.Leaving = false;
 
                 var isLocal = name == yourName;
                 if (existing.IsLocalPlayer != isLocal)

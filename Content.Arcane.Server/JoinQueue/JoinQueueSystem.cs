@@ -284,6 +284,11 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var mode = preset == null ? "Unknown" : Loc.GetString(preset.ModeTitle);
         var elapsed = _ticker.RunLevel >= GameRunLevel.InRound
             ? (int) (_timing.CurTime - _ticker.RoundStartTimeSpan).TotalMinutes : 0;
+        var mapName = _maps.GetSelectedMap()?.MapName ?? "Unknown";
+        var playerCount = ActualPlayersCount;
+        var maximumPlayers = _cfg.GetCVar(CCVars.SoftMaxPlayers);
+        var leaderboardNames = longest.Select(p => p.Value.Name).ToList();
+        var leaderboardSeconds = longest.Select(p => p.Value.Seconds).ToList();
         for (var i = 0; i < entries.Length; i++)
         {
             var session = entries[i].Session!;
@@ -292,16 +297,16 @@ public sealed partial class JoinQueueSystem : EntitySystem
                 Total = entries.Length,
                 Position = i + 1,
                 EstimatedWaitSeconds = average < 0 ? -1 : (float) (average * (i + 1) / entries.Length),
-                MapName = _maps.GetSelectedMap()?.MapName ?? "Unknown",
+                MapName = mapName,
                 GameMode = mode,
-                ServerPlayerCount = ActualPlayersCount,
-                MaxPlayerCount = _cfg.GetCVar(CCVars.SoftMaxPlayers),
+                ServerPlayerCount = playerCount,
+                MaxPlayerCount = maximumPlayers,
                 RoundDurationMinutes = elapsed,
                 YourName = session.Name,
                 PlayerNames = names,
                 PlayerWaitSeconds = waits,
-                QueueWaitLeaderboardNames = longest.Select(p => p.Value.Name).ToList(),
-                QueueWaitLeaderboardSeconds = longest.Select(p => p.Value.Seconds).ToList(),
+                QueueWaitLeaderboardNames = leaderboardNames,
+                QueueWaitLeaderboardSeconds = leaderboardSeconds,
                 MiniGameLeaderboard = board,
             });
         }
