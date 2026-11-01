@@ -81,7 +81,11 @@ public sealed class GyrussGame
         SpawnEnemies(dt);
         FireEnemyBullets(dt);
         MoveEnemies(dt);
+        if (GameOver)
+            return;
         MoveBullets(dt);
+        if (GameOver)
+            return;
 
         if (_waveEnemiesLeft <= 0 && Enemies.Count == 0)
         {

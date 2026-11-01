@@ -10,7 +10,7 @@ namespace Content.Arcane.Client.JoinQueue;
 [GenerateTypedNameReferences]
 public sealed partial class QueueGui : Control
 {
-    private const float SidePanelsMinWidth = 1360f;
+    private const float SidePanelGap = 16f;
 
     public event Action? QuitPressed;
 
@@ -27,9 +27,19 @@ public sealed partial class QueueGui : Control
     {
         base.FrameUpdate(args);
 
-        var showSidePanels = Size.X >= SidePanelsMinWidth;
+        var centerWidth = MathF.Max(QueueCenterPanel.Size.X, QueueCenterPanel.DesiredSize.X);
+        var sideSpace = (Size.X - centerWidth) / 2f;
+        var requiredSpace = MathF.Max(RequiredSideWidth(MiniGameLeaderboardPanel, MiniGameLeaderboard),
+            RequiredSideWidth(QueueTimeLeaderboardPanel, QueueTimeLeaderboard));
+        var showSidePanels = centerWidth > 0f && sideSpace >= requiredSpace + SidePanelGap;
         MiniGameLeaderboardPanel.Visible = showSidePanels;
         QueueTimeLeaderboardPanel.Visible = showSidePanels;
+    }
+
+    private static float RequiredSideWidth(Control panel, Control content)
+    {
+        return MathF.Max(content.MinSize.X + content.Margin.SumHorizontal, content.DesiredSize.X)
+            + panel.Margin.SumHorizontal;
     }
 
     public void UpdateInfo(QueueUpdateMessage msg)
@@ -51,7 +61,7 @@ public sealed partial class QueueGui : Control
 
         ServerInfo.Text = Loc.GetString("queue-server-info",
             ("map", string.IsNullOrWhiteSpace(msg.MapName) ? Loc.GetString("generic-unknown-title") : msg.MapName),
-            ("mode", string.IsNullOrWhiteSpace(msg.GameMode) ? Loc.GetString("generic-unknown-title") : msg.GameMode),
+            ("mode", string.IsNullOrWhiteSpace(msg.GameMode) ? Loc.GetString("generic-unknown-title") : Loc.GetString(msg.GameMode)),
             ("players", msg.ServerPlayerCount),
             ("max", msg.MaxPlayerCount),
             ("duration", msg.RoundDurationMinutes));

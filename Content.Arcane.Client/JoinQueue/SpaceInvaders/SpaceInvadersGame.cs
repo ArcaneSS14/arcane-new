@@ -95,8 +95,12 @@ public sealed class SpaceInvadersGame
         CoreX = GameW / 2f - 22f + MathF.Sin(_coreDrift * 1.4f) * (28f + Wave * 2f);
 
         MoveCrawlers(frameTime);
+        if (GameOver)
+            return;
         ShootCrawlerBullet(frameTime);
         MoveBullets(frameTime);
+        if (GameOver)
+            return;
 
         if (Crawlers.Count == 0 && CoreHealth <= 0)
         {
@@ -253,7 +257,14 @@ public sealed class SpaceInvadersGame
 
         _crawlerDirection *= -1;
         foreach (var crawler in Crawlers)
+        {
             crawler.Y += 14f + Wave * 1.5f;
+            if (crawler.Y + CrawlerH >= PlayerY - 4f)
+            {
+                EndGame();
+                return;
+            }
+        }
     }
 
     private void ShootCrawlerBullet(float frameTime)

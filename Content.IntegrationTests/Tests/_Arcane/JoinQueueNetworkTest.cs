@@ -69,6 +69,7 @@ public sealed class JoinQueueNetworkTest : GameTest
         {
             Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
             Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
+            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.GreaterThanOrEqualTo(0));
         });
         await Pair.ReallyBeIdle(5);
         await Client.WaitAssertion(() => Assert.That(Client.ResolveDependency<IStateManager>().CurrentState, Is.Not.TypeOf<QueueState>()));
@@ -120,6 +121,7 @@ public sealed class JoinQueueNetworkTest : GameTest
             Assert.That(current.UserId, Is.EqualTo(session.UserId));
             Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
             Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
+            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.EqualTo(-1), "Bypassing the queue must not create a queue-wait estimate.");
         });
     }
 
