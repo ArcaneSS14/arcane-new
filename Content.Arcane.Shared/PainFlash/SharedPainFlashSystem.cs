@@ -22,7 +22,7 @@ public abstract partial class SharedPainFlashSystem : EntitySystem
     {
         damage = FixedPoint2.Zero;
 
-        if (!args.InterruptsDoAfters || args.DamageDelta is null)
+        if (!args.DamageIncreased || args.DamageDelta is null)
             return false;
 
         damage = DamageSpecifier.GetPositive(args.DamageDelta).GetTotal();
