@@ -50,11 +50,13 @@ public sealed partial class CrewManifestListing : BoxContainer
 
     public void AddCrewManifestEntries(CrewManifestEntries entries)
     {
-        // Arcane-Edit-Start: cache entries so search changes can rebuild the listing
+        // Arcane-Start
         _entries = entries;
         Refresh();
+        // Arcane-End
     }
 
+    // Arcane-Start
     public void ClearCrewManifestEntries()
     {
         _entries = null;
@@ -152,7 +154,7 @@ public sealed partial class CrewManifestListing : BoxContainer
             PlaySearchTransition();
 
         var filter = _searchBar?.Text.Trim();
-        // Arcane-Edit-End
+        // Arcane-End
         var entryDict = new Dictionary<DepartmentPrototype, List<CrewManifestEntry>>();
 
         foreach (var entry in _entries.Entries) // Arcane-Edit: entries.Entries > _entries.Entries
