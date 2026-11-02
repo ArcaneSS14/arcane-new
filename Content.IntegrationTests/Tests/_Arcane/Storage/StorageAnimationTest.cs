@@ -11,11 +11,14 @@ using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
 using Content.Shared.Labels;
 using Robust.Client.Graphics;
 using Content.Client.Graphics;
+using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests._Arcane.Storage;
 
 public sealed class StorageAnimationTest : InteractionTest
 {
+    private static readonly ProtoId<ShaderPrototype> OutlineShader = "SelectionOutlineInrange";
+
     [TestPrototypes]
     private const string Prototypes = """
 - type: entity
@@ -127,7 +130,7 @@ public sealed class StorageAnimationTest : InteractionTest
             await Client.WaitPost(() =>
             {
                 var sprites = CEntMan.System<SpriteSystem>();
-                var shader = CProtoMan.Index<ShaderPrototype>("SelectionOutlineInrange").Instance();
+                var shader = CProtoMan.Index(OutlineShader).Instance();
                 sprites.SetPostShader(CTarget!.Value, new SpriteComponent.PostShaderArgs(ContentPostShaderIds.InteractionOutline, shader));
                 sprites.SetPostShader(CTarget.Value, new SpriteComponent.PostShaderArgs("test-storage-effect", shader));
             });
