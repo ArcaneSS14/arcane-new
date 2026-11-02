@@ -1,0 +1,17 @@
+{
+    "version": 1,
+    "license": "Apache-2.0",
+    "copyright": "content_copy and library_add_check icons from Material Symbols by Google LLC (https://fonts.google.com/icons), Apache-2.0",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "copy"
+        },
+        {
+            "name": "copied"
+        }
+    ]
+}
