@@ -12,6 +12,9 @@
       brass:
       - state: equipped-box
     slots: [brass]
+  - type: StealTarget
+    stealGroup: Brass
+
 - type: entity
   parent: BaseClothingBrass
   id: ClothingBrassBlack
