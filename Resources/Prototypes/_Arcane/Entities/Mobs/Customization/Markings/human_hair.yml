@@ -1,0 +1,83 @@
+- type: marking
+  id: HumanHairCombedShaved
+  bodyPart: Hair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: combed
+
+- type: marking
+  id: HumanHairCombedBackADV
+  bodyPart: Hair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: combedback
+
+- type: marking
+  id: HumanHairPunk
+  bodyPart: Hair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: punk
+
+- type: marking
+  id: HumanHairTopKnot
+  bodyPart: Hair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: topknot
+
+- type: marking
+  id: HumanHairPunkBig
+  bodyPart: Hair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: punk_big
+
+- type: marking
+  id: HumanFacialHairDED
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: ded
+
+- type: marking
+  id: HumanFacialHairGusar
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: gusar
+
+- type: marking
+  id: HumanFacialHairLogan
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: logan
+
+- type: marking
+  id: HumanFacialHairTrocki
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: trocki
+
+- type: marking
+  id: HumanFacialHairDwarfBig
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: Dwarf
+
+- type: marking
+  id: HumanFacialHairBismark
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: bismark
+
+- type: marking
+  id: HumanFacialHairBrutalBig
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/human_hair.rsi
+    state: big_Brutal
