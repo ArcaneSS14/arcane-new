@@ -1,42 +1,83 @@
 light_mode unshaded;
 
 uniform highp float glow_brightness; // brightness multiplier applied to the sprite
-uniform highp float outline_width;   // reach of the copied pixel, in texels
-uniform highp float outline_alpha;   // transparency of the copied pixel
+uniform highp float outline_width;   // blur radius around the sprite, in texels (up to 3.5)
+uniform highp float outline_alpha;   // opacity of the blurred halo
 
-highp vec4 pickPixel(highp vec4 a, highp vec4 b) {
-    return b.a > a.a ? b : a;
+// Texels sampled on each side of the pixel. The kernel covers an 8x8 texel area,
+// which bounds the usable outline_width.
+const highp int KERNEL = 4;
+const highp float MAX_RADIUS = 3.5;
+
+// One texel, premultiplied by alpha, or nothing if it lies outside our frame.
+highp vec4 texel(highp vec2 uv, highp mat2 toFrame) {
+    highp vec2 frame = UV2 + toFrame * (uv - UV);
+    if (frame.x < 0.0 || frame.y < 0.0 || frame.x > 1.0 || frame.y > 1.0)
+        return vec4(0.0);
+
+    highp vec4 c = texture2D(TEXTURE, uv);
+    return vec4(c.rgb * c.a, c.a);
 }
 
 void fragment() {
     highp vec4 sprite = zTexture(UV);
 
+    // Maps an atlas UV offset to an offset in UV2 (0..1 across this sprite's frame), so samples
+    // from a neighbouring atlas state can be rejected. Derivatives only exist in the fragment
+    // stage, while helper functions are also compiled into the vertex shader, so this stays here.
+    highp mat2 toFrame = mat2(0.0);
+#ifdef HAS_DFDX
+    highp mat2 uvJ = mat2(dFdx(UV), dFdy(UV));
+    highp mat2 uv2J = mat2(dFdx(UV2), dFdy(UV2));
+    highp float det = uvJ[0][0] * uvJ[1][1] - uvJ[1][0] * uvJ[0][1];
+    if (det != 0.0)
+        toFrame = uv2J * (mat2(uvJ[1][1], -uvJ[0][1], -uvJ[1][0], uvJ[0][0]) / det);
+#endif
+
+    // Weigh every texel around the pixel by its exact distance to it. The weight is continuous
+    // in the pixel position and falls to zero at the radius, so the halo is smooth inside and at
+    // its edge, and neighbouring colours blend into each other instead of forming a pattern.
     highp vec2 ps = TEXTURE_PIXEL_SIZE;
+    highp vec2 p = UV / ps - 0.5;
+    highp vec2 base = floor(p);
+    highp float radius = clamp(outline_width, 0.5, MAX_RADIUS);
 
-    // Copy the nearest sprite pixel and paint it into the empty space around the sprite.
-    highp vec4 copy = sprite;
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width,  0.0) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width,  0.0) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( 0.0,  outline_width) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( 0.0, -outline_width) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width,  outline_width) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width,  outline_width) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2( outline_width, -outline_width) * ps));
-    copy = pickPixel(copy, texture2D(TEXTURE, UV + vec2(-outline_width, -outline_width) * ps));
+    highp vec4 blur = vec4(0.0);
+    highp float total = 0.0;
+    for (int y = 1 - KERNEL; y <= KERNEL; y++)
+    {
+        for (int x = 1 - KERNEL; x <= KERNEL; x++)
+        {
+            highp vec2 cell = base + vec2(float(x), float(y));
+            highp vec2 delta = cell - p;
+            highp float k = max(0.0, 1.0 - dot(delta, delta) / (radius * radius));
+            highp float w = k * k;
+            blur += texel((cell + 0.5) * ps, toFrame) * w;
+            total += w;
+        }
+    }
+    blur /= total;
 
-    // RSI states share an unpadded atlas, so keep the copy off the frame border
-    // to avoid bleeding in the neighbouring state.
-    highp float margin = 0.03;
-    highp float guard = smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
-                      * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
+#ifndef HAS_DFDX
+    // Without derivatives we can't find the frame bounds, so fade the halo out near the
+    // frame border instead to keep the neighbouring atlas state from bleeding in.
+    highp float margin = 0.1;
+    blur *= smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
+          * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
+#endif
 
-    // Only paint where the sprite itself is absent but a copied pixel reaches in.
-    highp float copied = clamp(copy.a - sprite.a, 0.0, 1.0) * guard;
+    highp vec3 haloColor = blur.a > 0.0 ? blur.rgb / blur.a : vec3(0.0);
+    highp float haloAlpha = clamp(blur.a * outline_alpha, 0.0, 1.0);
 
-    highp vec4 glowing = vec4(min(sprite.rgb * glow_brightness, vec3(3.0)), sprite.a);
-    highp vec4 ghost = vec4(copy.rgb, copied * outline_alpha);
+    highp vec3 glowing = min(sprite.rgb * glow_brightness, vec3(3.0));
 
-    COLOR = mix(ghost, glowing, step(0.01, sprite.a));
+    // Draw the bright sprite over its blurred halo.
+    highp float outAlpha = sprite.a + haloAlpha * (1.0 - sprite.a);
+    highp vec3 outColor = outAlpha > 0.0
+        ? (glowing * sprite.a + haloColor * haloAlpha * (1.0 - sprite.a)) / outAlpha
+        : vec3(0.0);
+
+    COLOR = vec4(outColor, outAlpha);
 
     if (COLOR.a < 0.004) {
         discard;
