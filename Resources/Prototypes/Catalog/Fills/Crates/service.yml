@@ -181,6 +181,12 @@
           - id: ClothingUniformJumpskirtPerformer
           - id: ClothingShoesBootsPerformer
           - id: ClothingHeadPerformerWig
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel

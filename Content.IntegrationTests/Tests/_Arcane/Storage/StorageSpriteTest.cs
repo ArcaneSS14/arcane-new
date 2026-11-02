@@ -3,11 +3,59 @@ using Content.Client.Storage.Visualizers;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Storage.EntitySystems;
 using Robust.Client.GameObjects;
+using System.Numerics;
 
 namespace Content.IntegrationTests.Tests._Arcane.Storage;
 
 public sealed class StorageSpriteTest : InteractionTest
 {
+    [Test]
+    public async Task StorageOffsetsPreserveTallAndExceptionalSprites()
+    {
+        var cases = new[]
+        {
+            ("ClosetSteelBase", 32, 48, 0.25f),
+            ("LockerSteel", 32, 48, 0.25f),
+            ("LockerNanorep", 32, 48, 0.25f),
+            ("CrateGenericSteel", 32, 48, 0.25f),
+            ("CrateFreezer", 32, 48, 0.25f),
+            ("CrateHydroponics", 32, 48, 0.25f),
+            ("CrateMedical", 32, 48, 0.25f),
+            ("CrateInternals", 32, 48, 0.25f),
+            ("CrateFoodPizza", 32, 48, 0.25f),
+            ("CrateFoodPizzaLarge", 32, 48, 0.25f),
+            ("CrateFoodMRE", 32, 48, 0.25f),
+            ("CrateAtmosphericsSecure", 32, 48, 0.25f),
+            ("CrateWooden", 32, 48, 0.25f),
+            ("CratePlastic", 62, 37, 0f),
+            ("CrateLivestock", 32, 32, 0f),
+            ("CrateRodentCage", 32, 32, 0f),
+            ("CratePirate", 32, 32, 0f),
+            ("LavalandCrateNecropolis", 32, 48, 0f),
+            ("CrateBingle", 32, 32, 0f),
+        };
+
+        foreach (var (prototype, width, height, offsetY) in cases)
+        {
+            await SpawnTarget(prototype);
+            await Pair.RunUntilSynced();
+            await Client.WaitAssertion(() =>
+            {
+                var uid = CTarget!.Value;
+                var sprite = CEntMan.GetComponent<SpriteComponent>(uid);
+                var sprites = CEntMan.System<SpriteSystem>();
+                var door = sprite[sprites.LayerMapGet(uid, StorageVisualLayers.Door)];
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(sprite.Offset, Is.EqualTo(new Vector2(0, offsetY)), prototype);
+                    Assert.That(door.ActualRsi?.Size.X, Is.EqualTo(width), prototype);
+                    Assert.That(door.ActualRsi?.Size.Y, Is.EqualTo(height), prototype);
+                }
+            });
+            await Delete(Target!.Value);
+        }
+    }
+
     [Test]
     public async Task StorageDoorsRemainVisibleThroughRepeatedOpenClose()
     {

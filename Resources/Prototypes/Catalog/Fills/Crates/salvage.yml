@@ -24,6 +24,12 @@
         - id: ClothingBeltUtility
         - id: OreBag
         - id: ClothingBeltSalvageWebbing
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -107,6 +113,12 @@
         amount: 4
 
 # Salvage rewards
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 - type: entity
   parent: CrateGenericSteel
   id: CrateSeismicCharge
@@ -118,6 +130,12 @@
       entity_storage:
         id: SeismicCharge
         amount: 6
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -145,6 +163,12 @@
       entity_storage:
         id: WeaponCrusher
         amount: 2
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -159,6 +183,12 @@
         - id: FultonBeacon
         - id: Fulton
           amount: 8
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -185,6 +215,12 @@
         - id: ClothingMaskBreath
         - id: OxygenTankFilled
         - id: NitrogenTankFilled
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -196,6 +232,12 @@
     containers:
       entity_storage:
         id: WeaponCrusherGlaive
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -207,3 +249,9 @@
     containers:
       entity_storage:
         id: ClothingNeckCloakSalvagerSupreme
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  # Arcane-End

@@ -24,6 +24,12 @@
       entity_storage:
         id: ParcelWrap
         amount: 3
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+  # Arcane-End
 
 
 - type: entity

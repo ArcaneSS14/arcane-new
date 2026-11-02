@@ -13,20 +13,32 @@
   - type: AccessReader
     access: [ [ "Chapel" ] ]
   - type: Sprite
+    # Arcane-Edit-Start: Orion storage sprites
     sprite: _Trauma/Structures/Storage/closet.rsi
-    layers:
-    - state: generic
+    layers: !Clear
+    - !Index:0
+      state: chapel
       map: ["enum.StorageVisualLayers.Base"]
-    - state: generic_door
+    - !Index:0
+      state: chapel_door
       map: ["enum.StorageVisualLayers.Door"]
-    - state: locked
+    - !Index:0
+      state: locked
       map: ["enum.LockVisualLayers.Lock"]
       shader: unshaded
-    - state: welded
+    - !Index:0
+      state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
-    - state: paper
+    - !Index:0
+      state: paper
       visible: false
       sprite: Structures/Storage/closet_labels.rsi
       offset: "-0.065,0"
       map: ["enum.PaperLabelVisuals.Layer"]
+    # Arcane-Edit-End
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Trauma/Structures/Storage/closet.rsi
+    state: icon
+  # Arcane-End

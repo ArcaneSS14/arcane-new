@@ -62,8 +62,10 @@
     state: gold_3
   product: IngotGold
   container:
-    entity: WrappedParcel
-    containerId: contents
+    # Arcane-Edit-Start: Orion storage sprites
+    entity: CrateGolden
+    containerId: entity_storage
+    # Arcane-Edit-End
   cost: 3225
   category: cargoproduct-category-name-materials
   group: market
@@ -77,8 +79,10 @@
     state: silver_3
   product: IngotSilver
   container:
-    entity: WrappedParcel
-    containerId: contents
+    # Arcane-Edit-Start: Orion storage sprites
+    entity: CrateSilver
+    containerId: entity_storage
+    # Arcane-Edit-End
   cost: 2580
   category: cargoproduct-category-name-materials
   group: market
