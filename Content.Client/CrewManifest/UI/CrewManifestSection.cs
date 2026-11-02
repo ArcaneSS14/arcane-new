@@ -117,6 +117,8 @@ public sealed class CrewManifestSection : BoxContainer
         var background = new StyleBoxFlat(Color.Transparent);
         var icon = new TextureRect
         {
+            Texture = _copyIcon,
+            TextureScale = new Vector2(ManifestIconSize / _copyIcon.Width, ManifestIconSize / _copyIcon.Height),
             VerticalAlignment = VAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0),
             Modulate = Color.Transparent,
@@ -140,22 +142,19 @@ public sealed class CrewManifestSection : BoxContainer
 
         var hovered = false;
         var flashing = false;
+        var pressNumber = 0UL;
 
-        void ShowIcon(Texture texture)
+        void SetIcon(Texture texture)
         {
             icon.Texture = texture;
             icon.TextureScale = new Vector2(ManifestIconSize / texture.Width, ManifestIconSize / texture.Height);
-            icon.Modulate = Color.White;
         }
 
         void ResetVisuals()
         {
             background.BackgroundColor = hovered ? HoverBackground : Color.Transparent;
 
-            if (hovered)
-                ShowIcon(_copyIcon);
-            else
-                icon.Modulate = Color.Transparent; // keep the reserved space, hide the glyph
+            icon.Modulate = hovered ? Color.White : Color.Transparent;
         }
 
         button.OnMouseEntered += _ =>
@@ -183,13 +182,19 @@ public sealed class CrewManifestSection : BoxContainer
             if (copied)
                 clipboard.SetText(text);
 
+            var currentPress = ++pressNumber;
             flashing = true;
             background.BackgroundColor = copied ? CopiedBackground : Color.Transparent;
-            ShowIcon(copied ? _copiedIcon : _failedIcon);
+            SetIcon(copied ? _copiedIcon : _failedIcon);
+            icon.Modulate = Color.White;
 
             Timer.Spawn(CopiedFeedbackDuration, () =>
             {
+                if (currentPress != pressNumber)
+                    return;
+
                 flashing = false;
+                SetIcon(_copyIcon);
                 ResetVisuals();
             });
         };
