@@ -14,6 +14,7 @@ public sealed partial class CrewManifestUiFragment : BoxContainer
         RobustXamlLoader.Load(this);
 
         StationName.AddStyleClass("LabelBig");
+        CrewManifestListing.SearchBar = SearchBar; // Arcane
         Orientation = LayoutOrientation.Vertical;
         HorizontalExpand = true;
         VerticalExpand = true;
@@ -21,7 +22,7 @@ public sealed partial class CrewManifestUiFragment : BoxContainer
 
     public void UpdateState(string stationName, CrewManifestEntries? entries)
     {
-        CrewManifestListing.RemoveAllChildren();
+        CrewManifestListing.ClearCrewManifestEntries(); // Arcane-Edit: RemoveAllChildren() > ClearCrewManifestEntries()
 
         StationNameContainer.Visible = entries != null;
         StationName.Text = stationName;
