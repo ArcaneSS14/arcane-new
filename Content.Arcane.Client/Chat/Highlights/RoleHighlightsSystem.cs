@@ -200,8 +200,6 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
             {
                 node.Write(writer);
                 writer.Flush();
-                if (writer.BaseStream is FileStream file)
-                    file.Flush(flushToDisk: true);
             }
 
             ReplaceHighlightsFile(temporaryPath);
