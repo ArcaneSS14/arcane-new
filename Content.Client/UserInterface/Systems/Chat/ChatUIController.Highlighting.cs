@@ -218,10 +218,14 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         if (job != null)
         {
             // Convert the job title to kebab-case and use it as a key for the loc file.
-            var jobKey = job.Value.Id.Replace(' ', '-').ToLower();
+            var jobKey = job.Value.Id.Replace(' ', '-').ToLowerInvariant(); // Arcane-Edit: ToLower() > ToLowerInvariant()
 
-            if (_loc.TryGetString($"highlights-{jobKey}", out var jobMatches))
+            // Arcane-Edit-Start: prefer the player's per-role highlights over defaults
+            if (TryGetSavedRoleHighlights(job.Value, out var savedHighlights))
+                newHighlights += '\n' + savedHighlights;
+            else if (_loc.TryGetString($"highlights-{jobKey}", out var jobMatches))
                 newHighlights += '\n' + jobMatches.Replace(", ", "\n");
+            // Arcane-Edit-End
         }
 
         _autoHighlights = newHighlights;
