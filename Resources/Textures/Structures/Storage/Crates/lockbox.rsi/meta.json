@@ -17,16 +17,22 @@
       "name": "closed"
     },
     {
-      "name": "overlay-closed"
+      "name": "overlay"
     },
     {
-      "name": "overlay-open"
+      "name": "overlay-closed"
     },
     {
       "name": "open"
     },
     {
       "name": "welded"
+    },
+    {
+      "name": "locked"
+    },
+    {
+      "name": "unlocked"
     },
     {
       "name": "sparking",
@@ -43,13 +49,7 @@
       ]
     },
     {
-      "name": "locked"
-    },
-    {
-      "name": "unlocked"
-    },
-    {
-      "name": "overlay"
+      "name": "overlay-open"
     }
   ]
 }

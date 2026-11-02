@@ -14,7 +14,7 @@
         - id: NitrogenTankFilled
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateCargo # Arcane-Edit: CrateGenericSteel > CrateCargo
   id: CrateCargoParcelWrap
   name: parcel wrap crate
   description: All your parcel wrapping needs in one crate, containing three rolls of parcel wrap.
@@ -24,12 +24,6 @@
       entity_storage:
         id: ParcelWrap
         amount: 3
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
-  # Arcane-End
 
 
 - type: entity

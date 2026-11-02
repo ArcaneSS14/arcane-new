@@ -155,8 +155,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: janitor_wardrobe_door
   # Arcane-End
 
@@ -168,8 +166,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: law_wardrobe_door
   # Arcane-End
 
@@ -181,8 +177,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: chef_wardrobe_door
   # Arcane-End
 
@@ -200,8 +194,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: law_wardrobe_door
   # Arcane-End
 
@@ -212,8 +204,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: cargo_wardrobe_door
   # Arcane-End
 
@@ -225,8 +215,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: mining_wardrobe_door
   # Arcane-End
 
@@ -237,8 +225,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: eng_wardrobe_door
   # Arcane-End
 
@@ -249,8 +235,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: med_wardrobe_door
   # Arcane-End
 
@@ -278,8 +262,6 @@
       sprite: Structures/Storage/closet_labels.rsi
       map: ["enum.PaperLabelVisuals.Layer"]
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: robo_wardrobe_door
   # Arcane-End
 
@@ -290,8 +272,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: chemical_wardrobe_door
   # Arcane-End
 
@@ -302,8 +282,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: genetic_wardrobe_door
   # Arcane-End
 
@@ -314,8 +292,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: viro_wardrobe_door
   # Arcane-End
 
@@ -326,8 +302,6 @@
   # Arcane-Start: Orion storage sprites
   components:
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: science_wardrobe_door
   # Arcane-End
 

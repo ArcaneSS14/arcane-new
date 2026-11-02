@@ -94,7 +94,7 @@
         id: SheetPlasma
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateGolden # Arcane-Edit: CrateGenericSteel > CrateGolden
   id: CrateMaterialGold
   name: gold crate
   description: 30 bars of gold.
@@ -103,15 +103,9 @@
     containers:
       entity_storage:
         id: IngotGold
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
-  # Arcane-End
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateSilver # Arcane-Edit: CrateGenericSteel > CrateSilver
   id: CrateMaterialSilver
   name: silver crate
   description: 30 bars of silver.
@@ -120,12 +114,6 @@
     containers:
       entity_storage:
         id: IngotSilver
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
-  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel

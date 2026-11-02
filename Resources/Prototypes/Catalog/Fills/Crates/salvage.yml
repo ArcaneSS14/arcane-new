@@ -1,5 +1,5 @@
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSalvageEquipment
   name: "salvage equipment crate"
   suffix: Filled
@@ -24,12 +24,6 @@
         - id: ClothingBeltUtility
         - id: OreBag
         - id: ClothingBeltSalvageWebbing
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -101,7 +95,7 @@
           prob: 0.0001
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusherDagger
   name: crusher dagger crate
   description: Contains 4 crusher daggers for use by salvage.
@@ -113,14 +107,8 @@
         amount: 4
 
 # Salvage rewards
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSeismicCharge
   name: seismic charge crate
   description: Contains 6 seismic charges for use by salvage.
@@ -130,12 +118,6 @@
       entity_storage:
         id: SeismicCharge
         amount: 6
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -153,7 +135,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusher
   name: crusher crate
   description: Contains 2 crushers for use by salvage.
@@ -163,15 +145,9 @@
       entity_storage:
         id: WeaponCrusher
         amount: 2
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateFulton
   name: fulton crate
   description: Contains a fulton beacon and 8 fultons.
@@ -183,12 +159,6 @@
         - id: FultonBeacon
         - id: Fulton
           amount: 8
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
   parent: CrateGenericSteel
@@ -202,7 +172,7 @@
         id: JetpackVoidFilled
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSalvageHardsuit
   name: mining hardsuit crate
   description: Contains a mining hardsuit, breath mask, and one tank of both oxygen and nitrogen.
@@ -215,15 +185,9 @@
         - id: ClothingMaskBreath
         - id: OxygenTankFilled
         - id: NitrogenTankFilled
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateCrusherGlaive
   name: crusher glaive crate
   description: Contains a crusher glaive for use by salvage.
@@ -232,15 +196,9 @@
     containers:
       entity_storage:
         id: WeaponCrusherGlaive
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSupremeSalvagerCloak
   name: supreme salvager cloak crate
   description: Contains a cloak only to be worn by supreme salvagers. Wearing it undeservedly will result in your doom.
@@ -249,9 +207,3 @@
     containers:
       entity_storage:
         id: ClothingNeckCloakSalvagerSupreme
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
-  # Arcane-End

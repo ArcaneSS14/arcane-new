@@ -15,23 +15,18 @@
   - type: Sprite
     # Arcane-Edit-Start: Orion storage sprites
     sprite: _Trauma/Structures/Storage/closet.rsi
-    layers: !Clear
-    - !Index:0
-      state: chapel
+    layers:
+    - state: chapel
       map: ["enum.StorageVisualLayers.Base"]
-    - !Index:0
-      state: chapel_door
+    - state: chapel_door
       map: ["enum.StorageVisualLayers.Door"]
-    - !Index:0
-      state: locked
+    - state: locked
       map: ["enum.LockVisualLayers.Lock"]
       shader: unshaded
-    - !Index:0
-      state: welded
+    - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
-    - !Index:0
-      state: paper
+    - state: paper
       visible: false
       sprite: Structures/Storage/closet_labels.rsi
       offset: "-0.065,0"

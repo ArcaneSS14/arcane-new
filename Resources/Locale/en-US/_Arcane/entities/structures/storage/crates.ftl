@@ -1,29 +1,22 @@
 ent-CrateAtmospherics = atmospherics crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateCargo = cargo crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateDeForest = DeForest crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateFreezerDonk = Donk Co. fridge
     .desc = A Donk Co. brand fridge, keeps your donkpockets and foam ammunition fresh!
 
 ent-CrateGolden = golden crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateFreezerKitchen = food icebox
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateLavender = lavender crate
     .desc = A glittery purple... no, lavender crate.
 
 ent-CrateMedicalAlt = medical crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateMining = mining crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateNakamura = nakamura engineering crate
     .desc = Crate from Nakamura Engineering, most likely containing engineering supplies.
@@ -32,7 +25,6 @@ ent-CratePink = pink crate
     .desc = A glittery pink crate.
 
 ent-CrateRobotics = robotics crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateRobust = robust industries crate
     .desc = Robust Industries LLC. crate. Feels oddly nostalgic.
@@ -41,22 +33,16 @@ ent-CrateSELF = S.E.L.F. crate
     .desc = A robust-looking crate with a seemingly decorative holographic display. The front of the crate proudly declares its allegiance to the notorious terrorist group 'S.E.L.F'.
 
 ent-CrateSilver = silver crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateWooden = wooden crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateAnimalRightsConsortiumSecure = animal rights consortium crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateAtmosphericsSecure = secure atmospherics crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateBitrunSecure = bitrunning crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateCargoSecure = secure cargo crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateCybersunDawnSecure = Cybersun crate
     .desc = A secure crate from Cybersun Industries. It has distinct orange-green colouring, probably of some department or division, but you cannot tell what is it.
@@ -71,13 +57,10 @@ ent-CrateCybersunNoonSecure = Cybersun crate
     .desc = A secure crate from Cybersun Industries. It has distinct yellow-orange colouring, probably of some department or division, but you cannot tell what is it.
 
 ent-CrateFreezerDonkSecure = secure Donk Co. fridge
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateGorlexSecure = Gorlex Marauders crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateGorlexWeaponSecure = Gorlex Marauders weapon crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateInterdyneSecure = Interdyne crate
     .desc = Crate belonging to Interdyne Pharmaceutics. Hopefully doesn't have bioweapons inside...
@@ -86,22 +69,16 @@ ent-CrateFreezerInterdyneSecure = Interdyne freezer
     .desc = This is an Interdyne Pharmaceuticals branded freezer. May or may not contain fresh organs.
 
 ent-CrateFreezerKitchenSecure = secure food icebox
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateMI13Secure = MI13 crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateMiningSecure = secure mining crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateRadiationSecure = secure radiation gear crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateSELFSecure = secure S.E.L.F. crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateTigerSecure = Tiger Co-Op crate
-    .desc = { ent-CrateGenericSteel.desc }
 
 ent-CrateWaffleSecure = Waffle corp. crate
     .desc = A very outdated model and design of shipment crate with a modern lock strapped on it, how befitting of its brand owner, Waffle Corporation. Golden lettering written in cursive by the logo reads "bringing you consecutively top five world-wide rated* breakfast since 2055". A much smaller fine print, also in cursive, clarifies "*in years 2099-2126"... It's not year 2126 now, however.

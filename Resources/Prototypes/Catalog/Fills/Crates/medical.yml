@@ -1,5 +1,5 @@
 - type: entity
-  parent: CrateMedical
+  parent: CrateMedicalAlt # Arcane-Edit: CrateMedical > CrateMedicalAlt
   id: CrateMedicalSupplies
   name: medical supplies crate
   description: Basic medical supplies.
@@ -17,12 +17,6 @@
         - id: BoxLatexGloves
         - id: BoxSterileMask
         - id: BoxMouthSwab
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
-  # Arcane-End
 
 - type: entity
   parent: CrateMedical

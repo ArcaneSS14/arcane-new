@@ -4,11 +4,39 @@ using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Storage.EntitySystems;
 using Robust.Client.GameObjects;
 using System.Numerics;
+using Robust.Shared.Localization;
 
 namespace Content.IntegrationTests.Tests._Arcane.Storage;
 
 public sealed class StorageSpriteTest : InteractionTest
 {
+    [Test]
+    public async Task ThematicCratesInheritTheirDescriptions()
+    {
+        var prototypes = new[]
+        {
+            "CrateAtmospherics", "CrateCargo", "CrateDeForest", "CrateGolden",
+            "CrateFreezerKitchen", "CrateMedicalAlt", "CrateMining", "CrateRobotics",
+            "CrateSilver", "CrateWooden", "CrateAnimalRightsConsortiumSecure",
+            "CrateAtmosphericsSecure", "CrateBitrunSecure", "CrateCargoSecure",
+            "CrateFreezerDonkSecure", "CrateGorlexSecure", "CrateGorlexWeaponSecure",
+            "CrateFreezerKitchenSecure", "CrateMI13Secure", "CrateMiningSecure",
+            "CrateRadiationSecure", "CrateSELFSecure", "CrateTigerSecure",
+        };
+
+        await Client.WaitAssertion(() =>
+        {
+            var localization = Client.ResolveDependency<ILocalizationManager>();
+            var expected = localization.GetEntityData("CrateGenericSteel").Desc;
+            Assert.That(expected, Is.Not.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var prototype in prototypes)
+                    Assert.That(localization.GetEntityData(prototype).Desc, Is.EqualTo(expected), prototype);
+            }
+        });
+    }
+
     [Test]
     public async Task StorageOffsetsPreserveTallAndExceptionalSprites()
     {
@@ -27,6 +55,21 @@ public sealed class StorageSpriteTest : InteractionTest
             ("CrateFoodMRE", 32, 48, 0.25f),
             ("CrateAtmosphericsSecure", 32, 48, 0.25f),
             ("CrateWooden", 32, 48, 0.25f),
+            ("CrateCargoParcelWrap", 32, 48, 0.25f),
+            ("CrateFoodIceCream", 32, 48, 0.25f),
+            ("CrateFoodSnowcone", 32, 48, 0.25f),
+            ("CrateMaterialGold", 32, 48, 0.25f),
+            ("CrateMaterialSilver", 32, 48, 0.25f),
+            ("CrateMedicalSupplies", 32, 48, 0.25f),
+            ("CrateSalvageEquipment", 32, 48, 0.25f),
+            ("CrateCrusherDagger", 32, 48, 0.25f),
+            ("CrateSeismicCharge", 32, 48, 0.25f),
+            ("CrateCrusher", 32, 48, 0.25f),
+            ("CrateFulton", 32, 48, 0.25f),
+            ("CrateSalvageHardsuit", 32, 48, 0.25f),
+            ("CrateCrusherGlaive", 32, 48, 0.25f),
+            ("CrateSupremeSalvagerCloak", 32, 48, 0.25f),
+            ("CrateServiceTheatre", 32, 48, 0.25f),
             ("CratePlastic", 62, 37, 0f),
             ("CrateLivestock", 32, 32, 0f),
             ("CrateRodentCage", 32, 32, 0f),

@@ -1,47 +1,44 @@
 {
-  "version": 1,
-  "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from TGstation, brigmedic locker is a resprited CMO locker, n2 sprites based on fire and emergency sprites, genpop lockers, sci bio locker is a resprited bio viro locker and Evac lockers by PuroSlavKing (GitHub); Arcane chaplain palettes and cross replacing the science locker R, 2026. Native Orion science locker geometry retained.; Previous/local sprites: Secure chapel locker edited by Reestock from TG locker textures.",
-  "size": {
-    "x": 32,
-    "y": 48
-  },
-  "states": [
-    {
-      "name": "chapel"
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Taken from TGstation, brigmedic locker is a resprited CMO locker, n2 sprites based on fire and emergency sprites, genpop lockers, sci bio locker is a resprited bio viro locker and Evac lockers by PuroSlavKing (GitHub); Arcane chaplain palettes and cross replacing the science locker R, 2026. Native Orion science locker geometry retained.; Previous/local sprites: Secure chapel locker edited by Reestock from TG locker textures.",
+    "size": {
+        "x": 32,
+        "y": 48
     },
-    {
-      "name": "chapel_door"
-    },
-    {
-      "name": "chapel_open"
-    },
-    {
-      "name": "locked"
-    },
-    {
-      "name": "unlocked"
-    },
-    {
-      "name": "welded"
-    },
-    {
-      "name": "icon"
-    },
-    {
-      "name": "icon_open"
-    },
-    {
-      "name": "generic"
-    },
-    {
-      "name": "generic_door"
-    },
-    {
-      "name": "generic_icon"
-    },
-    {
-      "name": "generic_open"
-    }
-  ]
+    "states": [
+        {
+            "name": "chapel"
+        },
+        {
+            "name": "chapel_door"
+        },
+        {
+            "name": "chapel_open"
+        },
+        {
+            "name": "generic"
+        },
+        {
+            "name": "generic_door"
+        },
+        {
+            "name": "generic_open"
+        },
+        {
+            "name": "generic_icon"
+        },
+        {
+            "name": "welded"
+        },
+        {
+            "name": "unlocked"
+        },
+        {
+            "name": "locked"
+        },
+        {
+            "name": "icon"
+        }
+    ]
 }

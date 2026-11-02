@@ -66,7 +66,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateFreezer
+  parent: CrateFreezerKitchen # Arcane-Edit: CrateFreezer > CrateFreezerKitchen
   id: CrateFoodIceCream
   name: ice cream delivery
   description: An assortment of ice cream delights for any occasion! Includes 16 frozen treats.
@@ -89,15 +89,9 @@
           amount: 2
         - id: FoodFrozenSundae
           amount: 2
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
-  # Arcane-End
 
 - type: entity
-  parent: CrateFreezer
+  parent: CrateFreezerKitchen # Arcane-Edit: CrateFreezer > CrateFreezerKitchen
   id: CrateFoodSnowcone
   name: snowcone delivery
   description: A freezer packed with refreshing snowcones for a hard working crew, or even a lazy one! Includes 16 snowcones.
@@ -118,12 +112,6 @@
           amount: 2
         - id: FoodFrozenSnowconeMime
           amount: 2
-  # Arcane-Start: Orion storage sprites
-  - type: Icon
-    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
-  - type: Sprite
-    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
-  # Arcane-End
 
 - type: entity
   parent: CratePlastic
