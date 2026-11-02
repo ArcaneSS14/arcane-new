@@ -7,3 +7,4 @@
   id: BaseSpeciesMobOrganic
   components:
   - type: Perishable
+  - type: PainFlash # Arcane
