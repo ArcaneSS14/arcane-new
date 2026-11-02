@@ -74,6 +74,57 @@
     stateBaseClosed: generic
     stateDoorOpen: generic_open
     stateDoorClosed: generic_door
+  # Arcane-Start: Reversible door animation for compatible storage artwork.
+  - type: StorageAnimationVisuals
+    sprites:
+    - Structures/Storage/closet.rsi
+    - _Arcane/Structures/Storage/Closets/roboticist.rsi
+    - _Arcane/Structures/Storage/Closets/roboticist_wardrobe.rsi
+    - _Trauma/Structures/Storage/closet.rsi
+    - _Goobstation/Structures/Storage/closet.rsi
+    openStates:
+    - generic_open
+    - secure_open
+    - armory_open
+    - atmos_open
+    - bio_jan_open
+    - bio_open
+    - bio_sci_open
+    - bio_sec_open
+    - bio_viro_open
+    - bomb_open
+    - janitor_bomb_open
+    - cap_open
+    - cargo_open
+    - ce_open
+    - cmo_open
+    - emergency_open
+    - eng_open
+    - eng_secure_open
+    - fire_open
+    - freezer_open
+    - genpop_open
+    - hop_open
+    - hos_open
+    - hydro_open
+    - med_open
+    - med_secure_open
+    - mining_open
+    - n2_open
+    - paramed_open
+    - qm_open
+    - rd_open
+    - robo_open
+    - science_open
+    - sec_open
+    - syndicate_open
+    - tac_open
+    - warden_open
+    - clown_open
+    - mime_open
+    - chapel_open
+    - ntr_open
+  # Arcane-End
   - type: StaticPrice
     price: 75
 
@@ -171,6 +222,21 @@
     stateBaseClosed: generic
     stateDoorOpen: generic_open
     stateDoorClosed: generic_door
+  # Arcane-Start: Wall closets have their own hinge and retain sprite rotation.
+  - type: StorageAnimationVisuals
+    sprites:
+    - Structures/Storage/wall_locker.rsi
+    openStates:
+    - generic_open
+    - emergency_open
+    - fire_open
+    - med_open
+    - n2_open
+    - eng_open
+    - genpop_open
+    - syndicate_open
+    hinge: -0.28125, 0
+  # Arcane-End
   - type: Construction
     graph: ClosetWall
     node: done

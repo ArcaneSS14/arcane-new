@@ -133,6 +133,8 @@ public sealed class StorageSpriteTest : InteractionTest
     private async Task AssertDoor(string prototype, string expected)
     {
         await Pair.RunUntilSynced();
+        // Check the static endpoint after the client-only door transition.
+        await RunSeconds(0.25f);
         await Client.WaitAssertion(() =>
         {
             var uid = CTarget!.Value;

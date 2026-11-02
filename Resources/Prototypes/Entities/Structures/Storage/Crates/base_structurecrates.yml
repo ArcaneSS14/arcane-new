@@ -5,6 +5,94 @@
   name: crate
   description: A large container for items.
   components:
+  # Arcane-Start: Animate only the separate lids of supported crates.
+  - type: StorageAnimationVisuals
+    sprites:
+    - Structures/Storage/Crates/chemcrate_secure.rsi
+    - Structures/Storage/Crates/command.rsi
+    - Structures/Storage/Crates/electrical.rsi
+    - Structures/Storage/Crates/engicrate_secure.rsi
+    - Structures/Storage/Crates/engineering.rsi
+    - Structures/Storage/Crates/freezer.rsi
+    - Structures/Storage/Crates/generic.rsi
+    - Structures/Storage/Crates/hydro_secure.rsi
+    - Structures/Storage/Crates/hydroponics.rsi
+    - Structures/Storage/Crates/medical.rsi
+    - Structures/Storage/Crates/medicalcrate_secure.rsi
+    - Structures/Storage/Crates/o2.rsi
+    - Structures/Storage/Crates/plasma.rsi
+    - Structures/Storage/Crates/privatecrate_secure.rsi
+    - Structures/Storage/Crates/radiation.rsi
+    - Structures/Storage/Crates/scicrate_secure.rsi
+    - Structures/Storage/Crates/science.rsi
+    - Structures/Storage/Crates/sec_gear.rsi
+    - Structures/Storage/Crates/secure.rsi
+    - Structures/Storage/Crates/surgery.rsi
+    - Structures/Storage/Crates/syndicate.rsi
+    - Structures/Storage/Crates/syndicate_secure.rsi
+    - Structures/Storage/Crates/weapon.rsi
+    - Structures/Storage/Crates/piratechest.rsi
+    - Structures/Storage/Crates/toybox.rsi
+    - Structures/Storage/Crates/web.rsi
+    - Structures/Storage/Crates/trashcart.rsi
+    - Structures/Storage/Crates/lockbox.rsi
+    - _Goobstation/Objects/Storage/binglecrate.rsi
+    - _Lavaland/Structures/Storage/Crates/necropolechest.rsi
+    - _Arcane/Structures/Storage/Crates/animal-rights-consortium_secure.rsi
+    - _Arcane/Structures/Storage/Crates/atmos.rsi
+    - _Arcane/Structures/Storage/Crates/atmos_secure.rsi
+    - _Arcane/Structures/Storage/Crates/bitrun_secure.rsi
+    - _Arcane/Structures/Storage/Crates/cargo.rsi
+    - _Arcane/Structures/Storage/Crates/cargo_secure.rsi
+    - _Arcane/Structures/Storage/Crates/cybersun-dawn_secure.rsi
+    - _Arcane/Structures/Storage/Crates/cybersun-dusk_secure.rsi
+    - _Arcane/Structures/Storage/Crates/cybersun-noon_secure.rsi
+    - _Arcane/Structures/Storage/Crates/deforest.rsi
+    - _Arcane/Structures/Storage/Crates/donk.rsi
+    - _Arcane/Structures/Storage/Crates/donk_secure.rsi
+    - _Arcane/Structures/Storage/Crates/gold.rsi
+    - _Arcane/Structures/Storage/Crates/gorlex-weapon_secure.rsi
+    - _Arcane/Structures/Storage/Crates/gorlex_secure.rsi
+    - _Arcane/Structures/Storage/Crates/inteq.rsi
+    - _Arcane/Structures/Storage/Crates/inteq_secure.rsi
+    - _Arcane/Structures/Storage/Crates/interdyne-freezer_secure.rsi
+    - _Arcane/Structures/Storage/Crates/interdyne_secure.rsi
+    - _Arcane/Structures/Storage/Crates/kitchen.rsi
+    - _Arcane/Structures/Storage/Crates/kitchen_secure.rsi
+    - _Arcane/Structures/Storage/Crates/lavender.rsi
+    - _Arcane/Structures/Storage/Crates/medical-alt.rsi
+    - _Arcane/Structures/Storage/Crates/mi13_secure.rsi
+    - _Arcane/Structures/Storage/Crates/mining.rsi
+    - _Arcane/Structures/Storage/Crates/mining_secure.rsi
+    - _Arcane/Structures/Storage/Crates/nakamura.rsi
+    - _Arcane/Structures/Storage/Crates/pink.rsi
+    - _Arcane/Structures/Storage/Crates/radiation_secure.rsi
+    - _Arcane/Structures/Storage/Crates/robotics.rsi
+    - _Arcane/Structures/Storage/Crates/robust.rsi
+    - _Arcane/Structures/Storage/Crates/self.rsi
+    - _Arcane/Structures/Storage/Crates/self_secure.rsi
+    - _Arcane/Structures/Storage/Crates/silver.rsi
+    - _Arcane/Structures/Storage/Crates/tiger_secure.rsi
+    - _Arcane/Structures/Storage/Crates/waffle_secure.rsi
+    - _Arcane/Structures/Storage/Crates/wood.rsi
+    - _Trauma/Structures/Storage/Crates/robocrate_secure.rsi
+    openStates:
+    - open
+    - crate_open
+    lid: true
+    hinge: 0, -0.0625
+    hinges:
+      Structures/Storage/Crates/piratechest.rsi: 0, 0.1875
+      Structures/Storage/Crates/toybox.rsi: 0, 0.125
+      Structures/Storage/Crates/trashcart.rsi: 0, -0.03125
+      Structures/Storage/Crates/lockbox.rsi: 0, -0.125
+      _Goobstation/Objects/Storage/binglecrate.rsi: 0, 0.0625
+      _Lavaland/Structures/Storage/Crates/necropolechest.rsi: 0, -0.15625
+    overlayCutoffs:
+      Structures/Storage/Crates/lockbox.rsi: 39
+    bodyCutoffs:
+      _Lavaland/Structures/Storage/Crates/necropolechest.rsi: 29
+  # Arcane-End
   - type: Animateable
   - type: Transform
     noRot: true
