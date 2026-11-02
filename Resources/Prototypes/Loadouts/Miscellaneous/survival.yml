@@ -22,6 +22,16 @@
     - Moth
     - Reptilian
     - Vulpkanin
+    # Arcane-Start
+    - Chitinid
+    - Oni
+    - Resomi
+    - Rodentia
+    - Shadowkin
+    - Tajaran
+    - Hydrakin
+    - Synth
+    # Arcane-End
 
 - type: loadoutEffectGroup
   id: EffectSpeciesVox

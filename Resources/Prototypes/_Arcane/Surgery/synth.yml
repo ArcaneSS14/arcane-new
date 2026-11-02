@@ -1,0 +1,17 @@
+- type: entity
+  parent: BaseSurgeryRemoveOrganChest
+  id: SurgeryRemoveSynthPowerCell
+  name: Remove Power Cell
+  components:
+  - type: SurgeryOrganCondition
+    organ: Battery
+
+- type: entity
+  parent: BaseSurgeryInsertOrganChest
+  id: SurgeryInsertSynthPowerCell
+  name: Insert Power Cell
+  components:
+  - type: SurgeryOrganSlotCondition
+    organSlot: Battery
+  - type: SurgeryOrganCondition
+    organ: Battery

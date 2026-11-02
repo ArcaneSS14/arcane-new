@@ -3,6 +3,9 @@
   parent: BaseItem
   id: ProjectileGrenadeBase
   components:
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Appearance
   - type: Damageable
   - type: Injurable

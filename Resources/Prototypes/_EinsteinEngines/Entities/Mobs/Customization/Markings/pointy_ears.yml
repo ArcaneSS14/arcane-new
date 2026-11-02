@@ -4,7 +4,7 @@
   id: PointyEarsStandard
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_standard
@@ -13,7 +13,7 @@
   id: PointyEarsWide
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_wide
@@ -22,7 +22,7 @@
   id: PointyEarsSmall
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_small
@@ -31,7 +31,7 @@
   id: PointyEarsUpwards
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_upwards
@@ -40,7 +40,7 @@
   id: PointyEarsTall
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_tall
@@ -49,7 +49,7 @@
   id: PointyEarsSlanted
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_slanted
@@ -58,7 +58,7 @@
   id: PointyEarsThin
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_thin
@@ -67,7 +67,7 @@
   id: PointyEarsLarge
   bodyPart: HeadSide
   forcedColoring: true
-  groupWhitelist: [Arachnid, Human]
+  groupWhitelist: [Arachnid, Human, Oni] # Arcane-Edit: [Arachnid, Human] > [Arachnid, Human, Oni]
   sprites:
   - sprite: _EinsteinEngines/Mobs/Customization/pointy_ears.rsi
     state: pointy_ears_large

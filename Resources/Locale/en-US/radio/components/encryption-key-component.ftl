@@ -7,5 +7,7 @@ encryption-keys-panel-locked = Open maintenance panel first!
 
 examine-encryption-channels-prefix = Available frequencies:
 # Trauma - add deviceType
-examine-encryption-channel = [color={$color}]{$key} for {$id} ({$freq}) {$deviceType}[/color]
-examine-encryption-default-channel = The default channel is [color={$color}]{$channel}[/color].
+# Arcane-Edit-Start
+examine-encryption-channel = [radiochannel="{$channelId}"]{$key} for {$id} ({$freq}) {$deviceType}[/radiochannel]
+examine-encryption-default-channel = The default channel is [radiochannel="{$channelId}"]{$channel}[/radiochannel].
+# Arcane-Edit-End

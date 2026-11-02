@@ -1,0 +1,91 @@
+- type: speechVerb
+  id: Rodentia
+  name: chat-speech-verb-name-rodentia
+  speechVerbStrings:
+  - chat-speech-verb-rodentia-1
+  - chat-speech-verb-rodentia-2
+  - chat-speech-verb-rodentia-3
+  - chat-speech-verb-rodentia-4
+
+- type: typingIndicator
+  id: rodentia
+  spritePath: /Textures/_Arcane/Effects/speech.rsi
+  typingState: rodentia0
+  idleState: rodentia0
+  offset: 0, 0.2
+
+- type: emoteSounds
+  id: MaleRodentia
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      path: /Audio/Animals/mouse_squeak.ogg
+    Laugh:
+      collection: MaleLaugh
+    Sneeze:
+      collection: MaleSneezes
+    Cough:
+      collection: MaleCoughs
+    Yawn:
+      collection: MaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: BikeHorn
+    Sigh:
+      collection: MaleSigh
+    Crying:
+      collection: MaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh
+    Squeak:
+      path: /Audio/Animals/mouse_squeak.ogg
+    CatMeow:
+      collection: CatMeows
+    Gasp:
+      collection: MaleGasp
+    DefaultDeathgasp:
+      collection: MaleDeathGasp
+    Gulp:
+      path: /Audio/_Goobstation/Voice/gulpexotic.ogg
+
+- type: emoteSounds
+  id: FemaleRodentia
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      path: /Audio/Animals/mouse_squeak.ogg
+    Laugh:
+      collection: FemaleLaugh
+    Sneeze:
+      collection: FemaleSneezes
+    Cough:
+      collection: FemaleCoughs
+    Yawn:
+      collection: FemaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: CluwneHorn
+    Sigh:
+      collection: FemaleSigh
+    Crying:
+      collection: FemaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh
+    Squeak:
+      path: /Audio/Animals/mouse_squeak.ogg
+    CatMeow:
+      collection: CatMeows
+    Gasp:
+      collection: FemaleGasp
+    DefaultDeathgasp:
+      collection: FemaleDeathGasp
+    Gulp:
+      path: /Audio/_Goobstation/Voice/gulpexotic.ogg

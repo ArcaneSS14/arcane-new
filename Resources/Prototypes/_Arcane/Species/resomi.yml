@@ -1,0 +1,29 @@
+- type: species
+  id: Resomi
+  name: species-name-resomi
+  roundStart: true
+  prototype: MobResomi
+  dollPrototype: AppearanceResomi
+  defaultSkinTone: "#faf7f7"
+  skinColoration: Hues
+  # Arcane-Start
+  averageHeight: 140
+  averageWeight: 40
+  defaultScale: 0.95
+  minScale: 0.9
+  maxScale: 1
+  # Arcane-End
+  maleFirstNames: NamesResomiMale
+  femaleFirstNames: NamesResomiFemale
+  naming: First
+  sexes:
+  - Unsexed
+  - Male
+  - Female
+  defaultSoundsBySex:
+  - MaleAvaliEmote
+  - FemaleAvaliEmote
+  - MaleAvaliEmote
+  voices:
+  - MaleAvaliEmote
+  - FemaleAvaliEmote

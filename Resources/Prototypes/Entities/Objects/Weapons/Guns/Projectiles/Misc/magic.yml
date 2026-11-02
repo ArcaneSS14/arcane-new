@@ -18,6 +18,9 @@
     layers:
     - state: fireball
       shader: unshaded
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 3.5 # Goob edit
@@ -84,6 +87,9 @@
     reflective: Magic
   - type: TimedDespawn
     lifetime: 30
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 100

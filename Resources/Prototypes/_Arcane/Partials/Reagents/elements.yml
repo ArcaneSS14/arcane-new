@@ -1,0 +1,29 @@
+# Synth stomachs turn eaten minerals into blood and nutriment.
+# The metabolites keep passing the element on to the bloodstream for everyone else.
+- type: reagent
+  id: Carbon
+  metabolisms:
+    Digestion:
+      metabolismRate: 0.1
+      metabolites:
+        Carbon: 0.5
+      effects:
+      - !type:ModifyBloodLevel
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Synth ]
+        amount: 0.405
+
+- type: reagent
+  id: Iron
+  metabolisms:
+    Digestion:
+      metabolites:
+        Iron: 0.5
+      effects:
+      - !type:AdjustReagent
+        reagent: Nutriment
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Synth ]
+        amount: 0.2

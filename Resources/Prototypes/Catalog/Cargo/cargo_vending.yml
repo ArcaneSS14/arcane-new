@@ -256,7 +256,7 @@
   container:
     entity: WrappedParcel
     containerId: contents
-  cost: 1000
+  cost: 2000 # Arcane-Edit: 1000 > 2000
   category: cargoproduct-category-name-atmospherics
   group: market
 

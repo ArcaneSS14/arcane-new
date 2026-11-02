@@ -135,5 +135,6 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction MappingOpenContextMenu = "MappingOpenContextMenu";
 
         public static readonly BoundKeyFunction Sprint = "Sprint"; // Arcane
+        public static readonly BoundKeyFunction NamePeek = "NamePeek"; // Arcane
     }
 }

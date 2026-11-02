@@ -8,7 +8,7 @@ YAML validation executable and its content-aware linting rules.
 
 ## Build and dependencies
 
-Direct project references: `Content.Client`, `Content.Server`, `Content.Shared`, `Content.IntegrationTests`. A direct project build also builds its project references, but not reverse dependents. When changing an API consumed by another project, build the affected consumer project(s) as well.
+Direct project references: `Content.Client`, `Content.Server`, `Content.Shared`, `Content.IntegrationTests`, `Content.Arcane.Client`, `Content.Arcane.Server`. A direct project build also builds its project references, but not reverse dependents. When changing an API consumed by another project, build the affected consumer project(s) as well.
 
 Build this project with:
 

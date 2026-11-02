@@ -1,0 +1,13 @@
+# Hydrakin run cold, so leporazine pulls them down instead of towards human temperature.
+- type: reagent
+  id: Leporazine
+  metabolisms:
+    Bloodstream:
+      effects:
+      - !type:AdjustTemperature
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        - !type:TemperatureCondition
+          min: 215.15
+        amount: -750000

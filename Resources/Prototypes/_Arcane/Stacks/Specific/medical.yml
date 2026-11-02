@@ -1,0 +1,7 @@
+- type: stack
+  parent: BaseSmallStack
+  id: SynthBloodpack
+  name: stack-synthbloodpack
+  icon: { sprite: "/Textures/_Arcane/Objects/Specific/Medical/medical.rsi", state: synthpack }
+  spawn: SynthBloodpack
+  maxCount: 10

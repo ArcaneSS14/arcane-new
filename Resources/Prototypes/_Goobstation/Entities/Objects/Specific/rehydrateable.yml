@@ -71,3 +71,14 @@
   - type: Rehydratable
     possibleSpawns:
     - MobVoxRandom
+
+# Arcane-Start
+- type: entity
+  parent: MonkeyCube
+  id: FeroxiCube
+  name: feroxi cube
+  components:
+  - type: Rehydratable
+    possibleSpawns:
+    - MobFeroxiRandom
+# Arcane-End

@@ -33,6 +33,9 @@
     - type: ExplodeOnTrigger
       keysIn:
       - timer
+    # Arcane-Start
+    - type: ExplosionEffect
+    # Arcane-End
     - type: Explosive
       explosionType: Default
       maxIntensity: 50
@@ -87,6 +90,9 @@
       shader: unshaded
   - type: TriggerOnSlip
   - type: ExplodeOnTrigger
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Explosive
     explosionType: Default
     maxIntensity: 3.4

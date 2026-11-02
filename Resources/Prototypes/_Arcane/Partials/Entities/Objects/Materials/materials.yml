@@ -1,0 +1,95 @@
+# Synth stomachs can digest raw materials.
+
+- type: entity
+  id: Coal
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - bitter
+  - type: BadFood
+
+- type: entity
+  id: PartRodMetal
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - metallic
+  - type: BadFood
+
+- type: entity
+  id: SheetSteel
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - metallic
+  - type: BadFood
+
+- type: entity
+  id: SheetBrass
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - metallic
+  - type: BadFood
+
+- type: entity
+  id: SheetPlasma
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - sour
+  - type: BadFood
+
+- type: entity
+  id: SheetPlastic
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - bitter
+  - type: BadFood
+
+- type: entity
+  id: MaterialDiamond
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - nothing
+  - type: BadFood
+
+- type: entity
+  id: MaterialBiomass
+  components:
+  - type: Edible
+    requiresSpecialDigestion: true
+    solution: composite
+  - type: FlavorProfile
+    flavors:
+    - meaty
+    - oily
+    - chalky
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 10

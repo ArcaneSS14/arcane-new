@@ -2,7 +2,6 @@
 
 using Content.Goobstation.Common.Administration.Notifications;
 using Content.Goobstation.Common.CCVar;
-using Content.Goobstation.Shared.Administration.Notifications;
 using Robust.Client.Player;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -11,7 +10,7 @@ using Content.Client.Audio; // Arcane
 
 namespace Content.Goobstation.Client.Administration.Notifications;
 
-public sealed partial class ClientAdminNotificationsSystem : SharedAdminNotificationSystem
+public sealed partial class ClientAdminNotificationsSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _config = default!;
     [Dependency] private SharedAudioSystem _audio = default!;

@@ -535,7 +535,7 @@
     itemIconStyle: NoItem
     useDelay: 1 # Prevents Emote Spam
   - type: Sprite
-    sprite: Mobs/Customization/Vulpkanin/tail_markings.rsi
+    sprite: _Arcane/Mobs/Customization/Vulpkanin/tail_markings.rsi # Arcane-Edit: Mobs/Customization/Vulpkanin/tail_markings.rsi > _Arcane/Mobs/Customization/Vulpkanin/tail_markings.rsi
     layers:
     - state: tail-wag-icon
 

@@ -3,6 +3,9 @@
   parent: BaseItem
   id: GrenadeBase
   components:
+  # Arcane-Start
+  - type: ExplosionEffect
+  # Arcane-End
   - type: Sprite
     sprite: Objects/Weapons/Grenades/grenade.rsi
     layers:

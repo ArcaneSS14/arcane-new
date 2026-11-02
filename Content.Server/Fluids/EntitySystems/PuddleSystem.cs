@@ -474,6 +474,11 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
             return false;
         }
 
+        // Arcane-Start
+        var wallSplash = new SplashOnWallEvent(coordinates, solution.Clone());
+        RaiseLocalEvent(ref wallSplash);
+        // Arcane-End
+
         var gridUid = _transform.GetGrid(coordinates);
 
         if (!TryComp<MapGridComponent>(gridUid, out var mapGrid))

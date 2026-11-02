@@ -1,4 +1,9 @@
 - type: shader
+  id: Flap
+  kind: source
+  path: "/Textures/_Arcane/Shaders/flap.swsl"
+
+- type:
   id: LightingOverlay
   kind: source
   path: "/Textures/_Arcane/Shaders/light.swsl"
@@ -16,3 +21,4 @@
   id: LightingHighlights
   kind: source
   path: "/Textures/_Arcane/Shaders/lighting_highlights.swsl"
+

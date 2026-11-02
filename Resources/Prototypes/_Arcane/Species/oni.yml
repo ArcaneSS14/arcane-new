@@ -1,0 +1,16 @@
+- type: species
+  id: Oni
+  name: species-name-oni
+  roundStart: true
+  prototype: MobOni
+  dollPrototype: AppearanceOni
+  skinColoration: Hues
+  # Arcane-Start
+  defaultScale: 1.1
+  minScale: 0.9
+  maxScale: 1.2
+  # Arcane-End
+  naming: FirstLast
+  maleFirstNames: NamesOniFirstMale
+  femaleFirstNames: NamesOniFirstFemale
+  lastNames: NamesOniLast

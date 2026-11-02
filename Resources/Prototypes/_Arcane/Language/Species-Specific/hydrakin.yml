@@ -1,0 +1,21 @@
+- type: language
+  id: Hydraspeak
+  speech:
+    color: "#4d91a8"
+  obfuscation:
+    !type:SyllableObfuscation
+    minSyllables: 1
+    maxSyllables: 3
+    replacement:
+    - ha
+    - hi
+    - hra
+    - kha
+    - ki
+    - ra
+    - ri
+    - sa
+    - sha
+    - si
+    - thra
+    - zha

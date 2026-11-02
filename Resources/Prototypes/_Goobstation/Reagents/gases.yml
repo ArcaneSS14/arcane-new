@@ -11,19 +11,7 @@
   color: "#9370db"
   metabolisms:
     Bloodstream:
-      conditions:
-      - !type:MetabolizerTypeCondition
-        type: [ Slime ]
-        inverted: true
       effects:
-      - !type:Emote
-        conditions:
-        - !type:ReagentCondition
-          reagent: BZ
-          min: 0.2
-        emote: Cough
-        showInChat: true
-        probability: 0.1
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -36,7 +24,6 @@
         ignoreResistances: true
         damage:
           types:
-            Asphyxiation: 10
             Poison: 2.5
       - !type:ModifyStatusEffect
         conditions:
@@ -45,23 +32,7 @@
           min: 0.3
         effectProto: StatusEffectSeeingRainbow
         type: Add
-        time: 150
-      - !type:Emote
-        conditions:
-        - !type:ReagentCondition
-          reagent: BZ
-          min: 0.2
-        emote: Laugh
-        showInChat: true
-        probability: 0.1
-      - !type:Emote
-        conditions:
-        - !type:ReagentCondition
-          reagent: BZ
-          min: 0.2
-        emote: Scream
-        showInChat: true
-        probability: 0.01
+        time: 15
       - !type:PopupMessage
         conditions:
         - !type:ReagentCondition
@@ -92,13 +63,9 @@
           reagent: NitrosylPlasmide
           max: 0.1
         effectProto: StatusEffectForcedSleeping
-        time: 10
-        type: Add
+        time: 6
+        delay: 5
     Respiration:
-      conditions:
-      - !type:MetabolizerTypeCondition
-        type: [ Slime ]
-        inverted: true
       effects:
       - !type:Emote
         conditions:
@@ -114,13 +81,12 @@
           reagent: BZ
           min: 0.5
         - !type:MetabolizerTypeCondition
-          type: [ Cybernetic ]
+          type: [ Cybernetic, Hydrakin ] # Arcane-Edit: [ Cybernetic ] > [ Cybernetic, Hydrakin ]
           inverted: true
         scaling: true
         ignoreResistances: true
         damage:
           types:
-            Asphyxiation: 10
             Poison: 2.5
       - !type:ModifyStatusEffect
         conditions:
@@ -129,23 +95,7 @@
           min: 0.3
         effectProto: StatusEffectSeeingRainbow
         type: Add
-        time: 150
-      - !type:Emote
-        conditions:
-        - !type:ReagentCondition
-          reagent: BZ
-          min: 0.2
-        emote: Laugh
-        showInChat: true
-        probability: 0.1
-      - !type:Emote
-        conditions:
-        - !type:ReagentCondition
-          reagent: BZ
-          min: 0.2
-        emote: Scream
-        showInChat: true
-        probability: 0.01
+        time: 15
       - !type:PopupMessage
         conditions:
         - !type:ReagentCondition
@@ -176,8 +126,8 @@
           reagent: NitrosylPlasmide
           max: 0.1
         effectProto: StatusEffectForcedSleeping
-        time: 10
-        type: Add
+        time: 6
+        delay: 5
 
 - type: reagent
   id: Healium
@@ -366,6 +316,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 6
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         reagent: NitrosylPlasmide
         amount: 2.5
       - !type:GenericStatusEffect
@@ -381,6 +336,11 @@
         - !type:ReagentCondition
           reagent: Nitrium
           min: 10
+        # Arcane-Start
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         damage:
           types:
             Asphyxiation: 15
@@ -399,7 +359,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -434,7 +394,7 @@
         factor: 8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ]
+          type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic, Feroxi ] # Arcane-Edit: [Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic] > [..., Feroxi]
       # Convert Pluox into CO2.
       - !type:ModifyLungGas
         conditions:

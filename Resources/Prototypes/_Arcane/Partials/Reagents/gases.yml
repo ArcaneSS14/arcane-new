@@ -1,0 +1,152 @@
+# Hydrakin lungs can breathe almost any gas, and some gases even help them.
+# Carbon dioxide is the exception: it doesn't hurt them, but it doesn't oxygenate them either.
+
+- type: reagent
+  id: Oxygen
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+
+- type: reagent
+  id: Plasma
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        factor: 4
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+      - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        damage:
+          types:
+            Heat: -0.8
+
+- type: reagent
+  id: Tritium
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+      - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        - !type:ReagentCondition
+          reagent: Tritium
+          min: 0.01
+        damage:
+          types:
+            Heat: -0.5
+            Poison: -0.5
+
+- type: reagent
+  id: Nitrogen
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+
+- type: reagent
+  id: NitrousOxide
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+      - !type:MovementSpeedModifier
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        - !type:ReagentCondition
+          reagent: NitrousOxide
+          min: 0.05
+        walkSpeedModifier: 1.25
+        sprintSpeedModifier: 1.25
+
+- type: reagent
+  id: Frezon
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+      - !type:AdjustTemperature
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        - !type:ReagentCondition
+          reagent: Frezon
+          min: 0.045
+        - !type:TemperatureCondition
+          min: 215.15
+        amount: -10000
+
+- type: reagent
+  id: BZ
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+      - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+        - !type:ReagentCondition
+          reagent: BZ
+          min: 0.5
+        damage:
+          types:
+            Cellular: -0.5
+            Poison: -2.0
+
+- type: reagent
+  id: Healium
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+
+- type: reagent
+  id: Nitrium
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+
+- type: reagent
+  id: Pluoxium
+  metabolisms:
+    Respiration:
+      effects:
+      - !type:Oxygenate
+        factor: 8
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]

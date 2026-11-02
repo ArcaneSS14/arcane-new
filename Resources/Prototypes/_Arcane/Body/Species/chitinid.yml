@@ -1,0 +1,297 @@
+- type: markingsGroup
+  parent: Undergarments
+  id: Chitinid
+  onlyGroupWhitelisted: true
+  limits:
+    enum.HumanoidVisualLayers.Hair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: true
+      default: [ ChitinidWingsDefault ]
+    enum.HumanoidVisualLayers.Snout:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: true
+      default: [ ChitinidAntennasDefault ]
+    enum.HumanoidVisualLayers.Head:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 3
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 3
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 3
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 3
+      required: false
+
+- type: entity
+  parent: BaseSpeciesAppearance
+  id: AppearanceChitinid
+  categories: [ HideSpawnMenu ]
+  name: chitinid appearance
+  components:
+  - type: Inventory
+    speciesId: moth
+  - type: InitialBody
+    organs:
+      Torso: OrganChitinidTorso
+      Head: OrganChitinidHead
+      Tail: OrganChitinidTail
+      ArmLeft: OrganChitinidArmLeft
+      ArmRight: OrganChitinidArmRight
+      HandLeft: OrganChitinidHandLeft
+      HandRight: OrganChitinidHandRight
+      LegLeft: OrganChitinidLegLeft
+      LegRight: OrganChitinidLegRight
+      FootLeft: OrganChitinidFootLeft
+      FootRight: OrganChitinidFootRight
+      Brain: OrganChitinidBrain
+      Eyes: OrganChitinidEyes
+      Tongue: OrganChitinidTongue
+      Appendix: OrganChitinidAppendix
+      Ears: OrganChitinidEars
+      Lungs: OrganChitinidLungs
+      Heart: OrganChitinidHeart
+      Stomach: OrganChitinidStomach
+      Liver: OrganChitinidLiver
+      Kidneys: OrganChitinidKidneys
+  - type: HumanoidProfile
+    species: Chitinid
+
+- type: entity
+  parent:
+  - AppearanceChitinid
+  - BaseSpeciesMobOrganic
+  id: MobChitinid
+  name: Urist McAnt
+  components:
+  - type: LanguageSpeaker
+    speaks:
+    - TauCetiBasic
+    - Moffic
+    understands:
+    - TauCetiBasic
+    - Moffic
+  - type: Speech
+    speechVerb: Chitinid
+    allowedEmotes: [ 'Chitter', 'Click', 'Hiss' ]
+  - type: TypingIndicator
+    proto: chitinid
+  - type: Vocal
+    emoteSounds: UnisexChitinid
+  - type: Satiation
+    satiations:
+      Hunger:
+        prototype: ChitinidHunger
+      Thirst:
+        prototype: NormalSatiationThirst
+  - type: UnpoweredFlashlight
+  - type: PointLight
+    enabled: false
+    radius: 3
+    softness: 5
+    color: "#2CFA1F"
+    autoRot: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 140
+        restitution: 0.0
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Damageable
+    damageModifierSet: Chitinid
+  - type: MeleeWeapon
+    animation: WeaponArcBite
+    soundHit:
+      path: /Audio/Effects/bite.ogg
+    damage:
+      types:
+        Piercing: 5
+  - type: Butcherable
+    spawned:
+    - id: FoodMeat
+      amount: 5
+  - type: Bloodstream
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: InsectBlood
+        Quantity: 300
+  - type: TemperatureDamage # Ants hate the cold
+    heatDamageThreshold: 320
+    coldDamageThreshold: 230
+    coldDamage:
+      types:
+        Cold: 1.25
+    heatDamage:
+      types:
+        Heat: 1.0
+  - type: TemperatureSpeed
+    thresholds:
+      289: 0.6
+      275: 0.4
+      250: 0.3
+  - type: CreamPied
+    sprite:
+      sprite: Effects/creampie.rsi
+      state: creampie_moth
+
+- type: entity
+  parent: OrganBaseOrganic
+  id: OrganChitinid
+  abstract: true
+  suffix: chitinid
+
+- type: entity
+  id: OrganChitinidMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Animal ]
+
+- type: entity
+  parent: OrganChitinid
+  id: OrganChitinidInternal
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Mobs/Species/Human/organs.rsi
+
+- type: entity
+  parent: OrganChitinid
+  id: OrganChitinidExternal
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/Chitinid/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Arcane/Mobs/Species/Chitinid/parts.rsi
+  - type: VisualOrganMarkings
+    markingData:
+      group: Chitinid
+
+- type: entity
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorsoTailed, OrganChitinidExternal ] # Shitmed - Tailed torso
+  id: OrganChitinidTorso
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Tail
+
+- type: entity
+  parent: [ OrganBaseHeadSexed, OrganBaseHeadBald, OrganChitinidExternal ] # Trauma - bald
+  id: OrganChitinidHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.HeadTop
+
+- type: entity
+  parent: [ OrganBaseArmLeft, OrganChitinidExternal ]
+  id: OrganChitinidArmLeft
+
+- type: entity
+  parent: [ OrganBaseArmRight, OrganChitinidExternal ]
+  id: OrganChitinidArmRight
+
+- type: entity
+  parent: [ OrganBaseHandLeft, OrganChitinidExternal ]
+  id: OrganChitinidHandLeft
+
+- type: entity
+  parent: [ OrganBaseHandRight, OrganChitinidExternal ]
+  id: OrganChitinidHandRight
+
+- type: entity
+  parent: [ OrganBaseLegLeft, OrganChitinidExternal ]
+  id: OrganChitinidLegLeft
+
+- type: entity
+  parent: [ OrganBaseLegRight, OrganChitinidExternal ]
+  id: OrganChitinidLegRight
+
+- type: entity
+  parent: [ OrganBaseFootLeft, OrganChitinidExternal ]
+  id: OrganChitinidFootLeft
+
+- type: entity
+  parent: [ OrganBaseFootRight, OrganChitinidExternal ]
+  id: OrganChitinidFootRight
+
+- type: entity
+  parent: [ OrganBaseTail, OrganChitinidExternal ]
+  id: OrganChitinidTail
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Customization/Chitinid/chitinid_wings.rsi
+    state: default
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # no sprite since the markings actually control it
+
+- type: entity
+  parent: [ OrganBaseBrain, OrganSpriteHumanInternal, OrganChitinidInternal ]
+  id: OrganChitinidBrain
+
+- type: entity
+  parent: [ OrganBaseEyes, OrganChitinidInternal, OrganChitinidExternal ]
+  id: OrganChitinidEyes
+  components:
+  - type: VisualOrgan
+    data:
+      sprite: _Arcane/Mobs/Species/Chitinid/parts.rsi
+      state: eyes
+
+- type: entity
+  parent: [ OrganBaseTongue, OrganChitinidInternal ]
+  id: OrganChitinidTongue
+
+- type: entity
+  parent: [ OrganBaseAppendix, OrganSpriteHumanInternal, OrganChitinidInternal ]
+  id: OrganChitinidAppendix
+
+- type: entity
+  parent: [ OrganBaseEars, OrganSpriteHumanInternal, OrganChitinidInternal ]
+  id: OrganChitinidEars
+
+- type: entity
+  parent: [ OrganBaseLungs, OrganChitinidInternal, OrganChitinidMetabolizer ]
+  id: OrganChitinidLungs
+
+- type: entity
+  parent: [ OrganBaseHeart, OrganChitinidInternal, OrganChitinidMetabolizer ]
+  id: OrganChitinidHeart
+
+- type: entity
+  parent: [ OrganBaseStomach, OrganChitinidInternal, OrganChitinidMetabolizer ]
+  id: OrganChitinidStomach
+
+- type: entity
+  parent: [ OrganBaseLiver, OrganSpriteHumanInternal, OrganChitinidInternal, OrganChitinidMetabolizer ]
+  id: OrganChitinidLiver
+
+- type: entity
+  parent: [ OrganBaseKidneys, OrganSpriteHumanInternal, OrganChitinidInternal, OrganChitinidMetabolizer ]
+  id: OrganChitinidKidneys

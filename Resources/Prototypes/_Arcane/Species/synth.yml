@@ -1,0 +1,10 @@
+- type: species
+  id: Synth
+  name: species-name-synth
+  roundStart: true
+  prototype: MobSynth
+  dollPrototype: AppearanceSynth
+  defaultSkinTone: "#ffffff"
+  skinColoration: Hues
+  defaultSoundsBySex: [ UnisexSilicon, UnisexSilicon, UnisexSilicon ]
+  voices: [ UnisexSilicon ]

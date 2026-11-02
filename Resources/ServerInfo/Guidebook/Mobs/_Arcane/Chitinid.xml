@@ -1,0 +1,22 @@
+<Document>
+  # Chitinid
+
+  <Box>
+    <GuideEntityEmbed Entity="AppearanceChitinid" Caption=""/>
+  </Box>
+
+  An industrious hymenoptera species, the Chitinid are strong and diligent. Thanks to evolution, they have grown an acute resistance to radiation, but not without its side effects.
+
+  ## Benefits
+
+  - Takes 80% less Radiation, and 10% less Slash, Blunt and Piercing damage.
+  - They possess a bio light.
+
+  ## Drawbacks
+
+  - They take 15% more Shock damage due to their biology.
+  - Thanks to their overactive systems they get hungry 33% faster.
+  - The cold does not agree with their biology and makes their movement sluggish the colder it gets, the cold also harms them more than others.
+  - Bug Blood.
+
+</Document>

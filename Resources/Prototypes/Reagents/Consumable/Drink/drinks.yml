@@ -514,6 +514,25 @@
           Ammonia: 1.0
           WaterVapor: -1.0
       # </Imp>
+      # Arcane-Start
+      - !type:Oxygenate # Feroxi breathe water vapour
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi, FeroxiDehydrated ]
+      - !type:Satiate
+        satiationType: Thirst
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi, FeroxiDehydrated ]
+        factor: 2
+      - !type:ModifyLungGas # converts water vapour into CO2 for Feroxi
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi, FeroxiDehydrated ]
+        ratios:
+          CarbonDioxide: 0.5
+          WaterVapor: -1.0
+      # Arcane-End
 
 - type: reagent
   id: Ice

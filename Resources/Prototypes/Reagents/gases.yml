@@ -17,6 +17,12 @@
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant, Arachnid, Cybernetic ] # Trauma - added Cybernetic
+      # Arcane-Start
+      - !type:Oxygenate # Feroxi still need to breathe
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi ]
+      # Arcane-End
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -58,6 +64,12 @@
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Human, Animal, Rat, Plant, Arachnid, Moth, Cybernetic ] # Goob - add Cybernetic
+      # Arcane-Start
+      - !type:Oxygenate # Feroxi still need to breathe
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Feroxi ]
+      # Arcane-End
       # Convert Oxygen into CO2.
       - !type:ModifyLungGas
         conditions:
@@ -156,7 +168,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Goob
-          type: [ Plasmaman, Cybernetic ]
+          type: [ Plasmaman, Cybernetic, Hydrakin ] # Arcane-Edit: [ Plasmaman, Cybernetic ] > [..., Hydrakin]
           inverted: true
         ignoreResistances: true
         damage:
@@ -168,7 +180,7 @@
         alertType: Toxins
         conditions: # Goob
         - !type:MetabolizerTypeCondition
-          type: [ Plasmaman ]
+          type: [ Plasmaman, Hydrakin ] # Arcane-Edit: [ Plasmaman ] > [ Plasmaman, Hydrakin ]
           inverted: true
         - !type:ReagentCondition
           reagent: Plasma
@@ -257,7 +269,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Shitmed
-          type: [ Cybernetic ]
+          type: [ Cybernetic, Hydrakin ] # Arcane-Edit: [ Cybernetic ] > [ Cybernetic, Hydrakin ]
           inverted: true
         ignoreResistances: true
         damage:
@@ -321,7 +333,7 @@
         minScale: 0.5
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant, Vox, Cybernetic] # Goob - added Cybernetic
+          type: [ Plant, Vox, Cybernetic, Hydrakin ] # Arcane-Edit: [ Plant, Vox, Cybernetic] > [..., Hydrakin]
           inverted: true
         # Don't want people to get toxin damage from the gas they just
         # exhaled, right?
@@ -333,7 +345,7 @@
       - !type:Oxygenate # carbon dioxide displaces oxygen from the bloodstream, causing asphyxiation
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant, Cybernetic ] # Goob - added Cybernetic
+          type: [ Plant, Cybernetic, Hydrakin ] # Arcane-Edit: [ Plant, Cybernetic ] > [..., Hydrakin]
           inverted: true
         factor: -4
       # We need a metabolism effect on reagent removal
@@ -426,7 +438,7 @@
           reagent: NitrosylPlasmide
           max: 0.1
         - !type:MetabolizerTypeCondition
-          type: [ Slime, Cybernetic ] # Goob - added Cybernetic
+          type: [ Slime, Cybernetic, Hydrakin ] # Arcane-Edit: [ Slime, Cybernetic ] > [..., Hydrakin]
           inverted: true
         type: Local
         visualType: Medium
@@ -439,7 +451,7 @@
           reagent: NitrosylPlasmide
           max: 0.1
         - !type:MetabolizerTypeCondition
-          type: [ Slime, Cybernetic ] # Goob - added Cybernetic
+          type: [ Slime, Cybernetic, Hydrakin ] # Arcane-Edit: [ Slime, Cybernetic ] > [..., Hydrakin]
           inverted: true
         walkSpeedModifier: 0.65
         sprintSpeedModifier: 0.65
@@ -450,7 +462,7 @@
           reagent: NitrosylPlasmide
           max: 0.1
         - !type:MetabolizerTypeCondition
-          type: [ Slime, Cybernetic ] # Goob - added Cybernetic
+          type: [ Slime, Cybernetic, Hydrakin ] # Arcane-Edit: [ Slime, Cybernetic ] > [..., Hydrakin]
           inverted: true
         effectProto: StatusEffectForcedSleeping
         time: 3
@@ -459,7 +471,7 @@
         minScale: 3.5
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime, Cybernetic ] # Goob - added Cybernetic
+          type: [ Slime, Cybernetic, Hydrakin ] # Arcane-Edit: [ Slime, Cybernetic ] > [..., Hydrakin]
           inverted: true
         ignoreResistances: true
         scaling: true
@@ -511,7 +523,7 @@
       - !type:HealthChange
         conditions: # Goob
         - !type:MetabolizerTypeCondition
-          type: [ Cybernetic ]
+          type: [ Cybernetic, Hydrakin ] # Arcane-Edit: [ Cybernetic ] > [ Cybernetic, Hydrakin ]
           inverted: true
         - !type:ReagentCondition
           reagent: Frezon
@@ -536,20 +548,44 @@
             Cellular: 0.025
       - !type:ModifyStatusEffect
         minScale: 1
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
         effectProto: StatusEffectSeeingRainbow
         type: Add
         time: 500
       - !type:Drunk
         boozePower: 500
         minScale: 1
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
       - !type:PopupMessage
         type: Local
         messages: [ "frezon-lungs-cold" ]
         probability: 0.1
         minScale: 1
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
       - !type:PopupMessage
         type: Local
         visualType: Medium
         messages: [ "frezon-euphoric" ]
         probability: 0.1
         minScale: 1
+        # Arcane-Start
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Hydrakin ]
+          inverted: true
+        # Arcane-End
