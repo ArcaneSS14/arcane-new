@@ -22,7 +22,7 @@ public sealed partial class HumanoidProfileEditor
 
         button.AddChild(new TextureRect
         {
-            TexturePath = "/Textures/Interface/Nano/filter.svg.96dpi.png",
+            TexturePath = "/Textures/_Arcane/Interface/ink_highlighter.svg.96dpi.png",
             HorizontalAlignment = HAlignment.Center,
             VerticalAlignment = VAlignment.Center,
             TextureScale = new Vector2(0.75f, 0.75f),
