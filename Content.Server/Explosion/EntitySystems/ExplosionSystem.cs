@@ -360,7 +360,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
             : queued.Proto.Sound;
 
         _audio.PlayStatic(sound, filter, mapEntityCoords, true, sound.Params);
-        // Arcane-Edit-Start
+        // Arcane-Start
         var screenshakeRange = iterationIntensity.Count * 4f;
         var screenshakeFilter = Filter.Empty().AddInRange(pos, screenshakeRange);
         DoArcaneExplosionScreenshake(
@@ -368,7 +368,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
             pos,
             screenshakeRange,
             iterationIntensity.Count < queued.Proto.SmallSoundIterationThreshold);
-        // Arcane-Edit-End
+        // Arcane-End
 
         // play far sound
         // far sound should play for anyone who wasn't in range of any of the effects of the bomb
