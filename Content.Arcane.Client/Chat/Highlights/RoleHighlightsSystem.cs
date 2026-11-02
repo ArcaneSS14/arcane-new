@@ -33,7 +33,7 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<GetRoleHighlightsEvent>(OnGetRoleHighlights);
-        SubscribeLocalEvent<OpenRoleHighlightEditorEvent>(OnOpenRoleHighlightEditor);
+        SubscribeLocalEvent<OpenRoleHighlightEditorEvent>((ref OpenRoleHighlightEditorEvent ev) => OnOpenRoleHighlightEditor(ev));
 
         RecoverInterruptedSave();
         LoadHighlights();
@@ -46,7 +46,7 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
         base.Shutdown();
     }
 
-    private void OnGetRoleHighlights(GetRoleHighlightsEvent args)
+    private void OnGetRoleHighlights(ref GetRoleHighlightsEvent args)
     {
         if (_highlights.TryGetValue(args.Job, out var highlights))
             args.Highlights = highlights;
