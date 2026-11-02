@@ -10,6 +10,7 @@ using Robust.Shared.Timing;
 using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
 using Content.Shared.Labels;
 using Robust.Client.Graphics;
+using Content.Client.Graphics;
 
 namespace Content.IntegrationTests.Tests._Arcane.Storage;
 
@@ -115,6 +116,44 @@ public sealed class StorageAnimationTest : InteractionTest
   - type: StorageAnimationVisuals
     duration: 1
 """;
+
+    [Test]
+    public async Task TemporaryPartsDoNotInheritHoverOutlines()
+    {
+        foreach (var prototype in new[] { "TestAnimatedCloset", "TestAnimatedCrate", "TestAnimatedDoubleGunSafe", "TestAnimatedLockBox", "TestAnimatedNecropolis" })
+        {
+            await SpawnTarget(prototype);
+            await Pair.RunUntilSynced();
+            await Client.WaitPost(() =>
+            {
+                var sprites = CEntMan.System<SpriteSystem>();
+                var shader = CProtoMan.Index<ShaderPrototype>("SelectionOutlineInrange").Instance();
+                sprites.SetPostShader(CTarget!.Value, new SpriteComponent.PostShaderArgs(ContentPostShaderIds.InteractionOutline, shader));
+                sprites.SetPostShader(CTarget.Value, new SpriteComponent.PostShaderArgs("test-storage-effect", shader));
+            });
+            await Server.WaitPost(() => SEntMan.System<EntityStorageSystem>().OpenStorage(STarget!.Value));
+            await RunSeconds(0.2f);
+            await Client.WaitAssertion(() =>
+            {
+                var uid = CTarget!.Value;
+                var comp = CEntMan.GetComponent<StorageAnimationVisualsComponent>(uid);
+                var sprites = CEntMan.System<SpriteSystem>();
+                Assert.That(comp.Active, Is.True, prototype);
+                Assert.That(sprites.HasPostShader(uid, ContentPostShaderIds.InteractionOutline), Is.True,
+                    "The hovered storage must keep its normal outline.");
+                foreach (var part in new[] { comp.Door, comp.RightDoor, comp.FixedOverlay })
+                {
+                    if (part is not { } entity)
+                        continue;
+                    Assert.That(sprites.HasPostShader(entity, ContentPostShaderIds.InteractionOutline), Is.False,
+                        "Temporary parts must not outline internal seams or retain a stale hover highlight.");
+                    Assert.That(sprites.HasPostShader(entity, "test-storage-effect"), Is.True,
+                        "Removing hover must preserve unrelated visual effects.");
+                }
+            });
+            await Delete(Target!.Value);
+        }
+    }
 
     [Test]
     public async Task ReversalCompletionAndDeletionDoNotLeaveDetachedDoors()

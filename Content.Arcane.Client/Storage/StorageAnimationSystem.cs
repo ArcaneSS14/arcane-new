@@ -8,6 +8,7 @@ using Content.Shared.Storage;
 using Content.Shared.Tools.Components;
 using Robust.Shared.Map;
 using Robust.Client.Graphics;
+using Content.Client.Graphics;
 
 namespace Content.Arcane.Client.Storage;
 
@@ -105,6 +106,9 @@ public sealed partial class StorageAnimationSystem : EntitySystem
 
         var sprite = EnsureComp<SpriteComponent>(door);
         _sprite.CopySprite((uid, source), (door, sprite));
+        // Hover belongs to the storage entity. Outlining each temporary part separately
+        // creates interior seams and leaves a stale highlight when the cursor moves away.
+        _sprite.RemovePostShader((door, sprite), ContentPostShaderIds.InteractionOutline);
         comp.Layers.Clear();
 
         SpriteComponent? fixedSprite = null;
@@ -114,6 +118,7 @@ public sealed partial class StorageAnimationSystem : EntitySystem
                 comp.FixedOverlay = Spawn(null, new EntityCoordinates(uid, Vector2.Zero));
             fixedSprite = EnsureComp<SpriteComponent>(comp.FixedOverlay.Value);
             _sprite.CopySprite((uid, source), (comp.FixedOverlay.Value, fixedSprite));
+            _sprite.RemovePostShader((comp.FixedOverlay.Value, fixedSprite), ContentPostShaderIds.InteractionOutline);
             _sprite.SetDrawDepth((comp.FixedOverlay.Value, fixedSprite), source.DrawDepth + 1);
         }
 
