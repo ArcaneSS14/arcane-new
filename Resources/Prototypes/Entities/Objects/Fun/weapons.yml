@@ -240,7 +240,7 @@
     - state: e_sword_blade
       color: "#FFFFFF"
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
   - type: EnergySword
   - type: ItemToggleExaminableStatus
@@ -269,10 +269,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ItemTogglePointLight
   - type: MeleeWeapon
     wideAnimationRotation: -135

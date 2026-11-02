@@ -18,7 +18,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm_red
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
     muzzleFlash: null
   - type: Physics
@@ -75,7 +75,7 @@
   - type: Sprite
     layers:
     - state: magicm_cyan
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AnomalousParticle
     particleType: Epsilon
 
@@ -105,7 +105,7 @@
   - type: Sprite
     layers:
     - state: magicm_yellow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AnomalousParticle
     particleType: Zeta
 
@@ -136,7 +136,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm_green
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AnomalousParticle
     particleType: Default
     severityOverride: true
@@ -164,7 +164,7 @@
   - type: Sprite
     layers:
     - state: magicm
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AnomalousParticle
     particleType: Sigma
 

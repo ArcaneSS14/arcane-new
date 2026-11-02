@@ -21,7 +21,7 @@
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]

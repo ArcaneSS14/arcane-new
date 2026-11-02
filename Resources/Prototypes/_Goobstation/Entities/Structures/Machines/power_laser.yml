@@ -20,11 +20,11 @@
     - state: base
       map: ["enum.PTLVisualLayers.Base"]
     - state: unpowered
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: true
       map: ["enum.PTLVisualLayers.Unpowered"]
     - state: charge-1
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["enum.PTLVisualLayers.Charge"]
   - type: Transform

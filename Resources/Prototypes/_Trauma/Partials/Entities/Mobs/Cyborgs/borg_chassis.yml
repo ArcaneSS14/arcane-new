@@ -109,7 +109,7 @@
     layers:
     - state: engineer_e
       map: [ "enum.BorgDisguiseVisualLayers.Light" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
     - state: synd_engi
       map: [ "enum.BorgVisualLayers.Body" ]

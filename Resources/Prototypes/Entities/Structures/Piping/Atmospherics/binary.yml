@@ -594,7 +594,7 @@
       renderingStrategy: Default
     - state: running
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AtmosPipeLayers
     pipeLayer: !type:CreateVariants
       values: [ 0, 1, 2 ]

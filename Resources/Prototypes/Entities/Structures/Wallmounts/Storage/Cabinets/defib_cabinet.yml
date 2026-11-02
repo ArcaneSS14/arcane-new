@@ -14,7 +14,7 @@
     - state: frame
     # Arcane-Start
     - state: light
-      shader: unshaded
+      shader: UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
       visible: false
     # Arcane-End

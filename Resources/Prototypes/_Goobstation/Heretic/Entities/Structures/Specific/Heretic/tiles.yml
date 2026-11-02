@@ -22,7 +22,7 @@
     drawdepth: FloorEffects
     layers:
       - state: 1
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: TileEntityEffect
     effects:
     - !type:Flammable
@@ -139,7 +139,7 @@
     sprite: _Goobstation/Heretic/void_overlay.rsi
     layers:
       - state: voidtile
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SyncSprite
   - type: TileEntityEffect
     effects:
@@ -184,7 +184,7 @@
     sprite: _Goobstation/Heretic/Effects/effects.rsi
     layers:
       - state: small_rune_1
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "base" ]
   - type: RandomSprite
     available:

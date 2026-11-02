@@ -470,7 +470,7 @@
     - state: emergency_light_on
       map: [ "enum.EmergencyLightVisualLayers.LightOn" ]
       color: "#7CFC00"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Appearance
   - type: Construction

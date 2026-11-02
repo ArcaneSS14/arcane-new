@@ -28,7 +28,7 @@
       state: bear
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: MobKangarooSpace
@@ -42,7 +42,7 @@
       state: squid
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:
@@ -66,7 +66,7 @@
       state: spider_crab
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:
@@ -91,7 +91,7 @@
       state: krait
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:

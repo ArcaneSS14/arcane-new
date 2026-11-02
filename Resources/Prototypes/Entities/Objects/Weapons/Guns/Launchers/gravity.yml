@@ -20,10 +20,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -44,7 +44,7 @@
     - state: base
     - state: base-unshaded
       map: [ "unshaded" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: PowerCellDraw
   - type: ToggleCellDraw
@@ -78,7 +78,7 @@
     - state: base
     - state: base-unshaded
       map: [ "unshaded" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: PowerCellDraw
   - type: ToggleCellDraw

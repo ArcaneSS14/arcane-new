@@ -12,7 +12,7 @@
     layers:
     - sprite: _Trauma/BloodCult/Entities/Structures/barrier.rsi
       state: barrier
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: InteractionOutline
   - type: Fixtures

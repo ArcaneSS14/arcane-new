@@ -3,7 +3,7 @@
   kind: source
   path: "/Textures/_Arcane/Shaders/flap.swsl"
 
-- type:
+- type: shader
   id: LightingOverlay
   kind: source
   path: "/Textures/_Arcane/Shaders/light.swsl"
@@ -14,8 +14,18 @@
   path: "/Textures/_Arcane/Shaders/glow.swsl"
   params:
     glow_brightness: 10
-    outline_width: 1.0
-    outline_alpha: 0.2
+    outline_width: 3.0
+    outline_alpha: 0.5
+
+# Blurred halo for regular unshaded sprites, without the lamp brightness boost.
+- type: shader
+  id: UnshadedGlow
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow.swsl"
+  params:
+    glow_brightness: 1
+    outline_width: 3.0
+    outline_alpha: 0.5
 
 - type: shader
   id: LightingHighlights

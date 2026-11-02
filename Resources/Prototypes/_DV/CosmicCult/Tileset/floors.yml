@@ -137,7 +137,7 @@
     drawdepth: BelowFloor
     layers:
       - state: decay
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: _DV/CosmicCult/Tileset/cosmicdecay.rsi
     state: full

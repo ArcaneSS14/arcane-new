@@ -130,7 +130,7 @@
           map: [ "enum.GeneratorVisualLayers.Body" ]
         - state: portgen_on_unlit
           map: [ "enum.GeneratorVisualLayers.Unlit" ]
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
           visible: false
     - type: GenericVisualizer
       visuals:
@@ -191,7 +191,7 @@
           map: [ "enum.GeneratorVisualLayers.Body" ]
         - state: portgen_on_unlit
           map: [ "enum.GeneratorVisualLayers.Unlit" ]
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
           visible: false
     - type: GenericVisualizer
       visuals:
@@ -264,7 +264,7 @@
       map: [ "enum.GeneratorVisualLayers.Body" ]
     - state: portgen3on_unlit
       map: [ "enum.GeneratorVisualLayers.Unlit" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: GenericVisualizer
     visuals:

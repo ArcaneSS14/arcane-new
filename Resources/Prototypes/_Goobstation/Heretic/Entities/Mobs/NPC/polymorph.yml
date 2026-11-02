@@ -98,7 +98,7 @@
     sprite: _Goobstation/Heretic/Effects/effects.rsi
     layers:
     - state: voidball_effect
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "base" ]
     drawdepth: OverMobs
     noRot: true

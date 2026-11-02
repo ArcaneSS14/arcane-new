@@ -14,7 +14,7 @@
     scale: 2,2
     layers:
     - state: god
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 # spawn animation, spawns actual god when it ends
 - type: entity
@@ -28,7 +28,7 @@
   - type: Sprite
     layers:
     - state: spawn
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   # the spawn animation is exactly 4.62 seconds long, so we time our entity spawn-in to be the same.
   - type: TimedDespawn
     lifetime: 4.62

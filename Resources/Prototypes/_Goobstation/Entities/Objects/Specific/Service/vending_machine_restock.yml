@@ -14,5 +14,5 @@
     layers:
     - state: base
     - state: green_bit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: refill_sweettoof

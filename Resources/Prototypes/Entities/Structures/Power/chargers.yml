@@ -56,7 +56,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:
@@ -89,7 +89,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
     - state: open
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
       visible: false
@@ -176,7 +176,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
     - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
       shader: "FlickerHologram"
       color: "#ffffffaa"
@@ -227,7 +227,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
     - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
       shader: "FlickerHologram"
       color: "#ffffffaa"
@@ -276,7 +276,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       # WWDP Edit begin
     - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
       shader: "FlickerHologram"
@@ -322,10 +322,10 @@
         map: ["base"]
       - state: borgcharger0
         map: ["enum.PowerDeviceVisualLayers.Powered"]
-        shader: "unshaded"
+        shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       - state: borgcharger1
         map: ["charged"]
-        shader: "unshaded"
+        shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
       - state: borgdecon1
         map: ["enum.WiresVisualLayers.MaintenancePanel"]

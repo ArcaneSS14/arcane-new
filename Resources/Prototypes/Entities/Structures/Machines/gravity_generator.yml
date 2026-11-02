@@ -26,7 +26,7 @@
         map: ["enum.GravityGeneratorVisualLayers.Base"]
       - sprite: Structures/Machines/gravity_generator_core.rsi
         state: activated
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: ["enum.GravityGeneratorVisualLayers.Core"]
   - type: Transform
     anchored: true
@@ -107,7 +107,7 @@
         map: ["enum.GravityGeneratorVisualLayers.Base"]
       - sprite: Structures/Machines/gravity_generator_core.rsi
         state: activated
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: ["enum.GravityGeneratorVisualLayers.Core"]
         scale: "0.4,0.4"
         offset: "0,0.2"

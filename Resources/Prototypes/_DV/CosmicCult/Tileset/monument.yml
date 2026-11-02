@@ -34,7 +34,7 @@
         visible: false
         map: ["enum.MonumentVisualLayers.TransformLayer"]
       - state: finale-overlay1
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: ["enum.MonumentVisualLayers.FinaleLayer"]
     offset: 0,1
@@ -105,7 +105,7 @@
     sprite: _DV/CosmicCult/Tileset/monument.rsi
     layers:
     - state: stage2-relocate-out
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     offset: 0,1
     drawdepth: Mobs
   - type: Fixtures
@@ -140,7 +140,7 @@
     sprite: _DV/CosmicCult/Tileset/monument.rsi
     layers:
     - state: stage2-relocate-in
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     offset: 0,1
     drawdepth: Overdoors
   - type: Fixtures

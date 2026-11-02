@@ -159,7 +159,7 @@
       - state: flashing
         map: [ "enum.FlashVisualLayers.LightLayer" ]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Flash
     - type: RevolutionaryConverter
     - type: LimitedCharges

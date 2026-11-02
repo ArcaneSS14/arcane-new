@@ -28,7 +28,7 @@
       map: [ "enum.CargoTelepadLayers.Base" ]
     - state: idle
       map: [ "enum.CargoTelepadLayers.Beam" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Damageable
     damageModifierSet: StructuralMetallicStrong
   - type: Destructible

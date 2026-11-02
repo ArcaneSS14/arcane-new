@@ -24,7 +24,7 @@
     - state: e-pickaxe-blade
       color: "#e95151"
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
   - type: Item
     sprite: _NF/Objects/Weapons/Melee/energy_pickaxe.rsi
@@ -41,10 +41,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Tag
     tags:
     - Pickaxe

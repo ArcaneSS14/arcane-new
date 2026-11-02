@@ -15,7 +15,7 @@
     - state: flashing
       map: [ "enum.FlashVisualLayers.LightLayer" ]
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Flash
     flashingTime: 20.0
     aoeFlashDuration: 10.0
@@ -53,7 +53,7 @@
     sprite: Structures/Power/Generation/Tesla/energy_ball.rsi
     layers:
     - state: energy_ball
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     scale: 0.5, 0.5
   - type: ScaleData
     scale: 0.5, 0.5

@@ -46,7 +46,7 @@
         state: flare_burn
         color: "#FFFFFF"
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - map: [ enum.ExpendableLightVisualLayers.Overlay ]
         state: flare_unlit
         color: "#FF0000"

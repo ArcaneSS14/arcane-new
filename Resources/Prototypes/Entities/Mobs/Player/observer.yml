@@ -45,7 +45,7 @@
     layers:
     - state: animated
       map: [ "ghostVariant" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: GenericVisualizer
     visuals:

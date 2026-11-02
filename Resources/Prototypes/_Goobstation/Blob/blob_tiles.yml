@@ -330,4 +330,4 @@
       state: blob_shield
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: blob_glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow

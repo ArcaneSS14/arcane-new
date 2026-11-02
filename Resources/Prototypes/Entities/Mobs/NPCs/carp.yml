@@ -97,7 +97,7 @@
       state: alive
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: mouth
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: RandomSprite
     available:
     - enum.DamageStateVisualLayers.Base:
@@ -203,7 +203,7 @@
       state: alive
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: mouth
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:

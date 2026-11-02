@@ -47,7 +47,7 @@
     - state: icon
     - state: on
       map: ["enum.SolutionHeaterVisuals.IsOn"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SolutionHeater
     heatPerSecond: 160
   - type: ItemPlacer

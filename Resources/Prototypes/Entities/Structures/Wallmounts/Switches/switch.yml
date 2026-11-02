@@ -15,10 +15,10 @@
     - state: dead
     - state: on
       map: ["on"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: off
       map: ["off"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -194,7 +194,7 @@
     - state: base
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: LockableButton

@@ -85,7 +85,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _Goobstation/Objects/Weapons/Guns/Battery/plasma_rifle.rsi
   - type: Gun
@@ -182,7 +182,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-0
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _EinsteinEngines/Objects/Weapons/Guns/Battery/ccdisabler.rsi
     quickEquip: false
@@ -218,7 +218,7 @@
           map: ["enum.GunVisualLayers.Base"]
         - state: mag-unshaded-0
           map: ["enum.GunVisualLayers.MagUnshaded"]
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Clothing
       sprite: _EinsteinEngines/Objects/Weapons/Guns/Battery/syndicate-disabler.rsi
       quickEquip: false
@@ -244,7 +244,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     sprite: _Goobstation/Objects/Weapons/Guns/Battery/energy_rifle.rsi
     size: Large
@@ -331,10 +331,10 @@
     inhandVisuals:
       left:
       - state: mode-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: mode-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Tag
     tags:
     - HighRiskItem
@@ -387,7 +387,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     sprite: _Goobstation/Objects/Weapons/Guns/Battery/ion_rifle.rsi
     size: Large

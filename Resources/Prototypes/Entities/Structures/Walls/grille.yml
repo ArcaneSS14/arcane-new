@@ -32,7 +32,7 @@
     - state: electrified
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Icon
     sprite: _Arcane/Structures/Walls/grille.rsi # Arcane-Edit: sprite: Structures/Walls/grille.rsi > sprite: _Arcane/Structures/Walls/grille.rsi
@@ -143,7 +143,7 @@
     - state: electrified_diagonal
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Icon
     sprite: Structures/Walls/grille-diagonal.rsi

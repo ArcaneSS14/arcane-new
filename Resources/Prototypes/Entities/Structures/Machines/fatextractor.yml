@@ -20,10 +20,10 @@
     - state: fat_door_off
       map: ["enum.StorageVisualLayers.Door"]
     - state: fat_red
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: fat_green
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["enum.FatExtractorVisualLayers.Light"]
     - state: fat_panel

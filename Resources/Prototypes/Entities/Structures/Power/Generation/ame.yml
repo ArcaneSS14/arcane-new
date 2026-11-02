@@ -148,7 +148,7 @@
       visible: false
     - state: core_weak
       map: ["core_glow"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Physics
   - type: Fixtures

@@ -43,4 +43,4 @@
     sprite: _Goobstation/Heretic/Entities/cosmic_rune.rsi
     layers:
     - state: cosmic_rune_light
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow

@@ -14,7 +14,7 @@
       layers:
         - sprite: /Textures/_White/Objects/Devices/experimentalsyndicateteleporter.rsi
           state: in
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       netsync: false
       drawdepth: Effects
     - type: PointLight
@@ -34,7 +34,7 @@
       layers:
         - sprite: /Textures/_White/Objects/Devices/experimentalsyndicateteleporter.rsi
           state: out
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       netsync: false
       drawdepth: Effects
     - type: PointLight

@@ -248,7 +248,7 @@
     layers:
     - state: icon
     - state: icon-unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: [ ClothingBackpackDuffel, BaseCentcommContraband ]

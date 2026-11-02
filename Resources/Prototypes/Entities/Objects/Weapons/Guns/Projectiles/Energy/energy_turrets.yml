@@ -8,7 +8,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: heavylaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Reflective
     reflective:
     - Energy
@@ -55,7 +55,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: heavylaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectOrangeDisabler
     damage:
@@ -74,7 +74,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StaminaDamageOnCollide
     damage: 30
   - type: Projectile
@@ -103,7 +103,7 @@
     sprite: Structures/Power/Generation/Tesla/energy_miniball.rsi
     layers:
     - state: tesla_projectile
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StaminaDamageOnCollide
     damage: 15
   - type: EmbeddableProjectile

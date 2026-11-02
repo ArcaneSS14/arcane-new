@@ -66,7 +66,7 @@
       - state: lamp
         map: [ "base" ]
       - state: lamp-on
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "light" ]
   - type: Item
@@ -93,7 +93,7 @@
     layers:
       - state: bananalamp
       - state: bananalamp_on
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "light" ]
 
@@ -109,7 +109,7 @@
       - state: lampgreen
         map: [ "base" ]
       - state: lampgreen-on
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "light" ]
   - type: Item
@@ -142,7 +142,7 @@
       - state: lamp-int
         map: [ "enum.FlashVisualLayers.BaseLayer" ]
       - state: lamp-int-on
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "light" ]
       - state: flashing
@@ -201,7 +201,7 @@
       - state: floodlight
         map: [ "base" ]
       - state: floodlight-on
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "light" ]
   - type: Physics

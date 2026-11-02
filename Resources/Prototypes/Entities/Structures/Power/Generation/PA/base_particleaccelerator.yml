@@ -42,7 +42,7 @@
       map: [ "enum.ParticleAcceleratorVisualLayers.Base" ]
     - state: unlitp
       map: [ "enum.ParticleAcceleratorVisualLayers.Unlit" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: ParticleAcceleratorPartVisuals
     stateBase: unlit

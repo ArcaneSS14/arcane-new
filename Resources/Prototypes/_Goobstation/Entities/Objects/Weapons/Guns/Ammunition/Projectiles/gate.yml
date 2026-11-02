@@ -9,7 +9,7 @@
   - type: Sprite
     layers:
     - state: piercing
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -29,7 +29,7 @@
   - type: Sprite
     layers:
     - state: spark
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:

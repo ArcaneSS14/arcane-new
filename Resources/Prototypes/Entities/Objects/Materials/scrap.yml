@@ -536,9 +536,9 @@
       - state: uranium_generator
       - map: [ "extra" ]
       - state: rad_dripping
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: rad_outline
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: RandomSprite
     available:
     - extra:

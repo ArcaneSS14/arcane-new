@@ -11,11 +11,11 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: cap-1
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.SolutionContainerLayers.Fill"]
     - state: core
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.ToggleableVisuals.Layer"]
   - type: Appearance
   - type: Item
@@ -32,10 +32,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-core
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-core
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ItemTogglePointLight
   - type: PointLight
     enabled: false

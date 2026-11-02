@@ -13,7 +13,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
     muzzleFlash: null # Trauma - removed flash
   - type: Physics
@@ -57,7 +57,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser_greyscale
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: orangered
   - type: Ammo
     muzzleFlash: null # Trauma - removed flash
@@ -85,7 +85,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: ice
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
     muzzleFlash: null
   - type: Physics

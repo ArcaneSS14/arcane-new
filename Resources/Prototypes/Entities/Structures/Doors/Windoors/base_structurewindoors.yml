@@ -37,32 +37,32 @@
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
     - state: closed_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.DoorVisualLayers.BaseUnlit"]
       visible: false
     - state: welded
       map: ["enum.WeldableLayers.BaseWelded"]
     - state: bolted_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.DoorVisualLayers.BaseBolted"]
     - state: emergency_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
     - state: panel_open
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
     - state: electrified_ai
       sprite: Interface/Misc/ai_hud.rsi
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["enum.ElectrifiedLayers.HUD"]
     - state: electrified
       sprite: Effects/electricity.rsi
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["enum.ElectrifiedLayers.Sparks"]
     - state: sparks
       map: ["enum.DoorVisualLayers.BaseEmagging"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: AnimationPlayer
   - type: ApcPowerReceiver
@@ -179,33 +179,33 @@
     - state: closed
       map: [ "enum.DoorVisualLayers.Base" ]
     - state: closed_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.DoorVisualLayers.BaseUnlit" ]
       visible: false
     - state: welded
       map: [ "enum.WeldableLayers.BaseWelded" ]
     - state: bolted_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.DoorVisualLayers.BaseBolted" ]
     - state: emergency_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.DoorVisualLayers.BaseEmergencyAccess" ]
     - state: panel_open
       map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       visible: false
     - state: electrified_ai
       sprite: Interface/Misc/ai_hud.rsi
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ElectrifiedLayers.HUD" ]
     - state: electrified
       sprite: Effects/electricity.rsi
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ElectrifiedLayers.Sparks" ]
     - state: sparks
       map: ["enum.DoorVisualLayers.BaseEmagging"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Damageable
     damageModifierSet: RGlass

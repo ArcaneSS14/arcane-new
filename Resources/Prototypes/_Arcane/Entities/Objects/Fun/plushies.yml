@@ -9,7 +9,7 @@
     layers:
     - state: icon
     - state: icon-unshaded
-      shader: unshaded
+      shader: UnshadedGlow
   - type: Item
     sprite: _Arcane/Objects/Fun/Plushes/synth_plushie.rsi
   - type: EmitSoundOnUse

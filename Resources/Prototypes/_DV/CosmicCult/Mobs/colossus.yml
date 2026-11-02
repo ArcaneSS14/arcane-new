@@ -16,7 +16,7 @@
     sprite: _DV/CosmicCult/Mobs/colossus.rsi
     layers:
     - state: unshaded_bg
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["underlay"]
     - state: colossus
       map: ["base"]
@@ -24,14 +24,14 @@
       visible: false
       map: ["corpse"]
     - state: unshaded_fg
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["overlay"]
     - state: attacking
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["attack"]
     - state: hibernate
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["hibernating"]
   - type: Appearance
@@ -299,7 +299,7 @@
     offset: 0,0.27
     layers:
     - state: tiledamage_start
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Tag
     tags:
     - HideContextMenu
@@ -320,7 +320,7 @@
     offset: 0,0.27
     layers:
     - state: tiledamage_end
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Transform
     noRot: true
     anchored: true

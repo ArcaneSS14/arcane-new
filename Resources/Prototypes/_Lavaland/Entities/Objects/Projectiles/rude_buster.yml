@@ -11,7 +11,7 @@
     sprite: _Lavaland/Objects/Projectiles/rude_buster.rsi
     layers:
     - state: buster
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#ae00ffdd"
       scale: 1.5,1.5
   - type: Reflective

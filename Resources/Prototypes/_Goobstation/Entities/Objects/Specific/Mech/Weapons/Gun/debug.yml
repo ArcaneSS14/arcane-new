@@ -50,7 +50,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: BatteryAmmoProvider
     proto: RedMediumLaser
     fireCost: 19
@@ -81,7 +81,7 @@
         map: ["enum.GunVisualLayers.Base"]
       - state: mag-unshaded-0
         map: ["enum.GunVisualLayers.MagUnshaded"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Gun
     fireRate: 1
     selectedMode: SemiAuto

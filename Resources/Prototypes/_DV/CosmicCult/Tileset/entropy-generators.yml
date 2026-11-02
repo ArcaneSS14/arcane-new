@@ -32,7 +32,7 @@
         map: ["base"]
       - state: overlay
         map: ["vfx"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
     drawdepth: Mobs
     noRot: true

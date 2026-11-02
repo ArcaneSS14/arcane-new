@@ -39,7 +39,7 @@
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
     - state: core-e
       map: ["enum.BorgVisualLayers.Light"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Machine
     board: null
   - type: Lathe

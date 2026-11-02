@@ -33,7 +33,7 @@
     layers:
     - state: head
     - state: overlay
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     drawdepth: Overdoors
   - type: Tag
     tags:

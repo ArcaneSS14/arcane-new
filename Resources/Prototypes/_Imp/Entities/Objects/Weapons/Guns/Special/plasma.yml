@@ -32,7 +32,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _Impstation/Objects/Weapons/Guns/Special/adder.rsi
     quickEquip: false
@@ -95,7 +95,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-4
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _Impstation/Objects/Weapons/Guns/Special/akurra.rsi
     quickEquip: false

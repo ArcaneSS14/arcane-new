@@ -77,7 +77,7 @@
         "gib":
           Primed:
             state: gibtonite_active
-            shader: unshaded
+            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
             visible: true
           Unprimed:
             state: gibtonite_inactive

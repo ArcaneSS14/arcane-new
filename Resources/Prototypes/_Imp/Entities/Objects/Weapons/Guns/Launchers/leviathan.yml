@@ -13,7 +13,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: mag-unshaded-1
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _Impstation/Objects/Weapons/Guns/Launchers/leviathan.rsi
   - type: HeldSpeedModifier

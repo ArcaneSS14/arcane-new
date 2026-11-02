@@ -7,7 +7,7 @@
   id: defaultUnshaded
   typingState: default0
   idleState: default3
-  shader: unshaded
+  shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: typingIndicator
   id: robot

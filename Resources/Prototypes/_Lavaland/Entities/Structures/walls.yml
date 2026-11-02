@@ -45,7 +45,7 @@
     - !type:CornerSpriteSmoothing
       mask: [ hierofield ]
       base: hierotemp
-      shader: unshaded
+      shader: UnshadedGlow
     # Arcane-Edit-End
   - type: Occluder
     enabled: false
