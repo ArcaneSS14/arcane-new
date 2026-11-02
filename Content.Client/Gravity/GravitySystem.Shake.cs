@@ -18,11 +18,20 @@ public sealed partial class GravitySystem
 
     private void InitializeShake()
     {
-        SubscribeLocalEvent<GravityShakeComponent, ComponentInit>(OnShakeInit);
+        SubscribeLocalEvent<GravityShakeComponent, AfterAutoHandleStateEvent>(OnShakeInit); // Arcane-Edit: ComponentInit > AfterAutoHandleStateEvent
     }
 
-    private void OnShakeInit(EntityUid uid, GravityShakeComponent component, ComponentInit args)
+    private void OnShakeInit(EntityUid uid, GravityShakeComponent component, ref AfterAutoHandleStateEvent args) // Arcane-Edit: ComponentInit > AfterAutoHandleStateEvent
     {
+        // Arcane-Start
+        if (component.ArcaneClientSoundHandled)
+            return;
+
+        component.ArcaneClientSoundHandled = true;
+        if (component.ArcaneSoundIsServerPlayed)
+            return;
+        // Arcane-End
+
         var localPlayer = _playerManager.LocalEntity;
 
         if (!TryComp(localPlayer, out TransformComponent? xform) ||
@@ -31,7 +40,7 @@ public sealed partial class GravitySystem
             return;
         }
 
-        if (Timing.IsFirstTimePredicted && TryComp<GravityComponent>(uid, out var gravity))
+        if (TryComp<GravityComponent>(uid, out var gravity)) // Arcane-Edit: first prediction > replicated state
         {
             var audioParams = gravity.GravityShakeSound?.Params ?? AudioParams.Default;
             audioParams = audioParams.AddVolume(-2f);

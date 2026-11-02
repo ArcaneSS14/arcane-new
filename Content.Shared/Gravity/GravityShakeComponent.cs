@@ -6,7 +6,7 @@ namespace Content.Shared.Gravity;
 /// <summary>
 /// Indicates this entity is shaking due to gravity changes.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true), AutoGenerateComponentPause] // Arcane-Edit: AutoGenerateComponentState > AutoGenerateComponentState(true)
 public sealed partial class GravityShakeComponent : Component
 {
     [ViewVariables(VVAccess.ReadWrite), DataField, AutoNetworkedField]
@@ -15,4 +15,11 @@ public sealed partial class GravityShakeComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField]
     [AutoPausedField]
     public TimeSpan NextShake;
+
+    // Arcane-Start
+    [AutoNetworkedField]
+    public bool ArcaneSoundIsServerPlayed;
+
+    public bool ArcaneClientSoundHandled;
+    // Arcane-End
 }
