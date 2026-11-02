@@ -1,5 +1,5 @@
+using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.PainFlash;
-using Content.Shared.CCVar;
 using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 using Robust.Client.Player;
@@ -19,7 +19,10 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
 
     private readonly List<PainFlashInstance> _painInstances = new();
     private PainFlashOverlay _overlay = default!;
-    private bool _reducedMotion;
+    private bool _painFlashEnabled = true;
+    private float _painFlashIntensity = 1f;
+
+    private bool IsPainFlashVisible => _painFlashEnabled && _painFlashIntensity > 0f;
 
     public override void Initialize()
     {
@@ -33,12 +36,14 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
         SubscribeLocalEvent<PainFlashComponent, LocalPlayerDetachedEvent>(OnPlayerDetached);
         SubscribeNetworkEvent<PainFlashMessage>(OnPainFlashMessage);
 
-        _config.OnValueChanged(CCVars.ReducedMotion, OnReducedMotionChanged, invokeImmediately: true);
+        _config.OnValueChanged(ArcaneCVars.PainFlashEnabled, OnPainFlashEnabledChanged, invokeImmediately: true);
+        _config.OnValueChanged(ArcaneCVars.PainFlashIntensity, OnPainFlashIntensityChanged, invokeImmediately: true);
     }
 
     public override void Shutdown()
     {
-        _config.UnsubValueChanged(CCVars.ReducedMotion, OnReducedMotionChanged);
+        _config.UnsubValueChanged(ArcaneCVars.PainFlashEnabled, OnPainFlashEnabledChanged);
+        _config.UnsubValueChanged(ArcaneCVars.PainFlashIntensity, OnPainFlashIntensityChanged);
         _overlayManager.RemoveOverlay(_overlay);
         _overlay.Reset();
         _painInstances.Clear();
@@ -46,11 +51,25 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
         base.Shutdown();
     }
 
-    private void OnReducedMotionChanged(bool reducedMotion)
+    private void OnPainFlashEnabledChanged(bool enabled)
     {
-        _reducedMotion = reducedMotion;
+        _painFlashEnabled = enabled;
+        UpdateOverlayIntensity();
+    }
 
-        if (reducedMotion)
+    private void OnPainFlashIntensityChanged(float intensity)
+    {
+        _painFlashIntensity = float.IsFinite(intensity)
+            ? Math.Clamp(intensity, 0f, 1f)
+            : 1f;
+        UpdateOverlayIntensity();
+    }
+
+    private void UpdateOverlayIntensity()
+    {
+        _overlay.Intensity = IsPainFlashVisible ? _painFlashIntensity : 0f;
+
+        if (!IsPainFlashVisible)
             _overlay.Reset();
     }
 
@@ -91,7 +110,7 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
 
     private void OnPainFlashMessage(PainFlashMessage message)
     {
-        if (_reducedMotion)
+        if (!IsPainFlashVisible)
             return;
 
         if (_painInstances.Remove(new PainFlashInstance(message.Damage, message.Tick)))
@@ -102,7 +121,7 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
 
     protected override void OnDamageChanged(Entity<PainFlashComponent> ent, ref DamageChangedEvent args)
     {
-        if (_reducedMotion || _player.LocalEntity != ent.Owner)
+        if (!IsPainFlashVisible || _player.LocalEntity != ent.Owner)
             return;
 
         if (Timing.ApplyingState || !Timing.IsFirstTimePredicted)

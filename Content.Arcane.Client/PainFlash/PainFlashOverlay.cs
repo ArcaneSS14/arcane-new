@@ -14,6 +14,8 @@ public sealed class PainFlashOverlay : Overlay
     public override OverlaySpace Space => OverlaySpace.WorldSpace;
     public override bool RequestScreenTexture => false;
 
+    public float Intensity { get; set; } = 1f;
+
     private float _painAccumulator;
 
     public void Reset()
@@ -41,10 +43,10 @@ public sealed class PainFlashOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        if (_painAccumulator <= 0f)
+        if (_painAccumulator <= 0f || Intensity <= 0f)
             return;
 
-        var alpha = Math.Clamp(_painAccumulator / MaxVisiblePain, 0f, 1f);
+        var alpha = Math.Clamp(_painAccumulator / MaxVisiblePain, 0f, 1f) * Intensity;
         args.WorldHandle.DrawRect(args.WorldBounds, Color.Red.WithAlpha(alpha));
     }
 }

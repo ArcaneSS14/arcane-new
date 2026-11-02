@@ -58,6 +58,15 @@ public sealed partial class ArcaneCVars
     public static readonly CVarDef<float> ChatRunechatPostTypingLifetime =
         CVarDef.Create("chat.runechat_post_typing_lifetime", 2f, CVar.CLIENTONLY | CVar.ARCHIVE);
 
+    public static readonly CVarDef<bool> PainFlashEnabled =
+        CVarDef.Create("accessibility.pain_flash_enabled", true, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    /// <summary>
+    ///     Intensity multiplier for the pain flash overlay. Zero disables the effect and one is full intensity.
+    /// </summary>
+    public static readonly CVarDef<float> PainFlashIntensity =
+        CVarDef.Create("accessibility.pain_flash_intensity", 1f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
     public static readonly CVarDef<bool> UseCustomInteractionOutlineColors =
         CVarDef.Create("interaction_outline.use_custom_colors", false, CVar.CLIENTONLY | CVar.ARCHIVE);
 
