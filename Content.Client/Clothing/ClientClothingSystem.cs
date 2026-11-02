@@ -44,6 +44,10 @@ public sealed partial class ClientClothingSystem : ClothingSystem
         {"belt", "BELT"},
         {"gloves", "HAND"},
         {"shoes", "FEET"},
+        // Arcane-Start
+        {"pants", "PANTS"},
+        {"brass", "BRASS"},
+        // Arcane-End
         {"id", "IDCARD"},
         {"pocket1", "POCKET1"},
         {"pocket2", "POCKET2"},

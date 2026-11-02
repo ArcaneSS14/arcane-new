@@ -1,0 +1,35 @@
+- type: inventoryTemplate
+  id: human
+  slots:
+  - name: brass
+    slotTexture: /Textures/_Arcane/Interface/Inventory/Slots/brass.png
+    slotFlags: BRASS
+    stripTime: 3
+    uiWindowPos: 3,2
+    strippingWindowPos: 2,1
+    displayName: Bra
+  - name: pants
+    slotTexture: /Textures/_Arcane/Interface/Inventory/Slots/pants.png
+    slotFlags: PANTS
+    stripTime: 6
+    uiWindowPos: 3,1
+    strippingWindowPos: 2,2
+    displayName: Underpants
+
+- type: inventoryTemplate
+  id: arachnid
+  slots:
+  - name: brass
+    slotTexture: /Textures/_Arcane/Interface/Inventory/Slots/brass.png
+    slotFlags: BRASS
+    stripTime: 3
+    uiWindowPos: 3,2
+    strippingWindowPos: 2,1
+    displayName: Bra
+  - name: pants
+    slotTexture: /Textures/_Arcane/Interface/Inventory/Slots/pants.png
+    slotFlags: PANTS
+    stripTime: 6
+    uiWindowPos: 3,1
+    strippingWindowPos: 2,2
+    displayName: Underpants

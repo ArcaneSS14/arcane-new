@@ -26,6 +26,10 @@ public enum SlotFlags
     LEGS = 1 << 13,
     FEET = 1 << 14,
     SUITSTORAGE = 1 << 15,
+    // Arcane-Start
+    PANTS = 1 << 16,
+    BRASS = 1 << 17,
+    // Arcane-End
     All = ~NONE,
 
     WITHOUT_POCKET = All & ~POCKET

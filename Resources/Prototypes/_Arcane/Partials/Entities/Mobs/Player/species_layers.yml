@@ -1,0 +1,7 @@
+- type: entity
+  id: BaseSpeciesLayers
+  components:
+  - type: Sprite
+    layers:
+    - map: ["brass"]
+    - map: ["pants"]

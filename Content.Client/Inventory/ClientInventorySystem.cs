@@ -299,7 +299,12 @@ namespace Content.Client.Inventory
             [ViewVariables] public bool ShowInWindow => SlotDef.ShowInWindow;
             [ViewVariables] public string SlotGroup => SlotDef.SlotGroup;
             [ViewVariables] public string SlotDisplayName => SlotDef.DisplayName;
-            [ViewVariables] public string TextureName => "Slots/" + SlotDef.TextureName;
+            // Arcane-Edit-Start: Allow owner-local absolute slot texture paths.
+            [ViewVariables]
+            public string TextureName => SlotDef.TextureName.StartsWith('/')
+                ? SlotDef.TextureName
+                : "Slots/" + SlotDef.TextureName;
+            // Arcane-Edit-End
             [ViewVariables] public string FullTextureName => SlotDef.FullTextureName;
 
             public SlotData(SlotDefinition slotDef, ContainerSlot? container = null, bool highlighted = false,
