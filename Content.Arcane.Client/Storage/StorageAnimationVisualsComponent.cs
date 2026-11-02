@@ -16,6 +16,16 @@ public sealed partial class StorageAnimationVisualsComponent : Component
     [DataField(required: true)]
     public HashSet<string> OpenStates = [];
 
+    /// <summary>Open states whose single door layer contains two outward-swinging leaves.</summary>
+    [DataField]
+    public HashSet<string> DoubleDoorStates = [];
+
+    [DataField]
+    public Vector2 LeftHinge = new(-9.5f / 32f, 0);
+
+    [DataField]
+    public Vector2 RightHinge = new(8.5f / 32f, 0);
+
     [DataField]
     public TimeSpan Duration = TimeSpan.FromSeconds(0.2);
 
@@ -42,6 +52,11 @@ public sealed partial class StorageAnimationVisualsComponent : Component
     public int? HiddenBaseLayer;
     public Texture? FrontTexture;
     public Texture? BackTexture;
+    public bool DoubleDoors;
+    public EntityUid? RightDoor;
+    public Texture? RightFrontTexture;
+    public Texture? RightBackTexture;
+    public readonly List<StorageAnimationLayer> RightLayers = [];
 
     [DataField]
     public float OpenAngle = 140f;

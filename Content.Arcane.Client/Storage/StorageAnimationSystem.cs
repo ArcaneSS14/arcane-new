@@ -85,6 +85,9 @@ public sealed partial class StorageAnimationSystem : EntitySystem
         comp.ResolvedHinge = comp.Hinges.GetValueOrDefault(sprite.BaseRSI.Path.RelativeTo(new ResPath("/Textures")), comp.Hinge);
         comp.OverlayCutoff = comp.OverlayCutoffs.GetValueOrDefault(sprite.BaseRSI.Path.RelativeTo(new ResPath("/Textures")));
         comp.BodyCutoff = comp.BodyCutoffs.GetValueOrDefault(sprite.BaseRSI.Path.RelativeTo(new ResPath("/Textures")));
+        comp.DoubleDoors = comp.DoubleDoorStates.Contains(visuals.StateDoorOpen);
+        if (comp.DoubleDoors)
+            comp.ResolvedHinge = comp.LeftHinge;
         return _sprite.LayerMapTryGet((uid, sprite), StorageVisualLayers.Door, out comp.DoorLayer, false);
     }
 
@@ -92,6 +95,8 @@ public sealed partial class StorageAnimationSystem : EntitySystem
         AppearanceComponent appearance)
     {
         ClearFixedParts(uid, comp);
+        if (!comp.DoubleDoors)
+            ClearRightDoor(comp);
         if (comp.Door is not { } door || Deleted(door))
         {
             door = Spawn(null, new EntityCoordinates(uid, Vector2.Zero));
@@ -194,6 +199,56 @@ public sealed partial class StorageAnimationSystem : EntitySystem
             comp.Layers.Add(new StorageAnimationLayer(i, layer.Offset, layer.Rotation, layer.Scale, visible, backOnly));
             _sprite.LayerSetVisible((uid, source), i, false);
         }
+
+        if (comp.DoubleDoors)
+            BindDoubleDoors(uid, comp, source, (door, sprite));
+    }
+
+    private void BindDoubleDoors(EntityUid uid, StorageAnimationVisualsComponent comp, SpriteComponent source,
+        Entity<SpriteComponent> left)
+    {
+        if (comp.RightDoor is not { } right || Deleted(right))
+        {
+            right = Spawn(null, new EntityCoordinates(uid, Vector2.Zero));
+            comp.RightDoor = right;
+        }
+
+        var sprite = EnsureComp<SpriteComponent>(right);
+        _sprite.CopySprite((left.Owner, left.Comp), (right, sprite));
+        source.BaseRSI!.TryGetState(comp.ClosedState, out var closed);
+        source.BaseRSI.TryGetState(comp.OpenState, out var open);
+        comp.FrontTexture = Half(closed!.Icons[0][0], false);
+        comp.BackTexture = Half(open!.Icons[0][0], false);
+        comp.RightFrontTexture = Half(closed.Icons[0][0], true);
+        comp.RightBackTexture = Half(open.Icons[0][0], true);
+        comp.RightLayers.Clear();
+
+        for (var i = 0; i < comp.Layers.Count; i++)
+        {
+            var layer = comp.Layers[i];
+            if (layer.Index == comp.DoorLayer)
+            {
+                var offset = new Vector2(closed.Size.X / 128f, 0);
+                comp.Layers[i] = layer with { Offset = layer.Offset - offset };
+                comp.RightLayers.Add(layer with { Offset = layer.Offset + offset });
+                continue;
+            }
+
+            // The existing lock and weld artwork lies on the right leaf. Keep the paper
+            // label whole on the left leaf, rather than duplicating or tearing it at the seam.
+            var onRight = IsLayer(uid, source, layer.Index, LockVisualLayers.Lock)
+                          || IsLayer(uid, source, layer.Index, WeldableLayers.BaseWelded);
+            comp.Layers[i] = layer with { Visible = layer.Visible && !onRight };
+            comp.RightLayers.Add(layer with { Visible = layer.Visible && onRight });
+        }
+    }
+
+    private static AtlasTexture Half(AtlasTexture frame, bool right)
+    {
+        var region = frame.SubRegion;
+        var middle = region.Left + frame.Width / 2f;
+        return new AtlasTexture(frame.SourceTexture,
+            new UIBox2(right ? middle : region.Left, region.Top, right ? region.Right : middle, region.Bottom));
     }
 
     private static AtlasTexture Slice(AtlasTexture frame, int top, int bottom)
@@ -254,17 +309,37 @@ public sealed partial class StorageAnimationSystem : EntitySystem
 
     private void Draw(EntityUid uid, StorageAnimationVisualsComponent comp, SpriteComponent source)
     {
-        if (comp.Door is not { } door || !TryComp<SpriteComponent>(door, out var sprite))
+        if (comp.Door is { } left)
+            DrawDoor(comp, source, left, comp.Layers, comp.ResolvedHinge, false, comp.FrontTexture, comp.BackTexture);
+        if (comp.RightDoor is { } right)
+            DrawDoor(comp, source, right, comp.RightLayers, comp.RightHinge, true, comp.RightFrontTexture, comp.RightBackTexture);
+
+        if (comp.FixedOverlay is { } fixedOverlay)
+        {
+            _sprite.SetColor(fixedOverlay, source.Color);
+            _sprite.SetVisible(fixedOverlay, source.Visible && !source.ContainerOccluded);
+            _sprite.SetOffset(fixedOverlay, source.Offset);
+            _sprite.SetRotation(fixedOverlay, source.Rotation);
+            _sprite.SetScale(fixedOverlay, source.Scale);
+        }
+    }
+
+    private void DrawDoor(StorageAnimationVisualsComponent comp, SpriteComponent source, EntityUid door,
+        List<StorageAnimationLayer> layers, Vector2 hinge, bool mirror, Texture? frontTexture, Texture? backTexture)
+    {
+        if (!TryComp<SpriteComponent>(door, out var sprite))
             return;
 
         var angle = comp.Lid ? comp.Phase * MathF.PI : comp.Phase * MathHelper.DegreesToRadians(comp.OpenAngle);
         var back = angle >= MathF.PI / 2f;
         var motion = DoorTransform(comp, angle, back);
+        if (mirror)
+            motion.M12 = -motion.M12;
         var owner = Matrix3x2.CreateScale(source.Scale)
                     * Matrix3x2.CreateRotation((float) source.Rotation.Theta)
                     * Matrix3x2.CreateTranslation(source.Offset);
-        var transform = Matrix3x2.CreateTranslation(-comp.ResolvedHinge) * motion
-                        * Matrix3x2.CreateTranslation(comp.ResolvedHinge) * owner;
+        var transform = Matrix3x2.CreateTranslation(-hinge) * motion
+                        * Matrix3x2.CreateTranslation(hinge) * owner;
 
         // A sprite and its layers each expose rotation/scale, but no shear setter.
         // Factor the affine transform into those two supported transforms.
@@ -275,18 +350,10 @@ public sealed partial class StorageAnimationSystem : EntitySystem
         _sprite.SetColor((door, sprite), source.Color);
         _sprite.SetVisible((door, sprite), source.Visible && !source.ContainerOccluded);
         sprite.NoRotation = source.NoRotation;
-        if (comp.FixedOverlay is { } fixedOverlay)
-        {
-            _sprite.SetColor(fixedOverlay, source.Color);
-            _sprite.SetVisible(fixedOverlay, source.Visible && !source.ContainerOccluded);
-            _sprite.SetOffset(fixedOverlay, source.Offset);
-            _sprite.SetRotation(fixedOverlay, source.Rotation);
-            _sprite.SetScale(fixedOverlay, source.Scale);
-        }
         // A separate sprite at the body's depth can sort behind it as its bounds move.
         _sprite.SetDrawDepth((door, sprite), comp.Lid ? source.DrawDepth + 1 : back ? (int) DrawDepth.BelowMobs : (int) DrawDepth.OverMobs);
 
-        foreach (var layer in comp.Layers)
+        foreach (var layer in layers)
         {
             _sprite.LayerSetOffset((door, sprite), layer.Index, Vector2.Transform(layer.Offset, Matrix3x2.CreateRotation(inner)));
             _sprite.LayerSetRotation((door, sprite), layer.Index, layer.Rotation + new Angle(inner));
@@ -295,8 +362,8 @@ public sealed partial class StorageAnimationSystem : EntitySystem
                 layer.Index == comp.DoorLayer || layer.Visible && (layer.BackOnly ? back : !back));
         }
 
-        if (comp.BodyCutoff > 0)
-            _sprite.LayerSetTexture((door, sprite), comp.DoorLayer, back ? comp.BackTexture : comp.FrontTexture);
+        if (frontTexture != null)
+            _sprite.LayerSetTexture((door, sprite), comp.DoorLayer, back ? backTexture : frontTexture);
         else
             _sprite.LayerSetRsiState((door, sprite), comp.DoorLayer, back ? comp.OpenState : comp.ClosedState);
     }
@@ -347,6 +414,7 @@ public sealed partial class StorageAnimationSystem : EntitySystem
             QueueDel(door);
         }
         comp.Door = null;
+        ClearRightDoor(comp);
         ClearFixedParts(uid, comp);
         comp.Layers.Clear();
         if (redraw && !TerminatingOrDeleted(uid) && TryComp<AppearanceComponent>(uid, out var appearance)
@@ -367,6 +435,19 @@ public sealed partial class StorageAnimationSystem : EntitySystem
         comp.HiddenBaseLayer = null;
         comp.FrontTexture = null;
         comp.BackTexture = null;
+    }
+
+    private void ClearRightDoor(StorageAnimationVisualsComponent comp)
+    {
+        if (comp.RightDoor is { } right && !Deleted(right))
+        {
+            _sprite.SetVisible(right, false);
+            QueueDel(right);
+        }
+        comp.RightDoor = null;
+        comp.RightFrontTexture = null;
+        comp.RightBackTexture = null;
+        comp.RightLayers.Clear();
     }
 
     private void OnParentChanged(EntityUid uid, StorageAnimationVisualsComponent comp, ref EntParentChangedMessage args)

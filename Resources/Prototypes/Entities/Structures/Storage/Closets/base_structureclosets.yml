@@ -124,6 +124,11 @@
     - mime_open
     - chapel_open
     - ntr_open
+    - shotguncase_open
+    - cabinet_open
+    doubleDoorStates:
+    - shotguncase_open
+    - cabinet_open
   # Arcane-End
   - type: StaticPrice
     price: 75
