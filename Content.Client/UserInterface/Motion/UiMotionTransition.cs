@@ -10,19 +10,26 @@ internal sealed class UiMotionTransition(IConfigurationManager configuration)
     private float _elapsed;
     private float _fromOpacity;
     private float _fromOffset;
-    private bool _entering;
+    private bool _entering = true;
     private UiMotionProfile _profile = UiMotionProfile.Standard;
 
     public float Opacity { get; private set; } = 1f;
     public float Offset { get; private set; }
     public bool Finished { get; private set; } = true;
 
+    public void Finish()
+    {
+        Opacity = _entering ? 1 : 0;
+        Offset = 0;
+        Finished = true;
+    }
+
     public void Start(UiMotionProfile profile, bool entering, float opacity, float offset)
     {
-        _profile = profile;
+        _profile = UiMotionSettings.Resolve(configuration, profile);
         _entering = entering;
         _fromOpacity = opacity;
-        _fromOffset = offset;
+        _fromOffset = configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : offset;
         _elapsed = 0;
         Finished = false;
         Advance(0);
@@ -33,11 +40,14 @@ internal sealed class UiMotionTransition(IConfigurationManager configuration)
         if (Finished)
             return;
 
+        _profile = UiMotionSettings.Resolve(configuration, _profile);
+        if (configuration.GetCVar(UiMotionSettings.Reduce))
+            _fromOffset = 0;
         var duration = (float) (_entering ? _profile.EnterDuration : _profile.ExitDuration).TotalSeconds;
-        _elapsed += Math.Max(0, deltaSeconds) * UiMotionSettings.NormalizeSpeed(configuration.GetCVar(UiMotionSettings.Speed));
+        _elapsed += Math.Max(0, deltaSeconds) * UiMotionSettings.PlaybackSpeed(configuration);
         var progress = !configuration.GetCVar(UiMotionSettings.Enabled)
                        || (_entering && !_profile.Opening)
-                       || (!_entering && !configuration.GetCVar(UiMotionSettings.AnimateClosing)) || duration <= 0
+                       || duration <= 0
             ? 1f
             : Math.Clamp(_elapsed / duration, 0f, 1f);
         var spatial = _entering && _profile.Overshoot ? Easings.OutBack(progress) : Easings.OutCubic(progress);
@@ -49,7 +59,7 @@ internal sealed class UiMotionTransition(IConfigurationManager configuration)
 
     public float GetStaggeredOpacity(int index, int count)
     {
-        if (Finished || !_entering || !_profile.Sequence || count < 4)
+        if (Finished || !_entering || !_profile.Sequence || configuration.GetCVar(UiMotionSettings.Reduce) || count < 4)
             return 1f;
 
         // Reserve the first half for the sequence and finish every item within the host's transition.

@@ -32,7 +32,7 @@ public abstract partial class SpeechBubble
         _motionAge += delta;
         if (_typingLabel == null || _reveal == null)
             return;
-        var speed = UiMotionSettings.NormalizeSpeed(ConfigManager.GetCVar(UiMotionSettings.Speed));
+        var speed = UiMotionSettings.PlaybackSpeed(ConfigManager);
         var enabled = ConfigManager.GetCVar(UiMotionSettings.Enabled) && ConfigManager.GetCVar(UiMotionSettings.SpeechTyping);
         var pause = ConfigManager.GetCVar(UiMotionSettings.SpeechPunctuation)
             ? UiMotionSettings.Read(ConfigManager, UiMotionSettings.SpeechPunctuationMs, 0, 500) / 1000 / speed : 0;
@@ -53,20 +53,24 @@ public abstract partial class SpeechBubble
     }
 
     private bool BubbleMovementEnabled => ConfigManager.GetCVar(UiMotionSettings.Enabled)
-                                          && ConfigManager.GetCVar(UiMotionSettings.BubbleMovement);
+                                          && ConfigManager.GetCVar(UiMotionSettings.BubbleMovement)
+                                          && !ConfigManager.GetCVar(UiMotionSettings.Reduce);
 
-    private float BubbleSpeed => UiMotionSettings.NormalizeSpeed(ConfigManager.GetCVar(UiMotionSettings.Speed));
+    private float BubbleSpeed => UiMotionSettings.PlaybackSpeed(ConfigManager);
 
     private float BubbleFadeSeconds => ConfigManager.GetCVar(UiMotionSettings.Enabled)
                                        && ConfigManager.GetCVar(UiMotionSettings.BubbleClosing)
-        ? UiMotionSettings.Read(ConfigManager, UiMotionSettings.BubbleExitMs, 0, 1000) / 1000 / BubbleSpeed : 0;
+        ? Math.Min(ConfigManager.GetCVar(UiMotionSettings.Reduce) ? 100 : 1000,
+            UiMotionSettings.Read(ConfigManager, UiMotionSettings.BubbleExitMs, 0, 1000)) / 1000 / BubbleSpeed : 0;
 
     private float BubbleOpacity(float timeLeft)
     {
         if (!ConfigManager.GetCVar(UiMotionSettings.Enabled))
             return 1;
         var duration = UiMotionSettings.Read(ConfigManager, UiMotionSettings.BubbleEnterMs, 0, 1000) / 1000;
-        var speed = UiMotionSettings.NormalizeSpeed(ConfigManager.GetCVar(UiMotionSettings.Speed));
+        if (ConfigManager.GetCVar(UiMotionSettings.Reduce))
+            duration = Math.Min(duration, 0.1f);
+        var speed = UiMotionSettings.PlaybackSpeed(ConfigManager);
         var opening = !ConfigManager.GetCVar(UiMotionSettings.BubbleOpening) || duration <= 0
             ? 1 : Math.Clamp(_motionAge * speed / duration, 0, 1);
         var fadeDuration = BubbleFadeSeconds;

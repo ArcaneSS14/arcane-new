@@ -17,13 +17,21 @@ public sealed class UiMotionSnapshot : Control
     private readonly ShaderInstance _shader;
     private IRenderTexture? _texture;
     private bool _removalQueued;
+    private readonly IConfigurationManager _configuration;
+    private readonly CVarDef<bool> _enabled;
+    private readonly CVarDef<bool> _closing;
 
     internal float Opacity => _transition.Opacity;
     internal float Offset => _transition.Offset;
 
     internal UiMotionSnapshot(IRenderTexture texture, IConfigurationManager configuration,
-        UiMotionProfile profile, Vector2 origin, Vector2 size, float opacity, float offset, Color tint, ShaderInstance shader)
+        UiMotionProfile profile, Vector2 origin, Vector2 size, float opacity, float offset, Color tint, ShaderInstance shader,
+        CVarDef<bool> enabled, CVarDef<bool> closing)
     {
+        MouseFilter = MouseFilterMode.Ignore;
+        _configuration = configuration;
+        _enabled = enabled;
+        _closing = closing;
         _texture = texture;
         _origin = origin;
         _tint = tint;
@@ -37,6 +45,8 @@ public sealed class UiMotionSnapshot : Control
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
+        if (!UiMotionSettings.IsEnabled(_configuration, _enabled) || !_configuration.GetCVar(_closing))
+            _transition.Finish();
         _transition.Advance(args.DeltaSeconds);
         UpdateAppearance();
         if (!_transition.Finished || _removalQueued)

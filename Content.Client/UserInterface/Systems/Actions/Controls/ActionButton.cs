@@ -14,10 +14,11 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 using Direction = Robust.Shared.Maths.Direction;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Actions.Controls;
 
-public sealed class ActionButton : Control, IEntityControl
+public sealed partial class ActionButton : Control, IEntityControl // Arcane-Edit: class > partial class
 {
     public const string StyleClassActionHighlightRect = "ActionHighlightRect";
 
@@ -161,6 +162,7 @@ public sealed class ActionButton : Control, IEntityControl
         OnKeyBindUp += OnUnpressed;
 
         TooltipSupplier = SupplyTooltip;
+        InitializeMotion(); // Arcane
     }
 
     protected override void OnThemeUpdated()
@@ -310,14 +312,23 @@ public sealed class ActionButton : Control, IEntityControl
 
     public void UpdateData(EntityUid? actionId, ActionsSystem system)
     {
+        var previous = Action?.Owner; // Arcane
         Action = system.GetAction(actionId);
 
         Label.Visible = Action != null;
         UpdateIcons();
+        // Arcane-Start
+        if (previous != Action?.Owner)
+        {
+            _motionCooling = null;
+            UserInterfaceManager.GetUIController<UiMotionUIController>().QueueAppearance(this);
+        }
+        // Arcane-End
     }
 
     public void ClearData()
     {
+        ResetMotion(); // Arcane
         Action = null;
         Cooldown.Visible = false;
         Cooldown.Progress = 1;
@@ -335,6 +346,8 @@ public sealed class ActionButton : Control, IEntityControl
 
         if (action.Cooldown is {} cooldown)
             Cooldown.FromTime(cooldown.Start, cooldown.End);
+
+        UpdateMotion(args.DeltaSeconds); // Arcane
 
         if (_toggled != action.Toggled)
             _toggled = action.Toggled;

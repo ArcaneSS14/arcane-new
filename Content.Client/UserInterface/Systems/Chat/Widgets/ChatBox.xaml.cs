@@ -17,7 +17,10 @@ using Robust.Shared.Input;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.LineEdit;
-using Content.Client.Audio; // Arcane
+// Arcane-Start
+using Content.Client.Audio;
+using Content.Client.UserInterface.Motion;
+// Arcane-End
 
 namespace Content.Client.UserInterface.Systems.Chat.Widgets;
 
@@ -43,6 +46,7 @@ public partial class ChatBox : UIWidget
     private (string, Color)? _lastLine;
     private int _lastLineRepeatCount = 0;
     // WD EDIT END
+    private UiMotionFeedback? _messageMotion; // Arcane
 
     public ChatBox()
     {
@@ -87,12 +91,26 @@ public partial class ChatBox : UIWidget
                 _entManager.System<AudioSystem>().PlayGlobal(msg.AudioPath, Filter.Local(), false, AudioParams.Default.AddVolume(msg.AudioVolume)));
             // Arcane-Edit-End
 
+        var newMessage = !msg.Read; // Arcane
         msg.Read = true;
 
         var color = msg.MessageColorOverride ?? msg.Channel.TextColor();
 
         // WD EDIT START
         (string, Color) tup = (msg.WrappedMessage, color);
+
+        // Arcane-Start
+        if (newMessage && !(_coalescence && msg.CanCoalesce && _lastLine == tup))
+        {
+            if (_messageMotion == null)
+            {
+                _messageMotion = new UiMotionFeedback();
+                AddChild(_messageMotion);
+            }
+            _messageMotion.Play(UiMotionSettings.Chat, UiMotionSettings.Chat,
+                UiMotionSettings.Read(_cfg, UiMotionSettings.ChatMs, 0, 1000), pulse: false);
+        }
+        // Arcane-End
 
         // Removing and then adding insantly nudges the chat window up before slowly dragging it back down, which makes the whole chat log shake
         // and make it borderline unreadable with frequent enough spam.

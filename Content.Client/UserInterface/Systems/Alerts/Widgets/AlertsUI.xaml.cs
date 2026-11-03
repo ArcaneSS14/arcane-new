@@ -65,7 +65,11 @@ public sealed partial class AlertsUI : UIWidget
             _alertControls.Remove(alertKeyToRemove, out var control);
             if (control == null)
                 return true;
-            AlertContainer.Children.Remove(control);
+            // Arcane-Edit-Start
+            control.AnimateRemoval();
+            control.OnPressed -= AlertControlPressed;
+            control.Orphan();
+            // Arcane-Edit-End
         }
 
         return false;
@@ -101,7 +105,12 @@ public sealed partial class AlertsUI : UIWidget
             else
             {
                 if (existingAlertControl != null)
-                    AlertContainer.Children.Remove(existingAlertControl);
+                // Arcane-Edit-Start
+                {
+                    existingAlertControl.OnPressed -= AlertControlPressed;
+                    existingAlertControl.Orphan();
+                }
+                // Arcane-Edit-End
 
                 // this is a new alert + alert key or just a different alert with the same
                 // key, create the control and add it in the appropriate order

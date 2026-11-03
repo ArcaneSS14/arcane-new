@@ -25,7 +25,7 @@ using S = Content.Client.UserInterface.Motion.UiMotionSettings;
 namespace Content.Tests.Client.UserInterface.Controls;
 
 [TestFixture]
-public sealed class UiMotionTest : RobustUnitTest
+public sealed partial class UiMotionTest : RobustUnitTest
 {
     public override UnitTestProject Project => UnitTestProject.Client;
     private IConfigurationManager _configuration;

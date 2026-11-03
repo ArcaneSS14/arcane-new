@@ -42,6 +42,36 @@ public static class UiMotionSettings
     public static readonly CVarDef<float> CheckboxMs = Float("checkbox_ms", 120);
     public static readonly CVarDef<float> CheckboxIntensity = Float("checkbox_intensity", 0.35f);
 
+    public static readonly CVarDef<bool> Reduce = CVarDef.Create("ui.motion_reduce", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+    public static readonly CVarDef<bool> Popups = Bool("popups");
+    public static readonly CVarDef<float> PopupsMs = Float("popups_ms", 90);
+    public static readonly CVarDef<bool> Slots = Bool("slots");
+    public static readonly CVarDef<float> SlotEnterMs = Float("slot_enter_ms", 80);
+    public static readonly CVarDef<float> SlotExitMs = Float("slot_exit_ms", 80);
+    public static readonly CVarDef<float> SlotScale = Float("slot_scale", 0.08f);
+    public static readonly CVarDef<bool> SlotHighlight = Bool("slot_highlight");
+    public static readonly CVarDef<bool> Actions = Bool("actions");
+    public static readonly CVarDef<float> ActionsEnterMs = Float("actions_enter_ms", 120);
+    public static readonly CVarDef<bool> ActionsCooldownPulse = Bool("actions_cooldown_pulse");
+    public static readonly CVarDef<bool> Alerts = Bool("alerts");
+    public static readonly CVarDef<float> AlertsEnterMs = Float("alerts_enter_ms", 120);
+    public static readonly CVarDef<float> AlertsExitMs = Float("alerts_exit_ms", 100);
+    public static readonly CVarDef<bool> AlertsSeverityPulse = Bool("alerts_severity_pulse");
+    public static readonly CVarDef<bool> Chat = Bool("chat");
+    public static readonly CVarDef<float> ChatMs = Float("chat_ms", 80);
+    public static readonly CVarDef<bool> WindowClose = Bool("window_close");
+    public static readonly CVarDef<float> WindowExitMs = Float("window_exit_ms", 100);
+    public static readonly CVarDef<bool> Progress = Bool("progress");
+    public static readonly CVarDef<float> ProgressMs = Float("progress_ms", 120);
+    public static readonly CVarDef<bool> Radial = Bool("radial");
+    public static readonly CVarDef<float> RadialEnterMs = Float("radial_enter_ms", 120);
+    public static readonly CVarDef<float> RadialExitMs = Float("radial_exit_ms", 100);
+    public static readonly CVarDef<bool> RadialHover = Bool("radial_hover");
+    public static readonly CVarDef<float> RadialHoverScale = Float("radial_hover_scale", 0.06f);
+    public static readonly CVarDef<bool> Lists = Bool("lists");
+    public static readonly CVarDef<float> ListsEnterMs = Float("lists_enter_ms", 150);
+    public static readonly CVarDef<float> ListsMaxStagger = Float("lists_max_stagger", 8);
+
     public static readonly CVarDef<bool> BubbleOpening = Bool("bubble_opening");
     public static readonly CVarDef<bool> BubbleClosing = Bool("bubble_closing");
     public static readonly CVarDef<bool> BubbleMovement = Bool("bubble_movement");
@@ -55,6 +85,24 @@ public static class UiMotionSettings
 
     private static CVarDef<bool> Bool(string name) => CVarDef.Create("ui.motion_" + name, true, CVar.CLIENTONLY | CVar.ARCHIVE);
     private static CVarDef<float> Float(string name, float value) => CVarDef.Create("ui.motion_" + name, value, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static bool IsEnabled(IConfigurationManager configuration, CVarDef<bool> group) =>
+        configuration.GetCVar(Enabled) && configuration.GetCVar(group);
+
+    public static float PlaybackSpeed(IConfigurationManager configuration) =>
+        configuration.GetCVar(Reduce) ? 1 : NormalizeSpeed(configuration.GetCVar(Speed));
+
+    public static UiMotionProfile Resolve(IConfigurationManager configuration, UiMotionProfile profile) =>
+        !configuration.GetCVar(Reduce) || profile is { Travel: 0, Overshoot: false, Sequence: false }
+            && profile.EnterDuration.TotalMilliseconds <= 100 && profile.ExitDuration.TotalMilliseconds <= 100
+        ? profile : profile with
+        {
+            EnterDuration = TimeSpan.FromMilliseconds(Math.Min(100, profile.EnterDuration.TotalMilliseconds)),
+            ExitDuration = TimeSpan.FromMilliseconds(Math.Min(100, profile.ExitDuration.TotalMilliseconds)),
+            Travel = 0,
+            Overshoot = false,
+            Sequence = false
+        };
 
     public static float Read(IConfigurationManager configuration, CVarDef<float> setting, float min, float max)
     {

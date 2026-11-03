@@ -6,7 +6,7 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.Motion;
 
 /// <summary>
-/// Reveals complete Unicode text elements while retaining every character for layout.
+/// Reveals common Unicode text clusters while retaining every character for layout.
 /// Uses only the public formatted-message API; never slices markup or changes font metrics.
 /// </summary>
 public sealed class UiTextReveal
@@ -29,7 +29,7 @@ public sealed class UiTextReveal
         }
 
         var plain = text.ToString();
-        _starts = StringInfo.ParseCombiningCharacters(plain);
+        _starts = ParseGraphemeStarts(plain);
         _punctuation = new bool[Count];
         for (var i = 0; i < Count; i++)
         {
@@ -37,6 +37,35 @@ public sealed class UiTextReveal
             if (_punctuation[i] && i + 1 < Count)
                 _punctuationCount++;
         }
+    }
+
+    // StringInfo is unavailable in the content sandbox. This deliberately bounded segmentation
+    // covers combining marks, emoji joiners/modifiers/tags, flag pairs and CRLF using allowed Rune APIs.
+    // It is not a complete UAX #29 implementation: decomposed Hangul and Indic consonant conjuncts
+    // may reveal in multiple steps. Surrogate pairs are never split.
+    private static int[] ParseGraphemeStarts(string text)
+    {
+        var starts = new List<int>();
+        var offset = 0;
+        var previous = -1;
+        var regionalCount = 0;
+        foreach (var rune in text.EnumerateRunes())
+        {
+            var value = rune.Value;
+            var category = Rune.GetUnicodeCategory(rune);
+            var regional = value is >= 0x1F1E6 and <= 0x1F1FF;
+            var extend = category is UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark or UnicodeCategory.EnclosingMark
+                || value == 0x200D || previous == 0x200D
+                || value is >= 0x1F3FB and <= 0x1F3FF or >= 0xE0020 and <= 0xE007F
+                || previous == '\r' && value == '\n'
+                || regional && regionalCount % 2 == 1;
+            if (offset == 0 || !extend)
+                starts.Add(offset);
+            regionalCount = regional ? regionalCount + 1 : 0;
+            offset += rune.Utf16SequenceLength;
+            previous = value;
+        }
+        return starts.ToArray();
     }
 
     public int VisibleCount(float elapsed, float charactersPerSecond, float punctuationSeconds, float maxSeconds)

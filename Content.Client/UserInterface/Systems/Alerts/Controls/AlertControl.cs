@@ -7,6 +7,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Alerts.Controls
 {
@@ -70,7 +71,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
             SetupIcon();
 
-            Children.Add(_icon);
+            InitializeAlertMotion(); // Arcane-Edit: Children.Add(_icon) > animated visual host
             _cooldownGraphic = new CooldownGraphic
             {
                 MaxSize = new Vector2(64, 64)
@@ -99,6 +100,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
             var icon = Alert.GetIcon(_severity);
             if (_sprite.LayerMapTryGet((_spriteViewEntity, sprite), AlertVisualLayers.Base, out var layer, false))
                 _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
+            _motionFeedback.Play(UiMotionSettings.Alerts, UiMotionSettings.AlertsSeverityPulse, 150); // Arcane
         }
 
         protected override void FrameUpdate(FrameEventArgs args)

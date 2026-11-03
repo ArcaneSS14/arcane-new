@@ -22,10 +22,11 @@ public sealed partial class MiscTab
     {
         var general = AddMotionGroup("general");
         MotionCheck(general, S.Enabled, "enabled");
+        MotionCheck(general, S.Reduce, "reduce");
         MotionSlider(general, S.Speed, "speed", S.MinSpeed, S.MaxSpeed, "multiplier");
         var profiles = new BoxContainer();
         general.Basic.AddChild(profiles);
-        foreach (var profile in new[] { "subtle", "expressive", "off" })
+        foreach (var profile in new[] { "subtle", "expressive", "reduced", "off" })
         {
             var button = new Button { Text = Loc.GetString("ui-motion-profile-" + profile) };
             button.OnPressed += _ => ApplyMotionProfile(profile);
@@ -59,6 +60,8 @@ public sealed partial class MiscTab
         var windows = AddMotionGroup("windows");
         MotionCheck(windows, S.Windows, "opening");
         MotionSlider(windows, S.WindowEnterMs, "enter", 0, 1000, "ms");
+        MotionCheck(windows, S.WindowClose, "closing");
+        MotionSlider(windows, S.WindowExitMs, "exit", 0, 1000, "ms");
 
         var buttons = AddMotionGroup("buttons");
         MotionCheck(buttons, S.Buttons, "enabled");
@@ -88,6 +91,49 @@ public sealed partial class MiscTab
         MotionCheck(bubbles, S.BubbleMovement, "movement");
         MotionSlider(bubbles, S.BubbleEnterMs, "enter", 0, 1000, "ms");
         MotionSlider(bubbles, S.BubbleExitMs, "exit", 0, 1000, "ms");
+
+        var popups = AddMotionGroup("popups");
+        MotionCheck(popups, S.Popups, "enabled");
+        MotionSlider(popups, S.PopupsMs, "duration", 0, 1000, "ms");
+
+        var slots = AddMotionGroup("slots");
+        MotionCheck(slots, S.Slots, "enabled");
+        MotionSlider(slots, S.SlotEnterMs, "duration", 0, 1000, "ms");
+        MotionSlider(slots, S.SlotExitMs, "exit", 0, 1000, "ms");
+
+        var actions = AddMotionGroup("actions");
+        MotionCheck(actions, S.Actions, "enabled");
+        MotionSlider(actions, S.ActionsEnterMs, "duration", 0, 1000, "ms");
+
+        var alerts = AddMotionGroup("alerts");
+        MotionCheck(alerts, S.Alerts, "enabled");
+        MotionSlider(alerts, S.AlertsEnterMs, "duration", 0, 1000, "ms");
+        MotionSlider(alerts, S.AlertsExitMs, "exit", 0, 1000, "ms");
+
+        var chat = AddMotionGroup("chat");
+        MotionCheck(chat, S.Chat, "enabled");
+        MotionSlider(chat, S.ChatMs, "duration", 0, 1000, "ms");
+
+        var progress = AddMotionGroup("progress");
+        MotionCheck(progress, S.Progress, "enabled");
+        MotionSlider(progress, S.ProgressMs, "duration", 0, 1000, "ms");
+
+        var radial = AddMotionGroup("radial");
+        MotionCheck(radial, S.Radial, "enabled");
+        MotionSlider(radial, S.RadialEnterMs, "duration", 0, 1000, "ms");
+        MotionSlider(radial, S.RadialExitMs, "exit", 0, 1000, "ms");
+
+        var lists = AddMotionGroup("lists");
+        MotionCheck(lists, S.Lists, "enabled");
+        MotionSlider(lists, S.ListsEnterMs, "duration", 0, 1000, "ms");
+
+        MotionCheck(slots, S.SlotHighlight, "highlight");
+        MotionSlider(slots, S.SlotScale, "scale", 0, 0.25f, "ratio");
+        MotionCheck(actions, S.ActionsCooldownPulse, "cooldown-pulse");
+        MotionCheck(alerts, S.AlertsSeverityPulse, "severity-pulse");
+        MotionCheck(radial, S.RadialHover, "hover");
+        MotionSlider(radial, S.RadialHoverScale, "scale", 0, 0.15f, "ratio");
+        MotionSlider(lists, S.ListsMaxStagger, "max-stagger", 0, 32, "items");
 
         var speech = AddMotionGroup("speech");
         MotionCheck(speech, S.SpeechTyping, "typing");
@@ -152,6 +198,7 @@ public sealed partial class MiscTab
         {
             foreach (var option in _motionOptions)
                 option.ResetToDefault();
+            _motionChecks[S.Reduce].Pressed = profile == "reduced";
             if (profile == "subtle")
             {
                 _motionChecks[S.MenuSpring].Pressed = false;
@@ -160,6 +207,13 @@ public sealed partial class MiscTab
                 _motionSliders[S.ButtonJitterMs].Set(0);
                 _motionSliders[S.CheckboxIntensity].Set(0.15f);
                 _motionSliders[S.WindowEnterMs].Set(150);
+                _motionChecks[S.ActionsCooldownPulse].Pressed = false;
+                _motionChecks[S.AlertsSeverityPulse].Pressed = false;
+                _motionChecks[S.RadialHover].Pressed = false;
+                _motionSliders[S.SlotScale].Set(0.03f);
+                _motionSliders[S.PopupsMs].Set(70);
+                _motionSliders[S.AlertsEnterMs].Set(100);
+                _motionSliders[S.ListsEnterMs].Set(100);
             }
         }
         Control.ValueChanged();

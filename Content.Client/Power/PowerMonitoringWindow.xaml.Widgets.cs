@@ -6,6 +6,7 @@ using Robust.Shared.Utility;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Power;
 
@@ -441,7 +442,7 @@ public sealed class PowerMonitoringButton : Button
     public TextureRect TextureRect;
     public Label NameLocalized;
 
-    public ProgressBar BatteryLevel;
+    public UiMotionProgressBar BatteryLevel; // Arcane-Edit: ProgressBar > UiMotionProgressBar
     public PanelContainer BackgroundPanel;
     public Label BatteryPercentage;
 
@@ -480,7 +481,7 @@ public sealed class PowerMonitoringButton : Button
 
         MainContainer.AddChild(NameLocalized);
 
-        BatteryLevel = new ProgressBar()
+        BatteryLevel = new UiMotionProgressBar() // Arcane-Edit: ProgressBar > UiMotionProgressBar
         {
             SetWidth = 47f,
             SetHeight = 20f,

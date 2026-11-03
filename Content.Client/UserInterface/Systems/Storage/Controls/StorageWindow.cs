@@ -392,6 +392,7 @@ public sealed partial class StorageWindow : BaseWindow
 
     public void RemoveGrid(ItemGridPiece control)
     {
+        control.AnimateRemoval(); // Arcane
         control.Orphan();
         _pieces.Remove(control.Entity);
         control.OnPiecePressed -= OnPiecePressed;
@@ -467,6 +468,7 @@ public sealed partial class StorageWindow : BaseWindow
         foreach (var ent in _toRemove)
         {
             _pieces.Remove(ent, out var data);
+            data.Control.AnimateRemoval(); // Arcane
             data.Control.Orphan();
         }
 
