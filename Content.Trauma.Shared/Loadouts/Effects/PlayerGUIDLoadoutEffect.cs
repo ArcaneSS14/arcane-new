@@ -19,7 +19,7 @@ public sealed partial class PlayerGUIDLoadoutEffect : LoadoutEffect
 
     private Guid? _guid;
 
-    public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout loadout, ICommonSession? session, IDependencyCollection collection, [NotNullWhen(false)] out FormattedMessage? reason)
+    public override bool Validate(HumanoidCharacterProfile profile, RoleLoadout loadout, LoadoutPrototype proto, ICommonSession? session, IDependencyCollection collection, [NotNullWhen(false)] out FormattedMessage? reason) // Arcane-Edit: added proto
     {
         if (session == null)
         {

@@ -32,7 +32,7 @@ public sealed partial class ProfilePreviewSpriteView
     /// <summary>
     /// Loads the profile onto a dummy entity.
     /// </summary>
-    private void LoadHumanoidEntity(HumanoidCharacterProfile? humanoid, JobPrototype? job, bool jobClothes)
+    private void LoadHumanoidEntity(HumanoidCharacterProfile? humanoid, JobPrototype? job, bool jobClothes, bool underwear = true) // Arcane-Edit: added underwear
     {
         EntProtoId? previewEntity = null;
         if (humanoid != null && jobClothes)
@@ -75,6 +75,12 @@ public sealed partial class ProfilePreviewSpriteView
                 GiveDummyLoadout(loadout);
             }
         }
+        // Arcane-Start: without job clothes the preview still wears the chosen underwear
+        else if (humanoid != null && previewEntity == null && underwear)
+        {
+            GiveDummyUnderwear(humanoid, job ?? GetPreferredJob(humanoid));
+        }
+        // Arcane-End
     }
 
     /// <summary>

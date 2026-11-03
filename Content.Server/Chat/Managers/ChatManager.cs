@@ -25,6 +25,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Replays;
 using Robust.Shared.Utility;
 
+using Content.Arcane.Common.Sponsors; // Arcane
+
 namespace Content.Server.Chat.Managers;
 
 /// <summary>
@@ -53,6 +55,7 @@ internal sealed partial class ChatManager : IChatManager
     [Dependency] private INetConfigurationManager _netConfigManager = default!;
     [Dependency] private IEntityManager _entityManager = default!;
     [Dependency] private PlayerRateLimitManager _rateLimitManager = default!;
+    private ISharedSponsorsManager? _sponsorsManager; // Arcane
     [Dependency] private ISharedPlayerManager _player = default!;
     //[Dependency] private DiscordChatLink _discordLink = default!; // Trauma - wasn't cherry picked
     [Dependency] private ILogManager _logManager = default!;
@@ -72,6 +75,7 @@ internal sealed partial class ChatManager : IChatManager
 
     public void Initialize()
     {
+        IoCManager.Instance!.TryResolveType(out _sponsorsManager); // Arcane
         _netManager.RegisterNetMessage<MsgChatMessage>();
         _netManager.RegisterNetMessage<MsgDeleteChatMessagesBy>();
 
@@ -298,6 +302,13 @@ internal sealed partial class ChatManager : IChatManager
         {
             wrappedMessage = Loc.GetString("chat-manager-send-ooc-patron-wrap-message", ("patronColor", "#aa00ff"),("playerName", player.Name), ("message", FormattedMessage.EscapeText(message))); // RMC - Patreon
         }
+
+        // Arcane-Start: sponsor OOC colour
+        if (_sponsorsManager != null && _sponsorsManager.TryGetServerOocColor(player.UserId, out var oocColor))
+        {
+            wrappedMessage = Loc.GetString("chat-manager-send-ooc-patron-wrap-message", ("patronColor", oocColor), ("playerName", player.Name), ("message", FormattedMessage.EscapeText(message)));
+        }
+        // Arcane-End
 
         //TODO: player.Name color, this will need to change the structure of the MsgChatMessage
         ChatMessageToAll(ChatChannel.OOC, message, wrappedMessage, EntityUid.Invalid, hideChat: false, recordReplay: true, colorOverride: colorOverride, author: player.UserId);
