@@ -31,6 +31,12 @@ public sealed partial class TracerComponent : Component
     public List<Vector2> PositionHistory = new();
 
     /// <summary>
+    /// Length of the polyline through <see cref="PositionHistory"/>, kept up to date as points come and go.
+    /// </summary>
+    [ViewVariables]
+    public float TrailLength;
+
+    /// <summary>
     /// When the tracer stops being drawn.
     /// </summary>
     [ViewVariables]

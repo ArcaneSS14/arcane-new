@@ -50,25 +50,22 @@ public sealed partial class TracerSystem : EntitySystem
                 continue;
             }
 
+            // A projectile that did not move adds nothing to the trail.
             var positions = tracer.PositionHistory;
-            positions.Add(_transform.GetWorldPosition(xform));
+            var position = _transform.GetWorldPosition(xform);
+            if (positions.Count > 0 && positions[^1] == position)
+                continue;
 
-            while (positions.Count > 2 && GetTrailLength(positions) > tracer.Length)
+            if (positions.Count > 0)
+                tracer.TrailLength += Vector2.Distance(positions[^1], position);
+            positions.Add(position);
+
+            while (positions.Count > 2 && tracer.TrailLength > tracer.Length)
             {
+                tracer.TrailLength -= Vector2.Distance(positions[0], positions[1]);
                 positions.RemoveAt(0);
             }
         }
-    }
-
-    private static float GetTrailLength(List<Vector2> positions)
-    {
-        var length = 0f;
-        for (var i = 1; i < positions.Count; i++)
-        {
-            length += Vector2.Distance(positions[i - 1], positions[i]);
-        }
-
-        return length;
     }
 
     public void Draw(DrawingHandleWorld handle, MapId currentMap)
