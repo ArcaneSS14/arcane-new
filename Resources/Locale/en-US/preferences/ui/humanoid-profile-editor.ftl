@@ -11,6 +11,11 @@ humanoid-profile-editor-name-label = Name:
 humanoid-profile-editor-appearance-tab = Appearance
 humanoid-profile-editor-clothing = Show clothing
 humanoid-profile-editor-clothing-show = Show
+# Arcane-Start
+humanoid-profile-editor-clothing-all = All
+humanoid-profile-editor-clothing-underwear = Underwear
+humanoid-profile-editor-clothing-none = None
+# Arcane-End
 humanoid-profile-editor-sex-label = Sex:
 humanoid-profile-editor-sex-male-text = Male
 humanoid-profile-editor-sex-female-text = Female
