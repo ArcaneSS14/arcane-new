@@ -24,10 +24,16 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private EntityQuery<MindComponent> _mindQuery = default!;
 
+    // Prototype data only changes on reload: the antagonist list with its component types resolved, and which
+    // antagonists each entity prototype matches through itself or its parents. Mind and role state is read live.
+    private List<(GlobalAntagonistPrototype Antag, List<Type> Components)>? _antagonists;
+    private readonly Dictionary<string, HashSet<GlobalAntagonistPrototype>> _antagonistsByPrototype = new();
+
     public override void Initialize()
     {
         base.Initialize();
 
+        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
         SubscribeNetworkEvent<GhostWarpsRequestEvent>(OnWarpsRequest);
         SubscribeLocalEvent<MindContainerComponent, MindRemovedMessage>(OnMindRemoved);
     }
@@ -40,6 +46,56 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
         EnsureComp<LastMindComponent>(uid).Mind = args.Mind.Owner;
     }
 
+    private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
+    {
+        if (!args.WasModified<EntityPrototype>() && !args.WasModified<GlobalAntagonistPrototype>())
+            return;
+
+        _antagonists = null;
+        _antagonistsByPrototype.Clear();
+    }
+
+    private List<(GlobalAntagonistPrototype Antag, List<Type> Components)> GetAntagonists()
+    {
+        if (_antagonists != null)
+            return _antagonists;
+
+        _antagonists = new();
+        foreach (var antag in _proto.EnumeratePrototypes<GlobalAntagonistPrototype>())
+        {
+            var components = new List<Type>();
+            foreach (var name in antag.Components)
+            {
+                if (EntityManager.ComponentFactory.TryGetRegistration(name, out var reg))
+                    components.Add(reg.Type);
+            }
+
+            _antagonists.Add((antag, components));
+        }
+
+        return _antagonists;
+    }
+
+    private HashSet<GlobalAntagonistPrototype> GetPrototypeAntagonists(EntityPrototype proto)
+    {
+        if (_antagonistsByPrototype.TryGetValue(proto.ID, out var matches))
+            return matches;
+
+        matches = new HashSet<GlobalAntagonistPrototype>();
+        foreach (var (antag, _) in GetAntagonists())
+        {
+            if (antag.Entities.Count == 0)
+                continue;
+
+            if (antag.Entities.Contains(proto.ID) ||
+                _proto.EnumerateAllParents<EntityPrototype>(proto.ID).Any(parent => antag.Entities.Contains(parent.id)))
+                matches.Add(antag);
+        }
+
+        _antagonistsByPrototype[proto.ID] = matches;
+        return matches;
+    }
+
     private void OnWarpsRequest(GhostWarpsRequestEvent msg, EntitySessionEventArgs args)
     {
         if (args.SenderSession.AttachedEntity is not { Valid: true } ghost || !HasComp<GhostComponent>(ghost))
@@ -47,7 +103,7 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
 
         var players = new List<GhostWarpPlayerDetail>();
         var antagonists = new List<GhostWarpAntagonist>();
-        var globalAntagonists = _proto.EnumeratePrototypes<GlobalAntagonistPrototype>().ToList();
+        var globalAntagonists = GetAntagonists();
 
         var query = EntityQueryEnumerator<MindContainerComponent, MetaDataComponent>();
         while (query.MoveNext(out var uid, out var container, out var meta))
@@ -89,25 +145,20 @@ public sealed partial class GhostWarpDetailsSystem : EntitySystem
         RaiseNetworkEvent(new GhostWarpDetailsEvent(players, antagonists), args.SenderSession.Channel);
     }
 
-    private GlobalAntagonistPrototype? FindAntagonist(EntityUid uid, MetaDataComponent meta, EntityUid? mind, List<GlobalAntagonistPrototype> antagonists)
+    private GlobalAntagonistPrototype? FindAntagonist(EntityUid uid,
+        MetaDataComponent meta,
+        EntityUid? mind,
+        List<(GlobalAntagonistPrototype Antag, List<Type> Components)> antagonists)
     {
-        foreach (var antag in antagonists)
+        var byPrototype = meta.EntityPrototype is { } proto ? GetPrototypeAntagonists(proto) : null;
+        foreach (var (antag, components) in antagonists)
         {
-            if (meta.EntityPrototype is { } proto && antag.Entities.Count > 0)
-            {
-                if (antag.Entities.Contains(proto.ID))
-                    return antag;
+            if (byPrototype != null && byPrototype.Contains(antag))
+                return antag;
 
-                foreach (var parent in _proto.EnumerateAllParents<EntityPrototype>(proto.ID))
-                {
-                    if (antag.Entities.Contains(parent.id))
-                        return antag;
-                }
-            }
-
-            foreach (var name in antag.Components)
+            foreach (var type in components)
             {
-                if (EntityManager.ComponentFactory.TryGetRegistration(name, out var reg) && HasComp(uid, reg.Type))
+                if (HasComp(uid, type))
                     return antag;
             }
 
