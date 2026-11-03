@@ -30,6 +30,7 @@ public sealed partial class SmesSystem : EntitySystem // goob edit - made public
         SubscribeLocalEvent<SmesComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<SmesComponent, ChargeChangedEvent>(OnBatteryChargeChanged);
         // Arcane-Start
+        SubscribeLocalEvent<SmesComponent, ComponentInit>(OnInit);
         SubscribeLocalEvent<SmesComponent, RefreshPartsEvent>(OnPartsRefresh);
         SubscribeLocalEvent<SmesComponent, UpgradeExamineEvent>(OnUpgradeExamine);
         // Arcane-End
@@ -37,18 +38,25 @@ public sealed partial class SmesSystem : EntitySystem // goob edit - made public
 
     private void OnMapInit(EntityUid uid, SmesComponent component, MapInitEvent args)
     {
-        // Arcane-Start
-        if (TryComp<PowerNetworkBatteryComponent>(uid, out var netBattery))
-        {
-            component.BaseMaxSupply = netBattery.MaxSupply;
-            component.BaseMaxChargeRate = netBattery.MaxChargeRate;
-            component.FinalMaxSupply = netBattery.MaxSupply;
-            component.FinalMaxChargeRate = netBattery.MaxChargeRate;
-        }
-        // Arcane-End
-
         UpdateSmesState(uid, component);
     }
+
+    // Arcane-Start
+    /// <summary>
+    /// Takes the base rates before startup refreshes parts, so a SMES built with upgraded parts does not
+    /// store its upgraded rates as the base.
+    /// </summary>
+    private void OnInit(EntityUid uid, SmesComponent component, ComponentInit args)
+    {
+        if (!TryComp<PowerNetworkBatteryComponent>(uid, out var netBattery))
+            return;
+
+        component.BaseMaxSupply = netBattery.MaxSupply;
+        component.BaseMaxChargeRate = netBattery.MaxChargeRate;
+        component.FinalMaxSupply = netBattery.MaxSupply;
+        component.FinalMaxChargeRate = netBattery.MaxChargeRate;
+    }
+    // Arcane-End
 
     private void OnBatteryChargeChanged(EntityUid uid, SmesComponent component, ref ChargeChangedEvent args)
     {

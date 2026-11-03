@@ -290,16 +290,16 @@ namespace Content.Server.Kitchen.EntitySystems
         {
             // this really does have to be in ComponentInit
             ent.Comp.Storage = _container.EnsureContainer<Container>(ent, ent.Comp.ContainerId);
-        }
 
-        private void OnMapInit(Entity<MicrowaveComponent> ent, ref MapInitEvent args)
-        {
-            // Arcane-Start
+            // Arcane-Start: before startup refreshes parts, so an upgraded build does not become the base
             ent.Comp.BaseCookTimeMultiplier = ent.Comp.CookTimeMultiplier;
             ent.Comp.BaseCapacity = ent.Comp.Capacity;
             ent.Comp.BaseExplosionChance = ent.Comp.ExplosionChance;
             // Arcane-End
+        }
 
+        private void OnMapInit(Entity<MicrowaveComponent> ent, ref MapInitEvent args)
+        {
             _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
         }
 
