@@ -48,6 +48,7 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Arcane.Common.Ghost; // Arcane
 
 namespace Content.Server.Ghost
 {
@@ -518,10 +519,14 @@ namespace Content.Server.Ghost
                 }
             }
 
-            var ghost = SpawnAtPosition(ServerGameTicker.ObserverPrototypeName, spawnPosition.Value);
+            // Arcane-Edit-Start: custom ghosts
+            var ghostProto = new GhostPrototypeEvent(mind.Comp.UserId, ServerGameTicker.ObserverPrototypeName);
+            RaiseLocalEvent(ref ghostProto);
+            var ghost = SpawnAtPosition(ghostProto.Prototype, spawnPosition.Value);
+            // Arcane-Edit-End
             var ghostComponent = Comp<GhostComponent>(ghost);
 
-            if (TryComp<GhostSpriteStateComponent>(ghost, out var state))  // If more TryComps are added this should be turned into an event
+            if (!ghostProto.Custom && TryComp<GhostSpriteStateComponent>(ghost, out var state)) // Arcane-Edit: TryComp > !ghostProto.Custom && TryComp, custom sprites lack death states  // If more TryComps are added this should be turned into an event
             {
                 _ghostState.SetGhostSprite((ghost, state), mind);
             }
