@@ -4,7 +4,9 @@ using Content.Server.Administration.Logs;
 using Content.Server.Chat.Managers;
 using Content.Shared.Chat;
 using Content.Shared.Database;
+using Content.Shared.ActionBlocker;
 using Content.Shared.Examine;
+using Content.Shared.IdentityManagement;
 using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
@@ -20,6 +22,7 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
     [Dependency] private IChatManager _chat = default!;
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private ExamineSystemShared _examine = default!;
 
     public override void Initialize()
@@ -46,6 +49,10 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
         if (emote.LastSend + emote.Cooldown > now)
             return;
 
+        // The same permission an ordinary emote needs: not dead, crit, asleep or otherwise unable to emote.
+        if (!_actionBlocker.CanEmote(source))
+            return;
+
         var channel = session.SenderSession.Channel;
         if (!_examine.InRangeUnOccluded(source, target.Value, _cfg.GetCVar(ArcaneCVars.DirectionalEmoteRange)))
         {
@@ -63,8 +70,9 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
         }
 
         var text = args.Text.Trim();
+        // The apparent identity, like ordinary emotes: a masked sender is not named.
         var wrapped = Loc.GetString("chat-manager-entity-directional-emote-wrap-message",
-            ("entityName", FormattedMessage.EscapeText(Name(source))),
+            ("entityName", FormattedMessage.EscapeText(Name(Identity.Entity(source, EntityManager)))),
             ("message", FormattedMessage.EscapeText(text)));
 
         _chat.ChatMessageToMany(ChatChannel.Emotes, text, wrapped, source, false, true,
