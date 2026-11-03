@@ -29,9 +29,11 @@ public sealed partial class RadioAnnounceOnSpawnSystem : EntitySystem
 
         AddComp<RadioMicrophoneComponent>(sender);
 
+        // The temporary sender only provides the shown name; the spawned entity is the radio source, so telecom
+        // and map checks see where the announcement actually comes from (a station channel needs that).
         foreach (var channelId in comp.AnnouncementChannels)
         {
-            _radio.SendRadioMessage(sender, message, ProtoMan.Index(channelId), sender, escapeMarkup: false);
+            _radio.SendRadioMessage(sender, message, ProtoMan.Index(channelId), uid, escapeMarkup: false);
         }
 
         QueueDel(sender);
