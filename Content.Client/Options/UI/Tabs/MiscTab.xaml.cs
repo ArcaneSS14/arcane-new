@@ -13,6 +13,8 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared;
 using Robust.Shared.Prototypes;
 
+using Content.Client.Localizations; // Arcane
+
 namespace Content.Client.Options.UI.Tabs;
 
 [GenerateTypedNameReferences]
@@ -23,6 +25,7 @@ public sealed partial class MiscTab : Control
     //[Dependency] private IPlayerManager _playerManager = default!; // no longer used
     // </Trauma>
     [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private DynamicLocalizationManager _dynamicLocalization = default!; // Arcane
 
     public MiscTab()
     {
@@ -43,10 +46,19 @@ public sealed partial class MiscTab : Control
             layoutEntries.Add(new OptionDropDownCVar<string>.ValueOption(layout.ToString()!, Loc.GetString($"ui-options-hud-layout-{layout.ToString()!.ToLower()}")));
         }
 
+        // Arcane-Start
+        var cultureEntries = _dynamicLocalization.GetAvailableCultures()
+            .Select(culture => new OptionDropDownCVar<string>.ValueOption(
+                culture.Name,
+                DynamicLocalizationManager.GetCultureLabel(culture)))
+            .ToList();
+        // Arcane-End
+
         // Channel can be null in replays so.
         // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         ShowOocPatronColor.Visible = _linkAccount.IsPatron(); // Trauma - use rmc patron system
 
+        Control.AddOptionDropDown(CVars.LocCultureName, DropDownLanguage, cultureEntries); // Arcane
         Control.AddOptionDropDown(CVars.InterfaceTheme, DropDownHudTheme, themeEntries);
         Control.AddOptionDropDown(CCVars.UILayout, DropDownHudLayout, layoutEntries);
 
@@ -70,4 +82,11 @@ public sealed partial class MiscTab : Control
 
         Control.Initialize();
     }
+
+    // Arcane-Start
+    public void ReloadLocalization()
+    {
+        DropDownLanguage.Title = Loc.GetString("ui-options-language");
+    }
+    // Arcane-End
 }

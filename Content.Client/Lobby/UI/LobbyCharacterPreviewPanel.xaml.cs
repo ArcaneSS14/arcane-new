@@ -30,4 +30,15 @@ public sealed partial class LobbyCharacterPreviewPanel : Control
     {
         Summary.Text = value;
     }
+
+    // Arcane-Start
+    public void ReloadLocalization()
+    {
+        Header.Text = Loc.GetString("lobby-character-preview-panel-header");
+        CharacterSetup.Text = Loc.GetString("lobby-character-preview-panel-character-setup-button");
+        PatronPerks.Text = Loc.GetString("rmc-ui-patron-perks");
+        Currency.Text = Loc.GetString("gs-balanceui-shop-label");
+        Unloaded.Text = Loc.GetString("lobby-character-preview-panel-unloaded-preferences-label");
+    }
+    // Arcane-End
 }

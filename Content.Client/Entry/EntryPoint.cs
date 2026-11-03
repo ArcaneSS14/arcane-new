@@ -39,6 +39,10 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
 
+// Arcane-Start
+using Content.Client.Localizations;
+// Arcane-End
+
 namespace Content.Client.Entry
 {
     public sealed partial class EntryPoint : GameClient
@@ -77,6 +81,7 @@ namespace Content.Client.Entry
         [Dependency] private IEntitySystemManager _entitySystemManager = default!;
         [Dependency] private ClientsidePlaytimeTrackingManager _clientsidePlaytimeManager = default!;
         [Dependency] private ClientFeedbackManager _feedbackManager = null!;
+        [Dependency] private DynamicLocalizationManager _dynamicLocalization = default!; // Arcane
 
         public override void PreInit()
         {
@@ -95,6 +100,7 @@ namespace Content.Client.Entry
             Dependencies.InjectDependencies(this);
 
             _contentLoc.Initialize();
+            _dynamicLocalization.Initialize(); // Arcane
             _componentFactory.DoAutoRegistrations();
             _componentFactory.IgnoreMissingComponents();
 

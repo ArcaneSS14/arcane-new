@@ -103,6 +103,25 @@ namespace Content.Client.Lobby
             Lobby?.SwitchState(state);
         }
 
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            if (Lobby == null)
+                return;
+
+            Lobby.ReloadLocalization();
+
+            var lobbyNameCvar = _cfg.GetCVar(CCVars.ServerLobbyName);
+            var serverName = _baseClient.GameInfo?.ServerName ?? string.Empty;
+            Lobby.ServerName.Text = string.IsNullOrEmpty(lobbyNameCvar)
+                ? Loc.GetString("ui-lobby-title", ("serverName", serverName))
+                : lobbyNameCvar;
+
+            UpdateLobbyUi();
+            UpdateLobbyBackground();
+        }
+        // Arcane-End
+
         private void OnSetupPressed(BaseButton.ButtonEventArgs args)
         {
             SetReady(false);

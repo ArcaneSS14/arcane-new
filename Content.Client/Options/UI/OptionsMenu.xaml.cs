@@ -28,6 +28,22 @@ namespace Content.Client.Options.UI
             UpdateTabs();
         }
 
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            Title = Loc.GetString("ui-options-title");
+            Tabs.SetTabTitle(0, Loc.GetString("ui-options-tab-misc"));
+            Tabs.SetTabTitle(1, Loc.GetString("ui-options-tab-graphics"));
+            Tabs.SetTabTitle(2, Loc.GetString("ui-options-tab-controls"));
+            Tabs.SetTabTitle(3, Loc.GetString("ui-options-tab-audio"));
+            Tabs.SetTabTitle(4, Loc.GetString("ui-options-tab-accessibility"));
+            Tabs.SetTabTitle(5, Loc.GetString("ui-options-tab-admin"));
+            Tabs.SetTabTitle(6, Loc.GetString("ui-options-tab-network"));
+            Tabs.SetTabTitle(7, Loc.GetString("ui-options-tab-customization"));
+            MiscTab.ReloadLocalization();
+        }
+        // Arcane-End
+
         public void UpdateTabs()
         {
             var isAdmin = _adminManager.IsAdmin(true);
