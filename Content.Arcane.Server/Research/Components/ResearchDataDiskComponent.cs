@@ -11,6 +11,12 @@ public sealed partial class ResearchDataDiskComponent : Component
     [DataField]
     public List<string> StoredTechnologies = new();
 
+    /// <summary>
+    /// Recipes the network had from technology disks rather than from research.
+    /// </summary>
+    [DataField]
+    public List<string> StoredRecipes = new();
+
     [DataField]
     public string? SnapshotServerName;
 }

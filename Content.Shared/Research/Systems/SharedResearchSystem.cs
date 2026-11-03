@@ -252,6 +252,7 @@ public abstract partial class SharedResearchSystem : EntitySystem
             recipes.UnionWith(tech.RecipeUnlocks);
         }
 
+        recipes.UnionWith(component.IndependentRecipes);
         component.UnlockedRecipes = recipes.ToList();
     }
 
@@ -589,6 +590,11 @@ public abstract partial class SharedResearchSystem : EntitySystem
     {
         if (!Resolve(uid, ref component))
             return;
+
+        // Arcane-Start: remembered apart from technologies, so recalculating the research state keeps it
+        if (!component.IndependentRecipes.Contains(recipe))
+            component.IndependentRecipes.Add(recipe);
+        // Arcane-End
 
         if (component.UnlockedRecipes.Contains(recipe))
             return;

@@ -24,36 +24,37 @@ public sealed partial class ResearchDataDiskSystem : EntitySystem
         if (!args.CanReach)
             return;
 
-        if (!TryComp<ResearchServerComponent>(args.Target, out var server) ||
-            !TryComp<TechnologyDatabaseComponent>(args.Target, out var database))
+        // Any server of a network reads and writes the network's database, which lives on its authority server.
+        if (args.Target is not { } target || !_research.TryGetNetworkDatabase(target, out var network))
             return;
 
         if (component.HasDataSnapshot)
         {
-            var imported = ImportDiskData(args.Target.Value, component, database);
-            _popupSystem.PopupEntity(Loc.GetString("research-disk-data-imported", ("count", imported)), args.Target.Value, args.User);
-            _research.LogNetworkEvent(args.Target.Value, "disk", Loc.GetString("research-netlog-disk-imported", ("count", imported)), args.User);
+            var imported = ImportDiskData(component, network);
+            _popupSystem.PopupEntity(Loc.GetString("research-disk-data-imported", ("count", imported)), target, args.User);
+            _research.LogNetworkEvent(network, "disk", Loc.GetString("research-netlog-disk-imported", ("count", imported)), args.User);
             args.Handled = true;
             return;
         }
 
-        ExportDiskData(uid, component, database, server);
-        _popupSystem.PopupEntity(Loc.GetString("research-disk-exported", ("count", component.StoredTechnologies.Count)), args.Target.Value, args.User);
-        _research.LogNetworkEvent(args.Target.Value, "disk", Loc.GetString("research-netlog-disk-exported", ("count", component.StoredTechnologies.Count)), args.User);
+        ExportDiskData(uid, component, network);
+        _popupSystem.PopupEntity(Loc.GetString("research-disk-exported", ("count", component.StoredTechnologies.Count)), target, args.User);
+        _research.LogNetworkEvent(network, "disk", Loc.GetString("research-netlog-disk-exported", ("count", component.StoredTechnologies.Count)), args.User);
         args.Handled = true;
     }
 
-    private void ExportDiskData(EntityUid diskUid, ResearchDataDiskComponent disk, TechnologyDatabaseComponent database, ResearchServerComponent server)
+    private void ExportDiskData(EntityUid diskUid, ResearchDataDiskComponent disk, Entity<ResearchServerComponent, TechnologyDatabaseComponent> network)
     {
         disk.HasDataSnapshot = true;
-        disk.StoredTechnologies = database.ResearchedTechnologies.Select(x => x.ToString()).ToList();
-        disk.SnapshotServerName = server.ServerName;
+        disk.StoredTechnologies = network.Comp2.ResearchedTechnologies.Select(x => x.ToString()).ToList();
+        disk.StoredRecipes = network.Comp2.IndependentRecipes.Select(x => x.ToString()).ToList();
+        disk.SnapshotServerName = network.Comp1.ServerName;
         Dirty(diskUid, disk);
     }
 
-    private int ImportDiskData(EntityUid serverUid, ResearchDataDiskComponent disk, TechnologyDatabaseComponent database)
+    private int ImportDiskData(ResearchDataDiskComponent disk, Entity<ResearchServerComponent, TechnologyDatabaseComponent> network)
     {
-        return _research.ImportTechnologySnapshot(serverUid, disk.StoredTechnologies, database);
+        return _research.ImportTechnologySnapshot(network, disk.StoredTechnologies, disk.StoredRecipes, network.Comp2);
     }
 
     private void OnExamined(EntityUid uid, ResearchDataDiskComponent component, ExaminedEvent args)

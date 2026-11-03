@@ -285,8 +285,8 @@ public sealed partial class ResearchSystem
 
         switch (objective)
         {
+            // Subclasses of ScanEntityExperimentObjective come first; the base case is the last one below.
             case PresentItemExperimentObjective presentObjective when MatchesEntityObjective(subject, presentObjective):
-            case ScanEntityExperimentObjective scanObjective when MatchesEntityObjective(subject, scanObjective):
                 delta = 1;
                 progress.ScannedEntities.Add(GetNetEntity(subject));
                 break;
@@ -527,13 +527,14 @@ public sealed partial class ResearchSystem
         if (!TryComp<BodyComponent>(subject, out var body))
             return false;
 
-        foreach (var (organUid, _) in _body.GetOrgans((subject, body)))
-        {
-            var organMeta = MetaData(organUid);
-            if (organMeta.EntityPrototype == null)
-                continue;
+        // Cybernetic organs carry the Cybernetics component, which lives in Content.Medical.Shared that the
+        // server project does not reference. Only installed internal organs count, not cyber limbs.
+        if (!Factory.TryGetRegistration("Cybernetics", out var cybernetics))
+            return false;
 
-            if (!organMeta.EntityPrototype.ID.StartsWith("OrganHuman", StringComparison.Ordinal))
+        foreach (var (organUid, _) in _body.GetInternalOrgans((subject, body)))
+        {
+            if (HasComp(organUid, cybernetics.Type))
                 return true;
         }
 

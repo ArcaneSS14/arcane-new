@@ -42,6 +42,7 @@ public sealed partial class ResearchSystem
         // Arcane-End
         primaryDb.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>(otherDb.UnlockedRecipes); // Arcane-Edit
         // Arcane-Start
+        primaryDb.IndependentRecipes = new List<ProtoId<LatheRecipePrototype>>(otherDb.IndependentRecipes);
         primaryDb.RevealedTechnologies = new List<ProtoId<TechnologyPrototype>>(otherDb.RevealedTechnologies);
         primaryDb.DiscoveryProgress = new List<TechnologyDiscoveryProgress>(otherDb.DiscoveryProgress);
         primaryDb.UnlockedInfrastructure = new List<string>(otherDb.UnlockedInfrastructure);
@@ -297,6 +298,7 @@ public sealed partial class ResearchSystem
         // Arcane-End
         component.UnlockedRecipes = new List<ProtoId<LatheRecipePrototype>>();
         // Arcane-Start
+        component.IndependentRecipes = new List<ProtoId<LatheRecipePrototype>>();
         component.RevealedTechnologies = new List<ProtoId<TechnologyPrototype>>();
         component.DiscoveryProgress = new List<TechnologyDiscoveryProgress>();
         component.UnlockedInfrastructure = new List<string>();

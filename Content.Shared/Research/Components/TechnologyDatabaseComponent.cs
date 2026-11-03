@@ -102,6 +102,14 @@ public sealed partial class TechnologyDatabaseComponent : Component
 
     // Arcane-Start
     /// <summary>
+    /// Recipes unlocked on their own (technology disks), not through a researched technology.
+    /// <see cref="UnlockedRecipes"/> is rebuilt from the researched technologies plus these.
+    /// </summary>
+    [AutoNetworkedField]
+    [DataField]
+    public List<ProtoId<LatheRecipePrototype>> IndependentRecipes = new();
+
+    /// <summary>
     /// Technologies revealed by non-standard effects (e.g. experiments).
     /// </summary>
     [AutoNetworkedField]
