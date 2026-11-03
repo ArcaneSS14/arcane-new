@@ -384,8 +384,10 @@
   components:
   - type: Objective
     icon:
-      sprite: _Arcane/Structures/Walls/solid.rsi # Arcane-Edit: sprite: Structures/Walls/solid.rsi > sprite: _Arcane/Structures/Walls/solid.rsi
-      state: rgeneric
+      # Arcane-Edit-Start: Arcane wall sprite, which has no rgeneric state
+      sprite: _Arcane/Structures/Walls/solid.rsi
+      state: full
+      # Arcane-Edit-End
 
 - type: entity
   parent: BaseAbductorVictimObjective
