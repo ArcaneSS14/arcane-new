@@ -35,6 +35,7 @@ public sealed partial class MaxTimeRestartRuleSystem : GameRuleSystem<MaxTimeRes
     {
         // TODO FULL GAME SAVE
         component.TimerCancel.Cancel();
+        component.TimerCancel.Dispose(); // Arcane
         component.TimerCancel = new CancellationTokenSource();
         Timer.Spawn(component.RoundMaxTime, () => TimerFired(component), component.TimerCancel.Token);
     }
