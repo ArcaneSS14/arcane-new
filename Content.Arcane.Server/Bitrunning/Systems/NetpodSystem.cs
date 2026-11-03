@@ -6,6 +6,7 @@ using Content.Arcane.Shared.Bitrunning;
 using Content.Arcane.Shared.Bitrunning.Components;
 using Content.Shared.Destructible;
 using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.DeviceLinking;
 using Content.Shared.DeviceLinking.Events;
 using Content.Shared.Mobs;
@@ -256,7 +257,7 @@ public sealed partial class NetpodSystem : EntitySystem
         if (!TryComp<NetpodLoadoutComponent>(ent.Owner, out var loadout))
             return;
 
-        HashSet<ProtoId<StartingGearPrototype>> allowed = GetAllowedLoadouts(loadout, args.Actor);
+        HashSet<ProtoId<StartingGearPrototype>> allowed = GetAllowedLoadouts(loadout, GetAvatarSpecies(ent, args.Actor));
 
         if (!allowed.Contains(args.LoadoutId))
             return;
@@ -266,26 +267,37 @@ public sealed partial class NetpodSystem : EntitySystem
         UpdateUi(ent, args.Actor);
     }
 
-    private HashSet<ProtoId<StartingGearPrototype>> GetAllowedLoadouts(NetpodLoadoutComponent loadout, EntityUid user)
+    /// <summary>
+    /// Species the avatar would get if this user connected through this pod now; the kit list follows it.
+    /// </summary>
+    private ProtoId<SpeciesPrototype>? GetAvatarSpecies(Entity<NetpodComponent> ent, EntityUid user)
     {
-        if (HasCompInContainerTree<BitrunningProfileDiskComponent>(user) && TryComp<HumanoidProfileComponent>(user, out var humanoid) && loadout.AllowedLoadoutSpecie.TryGetValue(humanoid.Species, out var speciesLoadouts))
+        var server = ResolveServer(ent) is { } serverUid ? CompOrNull<QuantumServerComponent>(serverUid) : null;
+        return _server.ResolveAvatarSpecies(server, user);
+    }
+
+    private HashSet<ProtoId<StartingGearPrototype>> GetAllowedLoadouts(NetpodLoadoutComponent loadout, ProtoId<SpeciesPrototype>? avatarSpecies)
+    {
+        if (avatarSpecies is { } species && loadout.AllowedLoadoutSpecie.TryGetValue(species, out var speciesLoadouts))
             return new HashSet<ProtoId<StartingGearPrototype>>(speciesLoadouts);
 
         return new HashSet<ProtoId<StartingGearPrototype>>(loadout.AllowedLoadout);
     }
 
-    public ProtoId<StartingGearPrototype>? GetResolvedPreferredLoadout(NetpodLoadoutComponent loadout, EntityUid user)
+    /// <param name="avatarSpecies">Species of the avatar body actually spawned, null for the generic avatar.</param>
+    public ProtoId<StartingGearPrototype>? GetResolvedPreferredLoadout(NetpodLoadoutComponent loadout, ProtoId<SpeciesPrototype>? avatarSpecies)
     {
-        if (HasCompInContainerTree<BitrunningProfileDiskComponent>(user) && TryComp<HumanoidProfileComponent>(user, out var humanoid))
-        {
-            if (loadout.PreferredLoadout != null && loadout.AllowedLoadoutSpecie.TryGetValue(humanoid.Species, out var allowed) && allowed.Contains(loadout.PreferredLoadout.Value))
-                return loadout.PreferredLoadout;
+        if (avatarSpecies is not { } species)
+            return loadout.PreferredLoadout;
 
-            if (loadout.PreferredLoadoutSpecie.TryGetValue(humanoid.Species, out var speciePreferred))
-                return speciePreferred;
-        }
+        // The kit was picked for whichever avatar the UI showed; the profile may have changed since.
+        if (loadout.PreferredLoadout is { } preferred && loadout.AllowedLoadoutSpecie.TryGetValue(species, out var allowed) && allowed.Contains(preferred))
+            return preferred;
 
-        return loadout.PreferredLoadout;
+        if (loadout.PreferredLoadoutSpecie.TryGetValue(species, out var speciePreferred))
+            return speciePreferred;
+
+        return loadout.AllowedLoadoutSpecie.ContainsKey(species) ? null : loadout.PreferredLoadout;
     }
 
     private bool HasCompInContainerTree<T>(EntityUid root) where T : Component
@@ -324,7 +336,8 @@ public sealed partial class NetpodSystem : EntitySystem
 
         if (TryComp<NetpodLoadoutComponent>(ent.Owner, out var loadoutComp))
         {
-            HashSet<ProtoId<StartingGearPrototype>> allowed = GetAllowedLoadouts(loadoutComp, user);
+            var avatarSpecies = GetAvatarSpecies(ent, user);
+            HashSet<ProtoId<StartingGearPrototype>> allowed = GetAllowedLoadouts(loadoutComp, avatarSpecies);
 
             foreach (ProtoId<StartingGearPrototype> loadoutId in allowed)
             {
@@ -335,7 +348,7 @@ public sealed partial class NetpodSystem : EntitySystem
             }
 
             loadouts.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
-            _ui.SetUiState(ent.Owner, NetpodUiKey.Key, new NetpodBoundUiState(GetResolvedPreferredLoadout(loadoutComp, user), loadouts));
+            _ui.SetUiState(ent.Owner, NetpodUiKey.Key, new NetpodBoundUiState(GetResolvedPreferredLoadout(loadoutComp, avatarSpecies), loadouts));
         }
         else
         {
@@ -385,7 +398,8 @@ public sealed partial class NetpodSystem : EntitySystem
 
     private void OnPortDisconnected(Entity<NetpodComponent> ent, ref PortDisconnectedEvent args)
     {
-        if (args.Port != ServerSinkPort || ent.Comp.LinkedServer != args.RemovedPortUid)
+        // Without the other end's uid the cached link cannot be trusted: drop it and re-read the graph on next use.
+        if (args.Port != ServerSinkPort || args.RemovedPortUid != null && ent.Comp.LinkedServer != args.RemovedPortUid)
             return;
 
         ent.Comp.LinkedServer = null;

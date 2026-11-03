@@ -69,31 +69,57 @@ public sealed partial class ByteforgeSystem : EntitySystem
         if (!TryComp<ByteforgeComponent>(args.Sink, out var byteforge))
             return;
 
-        if (ent.Comp.LinkedByteforge is { } oldByteforge && oldByteforge != args.Sink && TryComp<ByteforgeComponent>(oldByteforge, out var oldByteforgeComp))
-        {
-            oldByteforgeComp.LinkedServer = null;
-            _appearance.SetData(oldByteforge, ByteforgeVisuals.ByteforgeAngry, false);
-        }
-
-        ent.Comp.LinkedByteforge = args.Sink;
-        byteforge.LinkedServer = ent.Owner;
-        UpdateByteforgeEmagVisual(ent.Comp);
-        Dirty(ent);
+        LinkByteforge(ent, (args.Sink, byteforge));
     }
 
     private void OnServerPortDisconnected(Entity<QuantumServerComponent> ent, ref PortDisconnectedEvent args)
     {
-        if (args.Port != ServerSourcePort || ent.Comp.LinkedByteforge != args.RemovedPortUid)
+        if (args.Port != ServerSourcePort || ent.Comp.LinkedByteforge is not { } linked)
             return;
 
-        if (TryComp<ByteforgeComponent>(args.RemovedPortUid, out var byteforge))
+        if (args.RemovedPortUid != null && args.RemovedPortUid != linked)
+            return;
+
+        UnlinkByteforge(ent, linked);
+    }
+
+    /// <summary>
+    /// A server delivers to one byteforge and a byteforge serves one server: linking either end
+    /// takes it away from its previous partner on both sides.
+    /// </summary>
+    private void LinkByteforge(Entity<QuantumServerComponent> server, Entity<ByteforgeComponent> byteforge)
+    {
+        if (server.Comp.LinkedByteforge is { } oldByteforge && oldByteforge != byteforge.Owner)
+            UnlinkByteforge(server, oldByteforge);
+
+        if (byteforge.Comp.LinkedServer is { } oldServer && oldServer != server.Owner &&
+            TryComp<QuantumServerComponent>(oldServer, out var oldServerComp) && oldServerComp.LinkedByteforge == byteforge.Owner)
+        {
+            oldServerComp.LinkedByteforge = null;
+            Dirty(oldServer, oldServerComp);
+        }
+
+        server.Comp.LinkedByteforge = byteforge.Owner;
+        byteforge.Comp.LinkedServer = server.Owner;
+        UpdateByteforgeEmagVisual(server.Comp);
+        Dirty(server);
+    }
+
+    /// <summary>
+    /// Ends the server's side of the link; the byteforge is only reset if it still belongs to this server.
+    /// </summary>
+    private void UnlinkByteforge(Entity<QuantumServerComponent> server, EntityUid byteforgeUid)
+    {
+        if (TryComp<ByteforgeComponent>(byteforgeUid, out var byteforge) && byteforge.LinkedServer == server.Owner)
+        {
             byteforge.LinkedServer = null;
+            _appearance.SetData(byteforgeUid, ByteforgeVisuals.ByteforgeAngry, false);
+        }
 
-        if (ent.Comp.LinkedByteforge is { } oldLinked && Exists(oldLinked))
-            _appearance.SetData(oldLinked, ByteforgeVisuals.ByteforgeAngry, false);
+        if (server.Comp.LinkedByteforge == byteforgeUid)
+            server.Comp.LinkedByteforge = null;
 
-        ent.Comp.LinkedByteforge = null;
-        Dirty(ent);
+        Dirty(server);
     }
 
     public bool HasLinkedByteforge(EntityUid serverUid, QuantumServerComponent server)
@@ -177,7 +203,8 @@ public sealed partial class ByteforgeSystem : EntitySystem
 
     public void RefreshLinkedByteforge(Entity<QuantumServerComponent> ent)
     {
-        ent.Comp.LinkedByteforge = null;
+        if (ent.Comp.LinkedByteforge is { } previous)
+            UnlinkByteforge(ent, previous);
 
         if (!TryComp<DeviceLinkSourceComponent>(ent.Owner, out var source))
             return;
@@ -189,9 +216,14 @@ public sealed partial class ByteforgeSystem : EntitySystem
                 if (!TryComp<ByteforgeComponent>(linkedEntity, out var byteforge))
                     continue;
 
-                ent.Comp.LinkedByteforge = linkedEntity;
-                byteforge.LinkedServer = ent.Owner;
-                UpdateByteforgeEmagVisual(ent.Comp);
+                // A byteforge another live server already owns stays with it.
+                if (byteforge.LinkedServer is { } owner && owner != ent.Owner &&
+                    TryComp<QuantumServerComponent>(owner, out var ownerComp) && ownerComp.LinkedByteforge == linkedEntity)
+                {
+                    continue;
+                }
+
+                LinkByteforge(ent, (linkedEntity, byteforge));
                 return;
             }
         }

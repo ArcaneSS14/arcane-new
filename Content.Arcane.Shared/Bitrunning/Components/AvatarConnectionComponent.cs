@@ -31,4 +31,10 @@ public sealed partial class AvatarConnectionComponent : Component
 
     [DataField]
     public TimeSpan DisconnectBlockedUntil = TimeSpan.Zero;
+
+    /// <summary>
+    /// Set while the avatar is being disconnected, so the death and ejection it causes do not disconnect it again.
+    /// </summary>
+    [ViewVariables]
+    public bool Disconnecting;
 }

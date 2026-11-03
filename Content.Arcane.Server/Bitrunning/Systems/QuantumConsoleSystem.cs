@@ -247,7 +247,8 @@ public sealed partial class QuantumConsoleSystem : EntitySystem
 
     private static void OnPortDisconnected(Entity<QuantumConsoleComponent> ent, ref PortDisconnectedEvent args)
     {
-        if (args.Port != ServerSinkPort || ent.Comp.LinkedServerId != args.RemovedPortUid)
+        // Without the other end's uid the cached link cannot be trusted: drop it and re-read the graph on next use.
+        if (args.Port != ServerSinkPort || args.RemovedPortUid != null && ent.Comp.LinkedServerId != args.RemovedPortUid)
             return;
 
         ent.Comp.LinkedServerId = null;

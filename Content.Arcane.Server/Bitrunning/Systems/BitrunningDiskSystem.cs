@@ -38,11 +38,12 @@ public sealed partial class BitrunningDiskSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<AvatarConnectionComponent, ComponentStartup>(OnAvatarStartup);
         SubscribeLocalEvent<AvatarConnectionComponent, ComponentShutdown>(OnAvatarShutdown);
 
-        SubscribeLocalEvent<BitrunningAbilityDiskComponent, EntInsertedIntoContainerMessage>(OnDiskInsertedIntoContainer);
-        SubscribeLocalEvent<BitrunningAbilityDiskComponent, EntRemovedFromContainerMessage>(OnDiskRemovedFromContainer);
+        SubscribeLocalEvent<BitrunningDiskCarrierComponent, EntInsertedIntoContainerMessage>(OnCarrierContainerChanged);
+        SubscribeLocalEvent<BitrunningDiskCarrierComponent, EntRemovedFromContainerMessage>(OnCarrierContainerChanged);
+        SubscribeLocalEvent<BitrunningAbilityDiskComponent, EntGotInsertedIntoContainerMessage>(OnDiskInsertedIntoContainer);
+        SubscribeLocalEvent<BitrunningAbilityDiskComponent, EntGotRemovedFromContainerMessage>(OnDiskRemovedFromContainer);
         SubscribeLocalEvent<BitrunningAbilityDiskComponent, ExaminedEvent>(OnDiskExamined);
         SubscribeLocalEvent<BitrunningAbilityDiskComponent, UseInHandEvent>(OnDiskUseInHand);
 
@@ -56,35 +57,63 @@ public sealed partial class BitrunningDiskSystem : EntitySystem
         SubscribeLocalEvent<BitrunningLesserHealActionEvent>(OnLesserHealAction);
     }
 
+    /// <summary>
+    /// Links the avatar to its runner's body once every connection field is set (connect, reconnect, polymorph)
+    /// and grants the abilities of the disks the body carries.
+    /// </summary>
     public void RefreshAvatarEffects(EntityUid avatarUid)
     {
-        if (TryComp<AvatarConnectionComponent>(avatarUid, out var avatarConnection))
-            UpdateAvatarEffects((avatarUid, avatarConnection));
+        if (!TryComp<AvatarConnectionComponent>(avatarUid, out var avatarConnection))
+            return;
+
+        UnregisterAvatar(avatarUid);
+        if (avatarConnection.OriginalBody is { } bodyUid && !TerminatingOrDeleted(bodyUid))
+        {
+            _avatarByBody[bodyUid] = avatarUid;
+            EnsureComp<BitrunningDiskCarrierComponent>(bodyUid).Avatar = avatarUid;
+        }
+
+        UpdateAvatarEffects((avatarUid, avatarConnection));
     }
 
-    private void OnAvatarStartup(Entity<AvatarConnectionComponent> ent, ref ComponentStartup args)
+    /// <summary>
+    /// Drops the body link of an avatar whose connection ended; disks moved afterwards no longer reach it.
+    /// </summary>
+    public void UnregisterAvatar(EntityUid avatarUid)
     {
-        if (ent.Comp.OriginalBody is { } bodyUid)
-            _avatarByBody[bodyUid] = ent.Owner;
+        foreach (var (bodyUid, linkedAvatar) in _avatarByBody.ToArray())
+        {
+            if (linkedAvatar != avatarUid)
+                continue;
 
-        UpdateAvatarEffects(ent);
+            _avatarByBody.Remove(bodyUid);
+            if (TryComp<BitrunningDiskCarrierComponent>(bodyUid, out var carrier) && carrier.Avatar == avatarUid)
+                RemComp(bodyUid, carrier);
+        }
     }
 
     private void OnAvatarShutdown(Entity<AvatarConnectionComponent> ent, ref ComponentShutdown args)
     {
-        if (ent.Comp.OriginalBody is { } bodyUid && _avatarByBody.TryGetValue(bodyUid, out var avatarUid) && avatarUid == ent.Owner)
-            _avatarByBody.Remove(bodyUid);
+        UnregisterAvatar(ent.Owner);
     }
 
-    private void OnDiskInsertedIntoContainer(Entity<BitrunningAbilityDiskComponent> ent, ref EntInsertedIntoContainerMessage args)
+    private void OnCarrierContainerChanged<T>(Entity<BitrunningDiskCarrierComponent> ent, ref T args)
+    {
+        // A container leaving or entering the body (backpack, belt) can carry disks with it.
+        if (TryComp<AvatarConnectionComponent>(ent.Comp.Avatar, out var avatarComp))
+            UpdateAvatarEffects((ent.Comp.Avatar, avatarComp));
+    }
+
+    private void OnDiskInsertedIntoContainer(Entity<BitrunningAbilityDiskComponent> ent, ref EntGotInsertedIntoContainerMessage args)
     {
         if (TryFindAvatarOwner(ent.Owner, out var avatarUid, out var avatarComp))
             UpdateAvatarEffects((avatarUid, avatarComp));
     }
 
-    private void OnDiskRemovedFromContainer(Entity<BitrunningAbilityDiskComponent> ent, ref EntRemovedFromContainerMessage args)
+    private void OnDiskRemovedFromContainer(Entity<BitrunningAbilityDiskComponent> ent, ref EntGotRemovedFromContainerMessage args)
     {
-        if (TryFindAvatarOwner(ent.Owner, out var avatarUid, out var avatarComp))
+        // The disk already sits in its new place, so look up the owner from the container it left.
+        if (TryFindAvatarOwner(args.Container.Owner, out var avatarUid, out var avatarComp))
             UpdateAvatarEffects((avatarUid, avatarComp));
     }
 

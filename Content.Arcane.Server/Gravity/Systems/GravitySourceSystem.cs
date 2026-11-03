@@ -1,3 +1,4 @@
+using Content.Arcane.Common.Gravity;
 using Content.Arcane.Server.Gravity.Components;
 using Content.Server.Gravity;
 using Content.Server.Power.Components;
@@ -18,6 +19,7 @@ public sealed partial class GravitySourceSystem : EntitySystem
 
         SubscribeLocalEvent<GravitySourceComponent, EntParentChangedMessage>(OnParentChanged);
         SubscribeLocalEvent<GravitySourceComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<GravityProviderQueryEvent>(OnProviderQuery);
     }
 
     public override void Update(float frameTime)
@@ -62,8 +64,26 @@ public sealed partial class GravitySourceSystem : EntitySystem
         if (!ent.Comp.Active)
             return;
 
+        // Gravity is recalculated through the provider query, so this source must no longer answer it.
+        ent.Comp.Active = false;
         var xform = Transform(ent);
         RefreshParentGravity(xform.ParentUid, false);
+    }
+
+    private void OnProviderQuery(ref GravityProviderQueryEvent args)
+    {
+        if (args.Enabled)
+            return;
+
+        var query = EntityQueryEnumerator<GravitySourceComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var source, out var xform))
+        {
+            if (!source.Active || xform.ParentUid != args.Grid || TerminatingOrDeleted(uid))
+                continue;
+
+            args.Enabled = true;
+            return;
+        }
     }
 
     private void RefreshParentGravity(EntityUid parentUid, bool enable)

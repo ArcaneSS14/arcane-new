@@ -4,6 +4,7 @@ using Robust.Shared.Prototypes;
 using Content.Arcane.Shared.Bitrunning.Components;
 using Content.Shared.Roles;
 using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Prototypes;
 using Robust.Shared.Containers;
 
 namespace Content.Arcane.Server.Bitrunning.Systems;
@@ -91,43 +92,12 @@ public sealed partial class BitrunningDomainSystem : EntitySystem
         return scannerTier >= domain.RequiredScannerTier + 1 && points >= domain.RequiredPointsToRevealReward;
     }
 
-    public ProtoId<StartingGearPrototype>? GetResolvedForcedLoadout(BitrunningVirtualDomainPrototype domain, EntityUid user)
+    /// <param name="avatarSpecies">Species of the avatar body actually spawned, null for the generic avatar.</param>
+    public ProtoId<StartingGearPrototype>? GetResolvedForcedLoadout(BitrunningVirtualDomainPrototype domain, ProtoId<SpeciesPrototype>? avatarSpecies)
     {
-        if (domain.ForcedLoadout == null)
-            return null;
-
-        if (HasCompInContainerTree<BitrunningProfileDiskComponent>(user) && TryComp<HumanoidProfileComponent>(user, out var humanoid) && domain.ForcedLoadoutSpecie.TryGetValue(humanoid.Species, out var speciesLoadout))
+        if (avatarSpecies is { } species && domain.ForcedLoadoutSpecie.TryGetValue(species, out var speciesLoadout))
             return speciesLoadout;
 
         return domain.ForcedLoadout;
-    }
-
-    private bool HasCompInContainerTree<T>(EntityUid root) where T : Component
-    {
-        var queue = new Queue<EntityUid>();
-        var visited = new HashSet<EntityUid>();
-        queue.Enqueue(root);
-
-        while (queue.TryDequeue(out var current))
-        {
-            if (!visited.Add(current))
-                continue;
-
-            if (HasComp<T>(current))
-                return true;
-
-            if (!TryComp<ContainerManagerComponent>(current, out var manager))
-                continue;
-
-            foreach (var container in manager.Containers.Values)
-            {
-                foreach (var contained in container.ContainedEntities)
-                {
-                    queue.Enqueue(contained);
-                }
-            }
-        }
-
-        return false;
     }
 }

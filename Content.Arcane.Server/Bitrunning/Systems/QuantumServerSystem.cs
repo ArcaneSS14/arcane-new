@@ -37,6 +37,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Mind.Components;
+using Content.Shared.Mind;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
@@ -407,6 +408,10 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
     public bool StopDomain(Entity<QuantumServerComponent> serverEnt, bool immediate = false)
     {
+        // A second stop (another console, a stale UI) would start a second cooldown timer.
+        if (!immediate && serverEnt.Comp.State != BitrunningServerState.Running)
+            return false;
+
         serverEnt.Comp.State = immediate
             ? BitrunningServerState.Ready
             : BitrunningServerState.CoolingDown;
@@ -457,11 +462,16 @@ public sealed partial class QuantumServerSystem : EntitySystem
         {
             var effectiveEfficiency = Math.Max(serverEnt.Comp.CooldownEfficiency, 0.001f);
             var delay = TimeSpan.FromSeconds(serverEnt.Comp.Cooldown.TotalSeconds / effectiveEfficiency);
-            serverEnt.Comp.CooldownEndTime = _timing.CurTime + delay;
+            var cooldownEnd = _timing.CurTime + delay;
+            serverEnt.Comp.CooldownEndTime = cooldownEnd;
             Timer.Spawn(delay,
                 () =>
                 {
                     if (!TryComp(serverEnt.Owner, out QuantumServerComponent? server))
+                        return;
+
+                    // Only the cooldown this timer was started for may end; a newer run or cooldown owns the state now.
+                    if (server.State != BitrunningServerState.CoolingDown || server.CooldownEndTime != cooldownEnd)
                         return;
 
                     server.State = BitrunningServerState.Ready;
@@ -515,7 +525,11 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
         pod.DeployedAvatar = true;
 
-        var avatar = SpawnAvatarForRunner(server, user, server.SpawnCoordinates ?? server.ExitCoordinates.Value);
+        // The avatar body and its kit both follow this one profile, resolved once.
+        HumanoidCharacterProfile? profile = ShouldLoadProfileAvatar(server, user) && TryGetHumanoidProfile(user, out var selected)
+            ? selected
+            : null;
+        var avatar = SpawnAvatarForRunner(server, profile, server.SpawnCoordinates ?? server.ExitCoordinates.Value);
         EnsureComp<BitrunningDomainRuntimeComponent>(avatar);
         _metaData.SetEntityName(avatar, Name(user));
 
@@ -532,7 +546,7 @@ public sealed partial class QuantumServerSystem : EntitySystem
         _mind.TransferTo(mindId, avatar, mind: mind);
         PlayLocalSound(user, pod.ConnectStasisSound);
         PlayLocalSound(avatar, pod.ConnectAvatarSound);
-        TryApplyAvatarOutfit(avatar, user, server, podUid);
+        TryApplyAvatarOutfit(avatar, profile?.Species, server, podUid);
 
         if (HasComp<InternalsComponent>(avatar) && _internals.FindBestGasTank(avatar) is { } tank)
             _gasTank.ConnectToInternals(tank, user: avatar);
@@ -607,27 +621,27 @@ public sealed partial class QuantumServerSystem : EntitySystem
         return domain.DeleteAvatarOnDisconnect;
     }
 
-    private void TryApplyAvatarOutfit(EntityUid avatar, EntityUid user, QuantumServerComponent server, EntityUid podUid)
+    private void TryApplyAvatarOutfit(EntityUid avatar, ProtoId<SpeciesPrototype>? avatarSpecies, QuantumServerComponent server, EntityUid podUid)
     {
-        if (!TryResolveLoadout(user, server, podUid, out var loadoutId))
+        if (!TryResolveLoadout(avatarSpecies, server, podUid, out var loadoutId))
             return;
 
         _outfit.SetOutfit(avatar, loadoutId);
     }
 
-    private bool TryResolveLoadout(EntityUid user, QuantumServerComponent server, EntityUid podUid, out string loadout)
+    private bool TryResolveLoadout(ProtoId<SpeciesPrototype>? avatarSpecies, QuantumServerComponent server, EntityUid podUid, out string loadout)
     {
         loadout = string.Empty;
 
         if (server.CurrentDomain != null &&
             _domains.TryGetDomain(server.CurrentDomain, out var domain) &&
-            _domains.GetResolvedForcedLoadout(domain, user) is { } forcedLoadout)
+            _domains.GetResolvedForcedLoadout(domain, avatarSpecies) is { } forcedLoadout)
         {
             loadout = forcedLoadout;
             return true;
         }
 
-        if (TryComp<NetpodLoadoutComponent>(podUid, out var loadoutComp) && _netpod.GetResolvedPreferredLoadout(loadoutComp, user) is { } preferredLoadout)
+        if (TryComp<NetpodLoadoutComponent>(podUid, out var loadoutComp) && _netpod.GetResolvedPreferredLoadout(loadoutComp, avatarSpecies) is { } preferredLoadout)
         {
             loadout = preferredLoadout;
             return true;
@@ -638,9 +652,10 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
     public void DisconnectAvatar(EntityUid avatarUid, bool harmful)
     {
-        if (!TryComp<AvatarConnectionComponent>(avatarUid, out var connection))
+        if (!TryComp<AvatarConnectionComponent>(avatarUid, out var connection) || connection.Disconnecting)
             return;
 
+        connection.Disconnecting = true;
         harmful |= IsAvatarInCriticalState(avatarUid);
 
         ReleaseAvatarHands(avatarUid);
@@ -649,6 +664,10 @@ public sealed partial class QuantumServerSystem : EntitySystem
         var serverUid = connection.Server;
         var podUid = connection.Netpod;
         var canRedirectToBitrunner = CanRedirectToBitrunnerBody(connection, originalBody);
+
+        // The link is no longer active: killing the avatar or ejecting the body below must not act on it again.
+        connection.Netpod = null;
+        _bitrunningDisk.UnregisterAvatar(avatarUid);
 
         if (originalBody is { } bodyUid && podUid is { } netpodUid && TryComp<NetpodComponent>(netpodUid, out var podComp))
             PlayLocalSound(bodyUid, podComp.DisconnectSound);
@@ -690,16 +709,16 @@ public sealed partial class QuantumServerSystem : EntitySystem
             Dirty(serverUid.Value, server);
         }
 
-        connection.Netpod = null;
-
         if (connection.DeleteOnDisconnect)
             QueueDel(avatarUid);
 
-        if (HasComp<ActorComponent>(avatarUid))
-            return;
+        if (!HasComp<ActorComponent>(avatarUid))
+        {
+            _actions.RemoveAction(connection.DisconnectActionEntity);
+            connection.DisconnectActionEntity = null;
+        }
 
-        _actions.RemoveAction(connection.DisconnectActionEntity);
-        connection.DisconnectActionEntity = null;
+        connection.Disconnecting = false;
     }
 
     public void AddObjectiveProgress(EntityUid serverUid, int points)
@@ -956,9 +975,6 @@ public sealed partial class QuantumServerSystem : EntitySystem
         if (args.NewMobState != MobState.Dead)
             return;
 
-        if (CanRedirectToBitrunnerBody(ent.Comp, ent.Comp.OriginalBody) && ent.Comp.OriginalBody is { } body)
-            TransferAvatarDamageToBitrunner(ent, body, true);
-
         DisconnectAvatar(ent, true);
     }
 
@@ -1083,7 +1099,8 @@ public sealed partial class QuantumServerSystem : EntitySystem
             if (pod.Avatar == ent.Owner)
                 pod.Avatar = null;
 
-            EnsureComp<AvatarNavRelayComponent>(podUid).RelayEntity = null;
+            if (TryComp<AvatarNavRelayComponent>(podUid, out var podRelay) && podRelay.RelayEntity == ent.Owner)
+                podRelay.RelayEntity = null;
 
             pod.Occupant = TryComp<NetpodContainerComponent>(podUid, out var containerComp)
                 ? containerComp.BodyContainer.ContainedEntity
@@ -1170,9 +1187,9 @@ public sealed partial class QuantumServerSystem : EntitySystem
             args.Channel = null;
     }
 
-    private EntityUid SpawnAvatarForRunner(QuantumServerComponent server, EntityUid user, EntityCoordinates coordinates)
+    private EntityUid SpawnAvatarForRunner(QuantumServerComponent server, HumanoidCharacterProfile? profile, EntityCoordinates coordinates)
     {
-        var avatar = !ShouldLoadProfileAvatar(server, user) || !TryGetHumanoidProfile(user, out var profile)
+        var avatar = profile == null
             ? Spawn(server.AvatarPrototype, coordinates)
             : SpawnProfileAvatar(profile, coordinates);
 
@@ -1202,6 +1219,21 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
         profile = selected;
         return true;
+    }
+
+    /// <summary>
+    /// Species of the avatar <paramref name="user"/> would get from this server: their selected profile's when a
+    /// profile disk loads it, otherwise null for the server's generic avatar.
+    /// </summary>
+    public ProtoId<SpeciesPrototype>? ResolveAvatarSpecies(QuantumServerComponent? server, EntityUid user)
+    {
+        if (server != null && !ShouldLoadProfileAvatar(server, user))
+            return null;
+
+        if (server == null && !HasCompInContainerTree<BitrunningProfileDiskComponent>(user))
+            return null;
+
+        return TryGetHumanoidProfile(user, out var profile) ? profile.Species : (ProtoId<SpeciesPrototype>?) null;
     }
 
     private bool ShouldLoadProfileAvatar(QuantumServerComponent server, EntityUid user)
@@ -1248,7 +1280,10 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
     private bool TryResolveRunnerMind(Entity<AvatarConnectionComponent> avatar, out EntityUid mindId)
     {
-        if (avatar.Comp.RunnerMind is { } storedMind && Exists(storedMind))
+        // After a disconnect the runner may be in their body or in another avatar; a kept avatar dying or
+        // getting deleted later must not pull them out of there.
+        if (avatar.Comp.RunnerMind is { } storedMind && TryComp<MindComponent>(storedMind, out var storedMindComp) &&
+            storedMindComp.OwnedEntity == avatar.Owner)
         {
             mindId = storedMind;
             return true;
