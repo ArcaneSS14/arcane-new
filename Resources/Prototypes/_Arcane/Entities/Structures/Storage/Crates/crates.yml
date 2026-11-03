@@ -351,3 +351,11 @@
     sprite: _Arcane/Structures/Storage/Crates/inteq_secure.rsi
   - type: Sprite
     sprite: _Arcane/Structures/Storage/Crates/inteq_secure.rsi
+
+- type: entity
+  parent: CrateBitrunSecure
+  id: CrateBitrunSecureReward
+  name: cache crate
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: BitrunningDespawnOnOpen
