@@ -1,6 +1,7 @@
 using Content.Shared.FixedPoint;
 using Content.Arcane.Shared.Mood;
 using Content.Shared.Alert;
+using Content.Shared.Nutrition.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Generic;
 
@@ -78,9 +79,18 @@ public sealed partial class MoodComponent : Component
     [DataField]
     public float DecreaseCritThreshold = 0.9f;
 
-    public FixedPoint2 SoftCritThresholdBeforeModify;
-    public FixedPoint2 HardCritThresholdBeforeModify;
-    public FixedPoint2 DeadThresholdBeforeModify;
+    /// <summary>
+    /// The crit threshold multiplier mood currently applies. Mood divides out only its own share when it changes,
+    /// so threshold changes made by others in the meantime (Soul Tap) stay.
+    /// </summary>
+    [ViewVariables]
+    public float AppliedCritMultiplier = 1f;
+
+    /// <summary>
+    /// The hunger and thirst slowdown mood took over at startup, given back when mood stops running.
+    /// </summary>
+    [ViewVariables]
+    public SatiationSpeedModifierComponent? SuppressedSatiationSpeed;
 
     [DataField]
     public ProtoId<AlertCategoryPrototype> MoodCategory = "Mood";

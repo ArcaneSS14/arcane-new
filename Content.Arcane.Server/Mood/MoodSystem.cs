@@ -1,4 +1,5 @@
 using System.Linq;
+using Robust.Shared.Serialization.Manager;
 using Content.Shared.FixedPoint;
 using Content.Server.Body.Systems;
 using Content.Server.Chat.Managers;
@@ -44,6 +45,11 @@ public sealed partial class MoodSystem : EntitySystem
     [Dependency] private SharedJetpackSystem _jetpack = default!;
     [Dependency] private SharedRoleSystem _roles = default!;
     [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private ISerializationManager _serialization = default!;
+
+    // Shared by all moodlet timers and never reused, so a timer from a removed effect cannot match a re-added one.
+    private int _nextTimerToken;
 
     public override void Initialize()
     {
@@ -67,6 +73,8 @@ public sealed partial class MoodSystem : EntitySystem
         SubscribeLocalEvent<SlipEvent>(OnSlip);
         SubscribeLocalEvent<RoleAddedEvent>(OnRoleAdded);
         SubscribeLocalEvent<RoleRemovedEvent>(OnRoleRemoved);
+
+        Subs.CVar(_config, ArcaneCVars.MoodEnabled, OnMoodEnabledChanged);
     }
 
     public override void Update(float frameTime)
@@ -138,11 +146,29 @@ public sealed partial class MoodSystem : EntitySystem
         return msg;
     }
 
+    /// <summary>
+    /// Turning mood off at runtime gives the hunger and thirst slowdown back, turning it on takes it again.
+    /// </summary>
+    private void OnMoodEnabledChanged(bool enabled)
+    {
+        var query = EntityQueryEnumerator<MoodComponent>();
+        while (query.MoveNext(out var uid, out var mood))
+        {
+            if (enabled)
+                SuppressSatiationSpeed(uid, mood);
+            else
+                RestoreSatiationSpeed(uid, mood);
+
+            _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
+        }
+    }
+
     private void OnShutdown(EntityUid uid, MoodComponent component, ComponentShutdown args)
     {
         _alerts.ClearAlertCategory(uid, component.MoodCategory);
         RemComp<SaturationScaleOverlayComponent>(uid);
-        ResetCritThresholds(uid, component);
+        ApplyCritMultiplier(uid, component, 1f);
+        RestoreSatiationSpeed(uid, component);
     }
 
     private void OnRemoveEffect(EntityUid uid, MoodComponent component, MoodRemoveEffectEvent args)
@@ -170,14 +196,15 @@ public sealed partial class MoodSystem : EntitySystem
         if (!_config.GetCVar(ArcaneCVars.MoodEnabled))
             return;
 
+        // A category does not make a moodlet permanent: categorised ones with a timeout are purged too.
         var moodletList = new List<string>();
-        foreach (var moodlet in component.UncategorisedEffects)
+        foreach (var moodletId in component.UncategorisedEffects.Keys.Concat(component.CategorisedEffects.Values))
         {
-            if (!_prototypeManager.TryIndex(moodlet.Key, out MoodEffectPrototype? moodProto)
+            if (!_prototypeManager.TryIndex(moodletId, out MoodEffectPrototype? moodProto)
                 || moodProto.Timeout == 0 && !args.RemovePermanentMoodlets)
                 continue;
 
-            moodletList.Add(moodlet.Key);
+            moodletList.Add(moodletId);
         }
 
         foreach (var moodId in moodletList)
@@ -305,14 +332,14 @@ public sealed partial class MoodSystem : EntitySystem
 
         if (prototype.Category != null)
         {
-            component.CategorisedEffectTimerGenerations.TryGetValue(prototype.Category, out var currentGeneration);
-            var generation = currentGeneration + 1;
+            var generation = ++_nextTimerToken;
             component.CategorisedEffectTimerGenerations[prototype.Category] = generation;
 
             Timer.Spawn(TimeSpan.FromSeconds(prototype.Timeout),
                 () =>
             {
                 if (!TryComp(uid, out MoodComponent? currentComponent)
+                    || currentComponent != component
                     || !currentComponent.CategorisedEffectTimerGenerations.TryGetValue(prototype.Category, out var activeGeneration)
                     || activeGeneration != generation)
                     return;
@@ -323,14 +350,14 @@ public sealed partial class MoodSystem : EntitySystem
             return;
         }
 
-        component.UncategorisedEffectTimerGenerations.TryGetValue(prototype.ID, out var uncategorisedGeneration);
-        var newGeneration = uncategorisedGeneration + 1;
+        var newGeneration = ++_nextTimerToken;
         component.UncategorisedEffectTimerGenerations[prototype.ID] = newGeneration;
 
         Timer.Spawn(TimeSpan.FromSeconds(prototype.Timeout),
             () =>
         {
             if (!TryComp(uid, out MoodComponent? currentComponent)
+                || currentComponent != component
                 || !currentComponent.UncategorisedEffectTimerGenerations.TryGetValue(prototype.ID, out var activeGeneration)
                 || activeGeneration != newGeneration)
                 return;
@@ -522,12 +549,7 @@ public sealed partial class MoodSystem : EntitySystem
         if (!_config.GetCVar(ArcaneCVars.MoodEnabled))
             return;
 
-        // Mood takes over the hunger and thirst slowdown.
-        RemCompDeferred<SatiationSpeedModifierComponent>(uid);
-
-        if (_config.GetCVar(ArcaneCVars.MoodModifiesThresholds)
-            && TryComp<MobThresholdsComponent>(uid, out var mobThresholdsComponent))
-            TryCacheBaselineThresholds(uid, component, mobThresholdsComponent);
+        SuppressSatiationSpeed(uid, component);
 
         EnsureComp<NetMoodComponent>(uid);
         RefreshMood(uid, component);
@@ -563,6 +585,7 @@ public sealed partial class MoodSystem : EntitySystem
                 component.MoodThresholds[MoodThreshold.Dead],
                 component.MoodThresholds[MoodThreshold.Insane]);
 
+        var levelChanged = component.CurrentMoodLevel != newMoodLevel;
         component.CurrentMoodLevel = newMoodLevel;
 
         if (TryComp<NetMoodComponent>(uid, out var mood))
@@ -577,6 +600,10 @@ public sealed partial class MoodSystem : EntitySystem
 
         RefreshShaders(uid, component.CurrentMoodLevel, component.MoodThresholds[MoodThreshold.Neutral]);
         UpdateCurrentThreshold(uid, component);
+
+        // The speed modifier depends on the exact level, so a change inside one category changes it too.
+        if (levelChanged)
+            _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
     }
 
     private void UpdateCurrentThreshold(EntityUid uid, MoodComponent? component = null)
@@ -584,7 +611,7 @@ public sealed partial class MoodSystem : EntitySystem
         if (!Resolve(uid, ref component))
             return;
 
-        var calculatedThreshold = GetMoodThreshold(component);
+        var calculatedThreshold = GetMoodThreshold(component, isDead: _mobState.IsDead(uid));
         if (calculatedThreshold == component.CurrentMoodThreshold)
             return;
 
@@ -713,12 +740,14 @@ public sealed partial class MoodSystem : EntitySystem
         component.CurrentSanity = clamped;
         component.CurrentSanityThreshold = GetSanityThreshold(component);
 
-        if (component.CurrentSanityThreshold != component.LastSanityThreshold)
-        {
-            _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
-            component.LastSanityThreshold = component.CurrentSanityThreshold;
-        }
+        if (component.CurrentSanityThreshold == component.LastSanityThreshold)
+            return;
 
+        _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
+        component.LastSanityThreshold = component.CurrentSanityThreshold;
+
+        // Sanity drifts every tick and no client reads the exact value: network it when its threshold changes,
+        // not on every step.
         if (!TryComp<NetMoodComponent>(uid, out var mood))
             return;
 
@@ -744,9 +773,7 @@ public sealed partial class MoodSystem : EntitySystem
 
     private void SetCritThreshold(EntityUid uid, MoodComponent component, int modifier)
     {
-        if (!_config.GetCVar(ArcaneCVars.MoodModifiesThresholds)
-            || !TryComp<MobThresholdsComponent>(uid, out var mobThresholds)
-            || !TryCacheBaselineThresholds(uid, component, mobThresholds))
+        if (!_config.GetCVar(ArcaneCVars.MoodModifiesThresholds))
             return;
 
         var multiplier = modifier switch
@@ -756,9 +783,28 @@ public sealed partial class MoodSystem : EntitySystem
             _ => 1f,
         };
 
-        var soft = component.SoftCritThresholdBeforeModify.Float() * multiplier;
-        var hard = component.HardCritThresholdBeforeModify.Float() * multiplier;
-        var dead = component.DeadThresholdBeforeModify.Float() * multiplier;
+        ApplyCritMultiplier(uid, component, multiplier);
+    }
+
+    /// <summary>
+    /// Replaces mood's share of the crit thresholds: the current thresholds are divided by the multiplier mood
+    /// applied before and scaled by the new one, so whatever else changed them in the meantime is kept.
+    /// </summary>
+    private void ApplyCritMultiplier(EntityUid uid, MoodComponent component, float multiplier)
+    {
+        if (component.AppliedCritMultiplier == multiplier || multiplier <= 0f
+            || !TryComp<MobThresholdsComponent>(uid, out var mobThresholds)
+            || !_mobThreshold.TryGetThresholdForState(uid, MobState.SoftCrit, out var currentSoft, mobThresholds)
+            || !_mobThreshold.TryGetThresholdForState(uid, MobState.Critical, out var currentHard, mobThresholds)
+            || !_mobThreshold.TryGetThresholdForState(uid, MobState.Dead, out var currentDead, mobThresholds))
+            return;
+
+        var scale = multiplier / component.AppliedCritMultiplier;
+        component.AppliedCritMultiplier = multiplier;
+
+        var soft = currentSoft.Value.Float() * scale;
+        var hard = currentHard.Value.Float() * scale;
+        var dead = currentDead.Value.Float() * scale;
 
         // Keep threshold ordering valid after scaling.
         hard = MathF.Max(hard, soft + 0.01f);
@@ -769,44 +815,45 @@ public sealed partial class MoodSystem : EntitySystem
         _mobThreshold.SetMobStateThreshold(uid, FixedPoint2.New(dead), MobState.Dead, mobThresholds);
     }
 
-    private bool TryCacheBaselineThresholds(EntityUid uid, MoodComponent component, MobThresholdsComponent thresholds)
+    /// <summary>
+    /// Mood takes over the hunger and thirst slowdown while it runs; the species' own modifier is kept to give back.
+    /// </summary>
+    private void SuppressSatiationSpeed(EntityUid uid, MoodComponent component)
     {
-        if (component.SoftCritThresholdBeforeModify != default
-            && component.HardCritThresholdBeforeModify != default
-            && component.DeadThresholdBeforeModify != default)
-            return true;
-
-        if (!_mobThreshold.TryGetThresholdForState(uid, MobState.SoftCrit, out var soft, thresholds)
-            || !_mobThreshold.TryGetThresholdForState(uid, MobState.Critical, out var hard, thresholds)
-            || !_mobThreshold.TryGetThresholdForState(uid, MobState.Dead, out var dead, thresholds))
-            return false;
-
-        component.SoftCritThresholdBeforeModify = soft.Value;
-        component.HardCritThresholdBeforeModify = hard.Value;
-        component.DeadThresholdBeforeModify = dead.Value;
-        return true;
-    }
-
-    private void ResetCritThresholds(EntityUid uid, MoodComponent component)
-    {
-        if (!_config.GetCVar(ArcaneCVars.MoodModifiesThresholds)
-            || !TryComp<MobThresholdsComponent>(uid, out var thresholds)
-            || !TryCacheBaselineThresholds(uid, component, thresholds))
+        if (!TryComp<SatiationSpeedModifierComponent>(uid, out var satiationSpeed))
             return;
 
-        _mobThreshold.SetMobStateThreshold(uid, component.SoftCritThresholdBeforeModify, MobState.SoftCrit, thresholds);
-        _mobThreshold.SetMobStateThreshold(uid, component.HardCritThresholdBeforeModify, MobState.Critical, thresholds);
-        _mobThreshold.SetMobStateThreshold(uid, component.DeadThresholdBeforeModify, MobState.Dead, thresholds);
+        component.SuppressedSatiationSpeed = _serialization.CreateCopy(satiationSpeed, notNullableOverride: true);
+        RemCompDeferred<SatiationSpeedModifierComponent>(uid);
     }
 
-    private static MoodThreshold GetMoodThreshold(MoodComponent component, float? moodLevel = null)
+    private void RestoreSatiationSpeed(EntityUid uid, MoodComponent component)
     {
+        if (component.SuppressedSatiationSpeed is not { } satiationSpeed || TerminatingOrDeleted(uid))
+            return;
+
+        component.SuppressedSatiationSpeed = null;
+        if (!HasComp<SatiationSpeedModifierComponent>(uid))
+            AddComp(uid, satiationSpeed);
+
+        _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
+    }
+
+    /// <param name="isDead">Only a dead mob is in the Dead category; a living one at the lowest mood is in the worst living one.</param>
+    private static MoodThreshold GetMoodThreshold(MoodComponent component, bool isDead, float? moodLevel = null)
+    {
+        if (isDead)
+            return MoodThreshold.Dead;
+
         moodLevel ??= component.CurrentMoodLevel;
-        var result = MoodThreshold.Dead;
+        var result = MoodThreshold.Horrible;
         var value = component.MoodThresholds[MoodThreshold.Insane];
 
         foreach (var threshold in component.MoodThresholds)
         {
+            if (threshold.Key == MoodThreshold.Dead)
+                continue;
+
             if (!(threshold.Value <= value) || !(threshold.Value >= moodLevel))
                 continue;
 

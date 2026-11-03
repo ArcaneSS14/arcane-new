@@ -76,6 +76,11 @@ public record struct OnSetMoodEvent(EntityUid Receiver, float MoodChangedAmount,
 ///     Allows for other systems to pick and choose specific events to modify.
 /// </summary>
 [ByRefEvent]
-public record struct OnMoodEffect(EntityUid Receiver, string EffectId, float EffectModifier = 1f, float EffectOffset = 0f);
+public record struct OnMoodEffect(EntityUid Receiver, string EffectId, float EffectModifier = 1f, float EffectOffset = 0f)
+{
+    // Only the strength of the moodlet can be changed by handlers; who gets which moodlet is fixed.
+    public EntityUid Receiver { get; } = Receiver;
+    public string EffectId { get; } = EffectId;
+}
 
 public sealed partial class ShowMoodAlertEvent : BaseAlertEvent;

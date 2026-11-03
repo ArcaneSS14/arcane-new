@@ -42,10 +42,18 @@ public sealed partial class SaturationScaleSystem : EntitySystem
 
     private void HandleMoodEffectsUpdated(bool moodEffectsEnabled)
     {
-        if (_overlayMan.HasOverlay<SaturationScaleOverlay>() && !moodEffectsEnabled)
-            _overlayMan.RemoveOverlay(_overlay);
-
         _moodEffectsEnabled = moodEffectsEnabled;
+
+        if (!moodEffectsEnabled)
+        {
+            if (_overlayMan.HasOverlay<SaturationScaleOverlay>())
+                _overlayMan.RemoveOverlay(_overlay);
+            return;
+        }
+
+        // Turned back on: the local entity may already have the overlay component, no init or attach will follow.
+        if (HasComp<SaturationScaleOverlayComponent>(_playerMan.LocalEntity) && !_overlayMan.HasOverlay<SaturationScaleOverlay>())
+            _overlayMan.AddOverlay(_overlay);
     }
 
     private void RoundRestartCleanup(RoundRestartCleanupEvent ev)
