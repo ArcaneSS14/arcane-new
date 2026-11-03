@@ -1,0 +1,36 @@
+using Content.Arcane.Shared.ChameleonStamp;
+using Robust.Client.GameObjects;
+using Robust.Shared.Prototypes;
+
+namespace Content.Arcane.Client.ChameleonStamp;
+
+public sealed partial class ChameleonStampSystem : SharedChameleonStampSystem
+{
+    [Dependency] private UserInterfaceSystem _ui = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent<ChameleonStampComponent, AfterAutoHandleStateEvent>(HandleState);
+        UpdatePresets();
+    }
+
+    private void HandleState(Entity<ChameleonStampComponent> entity, ref AfterAutoHandleStateEvent args)
+    {
+        UpdateVisuals(entity);
+
+        if (_ui.TryGetOpenUi<ChameleonStampUserInterface>(entity.Owner, ChameleonStampUiKey.Key, out var bui))
+            bui.Update();
+    }
+
+    public void UpdateVisuals(Entity<ChameleonStampComponent> entity)
+    {
+        if (!TryComp<SpriteComponent>(entity, out var sprite)
+            || !Proto.TryIndex<EntityPrototype>(entity.Comp.SelectedStampSpritePrototype, out var proto)
+            || !proto.TryGetComponent<SpriteComponent>(out var presetSprite))
+            return;
+
+        sprite.CopyFrom(presetSprite);
+    }
+}

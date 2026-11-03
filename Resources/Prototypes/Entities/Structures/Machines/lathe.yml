@@ -257,6 +257,7 @@
     #- Chemistry - Goobstation
     - Janitor
     - Instruments
+    - ArcaneService # Arcane
     - Equipment # Goobstation note: handheld mass scanner is removed
     # Goobstation Packs
     # - ServiceWeapons
@@ -621,6 +622,7 @@
     - MedicalClothingStatic
     - EmptyMedkitsStatic
     - SurgeryStatic
+    - EmptyMedicalSprayBottlesStatic # Arcane
     dynamicPacks:
     # <Trauma>
     - Surgery
@@ -681,6 +683,7 @@
     - Scarves
     - Carpets
     - Bedsheets
+    - DoubleBedsheets # Arcane
     # Goobstation Packs
     - ClothingCasualJumpsuits
     - ClothingCommandSummer

@@ -44,6 +44,15 @@ namespace Content.Shared.Construction
         [DataField]
         public bool DoNotReplaceInheritingEntities;
 
+        // Arcane-Start
+        /// <summary>
+        ///     If true, the original entity is kept when changing to this node,
+        ///     e.g. a window built on a grille does not delete the grille.
+        /// </summary>
+        [DataField]
+        public bool KeepOriginalEntity;
+        // Arcane-End
+
         public ConstructionGraphEdge? GetEdge(string target)
         {
             foreach (var edge in _edges)

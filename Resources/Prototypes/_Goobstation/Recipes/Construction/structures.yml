@@ -79,5 +79,7 @@
   parent: SolidSecretDoor
   id: ReinforcedSecretDoor
   name: recipes-secret-door-reinforced-name
-  graph: ReinforcedSecretDoor
-  targetNode: ReinforcedSecretDoor
+  # Arcane-Edit-Start
+  graph: Girder
+  targetNode: reinforcedSecretDoor
+  # Arcane-Edit-End

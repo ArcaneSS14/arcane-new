@@ -43,6 +43,14 @@ public sealed partial class StrapComponent : Component
     [DataField, AutoNetworkedField]
     public Vector2 BuckleOffset = Vector2.Zero;
 
+    // Arcane-Start
+    /// <summary>
+    /// Per-entity buckle offsets, for straps holding several entities at different spots (double beds).
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public Dictionary<EntityUid, Vector2> BuckleOffsets = new();
+    // Arcane-End
+
     /// <summary>
     /// The angle to rotate the player by when they get strapped
     /// </summary>

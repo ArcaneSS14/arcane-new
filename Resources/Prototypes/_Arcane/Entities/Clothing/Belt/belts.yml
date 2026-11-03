@@ -54,3 +54,87 @@
     useCharge: 0
   - type: UseDelay
     delay: 10.0
+- type: entity
+  parent: ClothingBeltSheath
+  id: ClothingBeltKatanaSheath
+  name: katana sheaths
+  description: An ornate belt designed to hold a pair of samurai's blades, or daisho.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Belt/katanasheath.rsi
+    state: sheath
+  - type: Clothing
+    sprite: _Arcane/Clothing/Belt/katanasheath.rsi
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+      item: !type:ContainerSlot {}
+      item2: !type:ContainerSlot {}
+  - type: ItemSlots
+    slots:
+      item:
+        name: Katana
+        insertVerbText: sheath-insert-verb
+        ejectVerbText: sheath-eject-verb
+        insertSound: /Audio/Items/sheath.ogg
+        ejectSound: /Audio/Items/unsheath.ogg
+        whitelist:
+          tags:
+          - Katana
+      item2:
+        name: Wakizashi
+        insertVerbText: sheath-insert-verb
+        ejectVerbText: sheath-eject-verb
+        insertSound: /Audio/Items/sheath.ogg
+        ejectSound: /Audio/Items/unsheath.ogg
+        whitelist:
+          tags:
+          - Wakizashi
+  - type: ItemMapper
+    mapLayers:
+      sheath-katana:
+        whitelist:
+          tags:
+          - Katana
+      sheath-wakizashi:
+        whitelist:
+          tags:
+          - Wakizashi
+  - type: Appearance
+
+- type: entity
+  parent: ClothingBeltSheath
+  id: ClothingBeltWhiteSheath
+  name: white sabre sheath
+  description: Style, shine, everything for the best sabers in the universe.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Belt/white_sheath.rsi
+    state: sheath
+  - type: Clothing
+    sprite: _Arcane/Clothing/Belt/white_sheath.rsi
+
+- type: entity
+  parent: ClothingBeltSheath
+  id: ClothingBeltSheriffSheath
+  name: sheriff sabre sheath
+  description: Practicality, durability, the saber will definitely not end up in your leg.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Belt/sheriff_sheath.rsi
+    state: sheath
+  - type: Clothing
+    sprite: _Arcane/Clothing/Belt/sheriff_sheath.rsi
+
+- type: entity
+  parent: ClothingBeltSheath
+  id: ClothingBeltCentCommSheath
+  name: centcomm sabre sheath
+  description: 545 corpses, zero lawsuits, janitors are quitting, crematorium is overheating. CentCom nods in approval.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Belt/centcomm_sheath.rsi
+    state: sheath
+  - type: Clothing
+    sprite: _Arcane/Clothing/Belt/centcomm_sheath.rsi

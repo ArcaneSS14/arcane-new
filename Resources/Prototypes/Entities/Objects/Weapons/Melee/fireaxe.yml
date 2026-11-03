@@ -38,6 +38,7 @@
         Blunt: 5
         Slash: 10
         Structural: 3
+      armorPenetration: 0.4 # Arcane
       woundSeverityMultipliers: # Trauma
         Blunt: 2
         Slash: 2.5
@@ -94,6 +95,7 @@
         Blunt: 5 # Trauma, was heat
         Slash: 10
         Structural: 20
+      armorPenetration: 0.4 # Arcane
       woundSeverityMultipliers:
         Slash: 2.5
         Blunt: 2 # Trauma, was heat

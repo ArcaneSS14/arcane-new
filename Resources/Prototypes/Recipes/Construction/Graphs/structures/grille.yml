@@ -44,6 +44,58 @@
             - tool: Cutting
               doAfter: 0.25
 
+        # Arcane-Start: windows can be built directly on a grille
+        - to: window
+          steps:
+            - material: Glass
+              amount: 2
+              doAfter: 3
+
+        - to: reinforcedWindow
+          steps:
+            - material: ReinforcedGlass
+              amount: 2
+              doAfter: 2
+
+        - to: uraniumWindow
+          steps:
+            - material: UraniumGlass
+              amount: 2
+              doAfter: 2
+
+        - to: reinforcedUraniumWindow
+          steps:
+            - material: ReinforcedUraniumGlass
+              amount: 2
+              doAfter: 3
+
+        - to: plasmaWindow
+          steps:
+            - material: PlasmaGlass
+              amount: 2
+              doAfter: 2
+
+        - to: reinforcedPlasmaWindow
+          steps:
+            - material: ReinforcedPlasmaGlass
+              amount: 2
+              doAfter: 3
+
+        - to: shuttleWindow
+          steps:
+            - material: Plasteel
+              amount: 2
+            - material: ReinforcedGlass
+              amount: 2
+              doAfter: 4
+
+        - to: clockworkWindow
+          steps:
+            - material: ClockworkGlass
+              amount: 2
+              doAfter: 3
+        # Arcane-End
+
     - node: grilleBroken
       entity: GrilleBroken
       edges:
@@ -97,4 +149,54 @@
         - material: MetalRod
           amount: 1
           doAfter: 0.5
+    # Arcane-End
+
+    # Arcane-Start
+    - node: window
+      entity: Window
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: reinforcedWindow
+      entity: ReinforcedWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: uraniumWindow
+      entity: UraniumWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: reinforcedUraniumWindow
+      entity: ReinforcedUraniumWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: plasmaWindow
+      entity: PlasmaWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: reinforcedPlasmaWindow
+      entity: ReinforcedPlasmaWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: shuttleWindow
+      entity: ShuttleWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
+
+    - node: clockworkWindow
+      entity: ClockworkWindow
+      keepOriginalEntity: true
+      actions:
+      - !type:SnapToGrid {}
     # Arcane-End

@@ -1,0 +1,94 @@
+# Two tiles wide, so every overlay layer is redirected to the 64x32 sprite.
+- type: entity
+  parent: Airlock
+  id: DoubleGlassAirlock
+  name: double glass airlock
+  description: It opens, it closes, and maybe crushes you, but it's wider than a normal door.
+  components:
+  - type: Door
+    closeTimeOne: 0.55
+    closeTimeTwo: 0.3
+    openTimeOne: 0.55
+    openTimeTwo: 0.3
+    occludes: false
+  - type: Occluder
+    enabled: false
+  - type: Sprite
+    sprite: _Arcane/Structures/Doors/Airlocks/double_glass_airlock.rsi
+    snapCardinals: false
+    offset: 0.5,0
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+    - state: closed_unlit
+      shader: unshaded
+      map: ["enum.DoorVisualLayers.BaseUnlit"]
+      visible: true
+    - state: welded
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - state: bolted_unlit
+      shader: unshaded
+      map: ["enum.DoorVisualLayers.BaseBolted"]
+    - state: emergency_unlit
+      map: ["enum.DoorVisualLayers.BaseEmergencyAccess"]
+      shader: unshaded
+    - state: panel_open
+      map: ["enum.WiresVisualLayers.MaintenancePanel"]
+    - state: electrified_ai
+      sprite: Interface/Misc/ai_hud.rsi
+      shader: unshaded
+      visible: false
+      map: ["enum.ElectrifiedLayers.HUD"]
+    - state: electrified
+      sprite: Effects/electricity.rsi
+      shader: unshaded
+      visible: false
+      map: ["enum.ElectrifiedLayers.Sparks"]
+    - state: sparks
+      map: ["enum.DoorVisualLayers.BaseEmagging"]
+      shader: unshaded
+      visible: false
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.49,-0.49,1.49,0.49"
+        density: 100
+        mask:
+        - FullTileMask
+        layer:
+        - GlassAirlockLayer
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 300 # 1.5x of a regular airlock
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalSlam
+  - type: LayerChangeOnWeld
+    unWeldedLayer: GlassAirlockLayer
+    weldedLayer: GlassLayer
+  - type: Rotatable
+    rotateWhileAnchored: false
+  - type: Transform
+    noRot: false
+  - type: Construction
+    graph: Airlock
+    node: glassAirlock
+  - type: Paintable
+    group: null
+  - type: RadiationBlocker
+    resistance: 1
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        collection: GlassSmack
+  - type: Tag
+    tags:
+    - GlassAirlock
+    - DoorRemoteWhitelist

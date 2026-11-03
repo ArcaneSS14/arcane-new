@@ -198,6 +198,16 @@
       weight: 0.001
     - id: ClothingUniformJumpsuitNanotrasen
       weight: 0.001
+    # Arcane-Start
+    - id: ClothingHandsGlovesCatPawsBrown
+      weight: 0.005
+    - id: ClothingHandsGlovesCatPawsBlack
+      weight: 0.005
+    - id: ClothingHandsGlovesCatPawsBlackWhite
+      weight: 0.005
+    - id: ClothingHandsGlovesCatPawsWhite
+      weight: 0.005
+    # Arcane-End
 
 - type: entityTable
   id: DresserSecondLootEntityTable

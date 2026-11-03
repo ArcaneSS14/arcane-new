@@ -73,3 +73,57 @@
       head: ClothingHeadHelmetInteQIronTombstone
   - type: PointLight
     color: "#FF8C00"
+- type: entity
+  parent: ClothingOuterArmorBasic
+  id: ClothingOuterArmorKendoBogu
+  name: bogu
+  description: A set of armor used in Kendo. It covers the waist, torso, and hands.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Armor/bogu.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Armor/bogu.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.8
+  - type: ClothingSpeedModifier
+    walkModifier: 0.95
+    sprintModifier: 0.85
+
+- type: entity
+  parent: ClothingOuterArmorCaptainCarapace
+  id: ClothingOuterArmorCaptainCarapaceWhite
+  name: captain white carapace
+  description: An armored breastplate that provides protection while offering mobility and flexibility. Issued only to the best members of the station. White color - symbol of cleanliness and order.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Armor/white_captain_carapace.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Armor/white_captain_carapace.rsi
+
+- type: entity
+  parent: [ ClothingOuterArmorBasic, ClothingOuterBaseToggleable ]
+  id: ClothingOuterArmorAllianceAssassin
+  name: alliance assassin armor
+  description: High-quality bulletproof vest with armor plate made of multilayer plasteel. It combines lightness and durability, has a buffer lining and fits perfectly to the body without making unnecessary sounds when worn.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Armor/alliance_assassin.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Armor/alliance_assassin.rsi
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.5
+        Piercing: 0.5
+        Radiation: 0.5
+        Caustic: 0.6
+        Heat: 0.6
+  - type: ToggleableClothing
+    clothingPrototypes: #goobstation change
+      head: ClothingHeadHelmetAllianceAssassin
