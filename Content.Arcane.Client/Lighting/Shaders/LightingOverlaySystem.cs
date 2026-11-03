@@ -12,6 +12,7 @@ public sealed partial class LightingOverlaySystem : EntitySystem
 
     private LightingOverlay? _lightingOverlay;
     private LightingHighlightsOverlay? _lightingHighlightsOverlay;
+    private GlowHaloOverlay? _glowHaloOverlay;
 
     public override void Initialize()
     {
@@ -22,6 +23,9 @@ public sealed partial class LightingOverlaySystem : EntitySystem
 
         _lightingOverlay = new LightingOverlay(EntityManager, _prototypeManager);
         _overlayManager.AddOverlay(_lightingOverlay);
+
+        _glowHaloOverlay = new GlowHaloOverlay();
+        _overlayManager.AddOverlay(_glowHaloOverlay);
     }
 
     public override void Shutdown()
@@ -40,6 +44,13 @@ public sealed partial class LightingOverlaySystem : EntitySystem
             _overlayManager.RemoveOverlay(_lightingOverlay);
             _lightingOverlay.Dispose();
             _lightingOverlay = null;
+        }
+
+        if (_glowHaloOverlay != null)
+        {
+            _overlayManager.RemoveOverlay(_glowHaloOverlay);
+            _glowHaloOverlay.Dispose();
+            _glowHaloOverlay = null;
         }
     }
 }

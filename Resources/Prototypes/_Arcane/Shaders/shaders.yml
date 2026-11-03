@@ -13,9 +13,11 @@
   kind: source
   path: "/Textures/_Arcane/Shaders/glow.swsl"
   params:
-    glow_brightness: 10
-    outline_width: 3.0
-    outline_alpha: 0.5
+    glow_brightness: 25
+    outline_width: 4.0
+    outline_alpha: 1
+    draw_sprite: 0
+    draw_halo: 0
 
 # Blurred halo for regular unshaded sprites, without the lamp brightness boost.
 - type: shader
@@ -26,6 +28,8 @@
     glow_brightness: 1
     outline_width: 3.0
     outline_alpha: 0.5
+    draw_sprite: 1
+    draw_halo: 0
 
 - type: shader
   id: LightingHighlights
