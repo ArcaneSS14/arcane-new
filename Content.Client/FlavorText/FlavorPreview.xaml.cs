@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Preferences;
 using Content.Client.Stylesheets;
@@ -29,7 +30,8 @@ public sealed partial class FlavorPreview : Control
     private const int MaxLinkTextLength = 40;
 
     /// <summary>
-    /// Link prefixes that are shown as clickable buttons, everything else is plain text.
+    /// Sites shown as clickable buttons, everything else is plain text. A link matches by its exact host and,
+    /// where a path is given, by whole path segments.
     /// </summary>
     private static readonly string[] AllowedLinks =
     [
@@ -187,7 +189,7 @@ public sealed partial class FlavorPreview : Control
 
         foreach (var link in entries)
         {
-            if (!IsAllowedLink(link))
+            if (!TryGetAllowedLink(link, out var uri))
             {
                 LinksContainer.AddChild(new Label
                 {
@@ -198,9 +200,13 @@ public sealed partial class FlavorPreview : Control
                 continue;
             }
 
+            // The host is what the link really leads to, so it is shown in full; the whole link is in the tooltip.
+            var shown = uri.Host + uri.AbsolutePath.TrimEnd('/');
             var button = new Button
             {
-                Text = link.Length > MaxLinkTextLength ? link[..(MaxLinkTextLength - 3)] + "..." : link,
+                Text = shown.Length > MaxLinkTextLength && uri.Host.Length < MaxLinkTextLength - 3
+                    ? shown[..(MaxLinkTextLength - 3)] + "..."
+                    : shown,
                 ToolTip = Loc.GetString("humanoid-profile-editor-link-tooltip", ("url", link)),
                 HorizontalAlignment = HAlignment.Center,
                 StyleClasses = { StyleClass.ButtonOpenBoth },
@@ -210,11 +216,26 @@ public sealed partial class FlavorPreview : Control
         }
     }
 
-    private static bool IsAllowedLink(string link)
+    private static bool TryGetAllowedLink(string link, [NotNullWhen(true)] out Uri? uri)
     {
-        foreach (var prefix in AllowedLinks)
+        // "https://docs.google.com.evil.example" and "https://docs.google.com@evil.example" start with an allowed
+        // prefix but lead elsewhere, so the link is parsed and its host compared as a whole.
+        if (!Uri.TryCreate(link, UriKind.Absolute, out uri) || uri.Scheme != Uri.UriSchemeHttps || uri.UserInfo.Length > 0)
+            return false;
+
+        foreach (var allowed in AllowedLinks)
         {
-            if (link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            var allowedUri = new Uri(allowed);
+            if (!string.Equals(uri.IdnHost, allowedUri.IdnHost, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var allowedPath = allowedUri.AbsolutePath.TrimEnd('/');
+            if (allowedPath.Length == 0)
+                return true;
+
+            var path = uri.AbsolutePath;
+            if (path.Equals(allowedPath, StringComparison.OrdinalIgnoreCase) ||
+                path.StartsWith(allowedPath + "/", StringComparison.OrdinalIgnoreCase))
                 return true;
         }
 
