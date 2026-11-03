@@ -388,8 +388,17 @@ public sealed partial class NewsSystem : SharedNewsSystem
 
     private void OnNewsWriterDraftUpdatedMessage(Entity<NewsWriterComponent> ent, ref NewsWriterSaveDraftMessage args)
     {
-        ent.Comp.DraftTitle = FormattedMessage.EscapeText(args.DraftTitle); // Goob Sanitize Text
-        ent.Comp.DraftContent = FormattedMessage.EscapeText(args.DraftContent); // Goob Sanitize Text
+        // Arcane-Edit-Start: the draft goes back into a plain text editor, so it is kept as typed (within the limits)
+        // and only sanitized when published; escaping it here broke allowed formatting on every save.
+        // ent.Comp.DraftTitle = FormattedMessage.EscapeText(args.DraftTitle); // Goob Sanitize Text
+        // ent.Comp.DraftContent = FormattedMessage.EscapeText(args.DraftContent); // Goob Sanitize Text
+        ent.Comp.DraftTitle = args.DraftTitle.Length > SharedNewsSystem.MaxTitleLength
+            ? args.DraftTitle[..SharedNewsSystem.MaxTitleLength]
+            : args.DraftTitle;
+        ent.Comp.DraftContent = args.DraftContent.Length > SharedNewsSystem.MaxContentLength
+            ? args.DraftContent[..SharedNewsSystem.MaxContentLength]
+            : args.DraftContent;
+        // Arcane-Edit-End
     }
 
     private void OnRequestArticleDraftMessage(Entity<NewsWriterComponent> ent, ref NewsWriterRequestDraftMessage msg)
