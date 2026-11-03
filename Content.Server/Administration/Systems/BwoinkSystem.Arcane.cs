@@ -14,6 +14,11 @@ public sealed partial class BwoinkSystem
     [Dependency] private IBanManager _banManager = default!;
 
     private static readonly TimeSpan AntiSpamCooldown = TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// Only messages this recent count towards a repeat; the same short answer to separate admin questions is not spam.
+    /// </summary>
+    private static readonly TimeSpan AntiSpamRepeatWindow = TimeSpan.FromMinutes(1);
     private const int AntiSpamMaxRecentMessages = 10;
     private const int AntiSpamRepeatCount = 5;
     private const int AntiSpamBanMinutes = 10;
@@ -35,7 +40,12 @@ public sealed partial class BwoinkSystem
         if (queue.Count > 0 && now - queue.Last().Timestamp < AntiSpamCooldown)
             return true;
 
-        var isSpam = queue.Count >= AntiSpamRepeatCount && queue.All(msg => msg.Text == text);
+        while (queue.Count > 0 && now - queue.Peek().Timestamp > AntiSpamRepeatWindow)
+            queue.Dequeue();
+
+        // Spam is this text repeated right after the same text several times within the window.
+        var isSpam = queue.Count >= AntiSpamRepeatCount &&
+                     queue.Skip(queue.Count - AntiSpamRepeatCount).All(msg => msg.Text == text);
 
         queue.Enqueue((text, now));
         if (queue.Count > AntiSpamMaxRecentMessages)
