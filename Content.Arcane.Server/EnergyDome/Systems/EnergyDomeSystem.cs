@@ -54,6 +54,8 @@ public sealed partial class EnergyDomeSystem : EntitySystem
         SubscribeLocalEvent<EnergyDomeGeneratorComponent, ChargeChangedEvent>(OnChargeChanged);
 
         SubscribeLocalEvent<EnergyDomeGeneratorComponent, EntParentChangedMessage>(OnParentChanged);
+        SubscribeLocalEvent<EnergyDomeGeneratorComponent, EntGotInsertedIntoContainerMessage>(OnContainerChanged);
+        SubscribeLocalEvent<EnergyDomeGeneratorComponent, EntGotRemovedFromContainerMessage>(OnContainerChanged);
 
         SubscribeLocalEvent<EnergyDomeGeneratorComponent, GetVerbsEvent<ActivationVerb>>(AddToggleDomeVerb);
         SubscribeLocalEvent<EnergyDomeGeneratorComponent, ExaminedEvent>(OnExamine);
@@ -200,11 +202,17 @@ public sealed partial class EnergyDomeSystem : EntitySystem
 
     private void OnParentChanged(Entity<EnergyDomeGeneratorComponent> generator, ref EntParentChangedMessage args)
     {
-        //To do: taking the active barrier in hand for some reason does not manage to change the parent in this case,
-        //and the barrier is not turned off.
-        //
-        //Laying down works well (-_-)
         if (GetProtectedEntity(generator) != generator.Comp.DomeParentEntity)
+            TurnOff(generator, false);
+    }
+
+    /// <summary>
+    /// Picking the generator up changes its parent before it is in the hand's container, so the parent change
+    /// still sees the old protected entity; the finished insertion or removal does not.
+    /// </summary>
+    private void OnContainerChanged<T>(Entity<EnergyDomeGeneratorComponent> generator, ref T args)
+    {
+        if (generator.Comp.Enabled && GetProtectedEntity(generator) != generator.Comp.DomeParentEntity)
             TurnOff(generator, false);
     }
 
@@ -237,7 +245,9 @@ public sealed partial class EnergyDomeSystem : EntitySystem
                 return false;
             }
 
-            if (!_powerCell.HasDrawCharge(generator.Owner))
+            // A passive draw of zero passes HasDrawCharge even with an empty cell, so check the cell itself too.
+            _powerCell.TryGetBatteryFromSlot(generator.Owner, out var cell);
+            if (!_powerCell.HasDrawCharge(generator.Owner) || cell is { } cellVal && _battery.GetCharge(cellVal.Owner).Charge <= 0f)
             {
                 _audio.PlayPvs(generator.Comp.TurnOffSound, generator);
                 _popup.PopupEntity(
