@@ -33,3 +33,9 @@ response-force-honk-squad-call-title = Party Maker Department
 
 response-force-assistant-name = Assistants
 response-force-assistant-call-title = Maintenance Management Department
+
+response-force-command-unknown-team = Unknown response force team: { $team }.
+response-force-command-invalid-team = Response force team { $team } is misconfigured, see the server log.
+response-force-command-cooldown = Wait { $time } before calling the next response force.
+response-force-command-not-in-round = A response force can only be called during a round.
+response-force-command-shuttle-failed = The response force shuttle failed to load, nothing was called.

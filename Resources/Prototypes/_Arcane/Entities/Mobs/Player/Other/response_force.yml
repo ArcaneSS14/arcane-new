@@ -724,6 +724,9 @@
     name: ghost-role-information-inteq-vanguard-leader-ert
     description: ghost-role-information-inteq-vanguard-description
     rules: ghost-role-information-nonantagonist-rules
+    mindRoles: # ERT, not the antagonist InteQ of the parent settings
+    - MindRoleGhostRoleNeutral
+    job: ERTLeader
 
 - type: randomHumanoidSettings
   parent: [ BaseInteQERT, InteQVanguard, BaseResponseForce ]
@@ -735,6 +738,9 @@
     name: ghost-role-information-inteq-vanguard-soldier-ert
     description: ghost-role-information-inteq-vanguard-description
     rules: ghost-role-information-nonantagonist-rules
+    mindRoles: # ERT, not the antagonist InteQ of the parent settings
+    - MindRoleGhostRoleNeutral
+    job: ERTSecurity
 
 - type: randomHumanoidSettings
   parent: [ BaseInteQERT, InteQVanguardMedic, BaseResponseForce ]
@@ -746,6 +752,9 @@
     name: ghost-role-information-inteq-vanguard-medic-ert
     description: ghost-role-information-inteq-vanguard-description
     rules: ghost-role-information-nonantagonist-rules
+    mindRoles: # ERT, not the antagonist InteQ of the parent settings
+    - MindRoleGhostRoleNeutral
+    job: ERTMedical
 
 
 
@@ -790,6 +799,9 @@
     name: ghost-role-information-inteq-vanguard-leader-ert
     description: ghost-role-information-inteq-vanguard-description
     rules: ghost-role-information-nonantagonist-rules
+    mindRoles: # ERT, not the antagonist InteQ of the parent settings
+    - MindRoleGhostRoleNeutral
+    job: ERTLeader
 
 - type: randomHumanoidSettings
   parent: [ BaseInteQERT, InteQVanguard, BaseResponseForce ]
@@ -801,6 +813,9 @@
     name: ghost-role-information-inteq-vanguard-operative-ert
     description: ghost-role-information-inteq-vanguard-description
     rules: ghost-role-information-nonantagonist-rules
+    mindRoles: # ERT, not the antagonist InteQ of the parent settings
+    - MindRoleGhostRoleNeutral
+    job: ERTSecurity
 
 
 

@@ -1,9 +1,10 @@
 using System.Linq;
 using System.Numerics;
-using System.Threading;
 using Content.Server.Chat.Systems;
 using Content.Server.GameTicking;
 using Content.Server.Ghost.Roles.Components;
+using Content.Server.Humanoid.Components;
+using Content.Server.Humanoid.Systems;
 using Content.Server.RandomMetadata;
 using Content.Shared.Spawners.Components;
 using Content.Shared.Station.Systems;
@@ -22,7 +23,6 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
-using static Content.Arcane.Server.ResponseForce.ResponseForceState;
 
 namespace Content.Arcane.Server.ResponseForce;
 
@@ -39,9 +39,23 @@ public sealed partial class ResponseForceSystem : EntitySystem
     [Dependency] private ISerializationManager _serialization = default!;
     [Dependency] private IConfigurationManager _configurationManager = default!;
     [Dependency] private IComponentFactory _componentFactory = default!;
+    [Dependency] private RandomHumanoidSystem _randomHumanoid = default!;
 
     private ISawmill _log = default!;
-    private readonly ReaderWriterLockSlim _callLock = new();
+
+    // Per round state of this world, reset on round restart cleanup.
+    [ViewVariables]
+    private readonly List<ResponseForceHistory> _calledEvents = new();
+
+    [ViewVariables]
+    private TimeSpan _lastCallTime = TimeSpan.Zero;
+
+    [ViewVariables]
+    private MapId? _shipyardMap;
+
+    [ViewVariables]
+    private float _shuttleIndex;
+
     private TimeSpan CallDelay => TimeSpan.FromMinutes(_configurationManager.GetCVar(ArcaneCVars.ResponseForceDelay));
 
     public override void Initialize()
@@ -58,28 +72,28 @@ public sealed partial class ResponseForceSystem : EntitySystem
 
     private void SetupShipyard()
     {
-        if (ShipyardMap != null && _mapSystem.MapExists(ShipyardMap))
+        if (_shipyardMap != null && _mapSystem.MapExists(_shipyardMap))
             return;
 
         var mapEntity = _mapSystem.CreateMap(out var mapId);
-        ShipyardMap = mapId;
+        _shipyardMap = mapId;
 
         _mapSystem.SetPaused(mapEntity, false);
-        ShuttleIndex = 0f;
+        _shuttleIndex = 0f;
     }
 
     private void CleanupShipyard()
     {
-        if (ShipyardMap == null || !_mapSystem.MapExists(ShipyardMap.Value))
+        if (_shipyardMap == null || !_mapSystem.MapExists(_shipyardMap.Value))
         {
-            ShipyardMap = null;
-            ShuttleIndex = 0f;
+            _shipyardMap = null;
+            _shuttleIndex = 0f;
             return;
         }
 
-        _mapSystem.DeleteMap(ShipyardMap.Value);
-        ShipyardMap = null;
-        ShuttleIndex = 0f;
+        _mapSystem.DeleteMap(_shipyardMap.Value);
+        _shipyardMap = null;
+        _shuttleIndex = 0f;
     }
 
 /* TODO: Do this.
@@ -108,7 +122,7 @@ public sealed partial class ResponseForceSystem : EntitySystem
         get
         {
             var ct = _gameTicker.RoundDuration();
-            var lastUsedTime = LastCallTime + CallDelay;
+            var lastUsedTime = _lastCallTime + CallDelay;
             return ct > lastUsedTime ? TimeSpan.Zero : lastUsedTime - ct;
         }
     }
@@ -120,60 +134,56 @@ public sealed partial class ResponseForceSystem : EntitySystem
     /// <param name="source"> Source of the call.</param>
     /// <param name="forceCountExtra"> How many extra ResponseForce will be forced to spawn.</param>
     /// <param name="forceCall"> If true, cooldown will be ignored.</param>
-    /// <returns>Returns true if call was successful.</returns>
-    public bool CallResponseForce(ProtoId<ResponseForceTeamPrototype> protoId, string source = "Unknown", int? forceCountExtra = null, bool forceCall = false)
+    /// <returns>Success, or the reason nothing was called.</returns>
+    public ResponseForceCallResult CallResponseForce(ProtoId<ResponseForceTeamPrototype> protoId, string source = "Unknown", int? forceCountExtra = null, bool forceCall = false)
     {
-        if (!_callLock.TryEnterWriteLock(-1))
+        if (!_prototypes.TryIndex(protoId, out var prototype))
         {
-            _log.Warning("ResponseForce is busy!");
-            return false;
+            _log.Error("Wrong ResponseForceTeamPrototype ID!");
+            return ResponseForceCallResult.UnknownTeam;
         }
-        try
+
+        // Checked before the shuttle loads: GetCount divides by it.
+        if (prototype.SpawnPerPlayers <= 0)
         {
-            if (!_prototypes.TryIndex(protoId, out var prototype))
-            {
-                _log.Error("Wrong ResponseForceTeamPrototype ID!");
-                return false;
-            }
+            _log.Error($"ResponseForceTeam {prototype.ID} has spawnPerPlayers {prototype.SpawnPerPlayers}, it must be positive.");
+            return ResponseForceCallResult.InvalidTeam;
+        }
 
-            if (_gameTicker.RunLevel != GameRunLevel.InRound)
-            {
-                _log.Warning("Can't call ResponseForce while not in the round.");
-                return false;
-            }
+        if (_gameTicker.RunLevel != GameRunLevel.InRound)
+        {
+            _log.Warning("Can't call ResponseForce while not in the round.");
+            return ResponseForceCallResult.NotInRound;
+        }
 
-            var currentTime = _gameTicker.RoundDuration();
+        var currentTime = _gameTicker.RoundDuration();
 
 #if !DEBUG
-            if (LastCallTime + CallDelay > currentTime && !forceCall)
-            {
-                _log.Info("Tried to call ResponseForce when it's on cooldown.");
-                return false;
-            }
+        if (_lastCallTime + CallDelay > currentTime && !forceCall)
+        {
+            _log.Info("Tried to call ResponseForce when it's on cooldown.");
+            return ResponseForceCallResult.OnCooldown;
+        }
 #endif
 
-            LastCallTime = currentTime;
-
-            var shuttle = SpawnShuttle(prototype.ShuttlePath);
-            if (shuttle == null)
-            {
-                _log.Error("Failed to load ResponseForce shuttle!");
-                return false;
-            }
-
-            SpawnGhostRole(prototype, shuttle.Value, forceCountExtra);
-            DispatchAnnouncement(prototype);
-
-            _log.Info($"Successfully called {prototype.ID} ResponseForceTeam. Source: {source}");
-
-            CalledEvents.Add(new ResponseForceHistory { Event = prototype.ResponseForceName, RoundTime = currentTime, WhoCalled = source });
-
-            return true;
-        }
-        finally
+        var shuttle = SpawnShuttle(prototype.ShuttlePath);
+        if (shuttle == null)
         {
-            _callLock.ExitWriteLock();
+            _log.Error("Failed to load ResponseForce shuttle!");
+            return ResponseForceCallResult.ShuttleLoadFailed;
         }
+
+        // A failed shuttle load does not use up the cooldown.
+        _lastCallTime = currentTime;
+
+        SpawnGhostRole(prototype, shuttle.Value, forceCountExtra);
+        DispatchAnnouncement(prototype);
+
+        _log.Info($"Successfully called {prototype.ID} ResponseForceTeam. Source: {source}");
+
+        _calledEvents.Add(new ResponseForceHistory { Event = prototype.ResponseForceName, RoundTime = currentTime, WhoCalled = source });
+
+        return ResponseForceCallResult.Success;
     }
 
     private EntityUid SpawnEntity(string? protoName, EntityCoordinates coordinates, ResponseForceTeamPrototype responseForce)
@@ -181,7 +191,13 @@ public sealed partial class ResponseForceSystem : EntitySystem
         if (protoName == null)
             return EntityUid.Invalid;
 
-        var uid = Spawn(protoName, coordinates);
+        // A random humanoid spawner deletes itself and spawns the humanoid on map init; set up that humanoid
+        // directly, the ghost role and raffle below have to land on the mob players take over.
+        var uid = _prototypes.TryIndex<EntityPrototype>(protoName, out var spawnerProto) &&
+                  spawnerProto.TryGetComponent<RandomHumanoidSpawnerComponent>(out var humanoidSpawner, _componentFactory) &&
+                  humanoidSpawner.SettingsPrototypeId is { } settings
+            ? _randomHumanoid.SpawnRandomHumanoid(settings, coordinates, spawnerProto.Name)
+            : Spawn(protoName, coordinates);
 
         EnsureComp<ResponseForceComponent>(uid);
 
@@ -201,12 +217,11 @@ public sealed partial class ResponseForceSystem : EntitySystem
             AddComp(uid, comp);
         }
 
-        if (TryComp<GhostRoleComponent>(uid, out var ghostRole) && ghostRole.RaffleConfig == null)
+        // The team decides the raffle of all its roles, including ones whose settings bring their own.
+        if (TryComp<GhostRoleComponent>(uid, out var ghostRole))
         {
-            ghostRole.RaffleConfig = new()
-            {
-                Settings = new ProtoId<GhostRoleRaffleSettingsPrototype>(responseForce.RaffleSettings),
-            };
+            ghostRole.RaffleConfig ??= new();
+            ghostRole.RaffleConfig.Settings = new ProtoId<GhostRoleRaffleSettingsPrototype>(responseForce.RaffleSettings);
         }
 
         return uid;
@@ -265,12 +280,11 @@ public sealed partial class ResponseForceSystem : EntitySystem
         if (proto.ResponseForceSpawn.Count == 0)
             return;
 
-        // Count how many other forces there should be.
+        // Count how many other forces there should be, capped by MaxRolesAmount. The guaranteed roles come on top.
         var countExtra = GetCount(proto);
-        // If bigger than MaxAmount, set to MaxAmount and extract already spawned roles
         countExtra = Math.Min(countExtra, proto.MaxRolesAmount);
 
-        // If CountExtra was forced to some number, check if this number is in range and extract already spawned roles.
+        // A forced count is capped the same way.
         if (forceCountExtra is >= 0)
             countExtra = Math.Min(forceCountExtra.Value, proto.MaxRolesAmount);
 
@@ -303,10 +317,10 @@ public sealed partial class ResponseForceSystem : EntitySystem
     {
         SetupShipyard();
 
-        if (!_map.TryLoadGrid(ShipyardMap!.Value, new ResPath(shuttlePath), out var grid, offset: new Vector2(500f + ShuttleIndex, 1f)))
+        if (!_map.TryLoadGrid(_shipyardMap!.Value, new ResPath(shuttlePath), out var grid, offset: new Vector2(500f + _shuttleIndex, 1f)))
             return null;
 
-        ShuttleIndex += grid.Value.Comp.LocalAABB.Width + 1;
+        _shuttleIndex += grid.Value.Comp.LocalAABB.Width + 1;
 
         return grid;
     }
@@ -334,7 +348,7 @@ public sealed partial class ResponseForceSystem : EntitySystem
 
     private void OnRoundEnd(ref RoundEndTextAppendEvent ev)
     {
-        foreach (var calledEvent in CalledEvents)
+        foreach (var calledEvent in _calledEvents)
         {
             ev.AddLine(Loc.GetString("response-force-system-round-end",
                 ("team", Loc.GetString(calledEvent.Event)),
@@ -345,11 +359,8 @@ public sealed partial class ResponseForceSystem : EntitySystem
 
     private void OnCleanup(RoundRestartCleanupEvent ev)
     {
-        CalledEvents.Clear();
-        LastCallTime = TimeSpan.Zero;
-
-        if (_callLock.IsWriteLockHeld)
-            _callLock.ExitWriteLock();
+        _calledEvents.Clear();
+        _lastCallTime = TimeSpan.Zero;
 
         CleanupShipyard();
     }

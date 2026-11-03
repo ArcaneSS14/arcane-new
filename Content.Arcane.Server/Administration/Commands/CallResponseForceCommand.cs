@@ -22,25 +22,38 @@ public sealed partial class CallResponseForceCommand : IConsoleCommand
 
     public void Execute(IConsoleShell shell, string argStr, string[] args)
     {
-        var responseForceSystem = _entManager.System<ResponseForceSystem>();
-
-        if (!_prototypes.TryIndex<ResponseForceTeamPrototype>(args[0], out _))
-            return;
-
-        switch (args.Length)
+        if (args.Length != 1)
         {
-            case 1:
-                if(!responseForceSystem.CallResponseForce(args[0],shell.Player != null ? shell.Player.Name : "An administrator"))
-                    shell.WriteLine($"Подождите еще {responseForceSystem.DelayTime} перед запуском следующих!");
-                _adminLogger.Add(
-                    LogType.AdminMessage,
-                    LogImpact.Extreme,
-                    $"Admin {(shell.Player != null ? shell.Player.Name : "An administrator")} called SpecForceTeam {args[0]}.");
-                break;
-            default:
-                shell.WriteLine(Loc.GetString("shell-wrong-arguments-number"));
-                break;
+            shell.WriteLine(Loc.GetString("shell-wrong-arguments-number"));
+            shell.WriteLine(Help);
+            return;
         }
+
+        if (!_prototypes.HasIndex<ResponseForceTeamPrototype>(args[0]))
+        {
+            shell.WriteError(Loc.GetString("response-force-command-unknown-team", ("team", args[0])));
+            return;
+        }
+
+        var responseForceSystem = _entManager.System<ResponseForceSystem>();
+        var caller = shell.Player != null ? shell.Player.Name : "An administrator";
+        var result = responseForceSystem.CallResponseForce(args[0], caller);
+        if (result != ResponseForceCallResult.Success)
+        {
+            shell.WriteError(result switch
+            {
+                ResponseForceCallResult.OnCooldown => Loc.GetString("response-force-command-cooldown", ("time", responseForceSystem.DelayTime)),
+                ResponseForceCallResult.NotInRound => Loc.GetString("response-force-command-not-in-round"),
+                ResponseForceCallResult.ShuttleLoadFailed => Loc.GetString("response-force-command-shuttle-failed"),
+                _ => Loc.GetString("response-force-command-invalid-team", ("team", args[0])),
+            });
+            return;
+        }
+
+        _adminLogger.Add(
+            LogType.AdminMessage,
+            LogImpact.Extreme,
+            $"Admin {caller} called SpecForceTeam {args[0]}.");
     }
 
     public CompletionResult GetCompletion(IConsoleShell shell, string[] args)

@@ -65,7 +65,7 @@ public sealed partial class ResponseForceTeamPrototype : IPrototype, IInheriting
     public int SpawnPerPlayers = 10;
 
     /// <summary>
-    /// Max amount of ghost roles that can be spawned.
+    /// Max amount of extra ghost roles spawned from <c>ResponseForceSpawn</c>, on top of the guaranteed ones.
     /// </summary>
     [DataField]
     public int MaxRolesAmount = 8;

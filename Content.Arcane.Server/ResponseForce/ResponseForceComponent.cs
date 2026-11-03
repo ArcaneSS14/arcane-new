@@ -1,4 +1,3 @@
-using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.ResponseForce;
@@ -13,19 +12,17 @@ public sealed partial class ResponseForceComponent : Component
     public ComponentRegistry Components { get; private set; } = new();
 }
 
-public static class ResponseForceState
+/// <summary>
+/// Why a response force call did not happen.
+/// </summary>
+public enum ResponseForceCallResult : byte
 {
-    [ViewVariables]
-    public static List<ResponseForceHistory> CalledEvents { get; } = new();
-
-    [ViewVariables]
-    public static TimeSpan LastCallTime { get; set; } = TimeSpan.Zero;
-
-    [ViewVariables]
-    public static MapId? ShipyardMap { get; set; } = null;
-
-    [ViewVariables]
-    public static float ShuttleIndex { get; set; } = 0f;
+    Success,
+    UnknownTeam,
+    InvalidTeam,
+    NotInRound,
+    OnCooldown,
+    ShuttleLoadFailed,
 }
 
 public sealed class ResponseForceHistory
