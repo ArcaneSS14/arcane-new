@@ -86,16 +86,28 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
     }
 
     // Arcane-Start
+    private readonly List<DungeonJob.DungeonJob> _finishedDungeonJobs = new();
+
+    /// <summary>
+    /// Disposes the tokens of finished jobs; collected first, removed after the loop, without copying all jobs every tick.
+    /// </summary>
     private void CleanupCompletedJobs()
     {
-        foreach (var (job, token) in _dungeonJobs.ToArray())
+        foreach (var (job, token) in _dungeonJobs)
         {
             if (job.Status != JobStatus.Finished)
                 continue;
 
             token.Dispose();
+            _finishedDungeonJobs.Add(job);
+        }
+
+        foreach (var job in _finishedDungeonJobs)
+        {
             _dungeonJobs.Remove(job);
         }
+
+        _finishedDungeonJobs.Clear();
     }
     // Arcane-End
 
