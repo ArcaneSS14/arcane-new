@@ -24,5 +24,12 @@ public sealed partial class ExplosionVisualsTexturesComponent : Component
     /// </summary>
     public List<Texture[]> FireFrames = new();
 
+    // Arcane-Start
+    /// <summary>
+    ///     Frame delays of each fire-state, read from the RSI together with <see cref="FireFrames"/>.
+    /// </summary>
+    public List<float[]> FireDelays = new();
+    // Arcane-End
+
     public Color? FireColor;
 }
