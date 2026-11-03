@@ -54,7 +54,8 @@
   - type: Sprite
     noRot: false
     drawdepth: SmallObjects
-    sprite: Structures/Wallmounts/intercom.rsi
+    sprite: _Arcane/Structures/Wallmounts/intercom.rsi # Arcane-Edit: Structures/Wallmounts/intercom.rsi > _Arcane/Structures/Wallmounts/intercom.rsi
+    offset: 0, -0.25 # Arcane
     layers:
     - state: base
     - state: unshaded
@@ -131,7 +132,8 @@
   components:
   - type: Sprite
     drawdepth: SmallObjects
-    sprite: Structures/Wallmounts/intercom.rsi
+    sprite: _Arcane/Structures/Wallmounts/intercom.rsi # Arcane-Edit: Structures/Wallmounts/intercom.rsi > _Arcane/Structures/Wallmounts/intercom.rsi
+    offset: 0, -0.25 # Arcane
     layers:
     - state: build
     - state: panel

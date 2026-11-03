@@ -75,8 +75,15 @@
   - type: StationAiWhitelist
   - type: Sprite
     drawdepth: SmallObjects
-    sprite: Structures/Wallmounts/switch.rsi
-    state: dead
+    sprite: _Arcane/Structures/Wallmounts/switch.rsi # Arcane-Edit: Structures/Wallmounts/switch.rsi > _Arcane/Structures/Wallmounts/switch.rsi
+    offset: 0, -0.25 # Arcane
+    # Arcane-Edit-Start: state: dead
+    layers:
+    - state: base
+    - state: button
+    - state: button-unshaded
+      shader: UnshadedGlow
+    # Arcane-Edit-End
   - type: UseDelay
     delay: 0.5 # prevent light-toggling auto-clickers.
   - type: SignalSwitch
@@ -189,6 +196,7 @@
   - type: AccessReader
   - type: Sprite
     drawdepth: WallMountedItems
+    offset: 0, 0 # Arcane
     sprite: Structures/Wallmounts/locked_switch.rsi
     layers:
     - state: base
