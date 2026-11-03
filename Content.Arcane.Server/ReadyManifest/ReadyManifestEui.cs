@@ -8,7 +8,7 @@ public sealed class ReadyManifestEui(ReadyManifestSystem system) : BaseEui
 {
     public override EuiStateBase GetNewState()
     {
-        return new ReadyManifestEuiState(system.BuildManifest());
+        return new ReadyManifestEuiState(system.CurrentManifest);
     }
 
     public override void Closed()

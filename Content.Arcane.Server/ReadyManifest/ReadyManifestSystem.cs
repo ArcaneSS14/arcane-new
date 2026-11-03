@@ -35,6 +35,13 @@ public sealed partial class ReadyManifestSystem : EntitySystem
     private readonly Dictionary<ICommonSession, ReadyManifestEui> _openEuis = new();
     private TimeSpan _nextRefresh;
 
+    /// <summary>
+    /// The manifest all open windows show, built once per refresh instead of once per viewer.
+    /// </summary>
+    private Dictionary<ProtoId<JobPrototype>, List<string>>? _manifest;
+
+    public Dictionary<ProtoId<JobPrototype>, List<string>> CurrentManifest => _manifest ??= BuildManifest();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -51,6 +58,7 @@ public sealed partial class ReadyManifestSystem : EntitySystem
             return;
 
         _nextRefresh = _timing.CurTime + RefreshInterval;
+        _manifest = BuildManifest();
         foreach (var eui in _openEuis.Values)
         {
             eui.StateDirty();
@@ -62,6 +70,8 @@ public sealed partial class ReadyManifestSystem : EntitySystem
         if (!_cfg.GetCVar(CCVars.CrewManifestWithoutEntity) || _openEuis.ContainsKey(args.SenderSession))
             return;
 
+        // A newly opened window starts from the current ready state, not the last refresh.
+        _manifest = BuildManifest();
         var eui = new ReadyManifestEui(this);
         _openEuis.Add(args.SenderSession, eui);
         _eui.OpenEui(eui, args.SenderSession);
