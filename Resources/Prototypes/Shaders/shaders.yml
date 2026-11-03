@@ -135,3 +135,11 @@
   id: Sharpness
   kind: source
   path: "/Textures/Shaders/sharpness.swsl"
+
+# Arcane-Start
+- type: shader
+  id: UiMotionPremultiplied
+  kind: canvas
+  light_mode: unshaded
+  blend_mode: premultiplied
+# Arcane-End

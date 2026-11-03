@@ -85,8 +85,10 @@ namespace Content.Client.ContextMenu.UI
             _setup = false;
 
             Close();
+            ClearExitVisuals(); // Arcane
             RootMenu.OnPopupHide -= Close;
             RootMenu.Orphan();
+            Menus.Clear(); // Arcane
             RootMenu = default!;
         }
 
@@ -95,11 +97,29 @@ namespace Content.Client.ContextMenu.UI
         /// </summary>
         public void Close()
         {
-            RootMenu.MenuBody.RemoveAllChildren();
-            CancelOpen?.Cancel();
-            CancelClose?.Cancel();
-            OnContextClosed?.Invoke();
-            RootMenu.Close();
+            // Arcane-Edit-Start: release modals and capture their images before clearing live controls.
+            if (_closing || RootMenu == null)
+                return;
+
+            _closing = true;
+            try
+            {
+                CancelOpen?.Cancel();
+                CancelOpen?.Dispose();
+                CancelOpen = null;
+                CancelClose?.Cancel();
+                CancelClose?.Dispose();
+                CancelClose = null;
+                CloseSubMenus(RootMenu);
+                RootMenu.Close();
+                RootMenu.MenuBody.RemoveAllChildren();
+                OnContextClosed?.Invoke();
+            }
+            finally
+            {
+                _closing = false;
+            }
+            // Arcane-Edit-End
         }
 
         /// <summary>
@@ -111,7 +131,7 @@ namespace Content.Client.ContextMenu.UI
         /// </remarks>
         public void CloseSubMenus(ContextMenuPopup? menu)
         {
-            if (menu == null || !menu.Visible)
+            if (menu == null) // Arcane-Edit: menu == null || !menu.Visible > menu == null (Popup hides before notifying Close)
                 return;
 
             while (Menus.TryPeek(out var subMenu) && subMenu != menu)

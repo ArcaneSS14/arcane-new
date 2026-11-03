@@ -4,6 +4,7 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Utility;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.ContextMenu.UI
 {
@@ -28,7 +29,7 @@ namespace Content.Client.ContextMenu.UI
         /// <summary>
         ///     This is the main body of the menu. The menu entries should be added to this object.
         /// </summary>
-        public GridContainer MenuBody = new();
+        public GridContainer MenuBody = default!; // Arcane-Edit: new GridContainer > animated grid initialized after XAML
 
         private ContextMenuUIController _uiController;
 
@@ -39,6 +40,14 @@ namespace Content.Client.ContextMenu.UI
 
             _uiController = uiController;
             ParentElement = parentElement;
+
+            // Arcane-Start
+            MenuBody = new UiMotionGridContainer
+            {
+                Motion = Motion,
+                MaxStaggeredChildren = MaxItemsBeforeScroll
+            };
+            // Arcane-End
 
             // TODO xaml controls now have the access options -> re-xamlify all this.
             //XAML controls are private. So defining and adding MenuBody here instead.
@@ -72,6 +81,10 @@ namespace Content.Client.ContextMenu.UI
 
         protected override void ExitedTree()
         {
+            // Arcane-Start: orphaned submenus must leave the logical stack as well.
+            if (ParentElement?.ParentMenu is { } parent && _uiController.Menus.Contains(this))
+                _uiController.CloseSubMenus(parent);
+            // Arcane-End
             base.ExitedTree();
             MenuBody.OnChildRemoved -= ctrl => _uiController.OnRemoveElement(this, ctrl);
             ParentElement = null;

@@ -61,6 +61,7 @@ namespace Content.Server.Verbs
 
             var response =
                 new VerbsResponseEvent(args.EntityUid, GetLocalVerbs(GetEntity(args.EntityUid), attached, verbTypes, force));
+            response.RequestId = args.RequestId; // Arcane
             RaiseNetworkEvent(response, player.Channel);
         }
 

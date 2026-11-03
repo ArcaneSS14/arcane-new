@@ -173,10 +173,10 @@ namespace Content.Client.Verbs
         ///     Ask the server to send back a list of server-side verbs, and for now return an incomplete list of verbs
         ///     (only those defined locally).
         /// </summary>
-        public SortedSet<Verb> GetVerbs(NetEntity target, EntityUid user, List<Type> verbTypes, out List<VerbCategory> extraCategories, bool force = false)
+        public SortedSet<Verb> GetVerbs(NetEntity target, EntityUid user, List<Type> verbTypes, out List<VerbCategory> extraCategories, bool force = false, long requestId = 0) // Arcane-Edit: no request correlation > optional requestId
         {
             if (!target.IsClientSide())
-                RaiseNetworkEvent(new RequestServerVerbsEvent(target, verbTypes, adminRequest: force));
+                RaiseNetworkEvent(new RequestServerVerbsEvent(target, verbTypes, adminRequest: force) { RequestId = requestId }); // Arcane-Edit: uncorrelated request > echoable requestId
 
             // Some admin menu interactions will try get verbs for entities that have not yet been sent to the player.
             if (!TryGetEntity(target, out var local))
