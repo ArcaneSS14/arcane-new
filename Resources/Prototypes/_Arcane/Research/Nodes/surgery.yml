@@ -50,10 +50,6 @@
     amount: 5000
   technologyPrerequisites:
   - Surgery
-  discountExperiments:
-  - AutopsyHuman
-  discountExperimentCosts:
-    AutopsyHuman: 5000
   # There should be surgery operations
   position: 4,12
 
@@ -73,10 +69,6 @@
     amount: 7500
   technologyPrerequisites:
   - AdvancedSurgery
-  discountExperiments:
-  - AutopsyNonhuman
-  discountExperimentCosts:
-    AutopsyNonhuman: 7500
   # There should be surgery operations
   position: 4,13
 
@@ -96,10 +88,6 @@
     amount: 10000
   technologyPrerequisites:
   - ExperimentalSurgery
-  discountExperiments:
-  - AutopsyXenomorph
-  discountExperimentCosts:
-    AutopsyXenomorph: 10000
   recipeUnlocks:
   - EnergyScalpel
   - EnergyCautery

@@ -264,7 +264,7 @@ public abstract partial class SharedResearchSystem : EntitySystem
             if (!ProtoMan.TryIndex(techId, out var tech))
                 continue;
 
-            availableExperiments.UnionWith(tech.UnlockedExperiments);
+            availableExperiments.UnionWith(tech.UnlockedExperiments.Select(experiment => experiment.Id));
         }
 
         availableExperiments.UnionWith(component.UnlockedExperiments);

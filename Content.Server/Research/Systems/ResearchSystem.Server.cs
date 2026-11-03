@@ -280,6 +280,11 @@ public sealed partial class ResearchSystem
         var generation = new Dictionary<string, int>();
         foreach (var networkServer in GetNetworkServers(uid, component))
         {
+            // The server's generation switch stops all its periodic points: own sources and every client (anomaly
+            // vessels too). One-off rewards such as experiments do not come through here.
+            if (TryComp<ResearchServerControlStatusComponent>(networkServer, out var status) && !status.GenerationEnabled)
+                continue;
+
             var ev = new ResearchServerGetPointsPerSecondByTypeEvent(networkServer, new());
 
             if (TryComp<ResearchServerComponent>(networkServer, out var networkServerComp))

@@ -34,9 +34,6 @@ public sealed partial class ResearchSystem
     // Arcane-Start
     private void OnGetPointsPerSecondByType(Entity<ResearchPointSourceComponent> source, ref ResearchServerGetPointsPerSecondByTypeEvent args)
     {
-        if (TryComp<ResearchServerControlStatusComponent>(args.Server, out var status) && !status.GenerationEnabled)
-            return;
-
         if (!CanProduce(source))
             return;
 

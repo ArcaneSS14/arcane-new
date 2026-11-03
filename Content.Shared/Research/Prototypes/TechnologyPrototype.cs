@@ -93,25 +93,25 @@ public sealed partial class TechnologyPrototype : IPrototype
     /// The required experiments that must be completed before this technology can be researched.
     /// </summary>
     [DataField]
-    public List<string> RequiredExperiments = new();
+    public List<ProtoId<ResearchExperimentPrototype>> RequiredExperiments = new();
 
     /// <summary>
     /// Experiments that can reduce the research cost for this technology.
     /// </summary>
     [DataField]
-    public List<string> DiscountExperiments = new();
+    public List<ProtoId<ResearchExperimentPrototype>> DiscountExperiments = new();
 
     /// <summary>
     /// Per-technology discount values keyed by experiment ID.
     /// </summary>
     [DataField]
-    public Dictionary<string, int> DiscountExperimentCosts = new();
+    public Dictionary<ProtoId<ResearchExperimentPrototype>, int> DiscountExperimentCosts = new();
 
     /// <summary>
     /// Experiments unlocked when this technology is researched.
     /// </summary>
     [DataField]
-    public List<string> UnlockedExperiments = new();
+    public List<ProtoId<ResearchExperimentPrototype>> UnlockedExperiments = new();
 
     /// <summary>
     /// Should this technology be announced to the station when unlocked.
@@ -125,12 +125,6 @@ public sealed partial class TechnologyPrototype : IPrototype
     /// </summary>
     [DataField]
     public List<ProtoId<RadioChannelPrototype>> AnnounceChannels = new();
-
-    /// <summary>
-    /// Indicates a technology that primarily unlocks RnD infrastructure.
-    /// </summary>
-    [DataField]
-    public bool InfrastructureUnlock;
 
     /// <summary>
     /// Infrastructure categories unlocked by this technology.
@@ -159,13 +153,13 @@ public sealed partial class TechnologyPrototype : IPrototype
 
     // Arcane-Start
     /// <summary>
-    /// Future-proof unlock list for item-discovery style systems.
+    /// Item prototypes that advance this technology's discovery when inserted into a research machine.
     /// </summary>
     [DataField]
     public List<string> ItemUnlocks = new();
 
     /// <summary>
-    /// Future-proof unlock list for deconstruction discovery systems.
+    /// Prototypes that advance this technology's discovery when deconstructed.
     /// </summary>
     [DataField]
     public List<string> DeconstructionUnlocks = new();

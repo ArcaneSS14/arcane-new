@@ -36,24 +36,6 @@ public sealed partial class ExperimentalDestructiveScannerComponent : Component
     public AudioParams AudioParams = AudioParams.Default.WithVolume(-8f).WithVariation(0.25f);
 
     [DataField]
-    public float BaseFailureChance = 0.25f;
-
-    [DataField]
-    public float FinalFailureChance = 0.25f;
-
-    [DataField]
-    public float BaseScanQuality = 1f;
-
-    [DataField]
-    public float FinalScanQuality = 1f;
-
-    [DataField]
     public ProtoId<MachinePartPrototype> ServoPart = "Servo";
-
-    [DataField]
-    public ProtoId<MachinePartPrototype> ScanningModulePart = "ScanningModule";
-
-    [DataField]
-    public ProtoId<MachinePartPrototype> MicroLaserPart = "MicroLaser";
 }
 // Arcane-End

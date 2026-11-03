@@ -407,9 +407,6 @@ public sealed partial class FancyResearchConsoleMenu : FancyWindow
                 ("technologies", string.Join(", ", technologiesUnlockedByCompletion))));
         }
 
-        if (reward.InfrastructureUnlock)
-            parts.Add(Loc.GetString("research-console-experiment-reward-infrastructure"));
-
         return parts.Count == 0
             ? Loc.GetString("research-console-experiment-reward-none")
             : string.Join(", ", parts);

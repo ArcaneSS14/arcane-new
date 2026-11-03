@@ -28,9 +28,6 @@ public sealed partial class ResearchExperimentPrototype : IPrototype
     public bool Hidden;
 
     [DataField]
-    public bool Repeatable;
-
-    [DataField]
     public bool StartingExperiment;
 
     /// <summary>
@@ -225,8 +222,5 @@ public sealed partial record ExperimentReward
 
     [DataField]
     public List<ProtoId<TechnologyPrototype>> RevealTechnologies = new();
-
-    [DataField]
-    public bool InfrastructureUnlock;
 }
 // Arcane-End

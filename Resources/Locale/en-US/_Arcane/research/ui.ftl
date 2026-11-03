@@ -47,4 +47,3 @@ research-console-experiment-reward-reveal-technologies = Reveals technologies: {
 research-console-experiment-reward-technology-discounts = Technology discounts: {$technologies}
 research-console-experiment-reward-technology-discount-entry = {$technology} ({$amount})
 research-console-experiment-reward-unlocked-technologies = Unlocks technologies: {$technologies}
-research-console-experiment-reward-infrastructure = Infrastructure unlock

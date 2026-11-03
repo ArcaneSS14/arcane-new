@@ -12,9 +12,6 @@
   - type: General
     amount: 500
   unlockedExperiments:
-  - AutopsyHuman
-  - AutopsyNonhuman
-  - AutopsyXenomorph
   - ScanningReagentHaloperidol
   - ScanningReagentCryostylane
   recipeUnlocks:

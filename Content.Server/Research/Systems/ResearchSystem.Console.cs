@@ -105,7 +105,7 @@ public sealed partial class ResearchSystem
             return;
 
         // R&D Console Rework Start
-        var allTechs = ProtoMan.EnumeratePrototypes<TechnologyPrototype>().ToList();
+        // var allTechs = ProtoMan.EnumeratePrototypes<TechnologyPrototype>().ToList(); // Arcane-Edit: only used by the replaced list below
         Dictionary<string, ResearchAvailability> techList;
         // Arcane-Start
         Dictionary<string, ResearchTechnologyLockReason> lockReasons;
@@ -263,8 +263,11 @@ public sealed partial class ResearchSystem
 
     private void OnConsoleDatabaseModified(EntityUid uid, ResearchConsoleComponent component, ref TechnologyDatabaseModifiedEvent args)
     {
-        SyncClientWithServer(uid);
-        UpdateConsoleInterface(uid, component);
+        // Arcane-Edit-Start: the console's research client already syncs on this event, and the sync raises
+        // TechnologyDatabaseSynchronizedEvent, which updates the interface; doing both here synced twice.
+        // SyncClientWithServer(uid);
+        // UpdateConsoleInterface(uid, component);
+        // Arcane-Edit-End
     }
 
     private void OnConsoleDatabaseSynchronized(EntityUid uid, ResearchConsoleComponent component, ref TechnologyDatabaseSynchronizedEvent args)
