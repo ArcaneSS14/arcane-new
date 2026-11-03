@@ -117,7 +117,7 @@
 - type: loadout
   id: SecurityOfficerWintercoat
   equipment:
-    outerClothing: ClothingOuterWinterSecArmored # Goobstation
+    outerClothing: ClothingOuterWinterSecArmoredAlt # Arcane-Edit: ClothingOuterWinterSecArmored > ClothingOuterWinterSecArmoredAlt
 
 # Shoes
 - type: loadout
@@ -133,7 +133,7 @@
 - type: loadout
   id: SecurityWinterBoots
   equipment:
-    shoes: ClothingShoesWinterCombatBoots # Goobstation
+    shoes: ClothingShoesBootsWinterSec # Arcane-Edit: ClothingShoesWinterCombatBoots > ClothingShoesBootsWinterSec
 
 # PDA
 - type: loadout

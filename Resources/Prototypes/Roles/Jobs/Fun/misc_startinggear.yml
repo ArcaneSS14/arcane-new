@@ -137,6 +137,10 @@
     ears: ClothingHeadsetAltSecurityRegular # Intentionally no medical channel
     belt: ClothingBeltMedicalEMTFilled
     pocket1: WeaponDisabler
+  # Arcane-Start
+  inhand:
+  - CaseBrigmedicFilled
+  # Arcane-End
   storage:
     back:
     - Flash

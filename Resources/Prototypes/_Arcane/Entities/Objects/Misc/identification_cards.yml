@@ -12,9 +12,9 @@
   - type: PresetIdCard
     job: InteQVanguardLeader
   - type: Access
+    groups:
+    - InteQ
     tags:
-    - InteQVanguardLeader
-    - InteQVanguard
     - Maintenance
 
 - type: entity
@@ -50,6 +50,23 @@
   components:
   - type: PresetIdCard
     job: ERTInteQVanguard
+
+- type: entity
+  parent: CBURNIDcard
+  id: CBURNLeaderIDcard
+  name: CBURN leader ID card
+  suffix: CBURN leader
+  components:
+  - type: PresetIdCard
+    job: CBURNLeader
+
+- type: entity
+  parent: CentcomIDCardDeathsquad
+  id: CentcomIDCardDeathsquadLeader
+  name: death squad leader ID card
+  components:
+  - type: PresetIdCard
+    job: DeathSquadLeader
 
 - type: entity
   parent: IDCardStandard

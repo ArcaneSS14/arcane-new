@@ -1492,8 +1492,10 @@
     radius: 2
     energy: 1.6
     color: "#b89f25"
-  - type: AccessReader
-    access: [["Salvage"]]
+  # Arcane-Edit-Start: salvage vendor has no access requirement
+  # - type: AccessReader
+  #   access: [["Salvage"]]
+  # Arcane-Edit-End
   - type: GuideHelp
     guides:
     - Salvage

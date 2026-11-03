@@ -1,3 +1,9 @@
+# Head
+- type: loadout
+  id: SecuritySideCap
+  equipment:
+    head: ClothingHeadHatSecuritySideCap
+
 # Shoes
 - type: loadout
   id: JackBootsToeless
