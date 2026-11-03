@@ -5,6 +5,7 @@ using Content.Client.UserInterface.Systems.Inventory.Controls;
 using Robust.Client.UserInterface;
 using Robust.Shared.Input;
 using Robust.Shared.Utility;
+using static Content.Client.Inventory.ClientInventorySystem;
 
 namespace Content.Client.UserInterface.Systems.Inventory;
 
@@ -60,35 +61,43 @@ public sealed partial class InventoryUIController
             return;
         }
 
-        foreach (var child in new List<Control>(_extraHotbar.Children))
+        LayoutHotbar(_extraHotbar, extra);
+    }
+
+    /// <summary>
+    /// Lays the slots out in a grid by their button offsets, filling the gaps with empty cells.
+    /// Shared by the inventory hotbar and the extra hotbar so both keep the same layout rules.
+    /// </summary>
+    private static void LayoutHotbar(ItemSlotButtonContainer hotbar, List<KeyValuePair<string, SlotData>> slots)
+    {
+        foreach (var child in new List<Control>(hotbar.Children))
         {
             if (child is not SlotControl)
-                _extraHotbar.RemoveChild(child);
+                hotbar.RemoveChild(child);
         }
 
-        var maxWidth = extra.Max(p => p.Value.ButtonOffset.X) + 1;
-        var maxIndex = extra.Max(p => GetIndex(p.Value.ButtonOffset));
+        var maxWidth = slots.Max(p => p.Value.ButtonOffset.X) + 1;
+        var byIndex = new Dictionary<int, string>();
+        foreach (var (name, data) in slots)
+        {
+            byIndex.TryAdd(data.ButtonOffset.Y * maxWidth + data.ButtonOffset.X, name);
+        }
 
-        _extraHotbar.MaxColumns = maxWidth;
-        _extraHotbar.Columns = maxWidth;
+        hotbar.MaxColumns = maxWidth;
+        hotbar.Columns = maxWidth;
 
+        var maxIndex = byIndex.Keys.Max();
         for (var i = 0; i <= maxIndex; i++)
         {
-            var index = i;
-            if (extra.FirstOrNull(p => GetIndex(p.Value.ButtonOffset) == index) is { } pair)
+            if (byIndex.TryGetValue(i, out var name))
             {
-                if (_extraHotbar.TryGetButton(pair.Key, out var slot))
+                if (hotbar.TryGetButton(name, out var slot))
                     slot.SetPositionLast();
             }
             else
             {
-                _extraHotbar.AddChild(new Control { MinSize = new Vector2(64, 64) });
+                hotbar.AddChild(new Control { MinSize = new Vector2(64, 64) });
             }
-        }
-
-        int GetIndex(Vector2i position)
-        {
-            return position.Y * maxWidth + position.X;
         }
     }
 }

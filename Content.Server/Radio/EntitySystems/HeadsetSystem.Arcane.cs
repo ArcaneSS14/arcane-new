@@ -11,18 +11,29 @@ public sealed partial class HeadsetSystem
 {
     [Dependency] private InventorySystem _inventory = default!;
 
-    private const SlotFlags EarSlots = SlotFlags.EARS | SlotFlags.EARSRIGHT;
-
     /// <summary>
-    /// Enabled headsets worn in either ear, left ear first.
+    /// Enabled headsets worn in a slot they work in (the same check as equipping), the ones in their required
+    /// slot first, so the left ear stays the main headset.
     /// </summary>
     private IEnumerable<Entity<HeadsetComponent>> GetWornHeadsets(EntityUid wearer)
     {
-        var enumerator = _inventory.GetSlotEnumerator(wearer, EarSlots);
-        while (enumerator.NextItem(out var item))
+        var additional = new List<Entity<HeadsetComponent>>();
+        var enumerator = _inventory.GetSlotEnumerator(wearer, SlotFlags.WITHOUT_POCKET);
+        while (enumerator.NextItem(out var item, out var slot))
         {
-            if (TryComp<HeadsetComponent>(item, out var headset) && headset.Enabled && headset.IsEquipped)
+            var slotFlags = slot.SlotFlags;
+            if (!TryComp<HeadsetComponent>(item, out var headset) || !headset.Enabled || !IsHeadsetSlot(headset, slotFlags))
+                continue;
+
+            if ((slotFlags & headset.RequiredSlot) != SlotFlags.NONE)
                 yield return (item, headset);
+            else
+                additional.Add((item, headset));
+        }
+
+        foreach (var headset in additional)
+        {
+            yield return headset;
         }
     }
 
