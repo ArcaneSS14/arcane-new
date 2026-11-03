@@ -30,6 +30,9 @@ public sealed partial class UiMotionUIController : UIController
     private readonly Dictionary<Control, Fade> _active = [];
     private readonly List<Control> _completed = [];
     private readonly Dictionary<Control, int> _indices = [];
+    private readonly Dictionary<BaseButton, ButtonFeedback> _buttonFeedback = [];
+    private readonly HashSet<BaseButton> _activeButtons = [];
+    private readonly List<BaseButton> _completedButtons = [];
 
     private sealed class Fade
     {
@@ -40,6 +43,17 @@ public sealed partial class UiMotionUIController : UIController
         public float Delay;
         public Vector2? Origin;
         public Vector2? AppliedPosition;
+        public bool PopupPosition;
+    }
+
+    private sealed class ButtonFeedback
+    {
+        public readonly UiMotionSpring Hover = new();
+        public readonly UiMotionSpring Press = new();
+        public Color Original;
+        public Color Applied;
+        public bool Hovered;
+        public bool Pressed;
     }
 
     public override void Initialize()
@@ -59,8 +73,15 @@ public sealed partial class UiMotionUIController : UIController
         control.OnChildAdded += Attach;
         control.OnChildRemoved += Detach;
         control.OnVisibilityChanged += VisibilityChanged;
-        if (control is CheckBox checkbox)
-            checkbox.OnToggled += CheckboxToggled;
+        if (control is BaseButton button)
+        {
+            button.OnMouseEntered += ButtonMouseEntered;
+            button.OnMouseExited += ButtonMouseExited;
+            button.OnButtonDown += ButtonDown;
+            button.OnButtonUp += ButtonUp;
+            if (button is CheckBox checkbox)
+                checkbox.OnToggled += CheckboxToggled;
+        }
         Queue(control);
         foreach (var child in control.Children)
             Attach(child);
@@ -74,8 +95,16 @@ public sealed partial class UiMotionUIController : UIController
         control.OnChildAdded -= Attach;
         control.OnChildRemoved -= Detach;
         control.OnVisibilityChanged -= VisibilityChanged;
-        if (control is CheckBox checkbox)
-            checkbox.OnToggled -= CheckboxToggled;
+        if (control is BaseButton button)
+        {
+            button.OnMouseEntered -= ButtonMouseEntered;
+            button.OnMouseExited -= ButtonMouseExited;
+            button.OnButtonDown -= ButtonDown;
+            button.OnButtonUp -= ButtonUp;
+            if (button is CheckBox checkbox)
+                checkbox.OnToggled -= CheckboxToggled;
+            ClearButtonFeedback(button);
+        }
         _pending.Remove(control);
         Cancel(control);
         foreach (var child in control.Children)
@@ -108,11 +137,73 @@ public sealed partial class UiMotionUIController : UIController
     {
         for (var parent = control.Parent; parent != null; parent = parent.Parent)
         {
-            if (parent is Popup or TabContainer or UiMotionContainer { Profile.Opening: true }
+            if (parent is Popup popup)
+            {
+                if (!IsDropdownPopup(popup))
+                    return true;
+                continue;
+            }
+            if (parent is TabContainer or UiMotionContainer { Profile.Opening: true }
                 || parent.Parent == UIManager.PopupRoot || IsListRow(parent))
                 return true;
         }
         return false;
+    }
+
+    private static bool IsDropdownPopup(Control control) => control is Popup
+        && control.StyleClasses.Contains(OptionButton.StyleClassPopup);
+
+    private static bool IsInsideDropdownPopup(Control control)
+    {
+        for (var parent = control.Parent; parent != null; parent = parent.Parent)
+        {
+            if (parent is Popup)
+                return IsDropdownPopup(parent);
+        }
+        return false;
+    }
+
+    private void ButtonMouseEntered(GUIMouseHoverEventArgs args)
+    {
+        if (args.SourceControl is BaseButton button)
+            SetButtonFeedback(button, hovered: true);
+    }
+
+    private void ButtonMouseExited(GUIMouseHoverEventArgs args)
+    {
+        if (args.SourceControl is BaseButton button)
+            SetButtonFeedback(button, hovered: false, pressed: false);
+    }
+
+    private void ButtonDown(BaseButton.ButtonEventArgs args) => SetButtonFeedback(args.Button, pressed: true);
+
+    private void ButtonUp(BaseButton.ButtonEventArgs args) => SetButtonFeedback(args.Button, pressed: false);
+
+    private void SetButtonFeedback(BaseButton button, bool? hovered = null, bool? pressed = null)
+    {
+        if (!_buttonFeedback.TryGetValue(button, out var feedback))
+        {
+            feedback = new ButtonFeedback
+            {
+                Original = button.Modulate,
+                Applied = button.Modulate
+            };
+            _buttonFeedback.Add(button, feedback);
+        }
+        if (hovered is { } hover)
+            feedback.Hovered = hover;
+        if (pressed is { } press)
+            feedback.Pressed = press;
+        _activeButtons.Add(button);
+    }
+
+    private void ClearButtonFeedback(BaseButton button)
+    {
+        _activeButtons.Remove(button);
+        if (!_buttonFeedback.Remove(button, out var feedback))
+            return;
+        if (button.Modulate == feedback.Applied)
+            button.Modulate = feedback.Original;
     }
 
     private void CheckboxToggled(BaseButton.ButtonToggledEventArgs args)
@@ -127,7 +218,7 @@ public sealed partial class UiMotionUIController : UIController
     private float Read(CVarDef<float> setting, float min, float max) => UiMotionSettings.Read(_configuration, setting, min, max);
 
     private void Start(Control control, CVarDef<bool> enabled, float milliseconds, float delay, float from = 0,
-        float travel = 0, bool expressive = false)
+        float travel = 0, bool expressive = false, bool popupPosition = false)
     {
         // Restart from the currently displayed opacity when toggling again.
         if (_active.TryGetValue(control, out var previous))
@@ -148,12 +239,13 @@ public sealed partial class UiMotionUIController : UIController
             Enabled = enabled,
             Original = control.Modulate,
             Applied = control.Modulate.WithAlpha(control.Modulate.A * from),
-            Delay = _configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : delay
+            Delay = _configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : delay,
+            PopupPosition = popupPosition
         };
         if (travel > 0 && !_configuration.GetCVar(UiMotionSettings.Reduce))
         {
-            fade.Origin = control.Position;
-            fade.AppliedPosition = ApplyPosition(control, fade.Origin.Value, transition.Offset);
+            fade.Origin = GetPosition(control, popupPosition);
+            fade.AppliedPosition = ApplyPosition(control, fade.Origin.Value, transition.Offset, popupPosition);
         }
         _active.Add(control, fade);
         control.Modulate = fade.Applied;
@@ -165,16 +257,25 @@ public sealed partial class UiMotionUIController : UIController
             return;
         if (control.Modulate == fade.Applied)
             control.Modulate = fade.Original;
-        if (fade.Origin is { } origin && fade.AppliedPosition is { } applied && control.Position == applied)
-            LayoutContainer.SetPosition(control, origin);
+        if (fade.Origin is { } origin && fade.AppliedPosition is { } applied
+            && GetPosition(control, fade.PopupPosition) == applied)
+            ApplyPosition(control, origin, 0, fade.PopupPosition);
     }
 
-    private static Vector2 ApplyPosition(Control control, Vector2 origin, float offset)
+    private static Vector2 GetPosition(Control control, bool popupPosition)
+    {
+        return popupPosition ? PopupContainer.GetPopupOrigin(control) : control.Position;
+    }
+
+    private static Vector2 ApplyPosition(Control control, Vector2 origin, float offset, bool popupPosition)
     {
         var position = origin + new Vector2(0, offset);
         if (control.Parent is { } parent)
             position = Vector2.Clamp(position, Vector2.Zero, Vector2.Max(Vector2.Zero, parent.Size - control.Size));
-        LayoutContainer.SetPosition(control, position);
+        if (popupPosition)
+            PopupContainer.SetPopupOrigin(control, position);
+        else
+            LayoutContainer.SetPosition(control, position);
         return position;
     }
 
@@ -190,7 +291,10 @@ public sealed partial class UiMotionUIController : UIController
                 ? tree.Parent! : control.Parent!;
             _indices.TryGetValue(parent, out var index);
             _indices[parent] = index + 1;
-            if (control is Popup || control.Parent == UIManager.PopupRoot)
+            if (IsDropdownPopup(control))
+                Start(control, UiMotionSettings.Dropdowns, Read(UiMotionSettings.DropdownEnterMs, 0, 1000), 0,
+                    travel: Read(UiMotionSettings.DropdownTravel, 0, 24), expressive: true, popupPosition: true);
+            else if (control is Popup || control.Parent == UIManager.PopupRoot)
                 Start(control, UiMotionSettings.Popups, Read(UiMotionSettings.PopupsMs, 0, 1000), 0);
             else if (control is RadialMenu)
                 continue; // Its sectors own the entrance; do not multiply their opacity by a second fade.
@@ -207,13 +311,14 @@ public sealed partial class UiMotionUIController : UIController
             {
                 var row = IsListRow(control);
                 var radial = control is RadialMenuButtonBase or RadialMenuContextualCentralTextureButton;
-                var group = row ? UiMotionSettings.Lists : radial ? UiMotionSettings.Radial
+                var dropdownItem = control is BaseButton && IsInsideDropdownPopup(control);
+                var group = dropdownItem ? UiMotionSettings.Dropdowns : row ? UiMotionSettings.Lists : radial ? UiMotionSettings.Radial
                     : control is ActionButton ? UiMotionSettings.Actions : UiMotionSettings.Buttons;
-                var duration = row ? UiMotionSettings.ListsEnterMs : radial ? UiMotionSettings.RadialEnterMs
+                var duration = dropdownItem ? UiMotionSettings.DropdownItemMs : row ? UiMotionSettings.ListsEnterMs : radial ? UiMotionSettings.RadialEnterMs
                     : control is ActionButton ? UiMotionSettings.ActionsEnterMs : UiMotionSettings.ButtonEnterMs;
                 if (row)
                     index = Math.Min(index, (int) Read(UiMotionSettings.ListsMaxStagger, 0, 32));
-                var delay = UiMotionSequence.Delay(index, radial ? 1 : _configuration.GetCVar(UiMotionSettings.ButtonOrder),
+                var delay = UiMotionSequence.Delay(index, radial || dropdownItem ? 1 : _configuration.GetCVar(UiMotionSettings.ButtonOrder),
                     Read(UiMotionSettings.ButtonIntervalMs, 0, 150), Read(UiMotionSettings.ButtonJitterMs, 0, 150),
                     Read(UiMotionSettings.ButtonMaxDelayMs, 0, 1000), Random.Shared.NextSingle());
                 if (control is ActionButton action)
@@ -237,8 +342,9 @@ public sealed partial class UiMotionUIController : UIController
             // An owning control may change its own tint during the transition.
             if (control.Modulate != fade.Applied)
                 fade.Original = control.Modulate;
-            if (fade.Origin is { } origin && fade.AppliedPosition is { } applied && control.Position != applied)
-                fade.Origin = origin + control.Position - applied;
+            var currentPosition = GetPosition(control, fade.PopupPosition);
+            if (fade.Origin is { } origin && fade.AppliedPosition is { } applied && currentPosition != applied)
+                fade.Origin = origin + currentPosition - applied;
             var delta = args.DeltaSeconds;
             var speed = UiMotionSettings.PlaybackSpeed(_configuration);
             if (_configuration.GetCVar(UiMotionSettings.Reduce))
@@ -250,7 +356,7 @@ public sealed partial class UiMotionUIController : UIController
             fade.Applied = fade.Original.WithAlpha(fade.Original.A * fade.Transition.Opacity);
             control.Modulate = fade.Applied;
             if (fade.Origin is { } motionOrigin)
-                fade.AppliedPosition = ApplyPosition(control, motionOrigin, fade.Transition.Offset);
+                fade.AppliedPosition = ApplyPosition(control, motionOrigin, fade.Transition.Offset, fade.PopupPosition);
             if (fade.Transition.Finished)
                 _completed.Add(control);
         }
@@ -258,6 +364,60 @@ public sealed partial class UiMotionUIController : UIController
         foreach (var control in _completed)
             Cancel(control);
         _completed.Clear();
+
+        UpdateButtonFeedback(args.DeltaSeconds);
+    }
+
+    private void UpdateButtonFeedback(float deltaSeconds)
+    {
+        foreach (var button in _activeButtons)
+        {
+            if (!button.IsInsideTree || !button.VisibleInTree || button.Disabled
+                || !UiMotionSettings.IsEnabled(_configuration, UiMotionSettings.Buttons)
+                || _configuration.GetCVar(UiMotionSettings.Reduce))
+            {
+                _completedButtons.Add(button);
+                continue;
+            }
+            if (_active.ContainsKey(button))
+                continue;
+
+            var feedback = _buttonFeedback[button];
+            if (button.Modulate != feedback.Applied)
+                feedback.Original = button.Modulate;
+            var speed = UiMotionSettings.PlaybackSpeed(_configuration);
+            var hover = feedback.Hover.Advance(
+                feedback.Hovered && _configuration.GetCVar(UiMotionSettings.ButtonHover) ? 1 : 0,
+                deltaSeconds * speed, 1, 1600);
+            var press = feedback.Press.Advance(
+                feedback.Pressed && _configuration.GetCVar(UiMotionSettings.ButtonPress) ? 1 : 0,
+                deltaSeconds * speed, 1, 3800);
+            feedback.Applied = ApplyButtonTint(feedback.Original, hover, press);
+            button.Modulate = feedback.Applied;
+            if (!feedback.Hovered && !feedback.Pressed && feedback.Hover.Value == 0 && feedback.Press.Value == 0)
+                _completedButtons.Add(button);
+        }
+
+        foreach (var button in _completedButtons)
+            ClearButtonFeedback(button);
+        _completedButtons.Clear();
+    }
+
+    private Color ApplyButtonTint(Color original, float hover, float press)
+    {
+        var hoverAmount = Math.Clamp(hover, 0, 1)
+            * Read(UiMotionSettings.ButtonHoverIntensity, 0, 0.2f);
+        var pressAmount = Math.Clamp(press, 0, 1)
+            * Read(UiMotionSettings.ButtonPressIntensity, 0, 0.2f);
+        const float hoverRed = 0.65f;
+        const float hoverGreen = 0.8f;
+        const float hoverBlue = 1f;
+        var dim = 1 - pressAmount;
+        return new Color(
+            (original.R + (hoverRed - original.R) * hoverAmount) * dim,
+            (original.G + (hoverGreen - original.G) * hoverAmount) * dim,
+            (original.B + (hoverBlue - original.B) * hoverAmount) * dim,
+            original.A);
     }
 }
 // Arcane-End

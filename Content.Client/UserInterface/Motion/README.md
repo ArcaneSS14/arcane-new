@@ -34,6 +34,8 @@ and [motion specifications](https://m3.material.io/styles/motion/overview/specs)
 | --- | --- | --- |
 | Context menus | Entrance, local item sequence, inert exit image | `ui.motion_menu_*`, `ui.animation_closing` |
 | Main window root | Expressive spatial entrance with a faster fade; buttons sequence within their own parent | `ui.motion_windows`, `ui.motion_window_enter_ms`, `ui.motion_window_travel`, `ui.motion_button*` |
+| Buttons | Effects-spring hover state and faster press state without changing hit geometry | `ui.motion_button_hover*`, `ui.motion_button_press*` |
+| Dropdown menus | Expressive spatial entrance, fast fade and ordered item reveal | `ui.motion_dropdown*` |
 | TabContainer pages | Fade on selection without moving content or changing hit areas | `ui.motion_tabs*` |
 | Vote popups | Fade and horizontal entrance from the left; normal vote input begins at its final position | `ui.motion_votes*` |
 | Popups and tooltips | Entrance fade; immediate close; no second fade on their children | `ui.motion_popups*` |
@@ -69,7 +71,8 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
 ## Ownership and lifetime
 
 - `UiMotionUIController` observes public tree/visibility events in WindowRoot, PopupRoot, ModalRoot and StateRoot.
-  Only pending appearances and active fades require controller frame work; there is no per-frame tree scan.
+  Only pending appearances, active transitions and currently hovered/pressed buttons require controller frame work;
+  there is no per-frame tree scan.
 - `UiMotionVisual` changes dedicated visual children and restores the original tint/scale, preserving owner changes.
   Slot entity references, action state, cooldown time, input filters and hit geometry stay independent of the transition.
 - A slot retains at most one outgoing icon. Removing its entity, hiding/removing the slot or disabling its group clears it.

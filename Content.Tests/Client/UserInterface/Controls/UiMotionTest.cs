@@ -43,6 +43,27 @@ public sealed partial class UiMotionTest : RobustUnitTest
         }
     }
 
+    private sealed class TestButton : Button
+    {
+        public void Hover(bool value)
+        {
+            if (value)
+                base.MouseEntered();
+            else
+                base.MouseExited();
+        }
+
+        public void Hold(bool value)
+        {
+            var state = value ? BoundKeyState.Down : BoundKeyState.Up;
+            var args = new GUIBoundKeyEventArgs(EngineKeyFunctions.UIClick, state, default, true, Vector2.Zero, Vector2.Zero);
+            if (value)
+                base.KeyBindDown(args);
+            else
+                base.KeyBindUp(args);
+        }
+    }
+
     // Use compiled XAML in the unit harness, which does not start the hot-reload service.
     private sealed class CompiledXaml : IXamlProxyHelper
     {
@@ -98,6 +119,10 @@ public sealed partial class UiMotionTest : RobustUnitTest
         Default(S.ButtonJitterMs);
         Default(S.ButtonMaxDelayMs);
         Default(S.ButtonOrder);
+        Default(S.ButtonHover);
+        Default(S.ButtonPress);
+        Default(S.ButtonHoverIntensity);
+        Default(S.ButtonPressIntensity);
         Default(S.Checkboxes);
         Default(S.CheckboxMs);
         Default(S.CheckboxIntensity);
@@ -352,6 +377,31 @@ public sealed partial class UiMotionTest : RobustUnitTest
         checkbox.Click();
         Assert.That(checkbox.Pressed, Is.False);
         Assert.That(checkbox.TextureRect.Modulate, Is.EqualTo(Color.White));
+    }
+
+    [Test]
+    public void ButtonHoverAndPressFeedbackPreserveInputAndRestoreTint()
+    {
+        _window = new TestWindow();
+        var button = new TestButton { MuteSounds = true };
+        _window.AddChild(button);
+        _window.Open();
+        _controller.FrameUpdate(new FrameEventArgs(2));
+        var filter = button.MouseFilter;
+
+        button.Hover(true);
+        _controller.FrameUpdate(new FrameEventArgs(0.03f));
+        Assert.That(button.Modulate.B, Is.GreaterThan(button.Modulate.R));
+        Assert.That(button.MouseFilter, Is.EqualTo(filter));
+
+        button.Hold(true);
+        _controller.FrameUpdate(new FrameEventArgs(0.03f));
+        Assert.That(button.Modulate.R, Is.LessThan(1));
+        button.Hold(false);
+        button.Hover(false);
+        _controller.FrameUpdate(new FrameEventArgs(1));
+        Assert.That(button.Modulate, Is.EqualTo(Color.White));
+        Assert.That(button.MouseFilter, Is.EqualTo(filter));
     }
 
     [Test]

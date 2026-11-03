@@ -70,6 +70,10 @@ public sealed partial class AnimationsTab
         MotionSlider(buttons, S.ButtonIntervalMs, "interval", 0, 150, "ms");
         MotionSlider(buttons, S.ButtonJitterMs, "jitter", 0, 150, "ms");
         MotionSlider(buttons, S.ButtonMaxDelayMs, "max-delay", 0, 1000, "ms");
+        MotionCheck(buttons, S.ButtonHover, "hover");
+        MotionCheck(buttons, S.ButtonPress, "press");
+        MotionSlider(buttons, S.ButtonHoverIntensity, "hover-intensity", 0, 0.2f, "ratio");
+        MotionSlider(buttons, S.ButtonPressIntensity, "press-intensity", 0, 0.2f, "ratio");
 
         var checkboxes = AddMotionGroup("checkboxes");
         MotionCheck(checkboxes, S.Checkboxes, "enabled");
@@ -86,6 +90,12 @@ public sealed partial class AnimationsTab
         var popups = AddMotionGroup("popups");
         MotionCheck(popups, S.Popups, "enabled");
         MotionSlider(popups, S.PopupsMs, "duration", 0, 1000, "ms");
+
+        var dropdowns = AddMotionGroup("dropdowns");
+        MotionCheck(dropdowns, S.Dropdowns, "enabled");
+        MotionSlider(dropdowns, S.DropdownEnterMs, "enter", 0, 1000, "ms");
+        MotionSlider(dropdowns, S.DropdownTravel, "travel", 0, 24, "pixels");
+        MotionSlider(dropdowns, S.DropdownItemMs, "item-duration", 0, 1000, "ms");
 
         var slots = AddMotionGroup("slots");
         MotionCheck(slots, S.Slots, "enabled");
@@ -230,6 +240,8 @@ public sealed partial class AnimationsTab
                     _motionChecks[S.BubbleMovement].Pressed = false;
                     _motionSliders[S.MenuTravel].Set(0);
                     _motionSliders[S.ButtonJitterMs].Set(0);
+                    _motionSliders[S.ButtonHoverIntensity].Set(0.04f);
+                    _motionSliders[S.ButtonPressIntensity].Set(0.06f);
                     _motionSliders[S.CheckboxIntensity].Set(0.15f);
                     _motionSliders[S.WindowEnterMs].Set(150);
                     _motionSliders[S.WindowTravel].Set(0);
@@ -238,6 +250,8 @@ public sealed partial class AnimationsTab
                     _motionChecks[S.RadialHover].Pressed = false;
                     _motionSliders[S.SlotScale].Set(0.03f);
                     _motionSliders[S.PopupsMs].Set(70);
+                    _motionSliders[S.DropdownEnterMs].Set(150);
+                    _motionSliders[S.DropdownTravel].Set(0);
                     _motionSliders[S.AlertsEnterMs].Set(100);
                     _motionSliders[S.ListsEnterMs].Set(100);
                 }
@@ -268,7 +282,7 @@ public sealed partial class AnimationsTab
             return MotionPreset.Expressive;
         if (modified == 1 && _motionChecks[S.Reduce].Pressed)
             return MotionPreset.Reduced;
-        return modified == 14 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
+        return modified == 18 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
     }
 
     private bool IsSubtleProfile()
@@ -280,11 +294,15 @@ public sealed partial class AnimationsTab
             && !_motionChecks[S.RadialHover].Pressed
             && Matches(S.MenuTravel, 0)
             && Matches(S.ButtonJitterMs, 0)
+            && Matches(S.ButtonHoverIntensity, 0.04f)
+            && Matches(S.ButtonPressIntensity, 0.06f)
             && Matches(S.CheckboxIntensity, 0.15f)
             && Matches(S.WindowEnterMs, 150)
             && Matches(S.WindowTravel, 0)
             && Matches(S.SlotScale, 0.03f)
             && Matches(S.PopupsMs, 70)
+            && Matches(S.DropdownEnterMs, 150)
+            && Matches(S.DropdownTravel, 0)
             && Matches(S.AlertsEnterMs, 100)
             && Matches(S.ListsEnterMs, 100);
     }

@@ -39,6 +39,10 @@ public static class UiMotionSettings
     public static readonly CVarDef<float> ButtonMaxDelayMs = Float("button_max_delay_ms", 180);
     // 0: together, 1: ordered, 2: ordered with jitter, 3: random.
     public static readonly CVarDef<int> ButtonOrder = CVarDef.Create("ui.motion_button_order", 2, CVar.CLIENTONLY | CVar.ARCHIVE);
+    public static readonly CVarDef<bool> ButtonHover = Bool("button_hover");
+    public static readonly CVarDef<bool> ButtonPress = Bool("button_press");
+    public static readonly CVarDef<float> ButtonHoverIntensity = Float("button_hover_intensity", 0.08f);
+    public static readonly CVarDef<float> ButtonPressIntensity = Float("button_press_intensity", 0.1f);
     public static readonly CVarDef<bool> Checkboxes = Bool("checkboxes");
     public static readonly CVarDef<float> CheckboxMs = Float("checkbox_ms", 150);
     public static readonly CVarDef<float> CheckboxIntensity = Float("checkbox_intensity", 0.35f);
@@ -46,6 +50,10 @@ public static class UiMotionSettings
     public static readonly CVarDef<bool> Reduce = CVarDef.Create("ui.motion_reduce", false, CVar.CLIENTONLY | CVar.ARCHIVE);
     public static readonly CVarDef<bool> Popups = Bool("popups");
     public static readonly CVarDef<float> PopupsMs = Float("popups_ms", 150);
+    public static readonly CVarDef<bool> Dropdowns = Bool("dropdowns");
+    public static readonly CVarDef<float> DropdownEnterMs = Float("dropdown_enter_ms", 350);
+    public static readonly CVarDef<float> DropdownTravel = Float("dropdown_travel", 6);
+    public static readonly CVarDef<float> DropdownItemMs = Float("dropdown_item_ms", 150);
     public static readonly CVarDef<bool> Slots = Bool("slots");
     public static readonly CVarDef<float> SlotEnterMs = Float("slot_enter_ms", 150);
     public static readonly CVarDef<float> SlotExitMs = Float("slot_exit_ms", 150);

@@ -142,6 +142,10 @@ public sealed partial class UiMotionTest
         Default(S.Reduce);
         Default(S.Popups);
         Default(S.PopupsMs);
+        Default(S.Dropdowns);
+        Default(S.DropdownEnterMs);
+        Default(S.DropdownTravel);
+        Default(S.DropdownItemMs);
         Default(S.Slots);
         Default(S.SlotEnterMs);
         Default(S.SlotExitMs);
@@ -225,6 +229,32 @@ public sealed partial class UiMotionTest
         finally
         {
             context.Shutdown();
+        }
+    }
+
+    [Test]
+    public void DropdownPopupAnimatesItsSurfaceAndItems()
+    {
+        var ui = IoCManager.Resolve<IUserInterfaceManager>();
+        var popup = new Popup { StyleClasses = { OptionButton.StyleClassPopup } };
+        var first = new Button();
+        var second = new Button();
+        popup.AddChild(first);
+        popup.AddChild(second);
+        ui.ModalRoot.AddChild(popup);
+        try
+        {
+            popup.Open();
+            _controller.FrameUpdate(new FrameEventArgs(0.02f));
+            Assert.That(popup.Modulate.A, Is.InRange(0.01f, 0.99f));
+            Assert.That(first.Modulate.A, Is.GreaterThan(second.Modulate.A));
+            Assert.That(first.MouseFilter, Is.EqualTo(Control.MouseFilterMode.Stop));
+            Assert.That(second.MouseFilter, Is.EqualTo(Control.MouseFilterMode.Stop));
+        }
+        finally
+        {
+            popup.Close();
+            popup.Orphan();
         }
     }
 
@@ -354,7 +384,8 @@ public sealed partial class UiMotionTest
     [Test]
     public void NewDurationsAndScalesRejectNonFiniteValues()
     {
-        var milliseconds = new[] { S.PopupsMs, S.SlotEnterMs, S.SlotExitMs, S.ActionsEnterMs,
+        var milliseconds = new[] { S.PopupsMs, S.DropdownEnterMs, S.DropdownItemMs,
+            S.SlotEnterMs, S.SlotExitMs, S.ActionsEnterMs,
             S.AlertsEnterMs, S.AlertsExitMs, S.ChatMs, S.ProgressMs,
             S.RadialEnterMs, S.RadialExitMs, S.ListsEnterMs };
         foreach (var setting in milliseconds)
@@ -366,8 +397,14 @@ public sealed partial class UiMotionTest
         }
         _configuration.SetCVar(S.SlotScale, float.PositiveInfinity);
         _configuration.SetCVar(S.RadialHoverScale, -1f);
+        _configuration.SetCVar(S.ButtonHoverIntensity, float.NaN);
+        _configuration.SetCVar(S.ButtonPressIntensity, -1f);
+        _configuration.SetCVar(S.DropdownTravel, float.PositiveInfinity);
         Assert.That(S.Read(_configuration, S.SlotScale, 0, 0.25f), Is.EqualTo(S.SlotScale.DefaultValue));
         Assert.That(S.Read(_configuration, S.RadialHoverScale, 0, 0.15f), Is.Zero);
+        Assert.That(S.Read(_configuration, S.ButtonHoverIntensity, 0, 0.2f), Is.EqualTo(S.ButtonHoverIntensity.DefaultValue));
+        Assert.That(S.Read(_configuration, S.ButtonPressIntensity, 0, 0.2f), Is.Zero);
+        Assert.That(S.Read(_configuration, S.DropdownTravel, 0, 24), Is.EqualTo(S.DropdownTravel.DefaultValue));
     }
 
     [Test]
