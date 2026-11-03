@@ -1,5 +1,4 @@
 using Robust.Shared.Network;
-using Robust.Shared.Player;
 
 namespace Content.Arcane.Common.ServerProtection;
 
@@ -20,9 +19,3 @@ public readonly record struct AdminBanPlacedEvent(NetUserId Admin, string AdminN
 /// </summary>
 [ByRefEvent]
 public readonly record struct AdminPermissionsReducedEvent(NetUserId Admin, string AdminName, string TargetName, string Action);
-
-/// <summary>
-///     Raised broadcast when a protection cvar is changed with the cvar command.
-/// </summary>
-[ByRefEvent]
-public readonly record struct ProtectionCVarChangedEvent(string CVar, ICommonSession? Actor, object? OldValue, object? NewValue);

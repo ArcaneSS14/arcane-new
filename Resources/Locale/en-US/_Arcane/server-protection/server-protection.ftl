@@ -1,4 +1,4 @@
-server-protection-unknown-actor = unknown
+server-protection-server-actor = the server (console or config)
 server-protection-toggled-on = [ServerProtection] { $system } was enabled by { $actor }.
 server-protection-toggled-off = [ServerProtection] { $system } was DISABLED by { $actor }.
 
