@@ -1,6 +1,6 @@
 ---
 name: maps-and-mapping
-description: Edit maps, map prototypes, grids, placements, entity references, and serialized compatibility safely.
+description: Edit maps, move or copy rooms, review layouts and map captures, and preserve serialized placements and references.
 ---
 # maps-and-mapping
 

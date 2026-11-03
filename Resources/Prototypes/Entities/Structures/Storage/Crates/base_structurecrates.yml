@@ -10,6 +10,7 @@
     noRot: true
   - type: Sprite
     noRot: true
+    offset: 0, 0.25 # Arcane
   - type: InteractionOutline
   - type: Physics
   - type: Fixtures
