@@ -60,9 +60,6 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
 
     //Sounds
     [DataField]
-    public SoundSpecifier AccessDeniedSound = new SoundPathSpecifier("/Audio/Machines/custom_deny.ogg");
-
-    [DataField]
     public SoundSpecifier TurnOnSound = new SoundPathSpecifier("/Audio/Machines/anomaly_sync_connect.ogg");
 
     [DataField]
@@ -88,7 +85,7 @@ public sealed partial class EnergyDomeGeneratorComponent : Component
     public ProtoId<SinkPortPrototype> OffPort = "Off";
 
     /// <summary>
-    /// Recharge rate of internal battery when active.
+    /// Recharge rate of internal battery when active; negative drains it. Off, the rate is zero.
     /// </summary>
     [DataField]
     public float InternalBatteryChargeRate = 100000f;

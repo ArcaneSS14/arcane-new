@@ -149,7 +149,7 @@
         !type:CableDeviceNode
         nodeGroupID: MVPower
   - type: BatterySelfRecharger
-    autoRechargeRate: -800 # discharge per second while active
+    autoRechargeRate: 0 # the generator sets internalBatteryChargeRate while active
   - type: Damageable
     damageModifierSet: Metallic
   - type: Injurable
@@ -175,7 +175,7 @@
     - On
     - Off
   - type: EnergyDomeGenerator
-    enabled: true
+    internalBatteryChargeRate: -800 # discharge per second while active
     damageEnergyDraw: 100
     domePrototype: EnergyDomeSlowing
     canDeviceNetworkUse: true
