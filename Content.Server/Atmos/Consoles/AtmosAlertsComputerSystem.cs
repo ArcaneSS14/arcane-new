@@ -52,6 +52,7 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
         // Alarm events
         SubscribeLocalEvent<AtmosAlertsDeviceComponent, EntityTerminatingEvent>(OnDeviceTerminatingEvent);
         SubscribeLocalEvent<AtmosAlertsDeviceComponent, AnchorStateChangedEvent>(OnDeviceAnchorChanged);
+        SubscribeLocalEvent<AtmosAlertsDeviceComponent, ReAnchorEvent>(OnDeviceReAnchor); // Arcane
     }
 
     #region Event handling
@@ -108,6 +109,17 @@ public sealed partial class AtmosAlertsComputerSystem : SharedAtmosAlertsCompute
     {
         OnDeviceAdditionOrRemoval(uid, component, args.Anchored);
     }
+
+    // Arcane-Start
+    /// <summary>
+    /// A grid split moves anchored devices to the new grid through ReAnchor, which raises no AnchorStateChangedEvent.
+    /// </summary>
+    private void OnDeviceReAnchor(EntityUid uid, AtmosAlertsDeviceComponent component, ref ReAnchorEvent args)
+    {
+        UpdateTrackedDevice(uid, component, args.OldGrid, false);
+        UpdateTrackedDevice(uid, component, args.Grid, true);
+    }
+    // Arcane-End
 
     private void OnDeviceTerminatingEvent(EntityUid uid, AtmosAlertsDeviceComponent component, ref EntityTerminatingEvent args)
     {
