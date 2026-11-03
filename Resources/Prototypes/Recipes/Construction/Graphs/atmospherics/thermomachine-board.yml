@@ -16,17 +16,19 @@
       steps:
       - tool: Screwing
         doAfter: 2
-  - node: hellfirefreezer
-    entity: HellfireFreezerMachineCircuitBoard
-    edges:
-    - to: hellfireheater
-      steps:
-      - tool: Screwing
-        doAfter: 2
-  - node: hellfireheater
-    entity: HellfireHeaterMachineCircuitBoard
-    edges:
-    - to: hellfirefreezer
-      steps:
-      - tool: Screwing
-        doAfter: 2
+# Arcane-Edit-Start: hellfire boards replaced by machine part upgrades (Orion #385)
+#  - node: hellfirefreezer
+#    entity: HellfireFreezerMachineCircuitBoard
+#    edges:
+#    - to: hellfireheater
+#      steps:
+#      - tool: Screwing
+#        doAfter: 2
+#  - node: hellfireheater
+#    entity: HellfireHeaterMachineCircuitBoard
+#    edges:
+#    - to: hellfirefreezer
+#      steps:
+#      - tool: Screwing
+#        doAfter: 2
+# Arcane-Edit-End
