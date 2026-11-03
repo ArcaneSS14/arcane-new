@@ -65,7 +65,9 @@ public sealed partial class StatusTabControl : BaseTabControl
 
     private void UpdateInfoBlob()
     {
-        if (_status?.Info is { } info)
-            ServerInfo.SetInfoBlob(info);
+        // Arcane-Edit-Start: resolve status text in the active client culture.
+        if (_status?.Info != null)
+            ServerInfo.SetInfoBlob(_status.GetInfoText());
+        // Arcane-Edit-End
     }
 }

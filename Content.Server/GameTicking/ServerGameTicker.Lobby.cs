@@ -41,7 +41,7 @@ public sealed partial class ServerGameTicker
     public void UpdateInfoText()
     {
         RaiseNetworkEvent(GetInfoMsg(), Filter.Empty().AddPlayers(_playerManager.NetworkedSessions));
-        RaiseNetworkEvent(new TickerInGameInfoEvent(GetInfoText(true)), Filter.Empty().AddPlayers(_playerManager.NetworkedSessions)); // Trauma
+        RaiseNetworkEvent(GetInGameInfoEvent(), Filter.Empty().AddPlayers(_playerManager.NetworkedSessions)); // Arcane-Edit: new TickerInGameInfoEvent(GetInfoText(true)) > GetInGameInfoEvent()
     }
 
     // TODO: You can move this to shared.
@@ -50,19 +50,56 @@ public sealed partial class ServerGameTicker
     private string GetInfoText(
         bool isInGameInfo = false) // Trauma
     {
+        // Arcane-Edit-Start: share unresolved status data with the separated HUD.
+        var info = GetInfoData();
+        if (info == null)
+            return string.Empty;
+
+        var gmTitle = Loc.GetString(info.GameModeTitle);
+        var desc = Loc.GetString(info.GameModeDescription);
+        var mapName = info.MapName ?? Loc.GetString("game-ticker-no-map-selected");
+        // Arcane-Edit-End
+        // <Trauma> override info text for separated hud
+        var infoText = RunLevel == GameRunLevel.PreRoundLobby
+            ? "game-ticker-get-info-preround-text"
+            : "game-ticker-get-info-text";
+        if (isInGameInfo)
+            infoText = "game-ticker-get-ingame-info-text";
+        // </Tauma>
+        // Arcane-Edit-Start: format from the shared unresolved status data.
+        return Loc.GetString(
+            infoText, // Trauma - use var from above
+            ("roundId", info.RoundId),
+            ("playerCount", info.PlayerCount),
+            ("readyCount", info.ReadyCount),
+            ("mapName", mapName),
+            ("gmTitle", gmTitle),
+            ("desc", desc));
+        // Arcane-Edit-End
+    }
+
+    // Arcane-Start
+    private TickerInGameInfoEvent GetInGameInfoEvent()
+    {
+        var info = GetInfoData();
+        return info == null
+            ? new TickerInGameInfoEvent(0, 0, null, null, null)
+            : new TickerInGameInfoEvent(
+                info.RoundId,
+                info.PlayerCount,
+                info.MapName,
+                info.GameModeTitle,
+                info.GameModeDescription);
+    }
+
+    private GameInfoData? GetInfoData()
+    {
         var preset = CurrentPreset ?? Preset;
         if (preset == null)
-        {
-            return string.Empty;
-        }
-
-        var playerCount = $"{_playerManager.PlayerCount}";
-        var readyCount = _playerGameStatuses.Values.Count(x => x == PlayerGameStatus.ReadyToPlay);
+            return null;
 
         var stationNames = new StringBuilder();
-        var query =
-            EntityQueryEnumerator<StationJobsComponent, StationSpawningComponent, MetaDataComponent>();
-
+        var query = EntityQueryEnumerator<StationJobsComponent, StationSpawningComponent, MetaDataComponent>();
         var foundOne = false;
 
         while (query.MoveNext(out _, out _, out var meta))
@@ -75,29 +112,29 @@ public sealed partial class ServerGameTicker
         }
 
         if (!foundOne)
-        {
-            stationNames.Append(_gameMapManager.GetSelectedMap()?.MapName ??
-                                Loc.GetString("game-ticker-no-map-selected"));
-        }
+            stationNames.Append(_gameMapManager.GetSelectedMap()?.MapName);
 
-        var gmTitle = (Decoy == null) ? Loc.GetString(preset.ModeTitle) : Loc.GetString(Decoy.ModeTitle);
-        var desc = (Decoy == null) ? Loc.GetString(preset.Description) : Loc.GetString(Decoy.Description);
-        // <Trauma> override info text for separated hud
-        var infoText = RunLevel == GameRunLevel.PreRoundLobby
-            ? "game-ticker-get-info-preround-text"
-            : "game-ticker-get-info-text";
-        if (isInGameInfo)
-            infoText = "game-ticker-get-ingame-info-text";
-        // </Tauma>
-        return Loc.GetString(
-            infoText, // Trauma - use var from above
-            ("roundId", RoundId),
-            ("playerCount", playerCount),
-            ("readyCount", readyCount),
-            ("mapName", stationNames.ToString()),
-            ("gmTitle", gmTitle),
-            ("desc", desc));
+        var gameModeTitle = Decoy == null ? preset.ModeTitle : Decoy.ModeTitle;
+        var gameModeDescription = Decoy == null ? preset.Description : Decoy.Description;
+        var readyCount = _playerGameStatuses.Values.Count(x => x == PlayerGameStatus.ReadyToPlay);
+
+        return new GameInfoData(
+            RoundId,
+            _playerManager.PlayerCount,
+            readyCount,
+            stationNames.Length == 0 ? null : stationNames.ToString(),
+            gameModeTitle,
+            gameModeDescription);
     }
+
+    private sealed record GameInfoData(
+        int RoundId,
+        int PlayerCount,
+        int ReadyCount,
+        string? MapName,
+        LocId GameModeTitle,
+        LocId GameModeDescription);
+    // Arcane-End
 
     private TickerConnectionStatusEvent GetConnectionStatusMsg()
     {
