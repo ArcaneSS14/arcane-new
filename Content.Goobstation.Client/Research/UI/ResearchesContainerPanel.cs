@@ -21,13 +21,24 @@ public sealed class ResearchesContainerPanel : LayoutContainer // Arcane-Edit: W
     // Arcane-End
 
     // Arcane-Edit-Start
+    // Technology id -> its node; rebuilt only when nodes are added or removed, positions are read while drawing.
+    private Dictionary<string, FancyResearchConsoleItem>? _items;
+
+    protected override void ChildAdded(Control newChild)
+    {
+        base.ChildAdded(newChild);
+        _items = null;
+    }
+
+    protected override void ChildRemoved(Control child)
+    {
+        base.ChildRemoved(child);
+        _items = null;
+    }
+
     protected override void Draw(DrawingHandleScreen handle)
     {
-        var items = new Dictionary<string, FancyResearchConsoleItem>();
-        foreach (var child in Children.OfType<FancyResearchConsoleItem>())
-        {
-            items.TryAdd(child.Prototype.ID, child);
-        }
+        var items = _items ??= BuildItems();
 
         foreach (var item in items.Values)
         {
@@ -42,6 +53,17 @@ public sealed class ResearchesContainerPanel : LayoutContainer // Arcane-Edit: W
                 DrawConnection(handle, item, prerequisite);
             }
         }
+    }
+
+    private Dictionary<string, FancyResearchConsoleItem> BuildItems()
+    {
+        var items = new Dictionary<string, FancyResearchConsoleItem>();
+        foreach (var child in Children.OfType<FancyResearchConsoleItem>())
+        {
+            items.TryAdd(child.Prototype.ID, child);
+        }
+
+        return items;
     }
     // Arcane-Edit-End
 
