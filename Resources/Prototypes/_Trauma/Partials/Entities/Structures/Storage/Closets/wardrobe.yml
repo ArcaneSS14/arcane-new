@@ -13,12 +13,11 @@
   - type: AccessReader
     access: [ [ "Chapel" ] ]
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     sprite: _Trauma/Structures/Storage/closet.rsi
     layers:
-    - state: chapel
+    - state: chapel # Arcane-Edit: generic > chapel
       map: ["enum.StorageVisualLayers.Base"]
-    - state: chapel_door
+    - state: chapel_door # Arcane-Edit: generic_door > chapel_door
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
@@ -31,7 +30,6 @@
       sprite: Structures/Storage/closet_labels.rsi
       offset: "-0.065,0"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   # Arcane-Start: Orion storage sprites
   - type: Icon
     sprite: _Trauma/Structures/Storage/closet.rsi
