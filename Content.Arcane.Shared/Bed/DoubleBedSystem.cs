@@ -8,13 +8,15 @@ namespace Content.Arcane.Shared.Bed;
 
 public sealed partial class DoubleBedSystem : EntitySystem
 {
+    [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private PlaceableSurfaceSystem _placeableSurface = default!;
     [Dependency] private SharedBuckleSystem _buckle = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private TagSystem _tag = default!;
 
     private static readonly ProtoId<TagPrototype> BedsheetTag = "Bedsheet";
-    private const float BedRange = 0.5f;
+    // Covers both sheet positions: the left sheet sits 0.5 away from the bed's origin.
+    private const float BedRange = 0.75f;
 
     public override void Initialize()
     {
@@ -22,6 +24,7 @@ public sealed partial class DoubleBedSystem : EntitySystem
 
         SubscribeLocalEvent<DoubleBedComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<DoubleBedComponent, StrapAttemptEvent>(OnStrapAttempt, before: [typeof(SharedBuckleSystem)]);
+        SubscribeLocalEvent<DoubleBedComponent, StrappedEvent>(OnStrapped);
         SubscribeLocalEvent<DoubleBedComponent, UnstrappedEvent>(OnUnstrapped, after: [typeof(SharedBuckleSystem)]);
         SubscribeLocalEvent<DoubleBedComponent, AfterInteractUsingEvent>(OnAfterInteractUsing, before: [typeof(PlaceableSurfaceSystem)]);
         SubscribeLocalEvent<DoubleBedComponent, InteractHandEvent>(OnInteractHand);
@@ -33,13 +36,28 @@ public sealed partial class DoubleBedSystem : EntitySystem
             _buckle.SetDefaultBuckleOffset((ent, strap), ent.Comp.LeftOffset);
     }
 
+    /// <summary>
+    /// Points the default offset at the side nobody occupies; the attempt may still be refused, so nothing is
+    /// stored for the entity until it is actually strapped.
+    /// </summary>
     private void OnStrapAttempt(Entity<DoubleBedComponent> ent, ref StrapAttemptEvent args)
     {
         if (!TryComp<StrapComponent>(ent, out var strap))
             return;
 
-        var offset = strap.BuckledEntities.Count == 0 ? ent.Comp.LeftOffset : ent.Comp.RightOffset;
-        _buckle.SetBuckleOffset((ent, strap), args.Buckle.Owner, offset);
+        var leftTaken = false;
+        foreach (var buckled in strap.BuckledEntities)
+        {
+            leftTaken |= SharedBuckleSystem.GetBuckleOffset(strap, buckled) == ent.Comp.LeftOffset;
+        }
+
+        _buckle.SetDefaultBuckleOffset((ent, strap), leftTaken ? ent.Comp.RightOffset : ent.Comp.LeftOffset);
+    }
+
+    private void OnStrapped(Entity<DoubleBedComponent> ent, ref StrappedEvent args)
+    {
+        // Pin the side this occupant got, so the default can point at the other one for the next.
+        _buckle.SetBuckleOffset(args.Strap, args.Buckle.Owner, args.Strap.Comp.BuckleOffset);
     }
 
     private void OnUnstrapped(Entity<DoubleBedComponent> ent, ref UnstrappedEvent args)
@@ -63,12 +81,8 @@ public sealed partial class DoubleBedSystem : EntitySystem
         if (args.Handled)
             return;
 
-        var query = EntityQueryEnumerator<DoubleBedSheetComponent, TransformComponent>();
-        while (query.MoveNext(out var sheet, out _, out var xform))
+        foreach (var sheet in _lookup.GetEntitiesInRange<DoubleBedSheetComponent>(Transform(ent).Coordinates, BedRange))
         {
-            if (!IsOnBed(ent, xform))
-                continue;
-
             _transform.SetCoordinates(sheet, Transform(args.User).Coordinates);
             args.Handled = true;
             return;
@@ -83,10 +97,9 @@ public sealed partial class DoubleBedSystem : EntitySystem
             return;
 
         var sheets = 0;
-        var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
-        while (query.MoveNext(out var uid, out var tag, out var xform))
+        foreach (var (uid, tag) in _lookup.GetEntitiesInRange<TagComponent>(Transform(ent).Coordinates, BedRange))
         {
-            if (uid == args.Used || !IsOnBed(ent, xform) || !_tag.HasTag(tag, BedsheetTag))
+            if (uid == args.Used || !_tag.HasTag(tag, BedsheetTag))
                 continue;
 
             // A double sheet already covers the bed.
@@ -98,11 +111,5 @@ public sealed partial class DoubleBedSystem : EntitySystem
 
         var offset = sheets == 0 ? ent.Comp.RightBedsheetOffset : ent.Comp.LeftBedsheetOffset;
         _placeableSurface.SetPositionOffset(ent, offset, surface);
-    }
-
-    private bool IsOnBed(EntityUid bed, TransformComponent xform)
-    {
-        return xform.Coordinates.TryDistance(EntityManager, _transform, Transform(bed).Coordinates, out var distance)
-               && distance < BedRange;
     }
 }
