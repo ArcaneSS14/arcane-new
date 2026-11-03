@@ -24,14 +24,18 @@ public sealed class LightingOverlay : Overlay
     private readonly ShaderInstance _shader;
     private readonly Action<bool> _lightCvarChanged;
     private readonly Action<float> _lightScaleChanged;
+    private readonly Action<int> _qualityChanged;
     private bool _enableGlowing;
+    private int _quality;
     private bool _useLowResMask;
     private readonly List<(Vector2 Pos, Color Color, Matrix3x2 Matrix, LightingOverlayComponent Comp)> _visible = new();
     private const float OverlapRadius = 4f;
     private const float OverlapStrength = 2f;
+    private const int QualityNone = 0;
+    private const int QualitySilly = 1;
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
-    public override bool RequestScreenTexture => true;
+    public override bool RequestScreenTexture => _enableGlowing && _quality != QualityNone;
 
     private static readonly ProtoId<ShaderPrototype> LightingOverlayShader = "LightingOverlay";
 
@@ -43,6 +47,8 @@ public sealed class LightingOverlay : Overlay
         _cfg = IoCManager.Resolve<IConfigurationManager>();
         _lightCvarChanged = value => _enableGlowing = value;
         _cfg.OnValueChanged(ArcaneCCVars.EnableLightsGlowing, _lightCvarChanged, true);
+        _qualityChanged = value => _quality = value;
+        _cfg.OnValueChanged(ArcaneCCVars.LightingShaderQuality, _qualityChanged, true);
         _lightScaleChanged = value => _useLowResMask = value <= 0.5f;
         _cfg.OnValueChanged(CVars.LightResolutionScale, _lightScaleChanged, true);
 
@@ -52,7 +58,7 @@ public sealed class LightingOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        if (!_enableGlowing || ScreenTexture == null)
+        if (!_enableGlowing || _quality == QualityNone || ScreenTexture == null)
             return;
 
         var xformQuery = _entityManager.GetEntityQuery<TransformComponent>();
@@ -81,6 +87,8 @@ public sealed class LightingOverlay : Overlay
             _visible.Add((worldPos, color, worldMatrix, component));
         }
 
+        // Silly quality, or a reduced light resolution, draws the low resolution masks.
+        var lowMask = _useLowResMask || _quality == QualitySilly;
         foreach (var (pos, baseColor, worldMatrix, component) in _visible)
         {
             var overlap = 0f;
@@ -94,7 +102,7 @@ public sealed class LightingOverlay : Overlay
             var color = baseColor.WithAlpha(baseColor.A / (1f + (overlap - 1f) * OverlapStrength));
             handle.SetTransform(worldMatrix);
 
-            var mask = _spriteSystem.Frame0(_useLowResMask && component.SpriteLow != null ? component.SpriteLow : component.Sprite);
+            var mask = _spriteSystem.Frame0(lowMask && component.SpriteLow != null ? component.SpriteLow : component.Sprite);
             var xOffset = component.OffsetX - mask.Width / 2f / EyeManager.PixelsPerMeter;
             var yOffset = component.OffsetY - mask.Height / 2f / EyeManager.PixelsPerMeter;
             var textureVector = new Vector2(xOffset, yOffset);
@@ -109,6 +117,7 @@ public sealed class LightingOverlay : Overlay
     protected override void DisposeBehavior()
     {
         _cfg.UnsubValueChanged(ArcaneCCVars.EnableLightsGlowing, _lightCvarChanged);
+        _cfg.UnsubValueChanged(ArcaneCCVars.LightingShaderQuality, _qualityChanged);
         _cfg.UnsubValueChanged(CVars.LightResolutionScale, _lightScaleChanged);
         base.DisposeBehavior();
     }

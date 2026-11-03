@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Numerics;
+using Content.Arcane.Common.CCVar;
 using Robust.Client.ComponentTrees;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Utility;
+using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Graphics.RSI;
@@ -18,6 +20,7 @@ namespace Content.Arcane.Client.Lighting.Shaders;
 /// <summary>
 /// Draws the blurred halo of glow-shaded sprite layers above every other sprite, so sprites drawn
 /// later can't cover it. Lamps are drawn here as well, above everything including the halos.
+/// Halos and the lamp brightness boost only show at the Strong lighting shader quality.
 /// </summary>
 public sealed partial class GlowHaloOverlay : Overlay
 {
@@ -31,6 +34,9 @@ public sealed partial class GlowHaloOverlay : Overlay
         ("LightGlow", true, false),
     ];
 
+    private const int QualityStrong = 2;
+
+    [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IEntityManager _entities = default!;
     [Dependency] private IPrototypeManager _prototypes = default!;
 
@@ -40,7 +46,11 @@ public sealed partial class GlowHaloOverlay : Overlay
     private readonly EntityQuery<MapGridComponent> _gridQuery;
 
     private readonly HashSet<ProtoId<ShaderPrototype>> _glowShaders = new();
-    private readonly List<(ProtoId<ShaderPrototype> Id, ShaderInstance Shader)> _passShaders = new();
+    private readonly HashSet<ProtoId<ShaderPrototype>> _spriteShaders = new();
+
+    // Plain is the pass without glow, used below Strong quality. Halo passes have none and are skipped.
+    private readonly List<(ProtoId<ShaderPrototype> Id, ShaderInstance Shader, ShaderInstance? Plain)> _passShaders = new();
+    private bool _strong;
     private readonly List<Entity<SpriteComponent, TransformComponent>> _sprites = new();
     private readonly List<(ProtoId<ShaderPrototype> Shader, Matrix3x2 Matrix, Texture Texture, Color Color)> _layers = new();
 
@@ -57,12 +67,31 @@ public sealed partial class GlowHaloOverlay : Overlay
 
         foreach (var (id, drawSprite, drawHalo) in Passes)
         {
-            var shader = _prototypes.Index(id).InstanceUnique();
+            var proto = _prototypes.Index(id);
+            var shader = proto.InstanceUnique();
             shader.SetParameter("draw_sprite", drawSprite ? 1f : 0f);
             shader.SetParameter("draw_halo", drawHalo ? 1f : 0f);
-            _passShaders.Add((id, shader));
+
+            ShaderInstance? plain = null;
+            if (drawSprite)
+            {
+                plain = proto.InstanceUnique();
+                plain.SetParameter("draw_sprite", 1f);
+                plain.SetParameter("draw_halo", 0f);
+                plain.SetParameter("glow_brightness", 1f);
+                _spriteShaders.Add(id);
+            }
+
+            _passShaders.Add((id, shader, plain));
             _glowShaders.Add(id);
         }
+
+        _cfg.OnValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged, true);
+    }
+
+    private void OnQualityChanged(int quality)
+    {
+        _strong = quality == QualityStrong;
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -80,7 +109,7 @@ public sealed partial class GlowHaloOverlay : Overlay
         _layers.Clear();
         foreach (var (uid, sprite, xform) in _sprites)
         {
-            if (!HasGlowLayer(sprite))
+            if (!HasGlowLayer(sprite, _strong ? _glowShaders : _spriteShaders))
                 continue;
 
             var (worldPosition, worldRotation) = _transform.GetWorldPositionRotation(xform);
@@ -97,9 +126,12 @@ public sealed partial class GlowHaloOverlay : Overlay
         }
 
         var handle = args.WorldHandle;
-        foreach (var (id, shader) in _passShaders)
+        foreach (var (id, shader, plain) in _passShaders)
         {
-            handle.UseShader(shader);
+            if (!_strong && plain == null)
+                continue;
+
+            handle.UseShader(_strong ? shader : plain);
             foreach (var layer in _layers)
             {
                 if (layer.Shader != id)
@@ -115,11 +147,11 @@ public sealed partial class GlowHaloOverlay : Overlay
         handle.SetTransform(Matrix3x2.Identity);
     }
 
-    private bool HasGlowLayer(SpriteComponent sprite)
+    private static bool HasGlowLayer(SpriteComponent sprite, HashSet<ProtoId<ShaderPrototype>> shaders)
     {
         foreach (var layer in sprite.AllLayers)
         {
-            if (layer is Layer { ShaderPrototype: { } proto } && _glowShaders.Contains(proto))
+            if (layer is Layer { ShaderPrototype: { } proto } && shaders.Contains(proto))
                 return true;
         }
 
@@ -194,9 +226,12 @@ public sealed partial class GlowHaloOverlay : Overlay
 
     protected override void DisposeBehavior()
     {
-        foreach (var (_, shader) in _passShaders)
+        _cfg.UnsubValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged);
+
+        foreach (var (_, shader, plain) in _passShaders)
         {
             shader.Dispose();
+            plain?.Dispose();
         }
 
         base.DisposeBehavior();

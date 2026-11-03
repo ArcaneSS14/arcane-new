@@ -25,7 +25,7 @@ public sealed partial class LightingOverlayComponent : Component
     public SpriteSpecifier Sprite = new Texture(new ResPath("_Arcane/Effects/LightMasks/lightmask_lamp.png"));
 
     /// <summary>
-    /// Optional mask used when the light quality is reduced (medium and below). Falls back to <see cref="Sprite"/>.
+    /// Optional mask used at the Silly lighting shader quality or a reduced light resolution. Falls back to <see cref="Sprite"/>.
     /// </summary>
     [DataField]
     public SpriteSpecifier? SpriteLow;
