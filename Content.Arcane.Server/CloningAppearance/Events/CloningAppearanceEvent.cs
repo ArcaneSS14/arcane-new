@@ -13,4 +13,9 @@ public sealed class CloningAppearanceEvent : EntityEventArgs
     public CloningAppearanceComponent Component = default!;
     public EntityCoordinates Coords { get; set; }
     public EntityUid? StationUid { get; set; }
+
+    /// <summary>
+    /// The placeholder body the player attached to; deleted once the new body has the mind.
+    /// </summary>
+    public EntityUid Placeholder { get; set; }
 }

@@ -65,6 +65,9 @@ public sealed partial class CloningAppearanceSystem : EntitySystem
         }
 
         _mindSystem.TransferTo(targetMind, mobUid);
+
+        // Only now that the mind left it: deleting the placeholder while it was being attached cut into the transfer.
+        QueueDel(ev.Placeholder);
     }
 
     private void OnPlayerAttached(Entity<CloningAppearanceComponent> ent, ref PlayerAttachedEvent args)
@@ -77,8 +80,8 @@ public sealed partial class CloningAppearanceSystem : EntitySystem
             Player = args.Player,
             Component = ent.Comp,
             StationUid = _stations.GetOwningStation(ent),
-            Coords = Transform(ent).Coordinates
+            Coords = Transform(ent).Coordinates,
+            Placeholder = ent,
         });
-        Del(ent);
     }
 }
