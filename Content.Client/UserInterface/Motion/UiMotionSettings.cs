@@ -59,6 +59,8 @@ public static class UiMotionSettings
     public static readonly CVarDef<bool> AlertsSeverityPulse = Bool("alerts_severity_pulse");
     public static readonly CVarDef<bool> Chat = Bool("chat");
     public static readonly CVarDef<float> ChatMs = Float("chat_ms", 80);
+    public static readonly CVarDef<bool> Notifications = Bool("notifications");
+    public static readonly CVarDef<float> NotificationsMs = Float("notifications_ms", 120);
     public static readonly CVarDef<bool> WindowClose = Bool("window_close");
     public static readonly CVarDef<float> WindowExitMs = Float("window_exit_ms", 100);
     public static readonly CVarDef<bool> Progress = Bool("progress");
@@ -71,6 +73,11 @@ public static class UiMotionSettings
     public static readonly CVarDef<bool> Lists = Bool("lists");
     public static readonly CVarDef<float> ListsEnterMs = Float("lists_enter_ms", 150);
     public static readonly CVarDef<float> ListsMaxStagger = Float("lists_max_stagger", 8);
+    public static readonly CVarDef<bool> Tabs = Bool("tabs");
+    public static readonly CVarDef<float> TabsEnterMs = Float("tabs_enter_ms", 120);
+    public static readonly CVarDef<bool> Votes = Bool("votes");
+    public static readonly CVarDef<float> VotesEnterMs = Float("votes_enter_ms", 280);
+    public static readonly CVarDef<float> VotesTravel = Float("votes_travel", 48);
 
     public static readonly CVarDef<bool> BubbleOpening = Bool("bubble_opening");
     public static readonly CVarDef<bool> BubbleClosing = Bool("bubble_closing");

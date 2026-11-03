@@ -35,6 +35,7 @@ public sealed partial class UiMotionContainer : Control
     public UiMotionProfile Profile { get; set; } = UiMotionProfile.Standard;
     public CVarDef<bool> EnabledSetting { get; set; } = UiMotionSettings.Enabled;
     public CVarDef<bool> ClosingSetting { get; set; } = UiMotionSettings.AnimateClosing;
+    public Vector2 TravelDirection { get; set; } = Vector2.UnitY;
     public Vector2 VisualOffset { get; private set; }
 
     public void UseMenuProfile() => Profile = UiMotionSettings.MenuProfile(_configuration);
@@ -142,10 +143,13 @@ public sealed partial class UiMotionContainer : Control
 
     protected override Vector2 ArrangeOverride(Vector2 finalSize)
     {
-        var offset = _transition.Offset;
+        var offset = _transition.Offset * TravelDirection;
         if (Root != null)
-            offset = Math.Clamp(offset, -GlobalPosition.Y, Math.Max(-GlobalPosition.Y, Root.Height - GlobalPosition.Y - finalSize.Y));
-        VisualOffset = new Vector2(0, offset);
+        {
+            offset.X = Math.Clamp(offset.X, -GlobalPosition.X, Math.Max(-GlobalPosition.X, Root.Width - GlobalPosition.X - finalSize.X));
+            offset.Y = Math.Clamp(offset.Y, -GlobalPosition.Y, Math.Max(-GlobalPosition.Y, Root.Height - GlobalPosition.Y - finalSize.Y));
+        }
+        VisualOffset = offset;
         foreach (var child in Children)
             child.Arrange(UIBox2.FromDimensions(VisualOffset, finalSize));
         return finalSize;

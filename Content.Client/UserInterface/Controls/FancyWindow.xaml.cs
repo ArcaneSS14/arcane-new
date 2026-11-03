@@ -26,7 +26,6 @@ namespace Content.Client.UserInterface.Controls
         {
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
-            InitializeWindowMotion(); // Arcane
 
             CloseButton.OnPressed += _ => Close();
             HelpButton.OnPressed += _ => Help();

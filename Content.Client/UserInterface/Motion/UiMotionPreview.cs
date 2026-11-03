@@ -122,6 +122,15 @@ public sealed partial class UiMotionPreview : FancyWindow
         };
         body.AddChild(replayList);
         body.AddChild(rows);
+        var tabs = new TabContainer { MinHeight = 80, TabsVisible = true };
+        tabs.AddChild(new Label { Text = Loc.GetString("ui-motion-preview-tab-first") });
+        tabs.SetTabTitle(0, Loc.GetString("ui-motion-preview-tab-first"));
+        tabs.AddChild(new Label { Text = Loc.GetString("ui-motion-preview-tab-second") });
+        tabs.SetTabTitle(1, Loc.GetString("ui-motion-preview-tab-second"));
+        body.AddChild(tabs);
+        var switchTab = new Button { Text = Loc.GetString("ui-motion-preview-tabs") };
+        switchTab.OnPressed += _ => tabs.CurrentTab = (tabs.CurrentTab + 1) % tabs.ChildCount;
+        body.AddChild(switchTab);
         _speech = new RichTextLabel { MaxWidth = 340 };
         body.AddChild(_speech);
         _reveal = new UiTextReveal(FormattedMessage.FromUnformatted(Loc.GetString("ui-motion-preview-speech")));

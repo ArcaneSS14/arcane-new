@@ -11,13 +11,15 @@ All preferences are archived client CVars defined in `UiMotionSettings.cs`.
 | --- | --- | --- |
 | Context menus | Entrance, local item sequence, inert exit image | `ui.motion_menu_*`, `ui.animation_closing` |
 | Main window root | Window entrance; buttons sequence within their own parent | `ui.motion_windows`, `ui.motion_window_enter_ms`, `ui.motion_button*` |
-| FancyWindow | Snapshot exit, immediate logical close and focus release | `ui.motion_window_close`, `ui.motion_window_exit_ms` |
+| TabContainer pages | Fade on selection without moving content or changing hit areas | `ui.motion_tabs*` |
+| Vote popups | Fade and horizontal entrance from the left; normal vote input begins at its final position | `ui.motion_votes*` |
 | Popups and tooltips | Entrance fade; immediate close; no second fade on their children | `ui.motion_popups*` |
 | SlotControl (inventory/hands/belt) | Icon fade/scale, transient outgoing icon, highlight fade | `ui.motion_slot*` |
 | Storage grid | Icon entrance; outgoing visual copy except during dragging | `ui.motion_slot*` |
 | Action hotbar | Local icon sequence and optional border pulse at cooldown boundaries | `ui.motion_actions*` |
 | Alerts | Icon entrance/exit fade, optional single severity border pulse | `ui.motion_alerts*` |
 | Chat | New unread message border indicator; no replay for coalesced repeats | `ui.motion_chat*` |
+| AHelp and changelog | Channel/tab transition and notification feedback; message history keeps its layout | `ui.motion_tabs*`, `ui.motion_notifications*` |
 | Power monitoring | Separate display interpolation; target value changes immediately | `ui.motion_progress*` |
 | Radial menus | Sector sequence, hover colour/outer-radius interpolation, snapshot exit | `ui.motion_radial*` |
 | Player lists and guide navigation | Bounded sequence of rows, without moving their hit areas | `ui.motion_lists*` |
@@ -43,7 +45,7 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
 
 ## Deliberate limits
 
-- No RobustToolbox or networking changes. Ordinary engine-owned BaseWindow subclasses without a content hook still close instantly.
+- No RobustToolbox or networking changes. Windows close immediately because content-side rendering cannot capture every engine window safely.
 - OutputPanel stores private RichTextEntry values, not row controls. Chat uses a border indicator, not per-line fades.
 - Alerts and storage use a conservative fade rather than layout scale. Storage exit copies can simplify rotated/custom item placement.
 - Text reveal uses sandbox-permitted Rune APIs. Combining marks, common emoji sequences, flags and CRLF stay together;

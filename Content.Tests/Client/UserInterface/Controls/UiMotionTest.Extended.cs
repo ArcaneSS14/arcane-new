@@ -156,6 +156,8 @@ public sealed partial class UiMotionTest
         Default(S.AlertsSeverityPulse);
         Default(S.Chat);
         Default(S.ChatMs);
+        Default(S.Notifications);
+        Default(S.NotificationsMs);
         Default(S.WindowClose);
         Default(S.WindowExitMs);
         Default(S.Progress);
@@ -168,6 +170,11 @@ public sealed partial class UiMotionTest
         Default(S.Lists);
         Default(S.ListsEnterMs);
         Default(S.ListsMaxStagger);
+        Default(S.Tabs);
+        Default(S.TabsEnterMs);
+        Default(S.Votes);
+        Default(S.VotesEnterMs);
+        Default(S.VotesTravel);
     }
 
     [Test]

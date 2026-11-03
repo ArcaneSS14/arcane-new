@@ -90,6 +90,7 @@ public sealed partial class UiMotionUIController : UIController
     private void Queue(Control control)
     {
         if (control.VisibleInTree && (control is BaseWindow or BaseButton or Popup or ActionButton or ItemGridPiece
+            || control.Parent is TabContainer
             || IsListRow(control) || control.Parent == UIManager.PopupRoot) && !_pending.Contains(control))
             _pending.Add(control);
     }
@@ -104,7 +105,7 @@ public sealed partial class UiMotionUIController : UIController
     {
         for (var parent = control.Parent; parent != null; parent = parent.Parent)
         {
-            if (parent is Popup or UiMotionContainer { Profile.Opening: true }
+            if (parent is Popup or TabContainer or UiMotionContainer { Profile.Opening: true }
                 || parent.Parent == UIManager.PopupRoot || IsListRow(parent))
                 return true;
         }
@@ -174,6 +175,8 @@ public sealed partial class UiMotionUIController : UIController
                 piece.AnimateAppearance();
             else if (control is BaseWindow)
                 Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0);
+            else if (control.Parent is TabContainer)
+                Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0);
             else
             {
                 var row = IsListRow(control);

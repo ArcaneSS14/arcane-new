@@ -73,6 +73,7 @@ namespace Content.Client.Administration.UI.Bwoink
             var formatted = new FormattedMessage(1);
             formatted.AddMarkupOrThrow($"[color=gray]{message.SentAt.ToShortTimeString()}[/color] {message.Text}");
             TextOutput.AddMessage(formatted, AllowedTags);
+            AnimateIncomingMessage(); // Arcane
             LastMessage = message.SentAt;
         }
 

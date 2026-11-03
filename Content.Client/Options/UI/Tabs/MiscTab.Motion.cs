@@ -114,6 +114,10 @@ public sealed partial class MiscTab
         MotionCheck(chat, S.Chat, "enabled");
         MotionSlider(chat, S.ChatMs, "duration", 0, 1000, "ms");
 
+        var notifications = AddMotionGroup("notifications");
+        MotionCheck(notifications, S.Notifications, "enabled");
+        MotionSlider(notifications, S.NotificationsMs, "duration", 0, 1000, "ms");
+
         var progress = AddMotionGroup("progress");
         MotionCheck(progress, S.Progress, "enabled");
         MotionSlider(progress, S.ProgressMs, "duration", 0, 1000, "ms");
@@ -126,6 +130,15 @@ public sealed partial class MiscTab
         var lists = AddMotionGroup("lists");
         MotionCheck(lists, S.Lists, "enabled");
         MotionSlider(lists, S.ListsEnterMs, "duration", 0, 1000, "ms");
+
+        var tabs = AddMotionGroup("tabs");
+        MotionCheck(tabs, S.Tabs, "enabled");
+        MotionSlider(tabs, S.TabsEnterMs, "duration", 0, 1000, "ms");
+
+        var votes = AddMotionGroup("votes");
+        MotionCheck(votes, S.Votes, "enabled");
+        MotionSlider(votes, S.VotesEnterMs, "enter", 0, 1000, "ms");
+        MotionSlider(votes, S.VotesTravel, "travel", 0, 240, "pixels");
 
         MotionCheck(slots, S.SlotHighlight, "highlight");
         MotionSlider(slots, S.SlotScale, "scale", 0, 0.25f, "ratio");

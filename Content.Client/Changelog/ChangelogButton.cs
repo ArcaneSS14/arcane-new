@@ -33,7 +33,11 @@ namespace Content.Client.Changelog
 
         private void UpdateStuff()
         {
-            if (_changelogManager.NewChangelogEntries)
+            // Arcane-Start
+            var hasNewEntries = _changelogManager.NewChangelogEntries;
+            AnimateNewEntries(hasNewEntries);
+            // Arcane-End
+            if (hasNewEntries) // Arcane-Edit: _changelogManager.NewChangelogEntries > hasNewEntries
             {
                 Text = Loc.GetString("changelog-button-new-entries");
                 StyleClasses.Add(StyleClass.Positive);

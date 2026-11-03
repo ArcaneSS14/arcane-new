@@ -26,6 +26,7 @@ namespace Content.Client.Voting.UI
             _vote = vote;
             IoCManager.InjectDependencies(this);
             RobustXamlLoader.Load(this);
+            InitializeVoteMotion(); // Arcane
 
             Stylesheet = IoCManager.Resolve<IStylesheetManager>().SheetSystem;
 

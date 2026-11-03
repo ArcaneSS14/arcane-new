@@ -286,6 +286,9 @@ namespace Content.Client.Administration.UI.Bwoink
             {
                 var panel = AHelpHelper.EnsurePanel(ch.Value);
                 panel.Visible = true;
+                // Arcane-Start
+                panel.AnimateChannelAppearance();
+                // Arcane-End
             }
         }
 
