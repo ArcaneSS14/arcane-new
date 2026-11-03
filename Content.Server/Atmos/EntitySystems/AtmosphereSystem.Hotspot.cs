@@ -101,7 +101,7 @@ public sealed partial class AtmosphereSystem
         // Start applying fire effects and spreading to adjacent tiles.
         if (tile.Hotspot.Bypassing)
         {
-            tile.Hotspot.State = 3;
+            // tile.Hotspot.State = 3; // Arcane-Edit: State = 3 > removed, PerformHotspotExposure sets the state from the temperature
 
             var gridUid = ent.Owner;
             var tilePos = tile.GridIndices;
@@ -257,19 +257,6 @@ public sealed partial class AtmosphereSystem
         if (tile.Air == null || !tile.Hotspot.Valid)
             return;
 
-        // Arcane-Start: Orion fire states
-        tile.Hotspot.State = tile.Hotspot.Temperature switch
-        {
-            <= 390.15f => 1,
-            <= 475.15f => 2,
-            <= 570.15f => 3,
-            <= 1000.15f => 4,
-            <= 5000.15f => 5,
-            <= 10000.15f => 6,
-            _ => 7,
-        };
-        // Arcane-End
-
         // Determine if the tile has become a full-blown fire if the volume of the fire has effectively reached
         // the volume of the tile's air.
         tile.Hotspot.Bypassing = tile.Hotspot.SkippedFirstProcess && tile.Hotspot.Volume > tile.Air.Volume * 0.95f;
@@ -291,6 +278,19 @@ public sealed partial class AtmosphereSystem
             tile.Hotspot.Volume = affected.ReactionResults[(byte)GasReaction.Fire] * Atmospherics.FireGrowthRate;
             Merge(tile.Air, affected);
         }
+
+        // Arcane-Start: Orion fire states, from the temperature after this cycle's reaction
+        tile.Hotspot.State = tile.Hotspot.Temperature switch
+        {
+            <= 390.15f => 1,
+            <= 475.15f => 2,
+            <= 570.15f => 3,
+            <= 1000.15f => 4,
+            <= 5000.15f => 5,
+            <= 10000.15f => 6,
+            _ => 7,
+        };
+        // Arcane-End
 
         var fireEvent = new TileFireEvent(tile.Hotspot.Temperature, tile.Hotspot.Volume);
         _entSet.Clear();
