@@ -1,9 +1,13 @@
 <!-- Arcane-Start -->
 # Client UI motion
 
-Options → Misc exposes independent groups, timings, reset buttons, presets and a preview of **saved** settings.
-Apply changed settings before opening the preview. `ui.animations=false` disables all new effects.
+Options → Animations exposes a preset selector plus independent groups, timings and reset buttons.
+Preset and detail changes are staged until Apply is pressed. `ui.animations=false` disables all new effects.
 All preferences are archived client CVars defined in `UiMotionSettings.cs`.
+
+Animation-adjacent settings stay with their actual owner when moving them would make the menu less clear: general
+reduced visual effects remain under Accessibility, runechat typing remains under Customization, and heat distortion
+remains under Graphics.
 
 ## Motion language
 
@@ -46,8 +50,8 @@ and [motion specifications](https://m3.material.io/styles/motion/overview/specs)
 
 ### XAML audit
 
-The release audit covers all 501 tracked XAML documents: 240 window roots, 4 popup roots, 5 radial-menu roots,
-and 252 reusable controls, pages, fragments and HUD widgets. Every audited window ultimately derives from
+The release audit covers all 502 tracked XAML documents: 240 window roots, 4 popup roots, 5 radial-menu roots,
+and 253 reusable controls, pages, fragments and HUD widgets. Every audited window ultimately derives from
 `BaseWindow`, including custom window root types, so the root controller covers their appearance without rewriting
 individual XAML files. Popup and radial roots use their dedicated lifecycle paths. Changelog tabs, Guidebook tree
 navigation, action/alert/storage HUD widgets and reusable controls are animated at their owning lifecycle boundary.
@@ -100,7 +104,7 @@ git diff --stat
 The headless process is a startup check: look for `Content.Client: Verified IL` and sandbox errors, then stop it.
 Use the existing local engine checkout; do not update the submodule as part of verification.
 
-Manual checks: replay the options preview, rapidly replace/remove items, drag storage items, switch hotbar pages,
-open/close/reopen windows, change alert severity and disable groups during transitions. Check input, scrolling,
+Manual checks: rapidly replace/remove items, drag storage items, switch hotbar pages, open/close/reopen windows,
+change alert severity and disable groups during transitions. Check input, scrolling,
 text readability, snapshot alignment and texture lifetime with real rendering.
 <!-- Arcane-End -->

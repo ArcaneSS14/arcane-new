@@ -23,7 +23,10 @@ namespace Content.Client.Options.UI
             Tabs.SetTabTitle(4, Loc.GetString("ui-options-tab-accessibility"));
             Tabs.SetTabTitle(5, Loc.GetString("ui-options-tab-admin"));
             Tabs.SetTabTitle(6, Loc.GetString("ui-options-tab-network"));
-            Tabs.SetTabTitle(7, Loc.GetString("ui-options-tab-customization")); // Arcane
+            // Arcane-Start
+            Tabs.SetTabTitle(7, Loc.GetString("ui-options-tab-customization"));
+            Tabs.SetTabTitle(8, Loc.GetString("ui-options-tab-animations"));
+            // Arcane-End
 
             UpdateTabs();
         }
@@ -38,7 +41,10 @@ namespace Content.Client.Options.UI
             AccessibilityTab.Control.ReloadValues();
             AudioTab.Control.ReloadValues();
             AdminOptionsTab.Control.ReloadValues();
-            CustomizationTab.Control.ReloadValues(); // Arcane
+            // Arcane-Start
+            CustomizationTab.Control.ReloadValues();
+            AnimationsTab.ReloadValues();
+            // Arcane-End
         }
     }
 }

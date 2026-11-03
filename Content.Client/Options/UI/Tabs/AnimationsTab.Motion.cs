@@ -1,50 +1,40 @@
 // Arcane-Start
 using System.Globalization;
-using Content.Client.UserInterface.Motion;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
 using S = Content.Client.UserInterface.Motion.UiMotionSettings;
+using System.Linq;
 
 namespace Content.Client.Options.UI.Tabs;
 
-public sealed partial class MiscTab
+public sealed partial class AnimationsTab
 {
     [Dependency] private IConfigurationManager _motionConfiguration = default!;
 
     private readonly List<BaseOption> _motionOptions = [];
     private readonly Dictionary<CVarDef<bool>, CheckBox> _motionChecks = [];
     private readonly Dictionary<CVarDef<float>, MotionFloatOption> _motionSliders = [];
-    private UiMotionPreview? _motionPreview;
+    private bool _profileReady;
+    private bool _updatingProfile;
 
     private sealed record MotionGroup(BoxContainer Basic, BoxContainer Details, List<BaseOption> Options);
 
+    private enum MotionPreset : byte
+    {
+        Expressive,
+        Subtle,
+        Reduced,
+        Off,
+        Custom
+    }
+
     private void InitializeMotionOptions()
     {
+        InitializeProfileSelector();
         var general = AddMotionGroup("general");
         MotionCheck(general, S.Enabled, "enabled");
         MotionCheck(general, S.Reduce, "reduce");
         MotionSlider(general, S.Speed, "speed", S.MinSpeed, S.MaxSpeed, "multiplier");
-        var profiles = new BoxContainer();
-        general.Basic.AddChild(profiles);
-        foreach (var profile in new[] { "subtle", "expressive", "reduced", "off" })
-        {
-            var button = new Button { Text = Loc.GetString("ui-motion-profile-" + profile) };
-            button.OnPressed += _ => ApplyMotionProfile(profile);
-            profiles.AddChild(button);
-        }
-        var preview = new Button { Text = Loc.GetString("ui-motion-preview") };
-        preview.OnPressed += _ =>
-        {
-            _motionPreview?.Close();
-            _motionPreview = new UiMotionPreview();
-            _motionPreview.OpenCentered();
-        };
-        general.Basic.AddChild(preview);
-        OnVisibilityChanged += _ =>
-        {
-            if (!VisibleInTree)
-                _motionPreview?.Close();
-        };
 
         var menus = AddMotionGroup("menus");
         MotionCheck(menus, S.MenuOpening, "opening");
@@ -66,14 +56,16 @@ public sealed partial class MiscTab
         MotionCheck(buttons, S.Buttons, "enabled");
         var order = new OptionDropDown { Title = Loc.GetString("ui-motion-order") };
         buttons.Basic.AddChild(order);
-        Track(buttons, Control.AddOptionDropDown(S.ButtonOrder, order,
+        var orderOption = Control.AddOptionDropDown(S.ButtonOrder, order,
             new List<OptionDropDownCVar<int>.ValueOption>
             {
                 new(0, Loc.GetString("ui-motion-order-together")),
                 new(1, Loc.GetString("ui-motion-order-sequential")),
                 new(2, Loc.GetString("ui-motion-order-jitter")),
                 new(3, Loc.GetString("ui-motion-order-random"))
-            }));
+            });
+        orderOption.ImmediateValueChanged += _ => RefreshProfileSelection();
+        Track(buttons, orderOption);
         MotionSlider(buttons, S.ButtonEnterMs, "enter", 0, 1000, "ms");
         MotionSlider(buttons, S.ButtonIntervalMs, "interval", 0, 150, "ms");
         MotionSlider(buttons, S.ButtonJitterMs, "jitter", 0, 150, "ms");
@@ -155,6 +147,20 @@ public sealed partial class MiscTab
         MotionSlider(speech, S.SpeechPunctuationMs, "pause", 0, 500, "ms");
     }
 
+    private void InitializeProfileSelector()
+    {
+        foreach (var preset in Enum.GetValues<MotionPreset>())
+            MotionProfile.Button.AddItem(Loc.GetString("ui-motion-profile-" + preset.ToString().ToLowerInvariant()), (int) preset);
+        MotionProfile.Button.SetItemDisabled(MotionProfile.Button.GetIdx((int) MotionPreset.Custom), true);
+        MotionProfile.Button.OnItemSelected += args =>
+        {
+            var preset = (MotionPreset) args.Id;
+            if (preset == MotionPreset.Custom)
+                return;
+            ApplyMotionProfile(preset);
+        };
+    }
+
     private MotionGroup AddMotionGroup(string name)
     {
         MotionOptions.AddChild(new Label { Text = Loc.GetString("ui-motion-group-" + name), StyleClasses = { "LabelKeyText" } });
@@ -171,6 +177,7 @@ public sealed partial class MiscTab
             foreach (var option in options)
                 option.ResetToDefault();
             Control.ValueChanged();
+            RefreshProfileSelection();
         };
         row.AddChild(reset);
         MotionOptions.AddChild(basic);
@@ -190,7 +197,9 @@ public sealed partial class MiscTab
         var checkbox = new CheckBox { Text = Loc.GetString("ui-motion-" + label) };
         group.Basic.AddChild(checkbox);
         _motionChecks.Add(setting, checkbox);
-        Track(group, Control.AddOptionCheckBox(setting, checkbox));
+        var option = Control.AddOptionCheckBox(setting, checkbox);
+        option.ImmediateValueChanged += _ => RefreshProfileSelection();
+        Track(group, option);
     }
 
     private void MotionSlider(MotionGroup group, CVarDef<float> setting, string label, float min, float max, string unit)
@@ -198,38 +207,97 @@ public sealed partial class MiscTab
         var slider = new OptionSlider { Title = Loc.GetString("ui-motion-" + label) };
         group.Details.AddChild(slider);
         var option = Control.AddOption(new MotionFloatOption(Control, _motionConfiguration, setting, slider, min, max, unit));
+        option.ImmediateValueChanged += _ => RefreshProfileSelection();
         _motionSliders.Add(setting, option);
         Track(group, option);
     }
 
-    private void ApplyMotionProfile(string profile)
+    private void ApplyMotionProfile(MotionPreset profile)
     {
-        if (profile == "off")
-            _motionChecks[S.Enabled].Pressed = false;
-        else
+        _updatingProfile = true;
+        try
         {
-            foreach (var option in _motionOptions)
-                option.ResetToDefault();
-            _motionChecks[S.Reduce].Pressed = profile == "reduced";
-            if (profile == "subtle")
+            if (profile == MotionPreset.Off)
+                _motionChecks[S.Enabled].Pressed = false;
+            else
             {
-                _motionChecks[S.MenuSpring].Pressed = false;
-                _motionChecks[S.BubbleMovement].Pressed = false;
-                _motionSliders[S.MenuTravel].Set(0);
-                _motionSliders[S.ButtonJitterMs].Set(0);
-                _motionSliders[S.CheckboxIntensity].Set(0.15f);
-                _motionSliders[S.WindowEnterMs].Set(150);
-                _motionSliders[S.WindowTravel].Set(0);
-                _motionChecks[S.ActionsCooldownPulse].Pressed = false;
-                _motionChecks[S.AlertsSeverityPulse].Pressed = false;
-                _motionChecks[S.RadialHover].Pressed = false;
-                _motionSliders[S.SlotScale].Set(0.03f);
-                _motionSliders[S.PopupsMs].Set(70);
-                _motionSliders[S.AlertsEnterMs].Set(100);
-                _motionSliders[S.ListsEnterMs].Set(100);
+                foreach (var option in _motionOptions)
+                    option.ResetToDefault();
+                _motionChecks[S.Reduce].Pressed = profile == MotionPreset.Reduced;
+                if (profile == MotionPreset.Subtle)
+                {
+                    _motionChecks[S.MenuSpring].Pressed = false;
+                    _motionChecks[S.BubbleMovement].Pressed = false;
+                    _motionSliders[S.MenuTravel].Set(0);
+                    _motionSliders[S.ButtonJitterMs].Set(0);
+                    _motionSliders[S.CheckboxIntensity].Set(0.15f);
+                    _motionSliders[S.WindowEnterMs].Set(150);
+                    _motionSliders[S.WindowTravel].Set(0);
+                    _motionChecks[S.ActionsCooldownPulse].Pressed = false;
+                    _motionChecks[S.AlertsSeverityPulse].Pressed = false;
+                    _motionChecks[S.RadialHover].Pressed = false;
+                    _motionSliders[S.SlotScale].Set(0.03f);
+                    _motionSliders[S.PopupsMs].Set(70);
+                    _motionSliders[S.AlertsEnterMs].Set(100);
+                    _motionSliders[S.ListsEnterMs].Set(100);
+                }
             }
+            Control.ValueChanged();
         }
-        Control.ValueChanged();
+        finally
+        {
+            _updatingProfile = false;
+        }
+        SelectProfile(profile);
+    }
+
+    private void RefreshProfileSelection()
+    {
+        if (!_profileReady || _updatingProfile)
+            return;
+        SelectProfile(DetectProfile());
+    }
+
+    private MotionPreset DetectProfile()
+    {
+        if (!_motionChecks[S.Enabled].Pressed)
+            return MotionPreset.Off;
+
+        var modified = _motionOptions.Count(option => option.IsModifiedFromDefault());
+        if (modified == 0)
+            return MotionPreset.Expressive;
+        if (modified == 1 && _motionChecks[S.Reduce].Pressed)
+            return MotionPreset.Reduced;
+        return modified == 14 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
+    }
+
+    private bool IsSubtleProfile()
+    {
+        return !_motionChecks[S.MenuSpring].Pressed
+            && !_motionChecks[S.BubbleMovement].Pressed
+            && !_motionChecks[S.ActionsCooldownPulse].Pressed
+            && !_motionChecks[S.AlertsSeverityPulse].Pressed
+            && !_motionChecks[S.RadialHover].Pressed
+            && Matches(S.MenuTravel, 0)
+            && Matches(S.ButtonJitterMs, 0)
+            && Matches(S.CheckboxIntensity, 0.15f)
+            && Matches(S.WindowEnterMs, 150)
+            && Matches(S.WindowTravel, 0)
+            && Matches(S.SlotScale, 0.03f)
+            && Matches(S.PopupsMs, 70)
+            && Matches(S.AlertsEnterMs, 100)
+            && Matches(S.ListsEnterMs, 100);
+    }
+
+    private bool Matches(CVarDef<float> setting, float expected)
+    {
+        return MathF.Abs(_motionSliders[setting].Current - expected) < 0.001f;
+    }
+
+    private void SelectProfile(MotionPreset profile)
+    {
+        MotionProfile.Button.SelectId((int) profile);
+        MotionProfileDescription.Text = Loc.GetString("ui-motion-profile-description-" + profile.ToString().ToLowerInvariant());
     }
 
     private sealed class MotionFloatOption : BaseOptionCVar<float>
@@ -268,6 +336,7 @@ public sealed partial class MiscTab
         }
 
         public void Set(float value) => Value = value;
+        public float Current => Value;
 
         private void UpdateLabel()
         {
