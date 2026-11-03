@@ -51,4 +51,15 @@ public sealed partial class UserActionsPanel : Control
         MainPanel.Visible = true;
         NoContentLabel.Visible = !anyVisible;
     }
+
+    // Arcane-Start
+    public void ReloadLocalization()
+    {
+        TabContainer.SetTabTitle(StatusTabControl, Loc.GetString("user-action-control-tab-status"));
+        TabContainer.SetTabTitle(EmotesTabControl, Loc.GetString("user-action-control-tab-emote"));
+        TabContainer.SetTabTitle(ConfigTabControl, Loc.GetString("user-action-control-tab-config"));
+        NoContentLabel.Text = Loc.GetString("user-action-control-nothing");
+        UpdateTabs();
+    }
+    // Arcane-End
 }

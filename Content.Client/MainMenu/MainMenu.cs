@@ -65,12 +65,14 @@ namespace Content.Client.MainMenu
         public void ReloadLocalization()
         {
             var address = _mainMenuControl.AddressBox.Text;
+            var username = _mainMenuControl.UsernameBox.Text;
             var wasConnecting = _isConnecting;
 
             Shutdown();
             Startup();
 
             _mainMenuControl.AddressBox.Text = address;
+            _mainMenuControl.UsernameBox.Text = username;
             if (!wasConnecting)
                 return;
 

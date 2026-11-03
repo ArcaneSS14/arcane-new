@@ -108,8 +108,6 @@ namespace Content.Client.Gameplay
         // Arcane-Start
         public void ReloadLocalization()
         {
-            ReloadMainScreen();
-
             switch (_uiManager.ActiveScreen)
             {
                 case DefaultGameScreen defaultScreen:

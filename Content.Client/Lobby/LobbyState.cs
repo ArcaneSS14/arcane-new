@@ -33,6 +33,7 @@ namespace Content.Client.Lobby
 
         private ClientGameTicker _gameTicker = default!;
         private ContentAudioSystem _contentAudioSystem = default!;
+        private LobbySoundtrackChangedEvent? _lastLobbySoundtrackChanged; // Arcane
 
         protected override Type? LinkedScreenType { get; } = typeof(LobbyGui);
         public LobbyGui? Lobby;
@@ -119,6 +120,8 @@ namespace Content.Client.Lobby
 
             UpdateLobbyUi();
             UpdateLobbyBackground();
+            if (_lastLobbySoundtrackChanged != null)
+                UpdateLobbySoundtrackInfo(_lastLobbySoundtrackChanged);
         }
         // Arcane-End
 
@@ -246,6 +249,7 @@ namespace Content.Client.Lobby
 
         private void UpdateLobbySoundtrackInfo(LobbySoundtrackChangedEvent ev)
         {
+            _lastLobbySoundtrackChanged = ev; // Arcane
             if (ev.SoundtrackFilename == null)
             {
                 Lobby!.LobbySong.SetMarkup(Loc.GetString("lobby-state-song-no-song-text"));

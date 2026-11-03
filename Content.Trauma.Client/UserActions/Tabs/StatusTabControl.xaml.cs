@@ -59,6 +59,7 @@ public sealed partial class StatusTabControl : BaseTabControl
 
     public override bool UpdateState()
     {
+        _minutes = -1; // Arcane
         UpdateInfoBlob();
         return true;
     }
