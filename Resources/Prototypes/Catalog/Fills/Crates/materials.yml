@@ -41,6 +41,13 @@
   name: plastic sheet crate
   description: 90 sheets of plastic.
   components:
+  # Arcane-Start: plastic appearance; preserve the delivery crate mechanics.
+  - type: Icon
+    sprite: Structures/Storage/Crates/plastic.rsi
+  - type: Sprite
+    sprite: Structures/Storage/Crates/plastic.rsi
+    offset: 0, 0
+  # Arcane-End
   - type: EntityTableContainerFill
     containers:
       entity_storage:
@@ -48,7 +55,7 @@
         amount: 3
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateWooden # Arcane-Edit: CrateGenericSteel > CrateWooden
   id: CrateMaterialWood
   name: wood crate
   description: Bunch of wood planks.
@@ -94,7 +101,7 @@
         id: SheetPlasma
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateGolden # Arcane-Edit: CrateGenericSteel > CrateGolden
   id: CrateMaterialGold
   name: gold crate
   description: 30 bars of gold.
@@ -105,7 +112,7 @@
         id: IngotGold
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateSilver # Arcane-Edit: CrateGenericSteel > CrateSilver
   id: CrateMaterialSilver
   name: silver crate
   description: 30 bars of silver.

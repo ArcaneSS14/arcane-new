@@ -10,6 +10,7 @@
     sprite: _Lavaland/Structures/Storage/Crates/necropolechest.rsi
   - type: Sprite
     sprite: _Lavaland/Structures/Storage/Crates/necropolechest.rsi
+    offset: 0, 0 # Arcane
 
 - type: entity
   parent: LavalandCrateNecropolis
