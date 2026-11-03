@@ -60,7 +60,7 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
     /// <summary>
     /// Alpha change per second during fade.
     /// </summary>
-    private const float FadeSpeed = 3f; // Arcane-Edit: 9f > 3f
+    private const float FadeSpeed = 6f; // Arcane-Edit: 9f > 6f
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowEntities;
 
