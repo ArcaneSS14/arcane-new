@@ -245,16 +245,22 @@
 # Assmos - Extinguisher Nozzle
 - type: entity
   id: CrateEngineeringFirefighterBackpackTank
-  parent: CrateAtmospherics # Arcane-Edit: CrateEngineering > CrateAtmospherics
+  parent: CrateEngineering
   name: firefighter crate
   description: Contains a firefighter backpack water tank.
   components:
   - type: StorageFill
     contents:
       - id: ClothingBackpackFirefighterTank
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  # Arcane-End
 
 - type: entity
-  parent: CrateAtmospherics # Arcane-Edit: CrateEngineering > CrateAtmospherics
+  parent: CrateEngineering
   id: CrateAirGrenade
   name: air grenade crate
   description: A crate containing 3 air grenades.
@@ -264,3 +270,9 @@
       entity_storage:
         id: AirGrenade
         amount: 3
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  # Arcane-End

@@ -198,7 +198,7 @@
         id: WeaponCrusherGlaive
 
 - type: entity
-  parent: CrateMiningSecure # Arcane-Edit: CrateGenericSteel > CrateMiningSecure
+  parent: CrateMining # Arcane-Edit: CrateGenericSteel > CrateMining
   id: CrateSupremeSalvagerCloak
   name: supreme salvager cloak crate
   description: Contains a cloak only to be worn by supreme salvagers. Wearing it undeservedly will result in your doom.

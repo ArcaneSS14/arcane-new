@@ -31,8 +31,8 @@
   - type: Icon
     sprite: Structures/Storage/Crates/plastic.rsi
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/plastic.rsi
+    offset: 0, 0 # Arcane
   - type: Construction
     graph: CratePlastic
     node: crateplastic
@@ -47,7 +47,7 @@
     group: CratePlastic
 
 - type: entity
-  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
+  parent: CratePlastic
   id: CrateFreezer
   name: freezer
   components:
@@ -55,6 +55,7 @@
     sprite: Structures/Storage/Crates/freezer.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/freezer.rsi
+    offset: 0, 0.25 # Arcane
   - type: AntiRottingContainer
   - type: ExplosionResistance
     damageCoefficient: 0.50
@@ -67,7 +68,7 @@
     group: null
 
 - type: entity
-  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
+  parent: CratePlastic
   id: CrateHydroponics
   name: hydroponics crate
   components:
@@ -75,9 +76,10 @@
     sprite: Structures/Storage/Crates/hydroponics.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/hydroponics.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
-  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
+  parent: CratePlastic
   id: CrateMedical
   name: medical crate
   components:
@@ -85,6 +87,7 @@
     sprite: Structures/Storage/Crates/medical.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/medical.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
   parent: CrateGenericSteel
@@ -98,7 +101,7 @@
     sprite: Structures/Storage/Crates/radiation.rsi
 
 - type: entity
-  parent: CrateGenericSteel # Arcane-Edit: CratePlastic > CrateGenericSteel
+  parent: CratePlastic
   id: CrateInternals
   name: oxygen crate
   components:
@@ -106,6 +109,7 @@
     sprite: Structures/Storage/Crates/o2.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/o2.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
   parent: CrateGenericSteel
@@ -326,6 +330,10 @@
     sprite: Structures/Storage/Crates/sec_gear.rsi
   - type: AccessReader
     access: [["Armory"]]
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: Structures/Storage/Crates/sec_gear.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateBaseSecure
@@ -348,7 +356,6 @@
   - type: Icon
     sprite: Structures/Storage/Crates/syndicate_secure.rsi
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/syndicate_secure.rsi
   - type: AccessReader
     access: [["SyndicateAgent", "NuclearOperative"]]
@@ -361,7 +368,6 @@
   - type: EntityStorage
     airtight: false
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/livestock.rsi
     layers:
     - state: base
@@ -371,6 +377,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.25,0.625"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/livestock.rsi
     state: base
@@ -420,7 +427,6 @@
   name: hamster cage
   components:
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/cage.rsi
     drawdepth: LargeObjects
     snapCardinals: true
@@ -432,6 +438,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "0.0,0.125"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/cage.rsi
     state: icon
@@ -498,7 +505,7 @@
         lid_overlay:
           True: { visible: false }
           False: { visible: true }
-        # Arcane-Start
+        # Arcane-Start: Orion storage sprites
         open_overlay:
           True: { visible: true }
           False: { visible: false }
@@ -526,20 +533,17 @@
   - type: Sprite
     layers:
     - state: base
-    # Arcane-Edit-Start: the resprite has no separate overlay state
-    # - state: overlay
-    #   color: "#ad8c27"
-    # Arcane-Edit-End
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ad8c27"
       map: [ lid_overlay ]
-    # Arcane-Start
     - state: overlay-open
       color: "#ad8c27"
-      map: [ open_overlay ]
-    # Arcane-End
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -563,20 +567,17 @@
   - type: Sprite
     layers:
     - state: base
-    # Arcane-Edit-Start: the resprite has no separate overlay state
-    # - state: overlay
-    #   color: "#92c7e8"
-    # Arcane-Edit-End
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#92c7e8"
       map: [ lid_overlay ]
-    # Arcane-Start
     - state: overlay-open
       color: "#92c7e8"
-      map: [ open_overlay ]
-    # Arcane-End
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -600,20 +601,17 @@
   - type: Sprite
     layers:
     - state: base
-    # Arcane-Edit-Start: the resprite has no separate overlay state
-    # - state: overlay
-    #   color: "#ba4bf0"
-    # Arcane-Edit-End
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ba4bf0"
       map: [ lid_overlay ]
-    # Arcane-Start
     - state: overlay-open
       color: "#ba4bf0"
-      map: [ open_overlay ]
-    # Arcane-End
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -637,20 +635,17 @@
   - type: Sprite
     layers:
     - state: base
-    # Arcane-Edit-Start: the resprite has no separate overlay state
-    # - state: overlay
-    #   color: "#c12d30"
-    # Arcane-Edit-End
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#c12d30"
       map: [ lid_overlay ]
-    # Arcane-Start
     - state: overlay-open
       color: "#c12d30"
-      map: [ open_overlay ]
-    # Arcane-End
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -674,20 +669,17 @@
   - type: Sprite
     layers:
     - state: base
-    # Arcane-Edit-Start: the resprite has no separate overlay state
-    # - state: overlay
-    #   color: "#53b723"
-    # Arcane-Edit-End
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#53b723"
       map: [ lid_overlay ]
-    # Arcane-Start
     - state: overlay-open
       color: "#53b723"
-      map: [ open_overlay ]
-    # Arcane-End
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -710,7 +702,6 @@
   description: A space pirate chest, not for station lubbers.
   components:
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/piratechest.rsi
     layers:
     - state: crate
@@ -724,6 +715,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "0.0,-0.09375"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/piratechest.rsi
     state: crate_icon
@@ -762,7 +754,6 @@
   description: A comfy coffin, excellent place for the vampires and corpses.
   components:
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/coffin.rsi
     layers:
     - state: base
@@ -806,7 +797,6 @@
   description: Someone died here...
   components:
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/wooden_grave.rsi
     layers:
     - state: base
@@ -858,7 +848,6 @@
   description: Someone died here...
   components:
   - type: Sprite
-    offset: "0.0,0.0" # Arcane
     sprite: Structures/Storage/Crates/stone_grave.rsi
     layers:
     - state: base

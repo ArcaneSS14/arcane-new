@@ -1,5 +1,5 @@
 - type: entity
-  parent: CrateFreezerKitchen # Arcane-Edit: CratePlastic > CrateFreezerKitchen
+  parent: CratePlastic
   id: CrateFoodPizza
   name: emergency pizza delivery
   description: Help do your part to end station hunger by distributing pizza to underfunded departments! Includes 4 pizzas.
@@ -13,9 +13,16 @@
         - id: FoodBoxPizzaCotton
         - id: LidSalami
           prob: 0.01
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+  # Arcane-End
 
 - type: entity
-  parent: CrateFreezerKitchen # Arcane-Edit: CratePlastic > CrateFreezerKitchen
+  parent: CratePlastic
   id: CrateFoodMRE
   name: MRE crate
   description: A military style meal fit to feed a whole department.
@@ -25,6 +32,13 @@
       entity_storage:
         id: BoxMRE
         amount: 6
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+  # Arcane-End
 
 - type: entity
   parent: CrateFreezer

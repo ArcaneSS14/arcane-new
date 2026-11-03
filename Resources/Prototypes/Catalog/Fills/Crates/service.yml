@@ -141,7 +141,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateWooden # Arcane-Edit: CrateGenericSteel > CrateWooden
+  parent: CrateLavender # Arcane-Edit: CrateGenericSteel > CrateLavender
   id: CrateServiceTheatre
   name: theatrical performances crate
   description: Contains a moth cloak, barber scissors, maid uniform, clown and mime attributes, and other performance charms.

@@ -12,7 +12,6 @@
   - type: Sprite
     noRot: true
     sprite: Structures/Storage/closet.rsi
-    offset: "0.0,0.25" # Arcane
     layers:
     - state: generic
       map: ["enum.StorageVisualLayers.Base"]
@@ -25,6 +24,7 @@
       visible: false
       sprite: Structures/Storage/closet_labels.rsi
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0.25 # Arcane
   - type: MovedByPressure
   - type: DamageOnHighSpeedImpact
     damage:

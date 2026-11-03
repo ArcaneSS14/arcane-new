@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from /tg/station | Edited by PuroSlavKing (Github)",
+  "copyright": "Taken from /tg/station | Edited by PuroSlavKing (Github); Previous/local sprites: Created by EmoGarbage404 (github) for Space Station 14.",
   "size": {
     "x": 62,
     "y": 37
@@ -21,6 +21,19 @@
     },
     {
       "name": "welded"
+    },
+    {
+      "name": "sparking",
+      "delays": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
     }
   ]
 }

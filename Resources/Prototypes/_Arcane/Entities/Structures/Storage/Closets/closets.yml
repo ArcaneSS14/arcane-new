@@ -5,7 +5,7 @@
   components:
   - type: Sprite
     netsync: false
-    sprite: _Arcane/Structures/Storage/Closets/inteq.rsi
+    sprite: _Arcane/Structures/Storage/inteq.rsi
     noRot: true
     layers:
     - state: inteq
@@ -32,7 +32,7 @@
   components:
   - type: Sprite
     netsync: false
-    sprite: _Arcane/Structures/Storage/Closets/inteq.rsi
+    sprite: _Arcane/Structures/Storage/inteq.rsi
     noRot: true
     layers:
     - state: inteq

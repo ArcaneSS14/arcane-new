@@ -152,12 +152,9 @@
   parent: WardrobeMixed
   name: custodial closet
   description: It's a storage unit for janitorial clothes and gear.
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: janitor_wardrobe_door
   # Arcane-End
 
@@ -166,12 +163,9 @@
   parent: WardrobeBlack
   name: formal closet
   description: It's a storage unit for formal clothing.
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: law_wardrobe_door
   # Arcane-End
 
@@ -180,12 +174,9 @@
   parent: WardrobeBlack
   name: chef's closet
   description: It's a storage unit for foodservice garments and mouse traps.
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: chef_wardrobe_door
   # Arcane-End
 
@@ -194,26 +185,15 @@
   parent: WardrobeBlack
   name: chaplain's wardrobe
   description: It's a storage unit for Nanotrasen-approved religious attire.
-  # Arcane-Start: Orion TG closets
-  components:
-  - type: Appearance
-  - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: ce_open
-    stateDoorClosed: chaplain_wardrobe_door
-  # Arcane-End
 
 - type: entity
   id: ClosetLegal
   parent: WardrobeBlue
   name: legal closet
   description: It's a storage unit for courtroom apparel and items.
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: law_wardrobe_door
   # Arcane-End
 
@@ -221,12 +201,9 @@
   id: WardrobeCargo
   parent: WardrobePrison
   name: cargo wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: cargo_wardrobe_door
   # Arcane-End
 
@@ -235,12 +212,9 @@
   parent: WardrobeMixed
   name: salvage wardrobe
   description: Notably not salvaged.
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: mining_wardrobe_door
   # Arcane-End
 
@@ -248,12 +222,9 @@
   id: WardrobeEngineering
   parent: WardrobeYellow
   name: engineering wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: eng_wardrobe_door
   # Arcane-End
 
@@ -261,12 +232,9 @@
   id: WardrobeMedicalDoctor
   parent: WardrobeWhite
   name: medical doctor's wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: med_wardrobe_door
   # Arcane-End
 
@@ -274,12 +242,26 @@
   id: WardrobeRobotics
   parent: WardrobeBlack
   name: robotics wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Closets/roboticist_wardrobe.rsi
+    state: icon
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Closets/roboticist_wardrobe.rsi
+    layers:
+    - state: generic
+      map: ["enum.StorageVisualLayers.Base"]
+    - state: robo_wardrobe_door
+      map: ["enum.StorageVisualLayers.Door"]
+    - state: welded
+      visible: false
+      map: ["enum.WeldableLayers.BaseWelded"]
+    - state: paper
+      visible: false
+      sprite: Structures/Storage/closet_labels.rsi
+      map: ["enum.PaperLabelVisuals.Layer"]
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: robo_wardrobe_door
   # Arcane-End
 
@@ -287,12 +269,9 @@
   id: WardrobeChemistry
   parent: WardrobeWhite
   name: chemistry wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: chemical_wardrobe_door
   # Arcane-End
 
@@ -300,12 +279,9 @@
   id: WardrobeGenetics
   parent: WardrobeWhite
   name: genetics wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: genetic_wardrobe_door
   # Arcane-End
 
@@ -313,12 +289,9 @@
   id: WardrobeVirology
   parent: WardrobeWhite
   name: virology wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: viro_wardrobe_door
   # Arcane-End
 
@@ -326,12 +299,9 @@
   id: WardrobeScience
   parent: WardrobeWhite
   name: science wardrobe
-  # Arcane-Start: Orion TG closets
+  # Arcane-Start: Orion storage sprites
   components:
-  - type: Appearance
   - type: EntityStorageVisuals
-    stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: science_wardrobe_door
   # Arcane-End
 

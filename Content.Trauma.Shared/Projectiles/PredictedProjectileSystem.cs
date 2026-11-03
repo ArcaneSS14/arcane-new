@@ -37,6 +37,10 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
     [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private SharedCameraRecoilSystem _recoil = default!;
+    // Arcane-Start
+    [Dependency] private ArcaneScreenshakeSystem _arcaneScreenshake = default!;
+    private static readonly ArcaneScreenshakeParameters ArcaneProjectileHitShake = new(0.35f, 1.4f, 0.014f);
+    // Arcane-End
     [Dependency] private SharedColorFlashEffectSystem _color = default!;
     [Dependency] private SharedDestructibleSystem _destructible = default!;
     [Dependency] private SharedGunSystem _gun = default!;
@@ -189,6 +193,11 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
 
             if (!ourBody.LinearVelocity.IsLengthZero() && _timing.IsFirstTimePredicted)
                 _recoil.KickCamera(target, ourBody.LinearVelocity.Normalized());
+
+            // Arcane-Start
+            if (_timing.IsFirstTimePredicted)
+                _arcaneScreenshake.Screenshake(target, ArcaneProjectileHitShake, null);
+            // Arcane-End
         }
 
         if (comp.DeleteOnCollide && comp.ProjectileSpent)

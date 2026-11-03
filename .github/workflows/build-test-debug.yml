@@ -209,7 +209,7 @@ jobs:
     name: Build & Test Debug
     needs: [build, build-release, test-unit, test-main, test-maps, test-gamerules, test-map-render]
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && github.actor != 'SlopBot' && github.event.pull_request.draft == false # Arcane-Edit: always() > always() && github.actor != 'SlopBot' && github.event.pull_request.draft == false
     steps:
       - name: CI succeeded
         run: |

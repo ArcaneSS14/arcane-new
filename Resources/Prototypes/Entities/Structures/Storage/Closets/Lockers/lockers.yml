@@ -275,10 +275,8 @@
   components:
   - type: Appearance
   - type: EntityStorageVisuals
-    # Arcane-Edit-Start: Orion TG closets
-    stateBaseClosed: chemical
-    stateDoorOpen: chemical_secure_open
-    # Arcane-Edit-End
+    stateBaseClosed: med
+    stateDoorOpen: med_open
     stateDoorClosed: chemical_door
   - type: AccessReader
     access: [ [ "Chemistry" ] ]
