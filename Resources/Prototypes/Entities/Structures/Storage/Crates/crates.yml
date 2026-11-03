@@ -533,12 +533,12 @@
   - type: Sprite
     layers:
     - state: base
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ad8c27"
       map: [ lid_overlay ]
-    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#ad8c27"
       visible: false
@@ -567,12 +567,12 @@
   - type: Sprite
     layers:
     - state: base
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#92c7e8"
       map: [ lid_overlay ]
-    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#92c7e8"
       visible: false
@@ -601,12 +601,12 @@
   - type: Sprite
     layers:
     - state: base
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ba4bf0"
       map: [ lid_overlay ]
-    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#ba4bf0"
       visible: false
@@ -635,12 +635,12 @@
   - type: Sprite
     layers:
     - state: base
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#c12d30"
       map: [ lid_overlay ]
-    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#c12d30"
       visible: false
@@ -669,12 +669,12 @@
   - type: Sprite
     layers:
     - state: base
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#53b723"
       map: [ lid_overlay ]
-    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#53b723"
       visible: false

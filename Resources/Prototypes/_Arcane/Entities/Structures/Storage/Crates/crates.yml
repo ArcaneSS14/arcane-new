@@ -1,6 +1,3 @@
-# Empty storage skins from Orion #170 + #177 and old Arcane InteQ art.
-# No roles, rewards or cargo products are introduced. InteQ access can be configured by mappers.
-
 - type: entity
   parent: CrateGenericSteel
   id: CrateAtmospherics
