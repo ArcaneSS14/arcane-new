@@ -24,6 +24,7 @@ public sealed partial class SharedAnomalyCoreSystem : EntitySystem
     // Arcane-Start
     [Dependency] private SharedContainerSystem _container = default!;
     [Dependency] private INetManager _net = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
     // Arcane-End
 
     public override void Initialize()
@@ -127,10 +128,7 @@ public sealed partial class SharedAnomalyCoreSystem : EntitySystem
                 Dirty(decayed, decayedCore);
             }
 
-            if (_container.TryGetContainingContainer(uid, out var container))
-                _container.Insert(decayed, container, force: true);
-
-            QueueDel(uid);
+            ReplaceCore(uid, decayed);
             return;
         }
         // Arcane-End
@@ -139,4 +137,38 @@ public sealed partial class SharedAnomalyCoreSystem : EntitySystem
         component.IsDecayed = true;
         Dirty(uid, component);
     }
+
+    // Arcane-Start
+    /// <summary>
+    /// Puts <paramref name="replacement"/> where <paramref name="core"/> is (hand, item slot, storage or floor) and deletes
+    /// the old core. A slot holds one entity, so the old core leaves it through the container API first.
+    /// </summary>
+    public void ReplaceCore(EntityUid core, EntityUid replacement)
+    {
+        if (_container.TryGetContainingContainer(core, out var container))
+        {
+            _container.Remove(core, container, force: true);
+            if (!_container.Insert(replacement, container))
+                _transform.DropNextTo(replacement, container.Owner);
+        }
+
+        QueueDel(core);
+    }
+
+    /// <summary>
+    /// Swaps an inert core for the freshly spawned active one; the active core decays back into the same inert
+    /// prototype and keeps the anomaly it came from, so the cycle can repeat.
+    /// </summary>
+    public void Reactivate(Entity<AnomalyCoreComponent> inert, EntityUid active)
+    {
+        if (TryComp<AnomalyCoreComponent>(active, out var activeCore))
+        {
+            activeCore.DecayPrototype = MetaData(inert).EntityPrototype?.ID;
+            activeCore.HazardousAnomalyPrototype = inert.Comp.HazardousAnomalyPrototype;
+            Dirty(active, activeCore);
+        }
+
+        ReplaceCore(inert, active);
+    }
+    // Arcane-End
 }

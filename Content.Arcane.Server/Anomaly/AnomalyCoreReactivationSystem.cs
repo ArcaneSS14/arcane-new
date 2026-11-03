@@ -1,6 +1,7 @@
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Electrocution;
 using Content.Shared.FixedPoint;
+using Content.Shared.Anomaly;
 using Content.Shared.Anomaly.Components;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Chemistry.Components;
@@ -10,7 +11,6 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Popups;
-using Robust.Shared.Containers;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 
@@ -28,7 +28,7 @@ public sealed partial class AnomalyCoreReactivationSystem : EntitySystem
     [Dependency] private ElectrocutionSystem _electrocution = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private FlammableSystem _flammable = default!;
-    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedAnomalyCoreSystem _core = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedSolutionContainerSystem _solutions = default!;
 
@@ -62,9 +62,13 @@ public sealed partial class AnomalyCoreReactivationSystem : EntitySystem
 
     private void TryReactivate(Entity<AnomalyCoreComponent> ent, Entity<SolutionComponent> solution)
     {
+        // A core with nothing to turn back into keeps its reagents.
+        if (GetReactivationPrototype(ent) is not { } active)
+            return;
+
         if (TryConsume(ent.Comp.ReactivationReagents, ent.Comp.ReactivationReagentAmount, solution))
         {
-            Reactivate(ent);
+            Reactivate(ent, active);
             return;
         }
 
@@ -73,7 +77,7 @@ public sealed partial class AnomalyCoreReactivationSystem : EntitySystem
             if (_random.Prob(ent.Comp.HazardousFailureChance))
                 DoHazardousFailure(ent);
             else
-                Reactivate(ent);
+                Reactivate(ent, active);
             return;
         }
 
@@ -100,17 +104,11 @@ public sealed partial class AnomalyCoreReactivationSystem : EntitySystem
         return false;
     }
 
-    private void Reactivate(Entity<AnomalyCoreComponent> ent)
+    private void Reactivate(Entity<AnomalyCoreComponent> ent, EntProtoId active)
     {
-        if (GetReactivationPrototype(ent) is not { } proto)
-            return;
-
-        var reactivated = Spawn(proto, Transform(ent).Coordinates);
-        if (_container.TryGetContainingContainer(ent.Owner, out var container))
-            _container.Insert(reactivated, container, force: true);
-
+        var reactivated = Spawn(active, Transform(ent).Coordinates);
+        _core.Reactivate(ent, reactivated);
         _popup.PopupEntity(Loc.GetString("anomaly-core-reactivated"), reactivated, PopupType.Medium);
-        QueueDel(ent);
     }
 
     /// <summary>
