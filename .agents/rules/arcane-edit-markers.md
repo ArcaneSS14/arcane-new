@@ -6,7 +6,7 @@ Marking applies only outside owner-local paths. Arcane runtime projects are root
 
 ## Which form to use
 
-The form depends on whether the lines are new or changed, counted per contiguous run, not per file or prototype. Unchanged intervening code/data ends the run: two separated single-line edits need two inline markers. Never widen a block to include YAML parent context or an unchanged method body.
+The form depends on whether the lines are new or changed, counted per contiguous run of one change kind and one semantic change, not per file or prototype. Unchanged intervening code/data or an unrelated section boundary ends the run: two separated single-line edits need two inline markers. Never widen a block to include YAML parent context or an unchanged method body.
 
 | Change | Form | Location |
 |---|---|---|
@@ -28,7 +28,7 @@ The single-line case is the common one, because most changes touch one line. A s
 private readonly int[] _cache = new int[16]; // Arcane
 ```
 
-For two or more contiguous lines of the same kind, the block form is required. Do not use inline markers for each line of a multi-line change, and do not open a `-Start` / `-End` pair around one line.
+For two or more lines in one run, the block form is required. Do not use inline markers for each line of a multi-line change, and do not open a `-Start` / `-End` pair around one line.
 
 `-Start` / `-End` are never trailing markers. A single added line is marked `Arcane`; `Arcane-Start` only appears as the opening half of a pair.
 
@@ -49,7 +49,7 @@ YAML:  # Arcane-Edit-Start: <reason>
 YAML:  # Arcane-Edit-End
 ```
 
-Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more contiguous lines of the same kind require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
+Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more lines in one run require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
 
 Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
 
@@ -114,7 +114,7 @@ This removal pattern is appropriate only when the commented entries are intentio
 
 ## Merge adjacent markers
 
-Merge same-kind markers only within the contiguous run defined above; a separate semantic change or unrelated section boundary ends it.
+Merge markers only within the run defined above. Keep adjacent markers for separate semantic changes or different change kinds separate.
 
 Contiguous merging keeps one hunk instead of several, which means one place for a rebase to conflict rather than several. State it in the report when it materially changes the marker boundary.
 
@@ -170,7 +170,7 @@ delayPerUnit: 0.5
 
 ### Merge contiguous inline markers into one pair
 
-Two adjacent inline markers of the same kind are one change, so put them in a single pair rather than marking each line separately.
+Two adjacent inline markers within one run belong in a single pair rather than marking each line separately.
 
 ```yaml
 itemOne: 1 # Arcane
@@ -225,7 +225,7 @@ One added line is a bare trailing marker, not a block.
 itemOne: 1 # Arcane
 ```
 
-A block and a lone line beside it. The block was a block because it covered two or more lines, and the lone line was never a block.
+A block and a lone line beside it stay separate when they belong to different semantic changes. If both belong to one run, combine them into one block.
 
 ```yaml
 # Arcane-Start
@@ -238,7 +238,7 @@ itemThree: 3 # Arcane
 
 ## Never merge across change kinds
 
-Two pairs of the same kind merge. Pairs of different kinds never merge.
+Two pairs of the same kind merge only within one run. Pairs of different kinds never merge.
 
 Merge `Arcane-Start` into `Arcane-Start` and `Arcane-Edit-Start` into `Arcane-Edit-Start`. Never merge an `Arcane-Start` block into an `Arcane-Edit-Start` block, even when they are adjacent. The `-End` marker says which kind of change a reader is looking at, and a merged block cannot say that.
 
@@ -270,7 +270,7 @@ Check, per file:
 - `-Start` and `-End` counts match
 - no nested `-Start` inside an open `-Start`
 - no `Arcane-Edit` in `Arcane-Start` blocks, or the reverse
-- no two marker blocks adjacent but unmerged
+- no adjacent blocks left unmerged when they belong to one run
 - added `using` lines are last in the file's `using` block and marked
 
 An `-Edit-Start` with no matching `-End` is a real defect, not a style question. It means the block runs to end of file and the next sync has no boundary to work with.
