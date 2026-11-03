@@ -33,7 +33,8 @@ public sealed class UiMotionProgressValue
             _age = 0;
         }
         _age += Math.Max(0, float.IsFinite(delta) ? delta : 0);
-        Displayed = _start + (_target - _start) * Math.Clamp(_age / duration, 0, 1);
+        var progress = Math.Clamp(_age / duration, 0, 1);
+        Displayed = _start + (_target - _start) * UiMotionEasing.Effects(progress, duration);
         return Displayed;
     }
 }

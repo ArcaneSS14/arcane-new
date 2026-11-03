@@ -60,7 +60,7 @@ public sealed class UiMotionVisual(Control target, IConfigurationManager configu
             if (sprite.Scale != _appliedScale)
                 _scale = sprite.Scale;
             _appliedScale = _scale * (1 - (configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : _shrink)
-                * MathF.Sin(MathF.PI * _transition.Opacity));
+                * (1 - _transition.Opacity));
             sprite.Scale = _appliedScale;
         }
         if (!_transition.Finished)

@@ -71,10 +71,12 @@ public abstract partial class SpeechBubble
         if (ConfigManager.GetCVar(UiMotionSettings.Reduce))
             duration = Math.Min(duration, 0.1f);
         var speed = UiMotionSettings.PlaybackSpeed(ConfigManager);
-        var opening = !ConfigManager.GetCVar(UiMotionSettings.BubbleOpening) || duration <= 0
+        var openingProgress = !ConfigManager.GetCVar(UiMotionSettings.BubbleOpening) || duration <= 0
             ? 1 : Math.Clamp(_motionAge * speed / duration, 0, 1);
+        var opening = UiMotionEasing.Effects(openingProgress, duration);
         var fadeDuration = BubbleFadeSeconds;
-        var closing = fadeDuration > 0 ? Math.Clamp(timeLeft / fadeDuration, 0, 1) : 1;
+        var closingProgress = fadeDuration > 0 ? 1 - Math.Clamp(timeLeft / fadeDuration, 0, 1) : 0;
+        var closing = 1 - UiMotionEasing.Effects(closingProgress, fadeDuration);
         return opening * closing;
     }
 }

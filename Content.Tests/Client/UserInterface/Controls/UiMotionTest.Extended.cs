@@ -158,8 +158,6 @@ public sealed partial class UiMotionTest
         Default(S.ChatMs);
         Default(S.Notifications);
         Default(S.NotificationsMs);
-        Default(S.WindowClose);
-        Default(S.WindowExitMs);
         Default(S.Progress);
         Default(S.ProgressMs);
         Default(S.Radial);
@@ -294,6 +292,7 @@ public sealed partial class UiMotionTest
         _window.Open();
         var motion = new UiMotionVisual(sprite, _configuration, S.Slots);
         motion.Start(100, shrink: 0.08f);
+        Assert.That(sprite.Scale.X, Is.LessThan(2));
         var opacity = sprite.Modulate.A;
         for (var i = 0; i < 12; i++)
         {
@@ -356,7 +355,7 @@ public sealed partial class UiMotionTest
     public void NewDurationsAndScalesRejectNonFiniteValues()
     {
         var milliseconds = new[] { S.PopupsMs, S.SlotEnterMs, S.SlotExitMs, S.ActionsEnterMs,
-            S.AlertsEnterMs, S.AlertsExitMs, S.ChatMs, S.WindowExitMs, S.ProgressMs,
+            S.AlertsEnterMs, S.AlertsExitMs, S.ChatMs, S.ProgressMs,
             S.RadialEnterMs, S.RadialExitMs, S.ListsEnterMs };
         foreach (var setting in milliseconds)
         {
@@ -388,8 +387,8 @@ public sealed partial class UiMotionTest
         Assert.That(row.Modulate, Is.EqualTo(Color.White));
     }
 
-    [TestCase(float.NaN, 90f)]
-    [TestCase(float.PositiveInfinity, 90f)]
+    [TestCase(float.NaN, 150f)]
+    [TestCase(float.PositiveInfinity, 150f)]
     [TestCase(-50f, 0f)]
     [TestCase(5000f, 1000f)]
     public void PopupDurationIsNormalized(float input, float expected)
@@ -416,6 +415,44 @@ public sealed partial class UiMotionTest
         Assert.That(progress.Advance(0.3f, 0, 0.12f, false), Is.EqualTo(0.3f));
         Assert.That(progress.Advance(0.3f, 0, 0.12f, true), Is.EqualTo(0.3f));
         Assert.That(progress.Advance(float.NaN, 0, 0.12f, true), Is.Zero);
+    }
+
+    [Test]
+    public void MaterialCurvesKeepEndpointsAndExpressiveSpatialMotionOvershoots()
+    {
+        Assert.That(UiMotionEasing.Spatial(0, true, UiMotionEasing.FastSpatialSeconds), Is.Zero);
+        Assert.That(UiMotionEasing.Spatial(1, true, UiMotionEasing.FastSpatialSeconds), Is.EqualTo(1));
+        Assert.That(UiMotionEasing.Effects(0, UiMotionEasing.FastEffectsSeconds), Is.Zero);
+        Assert.That(UiMotionEasing.Effects(1, UiMotionEasing.FastEffectsSeconds), Is.EqualTo(1));
+
+        var previous = 0f;
+        var overshot = false;
+        for (var i = 1; i <= 20; i++)
+        {
+            var progress = i / 20f;
+            var effect = UiMotionEasing.Effects(progress, UiMotionEasing.DefaultEffectsSeconds);
+            Assert.That(effect, Is.InRange(previous, 1f));
+            previous = effect;
+            overshot |= UiMotionEasing.Spatial(progress, true, UiMotionEasing.FastSpatialSeconds) > 1;
+        }
+        Assert.That(overshot, Is.True);
+    }
+
+    [Test]
+    public void InteractiveSpringRetargetsWithoutJumpAndSettles()
+    {
+        var spring = new UiMotionSpring();
+        for (var i = 0; i < 6; i++)
+            spring.Advance(1, 1 / 60f);
+        var beforeRetarget = spring.Value;
+        Assert.That(beforeRetarget, Is.GreaterThan(0));
+
+        var afterRetarget = spring.Advance(0, 0);
+        Assert.That(afterRetarget, Is.EqualTo(beforeRetarget));
+        for (var i = 0; i < 120; i++)
+            spring.Advance(0, 1 / 60f);
+        Assert.That(spring.Value, Is.EqualTo(0).Within(0.001f));
+        Assert.That(spring.Velocity, Is.EqualTo(0).Within(0.01f));
     }
 }
 // Arcane-End

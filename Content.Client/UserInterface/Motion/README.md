@@ -5,12 +5,31 @@ Options → Misc exposes independent groups, timings, reset buttons, presets and
 Apply changed settings before opening the preview. `ui.animations=false` disables all new effects.
 All preferences are archived client CVars defined in `UiMotionSettings.cs`.
 
+## Motion language
+
+Timed movement and fades use the official Material 3 spring-to-curve conversions:
+
+| Token | Cubic bezier | Default duration |
+| --- | --- | --- |
+| Expressive fast spatial | `0.42, 1.67, 0.21, 0.90` | 350 ms |
+| Expressive default spatial | `0.38, 1.21, 0.22, 1.00` | 500 ms |
+| Expressive slow spatial | `0.39, 1.29, 0.35, 0.98` | 650 ms |
+| Fast effects | `0.31, 0.94, 0.34, 1.00` | 150 ms |
+| Default effects | `0.34, 0.80, 0.34, 1.00` | 200 ms |
+| Slow effects | `0.34, 0.88, 0.34, 1.00` | 300 ms |
+
+Menus and vote surfaces composite a spatial curve with the matching shorter effects curve, so content becomes
+readable before travel settles. Interruptible radial hover uses the expressive fast spatial spring directly
+(`damping = 0.6`, `stiffness = 800`) and preserves velocity when its target reverses. Other feedback uses effects
+curves and does not move input geometry. Sources: [Material 3 motion overview](https://m3.material.io/styles/motion/overview/how-it-works)
+and [motion specifications](https://m3.material.io/styles/motion/overview/specs).
+
 ## Coverage
 
 | Surface | Behaviour | Settings prefix |
 | --- | --- | --- |
 | Context menus | Entrance, local item sequence, inert exit image | `ui.motion_menu_*`, `ui.animation_closing` |
-| Main window root | Window entrance; buttons sequence within their own parent | `ui.motion_windows`, `ui.motion_window_enter_ms`, `ui.motion_button*` |
+| Main window root | Expressive spatial entrance with a faster fade; buttons sequence within their own parent | `ui.motion_windows`, `ui.motion_window_enter_ms`, `ui.motion_window_travel`, `ui.motion_button*` |
 | TabContainer pages | Fade on selection without moving content or changing hit areas | `ui.motion_tabs*` |
 | Vote popups | Fade and horizontal entrance from the left; normal vote input begins at its final position | `ui.motion_votes*` |
 | Popups and tooltips | Entrance fade; immediate close; no second fade on their children | `ui.motion_popups*` |
@@ -25,9 +44,22 @@ All preferences are archived client CVars defined in `UiMotionSettings.cs`.
 | Player lists and guide navigation | Bounded sequence of rows, without moving their hit areas | `ui.motion_lists*` |
 | Speech bubbles | Entrance/exit, optional movement and text reveal | `ui.motion_bubble*`, `ui.motion_speech*` |
 
+### XAML audit
+
+The release audit covers all 501 tracked XAML documents: 240 window roots, 4 popup roots, 5 radial-menu roots,
+and 252 reusable controls, pages, fragments and HUD widgets. Every audited window ultimately derives from
+`BaseWindow`, including custom window root types, so the root controller covers their appearance without rewriting
+individual XAML files. Popup and radial roots use their dedicated lifecycle paths. Changelog tabs, Guidebook tree
+navigation, action/alert/storage HUD widgets and reusable controls are animated at their owning lifecycle boundary.
+
+Reusable children deliberately do not each receive a wrapper. Animating both a window and every nested XAML control
+would multiply opacity, replay effects during state refreshes and make input-heavy interfaces feel slower. New window
+types inherit root motion automatically; a genuinely independent popup, list-row family or dynamic visual should use
+the matching opt-in control described above.
+
 `ui.motion_reduce=true` removes cascades, travel, overshoot, icon scale, new pulses and progress interpolation.
 Fades are limited to 100 ms and playback uses 1× speed. Typing has its own independent toggle.
-Setting a duration to zero makes that transition immediate. Window entrance and exit can be disabled separately.
+Setting a duration to zero makes that transition immediate. Window entrance can be disabled separately.
 Subtle, Expressive and Reduced presets stage values in the normal options workflow; Off disables the master switch.
 
 ## Ownership and lifetime
@@ -45,7 +77,9 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
 
 ## Deliberate limits
 
-- No RobustToolbox or networking changes. Windows close immediately because content-side rendering cannot capture every engine window safely.
+- No RobustToolbox or networking changes. Windows close immediately because `BaseWindow.Close()` removes the live
+  control before notifying content. Delaying that close would retain focus and BUI state; continuously caching all
+  windows would add unacceptable GPU cost. Existing inert snapshots remain limited to opt-in menus and radial surfaces.
 - OutputPanel stores private RichTextEntry values, not row controls. Chat uses a border indicator, not per-line fades.
 - Alerts and storage use a conservative fade rather than layout scale. Storage exit copies can simplify rotated/custom item placement.
 - Text reveal uses sandbox-permitted Rune APIs. Combining marks, common emoji sequences, flags and CRLF stay together;

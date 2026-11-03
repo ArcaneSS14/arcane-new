@@ -50,7 +50,8 @@ public sealed class UiMotionFeedback : Control
     {
         if (_remaining <= 0 || !Enabled)
             return;
-        var opacity = _remaining / _duration;
+        var progress = 1 - _remaining / _duration;
+        var opacity = 1 - UiMotionEasing.Effects(progress, _duration);
         handle.DrawRect(PixelSizeBox, new Color(0.65f, 0.8f, 1f, opacity * 0.6f), false);
     }
 

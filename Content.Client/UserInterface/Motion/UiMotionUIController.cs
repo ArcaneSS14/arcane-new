@@ -13,6 +13,7 @@ using Content.Client.UserInterface.Systems.Storage.Controls;
 using Content.Client.Administration.UI.CustomControls;
 using Content.Client.Administration.UI.Tabs.PlayerTab;
 using TreeItem = Content.Client.UserInterface.Controls.FancyTree.TreeItem;
+using System.Numerics;
 
 namespace Content.Client.UserInterface.Motion;
 
@@ -37,6 +38,8 @@ public sealed partial class UiMotionUIController : UIController
         public Color Original;
         public Color Applied;
         public float Delay;
+        public Vector2? Origin;
+        public Vector2? AppliedPosition;
     }
 
     public override void Initialize()
@@ -123,7 +126,8 @@ public sealed partial class UiMotionUIController : UIController
 
     private float Read(CVarDef<float> setting, float min, float max) => UiMotionSettings.Read(_configuration, setting, min, max);
 
-    private void Start(Control control, CVarDef<bool> enabled, float milliseconds, float delay, float from = 0)
+    private void Start(Control control, CVarDef<bool> enabled, float milliseconds, float delay, float from = 0,
+        float travel = 0, bool expressive = false)
     {
         // Restart from the currently displayed opacity when toggling again.
         if (_active.TryGetValue(control, out var previous))
@@ -133,8 +137,11 @@ public sealed partial class UiMotionUIController : UIController
             return;
 
         var transition = new UiMotionTransition(_configuration);
-        transition.Start(UiMotionSettings.Resolve(_configuration,
-            new UiMotionProfile(TimeSpan.FromMilliseconds(milliseconds), TimeSpan.Zero, 0, false)), true, from, 0);
+        var profile = new UiMotionProfile(TimeSpan.FromMilliseconds(milliseconds), TimeSpan.Zero, travel, expressive)
+        {
+            EnterEffectDuration = travel > 0 ? UiMotionSettings.SpatialEffectDuration(milliseconds) : null
+        };
+        transition.Start(UiMotionSettings.Resolve(_configuration, profile), true, from, -travel);
         var fade = new Fade
         {
             Transition = transition,
@@ -143,14 +150,32 @@ public sealed partial class UiMotionUIController : UIController
             Applied = control.Modulate.WithAlpha(control.Modulate.A * from),
             Delay = _configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : delay
         };
+        if (travel > 0 && !_configuration.GetCVar(UiMotionSettings.Reduce))
+        {
+            fade.Origin = control.Position;
+            fade.AppliedPosition = ApplyPosition(control, fade.Origin.Value, transition.Offset);
+        }
         _active.Add(control, fade);
         control.Modulate = fade.Applied;
     }
 
     private void Cancel(Control control)
     {
-        if (_active.Remove(control, out var fade) && control.Modulate == fade.Applied)
+        if (!_active.Remove(control, out var fade))
+            return;
+        if (control.Modulate == fade.Applied)
             control.Modulate = fade.Original;
+        if (fade.Origin is { } origin && fade.AppliedPosition is { } applied && control.Position == applied)
+            LayoutContainer.SetPosition(control, origin);
+    }
+
+    private static Vector2 ApplyPosition(Control control, Vector2 origin, float offset)
+    {
+        var position = origin + new Vector2(0, offset);
+        if (control.Parent is { } parent)
+            position = Vector2.Clamp(position, Vector2.Zero, Vector2.Max(Vector2.Zero, parent.Size - control.Size));
+        LayoutContainer.SetPosition(control, position);
+        return position;
     }
 
     public override void FrameUpdate(FrameEventArgs args)
@@ -174,7 +199,8 @@ public sealed partial class UiMotionUIController : UIController
             else if (control is ItemGridPiece piece)
                 piece.AnimateAppearance();
             else if (control is BaseWindow)
-                Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0);
+                Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0,
+                    travel: Read(UiMotionSettings.WindowTravel, 0, 24), expressive: true);
             else if (control.Parent is TabContainer)
                 Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0);
             else
@@ -211,6 +237,8 @@ public sealed partial class UiMotionUIController : UIController
             // An owning control may change its own tint during the transition.
             if (control.Modulate != fade.Applied)
                 fade.Original = control.Modulate;
+            if (fade.Origin is { } origin && fade.AppliedPosition is { } applied && control.Position != applied)
+                fade.Origin = origin + control.Position - applied;
             var delta = args.DeltaSeconds;
             var speed = UiMotionSettings.PlaybackSpeed(_configuration);
             if (_configuration.GetCVar(UiMotionSettings.Reduce))
@@ -221,6 +249,8 @@ public sealed partial class UiMotionUIController : UIController
             fade.Transition.Advance(delta);
             fade.Applied = fade.Original.WithAlpha(fade.Original.A * fade.Transition.Opacity);
             control.Modulate = fade.Applied;
+            if (fade.Origin is { } motionOrigin)
+                fade.AppliedPosition = ApplyPosition(control, motionOrigin, fade.Transition.Offset);
             if (fade.Transition.Finished)
                 _completed.Add(control);
         }

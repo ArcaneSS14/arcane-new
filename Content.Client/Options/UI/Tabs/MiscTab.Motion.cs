@@ -60,8 +60,7 @@ public sealed partial class MiscTab
         var windows = AddMotionGroup("windows");
         MotionCheck(windows, S.Windows, "opening");
         MotionSlider(windows, S.WindowEnterMs, "enter", 0, 1000, "ms");
-        MotionCheck(windows, S.WindowClose, "closing");
-        MotionSlider(windows, S.WindowExitMs, "exit", 0, 1000, "ms");
+        MotionSlider(windows, S.WindowTravel, "travel", 0, 24, "pixels");
 
         var buttons = AddMotionGroup("buttons");
         MotionCheck(buttons, S.Buttons, "enabled");
@@ -220,6 +219,7 @@ public sealed partial class MiscTab
                 _motionSliders[S.ButtonJitterMs].Set(0);
                 _motionSliders[S.CheckboxIntensity].Set(0.15f);
                 _motionSliders[S.WindowEnterMs].Set(150);
+                _motionSliders[S.WindowTravel].Set(0);
                 _motionChecks[S.ActionsCooldownPulse].Pressed = false;
                 _motionChecks[S.AlertsSeverityPulse].Pressed = false;
                 _motionChecks[S.RadialHover].Pressed = false;

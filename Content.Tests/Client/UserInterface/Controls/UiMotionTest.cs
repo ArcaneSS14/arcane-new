@@ -91,6 +91,7 @@ public sealed partial class UiMotionTest : RobustUnitTest
         Default(S.AnimateClosing);
         Default(S.Windows);
         Default(S.WindowEnterMs);
+        Default(S.WindowTravel);
         Default(S.Buttons);
         Default(S.ButtonEnterMs);
         Default(S.ButtonIntervalMs);
@@ -256,7 +257,7 @@ public sealed partial class UiMotionTest : RobustUnitTest
         _configuration.SetCVar(S.MenuOpening, false);
         _configuration.SetCVar(S.MenuSequence, false);
         var profile = S.MenuProfile(_configuration);
-        Assert.That(profile.EnterDuration.TotalMilliseconds, Is.EqualTo(250));
+        Assert.That(profile.EnterDuration.TotalMilliseconds, Is.EqualTo(350));
         Assert.That(profile.Travel, Is.Zero);
         Assert.That(profile.Opening, Is.False);
         Assert.That(profile.Sequence, Is.False);

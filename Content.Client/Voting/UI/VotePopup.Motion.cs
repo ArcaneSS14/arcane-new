@@ -34,11 +34,15 @@ public sealed partial class VotePopup
     protected override void EnteredTree()
     {
         base.EnteredTree();
+        var duration = UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.VotesEnterMs, 0, 1000);
         _motionHost.Profile = new UiMotionProfile(
-            TimeSpan.FromMilliseconds(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.VotesEnterMs, 0, 1000)),
+            TimeSpan.FromMilliseconds(duration),
             TimeSpan.Zero,
             UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.VotesTravel, 0, 240),
-            false);
+            true)
+        {
+            EnterEffectDuration = UiMotionSettings.SpatialEffectDuration(duration)
+        };
         _motionHost.Show();
     }
 }

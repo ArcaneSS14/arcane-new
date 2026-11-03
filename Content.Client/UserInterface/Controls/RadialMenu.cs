@@ -428,6 +428,7 @@ public class RadialMenuButtonWithSector : RadialMenuButton, IRadialMenuItemWithS
 {
     // Arcane-Start
     private float _motionHover;
+    private readonly UiMotionSpring _motionHoverSpring = new();
     private readonly IConfigurationManager _motionConfiguration = IoCManager.Resolve<IConfigurationManager>();
 
     protected override void FrameUpdate(FrameEventArgs args)
@@ -436,8 +437,9 @@ public class RadialMenuButtonWithSector : RadialMenuButton, IRadialMenuItemWithS
         var target = DrawMode == DrawModeEnum.Hover ? 1f : 0f;
         var enabled = UiMotionSettings.IsEnabled(_motionConfiguration, UiMotionSettings.Radial)
             && _motionConfiguration.GetCVar(UiMotionSettings.RadialHover) && !_motionConfiguration.GetCVar(UiMotionSettings.Reduce);
-        _motionHover = enabled ? _motionHover + (target - _motionHover) * Math.Min(1, args.DeltaSeconds * 20
-            * UiMotionSettings.PlaybackSpeed(_motionConfiguration)) : target;
+        _motionHover = enabled
+            ? _motionHoverSpring.Advance(target, args.DeltaSeconds * UiMotionSettings.PlaybackSpeed(_motionConfiguration))
+            : _motionHoverSpring.Snap(target);
     }
 
     private Color MotionHoverColor(Color normal, Color hover) => new(
