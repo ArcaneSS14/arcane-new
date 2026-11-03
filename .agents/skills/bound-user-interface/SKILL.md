@@ -4,15 +4,15 @@ description: Implement BUI contracts, server validation, localized client window
 ---
 # bound-user-interface
 
-## When to use
+## Когда применять
 
 Use BUI for entity-owned UI; use EUI for session-oriented non-entity UI.
 
-## Before editing
+## До изменения
 
 Trace the Shared UI key and serializable contract, server owner/handler/state, client adapter, XAML window, and open/close/deletion/range-loss lifecycle. Establish which framework checks already exist and what the server path must still check.
 
-## Rules and boundaries
+## Правила и границы
 
 Shared contains only the UI key and minimal serializable intent/state contract. Messages express intent, not a claimed result. The server validates actor, lifecycle, range, access, and current state, performs authoritative mutation, and refreshes minimal state without hidden data or resolved text. The client adapter opens/closes the window, applies state, and forwards typed intent; XAML owns controls/view state, never authorization or gameplay outcome.
 
@@ -22,15 +22,15 @@ Subscribe once for a window lifetime. Unsubscribe from every long-lived publishe
 
 Correct: send typed intent and validate actor/range/state on Server. Prohibited: authorize from a client button. Stop: report when the BUI contract or server owner is unavailable.
 
-## Choose an approach
+## Выбор подхода
 
 Use one source for displayed state: the latest replicated component or BUI state. Keep window selection/filter presentation-only unless the feature contract explicitly requires otherwise; per-viewer presentation state never substitutes shared entity state.
 
-## Avoid
+## Антипаттерны
 
 Do not use client button state as authorization, send a client-supplied result, keep competing displayed-state copies, or allow a callback to update a closed or rebound window.
 
-## Verification
+## Проверка
 
 Cover open/close/reopen, deletion, range loss, viewers, stale state, delayed callbacks and culture refresh.
 

@@ -4,15 +4,15 @@ description: Implement minimal network events and component state with authority
 ---
 # networking
 
-## When to use
+## Когда применять
 
 Use for replicated state, network intent, conversion or dirtying; not for purely local presentation.
 
-## Before editing
+## До изменения
 
 Find sender, receiver, shared contract, authoritative mutation, serialization/conversion, dirtying, client application and owner test.
 
-## Rules and boundaries
+## Правила и границы
 
 Messages express intent; server derives results. Replicate only data clients need and validate every client-originated request.
 Use the current supported serialization and NetEntity conversion path for entity references; do not send raw server-only entities or broad component objects.
@@ -21,19 +21,19 @@ Use the current supported serialization and NetEntity conversion path for entity
 
 Correct: replicate minimal state and validate message intent on Server. Prohibited: send hidden data or client-claimed result. Stop: report unknown serialization/NetEntity contract.
 
-## Choose an approach
+## Выбор подхода
 
 Prefer existing component state for ongoing visible state; use a small message for an action request or transient response.
 After authoritative mutation, use the component or field dirtying pattern generated for that state. Trace sender, receiver and client state application before choosing a contract.
 
-## Avoid
+## Антипаттерны
 
 - Trusting client values enables authority bugs.
 - Replicating full components or secrets wastes bandwidth and leaks state.
 - Forgetting dirtying leaves stale presentation.
 - Treating a transient message as persistent state loses late-join and reconnect correctness.
 
-## Verification
+## Проверка
 
 Cover serialization, rejection, late/reconnect state and affected prediction.
 

@@ -5,15 +5,15 @@ description: Validate, migrate, and atomically persist files and configuration w
 
 # save-data-and-configuration
 
-## When to use
+## Когда применять
 
 Use for save data, configuration schema/versioning, migration, atomic write, settings recovery, or restart behavior.
 
-## Before editing
+## До изменения
 
 Find the persistence owner, schema/version, consumers, compatibility/rollback contract, file lifecycle, atomic-write owner, and existing targeted persistence/restart test path.
 
-## Rules and boundaries
+## Правила и границы
 
 - Treat files as untrusted: validate schema, bounds, enums, paths, IDs, required/cross-field rules, missing/empty/truncated/malformed/future-version data.
 - Defaults satisfy whitelist/cross-field constraints; normalize legacy values before gameplay. Version incompatible formats and back up unreadable legacy data before reset when recovery matters.
@@ -25,15 +25,15 @@ Find the persistence owner, schema/version, consumers, compatibility/rollback co
 
 Correct: validate then atomically replace persisted configuration. Prohibited: overwrite valid data with partial output. Stop: report unknown schema/migration/recovery behavior.
 
-## Choose an approach
+## Выбор подхода
 
 Use backward-compatible migration and safe fallback before destructive reset; scope persistence to its owner and define restart/rollback/corruption behavior explicitly.
 
-## Avoid
+## Антипаттерны
 
 - Do not silently accept impossible/dangerous config, overwrite a valid file, or treat a successful write as restart proof.
 
-## Verification
+## Проверка
 
 When persistence changes, select existing owner coverage for missing/malformed/legacy/partial/concurrent/out-of-range/backup/normalization/restart paths. Do not restore or run full suites by default.
 

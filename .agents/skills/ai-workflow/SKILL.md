@@ -5,15 +5,15 @@ description: Plan, verify, implement, and deliver repository work through eviden
 
 # ai-workflow
 
-## When to use
+## Когда применять
 
 Use for repository work that needs an evidence-backed plan, implementation boundary, verification choice, or delivery report.
 
-## Before editing
+## До изменения
 
 Establish the requested outcome, exclusions, allowed paths, commit/push expectation, and verification plan. Collect only relevant preflight: owner and owner-local paths, inherited paths/marker syntax, caller/target assemblies, required declarations/access, extension point, test owner, locale scope, and verification. Mark irrelevant fields not applicable; do not begin implementation while a correctness-critical field remains unknown.
 
-## Rules and boundaries
+## Правила и границы
 
 - Treat declarations, files, and command output as evidence. Subagent summaries and unverified assumptions are not proof.
 - Verify repository/remote/upstream, branch, and marker scheme only when inherited paths, ownership, project references, synchronization, or automation are in scope.
@@ -25,17 +25,17 @@ Establish the requested outcome, exclusions, allowed paths, commit/push expectat
 
 Correct: use declarations and command output as evidence for the changed owner. Prohibited: implement from an unverified summary. Stop: report a correctness-critical unknown boundary before implementation.
 
-## Choose an approach
+## Выбор подхода
 
 Map entry points, dependencies, lifecycle, resources, localization, and tests using exact paths/symbols only for the changed surface. Choose the smallest existing extension point and owner-local implementation that satisfies the outcome; broaden exploration or verification only when evidence requires it.
 
-## Avoid
+## Антипаттерны
 
 - Do not implement around an unknown access/owner/authority boundary, invent APIs, or treat a summary as declaration evidence.
 - Do not expand to unrelated files, infrastructure, localization, or full verification merely to complete a checklist.
 - Do not inspect or change SPDX when code/resources/configuration are not in scope.
 
-## Verification
+## Проверка
 
 Inspect final status and diff. In delivery, separate checks actually run and their results, checks not run and why, limitations/unresolved risks, and remote status. Verify commit count, resulting SHA, remote ref, or PR head only when the task includes commit, push, or PR publication.
 

@@ -5,15 +5,15 @@ description: Manage timers, cancellation, entity lifetime, asynchronous work, an
 
 # timers-and-async
 
-## When to use
+## Когда применять
 
 Use for timers, delayed callbacks, cancellation, asynchronous I/O/computation, deferred ECS mutation, and work that can outlive an entity, session, map, or round.
 
-## Before editing
+## До изменения
 
 Identify the timer/task owner, cancellation owner, entity/session/map/round lifetime, thread boundary, repeated-start behavior, and desired completion contract. Determine whether the owner already uses an update loop or shared scheduler before scheduling new work.
 
-## Rules and boundaries
+## Правила и границы
 
 - Before every delayed mutation, re-check entity existence, component state, authority, and operation currency. Do not capture stale component references, target IDs, permission, or prices without revalidation.
 - Use the established timing/scheduler pattern. Do not create a timer per entity in a hot system when the owner uses an update loop or shared scheduler.
@@ -26,17 +26,17 @@ Identify the timer/task owner, cancellation owner, entity/session/map/round life
 
 Correct: revalidate owner state before delayed mutation. Prohibited: block simulation with Task.Wait. Stop: report unavailable scheduler/thread handoff.
 
-## Choose an approach
+## Выбор подхода
 
 Prefer an owner update loop for hot, repeated simulation work; use the existing shared scheduler/timer pattern for delayed completion; use supported background work only when it does not touch ECS state directly. Couple cancellation to the narrowest owner that can end the operation.
 
-## Avoid
+## Антипаттерны
 
 - Do not let a callback mutate a deleted entity, ignore cancellation, or retain stale permission/target/price.
 - Do not let a background thread access entity state or apply a result without returning to the simulation thread.
 - Do not start duplicate timers that can both complete, or leave a repeating timer alive after system shutdown.
 
-## Verification
+## Проверка
 
 Check cancellation, duplicate scheduling, deletion, component removal, shutdown, disconnect, exception paths, and delayed completion after state/authority changes.
 

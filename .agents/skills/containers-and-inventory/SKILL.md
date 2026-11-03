@@ -5,15 +5,15 @@ description: Move entities through containers, hands, slots, storage, equipment,
 
 # containers-and-inventory
 
-## When to use
+## Когда применять
 
 Use for containers, slots, hands, storage, equipment, pickup/drop, transfer, and inventory UI.
 
-## Before editing
+## До изменения
 
 Identify the owning container/slot/hand/storage system, item lifecycle, capacity/whitelist/access/body constraints, transform/PVS behavior, UI state, and nearest owner test.
 
-## Rules and boundaries
+## Правила и границы
 
 - Use established insertion/removal/pickup/drop/equip APIs. Never manually parent to simulate insertion or mutate container collections directly.
 - Validate capacity, whitelist/blacklist, access, body state, and current ownership. Handle insertion/removal events and side effects exactly once.
@@ -25,16 +25,16 @@ Identify the owning container/slot/hand/storage system, item lifecycle, capacity
 
 Correct: move an item with the owning container API. Prohibited: manually parent it as insertion. Stop: report when the destination owner or transfer invariant is unknown.
 
-## Choose an approach
+## Выбор подхода
 
 Use the owner system that owns the destination and event flow; model transfers through its APIs, not an independent entity-parenting path.
 
-## Avoid
+## Антипаттерны
 
 - Do not place an entity in two containers, skip removal events, leak contained entities through PVS, or retain invalid slots after deletion.
 - Do not duplicate predicted feedback on hand transfer.
 
-## Verification
+## Проверка
 
 When affected, check insert/remove/swap/drop/delete, nested storage, full/denied inventory, body transfer, reconnect, and multiple viewers through existing owner coverage.
 

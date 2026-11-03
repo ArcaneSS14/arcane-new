@@ -5,15 +5,15 @@ description: Name C# symbols, events, prototypes, FTL keys, resources, and compa
 
 # naming-conventions
 
-## When to use
+## Когда применять
 
 Use when naming or renaming symbols, events, prototypes, FTL keys, resources, CVars, network contracts, or serialized compatibility identifiers.
 
-## Before editing
+## До изменения
 
 Find owner conventions, exact declarations, consumers, compatibility surface, locale/resource root, and applicable fork/partial naming boundary before selecting a name.
 
-## Rules and boundaries
+## Правила и границы
 
 - Names communicate owner, timing, and intent. Use repository casing/suffixes and established vocabulary; events state attempt/pre-change/notification/completion semantics.
 - Prototype IDs are stable machine identifiers, FTL keys are lowercase kebab-case with clear owner/feature prefix, and variables describe meaning rather than UI position. File placement does not prevent duplicate keys.
@@ -25,16 +25,16 @@ Find owner conventions, exact declarations, consumers, compatibility surface, lo
 
 Correct: preserve a stable prototype/FTL/CVar identifier and search consumers before rename. Prohibited: use display text as a machine ID. Stop: report unproven compatibility/migration path.
 
-## Choose an approach
+## Выбор подхода
 
 Choose stable owner-prefixed identifiers for compatibility surfaces and existing partial/resource naming for conflict-sensitive paths. Search every reference only for a public compatibility rename or explicit all-reference task.
 
-## Avoid
+## Антипаттерны
 
 - Do not invent abbreviations, use display text as an ID, or rename stable contracts without consumer/migration analysis.
 - Do not use a foreign fork suffix or a partial to bypass assembly/access constraints.
 
-## Verification
+## Проверка
 
 For a C# symbol rename, use targeted consumer search and build the affected owner project. Run resource/localization validation only when resources, FTL, prototype references, or their consumer contract changed; do not run Release/global lint by default.
 

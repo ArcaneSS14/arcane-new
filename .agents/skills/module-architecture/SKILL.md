@@ -5,15 +5,15 @@ description: Prove repository ownership, module ownership, assembly boundaries, 
 
 # module-architecture
 
-## When to use
+## Когда применять
 
 Use when a change crosses ownership, inherited paths, assemblies, project references, resource roots, modules, tests, or engine boundaries.
 
-## Before editing
+## До изменения
 
 Verify repository identity/remotes/branch only for ownership, inherited-path, synchronization, automation, project-reference, or module-boundary changes. Determine the owner from the target project/resource path, `Modules/CATALOG.md`, applicable owner guide, and actual declarations. Identify caller/target assemblies, accessibility, reference direction, existing infrastructure, and applicable marker boundary.
 
-## Rules and boundaries
+## Правила и границы
 
 - Arcane runtime code belongs in root `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`; Arcane resources belong in existing `_Arcane` directories under `Resources`. `Modules/Arcane` contains guidance, not runtime projects.
 - TraumaStation is the sync trajectory for inherited code. Keep Trauma-owned and vanilla root edits minimal and Arcane-marked; owner-local Arcane module/underscore paths receive no redundant marker. Never use foreign markers or an invalid comment format.
@@ -36,17 +36,17 @@ Recheck trigger: Changing project layout, module catalog, resource roots, or tes
 
 Correct: choose Server for hidden authority and Client for presentation. Prohibited: add a reference to bypass access. Stop: report an inaccessible member and required public extension point.
 
-## Choose an approach
+## Выбор подхода
 
 Prefer an owner-local Arcane path for Arcane-only behavior. For a sync-trajectory change, use the smallest inherited path and marker-correct block. Build/test only the existing owner project (`Content.Tests` or `Content.IntegrationTests` when it owns coverage), never assume a separate Arcane integration project exists.
 
-## Avoid
+## Антипаттерны
 
 - Do not inspect repository identity for a routine owner-local edit, or create a reference solely to reach inaccessible code.
 - Do not add redundant markers to owner-local paths, foreign markers to Arcane work, or broad formatting cleanup to inherited files.
 - Do not create a parallel project/service/test fixture when the owner already covers it.
 
-## Verification
+## Проверка
 
 Confirm owner path, marker placement where applicable, assembly direction/access, existing test owner, and final changed paths. Use only the smallest project/build/test verification warranted by the altered surface.
 

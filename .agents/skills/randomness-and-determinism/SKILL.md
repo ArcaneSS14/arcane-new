@@ -5,15 +5,15 @@ description: Use authoritative, deterministic, weighted, and testable randomness
 
 # randomness-and-determinism
 
-## When to use
+## Когда применять
 
 Use for random or weighted gameplay selections, datasets, loot, rewards, combat/economy results, persisted outcomes, retries, and predicted cosmetic variation.
 
-## Before editing
+## До изменения
 
 Identify the authority owner, whether the result is protected or persisted, prediction/reconciliation flow, deterministic inputs, existing random service or weighted collection/dataset, and the commit/replay/retry behavior.
 
-## Rules and boundaries
+## Правила и границы
 
 - Protected results are server-authoritative. Client randomness is limited to presentation with no gameplay effect; shared predicted logic must not use an unsynchronized random source.
 - Choose deterministic inputs, an existing random service, a weighted collection/dataset, or authoritative correction according to the flow. Do not introduce a separate global random state.
@@ -25,17 +25,17 @@ Identify the authority owner, whether the result is protected or persisted, pred
 
 Correct: commit protected weighted result on Server. Prohibited: use unsynchronized random in predicted shared code. Stop: report unknown deterministic input/retry semantics.
 
-## Choose an approach
+## Выбор подхода
 
 Use deterministic shared input for predicted presentation that must agree locally. Use the owner random service or weighted data-driven collection for server selection. Use authoritative correction when a client may preview an effect but cannot decide the protected result.
 
-## Avoid
+## Антипаттерны
 
 - Do not let a client select loot, rewards, combat/economy values, roles, or hidden outcomes.
 - Do not use global random state, test order, an unseeded shared prediction path, or retry loops that alter odds unintentionally.
 - Do not ignore an empty table, invalid weight, duplicate entry, or missing reference.
 
-## Verification
+## Проверка
 
 Check deterministic seed/input, empty and single entry, weighted boundaries, zero/negative weight, duplicate/missing entries, repeated invocation, retry, rejection, balance changes, and prediction reconciliation.
 

@@ -5,15 +5,15 @@ description: Implement privileged commands, admin UI, role checks, audit logs, a
 
 # admin-and-permissions
 
-## When to use
+## Когда применять
 
 Use for privileged commands, admin UI, role/flag checks, player-affecting operations, and audit trails.
 
-## Before editing
+## До изменения
 
 Identify the exact permission/flag, server entry points (command, EUI/BUI, verb, network event), target lifecycle, round/session state, and audit owner.
 
-## Rules and boundaries
+## Правила и границы
 
 - Privileged tooling fails closed and is server-authoritative. A visible button or client state is never authorization; recheck permission at every server entry point.
 - Keep read-only diagnostics separate from mutation. Validate target, ownership, session/round state, and current permission before each protected operation.
@@ -25,16 +25,16 @@ Identify the exact permission/flag, server entry points (command, EUI/BUI, verb,
 
 Correct: validate the exact server-side permission before an admin mutation. Prohibited: treat a visible admin button as authorization. Stop: report when no supported permission or audit owner exists.
 
-## Choose an approach
+## Выбор подхода
 
 Use the narrowest existing permission instead of broadening a flag because a nearby command does. Route mutating functionality through its owner system and an auditable server handler.
 
-## Avoid
+## Антипаттерны
 
 - Do not trust a client-selected target/result, bypass owner APIs, or treat command registration as a permission check.
 - Do not log secrets or make normal rejection an error.
 
-## Verification
+## Проверка
 
 When privilege behavior changed, cover authorized/unauthorized users, missing session, disconnected target, repeated execution, malformed arguments, and runtime permission changes using the existing owner test path.
 

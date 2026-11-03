@@ -5,15 +5,15 @@ description: Implement round lifecycle, game rules, objectives, announcements, w
 
 # round-and-game-rules
 
-## When to use
+## Когда применять
 
 Use for round lifecycle, game rules, objectives, announcements, win conditions, player assignment, or restart cleanup.
 
-## Before editing
+## До изменения
 
 Trace activation, round start, assignment, updates, end conditions, round end/restart, rule entity/state, prototype/serialized contract, presentation, and cleanup owner.
 
-## Rules and boundaries
+## Правила и границы
 
 - Keep authoritative rule state on Server; replicate only needed presentation. Prefer rule entities and existing game-rule APIs over static state.
 - Handle late join, reconnect, ghosting, body/mind transfer, disconnect, administrative intervention, no eligible players, and duplicate role/objective assignment.
@@ -25,15 +25,15 @@ Trace activation, round start, assignment, updates, end conditions, round end/re
 
 Correct: clean round-scoped timers/entities on round end. Prohibited: retain global static rule state across restart. Stop: report missing game-rule lifecycle owner.
 
-## Choose an approach
+## Выбор подхода
 
 Extend the established rule/entity/objective owner and lifecycle events; keep rule-specific state serialized/prototype-backed only when it belongs to that contract.
 
-## Avoid
+## Антипаттерны
 
 - Do not assume system/entity lives one round, expose hidden result state, or leave cleanup to a detached timer.
 
-## Verification
+## Проверка
 
 When changed, cover activation, late/no eligible players, disconnect/deletion, simultaneous rules, early/normal end, and restart via targeted owner tests.
 

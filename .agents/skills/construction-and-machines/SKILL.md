@@ -5,15 +5,15 @@ description: Implement construction graphs, machine lifecycle, power, parts, upg
 
 # construction-and-machines
 
-## When to use
+## Когда применять
 
 Use for construction graphs, machines, boards/parts, upgrades, power/anchoring, examination, or machine UI.
 
-## Before editing
+## До изменения
 
 Trace graph/node conventions, prototype contract, machine owner, map initialization, anchoring/power/damage/deconstruction lifecycle, part rating, UI, and targeted owner test.
 
-## Rules and boundaries
+## Правила и границы
 
 - Keep construction data-driven; validate tools/materials, replacement, deconstruction, and state transfer. Do not import source-fork graph IDs.
 - Subscribe to lifecycle events rather than polling each machine. Define map spawn, anchoring, power loss, damage/breakage, deconstruction, deletion, and cleanup.
@@ -25,16 +25,16 @@ Trace graph/node conventions, prototype contract, machine owner, map initializat
 
 Correct: recalculate part-derived values at the established lifecycle event. Prohibited: let a machine run when unpowered. Stop: report a missing machine/board owner API.
 
-## Choose an approach
+## Выбор подхода
 
 Extend the current graph/machine owner and prototype fields; use event-driven recalculation and existing BUI flow instead of isolated loops/caches.
 
-## Avoid
+## Антипаттерны
 
 - Do not lose contents/ownership on replacement, run unpowered/unanchored machinery, trust client price/output, or let map-spawn skip setup.
 - Do not leave examine text inconsistent with authoritative state.
 
-## Verification
+## Проверка
 
 When affected, check construction/deconstruction, map spawn, power loss, anchoring, part replacement, damage, UI concurrency, and targeted YAML/owner behavior.
 
