@@ -220,8 +220,8 @@ public sealed partial class PartExchangerSystem : EntitySystem
                             break;
                         }
 
+                        // The split part goes into the machine; the rest of the stack stays available with a lower count.
                         replacementUids.Add(split.Value);
-                        available.Add((split.Value, state));
                         _container.Insert(replacementUid, storage.Container, force: true);
                     }
                     else
@@ -267,14 +267,14 @@ public sealed partial class PartExchangerSystem : EntitySystem
                         _container.Insert(replacementUid, storage.Container, force: true);
                 }
 
+                // A part that went into the machine whole is no longer available, whatever its stack count.
                 foreach (var (removedUid, _) in removed)
                 {
-                    var index = available.FindIndex(p => p.Uid == removedUid);
-                    if (index < 0)
+                    if (!replacementUids.Contains(removedUid))
                         continue;
 
-                    var stack = available[index].State.Stack;
-                    if (stack == null || stack.Count == 0)
+                    var index = available.FindIndex(p => p.Uid == removedUid);
+                    if (index >= 0)
                         available.RemoveAt(index);
                 }
 
