@@ -101,13 +101,14 @@ public sealed partial class BitrunningDomainEnemyObjectiveComponent : Component
     public int Points = 1;
 
     public EntityUid? DomainMapUid;
-}
 
-/// <summary>
-/// Marks an enemy objective entity that already granted elimination progress.
-/// </summary>
-[RegisterComponent]
-public sealed partial class BitrunningEnemyObjectiveCountedComponent : Component;
+    /// <summary>
+    /// Set once the enemy granted elimination progress, so death and then deletion count once. A field rather than
+    /// a marker component: deletion runs while the entity is terminating, when components can no longer be added.
+    /// </summary>
+    [ViewVariables]
+    public bool Counted;
+}
 
 /// <summary>
 /// Marks a reward cache crate that should disappear immediately after being opened.

@@ -171,7 +171,7 @@ public sealed partial class BitrunningObjectiveSystem : EntitySystem
 
     private void TryAwardEnemyEliminationProgress(Entity<BitrunningDomainEnemyObjectiveComponent> ent)
     {
-        if (HasComp<BitrunningEnemyObjectiveCountedComponent>(ent))
+        if (ent.Comp.Counted)
             return;
 
         var resolvedMapUid = ent.Comp.DomainMapUid;
@@ -194,7 +194,7 @@ public sealed partial class BitrunningObjectiveSystem : EntitySystem
         if (server.ObjectiveType != BitrunningObjectiveType.EliminateEnemies)
             return;
 
-        EnsureComp<BitrunningEnemyObjectiveCountedComponent>(ent);
+        ent.Comp.Counted = true;
         _server.AddObjectiveProgress(serverUid, ent.Comp.Points);
     }
 

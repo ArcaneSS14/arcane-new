@@ -231,6 +231,11 @@ public sealed partial class ByteforgeSystem : EntitySystem
 
     public bool TryFillRewardCacheWithLoot(EntityUid cargoUid, QuantumServerComponent server)
     {
+        // The default completion cache is a virtual objective token without storage: nothing to spawn loot into,
+        // the physical crate gets its own fill when it is delivered.
+        if (!HasComp<StorageComponent>(cargoUid) && !HasComp<EntityStorageComponent>(cargoUid))
+            return false;
+
         var tableId = GetDifficultyLootTable(server);
         if (!_prototype.TryIndex(tableId, out var table))
             return false;

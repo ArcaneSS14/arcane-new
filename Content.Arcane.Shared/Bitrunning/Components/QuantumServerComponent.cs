@@ -10,15 +10,13 @@ namespace Content.Arcane.Shared.Bitrunning.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class QuantumServerComponent : Component
 {
-    // This is intentionally unbounded so avatars and linked pods always remain viewable on camera networks.
-    private const int UnboundedBroadcastRange = int.MaxValue;
-
     [DataField, AutoNetworkedField]
     public BitrunningServerState State = BitrunningServerState.Ready;
 
     [DataField, AutoNetworkedField]
     public int Points;
 
+    // Scanner tier, cooldown efficiency and quality bonus are fixed per prototype: no machine part upgrades them.
     [DataField, AutoNetworkedField]
     public int ScannerTier = 1;
 
@@ -48,12 +46,6 @@ public sealed partial class QuantumServerComponent : Component
 
     [DataField, AutoNetworkedField]
     public TimeSpan CooldownEndTime;
-
-    [DataField, AutoNetworkedField]
-    public bool BroadcastEnabled;
-
-    [DataField]
-    public int BroadcastWirelessRange = UnboundedBroadcastRange;
 
     [DataField]
     public ProtoId<EntityTablePrototype> DeliveryPeacefulLootTable = "BitrunningDeliveryPeacefulLoot";
@@ -109,8 +101,6 @@ public sealed partial class QuantumServerComponent : Component
     public bool ObjectiveCompleted;
 
     public BitrunningObjectiveType ObjectiveType = BitrunningObjectiveType.None;
-
-    public int ThreatsSpawned;
 
     public bool AllowDiskModifications = true;
 

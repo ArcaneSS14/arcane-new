@@ -2,6 +2,7 @@ using System.Linq;
 using System.Numerics;
 using Content.Trauma.Common.Effects;
 using Content.Server.Mind;
+using Content.Server.Radio.EntitySystems;
 using Content.Server.Popups;
 using Content.Arcane.Server.Bitrunning.Components;
 using Content.Server.Actions;
@@ -122,7 +123,8 @@ public sealed partial class QuantumServerSystem : EntitySystem
         SubscribeLocalEvent<AvatarConnectionComponent, BitrunningDisconnectAvatarDoAfterEvent>(OnAvatarDisconnectDoAfter);
         SubscribeLocalEvent<AvatarConnectionComponent, SuicideEvent>(OnAvatarSuicide);
         SubscribeLocalEvent<AvatarConnectionComponent, PolymorphedEvent>(OnAvatarPolymorphed);
-        SubscribeLocalEvent<AvatarConnectionComponent, EntitySpokeEvent>(OnAvatarSpoke);
+        // Before the senders: clearing the channel afterwards would not stop a message already sent.
+        SubscribeLocalEvent<AvatarConnectionComponent, EntitySpokeEvent>(OnAvatarSpoke, before: [typeof(HeadsetSystem), typeof(RadioSystem)]);
         SubscribeLocalEvent<AvatarConnectionComponent, GetAntagSelectionBlockerEvent>(OnAvatarGetAntagSelectionBlocker);
         SubscribeLocalEvent<AvatarConnectionComponent, EntityTerminatingEvent>(OnAvatarTerminating);
     }
@@ -221,7 +223,6 @@ public sealed partial class QuantumServerSystem : EntitySystem
         server.ObjectiveGoal = ResolveObjectiveGoal((serverUid, server), domain, objectiveType);
         server.ObjectiveCompleted = false;
         server.Points -= domain.Cost;
-        server.ThreatsSpawned = 0;
         server.CooldownEndTime = TimeSpan.Zero;
         server.AllowDiskModifications = domain.AllowDiskModifications;
         server.AllowProfileLoad = domain.AllowProfileLoad;
@@ -551,7 +552,6 @@ public sealed partial class QuantumServerSystem : EntitySystem
         if (HasComp<InternalsComponent>(avatar) && _internals.FindBestGasTank(avatar) is { } tank)
             _gasTank.ConnectToInternals(tank, user: avatar);
 
-        // SetAvatarBroadcastEnabled((avatar, connection), server, server.BroadcastEnabled);
         _actions.AddAction(avatar, ref connection.DisconnectActionEntity, connection.DisconnectActionPrototype, avatar);
         var objectivePopupText = server.ObjectiveCompleted
             ? Loc.GetString("bitrunning-objective-completed")
@@ -784,7 +784,12 @@ public sealed partial class QuantumServerSystem : EntitySystem
         serverEnt.Comp.ObjectiveCompleted = true;
         var rewardMultiplier = CalculateBaseRewardMultiplier(serverEnt.Comp);
 
-        if (ShouldSpawnCompletionRewardCache(serverEnt.Comp) && serverEnt.Comp.ObjectiveType != BitrunningObjectiveType.DeliveryCacheCrate)
+        // A cache spawned on the domain map is gone with it when the domain stops right away.
+        var autoStop = ShouldAutoStopOnObjectiveComplete(serverEnt.Comp);
+        if (autoStop && ShouldSpawnCompletionRewardCache(serverEnt.Comp))
+            Log.Error($"Domain {serverEnt.Comp.CurrentDomain} both spawns a reward cache and stops on completion; the cache is skipped.");
+
+        if (!autoStop && ShouldSpawnCompletionRewardCache(serverEnt.Comp) && serverEnt.Comp.ObjectiveType != BitrunningObjectiveType.DeliveryCacheCrate)
         {
             if (serverEnt.Comp is { HasExplicitCacheMarker: true, CacheCoordinates: { } markerCoordinates })
                 SpawnRewardCache(serverEnt.Comp, markerCoordinates);
@@ -824,8 +829,9 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
         if (serverEnt.Comp.WasRandomizedRun)
         {
-            serverReward += randomServerBonus;
-            bitrunningReward += randomBitrunningBonus;
+            // Bonuses are data and may be negative; the totals never go below zero.
+            serverReward = Math.Max(0, serverReward + randomServerBonus);
+            bitrunningReward = Math.Max(0, bitrunningReward + randomBitrunningBonus);
         }
 
         if (serverReward > 0)
@@ -847,7 +853,7 @@ public sealed partial class QuantumServerSystem : EntitySystem
 
         _audio.PlayPvs(serverEnt.Comp.ObjectiveRewardSound, serverEnt.Owner);
 
-        if (ShouldAutoStopOnObjectiveComplete(serverEnt.Comp))
+        if (autoStop)
             StopDomain(serverEnt);
 
         Dirty(serverEnt);
@@ -935,7 +941,6 @@ public sealed partial class QuantumServerSystem : EntitySystem
         total += server.QualityBonus;
         total += Math.Max(0, server.ActiveConnections.Count - 1) * 0.5f;
         total += noHitCount * 0.4f;
-        total += server.ThreatsSpawned * 0.5f;
         return Math.Max(1f, total);
     }
 
@@ -1349,6 +1354,13 @@ public sealed partial class QuantumServerSystem : EntitySystem
         var explicitTarget = domain.ObjectiveTargetByType.TryGetValue(objectiveType, out var byTypeTarget)
             ? Math.Max(byTypeTarget, 0)
             : Math.Max(domain.ObjectiveTarget, 0);
+
+        // Stomach objectives are met or not: progress stops after the first point, so a bigger target never completes.
+        if (objectiveType is BitrunningObjectiveType.FillStomach or BitrunningObjectiveType.OverhydrateStomach && explicitTarget > 1)
+        {
+            Log.Error($"Domain {domain.ID} sets target {explicitTarget} for {objectiveType}, which only supports 1.");
+            explicitTarget = 1;
+        }
         if (explicitTarget > 0 || objectiveType != BitrunningObjectiveType.EliminateEnemies)
             return explicitTarget;
 

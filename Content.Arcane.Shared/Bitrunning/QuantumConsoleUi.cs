@@ -109,9 +109,3 @@ public sealed class QuantumConsoleStopDomainMessage : BoundUserInterfaceMessage;
 
 [Serializable, NetSerializable]
 public sealed class QuantumConsoleRefreshMessage : BoundUserInterfaceMessage;
-
-[Serializable, NetSerializable]
-public sealed class QuantumConsoleBroadcastMessage(bool enabled) : BoundUserInterfaceMessage
-{
-    public bool Enabled = enabled;
-}
