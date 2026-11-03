@@ -5,11 +5,11 @@ description: Read and reason about an unfamiliar SS14 ECS subsystem before chang
 
 # ecs-basics
 
-## Когда применять
+## When to use
 
 Use for an unfamiliar ECS feature or cross-system bug; not instead of a narrow domain skill.
 
-## До изменения
+## Before editing
 
 Trace entry point, prototype, component state, owner system, events, Server/Shared/Client path, replication/presentation, and nearest owner test.
 
@@ -20,7 +20,7 @@ Trace entry point, prototype, component state, owner system, events, Server/Shar
 5. Establish Server, Shared, Client and Resources ownership.
 6. Find the nearest owner-local or integration test.
 
-## Правила и границы
+## Rules and boundaries
 
 Entities identify; components store state; systems own behavior and mutation; prototypes compose initial state.
 Ask: which component stores state; which system may mutate it; which event starts the flow; what is authoritative, predicted and replicated; which lifecycle initializes or cleans up; and which prototype, resource and locale dependencies are required.
@@ -29,16 +29,16 @@ Ask: which component stores state; which system may mutate it; which event start
 
 Correct: trace component, system, event, mutation, dirtying, and presentation. Prohibited: edit the first matching component without flow discovery. Stop: report unknown owner/lifecycle before changing it.
 
-## Выбор подхода
+## Choose an approach
 
 Choose the existing state owner first, then its system and event; trace client presentation separately from authority.
 
-## Антипаттерны
+## Avoid
 
 - Copying a system without matching lifecycle causes wrong ownership and cleanup.
 - Treating presentation as authority hides server validation.
 
-## Проверка
+## Verification
 
 Verify the complete flow and the narrowest affected test.
 

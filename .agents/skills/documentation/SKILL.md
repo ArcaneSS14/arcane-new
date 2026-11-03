@@ -5,15 +5,15 @@ description: Write concise technical guidance, PR notes, architecture explanatio
 
 # documentation
 
-## Когда применять
+## When to use
 
 Use for technical guidance, PR notes, architecture explanations, handoffs, and reproducible verification reports.
 
-## До изменения
+## Before editing
 
 Identify the canonical documentation owner, requested audience, scope, and decisions that are not obvious from the diff. For substantial work, determine only relevant owner, assembly boundary, data/event flow, compatibility, localization scope, resources, tests, and limitations.
 
-## Правила и границы
+## Rules and boundaries
 
 - Document decisions and evidence, not a restatement of code. Use current paths, declarations, and exact commands; do not claim behavior from an old repository or source fork.
 - A verification report separates commands actually run/results, checks not run/reason, manual checks, unresolved risks, and paths requiring human SPDX action.
@@ -25,17 +25,17 @@ Identify the canonical documentation owner, requested audience, scope, and decis
 
 Correct: report exact commands run and omitted checks separately. Prohibited: state all tests passed after a diff check. Stop: report missing evidence instead of documenting a claim.
 
-## Выбор подхода
+## Choose an approach
 
 Write the smallest owner-local addition that explains a non-obvious decision, contract, limitation, or verification outcome. Omit fields that do not apply rather than filling a handoff with generic repository detail.
 
-## Антипаттерны
+## Avoid
 
 - Do not invent paths, APIs, commands, behavior, test status, or source-fork assumptions.
 - Do not report an unrun check as successful or hide an unavailable dependency behind a generic pass.
 - Do not duplicate canonical documentation or create a changelog when technical guidance was requested.
 
-## Проверка
+## Verification
 
 Review every factual statement against the current file/declaration/command output. For documentation-only changes, use `git diff --name-status`, `git diff --check`, and final diff; state that builds/tests were not run unless they actually were.
 

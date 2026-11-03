@@ -5,15 +5,15 @@ description: Implement sprite layers, overlays, render targets, shader prototype
 
 # sprite-overlays-and-shaders
 
-## Когда применять
+## When to use
 
 Use for client sprite layers, entity-local or global overlays, shader parameters, render targets, or presentation effects derived from replicated or permitted predicted state.
 
-## До изменения
+## Before editing
 
 Identify the owner and cleanup lifecycle for each sprite layer, overlay, shader parameter, and render target. Trace component shutdown, state exit, map transfer, disconnect, deletion, and resolution/viewport changes before allocating a visual resource.
 
-## Правила и границы
+## Rules and boundaries
 
 - Use stable sprite layer keys and reuse existing layers. Verify RSI path/state, visibility, color, scale, rotation, animation, and resource fallback.
 - Give every overlay, child visual, shader parameter, and render target a clear owner and cleanup path. Remove entity-local resources on component shutdown, state exit, map transfer, disconnect, or deletion as applicable.
@@ -25,17 +25,17 @@ Identify the owner and cleanup lifecycle for each sprite layer, overlay, shader 
 
 Correct: reuse stable entity-local layer/overlay and clean it at lifecycle end. Prohibited: use a global overlay for entity-local effect. Stop: report missing visual resource owner.
 
-## Выбор подхода
+## Choose an approach
 
 Prefer a sprite layer for a persistent entity-owned visual, an entity-local overlay for transient entity presentation, and a global overlay only for a viewport-wide effect. Use a shader or render target only when the established client rendering path needs it; otherwise reuse the nearest existing sprite/overlay pattern.
 
-## Антипаттерны
+## Avoid
 
 - Do not recreate a layer or overlay per update, drive an entity-local effect through a global overlay, or retain a visual after its owner disappears.
 - Do not update a costly shader parameter every frame without a changed input.
 - Do not move authority, hidden state, or protected gameplay checks into visual code.
 
-## Проверка
+## Verification
 
 Check RSI state/path, visibility, color, scale, rotation, animation, and missing-resource fallback. Cover component add/remove, state exit, late join, reconnect, deletion, map transfer, resolution/viewport changes, and multiple simultaneous effects.
 

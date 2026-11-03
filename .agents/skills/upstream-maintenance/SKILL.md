@@ -5,15 +5,15 @@ description: Keep inherited changes narrow, correctly marked, traceable, and eas
 
 # upstream-maintenance
 
-## Когда применять
+## When to use
 
 Use when an inherited path needs an upstream bug fix, extension point, compatibility adaptation, divergence, revert/restore analysis, or conflict resolution.
 
-## До изменения
+## Before editing
 
 Classify the change as upstream bug fix, reusable extension point, compatibility adaptation, or repository-owned divergence. For add/remove/revert/restore, trace relevant history and actual diffs through `.agents/rules/change-history-analysis.md`; do not decide from a title or marker alone. Verify current owner tag and marker syntax.
 
-## Правила и границы
+## Rules and boundaries
 
 - Prefer an owner-local module/underscore path for repository-owned behavior; those paths receive no redundant markers.
 - For an inherited edit, use the smallest current-repository marker block, preserve nearby layout, avoid format cleanup, and document intentional divergence/source revision when relevant.
@@ -34,17 +34,17 @@ Recheck trigger: Changing marker policy, fork trajectory, or conflict-resolution
 
 Correct: inspect add/remove/revert history before inherited edit. Prohibited: blanket-resolve a conflict. Stop: report unresolved base/current/incoming intent.
 
-## Выбор подхода
+## Choose an approach
 
 Use an upstream fix when it is the intended sync behavior, an extension point when it can isolate Arcane behavior, and an owner-local divergence when the repository intentionally differs. Keep source-history research proportional to the actual inherited path rather than scanning unrelated history.
 
-## Антипаттерны
+## Avoid
 
 - Do not judge provenance from a marker/title, copy an entire inherited file, or mix formatting cleanup with a behavior change.
 - Do not put redundant markers in owner-local paths, leave an upstream marker on an Arcane-authored line, or resolve a conflict mechanically.
 - Do not call an unreviewed incoming change an Arcane change merely because it is present locally.
 
-## Проверка
+## Verification
 
 Inspect history/diffs required by the change, final marker placement, inherited diff scope, and delivery note for intentional divergence/source revision when relevant. Verify only the directly affected owner path; do not rebase, merge, or initialize engine dependencies for documentation-only work.
 

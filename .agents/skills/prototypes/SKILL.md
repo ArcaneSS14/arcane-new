@@ -4,16 +4,16 @@ description: Create, inherit, compose, localize, and validate YAML prototypes in
 ---
 # prototypes
 
-## Когда применять
+## When to use
 
 Use for prototype creation, review, inheritance or referenced resources.
 
-## До изменения
+## Before editing
 
 Find owner root through Modules/CATALOG.md, owner guide and existing Resources; inspect a nearby type and its component schema.
 Verify repository identity and edit-marker boundaries before inherited edits.
 
-## Правила и границы
+## Rules and boundaries
 
 Verify type, ID, parent, component fields, typed IDs and every locale, sprite, sound, dataset and map reference. Prototype fields are configuration; runtime state belongs to systems/components.
 Add English display text; change Russian only when explicitly requested.
@@ -31,15 +31,15 @@ Recheck trigger: Changing catalog routing, owner guidance, resource roots, or lo
 
 Correct: verify prototype owner/schema before composing inheritance. Prohibited: add a parallel owner root. Stop: report unknown consumer/schema validation.
 
-## Выбор подхода
+## Choose an approach
 
 Use inheritance for shared defaults, composition for reusable component sets, and a separate prototype for distinct identity.
 
-## Антипаттерны
+## Avoid
 
 Do not copy large YAML blocks, duplicate IDs, leave stale references, or use prototype IDs as visible fallback text.
 
-## Проверка
+## Verification
 
 Search duplicate IDs and stale consumers; use an existing targeted validator for changed prototypes and direct resources only.
 When lifecycle or map loading changes, choose a focused owner test; do not restore, full-build or run global YAML lint by default.

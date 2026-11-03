@@ -5,15 +5,15 @@ description: Modify atmos simulation, gases, fire, pressure, pipes, devices, UI,
 
 # atmos
 
-## Когда применять
+## When to use
 
 Use for authoritative atmosphere simulation: gases, pressure, fire, pipe networks, atmospheric devices, alarms, and presentation/UI derived from their state.
 
-## До изменения
+## Before editing
 
 Find the owner system, gas/pressure/fire/pipe/device contract, update frequency, prototype tuning, and power, anchoring, and network dependencies. Trace which state remains on the authoritative server and which minimal presentation/UI state reaches the client.
 
-## Правила и границы
+## Rules and boundaries
 
 - Atmos is authoritative server simulation. Shared contains only required components, enums, contracts, and UI messages; Client receives presentation or UI state only.
 - Use existing units, gas identifiers, `GasMixture` patterns, device components, and alarm flows. Do not create parallel gas containers or perform ad-hoc unit conversion.
@@ -26,17 +26,17 @@ Find the owner system, gas/pressure/fire/pipe/device contract, update frequency,
 
 Correct: extend the existing server gas/device owner with its current units. Prohibited: create a parallel gas container. Stop: report when the gas/device API or simulation owner is unverified.
 
-## Выбор подхода
+## Choose an approach
 
 Extend the existing gas, pipe, device, or alarm owner rather than creating a parallel container or update loop. Use prototype-backed fields for content tuning and component/system state for runtime simulation. Add client overlays or UI only as presentation consumers of authoritative state.
 
-## Антипаттерны
+## Avoid
 
 - Do not let client input decide pressure, gas, fire, or device outcomes.
 - Do not invent units or gas identifiers, duplicate an existing device/alarm flow, or hide simulation work in a UI callback.
 - Do not add an allocation, LINQ query, or broad scan to a repeated tile/device update without proving its bounded frequency.
 
-## Проверка
+## Verification
 
 When affected, check pressure limits, disconnected networks, power loss, deletion, anchoring, multiple gases, fire interaction, and malformed device settings. Use focused owner validation only for touched prototypes or runtime behavior; do not restore or run a full build for skill-only changes.
 

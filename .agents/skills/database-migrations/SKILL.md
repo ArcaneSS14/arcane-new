@@ -5,15 +5,15 @@ description: Change persistent models and SQLite/PostgreSQL migrations without b
 
 # database-migrations
 
-## Когда применять
+## When to use
 
 Use for persistent models, SQLite/PostgreSQL schema, migrations, provider compatibility, backfills, or upgrade/rollback behavior.
 
-## До изменения
+## Before editing
 
 Find the database owner, current provider conventions/package versions, model consumers, existing-row shape, nullability/default/index/unique/backfill needs, and rollback/data-loss contract.
 
-## Правила и границы
+## Rules and boundaries
 
 - Persistence is server-only compatibility work; database entities are not gameplay components or Shared transport types.
 - Generate/review matching SQLite and PostgreSQL migrations and snapshots. Fresh creation is insufficient: evaluate upgrade from existing schema and `Up`/`Down` separately.
@@ -35,16 +35,16 @@ Recheck trigger: Changing EF Core/provider package versions, target framework, o
 
 Correct: review SQLite and PostgreSQL upgrade migrations separately. Prohibited: accept fresh database creation as upgrade proof. Stop: report unavailable provider migration validation.
 
-## Выбор подхода
+## Choose an approach
 
 Prefer backward-compatible additive migration and explicit backfill/default. Use destructive migration only with explicit accepted data loss and a documented rollback/restore plan.
 
-## Антипаттерны
+## Avoid
 
 - Do not treat a fresh database as upgrade proof, silently lose data, or block gameplay hot paths on database I/O.
 - Do not invent provider command/API behavior.
 
-## Проверка
+## Verification
 
 When migration/model changes are made, inspect generated operations/snapshot and exercise existing upgrade coverage for each affected provider if available; report unavailable provider checks rather than claiming them.
 

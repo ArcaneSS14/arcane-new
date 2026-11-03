@@ -5,15 +5,15 @@ description: Apply an explicit, current-turn-only concise response mode without 
 
 # caveman-mode
 
-## Когда применять
+## When to use
 
 Use only when the user explicitly requests `$caveman`, “caveman mode”, a brief/minimal answer, fewer tokens, or an unambiguous equivalent. It changes response style for the current turn only; it never persists into later turns.
 
-## До изменения
+## Before editing
 
 Identify whether the response includes a security warning, destructive or irreversible action, clarification question, ordered procedure, commit/PR/issue text, documentation, or another persistent artifact. Those surfaces need normal complete prose.
 
-## Правила и границы
+## Rules and boundaries
 
 - Lead with the result, then only the necessary reason and next action. Omit greetings, filler, empty recap, and decorative tables.
 - Preserve the user's language. Do not shorten code blocks, commands, paths, API names, numbers, errors, citations, negations, safety constraints, acceptance criteria, or verification results.
@@ -25,17 +25,17 @@ Identify whether the response includes a security warning, destructive or irreve
 
 Correct: “`git diff --check` passed; no files outside scope changed.” Prohibited: omit a failed check or a destructive-action warning to save words. Stop: use normal prose when a concise answer could obscure risk or sequence.
 
-## Выбор подхода
+## Choose an approach
 
 Use one short result paragraph for a simple completed request. Use a compact list only when it preserves several independent facts. Return to normal response style on the next turn unless the user explicitly requests this mode again.
 
-## Антипаттерны
+## Avoid
 
 - Do not imitate a caveman persona, break grammar, invent abbreviations, or add branding.
 - Do not persist mode state, install/run upstream tooling, or route a task to an external service.
 - Do not replace domain skills, rewrite payload, or claim token savings without local measurement.
 
-## Проверка
+## Verification
 
 Before sending, verify that every negation, number, command, path, error, safety condition, and requested result remains exact. Confirm the response still contains required status updates and verification evidence.
 

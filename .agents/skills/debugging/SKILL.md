@@ -5,15 +5,15 @@ description: Reproduce failures, trace authoritative flow, prove the broken assu
 
 # debugging
 
-## Когда применять
+## When to use
 
 Use when a runtime symptom, desync, UI issue, prototype-load error, localization defect, or regression needs a proven cause before changing design.
 
-## До изменения
+## Before editing
 
 Reproduce the exact symptom and record inputs, runtime side, owner, lifecycle stage, and expected versus actual result. Establish the authoritative owner and public entry point first. Verify every assumed declaration, ID, resource, and path before altering the suspected flow.
 
-## Правила и границы
+## Rules and boundaries
 
 - Trace only the affected flow: subscription, validation, mutation, dirtying, persistence, replication, and presentation. For a network defect, compare server and client state and identify the divergence point.
 - Put temporary diagnostics only around the suspected divergence, remove them after the cause is confirmed, and never use them as a substitute for tracing ownership.
@@ -25,17 +25,17 @@ Reproduce the exact symptom and record inputs, runtime side, owner, lifecycle st
 
 Correct: reproduce and trace the authoritative divergence before fixing it. Prohibited: redesign from a symptom alone. Stop: report when the entry point or declaration cannot be proven.
 
-## Выбор подхода
+## Choose an approach
 
 Choose a focused affected-project build after reproduction. Use a focused regression test when the owner can cover the failure; use integration coverage only for a broken cross-layer path. Treat a server/client comparison as required evidence for a network divergence rather than assuming which side is wrong.
 
-## Антипаттерны
+## Avoid
 
 - Do not redesign before reproducing, fix a symptom without a proven owner, or leave temporary diagnostics in the final change.
 - Do not infer a declaration, prototype ID, resource path, or replication step from a similar feature.
 - Do not add a parallel test fixture or claim regression coverage that has not been added and run.
 
-## Проверка
+## Verification
 
 Record the reproduction result, the evidence for the divergence/cause, the narrow fix, and only commands actually run. Follow root `AGENTS.md`: do not restore dependencies or run an owner’s full suite by default.
 

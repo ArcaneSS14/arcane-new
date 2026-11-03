@@ -5,15 +5,15 @@ description: Work with visibility, network interest, PVS filters, and PVS-sensit
 
 # pvs
 
-## Когда применять
+## When to use
 
 Use when changing which entities, events, or replicated state a client receives through world visibility, network interest, filters, or a PVS override.
 
-## До изменения
+## Before editing
 
 Determine why the specific client needs the entity, event, or state. Check whether normal world visibility, a constrained message, or UI state satisfies that need before considering an override. Trace transforms, parents, containers, grids, maps, ghosts/observers, sessions, map transfer, and UI closure for the intended audience and lifetime.
 
-## Правила и границы
+## Rules and boundaries
 
 - PVS is a bandwidth and visibility mechanism, not an authorization boundary. Do not expose hidden state merely because an entity is visible in PVS.
 - Add an override only when the entity itself must remain network-visible. Use a constrained message or UI state when the client needs remote data but not a visible entity.
@@ -24,17 +24,17 @@ Determine why the specific client needs the entity, event, or state. Check wheth
 
 Correct: use an override only when the entity itself must remain visible. Prohibited: use PVS as authorization. Stop: report unknown audience/lifetime owner.
 
-## Выбор подхода
+## Choose an approach
 
 Prefer ordinary world visibility and existing filters. Select a limited message or UI state for remote, viewer-specific data. Select a PVS override only when keeping the actual entity network-visible is necessary, and bind it to the narrowest viewer/session and lifecycle.
 
-## Антипаттерны
+## Avoid
 
 - Do not use PVS visibility as permission to disclose protected component state.
 - Do not apply broad or permanent overrides to large entity sets, or leave override/session visibility after its UI or feature closes.
 - Do not choose global delivery only because PVS behavior was not investigated.
 
-## Проверка
+## Verification
 
 Check enter/leave range, reconnect, observer/ghost flow, parent/container changes, grids/maps, map transfer, deletion, UI closure, and absence of state leakage to unrelated sessions.
 

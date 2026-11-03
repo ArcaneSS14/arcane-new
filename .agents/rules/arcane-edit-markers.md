@@ -6,7 +6,7 @@ Marking applies only outside owner-local paths. Arcane runtime projects are root
 
 ## Which form to use
 
-The form depends on whether the lines are new or changed, and on how many.
+The form depends on whether the lines are new or changed, counted per contiguous run, not per file or prototype. Unchanged intervening code/data ends the run: two separated single-line edits need two inline markers. Never widen a block to include YAML parent context or an unchanged method body.
 
 | Change | Form | Location |
 |---|---|---|
@@ -28,7 +28,7 @@ The single-line case is the common one, because most changes touch one line. A s
 private readonly int[] _cache = new int[16]; // Arcane
 ```
 
-The moment a change covers two or more lines of the same kind, the block form is required. Do not use inline markers for each line of a multi-line change, and do not open a `-Start` / `-End` pair around one line.
+For two or more contiguous lines of the same kind, the block form is required. Do not use inline markers for each line of a multi-line change, and do not open a `-Start` / `-End` pair around one line.
 
 `-Start` / `-End` are never trailing markers. A single added line is marked `Arcane`; `Arcane-Start` only appears as the opening half of a pair.
 
@@ -49,7 +49,7 @@ YAML:  # Arcane-Edit-Start: <reason>
 YAML:  # Arcane-Edit-End
 ```
 
-Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more lines of the same kind require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
+Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more contiguous lines of the same kind require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
 
 Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
 
@@ -114,7 +114,7 @@ This removal pattern is appropriate only when the commented entries are intentio
 
 ## Merge adjacent markers
 
-Merge same-kind markers only when their changed lines are contiguous. Do not stretch one marker block across an unchanged line, a separate semantic change, or an unrelated blank/section boundary.
+Merge same-kind markers only within the contiguous run defined above; a separate semantic change or unrelated section boundary ends it.
 
 Contiguous merging keeps one hunk instead of several, which means one place for a rebase to conflict rather than several. State it in the report when it materially changes the marker boundary.
 
@@ -262,8 +262,11 @@ When reviewing a file, inspect its actual marker boundaries; do not rely on a re
 git grep -n "Arcane-Start\|Arcane-End\|Arcane-Edit" -- <path>
 ```
 
+Check the before/after diff, not only the resulting file. For a replacement that removes entries as well as adds them, anchor the edit block at the replacement site, including the removed portion; do not mark only its surviving additions. Balanced markers alone do not prove correct scope.
+
 Check, per file:
 
+- each block covers only the corresponding contiguous change, including its deletion boundary
 - `-Start` and `-End` counts match
 - no nested `-Start` inside an open `-Start`
 - no `Arcane-Edit` in `Arcane-Start` blocks, or the reverse

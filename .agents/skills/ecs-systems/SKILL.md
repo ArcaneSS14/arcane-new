@@ -5,15 +5,15 @@ description: Implement entity behavior, subscriptions, lifecycle handling, and r
 
 # ecs-systems
 
-## Когда применять
+## When to use
 
 Use for behavior and mutation; do not create a system when an existing owner API fits.
 
-## До изменения
+## Before editing
 
 Locate state owner, entry event, APIs, dependency boundary, query scope, lifecycle callbacks, cleanup, callers and test owner.
 
-## Правила и границы
+## Rules and boundaries
 
 Systems own behavior. Handlers route, validation does not mutate, and execution has one mutation path. Dependencies and subscriptions follow system lifecycle.
 Resolve dependencies through the established dependency mechanism. For a fixed handler compatible with the current generator, `[SubscribeLocalEvent]` may replace a matching manual registration; retain an explicit subscription when its conditional/dynamic lifetime or other contract cannot be expressed by the generator, and never use both forms. `[Dependency]` fields require a partial containing type and must not be readonly; injected `EntityQuery<T>` is supported when a cached query is needed. Keep handlers thin, route reusable operations through Try methods, and keep Can checks mutation-free.
@@ -31,19 +31,19 @@ Recheck trigger: Changing the RobustToolbox pin, analyzer package, or ECS subscr
 
 Correct: use one generator or explicit subscription path that preserves the required lifecycle/order. Prohibited: register the same handler both ways. Stop: report an unsupported handler signature or unclear lifecycle/order contract.
 
-## Выбор подхода
+## Choose an approach
 
 Use direct owner API for one owner, an event for established extensibility, and bounded queries for matching entities.
 Prefer existing entity helpers and bounded EntityQueryEnumerator-style queries over repeated global searches. Use guarded component lookup for optional state, resolution only where the caller contract requires it, and idempotent component creation only when creation is intended.
 
-## Антипаттерны
+## Avoid
 
 - Multiple mutation paths cause duplicate effects.
 - Broad hot-path scans cause performance regressions.
 - Uncleaned callbacks mutate stale state.
 - Immediate removal during dispatch, iteration, or physics callbacks can invalidate the active path; use the established deferred-removal path when that risk exists.
 
-## Проверка
+## Verification
 
 Cover repeated input, initialization, shutdown, deletion and the narrowest owner test.
 Explicitly cover cleanup of callbacks, timers, overlays and cached entity references.

@@ -5,15 +5,15 @@ description: Review correctness, access, repository ownership, authority, locali
 
 # code-review
 
-## Когда применять
+## When to use
 
 Use when reviewing a change for observable correctness, architectural validity, scope, evidence, and actionable defects; review formatting and style last.
 
-## До изменения
+## Before editing
 
 Determine intended scope and observable behavior, owner, authority, assembly/access boundary, lifecycle, persistence, networking/prediction, resources, and localization impact. For inherited, ownership, project-reference, or synchronization changes, verify repository identity, owner tag, and upstream. For changed inherited paths, identify the applicable edit-marker rule; owner-local module and underscore paths must not gain redundant markers.
 
-## Правила и границы
+## Rules and boundaries
 
 - Trace validation, mutation, dirtying, persistence, lifecycle, presentation, repeated execution, reconnect, and failure paths only for changed surfaces.
 - Check declarations, access modifiers, project/assembly references, public contracts, cleanup, compatibility, resources, and regression behavior relevant to the diff.
@@ -25,17 +25,17 @@ Determine intended scope and observable behavior, owner, authority, assembly/acc
 
 Correct: report an evidence-backed observable defect with path and impact. Prohibited: call a style preference a bug. Stop: report insufficient declaration/diff evidence instead of asserting a finding.
 
-## Выбор подхода
+## Choose an approach
 
 Start with correctness/authority/architecture, then lifecycle and safety, then test evidence and scope, then maintainability/style. Report only evidence-backed findings; distinguish a confirmed defect from an unverified risk or a request for clarification.
 
-## Антипаттерны
+## Avoid
 
 - Do not review formatting before observable behavior, invent an API/command, or call a preference a bug without impact.
 - Do not require markers on owner-local paths or skip marker review for an actually changed inherited path.
 - Do not claim a test/build result from an unrun command or ignore an unrelated/unauthorized diff path.
 
-## Проверка
+## Verification
 
 Inspect the complete changed-file list and final diff. Confirm each finding's evidence and scope, and state explicitly which verification evidence was unavailable rather than inferring success.
 

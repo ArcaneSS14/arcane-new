@@ -5,15 +5,15 @@ description: Author deterministic owner-correct tests that prove observable cont
 
 # tests-authoring
 
-## Когда применять
+## When to use
 
 Use when authoring or reviewing a focused regression test for a caller-visible contract.
 
-## До изменения
+## Before editing
 
 Establish the owner, assembly, runtime side, access boundary, production entry point, original failing behavior, and expected observable outcome. Locate the existing owner test project and nearby test pattern before writing setup. Place focused root tests in `Content.Tests` and root integration tests in `Content.IntegrationTests`.
 
-## Правила и границы
+## Rules and boundaries
 
 - A regression test must fail on the original defect and prove a caller-visible contract. Act through the production public API, real event, command, UI message, or lifecycle entry point.
 - Verify declarations, access modifiers, assemblies, runtime sides, and project references before using a symbol. Do not use private reflection.
@@ -34,20 +34,20 @@ Recheck trigger: Changing test project layout, catalog ownership, or test infras
 
 Correct: make a deterministic test fail on the original caller-visible defect. Prohibited: reflect private state or sleep on wall clock. Stop: report inaccessible production entry point.
 
-## Выбор подхода
+## Choose an approach
 
 Use a focused root test for a local contract and integration coverage only for a real cross-layer production path. Prefer the nearest existing owner fixture and deterministic control point over a broader asynchronous test harness.
 
-## Антипаттерны
+## Avoid
 
 - Do not test inaccessible private state instead of observable behavior, mask the defect with setup shortcuts, or rely on timing/order coincidence.
 - Do not claim regression coverage exists until the test is added and run.
 - Do not expand to a full suite by default when the authored focused test and its affected build establish the contract.
 
-## Проверка
+## Verification
 
 Run the authored focused test and directly needed build when appropriate. Report the exact command/result and any check not run; never state that a test passed or coverage exists without executing it.
 
 ## References
 
-- [Regression test design](references/regression-test-design.md): Read this when designing a regression test for a defect with boundary, permission, deletion, cancellation, reconnect, stale-state, or provider-specific risk.
+- [Regression test design](references/regression-test-design.md): Read this when designing regression coverage or interpreting before/after evidence, including when the old revision cannot run the test.

@@ -4,15 +4,15 @@ description: Discover and reuse owner resource structure, then validate paths, R
 ---
 # resources-and-assets
 
-## Когда применять
+## When to use
 
 Use for resource paths, RSI, audio, maps, attribution or asset consumers.
 
-## До изменения
+## Before editing
 
 Find the owner from existing owner paths and nearby assets, never a namespace or prototype ID; identify direct prototype, code, map, locale and visualizer consumers.
 
-## Правила и границы
+## Rules and boundaries
 
 Check case-sensitive paths, RSI metadata/states, audio format/resources, source provenance and attribution. Keep player-visible companions localized as requested.
 Check RSI dimensions, states and frame data; check audio collections, format and volume. Add English player-visible text; change ru-RU only when requested. Apply owner-local/inherited edit-marker rules.
@@ -30,16 +30,16 @@ Recheck trigger: Changing localization, asset ownership, or edit-marker policy.
 
 Correct: reuse owner-local RSI/audio resource structure and validate direct paths. Prohibited: create a parallel hierarchy. Stop: report unknown asset provenance/consumer.
 
-## Выбор подхода
+## Choose an approach
 
 Reuse the owner hierarchy and its supported specialized validation path. Consider prediction, audience and audio lifetime only for an audio task.
 
-## Антипаттерны
+## Avoid
 
 Do not create parallel resource trees, change SPDX, infer paths, or validate unrelated resources.
 Do not recursively inventory resources.
 
-## Проверка
+## Verification
 
 Verify changed files and direct consumers with the narrowest current validator and final diff.
 Validate only the changed resource type and directly affected paths.

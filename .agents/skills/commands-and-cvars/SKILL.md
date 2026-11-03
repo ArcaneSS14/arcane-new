@@ -5,15 +5,15 @@ description: Implement commands and CVar-backed configuration with validation, a
 
 # commands-and-cvars
 
-## Когда применять
+## When to use
 
 Use for console commands, CVar-backed operational configuration, command permissions, runtime settings, or CVar compatibility changes.
 
-## До изменения
+## Before editing
 
 Find current command registration/shell pattern, server authority/permission owner, exact CVar key, definition, flags, consumers, persistence, and runtime-change lifecycle.
 
-## Правила и границы
+## Rules and boundaries
 
 - Separate parsing, authorization, validation, execution, and feedback. Server checks privileged commands; client completion/visibility is not authority. Audit player/round/persistence/config mutations.
 - Validate argument count, parsing, ranges, non-finite values, and current state before mutation. Localize player-facing descriptions/help/errors in `en-US`; add Russian only on request. Keep internal exceptions, secrets, and unauthorized data out of player output. A permission-checked diagnostic/admin command may display technical IDs when they are part of its intended contract; do not replace useful diagnostics with player prose.
@@ -34,16 +34,16 @@ Recheck trigger: Changing CVar flags, engine revision, or replication behavior.
 
 Correct: validate command input and permission at its server owner. Prohibited: use a CVar for per-entity state. Stop: report unverified CVar flags or command registration.
 
-## Выбор подхода
+## Choose an approach
 
 Use a component/prototype for content/entity state and a CVar for global behavior. Define replicated values in Shared only when replication is required; never store secrets/private server state in a CVar.
 
-## Антипаттерны
+## Avoid
 
 - Do not broaden permissions, trust client values, use `CONFIDENTIAL` as secret storage, or leave live subscriptions after owner shutdown.
 - Do not invent CVar flags or commands from another fork.
 
-## Проверка
+## Verification
 
 When changed, cover command parsing/bounds/permissions/output or CVar default/override/live update/replication/archive/invalid fallback as applicable, with an existing owner project/test path only.
 
