@@ -28,9 +28,10 @@ public sealed partial class BitrunningDiskWindow : FancyWindow
 
         foreach (var option in options)
         {
+            // Options are locale ids; the id itself is still what gets sent back.
             var button = new Button
             {
-                Text = option,
+                Text = Loc.TryGetString(option, out var localized) ? localized : option,
             };
             button.OnPressed += _ => OnSelected?.Invoke(option);
             OptionsContainer.AddChild(button);
