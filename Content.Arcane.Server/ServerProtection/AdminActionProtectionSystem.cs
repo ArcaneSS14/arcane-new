@@ -61,58 +61,75 @@ public sealed partial class AdminActionProtectionSystem : EntitySystem
 
     private void OnBanPlaced(ref AdminBanPlacedEvent args)
     {
-        if (!_enabled || !RegisterAction(args.Admin, ActionKind.Ban, _banThreshold, _banWindow))
+        if (!_enabled || !RegisterAction(args.Admin, ActionKind.Ban, _banThreshold, _banWindow, out var alert))
             return;
 
-        _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-mass-ban",
-            ("admin", args.AdminName),
-            ("userId", args.Admin.ToString()),
-            ("target", args.TargetName)));
+        if (alert)
+        {
+            _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-mass-ban",
+                ("admin", args.AdminName),
+                ("userId", args.Admin.ToString()),
+                ("target", args.TargetName)));
+        }
 
-        EnforceMeasures(args.Admin, args.AdminName, "mass-ban-detected");
+        EnforceMeasures(args.Admin, args.AdminName, "mass-ban-detected", alert);
     }
 
     private void OnPermissionsReduced(ref AdminPermissionsReducedEvent args)
     {
-        if (!_enabled || !RegisterAction(args.Admin, ActionKind.Permission, _permissionThreshold, _permissionWindow))
+        if (!_enabled || !RegisterAction(args.Admin, ActionKind.Permission, _permissionThreshold, _permissionWindow, out var alert))
             return;
 
-        _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-mass-permission-removal",
-            ("admin", args.AdminName),
-            ("userId", args.Admin.ToString()),
-            ("action", args.Action),
-            ("target", args.TargetName)));
+        if (alert)
+        {
+            _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-mass-permission-removal",
+                ("admin", args.AdminName),
+                ("userId", args.Admin.ToString()),
+                ("action", args.Action),
+                ("target", args.TargetName)));
+        }
 
-        EnforceMeasures(args.Admin, args.AdminName, "permission-stripping-detected");
+        EnforceMeasures(args.Admin, args.AdminName, "permission-stripping-detected", alert);
     }
 
-    private void EnforceMeasures(NetUserId admin, string adminName, string reasonTag)
+    /// <summary>
+    ///     Applies the protection every time the threshold is crossed; only the alerts are rate limited.
+    /// </summary>
+    private void EnforceMeasures(NetUserId admin, string adminName, string reasonTag, bool alert)
     {
         if (_autoDeAdmin && _player.TryGetSessionById(admin, out var session))
         {
-            _punishment.DeAdmin(session, $"AdminActionProtection: {reasonTag}");
-            _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-deadmined",
-                ("admin", adminName),
-                ("userId", admin.ToString()),
-                ("reason", reasonTag)));
+            _punishment.Suspend(session, $"AdminActionProtection: {reasonTag}");
+            if (alert)
+            {
+                _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-deadmined",
+                    ("admin", adminName),
+                    ("userId", admin.ToString()),
+                    ("reason", reasonTag)));
+            }
         }
 
         if (!_autoBan)
             return;
 
         _punishment.ApplyBan(admin, adminName, Loc.GetString("admin-action-protection-ban-reason", ("reason", reasonTag)), _autoBanMinutes);
-        _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-banned",
-            ("admin", adminName),
-            ("userId", admin.ToString()),
-            ("minutes", _autoBanMinutes),
-            ("reason", reasonTag)));
+        if (alert)
+        {
+            _punishment.SendAdminAlert(Loc.GetString("admin-action-protection-banned",
+                ("admin", adminName),
+                ("userId", admin.ToString()),
+                ("minutes", _autoBanMinutes),
+                ("reason", reasonTag)));
+        }
     }
 
     /// <summary>
-    ///     Records the action and returns true when it crosses the threshold and no alert was sent recently.
+    ///     Records the action and returns true when it crosses the threshold; <paramref name="alert"/> is false
+    ///     while an alert for this admin and kind was sent recently.
     /// </summary>
-    private bool RegisterAction(NetUserId admin, ActionKind kind, int threshold, float windowSeconds)
+    private bool RegisterAction(NetUserId admin, ActionKind kind, int threshold, float windowSeconds, out bool alert)
     {
+        alert = false;
         var key = (admin, kind);
         if (!_actions.TryGetValue(key, out var queue))
         {
@@ -133,9 +150,10 @@ public sealed partial class AdminActionProtectionSystem : EntitySystem
             return false;
 
         if (_lastAlert.TryGetValue(key, out var lastAlert) && now - lastAlert < TimeSpan.FromSeconds(Math.Max(1f, _alertCooldown)))
-            return false;
+            return true;
 
         _lastAlert[key] = now;
+        alert = true;
         return true;
     }
 }

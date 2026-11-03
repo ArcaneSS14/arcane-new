@@ -161,6 +161,11 @@ namespace Content.Server.Administration.UI
 
             await _db.RemoveAdminRankAsync(rr.Id);
 
+            // Arcane-Start: one rank-wide change is one protection action, whatever the number of its admins
+            if (rank.Flags.Count > 0)
+                RaisePermissionsReduced(rank.Name, "remove-rank");
+            // Arcane-End
+
             _adminManager.ReloadAdminsWithRank(rr.Id);
         }
 
@@ -184,6 +189,8 @@ namespace Content.Server.Administration.UI
                 return;
             }
 
+            var oldRankFlags = AdminFlagsHelper.NamesToFlags(rank.Flags.Select(f => f.Flag)); // Arcane
+
             rank.Flags = GenRankFlagList(ur.Flags);
             rank.Name = ur.Name;
 
@@ -191,6 +198,11 @@ namespace Content.Server.Administration.UI
 
             var flagText = string.Join(' ', AdminFlagsHelper.FlagsToNames(ur.Flags).Select(f => $"+{f}"));
             _sawmill.Info($"{Player} updated admin rank {rank.Name}/{flagText}.");
+
+            // Arcane-Start
+            if ((oldRankFlags & ~ur.Flags) != 0)
+                RaisePermissionsReduced(rank.Name, "update-rank-restrict");
+            // Arcane-End
 
             _adminManager.ReloadAdminsWithRank(ur.Id);
         }
@@ -268,7 +280,10 @@ namespace Content.Server.Administration.UI
                 return;
             }
 
-            var permissionReduction = IsPermissionReduction(admin, ua); // Arcane
+            // Arcane-Start
+            var newRank = ua.RankId is { } newRankId ? await _db.GetAdminRankAsync(newRankId) : null;
+            var permissionReduction = IsPermissionReduction(admin, ua, newRank);
+            // Arcane-End
 
             admin.Title = ua.Title;
             admin.AdminRankId = ua.RankId;
@@ -377,18 +392,17 @@ namespace Content.Server.Administration.UI
             _entityManager.EventBus.RaiseEvent(EventSource.Local, ref ev);
         }
 
-        private static bool IsPermissionReduction(Admin oldAdmin, UpdateAdmin update)
+        /// <summary>
+        /// Compares the effective permissions before and after, rank included, the same way AdminManager computes them.
+        /// </summary>
+        private static bool IsPermissionReduction(Admin oldAdmin, UpdateAdmin update, DbAdminRank? newRank)
         {
             if (update.Suspended && !oldAdmin.Suspended)
                 return true;
 
-            if (oldAdmin.AdminRankId != null && update.RankId == null)
-                return true;
-
-            var oldPosFlags = AdminFlagsHelper.NamesToFlags(oldAdmin.Flags.Where(f => !f.Negative).Select(f => f.Flag));
-            var oldNegFlags = AdminFlagsHelper.NamesToFlags(oldAdmin.Flags.Where(f => f.Negative).Select(f => f.Flag));
-
-            return (oldPosFlags & ~update.PosFlags) != 0 || (update.NegFlags & ~oldNegFlags) != 0;
+            var oldFlags = AdminManager.GetEffectiveFlags(oldAdmin.AdminRank, oldAdmin.Flags);
+            var newFlags = AdminManager.GetEffectiveFlags(newRank, GenAdminFlagList(update.PosFlags, update.NegFlags));
+            return (oldFlags & ~newFlags) != 0;
         }
         // Arcane-End
 

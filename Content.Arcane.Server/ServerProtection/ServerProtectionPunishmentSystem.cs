@@ -2,6 +2,7 @@ using Content.Server.Administration;
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.Chat.Managers;
+using Content.Server.Database;
 using Content.Server.GhostKick;
 using Content.Shared.Database;
 using Robust.Shared.Network;
@@ -19,6 +20,7 @@ public sealed partial class ServerProtectionPunishmentSystem : EntitySystem
     [Dependency] private IAdminManager _adminManager = default!;
     [Dependency] private IBanManager _banManager = default!;
     [Dependency] private IChatManager _chat = default!;
+    [Dependency] private IServerDbManager _db = default!;
     [Dependency] private IPlayerLocator _locator = default!;
 
     /// <summary>
@@ -48,6 +50,30 @@ public sealed partial class ServerProtectionPunishmentSystem : EntitySystem
     {
         _adminManager.DeAdmin(player);
         Log.Warning($"{player.Name} was de-admined: {reason}");
+    }
+
+    /// <summary>
+    ///     Suspends the admin record, so neither readmin nor reconnecting gives the permissions back until an
+    ///     authorized admin lifts the suspension in the permissions panel. Admins without a database record
+    ///     (local or transient) are de-admined instead.
+    /// </summary>
+    public async void Suspend(ICommonSession player, string reason)
+    {
+        var admin = await _db.GetAdminDataForAsync(player.UserId);
+        if (admin == null)
+        {
+            DeAdmin(player, reason);
+            return;
+        }
+
+        if (!admin.Suspended)
+        {
+            admin.Suspended = true;
+            await _db.UpdateAdminAsync(admin);
+        }
+
+        _adminManager.ReloadAdmin(player);
+        Log.Warning($"{player.Name} was suspended as admin: {reason}");
     }
 
     public void Kick(ICommonSession player, string reason)

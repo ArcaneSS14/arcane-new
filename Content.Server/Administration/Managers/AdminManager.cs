@@ -74,6 +74,36 @@ namespace Content.Server.Administration.Managers
             return null;
         }
 
+        // Arcane-Start
+        /// <summary>
+        /// The permissions an admin record grants: its rank's flags with the record's own flags added or removed.
+        /// </summary>
+        public static AdminFlags GetEffectiveFlags(Database.AdminRank? rank, IEnumerable<Database.AdminFlag> adminFlags)
+        {
+            var flags = AdminFlags.None;
+
+            if (rank != null)
+            {
+                flags = AdminFlagsHelper.NamesToFlags(rank.Flags.Select(p => p.Flag));
+            }
+
+            foreach (var dbFlag in adminFlags)
+            {
+                var flag = AdminFlagsHelper.NameToFlag(dbFlag.Flag);
+                if (dbFlag.Negative)
+                {
+                    flags &= ~flag;
+                }
+                else
+                {
+                    flags |= flag;
+                }
+            }
+
+            return flags;
+        }
+        // Arcane-End
+
         public void DeAdmin(ICommonSession session)
         {
             if (!_admins.TryGetValue(session, out var reg))
@@ -462,25 +492,7 @@ namespace Content.Server.Administration.Managers
                     return null;
                 }
 
-                var flags = AdminFlags.None;
-
-                if (dbData.AdminRank != null)
-                {
-                    flags = AdminFlagsHelper.NamesToFlags(dbData.AdminRank.Flags.Select(p => p.Flag));
-                }
-
-                foreach (var dbFlag in dbData.Flags)
-                {
-                    var flag = AdminFlagsHelper.NameToFlag(dbFlag.Flag);
-                    if (dbFlag.Negative)
-                    {
-                        flags &= ~flag;
-                    }
-                    else
-                    {
-                        flags |= flag;
-                    }
-                }
+                var flags = GetEffectiveFlags(dbData.AdminRank, dbData.Flags); // Arcane-Edit: moved into GetEffectiveFlags
 
                 var data = new AdminData
                 {
