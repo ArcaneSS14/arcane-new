@@ -157,7 +157,8 @@ public sealed partial class BankSystem : EntitySystem
     /// <summary>
     ///     Adds or, with a negative amount, withdraws credits. Fails when the account would go below zero.
     /// </summary>
-    public bool ChangeBalance(Entity<BankAccountComponent> account, int amount, string reason)
+    /// <param name="syncCards">False when the caller updates the cards of many accounts in one pass itself.</param>
+    public bool ChangeBalance(Entity<BankAccountComponent> account, int amount, string reason, bool syncCards = true)
     {
         if (amount == 0)
             return true;
@@ -170,20 +171,26 @@ public sealed partial class BankSystem : EntitySystem
         _adminLog.Add(LogType.Action, LogImpact.Low,
             $"Bank account {account.Comp.AccountId} ({account.Comp.OwnerName}) changed by {amount} for {reason}, balance {account.Comp.Balance}");
 
-        SyncCards(account);
+        if (syncCards)
+            SyncCards(new Dictionary<string, int> { [account.Comp.AccountId] = account.Comp.Balance });
+
         return true;
     }
 
-    private void SyncCards(Entity<BankAccountComponent> account)
+    /// <summary>
+    /// Copies the new balances onto every card linked to these accounts, open card windows included.
+    /// </summary>
+    private void SyncCards(Dictionary<string, int> balances)
     {
         var query = EntityQueryEnumerator<BankCardComponent>();
         while (query.MoveNext(out var uid, out var card))
         {
-            if (card.AccountId != account.Comp.AccountId)
+            if (card.AccountId is not { } accountId || !balances.TryGetValue(accountId, out var balance))
                 continue;
 
-            card.Balance = account.Comp.Balance;
+            card.Balance = balance;
             Dirty(uid, card);
+            UpdateUi((uid, card));
         }
     }
 
@@ -210,6 +217,7 @@ public sealed partial class BankSystem : EntitySystem
     /// </summary>
     private void ProcessPayday()
     {
+        var paidBalances = new Dictionary<string, int>();
         var query = EntityQueryEnumerator<BankAccountComponent, MindComponent>();
         while (query.MoveNext(out var uid, out var account, out var mind))
         {
@@ -231,12 +239,16 @@ public sealed partial class BankSystem : EntitySystem
                 _cargo.UpdateBankAccount((station.Value, bank), -paid, department);
             }
 
-            if (!ChangeBalance((uid, account), paid, "payday"))
+            if (!ChangeBalance((uid, account), paid, "payday", syncCards: false))
                 continue;
 
+            paidBalances[account.AccountId] = account.Balance;
             _popup.PopupEntity(Loc.GetString("bank-payday-received", ("amount", paid)), owned, owned);
             _audio.PlayEntity(PaydaySound, owned, owned, AudioParams.Default.WithVolume(-2f));
         }
+
+        // One pass over the cards for the whole payday instead of one per paid account.
+        SyncCards(paidBalances);
     }
 
     private void OnAccountLookup(ref BankAccountLookupEvent args)
@@ -274,7 +286,6 @@ public sealed partial class BankSystem : EntitySystem
 
         _popup.PopupEntity(Loc.GetString("bank-card-deposited", ("amount", stack.Count)), ent, args.User);
         _stack.SetCount((args.Used, stack), 0);
-        UpdateUi(ent);
     }
 
     private void OnUiOpened(Entity<BankCardComponent> ent, ref BoundUIOpenedEvent args)
@@ -304,8 +315,6 @@ public sealed partial class BankSystem : EntitySystem
         {
             _hands.PickupOrDrop(args.Actor, chip);
         }
-
-        UpdateUi(ent);
     }
 
     private void UpdateUi(Entity<BankCardComponent> ent)

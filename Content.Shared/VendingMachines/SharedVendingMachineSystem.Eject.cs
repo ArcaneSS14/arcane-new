@@ -155,7 +155,9 @@ public abstract partial class SharedVendingMachineSystem
         }
 
         // Arcane-Start
-        var purchase = new VendingPurchaseAttemptEvent(user, entry.ID, (int) type);
+        // The entry's own type, not the requested one: a forged request for an emagged item from a normal
+        // machine gets the normal entry and must pay its normal price.
+        var purchase = new VendingPurchaseAttemptEvent(user, entry.ID, (int) entry.Type);
         RaiseLocalEvent(uid, ref purchase);
         if (purchase.Cancelled)
         {

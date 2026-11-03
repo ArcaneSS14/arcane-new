@@ -17,8 +17,8 @@
     - state: holochip
       map: ["overlay"]
   - type: Appearance
-  - type: StaticPrice
-    price: 0
+  - type: StackPrice # Cash: worth its count, like the paper credits it is withdrawn for
+    price: 1
 
 - type: entity
   parent: CreditHolochip
