@@ -130,7 +130,8 @@ public sealed partial class AtmosphereSystem
                 var visual = SpawnAtPosition(SpaceWindVisualProto, location);
                 if (tile.PressureDirection != AtmosDirection.Invalid)
                 {
-                    var angle = tile.PressureDirection.ToAngle() + XformSystem.GetWorldRotation(gridAtmosphere) - Angle.FromDegrees(90);
+                    // The visual is parented to the grid, so its local rotation is already relative to the grid.
+                    var angle = tile.PressureDirection.ToAngle() - Angle.FromDegrees(90);
                     XformSystem.SetLocalRotation(visual, angle);
                 }
             }
