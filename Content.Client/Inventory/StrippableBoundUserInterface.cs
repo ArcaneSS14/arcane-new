@@ -155,6 +155,7 @@ namespace Content.Client.Inventory
 
             if (EntMan.TryGetComponent<InventoryComponent>(Owner, out var inv))
             {
+                _coveredSlots = GetCoveredSlots(inv); // Arcane: once per menu update, not per slot
                 foreach (var slot in inv.Slots)
                 {
                     AddInventoryButton(Owner, slot.Name, inv);
@@ -314,7 +315,7 @@ namespace Content.Client.Inventory
             // Arcane-Start: slots covered by other clothing (Orion #208)
             if (!EntMan.HasComponent<BypassInteractionChecksComponent>(_player.LocalEntity))
             {
-                var (blocked, hidden) = GetCoveredSlots(invUid, inv);
+                var (blocked, hidden) = _coveredSlots;
                 if ((slotDef.SlotFlags & (blocked | hidden)) != 0)
                     entity = _virtualHiddenEntity;
 
@@ -335,16 +336,20 @@ namespace Content.Client.Inventory
         }
 
         // Arcane-Start
+        private (SlotFlags Blocked, SlotFlags Hidden) _coveredSlots;
+
         /// <summary>
-        /// Slots blocked or hidden by the clothing the target is wearing.
+        /// Slots blocked or hidden by the clothing the target is wearing. Pockets do not count, the same as for
+        /// the server's equip checks: shoes kept in a pocket do not cover the socks.
         /// </summary>
-        private (SlotFlags Blocked, SlotFlags Hidden) GetCoveredSlots(EntityUid invUid, InventoryComponent inv)
+        private (SlotFlags Blocked, SlotFlags Hidden) GetCoveredSlots(InventoryComponent inv)
         {
             var blocked = SlotFlags.NONE;
             var hidden = SlotFlags.NONE;
-            foreach (var slotContainer in inv.Containers)
+            var enumerator = new InventorySystem.InventorySlotEnumerator(inv, SlotFlags.WITHOUT_POCKET);
+            while (enumerator.NextItem(out var item))
             {
-                if (!EntMan.TryGetComponent<SlotBlockComponent>(slotContainer.ContainedEntity, out var block))
+                if (!EntMan.TryGetComponent<SlotBlockComponent>(item, out var block))
                     continue;
 
                 blocked |= block.Slots;
