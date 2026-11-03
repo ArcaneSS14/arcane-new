@@ -94,14 +94,13 @@ public sealed partial class CustomGhostsWindow : DefaultWindow
         var button = new CustomGhostButton();
         ScrollBox.AddChild(button);
         button.ActualButton.Name = ghostProto.ID;
-        // Can't use EntityPrototypeView since its UpdateEntity method is private
-        // so i have to do what it does manually
-        // therefore there is no reason to use it over SpriteView
-
+        // A manual preview instead of EntityPrototypeView: ghosts are invisible, and the preview has to force
+        // its sprite visible after spawning, which EntityPrototypeView has no hook for. The previews are
+        // deleted when the window closes.
         var ghostEnt = _entMan.Spawn(ghostProto.GhostEntityPrototype);
         _previewEntities.Add(ghostEnt);
         _sprite.ForceUpdate(ghostEnt);
-        _sprite.SetVisible(ghostEnt, true); // counters ghost invisibility bullshit
+        _sprite.SetVisible(ghostEnt, true); // ghost sprites start invisible
         button.EntityTextureRects.SetEntity(ghostEnt);
 
         button.EntityLabel.Text = ghostProto.DisplayName;

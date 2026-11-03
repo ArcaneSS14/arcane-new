@@ -19,14 +19,18 @@ public sealed partial class CkeyRestriction : CustomGhostRestriction
     public override bool CanUse(ICommonSession player, [NotNullWhen(false)] out string? failReason)
     {
         failReason = null;
-        var name = player.Name.ToLower();
-        if (player.Name.StartsWith("localhost@"))
-            name = name.Substring(10); // what's the proper way of doing this?
 
-        foreach(var testCkey in Ckey)
+        // Local dev logins are "localhost@<name>"; the ckey is the part after the prefix.
+        const string localPrefix = "localhost@";
+        var name = player.Name.StartsWith(localPrefix, StringComparison.Ordinal)
+            ? player.Name[localPrefix.Length..]
+            : player.Name;
+
+        // Ckeys are case insensitive; ordinal comparison does not depend on the current culture.
+        foreach (var testCkey in Ckey)
         {
-            if(testCkey.ToLower() == name) // I'd do a .Contains() here, but i want this check to be case independent, and the StringComparer.OrdinalIgnoreCase
-                return true;              // is not allowed by the sandbox because robusttoolbox maintainers are mentally disabled
+            if (string.Equals(testCkey, name, StringComparison.OrdinalIgnoreCase))
+                return true;
         }
 
         failReason = Loc.GetString("custom-ghost-fail-exclusive-ghost");
@@ -39,17 +43,16 @@ public sealed partial class CkeyRestriction : CustomGhostRestriction
 [DataDefinition]
 public sealed partial class PlaytimeServerRestriction : CustomGhostRestriction
 {
-    private static ISharedPlaytimeManager? _playtime;
 
     [DataField(required: true)]
     public float HoursPlaytime;
 
     public override bool CanUse(ICommonSession player, [NotNullWhen(false)] out string? failReason)
     {
-        _playtime ??= IoCManager.Resolve<ISharedPlaytimeManager>();
+        var playtime = IoCManager.Resolve<ISharedPlaytimeManager>();
 
         failReason = null;
-        var playtimes = _playtime.GetPlayTimes(player);
+        var playtimes = playtime.GetPlayTimes(player);
 
         double jobPlaytime = 0;
         if (playtimes.TryGetValue("Overall", out var time))
@@ -74,25 +77,23 @@ public sealed partial class PlaytimeServerRestriction : CustomGhostRestriction
 [DataDefinition]
 public sealed partial class PlaytimeJobRestriction : CustomGhostRestriction
 {
-    private static ISharedPlaytimeManager? _playtime;
-    private static IPrototypeManager? _proto;
 
     [DataField(required: true)]
-    public string Job = string.Empty;
+    public ProtoId<JobPrototype> Job = string.Empty;
 
     [DataField(required: true)]
     public float HoursPlaytime;
 
     public override bool CanUse(ICommonSession player, [NotNullWhen(false)] out string? failReason)
     {
-        _playtime ??= IoCManager.Resolve<ISharedPlaytimeManager>();
-        _proto ??= IoCManager.Resolve<IPrototypeManager>();
+        var playtime = IoCManager.Resolve<ISharedPlaytimeManager>();
+        var proto = IoCManager.Resolve<IPrototypeManager>();
 
         failReason = null;
-        var playtimes = _playtime.GetPlayTimes(player);
+        var playtimes = playtime.GetPlayTimes(player);
 
         double jobPlaytime = 0;
-        var jobProto = _proto.Index<JobPrototype>(Job);
+        var jobProto = proto.Index(Job);
         if (playtimes.TryGetValue(jobProto.PlayTimeTracker, out var time))
             jobPlaytime += time.TotalHours;
 
@@ -116,8 +117,6 @@ public sealed partial class PlaytimeJobRestriction : CustomGhostRestriction
 [DataDefinition]
 public sealed partial class PlaytimeDepartmentRestriction : CustomGhostRestriction
 {
-    private static ISharedPlaytimeManager? _playtime;
-    private static IPrototypeManager? _proto;
 
     [DataField(required: true)]
     public ProtoId<DepartmentPrototype> Department = string.Empty;
@@ -127,18 +126,18 @@ public sealed partial class PlaytimeDepartmentRestriction : CustomGhostRestricti
 
     public override bool CanUse(ICommonSession player, [NotNullWhen(false)] out string? failReason)
     {
-        _playtime ??= IoCManager.Resolve<ISharedPlaytimeManager>();
-        _proto ??= IoCManager.Resolve<IPrototypeManager>();
+        var playtime = IoCManager.Resolve<ISharedPlaytimeManager>();
+        var proto = IoCManager.Resolve<IPrototypeManager>();
 
         failReason = null;
-        var playtimes = _playtime.GetPlayTimes(player);
+        var playtimes = playtime.GetPlayTimes(player);
 
         double departmentPlaytime = 0;
-        var departmentProto = _proto.Index(Department);
+        var departmentProto = proto.Index(Department);
         var departmentJobs = departmentProto.Roles;
         foreach (var job in departmentJobs)
         {
-            var jobProto = _proto.Index(job);
+            var jobProto = proto.Index(job);
             if (playtimes.TryGetValue(jobProto.PlayTimeTracker, out var time))
                 departmentPlaytime += time.TotalHours;
         }
