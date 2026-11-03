@@ -531,7 +531,6 @@
   name: engineering lock box
   components:
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     layers:
     - state: base
     - state: closed
@@ -539,10 +538,12 @@
     - state: overlay-closed
       color: "#ad8c27"
       map: [ lid_overlay ]
+    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#ad8c27"
       visible: false
       map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -553,7 +554,6 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.46875,0.03125"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   - type: OverrideSell
     overrideAccount: Engineering
   - type: AccessReader
@@ -565,7 +565,6 @@
   name: medical lock box
   components:
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     layers:
     - state: base
     - state: closed
@@ -573,10 +572,12 @@
     - state: overlay-closed
       color: "#92c7e8"
       map: [ lid_overlay ]
+    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#92c7e8"
       visible: false
       map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -587,7 +588,6 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.46875,0.03125"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   - type: OverrideSell
     overrideAccount: Medical
   - type: AccessReader
@@ -599,7 +599,6 @@
   name: science lock box
   components:
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     layers:
     - state: base
     - state: closed
@@ -607,10 +606,12 @@
     - state: overlay-closed
       color: "#ba4bf0"
       map: [ lid_overlay ]
+    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#ba4bf0"
       visible: false
       map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -621,7 +622,6 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.46875,0.03125"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   - type: OverrideSell
     overrideAccount: Science
   - type: AccessReader
@@ -633,7 +633,6 @@
   name: security lock box
   components:
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     layers:
     - state: base
     - state: closed
@@ -641,10 +640,12 @@
     - state: overlay-closed
       color: "#c12d30"
       map: [ lid_overlay ]
+    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#c12d30"
       visible: false
       map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -655,7 +656,6 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.46875,0.03125"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   - type: OverrideSell
     overrideAccount: Security
   - type: AccessReader
@@ -667,7 +667,6 @@
   name: service lock box
   components:
   - type: Sprite
-    # Arcane-Edit-Start: Orion storage sprites
     layers:
     - state: base
     - state: closed
@@ -675,10 +674,12 @@
     - state: overlay-closed
       color: "#53b723"
       map: [ lid_overlay ]
+    # Arcane-Edit-Start: static overlay replaced by open overlay
     - state: overlay-open
       color: "#53b723"
       visible: false
       map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -689,7 +690,6 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.46875,0.03125"
       map: ["enum.PaperLabelVisuals.Layer"]
-    # Arcane-Edit-End
   - type: OverrideSell
     overrideAccount: Service
   - type: AccessReader

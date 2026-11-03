@@ -2,7 +2,7 @@
 # No roles, rewards or cargo products are introduced. InteQ access can be configured by mappers.
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateAtmospherics
   components:
   - type: Icon
@@ -11,7 +11,7 @@
     sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateCargo
   components:
   - type: Icon
@@ -20,7 +20,7 @@
     sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateDeForest
   components:
   - type: Icon
@@ -29,7 +29,7 @@
     sprite: _Arcane/Structures/Storage/Crates/deforest.rsi
 
 - type: entity
-  parent: [CrateFreezer]
+  parent: CrateFreezer
   id: CrateFreezerDonk
   components:
   - type: Icon
@@ -38,7 +38,7 @@
     sprite: _Arcane/Structures/Storage/Crates/donk.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateGolden
   components:
   - type: Icon
@@ -47,7 +47,7 @@
     sprite: _Arcane/Structures/Storage/Crates/gold.rsi
 
 - type: entity
-  parent: [CrateFreezer]
+  parent: CrateFreezer
   id: CrateFreezerKitchen
   components:
   - type: Icon
@@ -56,7 +56,7 @@
     sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateLavender
   components:
   - type: Icon
@@ -65,7 +65,7 @@
     sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
 
 - type: entity
-  parent: [CrateMedical]
+  parent: CrateMedical
   id: CrateMedicalAlt
   components:
   - type: Icon
@@ -74,7 +74,7 @@
     sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateMining
   components:
   - type: Icon
@@ -83,7 +83,7 @@
     sprite: _Arcane/Structures/Storage/Crates/mining.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateNakamura
   components:
   - type: Icon
@@ -92,7 +92,7 @@
     sprite: _Arcane/Structures/Storage/Crates/nakamura.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CratePink
   components:
   - type: Icon
@@ -101,7 +101,7 @@
     sprite: _Arcane/Structures/Storage/Crates/pink.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateRobotics
   components:
   - type: Icon
@@ -110,7 +110,7 @@
     sprite: _Arcane/Structures/Storage/Crates/robotics.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateRobust
   components:
   - type: Icon
@@ -119,7 +119,7 @@
     sprite: _Arcane/Structures/Storage/Crates/robust.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateSELF
   components:
   - type: Icon
@@ -128,7 +128,7 @@
     sprite: _Arcane/Structures/Storage/Crates/self.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateSilver
   components:
   - type: Icon
@@ -137,7 +137,7 @@
     sprite: _Arcane/Structures/Storage/Crates/silver.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateWooden
   components:
   - type: Icon
@@ -338,7 +338,7 @@
     sprite: _Arcane/Structures/Storage/Crates/waffle_secure.rsi
 
 - type: entity
-  parent: [CrateGenericSteel]
+  parent: CrateGenericSteel
   id: CrateInteQ
   components:
   - type: Icon
@@ -347,7 +347,7 @@
     sprite: _Arcane/Structures/Storage/Crates/inteq.rsi
 
 - type: entity
-  parent: [CrateBaseSecure]
+  parent: CrateBaseSecure
   id: CrateInteQSecure
   components:
   - type: Icon
