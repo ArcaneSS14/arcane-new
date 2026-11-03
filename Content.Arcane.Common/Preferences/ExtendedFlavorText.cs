@@ -1,3 +1,4 @@
+using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Content.Arcane.Common.CCVar;
@@ -87,7 +88,7 @@ public sealed partial class ExtendedFlavorText : IEquatable<ExtendedFlavorText>
         {
             Character = ValidateText(Character, cfg.GetCVar(ArcaneCVars.FlavorCharacterLength)),
             Ooc = ValidateText(Ooc, ooc),
-            Tags = FormatTags(Cut(Tags, tags)),
+            Tags = FormatTags(Tags, tags),
             Links = Cut(Links, links),
             Green = ValidateText(Green, preferences),
             Yellow = ValidateText(Yellow, preferences),
@@ -95,7 +96,7 @@ public sealed partial class ExtendedFlavorText : IEquatable<ExtendedFlavorText>
             Nsfw = ValidateText(Nsfw, nsfw),
             NsfwOoc = ValidateText(NsfwOoc, ooc),
             NsfwLinks = Cut(NsfwLinks, links),
-            NsfwTags = FormatTags(Cut(NsfwTags, tags)),
+            NsfwTags = FormatTags(NsfwTags, tags),
         };
     }
 
@@ -132,13 +133,29 @@ public sealed partial class ExtendedFlavorText : IEquatable<ExtendedFlavorText>
         return text.Length > maxLength ? text[..maxLength] : text;
     }
 
-    private static string FormatTags(string tags)
+    /// <summary>
+    /// Formats tags as "#a, #b" within <paramref name="maxLength"/>, counting the added '#' and separators and
+    /// keeping only whole tags, so formatting already formatted tags changes nothing.
+    /// </summary>
+    private static string FormatTags(string tags, int maxLength)
     {
-        var formatted = SplitList(tags)
-            .Select(tag => tag.StartsWith('#') ? tag : "#" + tag)
-            .Where(tag => tag.Length > 1);
+        var result = new StringBuilder();
+        foreach (var entry in SplitList(tags))
+        {
+            var tag = entry.StartsWith('#') ? entry : "#" + entry;
+            if (tag.Length <= 1)
+                continue;
 
-        return string.Join(", ", formatted);
+            var added = result.Length == 0 ? tag.Length : tag.Length + 2;
+            if (result.Length + added > maxLength)
+                break;
+
+            if (result.Length > 0)
+                result.Append(", ");
+            result.Append(tag);
+        }
+
+        return result.ToString();
     }
 
     public bool Equals(ExtendedFlavorText? other)
