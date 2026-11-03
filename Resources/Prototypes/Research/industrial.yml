@@ -48,12 +48,21 @@
   id: AdvancedPowercells
   name: research-technology-advanced-powercells
   icon:
-    sprite: Structures/Power/turbo_recharger.rsi
-    state: empty
+    # Arcane-Edit-Start: turbo_recharger.rsi/empty > inducer icon
+    sprite: _Arcane/Objects/Tools/Inducer/inducer-rnd.rsi
+    state: icon
+    # Arcane-Edit-End
   discipline: Industrial
   tier: 1
   cost: 7500
   recipeUnlocks:
+  # Arcane-Start
+  - InducerScientific
+  - MegaCellSuper
+  - MegaCellHyper
+  - MegaCellHigh
+  - PowerCellSuper
+  # Arcane-End
   - PowerCellHigh
   - TurboItemRechargerCircuitboard
   - SMESAdvancedMachineCircuitboard
@@ -273,13 +282,20 @@
   id: OptimizedMicrogalvanism
   name: research-technology-optimized-microgalvanism
   icon:
-    sprite: Objects/Power/power_cells.rsi
-    state: microreactor
+    # Arcane-Edit-Start: power_cells.rsi/microreactor > bluespace cell
+    sprite: _Arcane/Objects/Power/power_cells.rsi
+    state: bluespace
+    # Arcane-Edit-End
   discipline: Industrial
   tier: 3
   cost: 15000 # Goobstation 10000 -> 15000
   recipeUnlocks:
-  - PowerCellMicroreactor
+  # Arcane-Edit-Start: replaces PowerCellMicroreactor
+  - MegaCellBluespace
+  - PowerCellBluespace
+  - PowerCellBluespaceReactor
+  - PowerCellVortex
+  # Arcane-Edit-End
   - PowerCellHyper
   technologyPrerequisites:
   - AdvancedToolsTechnology  # Goobstation R&D Console rework

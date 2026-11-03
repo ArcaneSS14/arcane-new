@@ -50,5 +50,18 @@ public sealed partial class ChameleonClothingSystem : SharedChameleonClothingSys
             borderColor.AccentHColor = otherBorderColor.AccentHColor;
             borderColor.AccentVColor = otherBorderColor.AccentVColor;
         }
+
+        // Arcane-Start
+        var ev = new ChameleonSpriteUpdatedEvent(proto);
+        RaiseLocalEvent(uid, ref ev);
+        // Arcane-End
     }
 }
+
+// Arcane-Start
+/// <summary>
+/// Raised on a chameleon item after it copied the sprite of <see cref="Disguise"/>, which wipes runtime sprite layers.
+/// </summary>
+[ByRefEvent]
+public readonly record struct ChameleonSpriteUpdatedEvent(EntityPrototype Disguise);
+// Arcane-End
