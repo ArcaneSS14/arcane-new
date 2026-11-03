@@ -32,7 +32,6 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
     [Dependency] private NpcFactionSystem _npcFaction = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private CommonSparksSystem _sparks = default!;
-    [Dependency] private UserInterfaceSystem _ui = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
@@ -47,8 +46,7 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         SubscribeLocalEvent<RecruitmentScanningComponent, AfterInteractEvent>(OnScanAttempt);
         SubscribeLocalEvent<RecruitmentScanningComponent, RecruitmentScanningDoAfterEvent>(OnScanComplete);
 
-        SubscribeLocalEvent<RecruitmentScanningComponent, RecruitmentAcceptMessage>(OnAccept);
-        SubscribeLocalEvent<RecruitmentScanningComponent, RecruitmentDeclineMessage>(OnDecline);
+        SubscribeLocalEvent<RecruitmentConfirmationComponent, ComponentShutdown>(OnConfirmationShutdown);
 
         SubscribeNetworkEvent<RecruitmentRespondConfirmationEvent>(OnRecruitmentResponse);
     }
@@ -85,6 +83,10 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         var userName = Identity.Name(args.User, EntityManager);
         if (args.User != target)
             _popup.PopupEntity(Loc.GetString("recruitment-start-target", ("user", userName)), args.User, target, PopupType.LargeCaution);
+
+        // A new request replaces the old one: whoever was asked before gets their window closed.
+        if (TryComp<RecruitmentConfirmationComponent>(uid, out var previous) && previous.Target != target)
+            CloseConfirmationWindow(uid, previous.Target);
 
         var confirmComp = EnsureComp<RecruitmentConfirmationComponent>(uid);
         confirmComp.Scanner = uid;
@@ -130,28 +132,41 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         if (ev.Accepted)
         {
             _adminLogger.Add(LogType.Action, LogImpact.Low, $"{actorName} accepted a recruitment request to {confirmComp.OrganizationName}");
-            OnAccept(scannerUid.Value, scanComp, new RecruitmentAcceptMessage { Actor = actor.Value });
+            Accept(scannerUid.Value, scanComp, actor.Value);
         }
         else
         {
             _adminLogger.Add(LogType.Action, LogImpact.Low, $"{actorName} declined a recruitment request to {confirmComp.OrganizationName}");
-            OnDecline(scannerUid.Value, scanComp, new RecruitmentDeclineMessage { Actor = actor.Value });
+            Decline(scannerUid.Value, actor.Value);
         }
     }
 
-    private void OnAccept(EntityUid uid, RecruitmentScanningComponent scanComp, RecruitmentAcceptMessage args)
+    /// <summary>
+    /// The request ends with its confirmation component (answer, new target, deleted scanner): close the window.
+    /// </summary>
+    private void OnConfirmationShutdown(Entity<RecruitmentConfirmationComponent> ent, ref ComponentShutdown args)
+    {
+        CloseConfirmationWindow(ent.Owner, ent.Comp.Target);
+    }
+
+    private void CloseConfirmationWindow(EntityUid scanner, EntityUid target)
+    {
+        if (TryComp<ActorComponent>(target, out var actor))
+            RaiseNetworkEvent(new RecruitmentCloseConfirmationEvent { Scanner = GetNetEntity(scanner) }, actor.PlayerSession);
+    }
+
+    private void Accept(EntityUid uid, RecruitmentScanningComponent scanComp, EntityUid actor)
     {
         if (!TryComp<RecruitmentConfirmationComponent>(uid, out var confirmComp))
             return;
 
-        if (args.Actor != confirmComp.Target)
+        if (actor != confirmComp.Target)
             return;
 
         var target = confirmComp.Target;
 
         if (Deleted(target) || Deleted(confirmComp.Recruiter))
         {
-            _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
             RemComp<RecruitmentConfirmationComponent>(uid);
             return;
         }
@@ -161,12 +176,10 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         if (!_transform.InRange(recruiterXform.Coordinates, targetXform.Coordinates, 2f))
         {
             _popup.PopupEntity(Loc.GetString("recruitment-too-far"), uid, confirmComp.Recruiter);
-            _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
             RemComp<RecruitmentConfirmationComponent>(uid);
             return;
         }
 
-        _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
         RemComp<RecruitmentConfirmationComponent>(uid);
 
         _popup.PopupEntity(Loc.GetString("recruitment-processing-user", ("target", Identity.Name(target, EntityManager, confirmComp.Recruiter))), uid, confirmComp.Recruiter);
@@ -182,19 +195,18 @@ public sealed partial class RecruitmentScanningSystem : EntitySystem
         _doAfter.TryStartDoAfter(doAfter);
     }
 
-    private void OnDecline(EntityUid uid, RecruitmentScanningComponent scanComp, RecruitmentDeclineMessage args)
+    private void Decline(EntityUid uid, EntityUid actor)
     {
         if (!TryComp<RecruitmentConfirmationComponent>(uid, out var confirmComp))
             return;
 
-        if (args.Actor != confirmComp.Target)
+        if (actor != confirmComp.Target)
             return;
 
         var targetName = Identity.Name(confirmComp.Target, EntityManager, confirmComp.Recruiter);
         _popup.PopupEntity(Loc.GetString("recruitment-decline", ("target", targetName)), uid, confirmComp.Recruiter);
         _popup.PopupEntity(Loc.GetString("recruitment-decline-target", ("organization", confirmComp.OrganizationName)), uid, confirmComp.Target);
 
-        _ui.CloseUi(uid, RecruitmentConfirmationUiKey.Key);
         RemComp<RecruitmentConfirmationComponent>(uid);
     }
 

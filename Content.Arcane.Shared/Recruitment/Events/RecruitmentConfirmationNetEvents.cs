@@ -10,6 +10,15 @@ public sealed class RecruitmentOpenConfirmationEvent : EntityEventArgs
     public string ImplantName { get; init; } = string.Empty;
 }
 
+/// <summary>
+/// Closes the target's confirmation window: the request was answered, replaced or its scanner is gone.
+/// </summary>
+[Serializable, NetSerializable]
+public sealed class RecruitmentCloseConfirmationEvent : EntityEventArgs
+{
+    public NetEntity Scanner { get; init; }
+}
+
 [Serializable, NetSerializable]
 public sealed class RecruitmentRespondConfirmationEvent : EntityEventArgs
 {

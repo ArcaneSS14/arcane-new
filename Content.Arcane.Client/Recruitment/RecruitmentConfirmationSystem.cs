@@ -14,6 +14,7 @@ public sealed class RecruitmentConfirmationSystem : EntitySystem
         base.Initialize();
 
         SubscribeNetworkEvent<RecruitmentOpenConfirmationEvent>(OnOpenConfirmation);
+        SubscribeNetworkEvent<RecruitmentCloseConfirmationEvent>(OnCloseConfirmation);
     }
 
     public override void Shutdown()
@@ -41,6 +42,12 @@ public sealed class RecruitmentConfirmationSystem : EntitySystem
         _window.OnDeclinePressed += OnDeclinePressed;
         _window.OnClose += OnWindowClosed;
         _window.OpenCentered();
+    }
+
+    private void OnCloseConfirmation(RecruitmentCloseConfirmationEvent ev, EntitySessionEventArgs args)
+    {
+        if (_scanner != null && GetNetEntity(_scanner.Value) == ev.Scanner)
+            CloseWindow();
     }
 
     private void OnAcceptPressed()

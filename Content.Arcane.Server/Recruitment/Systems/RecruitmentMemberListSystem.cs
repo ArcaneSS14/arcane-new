@@ -35,13 +35,21 @@ public sealed partial class RecruitmentMemberListSystem : EntitySystem
 
     private void UpdateMemberList(EntityUid uid, RecruitmentScanningComponent comp)
     {
+        _ui.SetUiState(uid, RecruitmentMemberListUiKey.Key, BuildMemberList(comp.OrganizationName));
+    }
+
+    /// <summary>
+    /// The member list of one organization; built once per refresh and shared by all its open scanners.
+    /// </summary>
+    private RecruitmentMemberListBuiState BuildMemberList(string organization)
+    {
         var members = new List<RecruitmentMemberListBuiState.RecruitedMemberData>();
 
         // Query all recruited entities for this organization
         var query = AllEntityQuery<RecruitedComponent, MetaDataComponent>();
         while (query.MoveNext(out _, out var recruited, out var meta))
         {
-            if (recruited.Organization != comp.OrganizationName)
+            if (recruited.Organization != organization)
                 continue;
 
             var memberName = meta.EntityName;
@@ -58,8 +66,7 @@ public sealed partial class RecruitmentMemberListSystem : EntitySystem
 
         members.Sort((a, b) => b.RecruitedAt.CompareTo(a.RecruitedAt));
 
-        var state = new RecruitmentMemberListBuiState(comp.OrganizationName, members.ToArray());
-        _ui.SetUiState(uid, RecruitmentMemberListUiKey.Key, state);
+        return new RecruitmentMemberListBuiState(organization, members.ToArray());
     }
 
     public override void Update(float frameTime)
@@ -72,13 +79,20 @@ public sealed partial class RecruitmentMemberListSystem : EntitySystem
 
         _nextUpdateAt = UpdateIntervalSeconds;
 
+        var states = new Dictionary<string, RecruitmentMemberListBuiState>();
         var query = EntityQueryEnumerator<RecruitmentScanningComponent>();
         while (query.MoveNext(out var scannerUid, out var scannerComp))
         {
             if (!_ui.IsUiOpen(scannerUid, RecruitmentMemberListUiKey.Key))
                 continue;
 
-            UpdateMemberList(scannerUid, scannerComp);
+            if (!states.TryGetValue(scannerComp.OrganizationName, out var state))
+            {
+                state = BuildMemberList(scannerComp.OrganizationName);
+                states[scannerComp.OrganizationName] = state;
+            }
+
+            _ui.SetUiState(scannerUid, RecruitmentMemberListUiKey.Key, state);
         }
     }
 }
