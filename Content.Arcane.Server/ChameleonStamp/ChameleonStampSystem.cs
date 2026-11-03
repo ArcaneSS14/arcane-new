@@ -44,6 +44,8 @@ public sealed partial class ChameleonStampSystem : SharedChameleonStampSystem
         stamp.StampedName = args.StampedName is { } stampedName
             ? Truncate(stampedName, MaxNameLength)
             : Loc.GetString(stampSpriteComponent.StampedName);
+        // The editor reads the custom name back from here; keep the corrected value, null for the preset.
+        entity.Comp.StampedName = args.StampedName != null ? stamp.StampedName : null;
 
         // Metadata
         if (args.CustomName == null)
