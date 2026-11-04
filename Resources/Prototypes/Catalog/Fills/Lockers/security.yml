@@ -159,6 +159,7 @@
     - id: HandLabeler
     - id: PlushieLizardJobDetective
       prob: 0.02
+    - id: Betty # Arcane
 
 - type: entity
   id: ClosetBombFilled
