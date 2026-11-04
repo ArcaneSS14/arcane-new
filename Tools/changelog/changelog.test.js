@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const yaml = require("js-yaml");
-const { main, getChanges, github } = require("./changelog");
+const { main, getChanges, github, parsePullRequest } = require("./changelog");
 const { getMedia } = require("./media");
 
 test("plain, bulleted and uppercase changes retain their types and categories", () => {
@@ -194,12 +194,16 @@ test("missing, commented and empty CLs are reported without creating game or Dis
     const env = { ...process.env };
     process.env.GITHUB_REPOSITORY = "ArcaneSS14/arcane-new";
     process.env.GITHUB_STEP_SUMMARY = path.join(directory, "summary.md");
-    const prs = [pull(98, null), pull(101, "<!--\n:cl:\n- add: Hidden\n-->"), pull(102, ":cl:"), pull(103)];
+    const prs = [pull(98, null), pull(101, "<!--\n:cl:\n- add: Hidden\n-->"), pull(102, ":cl:"), pull(103),
+        pull(104, "<!--\n:cl:\n- add: Hidden until EOF"),
+        pull(105, "    :cl:\n    - add: Indented example"),
+        pull(106, "\t:cl:\n\t- add: Tab-indented example"),
+        pull(107, "```text\n:cl:\n- add: Fenced example\n```")];
     const request = async () => ({ ok: true, json: async () => prs });
     try {
         const result = await main({ directory, reconcile: true, request });
         assert.equal(result.added, 1);
-        assert.deepEqual(result.skipped.map(p => p.number), [98, 101, 102]);
+        assert.deepEqual(result.skipped.map(p => p.number), [98, 101, 102, 104, 105, 106, 107]);
         assert.deepEqual(result.invalid, [102]);
         const entries = yaml.load(fs.readFileSync(path.join(directory, "ArcaneChangelog.yml"), "utf8")).Entries;
         assert.deepEqual(entries.map(e => e.prNumber), [103]);
@@ -210,5 +214,88 @@ test("missing, commented and empty CLs are reported without creating game or Dis
         process.env = env;
         fs.rmSync(directory, { recursive: true });
     }
+});
+
+test("comments and fences cannot hide the visible CL or expose example media", () => {
+    const examples = [
+        "```html\n<!--\n:cl:\n- add: Example\nhttps://example.org/hidden.png\n```",
+        "<!--\n```\n:cl:\n- add: Example\nhttps://example.org/hidden.png\n-->",
+        "    :cl:\n    - add: Indented example",
+    ];
+    for (const example of examples) {
+        const body = "## Media\n" + example + "\n\n## Media\nhttps://example.org/visible.png\n"
+            + "   :cl: Author\n- add: Visible change\n  Preserved continuation\n<!-- hidden through EOF\n- fix: Hidden";
+        const parsed = parsePullRequest(pull(108, body), "ArcaneSS14/arcane-new");
+        assert.equal(parsed.length, 1);
+        assert.deepEqual(parsed[0].entry.changes, [{ type: "Add", message: "Visible change\nPreserved continuation" }]);
+        assert.deepEqual(parsed[0].entry.media, ["https://example.org/visible.png"]);
+    }
+});
+
+test("inherited duplicate IDs and URLs preserve history without blocking a batch or creating new duplicates", async () => {
+    const directory = fixture();
+    const env = { ...process.env };
+    process.env.GITHUB_REPOSITORY = "ArcaneSS14/arcane-new";
+    process.env.CHANGELOG_BRANCH = "master";
+    const historical = (id, url) => ({ id, url, author: "Upstream", time: "2026-05-05T00:00:00Z",
+        changes: [{ type: "Tweak", message: "Historical change " + id }] });
+    const trauma = [historical(918, "https://github.com/Trauma-Station/Trauma-Station/pull/2420"),
+        historical(919, "https://github.com/Trauma-Station/Trauma-Station/pull/2420")];
+    const admin = [historical(5, "https://github.com/space-wizards/space-station-14/pull/1"),
+        historical(5, "https://github.com/space-wizards/space-station-14/pull/2")];
+    fs.writeFileSync(path.join(directory, "TraumaChangelog.yml"), yaml.dump({ Entries: trauma }));
+    fs.writeFileSync(path.join(directory, "Admin.yml"), yaml.dump({ Entries: admin }));
+    const prs = [pull(500), pull(501, ":cl:\nTRAUMA:\n- fix: New Trauma change"),
+        pull(502, ":cl:\nWIZDENADMIN:\n- fix: New admin change")];
+    const request = async uri => ({ ok: true, json: async () => uri.includes("/compare/") ? { status: "ahead" } : prs });
+    try {
+        const first = await main({ directory, reconcile: true, snapshot: "build", request });
+        assert.equal(first.added, 3);
+        assert.equal(first.writes, 3);
+        for (const [file, original, nextId] of [["TraumaChangelog.yml", trauma, 920], ["Admin.yml", admin, 6]]) {
+            const entries = yaml.load(fs.readFileSync(path.join(directory, file), "utf8")).Entries;
+            assert.deepEqual(entries.slice(0, 2), original);
+            assert.equal(entries.length, 3);
+            assert.equal(entries[2].id, nextId);
+        }
+        const replay = await main({ directory, reconcile: true, snapshot: "build", request });
+        assert.equal(replay.added, 0);
+        assert.equal(replay.writes, 0);
+    } finally {
+        process.env = env;
+        fs.rmSync(directory, { recursive: true });
+    }
+});
+test("multiple visible CL blocks reject the whole PR while reconciliation recovers other PRs", async () => {
+    const directory = fixture();
+    const env = { ...process.env };
+    const error = console.error;
+    const warnings = [];
+    process.env.GITHUB_REPOSITORY = "ArcaneSS14/arcane-new";
+    process.env.CHANGELOG_BRANCH = "master";
+    console.error = message => warnings.push(message);
+    const prs = [pull(600, ":cl: First\n- add: Must not publish partially\n🆑 Second\n- fix: Second change"), pull(601)];
+    const request = async () => ({ ok: true, json: async () => prs });
+    try {
+        const result = await main({ directory, reconcile: true, request });
+        assert.deepEqual(result.invalid, [600]);
+        assert.equal(result.added, 1);
+        const entries = yaml.load(fs.readFileSync(path.join(directory, "ArcaneChangelog.yml"), "utf8")).Entries;
+        assert.deepEqual(entries.map(entry => entry.prNumber), [601]);
+        assert.match(warnings.join("\n"), /PR #600:.*one.*CL.*combine/i);
+    } finally {
+        console.error = error;
+        process.env = env;
+        fs.rmSync(directory, { recursive: true });
+    }
+});
+
+test("media ignores balanced inline code but keeps real Markdown links and images", () => {
+    const body = ["## Media", "Example: `https://example.org/example.png`.",
+        "Example: ``https://example.org/example2.png with a ` inside``.",
+        "Multiline: `example\nhttps://example.org/example3.png`.",
+        "![Screenshot](https://example.org/image.png)", "[Video](https://example.org/video.mp4)",
+        "Unmatched delimiter: ` https://example.org/visible.png"].join("\n");
+    assert.deepEqual(getMedia(body), ["https://example.org/image.png", "https://example.org/video.mp4", "https://example.org/visible.png"]);
 });
 // Arcane-End

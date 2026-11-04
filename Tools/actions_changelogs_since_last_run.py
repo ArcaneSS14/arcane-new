@@ -78,17 +78,16 @@ def main():
 
     diff = diff_changelog(last_changelog, cur_changelog)
     # Arcane-Edit-Start: one Components V2 card per PR; debug uses the identical payloads.
-    payloads = (payload for entry in diff for payload in render_entry(entry))
     if DEBUG:
-        payloads = list(payloads)
+        payloads = [payload for entry in diff for payload in render_entry(entry)]
         output = Path(os.environ.get("CHANGELOG_DEBUG_OUTPUT", "Resources/Changelog/DiscordDebug.json"))
         output.write_text(json.dumps(payloads, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"Wrote {len(payloads)} Discord messages to {output}")
         return
 
     with requests.Session() as session:
-        for payload in payloads:
-            state.deliver(payload, lambda message: send_card(session, message))
+        for entry in diff:
+            state.deliver_entry(entry, render_entry, lambda message: send_card(session, message))
     # Arcane-Edit-End
 
 
@@ -175,7 +174,15 @@ def get_last_changelog(state=None) -> str: # Arcane-Edit: restore delivery recei
                   and (most_recent is None or completed_at(run) > completed_at(most_recent))]
         if current.get("run_attempt", 1) > 1:
             failed.append(current)
-        restore_receipts(session, GITHUB_API_URL, github_repository, failed, state)
+        def predates_journal(run):
+            response = session.get(
+                f"{GITHUB_API_URL}/repos/{github_repository}/contents/{CHANGELOG_FILE}",
+                params={"ref": run["head_sha"]}, timeout=30)
+            if response.status_code == 404:
+                return True
+            response.raise_for_status()
+            return False
+        restore_receipts(session, GITHUB_API_URL, github_repository, failed, state, predates_journal)
     if most_recent is None:
         return "Entries: []"
     saved = [a for a in artifacts(session, GITHUB_API_URL, github_repository, most_recent["id"])
@@ -227,7 +234,17 @@ def diff_changelog(
     # Arcane-Edit-Start: recovered build entries can have different IDs from later committed entries.
     def key(entry):
         return entry.get("url") or entry["id"]
-    old_entry_ids = {key(entry) for entry in old["Entries"]}
+    current_by_id = {entry["id"]: entry for entry in cur["Entries"]}
+    old_entry_ids = set()
+    for previous in old["Entries"]:
+        current = current_by_id.get(previous["id"])
+        # Adding attribution to an unchanged legacy entry is not a rollback. An ID
+        # alone is insufficient: recovered build snapshots can reuse it for another PR.
+        if (not previous.get("url") and current and current.get("url")
+                and all(previous.get(field) == current.get(field) for field in ("author", "time", "changes"))):
+            old_entry_ids.add(key(current))
+        else:
+            old_entry_ids.add(key(previous))
     current_entry_ids = {key(entry) for entry in cur["Entries"]}
     if not old_entry_ids <= current_entry_ids:
         raise RuntimeError("The journal omits previously published PRs; refusing to reset the Discord baseline to an older or incomplete history")

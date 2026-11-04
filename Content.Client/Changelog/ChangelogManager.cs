@@ -8,6 +8,7 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Utility;
+using System.Text.Json; // Arcane
 
 namespace Content.Client.Changelog
 {
@@ -22,6 +23,17 @@ namespace Content.Client.Changelog
         public const string MainChangelogName = "Arcane"; // Arcane-Edit: Traumalog > Arcane
 
         private ISawmill _sawmill = default!;
+
+        // Arcane-Start: published snapshots can assign different numeric IDs to the same PR.
+        private readonly HashSet<string> _readEntryKeys = new();
+        private HashSet<string> _entryKeys = new();
+        private ResPath ReadEntriesPath => new($"/changelog_read_v2_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}");
+
+        private static string EntryKey(ChangelogEntry entry) =>
+            string.IsNullOrWhiteSpace(entry.Url) ? $"id:{entry.Id}" : entry.Url;
+
+        public bool IsRead(ChangelogEntry entry) => _readEntryKeys.Contains(EntryKey(entry));
+        // Arcane-End
 
         public bool NewChangelogEntries { get; private set; }
         public int LastReadId { get; private set; }
@@ -45,6 +57,12 @@ namespace Content.Client.Changelog
             using var sw = _resource.UserData.OpenWriteText(new ($"/changelog_last_seen_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}")); // Arcane-Edit: isolate read IDs from upstream journals
 
             sw.Write(MaxId.ToString());
+
+            // Arcane-Start: keep the in-memory read snapshot for the window's unread divider.
+            using var entriesWriter = _resource.UserData.OpenWriteText(ReadEntriesPath);
+            var readEntries = _readEntryKeys.Union(_entryKeys).OrderBy(key => key).ToArray();
+            entriesWriter.Write(JsonSerializer.Serialize(readEntries));
+            // Arcane-End
         }
 
         public async void Initialize()
@@ -81,6 +99,7 @@ namespace Content.Client.Changelog
             }
 
             MaxId = changelog.Entries.Max(c => c.Id);
+            _entryKeys = changelog.Entries.Select(EntryKey).ToHashSet(); // Arcane
 
             CheckLastSeenEntry();
         }
@@ -95,7 +114,23 @@ namespace Content.Client.Changelog
                 : 0;
             // Arcane-Edit-End
 
-            NewChangelogEntries = LastReadId < MaxId;
+            // Arcane-Edit-Start: a new file deliberately avoids guessing URL identities from old IDs.
+            _readEntryKeys.Clear();
+            if (_resource.UserData.TryReadAllText(ReadEntriesPath, out var readEntriesText))
+            {
+                try
+                {
+                    var readEntries = JsonSerializer.Deserialize<string[]>(readEntriesText) ?? [];
+                    _readEntryKeys.UnionWith(readEntries.Where(key => !string.IsNullOrWhiteSpace(key)));
+                }
+                catch (JsonException)
+                {
+                    // Damaged state is treated as unread, never as proof that entries were seen.
+                }
+            }
+
+            NewChangelogEntries = !_entryKeys.IsSubsetOf(_readEntryKeys);
+            // Arcane-Edit-End
 
             NewChangelogEntriesChanged?.Invoke();
         }
@@ -214,6 +249,11 @@ namespace Content.Client.Changelog
             /// </summary>
             [DataField]
             public List<string> Labels { get; private set; } = [];
+
+            // Arcane-Start
+            [DataField]
+            public string Url { get; private set; } = "";
+            // Arcane-End
         }
 
         [DataDefinition]

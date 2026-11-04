@@ -3,7 +3,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
-const { getMedia, withoutCodeBlocks } = require("./media");
+const { getMedia, visibleMarkdown } = require("./media");
 
 const CategoryPaths = {
     ARCANE: "ArcaneChangelog.yml",
@@ -51,8 +51,10 @@ function getChanges(body) {
 }
 
 function parsePullRequest(pr, repository) {
-    const visible = withoutCodeBlocks((pr.body || "").replace(/<!--[\s\S]*?-->/g, ""));
-    const header = /^[ \t]*(?::cl:|🆑)[ \t]*([^\r\n]*)(?:\r?\n([\s\S]*))?$/im.exec(visible);
+    const visible = visibleMarkdown(pr.body);
+    if ((visible.match(/^ {0,3}(?::cl:|🆑)/gim) || []).length > 1)
+        throw new Error("Only one visible CL block is supported; combine all entries under one :cl: or 🆑 header");
+    const header = /^ {0,3}(?::cl:|🆑)[ \t]*([^\r\n]*)(?:\r?\n([\s\S]*))?$/im.exec(visible);
     if (!header) return null;
     const changes = getChanges(header[2] || "");
     if (!changes) throw new Error("The changelog header has no entries");
@@ -86,16 +88,13 @@ class Journals {
         const data = yaml.load(raw);
         if (!data || !Array.isArray(data.Entries)) throw new Error("Invalid journal: " + filename);
         const urls = new Set();
-        const ids = new Set();
         let maxId = 0;
         for (const entry of data.Entries) {
-            if (!Number.isSafeInteger(entry.id) || ids.has(entry.id)) throw new Error("Invalid or duplicate ID in " + filename);
-            ids.add(entry.id);
+            if (!Number.isSafeInteger(entry.id)) throw new Error("Invalid ID in " + filename);
             maxId = Math.max(maxId, entry.id);
-            if (entry.url) {
-                if (urls.has(entry.url)) throw new Error("Duplicate PR in " + filename);
-                urls.add(entry.url);
-            }
+            // Inherited journals already contain duplicate IDs/URLs. Preserve that history;
+            // the membership set still prevents this collector from adding a duplicate.
+            if (entry.url) urls.add(entry.url);
         }
         const journal = { filename, data, urls, maxId, changed: false };
         this.files.set(category, journal);

@@ -75,8 +75,9 @@ def render_entry(entry):
     pr = re.fullmatch(r"https://github\.com/[\w.-]+/[\w.-]+/pull/(\d+)/?", url or "")
     title = "История Arcane" if entry.get("historical") else "Изменения Arcane"
     heading = f"## {title} · [PR #{pr[1]}]({url})" if pr else "## " + title
-    author = escape_text(str(entry.get("author") or "Неизвестный автор")[:120])
-    details = f"-# Автор: **{author}**"
+    author = escape_text(entry.get("author") or "Неизвестный автор")
+    long_author = text_length(author) > 240
+    details = "-# Авторы: в тексте ниже" if long_author else f"-# Автор: **{author}**"
     try:
         date = datetime.fromisoformat(str(entry.get("time")))
         if date.tzinfo is not None:
@@ -96,6 +97,8 @@ def render_entry(entry):
             sections.append(f"### {label}\n" + "\n".join(grouped[kind]))
     if "Intent: Experimental" in (entry.get("labels") or []):
         sections.insert(0, "🧪 **Экспериментальные изменения**")
+    if long_author:
+        sections.insert(0, "### Авторы\n" + author)
     body = "\n\n".join(sections) or "Нет описания изменений."
     pages = list(split_text(body, TEXT_BUDGET))
     links = media_urls(entry)
@@ -134,7 +137,18 @@ def link_fallback(payload):
     if not links:
         return []
     result = [{**payload, "components": [{**card, "components": [c for c in components if c["type"] != 12]}]}]
-    for text in split_text("### Медиа к изменению\n" + "\n".join(f"<{url}>" for url in links), TEXT_BUDGET):
+    pages = []
+    text = "### Медиа к изменению"
+    for url in links:
+        line = f"<{url}>"
+        # Every accepted media URL fits individually; never split an autolink.
+        if text_length(text) + 1 + text_length(line) > TEXT_BUDGET:
+            pages.append(text)
+            text = line
+        else:
+            text += "\n" + line
+    pages.append(text)
+    for text in pages:
         result.append({**payload, "components": [{**card, "components": [components[0], {"type": 10, "content": text}]}]})
     return result
 # Arcane-End

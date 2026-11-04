@@ -13,7 +13,7 @@ from unittest.mock import Mock, MagicMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 publisher = importlib.import_module("actions_changelogs_since_last_run")
-from changelog.discord import render_entry, text_length, link_fallback
+from changelog.discord import render_entry, text_length, link_fallback, escape_text
 from changelog.delivery import DeliveryState, RejectedDelivery
 from changelog import delivery
 
@@ -68,6 +68,22 @@ class DiscordChangelogTest(unittest.TestCase):
             self.assertIn(link, text)
         for p in fallbacks:
             self.assertLessEqual(sum(text_length(c.get("content", "")) for c in p["components"][0]["components"]), 4000)
+
+    def test_media_fallback_never_splits_an_individual_url(self):
+        links = ["https://example.org/" + "a" * 1180, "https://example.org/" + "b" * 1880]
+        fallbacks = link_fallback(next(render_entry(entry(media=links))))
+        texts = ["\n".join(c.get("content", "") for c in p["components"][0]["components"]) for p in fallbacks]
+        for url in links:
+            self.assertTrue(any(f"<{url}>" in text for text in texts))
+        self.assertTrue(all(text_length(text) <= 4000 for text in texts))
+
+    def test_long_escaped_author_list_is_preserved_across_pages(self):
+        author = "😀Имя_*@Автор[1], " * 1500 + "ПоследнийАвтор"
+        cards = list(render_entry(entry(author=author)))
+        body = "".join(card["components"][0]["components"][2]["content"] for card in cards)
+        self.assertIn(escape_text(author), body)
+        for card in cards:
+            self.assertLessEqual(sum(text_length(c.get("content", "")) for c in card["components"][0]["components"]), 4000)
 
     def test_failed_and_foreign_branch_runs_are_not_publication_baselines(self):
         current = {"id": 9, "created_at": "2026-11-04", "head_branch": "master", "workflow_url": "https://api.github.com/workflows/1"}
@@ -162,6 +178,26 @@ class DiscordChangelogTest(unittest.TestCase):
         current = {"Entries": [entry(id=50), entry(id=51, url="https://github.com/ArcaneSS14/arcane-new/pull/43")]}
         self.assertEqual([e["id"] for e in publisher.diff_changelog(old, current)], [51])
 
+    def test_adding_url_to_an_unchanged_legacy_entry_does_not_resend_it(self):
+        old = {"Entries": [entry(url=None)]}
+        new = {"Entries": [entry(), entry(id=2, url="https://github.com/ArcaneSS14/arcane-new/pull/43")]}
+        self.assertEqual([e["id"] for e in publisher.diff_changelog(old, new)], [2])
+        changed = entry(changes=[{"type": "Add", "message": "A different PR"}])
+        with self.assertRaisesRegex(RuntimeError, "previously published PRs"):
+            publisher.diff_changelog(old, {"Entries": [changed]})
+
+    @patch.object(publisher, "DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/123/test-token")
+    def test_success_without_a_valid_message_id_remains_uncertain(self):
+        for data in ({}, {"id": "invalid"}, {"id": 123}, {"id": ""}):
+            with self.subTest(data=data), tempfile.TemporaryDirectory() as directory:
+                session = Mock()
+                session.post.return_value = response(data=data)
+                state = DeliveryState(Path(directory) / "state.json")
+                with self.assertRaisesRegex(RuntimeError, "no confirmed message ID"):
+                    state.deliver(next(render_entry(entry())), lambda p: publisher.send_card(session, p))
+                self.assertFalse(state.confirmed)
+                self.assertEqual(len(state.pending), 1)
+
     def test_rerun_of_an_older_build_cannot_reset_the_delivered_history(self):
         previous = {"Entries": [entry(), entry(id=2, url="https://github.com/ArcaneSS14/arcane-new/pull/43")]}
         with self.assertRaisesRegex(RuntimeError, "previously published PRs"):
@@ -236,14 +272,62 @@ class DiscordChangelogTest(unittest.TestCase):
     def test_restored_operator_resolution_does_not_resurrect_an_old_uncertain_send(self):
         runs = [{"id": i, "run_attempt": 1, "status": "completed", "updated_at": f"2026-11-0{i}"} for i in (1, 2)]
         with tempfile.TemporaryDirectory() as directory, \
-             patch.object(delivery, "artifacts", return_value=[{"name": "changelog-delivery-1", "created_at": "2026-11-01"}]), \
-             patch.object(delivery, "read_artifact", side_effect=[
-                 '{"prepared": true, "confirmed": ["delivered"], "pending": ["uncertain"]}',
-                 '{"prepared": true, "confirmed": ["delivered"], "pending": []}']):
+             patch.object(delivery, "artifacts", side_effect=lambda s, a, r, run: [{"name": "changelog-delivery-1", "created_at": f"2026-11-0{run}", "run": run}]), \
+             patch.object(delivery, "read_artifact", side_effect=lambda s, a, f: json.dumps({
+                 "prepared": True, "confirmed": ["delivered"], "pending": ["uncertain"] if a["run"] == 1 else []})):
             state = DeliveryState(Path(directory) / "state.json")
             delivery.restore_receipts(Mock(), "https://api.github.com", "ArcaneSS14/arcane-new", runs, state)
             self.assertEqual(state.confirmed, {"delivered"})
             self.assertFalse(state.pending)
+
+    def test_rerun_of_older_workflow_cannot_replace_newer_uncertain_receipt(self):
+        runs = [{"id": 2, "run_attempt": 1, "status": "completed", "updated_at": "2026-11-04T12:00:00Z"},
+                {"id": 1, "run_attempt": 2, "status": "in_progress", "updated_at": "2026-11-04T13:00:00Z"}]
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(delivery, "artifacts", side_effect=lambda s, a, r, run: [{"name": "changelog-delivery-1", "created_at": f"2026-11-0{run}T09:00:00Z", "run": run}]), \
+             patch.object(delivery, "read_artifact", side_effect=lambda s, a, f: json.dumps({
+                 "prepared": True, "confirmed": ["X"] if a["run"] == 2 else [], "pending": ["Y"] if a["run"] == 2 else ["X"]})):
+            state = DeliveryState(Path(directory) / "state.json")
+            delivery.restore_receipts(Mock(), "https://api.github.com", "ArcaneSS14/arcane-new", runs, state)
+            self.assertEqual(state.pending, {"Y"})
+            send = Mock()
+            with self.assertRaisesRegex(RuntimeError, "uncertain"):
+                state.deliver(next(render_entry(entry())), send)
+            send.assert_not_called()
+
+    def test_changed_pr_body_between_failed_builds_keeps_the_original_delivery_plan(self):
+        original = entry(changes=[{"type": "Add", "message": "A" * 5000}])
+        original_cards = list(render_entry(original))
+        with tempfile.TemporaryDirectory() as directory:
+            filename = Path(directory) / "delivery.json"
+            state = DeliveryState(filename)
+            first = Mock(side_effect=[{"message_id": "123"}, RejectedDelivery("HTTP 429")])
+            with self.assertRaises(RejectedDelivery):
+                state.deliver_entry(original, render_entry, first)
+            restored = DeliveryState(filename)
+            restored.absorb(json.loads(filename.read_text(encoding="utf-8")))
+            changed = entry(changes=[{"type": "Add", "message": "Edited description"}])
+            replay = Mock(return_value={"message_id": "124"})
+            restored.deliver_entry(changed, render_entry, replay)
+            replay.assert_called_once_with(original_cards[1])
+
+    def test_first_arcane_publish_ignores_failed_runs_before_the_journal_existed(self):
+        run = {"id": 1, "head_sha": "before-arcane", "status": "completed", "run_attempt": 1}
+        session = Mock()
+        with tempfile.TemporaryDirectory() as directory, patch.object(delivery, "artifacts", return_value=[]):
+            state = DeliveryState(Path(directory) / "state.json")
+            legacy = Mock(return_value=True)
+            delivery.restore_receipts(session, "https://api.github.com", "ArcaneSS14/arcane-new", [run], state, legacy)
+            legacy.assert_called_once_with(run)
+            session.get.assert_not_called()
+
+    def test_empty_journal_in_a_new_run_does_not_excuse_a_missing_receipt(self):
+        run = {"id": 1, "head_sha": "with-arcane", "status": "completed", "run_attempt": 1}
+        session = Mock()
+        session.get.return_value = response(data={"jobs": [{"steps": [{"name": "Publish changelog (Discord)", "conclusion": "failure"}]}]})
+        with tempfile.TemporaryDirectory() as directory, patch.object(delivery, "artifacts", return_value=[]):
+            with self.assertRaisesRegex(RuntimeError, "no receipt"):
+                delivery.restore_receipts(session, "https://api.github.com", "ArcaneSS14/arcane-new", [run], DeliveryState(Path(directory) / "state.json"), lambda run: False)
 
 
 if __name__ == "__main__":
