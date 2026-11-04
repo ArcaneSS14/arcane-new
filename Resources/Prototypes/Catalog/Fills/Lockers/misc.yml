@@ -248,6 +248,11 @@
     - !type:NestedSelector
       tableId: SyndieMaintLoot
       prob: 0.05
+    # Arcane-Start: Orion #16 InteQ loot
+    - !type:NestedSelector
+      tableId: InteQMaintLoot
+      prob: 0.05
+    # Arcane-End
     # Recursive
     - id: ClosetMaintenanceFilledRandom
       prob: 0.01

@@ -1,4 +1,7 @@
 - type: Tag
+  id: MeleeHitIgnore
+
+- type: Tag
   id: EmergencyWaterVaporTank
 
 - type: Tag
