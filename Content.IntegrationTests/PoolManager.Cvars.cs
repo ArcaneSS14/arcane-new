@@ -3,6 +3,7 @@
 using Content.Lavaland.Shared.CCVar;
 using Content.Trauma.Common.CCVar;
 // </Trauma>
+using Content.Arcane.Common.CCVar; // Arcane
 using Content.Shared.CCVar;
 
 namespace Content.IntegrationTests;
@@ -30,6 +31,7 @@ public static partial class PoolManager
         (CCVars.AdminLogsQueueSendDelay.Name, "0"),
         (CCVars.NPCMaxUpdates.Name,           "999999"),
         (CCVars.GameRoleTimers.Name,          "false"),
+        (ArcaneCCVars.ComponentCopyWarmup.Name, "false"), // Arcane
         (CCVars.GameRoleLoadoutTimers.Name,   "false"),
         (CCVars.GameRoleWhitelist.Name,       "false"),
         (CCVars.GridFill.Name,                "false"),

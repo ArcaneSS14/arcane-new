@@ -62,6 +62,20 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
     /// </summary>
     private const float FadeSpeed = 6f; // Arcane-Edit: 9f > 6f
 
+    // Arcane-Start
+    /// <summary>
+    /// Every how many frames a wall-mount casts its visibility ray while the eye is moving.
+    /// </summary>
+    private const uint MovingCheckInterval = 4;
+
+    /// <summary>
+    /// Same as <see cref="MovingCheckInterval"/>, while the eye stays still and only walls can change the result.
+    /// </summary>
+    private const uint IdleCheckInterval = 30;
+
+    private readonly List<Entity<WallMountComponent, TransformComponent>> _mounts = [];
+    // Arcane-End
+
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowEntities;
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -134,11 +148,18 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
     /// </summary>
     private void ProcessVisibleEntities(in OverlayDrawArgs args, IEye eye, Matrix3x2 matrix, float fadeStep, ViewportFadeState viewportState)
     {
-        foreach (var entity in _tree.QueryAabb(args.MapId, args.WorldBounds))
-        {
-            var (wallmount, xform) = entity;
-            var uid = entity.Uid;
+        // Arcane-Edit-Start: walls don't move, so wall-mounts don't all need a ray every frame
+        viewportState.Frame++;
+        var currentEye = (eye.Position, eye.Rotation);
+        var checkInterval = currentEye == viewportState.LastEye ? IdleCheckInterval : MovingCheckInterval;
+        viewportState.LastEye = currentEye;
 
+        _mounts.Clear();
+        _tree.QueryAabb(_mounts, args.MapId, args.WorldBounds);
+
+        foreach (var (uid, wallmount, xform) in _mounts)
+        {
+            // Arcane-Edit-End
             if (!_spriteQuery.TryGetComponent(uid, out var sprite))
                 continue;
 
@@ -148,7 +169,12 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
 
             viewportState.SeenThisFrame.Add(uid);
 
-            var targetAlpha = ComputeTargetAlpha(wallmount, xform, eye, matrix);
+            // Arcane-Edit-Start
+            var targetAlpha = viewportState.FadeStates.TryGetValue(uid, out var tracked)
+                              && unchecked((uint) uid.Id + viewportState.Frame) % checkInterval != 0
+                ? tracked.TargetAlpha
+                : ComputeTargetAlpha(wallmount, xform, eye, matrix);
+            // Arcane-Edit-End
             UpdateFadeState(uid, originalAlpha, targetAlpha, fadeStep, viewportState);
         }
     }
