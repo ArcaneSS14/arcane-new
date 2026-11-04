@@ -21,6 +21,8 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
     [Dependency] private SharedItemSwitchSystem _switch = default!;
     [Dependency] private IGameTiming _timing = default!;
 
+    private readonly HashSet<EntityUid> _counterattacking = []; // Arcane
+
     public override void Initialize()
     {
         base.Initialize();
@@ -35,21 +37,32 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
 
     private void OnAttacked(Entity<CounterattackWeaponUserComponent> ent, ref AttackedEvent args)
     {
-        if (!_timing.IsFirstTimePredicted || ent.Owner == args.User)
+        if (!_timing.IsFirstTimePredicted || ent.Owner == args.User || _counterattacking.Contains(ent.Owner)) // Arcane-Edit: Prevent mutually recursive counterattacks.
             return;
 
         var meleeWeapon = ent.Comp.Weapons.FirstOrDefault(EntityUid.Invalid);
         if (!meleeWeapon.IsValid()
+            || !_hands.IsHolding(ent.Owner, meleeWeapon) // Arcane
             || !TryComp<MeleeWeaponComponent>(meleeWeapon, out var meleeComp)
             || !TryComp<CounterattackWeaponComponent>(meleeWeapon, out var counterattack))
             return;
 
-        meleeComp.NextAttack = TimeSpan.Zero;
-        _melee.AttemptLightAttack(ent, meleeWeapon, meleeComp, args.User);
-        meleeComp.NextAttack = TimeSpan.Zero;
-        _switch.Switch(meleeWeapon, counterattack.SetItemSwitch);
-        if (TryComp<UseDelayComponent>(meleeWeapon, out var delay))
-            _delay.ResetAllDelays((meleeWeapon, delay));
+        // Arcane-Edit-Start: Keep the guard until nested attack events and switching have finished.
+        _counterattacking.Add(ent.Owner);
+        try
+        {
+            meleeComp.NextAttack = TimeSpan.Zero;
+            _melee.AttemptLightAttack(ent, meleeWeapon, meleeComp, args.User);
+            meleeComp.NextAttack = TimeSpan.Zero;
+            _switch.Switch(meleeWeapon, counterattack.SetItemSwitch);
+            if (TryComp<UseDelayComponent>(meleeWeapon, out var delay))
+                _delay.ResetAllDelays((meleeWeapon, delay));
+        }
+        finally
+        {
+            _counterattacking.Remove(ent.Owner);
+        }
+        // Arcane-Edit-End
     }
 
     private void OnStartup(Entity<CounterattackWeaponComponent> ent, ref ComponentInit args)
@@ -58,7 +71,11 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
             || !_hands.EnumerateHeld(container.Owner).Contains(ent))
             return;
 
-        EnsureComp<CounterattackWeaponUserComponent>(container.Owner).Weapons.Add(ent);
+        // Arcane-Edit-Start: Initialization and insertion can observe the same held weapon.
+        var weapons = EnsureComp<CounterattackWeaponUserComponent>(container.Owner).Weapons;
+        if (!weapons.Contains(ent.Owner))
+            weapons.Add(ent.Owner);
+        // Arcane-Edit-End
     }
 
     private void OnInserted(Entity<CounterattackWeaponComponent> ent, ref EntGotInsertedIntoContainerMessage args)
@@ -66,7 +83,11 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
         if (!_hands.EnumerateHeld(args.Container.Owner).Contains(ent))
             return;
 
-        EnsureComp<CounterattackWeaponUserComponent>(args.Container.Owner).Weapons.Add(ent);
+        // Arcane-Edit-Start: Register each held weapon once.
+        var weapons = EnsureComp<CounterattackWeaponUserComponent>(args.Container.Owner).Weapons;
+        if (!weapons.Contains(ent.Owner))
+            weapons.Add(ent.Owner);
+        // Arcane-Edit-End
     }
 
     private void OnShutdown(Entity<CounterattackWeaponComponent> ent, ref ComponentShutdown args)

@@ -139,7 +139,6 @@
     children:
     # <Trauma>
     - id: BloodTrak
-    - id: Betty
     - id: BoxTapeRecorder
     # </Trauma>
     - id: ClothingEyesGlassesNoir
@@ -160,6 +159,7 @@
     - id: HandLabeler
     - id: PlushieLizardJobDetective
       prob: 0.02
+    - id: Betty # Arcane
 
 - type: entity
   id: ClosetBombFilled
