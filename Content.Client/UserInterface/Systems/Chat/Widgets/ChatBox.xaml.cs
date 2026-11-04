@@ -20,6 +20,7 @@ using static Robust.Client.UserInterface.Controls.LineEdit;
 // Arcane-Start
 using Content.Client.Audio;
 using Content.Client.UserInterface.Motion;
+using System.Numerics;
 // Arcane-End
 
 namespace Content.Client.UserInterface.Systems.Chat.Widgets;
@@ -133,6 +134,15 @@ public partial class ChatBox : UIWidget
             AddLine(msg.WrappedMessage, color, _lastLineRepeatCount);
         } // WD EDIT END
     }
+
+    // Arcane-Start
+    protected override Vector2 ArrangeOverride(Vector2 finalSize)
+    {
+        var size = base.ArrangeOverride(finalSize);
+        _messageMotion?.Arrange(UIBox2.FromDimensions(Vector2.Zero, finalSize));
+        return size;
+    }
+    // Arcane-End
 
     private void OnHighlightsUpdated(string highlights)
     {

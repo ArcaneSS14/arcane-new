@@ -38,6 +38,19 @@ public sealed partial class UiMotionContainer : Control
     public bool ClampToRootBounds { get; set; } = true;
     public Vector2 TravelDirection { get; set; } = Vector2.UnitY;
     public Vector2 VisualOffset { get; private set; }
+    private Vector2 _additionalVisualOffset;
+
+    public Vector2 AdditionalVisualOffset
+    {
+        get => _additionalVisualOffset;
+        set
+        {
+            if (_additionalVisualOffset == value)
+                return;
+            _additionalVisualOffset = value;
+            InvalidateArrange();
+        }
+    }
 
     public void UseMenuProfile() => Profile = UiMotionSettings.MenuProfile(_configuration);
 
@@ -155,7 +168,7 @@ public sealed partial class UiMotionContainer : Control
 
     protected override Vector2 ArrangeOverride(Vector2 finalSize)
     {
-        var offset = _transition.Offset * TravelDirection;
+        var offset = _transition.Offset * TravelDirection + AdditionalVisualOffset;
         if (ClampToRootBounds && Root != null)
         {
             offset.X = Math.Clamp(offset.X, -GlobalPosition.X, Math.Max(-GlobalPosition.X, Root.Width - GlobalPosition.X - finalSize.X));

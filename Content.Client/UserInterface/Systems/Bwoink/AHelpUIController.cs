@@ -55,6 +55,8 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
     // Arcane-Start
     private UiMotionVisual? _gameAHelpNotificationMotion;
     private UiMotionVisual? _lobbyAHelpNotificationMotion;
+    private Control? _gameAHelpNotificationTarget;
+    private Control? _lobbyAHelpNotificationTarget;
     // Arcane-End
 
     protected override string SawmillName => "c.s.go.es.bwoink";
@@ -263,18 +265,24 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
         GameAHelpButton?.StyleClasses.Add(StyleClass.Negative);
         LobbyAHelpButton?.StyleClasses.Add(StyleClass.Negative);
         // Arcane-Start
-        AnimateUnreadButton(GameAHelpButton, ref _gameAHelpNotificationMotion);
-        AnimateUnreadButton(LobbyAHelpButton, ref _lobbyAHelpNotificationMotion);
+        AnimateUnreadButton(GameAHelpButton, ref _gameAHelpNotificationMotion, ref _gameAHelpNotificationTarget);
+        AnimateUnreadButton(LobbyAHelpButton, ref _lobbyAHelpNotificationMotion, ref _lobbyAHelpNotificationTarget);
         // Arcane-End
         _hasUnreadAHelp = true;
     }
 
     // Arcane-Start
-    private void AnimateUnreadButton(Control? button, ref UiMotionVisual? motion)
+    private void AnimateUnreadButton(Control? button, ref UiMotionVisual? motion, ref Control? target)
     {
         if (button == null)
             return;
 
+        if (target != button)
+        {
+            motion?.Reset();
+            motion = null;
+            target = button;
+        }
         (motion ??= new UiMotionVisual(button, _config, UiMotionSettings.Notifications)).Start(
             UiMotionSettings.Read(_config, UiMotionSettings.NotificationsMs, 0, 1000));
     }

@@ -57,7 +57,12 @@ internal sealed class UiMotionTransition(IConfigurationManager configuration)
         var effects = UiMotionEasing.Effects(_effectProgress, effectDuration);
         Opacity = _profile.Fade ? Math.Clamp(_fromOpacity + ((_entering ? 1f : 0f) - _fromOpacity) * effects, 0f, 1f) : 1f;
         Offset = _fromOffset + ((_entering ? 0f : -_profile.Travel) - _fromOffset) * spatial;
-        Finished = _spatialProgress >= 1 && _effectProgress >= 1;
+        var sequenceDuration = _entering && !immediate && effectDuration > 0
+            && _profile.Sequence && !configuration.GetCVar(UiMotionSettings.Reduce)
+            ? Math.Min(_profile.SequenceSeconds, spatialDuration * 0.45f)
+            : 0;
+        Finished = _spatialProgress >= 1 && _effectProgress >= 1
+            && _elapsed >= effectDuration + sequenceDuration;
     }
 
     public float GetStaggeredOpacity(int index, int count)

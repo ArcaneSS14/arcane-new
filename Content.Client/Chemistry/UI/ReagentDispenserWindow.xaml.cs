@@ -22,7 +22,10 @@ namespace Content.Client.Chemistry.UI
         [Dependency] private IEntityManager _entityManager = default!;
         public event Action<ItemStorageLocation>? OnDispenseReagentButtonPressed;
         public event Action<ItemStorageLocation>? OnEjectJugButtonPressed;
-        private HashSet<ReagentId> _displayedOutputReagents = []; // Arcane
+        // Arcane-Start
+        private HashSet<ReagentId> _displayedOutputReagents = [];
+        private NetEntity? _displayedOutputContainer;
+        // Arcane-End
 
         /// <summary>
         /// Create and initialize the dispenser UI client-side. Creates the basic layout,
@@ -89,6 +92,13 @@ namespace Content.Client.Chemistry.UI
         public void UpdateContainerInfo(ReagentDispenserBoundUserInterfaceState state)
         {
             ContainerInfo.Children.Clear();
+            // Arcane-Start
+            if (_displayedOutputContainer != state.OutputContainerEntity)
+            {
+                _displayedOutputReagents.Clear();
+                _displayedOutputContainer = state.OutputContainerEntity;
+            }
+            // Arcane-End
 
             if (state.OutputContainer is null)
             {

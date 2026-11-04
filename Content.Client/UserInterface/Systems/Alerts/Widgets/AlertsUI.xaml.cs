@@ -104,6 +104,7 @@ public sealed partial class AlertsUI : UIWidget
             }
             else
             {
+                var replacingExistingAlert = existingAlertControl != null; // Arcane
                 if (existingAlertControl != null)
                 // Arcane-Edit-Start
                 {
@@ -140,7 +141,12 @@ public sealed partial class AlertsUI : UIWidget
                     AlertContainer.Children.Add(newAlertControl);
                 }
 
-                newAlertControl.AnimateAppearance(); // Arcane
+                // Arcane-Edit-Start: new alerts enter spatially; an existing keyed alert changing sprite pulses in place.
+                if (replacingExistingAlert)
+                    newAlertControl.AnimateSeverityChange();
+                else
+                    newAlertControl.AnimateAppearance();
+                // Arcane-Edit-End
                 _alertControls[newAlert.AlertKey] = newAlertControl;
             }
         }

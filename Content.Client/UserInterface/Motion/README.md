@@ -42,7 +42,7 @@ and [motion specifications](https://m3.material.io/styles/motion/overview/specs)
 | SlotControl (inventory/hands/belt) | Item changes are immediate; optional highlight feedback only | `ui.motion_slot*` |
 | Storage grid | Icon entrance; outgoing visual copy except during dragging | `ui.motion_slot*` |
 | Action hotbar | Local icon sequence and optional border pulse at cooldown boundaries | `ui.motion_actions*` |
-| Alerts | Owner-triggered 32 px expressive bounce from the right on add/severity update; removal stays immediate | `ui.motion_alerts*` |
+| Alerts | Owner-triggered 32 px expressive bounce on add; local fast-spatial spring pulse on severity update | `ui.motion_alerts*` |
 | Chat | New unread message border indicator plus explicit channel-selector/filter popup entrance | `ui.motion_chat*`, `ui.motion_popups*` |
 | AHelp and changelog | Channel/tab transition and notification feedback; message history keeps its layout | `ui.motion_tabs*`, `ui.motion_notifications*` |
 | Power monitoring | Separate display interpolation; target value changes immediately | `ui.motion_progress*` |

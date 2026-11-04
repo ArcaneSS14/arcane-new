@@ -28,6 +28,7 @@ public sealed partial class UiMotionUIController : UIController
 
     private readonly HashSet<Control> _observed = [];
     private readonly List<Control> _pending = [];
+    private readonly HashSet<Control> _pendingSet = [];
     private readonly Dictionary<Control, Fade> _active = [];
     private readonly List<Control> _completed = [];
     private readonly Dictionary<Control, int> _indices = [];
@@ -107,7 +108,7 @@ public sealed partial class UiMotionUIController : UIController
                 button.OnToggled -= ToggleToggled;
             ClearButtonFeedback(button);
         }
-        _pending.Remove(control);
+        RemovePending(control);
         Cancel(control);
         foreach (var child in control.Children)
             Detach(child);
@@ -127,8 +128,14 @@ public sealed partial class UiMotionUIController : UIController
             return;
         if (control.VisibleInTree && (control is BaseWindow or BaseButton or Popup or ActionButton or ItemGridPiece
             || control.Parent is TabContainer
-            || IsListRow(control) || control.Parent == UIManager.PopupRoot) && !_pending.Contains(control))
+            || IsListRow(control) || control.Parent == UIManager.PopupRoot) && _pendingSet.Add(control))
             _pending.Add(control);
+    }
+
+    private void RemovePending(Control control)
+    {
+        if (_pendingSet.Remove(control))
+            _pending.Remove(control);
     }
 
     /// <summary>Queue a changed content control in its parent's appearance sequence.</summary>
@@ -139,7 +146,7 @@ public sealed partial class UiMotionUIController : UIController
     {
         if (!control.VisibleInTree)
             return;
-        _pending.Remove(control);
+        RemovePending(control);
         Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0,
             suppressChildren: true);
     }
@@ -149,7 +156,7 @@ public sealed partial class UiMotionUIController : UIController
     {
         if (!control.VisibleInTree)
             return;
-        _pending.Remove(control);
+        RemovePending(control);
         Start(control, UiMotionSettings.Popups, Read(UiMotionSettings.PopupsMs, 0, 1000), 0,
             suppressChildren: true);
     }
@@ -159,7 +166,7 @@ public sealed partial class UiMotionUIController : UIController
     {
         if (!control.VisibleInTree)
             return;
-        _pending.Remove(control);
+        RemovePending(control);
         Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0,
             suppressChildren: true);
     }
@@ -169,7 +176,7 @@ public sealed partial class UiMotionUIController : UIController
     {
         if (!control.VisibleInTree)
             return;
-        _pending.Remove(control);
+        RemovePending(control);
         var delay = UiMotionSequence.Delay(index, 1,
             Read(UiMotionSettings.ButtonIntervalMs, 0, 150), 0,
             Read(UiMotionSettings.ButtonMaxDelayMs, 0, 1000), 0) / 1000;
@@ -399,6 +406,7 @@ public sealed partial class UiMotionUIController : UIController
             }
         }
         _pending.Clear();
+        _pendingSet.Clear();
 
         foreach (var (control, fade) in _active)
         {

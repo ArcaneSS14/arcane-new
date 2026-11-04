@@ -282,6 +282,25 @@ public sealed partial class UiMotionTest
     }
 
     [Test]
+    public void StaggeredTransitionWaitsForLastItemFade()
+    {
+        var transition = new UiMotionTransition(_configuration);
+        var profile = new UiMotionProfile(TimeSpan.FromMilliseconds(200), TimeSpan.Zero, 0, false)
+        {
+            EnterEffectDuration = TimeSpan.FromMilliseconds(150),
+            Sequence = true,
+            SequenceSeconds = 0.1f
+        };
+        transition.Start(profile, true, 0, 0);
+        transition.Advance(0.15f);
+        Assert.That(transition.Finished, Is.False);
+        Assert.That(transition.GetStaggeredOpacity(3, 4), Is.LessThan(1));
+        transition.Advance(0.1f);
+        Assert.That(transition.Finished, Is.True);
+        Assert.That(transition.GetStaggeredOpacity(3, 4), Is.EqualTo(1));
+    }
+
+    [Test]
     public void SwitchingTabsAnimatesOnlyTheNewPage()
     {
         _window = new TestWindow();

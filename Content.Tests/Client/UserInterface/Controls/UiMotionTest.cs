@@ -188,6 +188,10 @@ public sealed partial class UiMotionTest : RobustUnitTest
         var plain = first.Nodes.Where(node => node.IsPlainText).ToArray();
         Assert.That(plain[0].Value.StringValue, Is.EqualTo("A\u0301"));
         Assert.That(plain[1].Value.StringValue, Is.EqualTo("👨‍👩‍👧‍👦"));
+        var hiddenIndex = first.Nodes.ToList().FindIndex(node => node == plain[1]);
+        Assert.That(hiddenIndex, Is.GreaterThan(0));
+        Assert.That(first.Nodes[hiddenIndex - 1].Name, Is.EqualTo("color"));
+        Assert.That(first.Nodes[hiddenIndex - 1].Value.ColorValue, Is.EqualTo(Color.Transparent));
         Assert.That(first.Nodes.Any(node => node.Name == "bold"), Is.True);
         Assert.That(reveal.Reveal(reveal.Count), Is.EqualTo(message));
         Assert.That(reveal.Reveal(-1).ToString(), Is.EqualTo(message.ToString()));
@@ -296,6 +300,12 @@ public sealed partial class UiMotionTest : RobustUnitTest
         Assert.That(profile.Opening, Is.False);
         Assert.That(profile.Sequence, Is.False);
         Assert.That(profile.Fade, Is.True);
+
+        _configuration.SetCVar(S.MenuEnterMs, 0);
+        _configuration.SetCVar(S.MenuExitMs, 0);
+        profile = S.MenuProfile(_configuration);
+        Assert.That(profile.EnterEffectDuration, Is.EqualTo(TimeSpan.Zero));
+        Assert.That(profile.ExitEffectDuration, Is.EqualTo(TimeSpan.Zero));
     }
 
     [Test]

@@ -100,13 +100,13 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
             var icon = Alert.GetIcon(_severity);
             if (_sprite.LayerMapTryGet((_spriteViewEntity, sprite), AlertVisualLayers.Base, out var layer, false))
                 _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
-            AnimateAppearance(updating: true); // Arcane
-            _motionFeedback.Play(UiMotionSettings.Alerts, UiMotionSettings.AlertsSeverityPulse, 150); // Arcane
+            AnimateSeverityChange(); // Arcane
         }
 
         protected override void FrameUpdate(FrameEventArgs args)
         {
             base.FrameUpdate(args);
+            UpdateAlertMotion(args.DeltaSeconds); // Arcane
             UserInterfaceManager.GetUIController<AlertsUIController>().UpdateAlertSpriteEntity(_spriteViewEntity, Alert);
 
             if (!Cooldown.HasValue)

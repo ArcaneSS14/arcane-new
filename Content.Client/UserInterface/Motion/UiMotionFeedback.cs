@@ -27,7 +27,8 @@ public sealed class UiMotionFeedback : Control
         _group = group;
         _effect = effect;
         _pulse = pulse;
-        _duration = _remaining = Math.Clamp(milliseconds, 0, 1000) / 1000;
+        var maximum = !pulse && _configuration.GetCVar(UiMotionSettings.Reduce) ? 100 : 1000;
+        _duration = _remaining = Math.Clamp(milliseconds, 0, maximum) / 1000;
         if (!Enabled)
             _remaining = 0;
     }

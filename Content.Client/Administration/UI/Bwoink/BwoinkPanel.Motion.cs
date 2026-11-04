@@ -15,6 +15,7 @@ public sealed partial class BwoinkPanel
 
     public void AnimateChannelAppearance()
     {
+        _messageFeedback?.Stop();
         (_channelMotion ??= new UiMotionVisual(this, _motionConfiguration, UiMotionSettings.Tabs)).Start(
             UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.TabsEnterMs, 0, 1000));
     }

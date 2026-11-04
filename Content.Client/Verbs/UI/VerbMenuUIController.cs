@@ -334,10 +334,15 @@ namespace Content.Client.Verbs.UI
             }
 
             // Admin menus may legitimately target entities that have never entered the client's PVS.
+            if (_localTarget == null)
+                EntityManager.TryGetEntity(CurrentTarget, out _localTarget);
             if (_localTarget is not { } target || !EntityManager.Deleted(target))
                 return;
 
-            _context.Close();
+            if (OpenMenu == _context.RootMenu)
+                _context.Close();
+            else
+                Close();
             _context.ClearExitVisuals();
         }
         // Arcane-End

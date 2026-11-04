@@ -8,7 +8,6 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
-using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Administration.UI.SetOutfit
 {
@@ -101,7 +100,6 @@ namespace Content.Client.Administration.UI.SetOutfit
                     OutfitList.Add(GetItem(gear, OutfitList));
                 }
             }
-            UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItem(OutfitList); // Arcane
         }
 
 

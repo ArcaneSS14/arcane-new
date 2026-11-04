@@ -149,8 +149,8 @@ public static class UiMotionSettings
             TimeSpan.FromMilliseconds(exit),
             Read(configuration, MenuTravel, 0, 24), configuration.GetCVar(MenuSpring))
         {
-            EnterEffectDuration = SpatialEffectDuration(enter),
-            ExitEffectDuration = SpatialEffectDuration(exit),
+            EnterEffectDuration = enter <= 0 ? TimeSpan.Zero : SpatialEffectDuration(enter),
+            ExitEffectDuration = exit <= 0 ? TimeSpan.Zero : SpatialEffectDuration(exit),
             Fade = configuration.GetCVar(MenuFade),
             Opening = configuration.GetCVar(MenuOpening),
             Sequence = configuration.GetCVar(MenuSequence),

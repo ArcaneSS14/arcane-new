@@ -18,6 +18,7 @@ public sealed partial class MappingPrototypeList : Control
     private readonly List<MappingPrototype> _prototypes = new();
     private readonly List<Texture> _insertTextures = new();
     private readonly List<MappingPrototype> _search = new();
+    private bool _animateSearchInsertions; // Arcane
 
     public MappingSpawnButton? Selected;
     public Action<IPrototype, List<Texture>>? GetPrototypeData;
@@ -80,7 +81,10 @@ public sealed partial class MappingPrototypeList : Control
         }
 
         list.AddChild(button);
-        UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(button, list.ChildCount - 1); // Arcane
+        // Arcane-Start
+        if (_animateSearchInsertions && list == SearchList)
+            UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(button, list.ChildCount - 1);
+        // Arcane-End
 
         button.Button.OnToggled += _ => SelectionChanged?.Invoke(button, prototype);
 
@@ -108,7 +112,17 @@ public sealed partial class MappingPrototypeList : Control
         SearchList.TotalItemCount = _search.Count;
         ScrollContainer.SetScrollValue(new Vector2(0, 0));
 
-        UpdateSearch();
+        // Arcane-Start
+        _animateSearchInsertions = true;
+        try
+        {
+            UpdateSearch();
+        }
+        finally
+        {
+            _animateSearchInsertions = false;
+        }
+        // Arcane-End
     }
 
     /// <summary>
