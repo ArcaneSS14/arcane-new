@@ -1,0 +1,21 @@
+light_mode unshaded;
+
+uniform highp float glow_brightness; // brightness multiplier applied to the sprite
+// 0 leaves the layer empty, for sprites that GlowHaloOverlay draws instead. Must be set explicitly:
+// instances of this shader share one GL program, which keeps the last uniform values.
+uniform highp float draw_sprite;
+
+highp vec3 keepHue(highp vec3 color, highp vec3 tint) {
+    highp float peak = max(max(color.r * tint.r, color.g * tint.g), color.b * tint.b);
+    return peak > 1.0 ? color / peak : color;
+}
+
+void fragment() {
+    highp vec4 sprite = zTexture(UV);
+
+    COLOR = vec4(keepHue(sprite.rgb * glow_brightness, MODULATE.rgb), sprite.a * draw_sprite);
+
+    if (COLOR.a < 0.004) {
+        discard;
+    }
+}

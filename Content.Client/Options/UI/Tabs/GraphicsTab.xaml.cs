@@ -230,7 +230,7 @@ public sealed partial class GraphicsTab : Control
         private const int QualityNone = 0;
         private const int QualitySilly = 1;
         private const int QualityStrong = 2;
-        private const int QualityDefault = QualitySilly;
+        private const int QualityDefault = QualityStrong;
 
         private readonly IConfigurationManager _cfg;
         private readonly OptionDropDown _dropDown;

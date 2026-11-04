@@ -24,7 +24,6 @@ public sealed partial class LightingHighlightsOverlay : Overlay
     private float _lastIntensity = float.NaN;
 
     public override OverlaySpace Space => OverlaySpace.WorldSpace;
-    public override bool RequestScreenTexture => GetIntensity() > 0f;
 
     public LightingHighlightsOverlay()
     {
@@ -44,9 +43,6 @@ public sealed partial class LightingHighlightsOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        if (ScreenTexture is not { } screen)
-            return;
-
         var intensity = GetIntensity();
         if (intensity <= 0f)
             return;
@@ -57,7 +53,6 @@ public sealed partial class LightingHighlightsOverlay : Overlay
             _lastIntensity = intensity;
         }
 
-        _shader.SetParameter("SCREEN_TEXTURE", screen);
         _shader.SetParameter("LIGHT_TEXTURE", args.Viewport.LightRenderTarget.Texture);
 
         var handle = args.WorldHandle;
@@ -71,7 +66,7 @@ public sealed partial class LightingHighlightsOverlay : Overlay
         return _cfg.GetCVar(ArcaneCCVars.LightingShaderQuality) switch
         {
             QualitySilly => 0.06f,
-            QualityStrong => 0.12f,
+            QualityStrong => 0.09f,
             _ => 0f,
         };
     }

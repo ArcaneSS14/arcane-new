@@ -11,6 +11,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Robust.Shared.Graphics; // Arcane
 
 namespace Content.Client.Light;
 
@@ -86,13 +87,13 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
         if (res.AOTarget?.Texture.Size != aoSize)
         {
             res.AOTarget?.Dispose();
-            res.AOTarget = _clyde.CreateRenderTarget(aoSize, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "ambient-occlusion-target");
+            res.AOTarget = _clyde.CreateRenderTarget(aoSize, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), new TextureSampleParameters { Filter = true }, name: "ambient-occlusion-target"); // Arcane-Edit: no sample parameters > linear filtering
         }
 
         if (res.AOBlurBuffer?.Texture.Size != aoSize)
         {
             res.AOBlurBuffer?.Dispose();
-            res.AOBlurBuffer = _clyde.CreateRenderTarget(aoSize, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "ambient-occlusion-blur-target");
+            res.AOBlurBuffer = _clyde.CreateRenderTarget(aoSize, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), new TextureSampleParameters { Filter = true }, name: "ambient-occlusion-blur-target"); // Arcane-Edit: no sample parameters > linear filtering
         }
 
         // Draw the texture data to the texture.

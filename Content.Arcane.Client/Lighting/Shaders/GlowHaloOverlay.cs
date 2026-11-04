@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Content.Arcane.Common.CCVar;
+using Content.Client.Graphics;
 using Robust.Client.ComponentTrees;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -10,9 +12,11 @@ using Robust.Shared.Enums;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Graphics.RSI;
 using Robust.Shared.IoC;
+using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 using static Robust.Client.GameObjects.SpriteComponent;
 
 namespace Content.Arcane.Client.Lighting.Shaders;
@@ -24,35 +28,46 @@ namespace Content.Arcane.Client.Lighting.Shaders;
 /// </summary>
 public sealed partial class GlowHaloOverlay : Overlay
 {
-    /// <summary>
-    /// Drawn in this order. Each pass draws what the layer's own shader leaves out.
-    /// </summary>
-    private static readonly (ProtoId<ShaderPrototype> Shader, bool Sprite, bool Halo)[] Passes =
-    [
-        ("UnshadedGlow", false, true),
-        ("LightGlow", false, true),
-        ("LightGlow", true, false),
-    ];
+    private static readonly ProtoId<ShaderPrototype> UnshadedGlowShader = "UnshadedGlow";
+    private static readonly ProtoId<ShaderPrototype> LightGlowShader = "LightGlow";
+    private static readonly ProtoId<ShaderPrototype> UnshadedHaloShader = "UnshadedGlowHalo";
+    private static readonly ProtoId<ShaderPrototype> LightHaloShader = "LightGlowHalo";
 
     private const int QualityStrong = 2;
 
+    /// <summary>
+    /// Finding glow sprites means checking every sprite or light around the view, so it isn't done
+    /// each frame. A sprite that starts to glow can show up this late.
+    /// </summary>
+    private static readonly TimeSpan ScanInterval = TimeSpan.FromSeconds(0.25);
+
+    /// <summary>
+    /// How far around the view to look for sprites, in meters, so that moving doesn't need a scan each frame.
+    /// </summary>
+    private const float ScanMargin = 6f;
+
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IEntityManager _entities = default!;
+    [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IPrototypeManager _prototypes = default!;
 
-    private readonly SpriteSystem _sprite;
     private readonly SpriteTreeSystem _spriteTree;
+    private readonly LightTreeSystem _lightTree;
     private readonly TransformSystem _transform;
     private readonly EntityQuery<MapGridComponent> _gridQuery;
+    private readonly EntityQuery<SpriteComponent> _spriteQuery;
 
-    private readonly HashSet<ProtoId<ShaderPrototype>> _glowShaders = new();
-    private readonly HashSet<ProtoId<ShaderPrototype>> _spriteShaders = new();
-
-    // Plain is the pass without glow, used below Strong quality. Halo passes have none and are skipped.
-    private readonly List<(ProtoId<ShaderPrototype> Id, ShaderInstance Shader, ShaderInstance? Plain)> _passShaders = new();
+    private readonly ShaderInstance _unshadedHalo;
+    private readonly ShaderInstance _lightHalo;
+    private readonly ShaderInstance _lamp;
+    private readonly ShaderInstance _plainLamp;
     private bool _strong;
-    private readonly List<Entity<SpriteComponent, TransformComponent>> _sprites = new();
-    private readonly List<(ProtoId<ShaderPrototype> Shader, Matrix3x2 Matrix, Texture Texture, Color Color)> _layers = new();
+
+    private readonly OverlayResourceCache<ViewportGlow> _viewports = new();
+    private readonly List<Entity<SpriteComponent, TransformComponent>> _scanned = new();
+    private readonly List<Entity<SharedPointLightComponent, TransformComponent>> _lights = new();
+    private readonly List<(Matrix3x2 Matrix, Texture Texture, Color Color)> _glowLayers = new();
+    private readonly List<(Matrix3x2 Matrix, Texture Texture, Color Color)> _lampLayers = new();
 
     // Above entities, below FOV, so halos don't show through walls.
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowFOV;
@@ -60,31 +75,21 @@ public sealed partial class GlowHaloOverlay : Overlay
     public GlowHaloOverlay()
     {
         IoCManager.InjectDependencies(this);
-        _sprite = _entities.System<SpriteSystem>();
         _spriteTree = _entities.System<SpriteTreeSystem>();
+        _lightTree = _entities.System<LightTreeSystem>();
         _transform = _entities.System<TransformSystem>();
         _gridQuery = _entities.GetEntityQuery<MapGridComponent>();
+        _spriteQuery = _entities.GetEntityQuery<SpriteComponent>();
 
-        foreach (var (id, drawSprite, drawHalo) in Passes)
-        {
-            var proto = _prototypes.Index(id);
-            var shader = proto.InstanceUnique();
-            shader.SetParameter("draw_sprite", drawSprite ? 1f : 0f);
-            shader.SetParameter("draw_halo", drawHalo ? 1f : 0f);
+        _unshadedHalo = _prototypes.Index(UnshadedHaloShader).Instance();
+        _lightHalo = _prototypes.Index(LightHaloShader).Instance();
 
-            ShaderInstance? plain = null;
-            if (drawSprite)
-            {
-                plain = proto.InstanceUnique();
-                plain.SetParameter("draw_sprite", 1f);
-                plain.SetParameter("draw_halo", 0f);
-                plain.SetParameter("glow_brightness", 1f);
-                _spriteShaders.Add(id);
-            }
+        _lamp = _prototypes.Index(LightGlowShader).InstanceUnique();
+        _lamp.SetParameter("draw_sprite", 1f);
 
-            _passShaders.Add((id, shader, plain));
-            _glowShaders.Add(id);
-        }
+        _plainLamp = _prototypes.Index(LightGlowShader).InstanceUnique();
+        _plainLamp.SetParameter("draw_sprite", 1f);
+        _plainLamp.SetParameter("glow_brightness", 1f);
 
         _cfg.OnValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged, true);
     }
@@ -99,17 +104,25 @@ public sealed partial class GlowHaloOverlay : Overlay
         if (args.Viewport.Eye is not { } eye)
             return;
 
-        _sprites.Clear();
-        _spriteTree.QueryAabb(_sprites, args.MapId, args.WorldBounds);
+        var glow = _viewports.GetForViewport(args.Viewport, static _ => new ViewportGlow());
+        if (glow.Map != args.MapId
+            || glow.Strong != _strong
+            || _timing.RealTime >= glow.NextScan
+            || !glow.Bounds.Encloses(args.WorldAABB))
+        {
+            Scan(glow, args);
+        }
 
         var eyeRotation = eye.Rotation;
         var viewScale = eye.Scale * args.Viewport.RenderScale * new Vector2(EyeManager.PixelsPerMeter, -EyeManager.PixelsPerMeter);
         var viewPosition = eye.Position.Position + eye.Offset;
 
-        _layers.Clear();
-        foreach (var (uid, sprite, xform) in _sprites)
+        _glowLayers.Clear();
+        _lampLayers.Clear();
+        foreach (var (uid, sprite, xform) in glow.Sprites)
         {
-            if (!HasGlowLayer(sprite, _strong ? _glowShaders : _spriteShaders))
+            // A sprite can get deleted, hidden or put in a container between scans.
+            if (sprite.Deleted || !sprite.Visible || sprite.TreeUid == null || xform.MapID != args.MapId)
                 continue;
 
             var (worldPosition, worldRotation) = _transform.GetWorldPositionRotation(xform);
@@ -126,32 +139,67 @@ public sealed partial class GlowHaloOverlay : Overlay
         }
 
         var handle = args.WorldHandle;
-        foreach (var (id, shader, plain) in _passShaders)
+        if (_strong)
         {
-            if (!_strong && plain == null)
-                continue;
-
-            handle.UseShader(_strong ? shader : plain);
-            foreach (var layer in _layers)
-            {
-                if (layer.Shader != id)
-                    continue;
-
-                var size = layer.Texture.Size / (float) EyeManager.PixelsPerMeter;
-                handle.SetTransform(layer.Matrix);
-                handle.DrawTextureRect(layer.Texture, Box2.FromDimensions(size / -2, size), layer.Color);
-            }
+            DrawLayers(handle, _unshadedHalo, _glowLayers);
+            DrawLayers(handle, _lightHalo, _lampLayers);
         }
+
+        DrawLayers(handle, _strong ? _lamp : _plainLamp, _lampLayers);
 
         handle.UseShader(null);
         handle.SetTransform(Matrix3x2.Identity);
     }
 
-    private static bool HasGlowLayer(SpriteComponent sprite, HashSet<ProtoId<ShaderPrototype>> shaders)
+    private static void DrawLayers(DrawingHandleWorld handle, ShaderInstance shader, List<(Matrix3x2 Matrix, Texture Texture, Color Color)> layers)
     {
-        foreach (var layer in sprite.AllLayers)
+        handle.UseShader(shader);
+        foreach (var layer in layers)
         {
-            if (layer is Layer { ShaderPrototype: { } proto } && shaders.Contains(proto))
+            var size = layer.Texture.Size / (float) EyeManager.PixelsPerMeter;
+            handle.SetTransform(layer.Matrix);
+            handle.DrawTextureRect(layer.Texture, Box2.FromDimensions(size / -2, size), layer.Color);
+        }
+    }
+
+    private void Scan(ViewportGlow glow, in OverlayDrawArgs args)
+    {
+        glow.Map = args.MapId;
+        glow.Strong = _strong;
+        glow.NextScan = _timing.RealTime + ScanInterval;
+        glow.Bounds = args.WorldAABB.Enlarged(ScanMargin);
+        glow.Sprites.Clear();
+
+        // Lamps come from the light tree: a lamp hidden behind a wall has left the sprite tree,
+        // but has to be drawn as soon as it comes back.
+        _lights.Clear();
+        _lightTree.QueryAabb(_lights, args.MapId, glow.Bounds);
+
+        foreach (var (uid, _, xform) in _lights)
+        {
+            if (_spriteQuery.TryComp(uid, out var sprite) && HasLayer(sprite, LightGlowShader))
+                glow.Sprites.Add((uid, sprite, xform));
+        }
+
+        if (!_strong)
+            return;
+
+        _scanned.Clear();
+        _spriteTree.QueryAabb(_scanned, args.MapId, glow.Bounds);
+
+        foreach (var entry in _scanned)
+        {
+            if (HasLayer(entry.Comp1, UnshadedGlowShader) && !HasLayer(entry.Comp1, LightGlowShader))
+                glow.Sprites.Add(entry);
+        }
+    }
+
+    private static bool HasLayer(SpriteComponent sprite, ProtoId<ShaderPrototype> shader)
+    {
+        var layers = (IReadOnlyList<ISpriteLayer>) sprite.AllLayers;
+        for (var i = 0; i < layers.Count; i++)
+        {
+            if (layers[i] is Layer { ShaderPrototype: { } proto } && proto == shader)
                 return true;
         }
 
@@ -171,15 +219,17 @@ public sealed partial class GlowHaloOverlay : Overlay
         var spriteMatrix = Matrix3x2.Multiply(comp.LocalMatrix, entityMatrix);
         Direction? overrideDirection = comp.EnableDirectionOverride ? comp.DirectionOverride : null;
 
-        foreach (var spriteLayer in comp.AllLayers)
+        var layers = (IReadOnlyList<ISpriteLayer>) comp.AllLayers;
+        for (var i = 0; i < layers.Count; i++)
         {
-            if (spriteLayer is not Layer layer)
+            if (layers[i] is not Layer layer)
                 continue;
 
             if (!layer.Visible || layer.Blank || layer.CopyToShaderParameters != null)
                 continue;
 
-            if (layer.ShaderPrototype is not { } proto || !_glowShaders.Contains(proto))
+            // Sprites using UnshadedGlow draw themselves, so below Strong they have nothing to draw here.
+            if (layer.ShaderPrototype is not { } proto || proto != LightGlowShader && (!_strong || proto != UnshadedGlowShader))
                 continue;
 
             var state = layer.ActualState;
@@ -195,7 +245,8 @@ public sealed partial class GlowHaloOverlay : Overlay
                 continue;
 
             var matrix = Matrix3x2.Multiply(layerMatrix, LayerSpriteMatrix(comp, layer, spriteMatrix, worldPosition, worldRotation, eyeRotation, angle));
-            _layers.Add((proto, matrix, texture, comp.Color * layer.Color));
+            var target = proto == LightGlowShader ? _lampLayers : _glowLayers;
+            target.Add((matrix, texture, comp.Color * layer.Color));
         }
     }
 
@@ -228,12 +279,26 @@ public sealed partial class GlowHaloOverlay : Overlay
     {
         _cfg.UnsubValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged);
 
-        foreach (var (_, shader, plain) in _passShaders)
-        {
-            shader.Dispose();
-            plain?.Dispose();
-        }
+        _viewports.Dispose();
+        _lamp.Dispose();
+        _plainLamp.Dispose();
 
         base.DisposeBehavior();
+    }
+
+    /// <summary>
+    /// The last scan of a viewport. Viewports can show different places, like camera monitors do.
+    /// </summary>
+    private sealed class ViewportGlow : IDisposable
+    {
+        public readonly List<Entity<SpriteComponent, TransformComponent>> Sprites = new();
+        public Box2 Bounds;
+        public MapId Map = MapId.Nullspace;
+        public bool Strong;
+        public TimeSpan NextScan;
+
+        public void Dispose()
+        {
+        }
     }
 }

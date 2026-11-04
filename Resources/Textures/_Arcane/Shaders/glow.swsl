@@ -1,10 +1,8 @@
 light_mode unshaded;
 
-uniform highp float glow_brightness; // brightness multiplier applied to the sprite
+uniform highp float glow_brightness; // brightness multiplier applied to the halo
 uniform highp float outline_width;   // blur radius around the sprite, in texels (up to 5.5)
 uniform highp float outline_alpha;   // opacity of the blurred halo, above 1 strengthens it
-uniform highp float draw_sprite;
-uniform highp float draw_halo;
 
 const highp int KERNEL = 6;
 const highp float MAX_RADIUS = 5.5;
@@ -26,22 +24,22 @@ highp vec4 texel(highp vec2 uv, highp mat2 toFrame) {
 void fragment() {
     highp vec4 sprite = zTexture(UV);
 
-    // The fragment body is inlined into main(), so it can't return early; branch instead.
-    highp vec3 haloColor = vec3(0.0);
-    highp float haloAlpha = 0.0;
-    if (draw_halo > 0.5) {
-        // Maps an atlas UV offset to an offset in UV2 (0..1 across this sprite's frame), so samples
-        // from a neighbouring atlas state can be rejected. Derivatives only exist in the fragment
-        // stage, while helper functions are also compiled into the vertex shader, so this stays here.
-        highp mat2 toFrame = mat2(0.0);
+    // Maps an atlas UV offset to an offset in UV2 (0..1 across this sprite's frame), so samples
+    // from a neighbouring atlas state can be rejected. Derivatives only exist in the fragment
+    // stage, while helper functions are also compiled into the vertex shader, so this stays here.
+    highp mat2 toFrame = mat2(0.0);
 #ifdef HAS_DFDX
-        highp mat2 uvJ = mat2(dFdx(UV), dFdy(UV));
-        highp mat2 uv2J = mat2(dFdx(UV2), dFdy(UV2));
-        highp float det = uvJ[0][0] * uvJ[1][1] - uvJ[1][0] * uvJ[0][1];
-        if (det != 0.0)
-            toFrame = uv2J * (mat2(uvJ[1][1], -uvJ[0][1], -uvJ[1][0], uvJ[0][0]) / det);
+    highp mat2 uvJ = mat2(dFdx(UV), dFdy(UV));
+    highp mat2 uv2J = mat2(dFdx(UV2), dFdy(UV2));
+    highp float det = uvJ[0][0] * uvJ[1][1] - uvJ[1][0] * uvJ[0][1];
+    if (det != 0.0)
+        toFrame = uv2J * (mat2(uvJ[1][1], -uvJ[0][1], -uvJ[1][0], uvJ[0][0]) / det);
 #endif
 
+    highp vec4 blur = vec4(0.0);
+
+    // The halo leaves the sprite uncovered, so its opaque pixels need no blur at all.
+    if (sprite.a < 0.996) {
         // Weigh every texel around the pixel by its exact distance to it. The weight is continuous
         // in the pixel position and falls to zero at the radius, so the halo is smooth inside and at
         // its edge, and neighbouring colours blend into each other instead of forming a pattern.
@@ -49,47 +47,43 @@ void fragment() {
         highp vec2 p = UV / ps - 0.5;
         highp vec2 base = floor(p);
         highp float radius = clamp(outline_width, 0.5, MAX_RADIUS);
+        highp float radiusSquared = radius * radius;
 
-        highp vec4 blur = vec4(0.0);
         highp float total = 0.0;
         for (int y = 1 - KERNEL; y <= KERNEL; y++)
         {
-            for (int x = 1 - KERNEL; x <= KERNEL; x++)
+            highp float dy = base.y + float(y) - p.y;
+            if (dy * dy < radiusSquared)
             {
-                highp vec2 cell = base + vec2(float(x), float(y));
-                highp vec2 delta = cell - p;
-                highp float k = 1.0 - dot(delta, delta) / (radius * radius);
-                if (k > 0.0)
+                for (int x = 1 - KERNEL; x <= KERNEL; x++)
                 {
-                    highp float w = k * k;
-                    blur += texel((cell + 0.5) * ps, toFrame) * w;
-                    total += w;
+                    highp float dx = base.x + float(x) - p.x;
+                    highp float k = 1.0 - (dx * dx + dy * dy) / radiusSquared;
+                    if (k > 0.0)
+                    {
+                        highp float w = k * k;
+                        blur += texel((vec2(p.x + dx, p.y + dy) + 0.5) * ps, toFrame) * w;
+                        total += w;
+                    }
                 }
             }
         }
         blur /= max(total, 0.0001);
-
-#ifndef HAS_DFDX
-        // Without derivatives we can't find the frame bounds, so fade the halo out near the
-        // frame border instead to keep the neighbouring atlas state from bleeding in.
-        highp float margin = 0.1;
-        blur *= smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
-              * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
-#endif
-
-        // The halo takes the same brightness boost as the sprite, so bright sprites glow brighter.
-        haloColor = blur.a > 0.0 ? keepHue(blur.rgb / blur.a * glow_brightness, MODULATE.rgb) : vec3(0.0);
-
-        // Leave the sprite itself uncovered, the halo only lies around it.
-        haloAlpha = clamp(blur.a * outline_alpha, 0.0, 1.0) * (1.0 - sprite.a);
     }
 
-    // The halo already leaves room for the sprite, so the two just add up.
-    highp float spriteAlpha = draw_sprite > 0.5 ? sprite.a : 0.0;
-    highp vec3 glowing = keepHue(sprite.rgb * glow_brightness, MODULATE.rgb);
-    highp float outAlpha = spriteAlpha + haloAlpha;
-    highp vec3 outColor = outAlpha > 0.0 ? (glowing * spriteAlpha + haloColor * haloAlpha) / outAlpha : vec3(0.0);
-    COLOR = vec4(outColor, outAlpha);
+#ifndef HAS_DFDX
+    // Without derivatives we can't find the frame bounds, so fade the halo out near the
+    // frame border instead to keep the neighbouring atlas state from bleeding in.
+    highp float margin = 0.1;
+    blur *= smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
+          * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
+#endif
+
+    // The halo takes the same brightness boost as the sprite, so bright sprites glow brighter.
+    highp vec3 haloColor = blur.a > 0.0 ? keepHue(blur.rgb / blur.a * glow_brightness, MODULATE.rgb) : vec3(0.0);
+
+    // Leave the sprite itself uncovered, the halo only lies around it.
+    COLOR = vec4(haloColor, clamp(blur.a * outline_alpha, 0.0, 1.0) * (1.0 - sprite.a));
 
     if (COLOR.a < 0.004) {
         discard;
