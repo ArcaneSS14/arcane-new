@@ -15,6 +15,7 @@ public sealed class UiMotionFeedback : Control
     private CVarDef<bool>? _effect;
     private float _remaining;
     private float _duration;
+    private float _originalDuration;
     private bool _pulse;
 
     public UiMotionFeedback()
@@ -29,6 +30,7 @@ public sealed class UiMotionFeedback : Control
         _pulse = pulse;
         var maximum = !pulse && _configuration.GetCVar(UiMotionSettings.Reduce) ? 100 : 1000;
         _duration = _remaining = Math.Clamp(milliseconds, 0, maximum) / 1000;
+        _originalDuration = _duration;
         if (!Enabled)
             _remaining = 0;
     }
@@ -58,7 +60,7 @@ public sealed class UiMotionFeedback : Control
         if (_remaining <= 0 || !Enabled)
             return;
         var progress = 1 - _remaining / _duration;
-        var opacity = 1 - UiMotionEasing.Effects(progress, _duration);
+        var opacity = 1 - UiMotionEasing.Effects(progress, _originalDuration);
         handle.DrawRect(PixelSizeBox, new Color(0.65f, 0.8f, 1f, opacity * 0.6f), false);
     }
 
