@@ -8,7 +8,7 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Utility;
-using System.Text.Json; // Arcane
+using System.IO; // Arcane
 
 namespace Content.Client.Changelog
 {
@@ -25,6 +25,7 @@ namespace Content.Client.Changelog
         private ISawmill _sawmill = default!;
 
         // Arcane-Start: published snapshots can assign different numeric IDs to the same PR.
+        private const string ReadEntriesHeader = "arcane-changelog-read-v2";
         private readonly HashSet<string> _readEntryKeys = new();
         private HashSet<string> _entryKeys = new();
         private ResPath ReadEntriesPath => new($"/changelog_read_v2_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}");
@@ -59,9 +60,12 @@ namespace Content.Client.Changelog
             sw.Write(MaxId.ToString());
 
             // Arcane-Start: keep the in-memory read snapshot for the window's unread divider.
-            using var entriesWriter = _resource.UserData.OpenWriteText(ReadEntriesPath);
-            var readEntries = _readEntryKeys.Union(_entryKeys).OrderBy(key => key).ToArray();
-            entriesWriter.Write(JsonSerializer.Serialize(readEntries));
+            using TextWriter entriesWriter = _resource.UserData.OpenWriteText(ReadEntriesPath);
+            entriesWriter.WriteLine(ReadEntriesHeader);
+            foreach (var key in _readEntryKeys.Union(_entryKeys).OrderBy(key => key))
+            {
+                entriesWriter.WriteLine(key);
+            }
             // Arcane-End
         }
 
@@ -118,14 +122,15 @@ namespace Content.Client.Changelog
             _readEntryKeys.Clear();
             if (_resource.UserData.TryReadAllText(ReadEntriesPath, out var readEntriesText))
             {
-                try
+                using var entriesReader = new StringReader(readEntriesText);
+                if (entriesReader.ReadLine() == ReadEntriesHeader)
                 {
-                    var readEntries = JsonSerializer.Deserialize<string[]>(readEntriesText) ?? [];
-                    _readEntryKeys.UnionWith(readEntries.Where(key => !string.IsNullOrWhiteSpace(key)));
-                }
-                catch (JsonException)
-                {
-                    // Damaged state is treated as unread, never as proof that entries were seen.
+                    while (entriesReader.ReadLine() is { } line)
+                    {
+                        var key = line.Trim();
+                        if (!string.IsNullOrEmpty(key))
+                            _readEntryKeys.Add(key);
+                    }
                 }
             }
 
