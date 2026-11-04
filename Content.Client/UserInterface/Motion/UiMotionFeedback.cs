@@ -44,6 +44,12 @@ public sealed class UiMotionFeedback : Control
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
+        if (!_pulse && _remaining > 0 && _configuration.GetCVar(UiMotionSettings.Reduce) && _remaining > 0.1f)
+        {
+            var progress = 1 - _remaining / _duration;
+            _remaining = 0.1f;
+            _duration = _remaining / (1 - progress);
+        }
         _remaining = Enabled ? Math.Max(0, _remaining - args.DeltaSeconds * UiMotionSettings.PlaybackSpeed(_configuration)) : 0;
     }
 

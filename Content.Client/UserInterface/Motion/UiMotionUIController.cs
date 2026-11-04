@@ -124,7 +124,7 @@ public sealed partial class UiMotionUIController : UIController
 
     private void Queue(Control control)
     {
-        if (control is AlertControl)
+        if (control is AlertControl || IsInsideMappingSearchList(control))
             return;
         if (control.VisibleInTree && (control is BaseWindow or BaseButton or Popup or ActionButton or ItemGridPiece
             || control.Parent is TabContainer
@@ -213,6 +213,22 @@ public sealed partial class UiMotionUIController : UIController
                 || parent is UiMotionContainer { Profile.Opening: true }
                 || parent.Parent == UIManager.PopupRoot || IsListRow(parent))
                 return true;
+        }
+        return false;
+    }
+
+    private static bool IsInsideMappingSearchList(Control control)
+    {
+        for (var current = control; current != null; current = current.Parent)
+        {
+            if (current is not MappingPrototypeList list)
+                continue;
+
+            for (var child = control; child != null && child != list; child = child.Parent)
+            {
+                if (child == list.SearchList)
+                    return true;
+            }
         }
         return false;
     }
@@ -359,7 +375,8 @@ public sealed partial class UiMotionUIController : UIController
         _indices.Clear();
         foreach (var control in _pending)
         {
-            if (!control.IsInsideTree || !control.VisibleInTree || control is ContextMenuPopup || IsInsideAnimatedParent(control))
+            if (!control.IsInsideTree || !control.VisibleInTree || control is ContextMenuPopup
+                || IsInsideMappingSearchList(control) || IsInsideAnimatedParent(control))
                 continue;
             var parent = control.Parent?.Parent is TreeItem tree && tree.Button == control
                 ? tree.Parent! : control.Parent!;

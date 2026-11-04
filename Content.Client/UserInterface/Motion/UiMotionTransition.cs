@@ -61,7 +61,7 @@ internal sealed class UiMotionTransition(IConfigurationManager configuration)
             && _profile.Sequence && !configuration.GetCVar(UiMotionSettings.Reduce)
             ? Math.Min(_profile.SequenceSeconds, spatialDuration * 0.45f)
             : 0;
-        Finished = _spatialProgress >= 1 && _effectProgress >= 1
+        Finished = immediate || _spatialProgress >= 1 && _effectProgress >= 1
             && _elapsed >= effectDuration + sequenceDuration;
     }
 

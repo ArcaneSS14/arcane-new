@@ -299,6 +299,10 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
     {
         GameAHelpButton?.StyleClasses.Remove(StyleClass.Negative);
         LobbyAHelpButton?.StyleClasses.Remove(StyleClass.Negative);
+        // Arcane-Start
+        _gameAHelpNotificationMotion?.Reset();
+        _lobbyAHelpNotificationMotion?.Reset();
+        // Arcane-End
         _hasUnreadAHelp = false;
     }
 
