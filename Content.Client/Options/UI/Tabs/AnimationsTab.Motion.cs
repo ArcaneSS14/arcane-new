@@ -110,6 +110,10 @@ public sealed partial class AnimationsTab
         MotionCheck(alerts, S.Alerts, "enabled");
         MotionSlider(alerts, S.AlertsEnterMs, "duration", 0, 1000, "ms");
         MotionSlider(alerts, S.AlertsTravel, "travel", 0, 240, "pixels");
+        MotionCheck(alerts, S.AlertsScale, "alerts-scale");
+        MotionSlider(alerts, S.AlertsBounce, "alerts-bounce", 0, 1, "percent");
+        MotionSlider(alerts, S.AlertsPulseIntensity, "alerts-pulse-intensity", 0, 0.35f, "percent");
+        MotionSlider(alerts, S.AlertsSpeed, "alerts-speed", 0.5f, 2, "multiplier");
 
         var chat = AddMotionGroup("chat");
         MotionCheck(chat, S.Chat, "enabled");
@@ -245,6 +249,8 @@ public sealed partial class AnimationsTab
                     _motionSliders[S.WindowTravel].Set(0);
                     _motionChecks[S.ActionsCooldownPulse].Pressed = false;
                     _motionChecks[S.AlertsSeverityPulse].Pressed = false;
+                    _motionChecks[S.AlertsScale].Pressed = false;
+                    _motionSliders[S.AlertsBounce].Set(0);
                     _motionChecks[S.RadialHover].Pressed = false;
                     _motionSliders[S.PopupsMs].Set(70);
                     _motionSliders[S.DropdownEnterMs].Set(150);
@@ -260,7 +266,7 @@ public sealed partial class AnimationsTab
         {
             _updatingProfile = false;
         }
-        SelectProfile(profile);
+        SelectProfile(profile == MotionPreset.Off ? DetectProfile() : profile);
     }
 
     private void RefreshProfileSelection()
@@ -272,15 +278,14 @@ public sealed partial class AnimationsTab
 
     private MotionPreset DetectProfile()
     {
-        if (!_motionChecks[S.Enabled].Pressed)
-            return MotionPreset.Off;
-
         var modified = _motionOptions.Count(option => option.IsModifiedFromDefault());
+        if (!_motionChecks[S.Enabled].Pressed)
+            return modified == 1 ? MotionPreset.Off : MotionPreset.Custom;
         if (modified == 0)
             return MotionPreset.Expressive;
         if (modified == 1 && _motionChecks[S.Reduce].Pressed)
             return MotionPreset.Reduced;
-        return modified == 18 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
+        return modified == 20 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
     }
 
     private bool IsSubtleProfile()
@@ -289,6 +294,7 @@ public sealed partial class AnimationsTab
             && !_motionChecks[S.BubbleMovement].Pressed
             && !_motionChecks[S.ActionsCooldownPulse].Pressed
             && !_motionChecks[S.AlertsSeverityPulse].Pressed
+            && !_motionChecks[S.AlertsScale].Pressed
             && !_motionChecks[S.RadialHover].Pressed
             && Matches(S.MenuTravel, 0)
             && Matches(S.ButtonJitterMs, 0)
@@ -302,6 +308,7 @@ public sealed partial class AnimationsTab
             && Matches(S.DropdownTravel, 0)
             && Matches(S.AlertsEnterMs, 100)
             && Matches(S.AlertsTravel, 0)
+            && Matches(S.AlertsBounce, 0)
             && Matches(S.ListsEnterMs, 100);
     }
 
@@ -356,6 +363,12 @@ public sealed partial class AnimationsTab
 
         private void UpdateLabel()
         {
+            if (_unit == "percent")
+            {
+                _slider.ValueLabel.Text = Loc.GetString("ui-motion-value-percent",
+                    ("value", (Value * 100).ToString("0", CultureInfo.CurrentCulture)));
+                return;
+            }
             var format = _unit is "seconds" or "multiplier" or "ratio" ? "0.00" : "0";
             _slider.ValueLabel.Text = Loc.GetString("ui-motion-value-" + _unit,
                 ("value", Value.ToString(format, CultureInfo.CurrentCulture)));

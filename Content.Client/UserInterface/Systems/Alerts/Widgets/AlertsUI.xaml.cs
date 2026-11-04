@@ -105,17 +105,20 @@ public sealed partial class AlertsUI : UIWidget
             else
             {
                 var replacingExistingAlert = existingAlertControl != null; // Arcane
+                var newAlertControl = CreateAlertControl(newAlert, alertState); // Arcane-Edit: create after removal > create before removal
                 if (existingAlertControl != null)
                 // Arcane-Edit-Start
                 {
+                    existingAlertControl.TransferAlertMotionTo(newAlertControl);
                     existingAlertControl.OnPressed -= AlertControlPressed;
                     existingAlertControl.Orphan();
                 }
                 // Arcane-Edit-End
 
-                // this is a new alert + alert key or just a different alert with the same
-                // key, create the control and add it in the appropriate order
-                var newAlertControl = CreateAlertControl(newAlert, alertState);
+                // Arcane-Edit-Start
+                // Create the replacement before removal to transfer its motion.
+                // Add the new control in the appropriate order.
+                // Arcane-Edit-End
 
                 //TODO: Can the presenter sort the states before giving it to us?
                 if (alertOrderPrototype != null)

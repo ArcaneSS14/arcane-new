@@ -42,7 +42,7 @@ and [motion specifications](https://m3.material.io/styles/motion/overview/specs)
 | SlotControl (inventory/hands/belt) | Item changes are immediate; optional highlight feedback only | `ui.motion_slot*` |
 | Storage grid | Icon entrance; outgoing visual copy except during dragging | `ui.motion_slot*` |
 | Action hotbar | Local icon sequence and optional border pulse at cooldown boundaries | `ui.motion_actions*` |
-| Alerts | Owner-triggered 32 px expressive bounce on add; local fast-spatial spring pulse on severity update | `ui.motion_alerts*` |
+| Alerts | Fast-spatial entrance and icon scale pulse on add; a separate pulse on severity or category replacement | `ui.motion_alerts*` |
 | Chat | New unread message border indicator plus explicit channel-selector/filter popup entrance | `ui.motion_chat*`, `ui.motion_popups*` |
 | AHelp and changelog | Channel/tab transition and notification feedback; message history keeps its layout | `ui.motion_tabs*`, `ui.motion_notifications*` |
 | Power monitoring | Separate display interpolation; target value changes immediately | `ui.motion_progress*` |
@@ -69,6 +69,9 @@ the matching opt-in control described above.
 Fades are limited to 100 ms and playback uses 1× speed. Typing has its own independent toggle.
 Setting a duration to zero makes that transition immediate. Window entrance can be disabled separately.
 Subtle, Expressive and Reduced presets stage values in the normal options workflow; Off disables the master switch.
+Alerts expose scale, bounce, severity pulse strength and local speed. Scale and severity pulse must both be enabled
+for severity feedback; disabling scale leaves entrance travel available. Global and alert speed multiply together.
+Appearance and severity scale use the larger active pulse, bounded to 135% of the original icon size.
 
 ## Ownership and lifetime
 
@@ -91,7 +94,7 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
   control before notifying content. Delaying that close would retain focus and BUI state; continuously caching all
   windows would add unacceptable GPU cost. Existing inert snapshots remain limited to opt-in menus and radial surfaces.
 - OutputPanel stores private RichTextEntry values, not row controls. Chat uses a border indicator, not per-line fades.
-- Alerts and storage use a conservative fade rather than layout scale. Radial and alert removal are immediate because
+- Storage uses a conservative fade rather than layout scale. Radial and alert removal are immediate because
   their prior render-target snapshots could show opaque backgrounds on some GPUs.
 - Text reveal uses sandbox-permitted Rune APIs. Combining marks, common emoji sequences, flags and CRLF stay together;
   decomposed Hangul and Indic consonant conjuncts can reveal in multiple steps. This is not full UAX #29 segmentation.

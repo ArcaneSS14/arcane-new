@@ -62,9 +62,13 @@ public static class UiMotionSettings
     public static readonly CVarDef<float> ActionsEnterMs = Float("actions_enter_ms", 350);
     public static readonly CVarDef<bool> ActionsCooldownPulse = Bool("actions_cooldown_pulse");
     public static readonly CVarDef<bool> Alerts = Bool("alerts");
-    public static readonly CVarDef<float> AlertsEnterMs = Float("alerts_enter_ms", 700);
+    public static readonly CVarDef<float> AlertsEnterMs = Float("alerts_enter_ms", 350);
     public static readonly CVarDef<float> AlertsTravel = Float("alerts_travel", 32);
     public static readonly CVarDef<bool> AlertsSeverityPulse = Bool("alerts_severity_pulse");
+    public static readonly CVarDef<bool> AlertsScale = Bool("alerts_scale");
+    public static readonly CVarDef<float> AlertsBounce = Float("alerts_bounce", 0.6f);
+    public static readonly CVarDef<float> AlertsPulseIntensity = Float("alerts_pulse_intensity", 0.28f);
+    public static readonly CVarDef<float> AlertsSpeed = Float("alerts_speed", 1f);
     public static readonly CVarDef<bool> Chat = Bool("chat");
     public static readonly CVarDef<float> ChatMs = Float("chat_ms", 150);
     public static readonly CVarDef<bool> Notifications = Bool("notifications");

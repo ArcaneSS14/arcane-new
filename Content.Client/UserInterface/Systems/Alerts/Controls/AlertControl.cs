@@ -61,10 +61,11 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
             HorizontalAlignment = HAlignment.Left;
             _severity = severity;
-            _icon = new SpriteView
+            _icon = new AlertSpriteView // Arcane-Edit: SpriteView > AlertSpriteView
             {
-                Scale = new Vector2(2, 2),
+                Scale = new Vector2(BaseIconScale, BaseIconScale), // Arcane-Edit: 2 > BaseIconScale
                 MaxSize = new Vector2(64, 64),
+                RectClipContent = false, // Arcane
                 Stretch = SpriteView.StretchMode.None,
                 HorizontalAlignment = HAlignment.Left
             };
@@ -143,6 +144,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
         protected override void ExitedTree()
         {
+            AnimateRemoval(); // Arcane
             base.ExitedTree();
 
             if (!_entityManager.Deleted(_spriteViewEntity))
@@ -151,6 +153,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
         protected override void Dispose(bool disposing)
         {
+            AnimateRemoval(); // Arcane
             base.Dispose(disposing);
 
             if (!_entityManager.Deleted(_spriteViewEntity))
