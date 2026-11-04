@@ -16,6 +16,14 @@ from typing import Any, Iterable
 import requests
 import yaml
 
+# Arcane-Start
+import json
+import time
+import re
+from changelog.discord import render_entry, link_fallback
+from changelog.delivery import DeliveryState, RejectedDelivery, artifacts, read_artifact, restore_receipts
+# Arcane-End
+
 DEBUG = os.environ.get("SS14_CHANGELOG_DEBUG", "").lower() in {"1", "true", "yes"}
 DEBUG_CHANGELOG_FILE_OLD = Path("Resources/Changelog/Old.yml")
 DEBUG_DISCORD_DUMP_FILE = Path("Resources/Changelog/DiscordDebug.md")
@@ -26,7 +34,7 @@ DISCORD_SPLIT_LIMIT = 2000
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 TRUNCATION_SUFFIX = " [...]"
 
-CHANGELOG_FILE = "Resources/Changelog/TraumaChangelog.yml"
+CHANGELOG_FILE = os.environ.get("CHANGELOG_FILE") or "Resources/Changelog/ArcaneChangelog.yml" # Arcane-Edit: Trauma journal > Arcane journal
 
 TYPES_TO_EMOJI = {"Fix": "🐛", "Add": "🆕", "Remove": "❌", "Tweak": "⚒️"}
 
@@ -38,8 +46,9 @@ ChangelogEntry = dict[str, Any]
 
 def main():
     if not DEBUG and not DISCORD_WEBHOOK_URL:
-        print("No discord webhook URL found, skipping discord send")
-        return
+        # Arcane-Edit-Start: a skipped delivery must not become the next successful baseline.
+        raise RuntimeError("CHANGELOG_DISCORD_WEBHOOK is not configured; changelog was not sent")
+        # Arcane-Edit-End
 
     if DEBUG:
         # to debug this script locally, you can use
@@ -48,44 +57,62 @@ def main():
     else:
         # when running this normally in a GitHub actions workflow,
         # it will get the old changelog from the GitHub API
-        last_changelog_stream = get_last_changelog()
+        # Arcane-Edit-Start: persist confirmed messages across failed runs and workflow retries.
+        state = DeliveryState(os.environ["CHANGELOG_DELIVERY_STATE"])
+        state.save()
+        last_changelog_stream = get_last_changelog(state)
+        for key in os.environ.get("CHANGELOG_CONFIRMED_MESSAGES", "").split():
+            state.confirmed.add(key)
+            state.pending.discard(key)
+        for key in os.environ.get("CHANGELOG_RETRY_MESSAGES", "").split():
+            state.pending.discard(key)
+        state.prepared = True
+        state.save()
+        if state.pending:
+            raise RuntimeError("A previous Discord delivery is uncertain; inspect delivery.json and use the recovery inputs")
+        # Arcane-Edit-End
 
     last_changelog = yaml.safe_load(last_changelog_stream)
     with open(CHANGELOG_FILE, "r", encoding="utf-8-sig") as f:
         cur_changelog = yaml.safe_load(f)
 
     diff = diff_changelog(last_changelog, cur_changelog)
-    message_lines = changelog_entries_to_message_lines(diff)
-
+    # Arcane-Edit-Start: one Components V2 card per PR; debug uses the identical payloads.
+    payloads = (payload for entry in diff for payload in render_entry(entry))
     if DEBUG:
-        dump_debug_markdown(message_lines)
+        payloads = list(payloads)
+        output = Path(os.environ.get("CHANGELOG_DEBUG_OUTPUT", "Resources/Changelog/DiscordDebug.json"))
+        output.write_text(json.dumps(payloads, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"Wrote {len(payloads)} Discord messages to {output}")
         return
 
-    send_message_lines(message_lines)
+    with requests.Session() as session:
+        for payload in payloads:
+            state.deliver(payload, lambda message: send_card(session, message))
+    # Arcane-Edit-End
 
 
 def get_most_recent_workflow(
     sess: requests.Session, github_repository: str, github_run: str
 ) -> Any:
     workflow_run = get_current_run(sess, github_repository, github_run)
-    # <Trauma> - sort it to fix dogshit github api change
+    # Arcane-Edit-Start: compare completion times, including reruns of older builds.
     past_runs = list(get_past_runs(sess, workflow_run))
-    past_runs.sort(key=lambda r: r["created_at"], reverse=True)
-    return past_runs[0]
-    # </Trauma>
+    return max(past_runs, key=lambda run: run.get("updated_at", run["created_at"]), default=None)
+    # Arcane-Edit-End
 
 
 def get_current_run(
     sess: requests.Session, github_repository: str, github_run: str
 ) -> Any:
     resp = sess.get(
-        f"{GITHUB_API_URL}/repos/{github_repository}/actions/runs/{github_run}"
+        f"{GITHUB_API_URL}/repos/{github_repository}/actions/runs/{github_run}", timeout=30 # Arcane-Edit: bounded request
     )
     resp.raise_for_status()
     return resp.json()
 
 
-def get_past_runs(sess: requests.Session, current_run: Any) -> Iterable[Any]:
+def get_past_runs(sess: requests.Session, current_run: Any, include_failed: bool = False) -> Iterable[Any]: # Arcane-Edit: failed runs may contain delivery receipts
     """
     Get all successful workflow runs before our current one.
     """
@@ -94,15 +121,19 @@ def get_past_runs(sess: requests.Session, current_run: Any) -> Iterable[Any]:
         "per_page": 100,
     }
     url = f"{current_run['workflow_url']}/runs"
-    now = current_run["created_at"]
+    now = current_run.get("run_started_at", current_run["created_at"]) # Arcane-Edit: use the current attempt's start time
 
     while url:
-        resp = sess.get(url, params=params)
+        resp = sess.get(url, params=params, timeout=30) # Arcane-Edit: bounded request
         resp.raise_for_status()
 
         for run in resp.json()["workflow_runs"]:
             # First past successful run that isn't our current run.
-            if run["id"] == current_run["id"] or run["status"] != "completed" or run["created_at"] >= now:
+            # Arcane-Edit-Start: select the same publication branch, including failed deliveries when requested.
+            if (run["id"] == current_run["id"] or run["status"] != "completed"
+                or (not include_failed and run.get("conclusion") != "success")
+                or run.get("head_branch") != current_run.get("head_branch") or run.get("updated_at", run["created_at"]) > now):
+            # Arcane-Edit-End
                 continue
 
             yield run
@@ -115,7 +146,7 @@ def get_past_runs(sess: requests.Session, current_run: Any) -> Iterable[Any]:
         params = None
 
 
-def get_last_changelog() -> str:
+def get_last_changelog(state=None) -> str: # Arcane-Edit: restore delivery receipts alongside the published snapshot
     github_repository = os.environ["GITHUB_REPOSITORY"]
     github_run = os.environ["GITHUB_RUN_ID"]
     github_token = os.environ["GITHUB_TOKEN"]
@@ -125,14 +156,41 @@ def get_last_changelog() -> str:
     session.headers["Accept"] = "application/vnd.github+json"
     session.headers["X-GitHub-Api-Version"] = "2022-11-28"
 
-    most_recent = get_most_recent_workflow(session, github_repository, github_run)
-    last_sha = most_recent["head_commit"]["id"]
+    # Arcane-Edit-Start: the packaged journal is authoritative, including recovered PRs.
+    current = get_current_run(session, github_repository, github_run)
+    runs = list(get_past_runs(session, current, include_failed=True))
+    successful = [run for run in runs if run.get("conclusion") == "success"]
+    completed_at = lambda run: run.get("updated_at", run["created_at"])
+    most_recent = max(successful, key=completed_at, default=None)
+    base_run = os.environ.get("CHANGELOG_BASE_RUN_ID")
+    if base_run:
+        if not base_run.isdecimal():
+            raise ValueError("CHANGELOG_BASE_RUN_ID must be a run ID")
+        most_recent = get_current_run(session, github_repository, base_run)
+        if (most_recent.get("head_branch") != current.get("head_branch") or most_recent["status"] != "completed"
+            or most_recent.get("workflow_url") != current.get("workflow_url")):
+            raise ValueError("The recovery baseline must be a completed publication of this branch")
+    if state is not None:
+        failed = [run for run in runs if run.get("conclusion") != "success"
+                  and (most_recent is None or completed_at(run) > completed_at(most_recent))]
+        if current.get("run_attempt", 1) > 1:
+            failed.append(current)
+        restore_receipts(session, GITHUB_API_URL, github_repository, failed, state)
+    if most_recent is None:
+        return "Entries: []"
+    saved = [a for a in artifacts(session, GITHUB_API_URL, github_repository, most_recent["id"])
+             if a["name"] == "published-changelog"]
+    if saved:
+        return read_artifact(session, saved[0], "ArcaneChangelog.yml")
+    last_sha = most_recent["head_sha"]
     print(f"Last successful publish job was {most_recent['id']}: {last_sha}")
     last_changelog_stream = get_last_changelog_by_sha(
         session, last_sha, github_repository
     )
-
+    if yaml.safe_load(last_changelog_stream).get("Entries"):
+        raise RuntimeError("The last published journal snapshot is missing; restore its artifact before sending")
     return last_changelog_stream
+    # Arcane-Edit-End
 
 
 def get_last_changelog_by_sha(
@@ -150,7 +208,12 @@ def get_last_changelog_by_sha(
         f"{GITHUB_API_URL}/repos/{github_repository}/contents/{CHANGELOG_FILE}",
         headers=headers,
         params=params,
+        timeout=30, # Arcane
     )
+    # Arcane-Start: a successful build before introducing ArcaneChangelog.yml has no Arcane entries.
+    if resp.status_code == 404:
+        return "Entries: []"
+    # Arcane-End
     resp.raise_for_status()
     return resp.text
 
@@ -161,8 +224,15 @@ def diff_changelog(
     """
     Find all new entries not present in the previous publish.
     """
-    old_entry_ids = {e["id"] for e in old["Entries"]}
-    return (e for e in cur["Entries"] if e["id"] not in old_entry_ids)
+    # Arcane-Edit-Start: recovered build entries can have different IDs from later committed entries.
+    def key(entry):
+        return entry.get("url") or entry["id"]
+    old_entry_ids = {key(entry) for entry in old["Entries"]}
+    current_entry_ids = {key(entry) for entry in cur["Entries"]}
+    if not old_entry_ids <= current_entry_ids:
+        raise RuntimeError("The journal omits previously published PRs; refusing to reset the Discord baseline to an older or incomplete history")
+    return (entry for entry in cur["Entries"] if key(entry) not in old_entry_ids)
+    # Arcane-Edit-End
 
 
 def get_discord_body(content: str):
@@ -304,6 +374,47 @@ def send_message_lines(message_lines: list[str]):
         print("Sending final changelog to discord")
         send_discord_webhook(chunks[-1])
 
+
+# Arcane-Start
+def send_card(session, payload):
+    """Retry explicit rate limits only; an uncertain POST must not be replayed."""
+    parsed = urllib.parse.urlsplit(DISCORD_WEBHOOK_URL or "")
+    if parsed.scheme != "https" or parsed.hostname not in ("discord.com", "discordapp.com") or not re.fullmatch(r"/api(?:/v\d+)?/webhooks/\d+/[^/]+", parsed.path):
+        raise ValueError("DISCORD_WEBHOOK_URL must be a Discord HTTPS webhook")
+    query = dict(urllib.parse.parse_qsl(parsed.query))
+    query.update(wait="true", with_components="true")
+    target = urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(query)))
+    for attempt in range(6):
+        try:
+            response = session.post(target, json=payload, timeout=30)
+        except requests.RequestException:
+            raise RuntimeError("Discord delivery could not be confirmed; inspect the channel before retrying") from None
+        if response.status_code == 429 and attempt < 5:
+            try:
+                delay = float(response.json()["retry_after"])
+            except (ValueError, TypeError, KeyError):
+                raise RuntimeError("Discord returned an invalid rate-limit response") from None
+            if not 0 <= delay <= 60:
+                raise RuntimeError("Discord rate-limit delay exceeds the retry budget")
+            time.sleep(max(delay, 0.05))
+            continue
+        if response.status_code == 400:
+            fallback = link_fallback(payload)
+            if fallback:
+                print("Discord rejected a gallery; preserving its media as links")
+                return fallback
+        if 400 <= response.status_code < 500:
+            raise RejectedDelivery(f"Discord rejected the changelog (HTTP {response.status_code})")
+        if not 200 <= response.status_code < 300:
+            raise RuntimeError(f"Discord rejected the changelog (HTTP {response.status_code})")
+        try:
+            message_id = response.json()["id"]
+            if not isinstance(message_id, str) or not message_id.isdecimal():
+                raise ValueError("Invalid Discord message ID")
+        except (ValueError, KeyError, TypeError):
+            raise RuntimeError("Discord returned no confirmed message ID; inspect the channel before retrying") from None
+        return {"message_id": message_id}
+# Arcane-End
 
 if __name__ == "__main__":
     # Trauma - removed try catch so it can actually be debugged idiots

@@ -19,7 +19,7 @@ namespace Content.Client.Changelog
         [Dependency] private IConfigurationManager _configManager = default!;
 
         private const string SawmillName = "changelog";
-        public const string MainChangelogName = "Traumalog";
+        public const string MainChangelogName = "Arcane"; // Arcane-Edit: Traumalog > Arcane
 
         private ISawmill _sawmill = default!;
 
@@ -42,7 +42,7 @@ namespace Content.Client.Changelog
             NewChangelogEntries = false;
             NewChangelogEntriesChanged?.Invoke();
 
-            using var sw = _resource.UserData.OpenWriteText(new ($"/changelog_last_seen_{_configManager.GetCVar(CCVars.ServerId)}"));
+            using var sw = _resource.UserData.OpenWriteText(new ($"/changelog_last_seen_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}")); // Arcane-Edit: isolate read IDs from upstream journals
 
             sw.Write(MaxId.ToString());
         }
@@ -69,7 +69,7 @@ namespace Content.Client.Changelog
                 return;
             }
 
-            var changelog = changelogs[0];
+            var changelog = mainChangelogs[0]; // Arcane-Edit: use the named journal regardless of tab ordering
             if (mainChangelogs.Length > 1)
             {
                 _sawmill.Error($"More than one file found in Resource/Changelog with name {MainChangelogName}");
@@ -87,11 +87,13 @@ namespace Content.Client.Changelog
 
         private void CheckLastSeenEntry()
         {
-            var path = new ResPath($"/changelog_last_seen_{_configManager.GetCVar(CCVars.ServerId)}");
-            if (_resource.UserData.TryReadAllText(path, out var lastReadIdText))
-            {
-                LastReadId = int.Parse(lastReadIdText);
-            }
+            // Arcane-Edit-Start: isolate journals and reset absent or damaged per-server read markers.
+            var path = new ResPath($"/changelog_last_seen_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}");
+            LastReadId = _resource.UserData.TryReadAllText(path, out var lastReadIdText) &&
+                         int.TryParse(lastReadIdText, out var lastReadId)
+                ? Math.Max(0, lastReadId)
+                : 0;
+            // Arcane-Edit-End
 
             NewChangelogEntries = LastReadId < MaxId;
 
