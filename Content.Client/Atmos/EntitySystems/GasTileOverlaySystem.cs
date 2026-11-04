@@ -4,6 +4,7 @@ using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.EntitySystems;
 using JetBrains.Annotations;
 using Robust.Shared.GameStates;
+using Robust.Shared.Utility; // Arcane
 
 namespace Content.Client.Atmos.EntitySystems;
 
@@ -52,6 +53,7 @@ public sealed partial class GasTileOverlaySystem : SharedGasTileOverlaySystem
 
         foreach (var (index, data) in modifiedChunks)
         {
+            UpdateTileMasks(data); // Arcane
             comp.Chunks[index] = data;
         }
     }
@@ -80,8 +82,42 @@ public sealed partial class GasTileOverlaySystem : SharedGasTileOverlaySystem
 
             foreach (var chunkData in gridData)
             {
+                UpdateTileMasks(chunkData); // Arcane
                 comp.Chunks[chunkData.Index] = chunkData;
             }
         }
     }
+
+    // Arcane-Start
+    private static void UpdateTileMasks(GasOverlayChunk chunk)
+    {
+        DebugTools.Assert(ChunkSize * ChunkSize <= sizeof(ulong) * 8, "Gas chunks no longer fit in the tile masks.");
+
+        var visibleGasTiles = 0ul;
+        var fireTiles = 0ul;
+
+        for (var i = 0; i < chunk.TileData.Length; i++)
+        {
+            ref var tile = ref chunk.TileData[i];
+
+            if (tile.FireState != 0)
+                fireTiles |= 1ul << i;
+
+            if (tile.Opacity == null)
+                continue;
+
+            foreach (var opacity in tile.Opacity)
+            {
+                if (opacity == 0)
+                    continue;
+
+                visibleGasTiles |= 1ul << i;
+                break;
+            }
+        }
+
+        chunk.VisibleGasTiles = visibleGasTiles;
+        chunk.FireTiles = fireTiles;
+    }
+    // Arcane-End
 }
