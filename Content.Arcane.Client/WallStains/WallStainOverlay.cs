@@ -50,6 +50,10 @@ public sealed partial class WallStainOverlay : Overlay
         var query = _entities.EntityQueryEnumerator<WallStainComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var stain, out var stainTransform))
         {
+            // Without any fill the stain has no colour from the server yet, it would show up white.
+            if (stain.FillLevel <= 0f)
+                continue;
+
             var position = _transform.GetWorldPosition(stainTransform);
             if (stainTransform.MapID != args.MapId ||
                 !_entities.TryGetComponent<StainedWallComponent>(stainTransform.ParentUid, out _) ||
