@@ -15,12 +15,17 @@ public sealed partial class ArtificerHealSystem : EntitySystem
 {
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private BloodCultSystem _cult = default!; // Arcane
 
     [SubscribeLocalEvent]
     private void OnBeforeHarmfulAction(Entity<ConstructComponent> ent, ref BeforeHarmfulActionEvent args)
     {
-        if (args.Cancelled || args.Type != HarmfulActionType.Harm)
+        // Arcane-Edit-Start: Only repair constructs belonging to the artificer's cult.
+        if (args.Cancelled || args.Type != HarmfulActionType.Harm
+            || _cult.GetRule(ent.Owner) is not { } rule
+            || _cult.GetRule(args.User)?.Owner != rule.Owner)
             return;
+        // Arcane-Edit-End
 
         if (TryComp<ArtificerHealComponent>(args.User, out var artificer))
         {

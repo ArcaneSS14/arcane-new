@@ -61,7 +61,7 @@ public sealed partial class ServerTurbineSystem : TurbineSystem
         if (!_machine.GetPipes(uid, out var inlet, out var outlet))
             return;
 
-        if (comp.CurrentBlade == null || comp.CurrentStator == null && comp.RPM > 10)
+        if ((comp.CurrentBlade == null || comp.CurrentStator == null) && comp.RPM > 10) // Arcane-Edit: Either missing part ruins only a spinning turbine.
             SetRuined(ent);
 
         UpdateAppearance(ent);

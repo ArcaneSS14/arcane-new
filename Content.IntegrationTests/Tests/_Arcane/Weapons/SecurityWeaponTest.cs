@@ -18,7 +18,7 @@ public sealed class SecurityWeaponTest : InteractionTest
     private static readonly EntProtoId Betty = "Betty";
     private static readonly EntProtoId Stunbaton = "Stunbaton";
     private static readonly EntProtoId Human = "MobHuman";
-    private static readonly EntProtoId CounterattackWeapon = "TestArcaneCounterattackWeapon";
+    private const string CounterattackWeapon = "TestArcaneCounterattackWeapon";
 
     [TestPrototypes]
     private const string Prototypes = """

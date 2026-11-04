@@ -56,7 +56,7 @@ public sealed partial class PassiveDamageSystem : EntitySystem
 
             // <Trauma>
             if (comp.PauseWhenStored && _container.TryGetContainingContainer(uid, out _)) // Prevents damage if PauseWhenContained bool is true and entity is inside a container
-                return;
+                continue; // Arcane-Edit: Skip only the stored entity, not every remaining passive-damage entity.
             // </Trauma>
 
             // Set the next time they can take damage
@@ -67,7 +67,7 @@ public sealed partial class PassiveDamageSystem : EntitySystem
             if (comp.AllowedStates == null || !TryComp<MobStateComponent>(uid, out var mobState))
             {
                 _damageable.ChangeDamage((uid, damage), comp.Damage, true, false);
-                return;
+                continue; // Arcane-Edit: Continue updating other entities after applying unrestricted passive damage.
             }
 
             // Damage them

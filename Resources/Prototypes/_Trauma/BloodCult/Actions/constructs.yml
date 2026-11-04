@@ -53,7 +53,7 @@
   description: This spell constructs a cult wall.
   components:
   - type: Sprite
-    sprite: Structures/Walls/cult.rsi
+    sprite: _Arcane/Structures/Walls/cult.rsi # Arcane-Edit: Use the existing Arcane cult wall sprite.
     layers:
     - state: full
   - type: Action
