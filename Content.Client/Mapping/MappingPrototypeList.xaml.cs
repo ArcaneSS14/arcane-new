@@ -7,6 +7,7 @@ using Robust.Client.UserInterface.CustomControls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using static Robust.Client.UserInterface.Controls.BaseButton;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Mapping;
 
@@ -79,6 +80,7 @@ public sealed partial class MappingPrototypeList : Control
         }
 
         list.AddChild(button);
+        UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(button, list.ChildCount - 1); // Arcane
 
         button.Button.OnToggled += _ => SelectionChanged?.Invoke(button, prototype);
 

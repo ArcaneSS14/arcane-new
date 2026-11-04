@@ -136,12 +136,14 @@ namespace Content.Client.Voting
                 _voteSource?.Restart();
                 @new = true;
 
+                // Arcane-Edit-Start: keep existing vote controls alive so only the new vote animates.
                 // Refresh
-                var container = _popupContainer;
-                ClearPopupContainer();
-
-                if (container != null)
-                    SetPopupContainer(container);
+                // var container = _popupContainer;
+                // ClearPopupContainer();
+                //
+                // if (container != null)
+                //     SetPopupContainer(container);
+                // Arcane-Edit-End
 
                 // New vote from the server.
                 var vote = new ActiveVote(voteId)

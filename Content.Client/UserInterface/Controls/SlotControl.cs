@@ -227,12 +227,10 @@ namespace Content.Client.UserInterface.Controls
         /// </summary>
         public void SetEntity(EntityUid? ent)
         {
-            var changed = BeginSlotChange(ent, null, false); // Arcane
             SpriteView.SetEntity(ent);
             SpriteView.Visible = true;
             ProtoView.Visible = false;
             UpdateButtonTexture();
-            if (changed) AnimateSlotIcon(SpriteView); // Arcane
         }
 
         /// <summary>
@@ -250,15 +248,12 @@ namespace Content.Client.UserInterface.Controls
         /// </summary>
         public void SetPrototype(EntProtoId? proto, bool fade)
         {
-            var changed = BeginSlotChange(null, proto, fade); // Arcane
             ProtoView.SetPrototype(proto);
             SpriteView.SetEntity(null); // Arcane
             SpriteView.Visible = false;
             ProtoView.Visible = true;
 
             UpdateButtonTexture();
-
-            if (changed) AnimateSlotIcon(ProtoView); // Arcane
 
             if (ProtoView.Entity is not { } ent || !fade)
                 return;

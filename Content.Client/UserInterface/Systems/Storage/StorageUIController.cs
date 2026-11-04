@@ -23,6 +23,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
 using Robust.Shared.Input;
 using Robust.Shared.Timing;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Storage;
 
@@ -176,6 +177,10 @@ public sealed partial class StorageUIController : UIController, IOnSystemChanged
         }
 
         _ui.RegisterControl(sBui, window);
+        // Arcane-Start
+        if (StaticStorageUIEnabled)
+            UIManager.GetUIController<UiMotionUIController>().AnimateWindow(window);
+        // Arcane-End
         return window;
     }
 

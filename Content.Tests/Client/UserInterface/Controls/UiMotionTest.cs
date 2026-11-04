@@ -43,6 +43,15 @@ public sealed partial class UiMotionTest : RobustUnitTest
         }
     }
 
+    private sealed class TestSwitchButton : Content.Client.UserInterface.Controls.SwitchButton
+    {
+        public void Click()
+        {
+            base.KeyBindDown(new GUIBoundKeyEventArgs(EngineKeyFunctions.UIClick, BoundKeyState.Down, default, true, Vector2.Zero, Vector2.Zero));
+            base.KeyBindUp(new GUIBoundKeyEventArgs(EngineKeyFunctions.UIClick, BoundKeyState.Up, default, true, Vector2.Zero, Vector2.Zero));
+        }
+    }
+
     private sealed class TestButton : Button
     {
         public void Hover(bool value)
@@ -377,6 +386,22 @@ public sealed partial class UiMotionTest : RobustUnitTest
         checkbox.Click();
         Assert.That(checkbox.Pressed, Is.False);
         Assert.That(checkbox.TextureRect.Modulate, Is.EqualTo(Color.White));
+    }
+
+    [Test]
+    public void SwitchStateChangesImmediatelyAndUsesToggleFeedback()
+    {
+        _window = new TestWindow();
+        var toggle = new TestSwitchButton { MuteSounds = true };
+        _window.AddChild(toggle);
+        _window.Open();
+        _controller.FrameUpdate(new FrameEventArgs(2));
+        toggle.Click();
+        Assert.That(toggle.Pressed, Is.True);
+        Assert.That(toggle.ThumbFill.Modulate.A, Is.LessThan(1));
+        _configuration.SetCVar(S.Checkboxes, false);
+        _controller.FrameUpdate(new FrameEventArgs(0));
+        Assert.That(toggle.ThumbFill.Modulate, Is.EqualTo(Color.White));
     }
 
     [Test]

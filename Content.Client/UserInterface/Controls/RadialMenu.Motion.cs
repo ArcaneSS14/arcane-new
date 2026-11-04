@@ -26,7 +26,7 @@ public partial class RadialMenu
     private void UpdateRadialMotion()
     {
         _motionExit.Profile = new UiMotionProfile(TimeSpan.Zero,
-            TimeSpan.FromMilliseconds(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.RadialExitMs, 0, 1000)),
+            TimeSpan.Zero,
             0, false) { Opening = false, Sequence = false };
     }
 

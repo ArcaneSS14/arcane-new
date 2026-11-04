@@ -12,7 +12,7 @@ public sealed partial class ContextMenuPopup
         {
             if (ParentElement == null)
                 _uiController.ClearExitVisuals();
-            Motion.UseMenuProfile();
+            Motion.UseStableMenuProfile();
             Motion.Show();
         }
         base.Open(box, altPos, altPosUp);

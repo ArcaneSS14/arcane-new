@@ -32,23 +32,25 @@ and [motion specifications](https://m3.material.io/styles/motion/overview/specs)
 
 | Surface | Behaviour | Settings prefix |
 | --- | --- | --- |
-| Context menus | Entrance, local item sequence, inert exit image | `ui.motion_menu_*`, `ui.animation_closing` |
+| Context menus | Stable entrance fade and local item sequence; no spatial or exit snapshot motion | `ui.motion_menu_*` |
 | Main window root | Expressive spatial entrance with a faster fade; buttons sequence within their own parent | `ui.motion_windows`, `ui.motion_window_enter_ms`, `ui.motion_window_travel`, `ui.motion_button*` |
-| Buttons | Effects-spring hover state and faster press state without changing hit geometry | `ui.motion_button_hover*`, `ui.motion_button_press*` |
+| Buttons and machine switches | Effects-spring hover/press state plus local ON/OFF thumb feedback without changing hit geometry | `ui.motion_button_hover*`, `ui.motion_button_press*`, `ui.motion_checkbox*` |
 | Dropdown menus | Expressive spatial entrance, fast fade and ordered item reveal | `ui.motion_dropdown*` |
-| TabContainer pages | Fade on selection without moving content or changing hit areas | `ui.motion_tabs*` |
+| TabContainer pages | Fade on selection, including separated Status/Emotes/Config, without moving content or changing hit areas | `ui.motion_tabs*` |
 | Vote popups | Fade and horizontal entrance from the left; normal vote input begins at its final position | `ui.motion_votes*` |
 | Popups and tooltips | Entrance fade; immediate close; no second fade on their children | `ui.motion_popups*` |
-| SlotControl (inventory/hands/belt) | Icon fade/scale, transient outgoing icon, highlight fade | `ui.motion_slot*` |
+| SlotControl (inventory/hands/belt) | Item changes are immediate; optional highlight feedback only | `ui.motion_slot*` |
 | Storage grid | Icon entrance; outgoing visual copy except during dragging | `ui.motion_slot*` |
 | Action hotbar | Local icon sequence and optional border pulse at cooldown boundaries | `ui.motion_actions*` |
-| Alerts | Icon entrance/exit fade, optional single severity border pulse | `ui.motion_alerts*` |
-| Chat | New unread message border indicator; no replay for coalesced repeats | `ui.motion_chat*` |
+| Alerts | Owner-triggered 32 px expressive bounce from the right on add/severity update; removal stays immediate | `ui.motion_alerts*` |
+| Chat | New unread message border indicator plus explicit channel-selector/filter popup entrance | `ui.motion_chat*`, `ui.motion_popups*` |
 | AHelp and changelog | Channel/tab transition and notification feedback; message history keeps its layout | `ui.motion_tabs*`, `ui.motion_notifications*` |
 | Power monitoring | Separate display interpolation; target value changes immediately | `ui.motion_progress*` |
-| Radial menus | Sector sequence, hover colour/outer-radius interpolation, snapshot exit | `ui.motion_radial*` |
+| Radial menus | Sector sequence and hover colour/outer-radius interpolation; close stays immediate | `ui.motion_radial*` |
 | Player lists and guide navigation | Bounded sequence of rows, without moving their hit areas | `ui.motion_lists*` |
 | Speech bubbles | Entrance/exit, optional movement and text reveal | `ui.motion_bubble*`, `ui.motion_speech*` |
+| Inventory, PDA and machine lists | Inventory/storage panel transition; PDA only uses normal whole-window entrance; new ChemMaster, dispenser, mapping, outfit, lathe and queue rows | `ui.motion_windows*`, `ui.motion_lists*` |
+| Concurrent votes | Only a newly-created vote enters; existing vote controls keep state and position | `ui.motion_votes*` |
 
 ### XAML audit
 
@@ -75,11 +77,12 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
   there is no per-frame tree scan.
 - `UiMotionVisual` changes dedicated visual children and restores the original tint/scale, preserving owner changes.
   Slot entity references, action state, cooldown time, input filters and hit geometry stay independent of the transition.
-- A slot retains at most one outgoing icon. Removing its entity, hiding/removing the slot or disabling its group clears it.
-  Prototype previews use a separate EntityPrototypeView with its normal entity cleanup.
+- A slot never reparents, clones, snapshots, scales or fades its item visual. Item changes are immediate, so repeated
+  equipment-panel opens cannot change layout or retain an outgoing entity.
 - `UiMotionContainer` captures through public render APIs. Exit images contain a texture, never live window controls.
   Captures are released on hide/removal, resize, disable or transfer; snapshots release their texture when orphaned.
-  Captures above 4,194,304 pixels are skipped. Radial menus require an additional capture render while visible.
+  Captures above 4,194,304 pixels are skipped. Live controls render directly by default so transparent HUD surfaces do
+  not inherit a render-target background. PDA pages and transparent HUD item slots do not use render targets.
 - Time-based cooldown rendering already updates from the actual clock; it is reused without delaying readiness.
 
 ## Deliberate limits
@@ -88,7 +91,8 @@ Subtle, Expressive and Reduced presets stage values in the normal options workfl
   control before notifying content. Delaying that close would retain focus and BUI state; continuously caching all
   windows would add unacceptable GPU cost. Existing inert snapshots remain limited to opt-in menus and radial surfaces.
 - OutputPanel stores private RichTextEntry values, not row controls. Chat uses a border indicator, not per-line fades.
-- Alerts and storage use a conservative fade rather than layout scale. Storage exit copies can simplify rotated/custom item placement.
+- Alerts and storage use a conservative fade rather than layout scale. Radial and alert removal are immediate because
+  their prior render-target snapshots could show opaque backgrounds on some GPUs.
 - Text reveal uses sandbox-permitted Rune APIs. Combining marks, common emoji sequences, flags and CRLF stay together;
   decomposed Hangul and Indic consonant conjuncts can reveal in multiple steps. This is not full UAX #29 segmentation.
   Text outlines are temporarily disabled during reveal because engine outlines ignore transparent text colour.

@@ -8,6 +8,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Chemistry.UI
 {
@@ -21,6 +22,7 @@ namespace Content.Client.Chemistry.UI
         [Dependency] private IEntityManager _entityManager = default!;
         public event Action<ItemStorageLocation>? OnDispenseReagentButtonPressed;
         public event Action<ItemStorageLocation>? OnEjectJugButtonPressed;
+        private HashSet<ReagentId> _displayedOutputReagents = []; // Arcane
 
         /// <summary>
         /// Create and initialize the dispenser UI client-side. Creates the basic layout,
@@ -90,6 +92,7 @@ namespace Content.Client.Chemistry.UI
 
             if (state.OutputContainer is null)
             {
+                _displayedOutputReagents.Clear(); // Arcane
                 ContainerInfoName.Text = "";
                 ContainerInfoFill.Text = "";
                 ContainerInfo.Children.Add(new Label { Text = Loc.GetString("reagent-dispenser-window-no-container-loaded-text") });
@@ -100,8 +103,13 @@ namespace Content.Client.Chemistry.UI
             ContainerInfoName.Text = state.OutputContainer.DisplayName;
             ContainerInfoFill.Text = state.OutputContainer.CurrentVolume + "/" + state.OutputContainer.MaxVolume;
 
+            // Arcane-Start
+            var currentReagents = new HashSet<ReagentId>();
+            var rowIndex = 0;
+            // Arcane-End
             foreach (var (reagent, quantity) in state.OutputContainer.Reagents!)
             {
+                currentReagents.Add(reagent); // Arcane
                 // Try get to the prototype for the given reagent. This gives us its name.
                 var localizedName = _prototypeManager.TryIndex(reagent.Prototype, out ReagentPrototype? p)
                     ? p.LocalizedName
@@ -114,7 +122,7 @@ namespace Content.Client.Chemistry.UI
                     StyleClasses = { StyleClass.LabelWeak },
                 };
 
-                ContainerInfo.Children.Add(new BoxContainer
+                var row = new BoxContainer // Arcane-Edit: anonymous rebuilt row > tracked row with new-item motion
                 {
                     Orientation = LayoutOrientation.Horizontal,
                     Children =
@@ -122,8 +130,15 @@ namespace Content.Client.Chemistry.UI
                         nameLabel,
                         quantityLabel,
                     }
-                });
+                };
+                // Arcane-Start
+                ContainerInfo.Children.Add(row);
+                if (!_displayedOutputReagents.Contains(reagent))
+                    UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(row, rowIndex);
+                rowIndex++;
+                // Arcane-End
             }
+            _displayedOutputReagents = currentReagents; // Arcane
         }
     }
 }

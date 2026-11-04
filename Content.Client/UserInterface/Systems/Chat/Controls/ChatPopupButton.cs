@@ -1,6 +1,7 @@
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Chat.Controls;
 
@@ -52,6 +53,7 @@ public abstract class ChatPopupButton<TPopup> : Button
         if (args.Pressed)
         {
             Popup.Open(GetPopupPosition());
+            UserInterfaceManager.GetUIController<UiMotionUIController>().AnimatePopup(Popup); // Arcane
         }
         else
         {

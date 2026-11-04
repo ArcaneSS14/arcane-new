@@ -60,7 +60,7 @@ public sealed partial class UiMotionTest
     }
 
     [Test]
-    public void SlotClearsLogicalEntityImmediatelyAndReleasesDeletedExitSprite()
+    public void SlotClearsLogicalEntityImmediatelyWithoutAddingLiveExitSprite()
     {
         PrepareSlotPrototypes();
         var entities = IoCManager.Resolve<IEntityManager>();
@@ -82,7 +82,7 @@ public sealed partial class UiMotionTest
             Assert.That(slot.Size, Is.EqualTo(new Vector2(64)));
             slot.SetEntity(null);
             Assert.That(slot.Entity, Is.Null);
-            Assert.That(slot.ChildCount, Is.EqualTo(children + 1));
+            Assert.That(slot.ChildCount, Is.EqualTo(children));
             entities.DeleteEntity(item);
             slot.Step(0.01f);
             Assert.That(slot.ChildCount, Is.EqualTo(children));
@@ -95,7 +95,7 @@ public sealed partial class UiMotionTest
     }
 
     [Test]
-    public void SlotPrototypeExitsAreBoundedAndDisableRestoresHighlight()
+    public void SlotPrototypeChangesAreBoundedAndDisableRestoresHighlight()
     {
         PrepareSlotPrototypes();
         _window = new TestWindow();
@@ -107,7 +107,7 @@ public sealed partial class UiMotionTest
         {
             slot.SetPrototype("UiMotionTestItem", false);
             slot.SetPrototype(null, false);
-            Assert.That(slot.ChildCount, Is.EqualTo(children + 1));
+            Assert.That(slot.ChildCount, Is.EqualTo(children));
         }
         slot.Highlight = true;
         _configuration.SetCVar(S.Enabled, false);
@@ -149,14 +149,13 @@ public sealed partial class UiMotionTest
         Default(S.Slots);
         Default(S.SlotEnterMs);
         Default(S.SlotExitMs);
-        Default(S.SlotScale);
         Default(S.SlotHighlight);
         Default(S.Actions);
         Default(S.ActionsEnterMs);
         Default(S.ActionsCooldownPulse);
         Default(S.Alerts);
         Default(S.AlertsEnterMs);
-        Default(S.AlertsExitMs);
+        Default(S.AlertsTravel);
         Default(S.AlertsSeverityPulse);
         Default(S.Chat);
         Default(S.ChatMs);
@@ -166,7 +165,6 @@ public sealed partial class UiMotionTest
         Default(S.ProgressMs);
         Default(S.Radial);
         Default(S.RadialEnterMs);
-        Default(S.RadialExitMs);
         Default(S.RadialHover);
         Default(S.RadialHoverScale);
         Default(S.Lists);
@@ -284,6 +282,26 @@ public sealed partial class UiMotionTest
     }
 
     [Test]
+    public void SwitchingTabsAnimatesOnlyTheNewPage()
+    {
+        _window = new TestWindow();
+        var tabs = new TabContainer();
+        var first = new Label();
+        var second = new Label();
+        tabs.AddChild(first);
+        tabs.AddChild(second);
+        _window.AddChild(tabs);
+        _window.Open();
+        _controller.FrameUpdate(new FrameEventArgs(2));
+        Assert.That(first.Modulate, Is.EqualTo(Color.White));
+
+        tabs.CurrentTab = 1;
+        _controller.FrameUpdate(new FrameEventArgs(0.02f));
+        Assert.That(first.Modulate, Is.EqualTo(Color.White));
+        Assert.That(second.Modulate.A, Is.InRange(0.01f, 0.99f));
+    }
+
+    [Test]
     public void ReducedMotionRemovesDelayScaleAndCheckboxPulse()
     {
         _configuration.SetCVar(S.Reduce, true);
@@ -386,8 +404,8 @@ public sealed partial class UiMotionTest
     {
         var milliseconds = new[] { S.PopupsMs, S.DropdownEnterMs, S.DropdownItemMs,
             S.SlotEnterMs, S.SlotExitMs, S.ActionsEnterMs,
-            S.AlertsEnterMs, S.AlertsExitMs, S.ChatMs, S.ProgressMs,
-            S.RadialEnterMs, S.RadialExitMs, S.ListsEnterMs };
+            S.AlertsEnterMs, S.ChatMs, S.ProgressMs,
+            S.RadialEnterMs, S.ListsEnterMs };
         foreach (var setting in milliseconds)
         {
             _configuration.SetCVar(setting, float.NaN);
@@ -395,16 +413,16 @@ public sealed partial class UiMotionTest
             _configuration.SetCVar(setting, -1f);
             Assert.That(S.Read(_configuration, setting, 0, 1000), Is.Zero, setting.Name);
         }
-        _configuration.SetCVar(S.SlotScale, float.PositiveInfinity);
         _configuration.SetCVar(S.RadialHoverScale, -1f);
         _configuration.SetCVar(S.ButtonHoverIntensity, float.NaN);
         _configuration.SetCVar(S.ButtonPressIntensity, -1f);
         _configuration.SetCVar(S.DropdownTravel, float.PositiveInfinity);
-        Assert.That(S.Read(_configuration, S.SlotScale, 0, 0.25f), Is.EqualTo(S.SlotScale.DefaultValue));
+        _configuration.SetCVar(S.AlertsTravel, float.NaN);
         Assert.That(S.Read(_configuration, S.RadialHoverScale, 0, 0.15f), Is.Zero);
         Assert.That(S.Read(_configuration, S.ButtonHoverIntensity, 0, 0.2f), Is.EqualTo(S.ButtonHoverIntensity.DefaultValue));
         Assert.That(S.Read(_configuration, S.ButtonPressIntensity, 0, 0.2f), Is.Zero);
         Assert.That(S.Read(_configuration, S.DropdownTravel, 0, 24), Is.EqualTo(S.DropdownTravel.DefaultValue));
+        Assert.That(S.Read(_configuration, S.AlertsTravel, 0, 240), Is.EqualTo(S.AlertsTravel.DefaultValue));
     }
 
     [Test]

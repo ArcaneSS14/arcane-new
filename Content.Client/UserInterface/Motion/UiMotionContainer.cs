@@ -35,10 +35,21 @@ public sealed partial class UiMotionContainer : Control
     public UiMotionProfile Profile { get; set; } = UiMotionProfile.Standard;
     public CVarDef<bool> EnabledSetting { get; set; } = UiMotionSettings.Enabled;
     public CVarDef<bool> ClosingSetting { get; set; } = UiMotionSettings.AnimateClosing;
+    public bool ClampToRootBounds { get; set; } = true;
     public Vector2 TravelDirection { get; set; } = Vector2.UnitY;
     public Vector2 VisualOffset { get; private set; }
 
     public void UseMenuProfile() => Profile = UiMotionSettings.MenuProfile(_configuration);
+
+    public void UseStableMenuProfile()
+    {
+        Profile = UiMotionSettings.MenuProfile(_configuration) with
+        {
+            ExitDuration = TimeSpan.Zero,
+            Travel = 0,
+            Overshoot = false
+        };
+    }
 
     public UiMotionContainer()
     {
@@ -51,8 +62,8 @@ public sealed partial class UiMotionContainer : Control
     public void Show()
     {
         Profile = UiMotionSettings.Resolve(_configuration, Profile);
-        var opacity = 0f;
-        var offset = -Profile.Travel;
+        var opacity = _transition.Finished ? 0f : _transition.Opacity;
+        var offset = _transition.Finished ? -Profile.Travel : _transition.Offset;
         if (_exit is { IsInsideTree: true, Visible: true })
         {
             opacity = _exit.Opacity;
@@ -95,8 +106,9 @@ public sealed partial class UiMotionContainer : Control
     {
         if (_renderChild != null)
             return;
-        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting) || !_configuration.GetCVar(ClosingSetting)
-            || Profile.ExitDuration <= TimeSpan.Zero || control.PixelWidth <= 0 || control.PixelHeight <= 0
+        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting)
+            || !_configuration.GetCVar(ClosingSetting) || Profile.ExitDuration <= TimeSpan.Zero
+            || control.PixelWidth <= 0 || control.PixelHeight <= 0
             || (long) control.PixelWidth * control.PixelHeight > 4_194_304)
         {
             ReleaseTexture();
@@ -144,7 +156,7 @@ public sealed partial class UiMotionContainer : Control
     protected override Vector2 ArrangeOverride(Vector2 finalSize)
     {
         var offset = _transition.Offset * TravelDirection;
-        if (Root != null)
+        if (ClampToRootBounds && Root != null)
         {
             offset.X = Math.Clamp(offset.X, -GlobalPosition.X, Math.Max(-GlobalPosition.X, Root.Width - GlobalPosition.X - finalSize.X));
             offset.Y = Math.Clamp(offset.Y, -GlobalPosition.Y, Math.Max(-GlobalPosition.Y, Root.Height - GlobalPosition.Y - finalSize.Y));
@@ -176,23 +188,15 @@ public sealed partial class UiMotionContainer : Control
         }
 
         CaptureControl(child, args);
-        if (_texture == null)
-        {
-            base.RenderChildOverride(ref args, childIndex, position);
-            return;
-        }
-
-        var handle = args.Handle.DrawingHandleScreen;
-        var transform = handle.GetTransform();
-        var modulate = handle.Modulate;
-        handle.SetTransform(Matrix3x2.Identity);
-        UiMotionSnapshot.DrawImage(handle, _texture.Texture, UIBox2.FromDimensions(position, child.PixelSize),
-            _shader ??= _prototypes.Index(CompositeShader).Instance(), args.Modulate, _transition.Opacity);
-        handle.Modulate = modulate;
-        handle.SetTransform(transform);
+        // Render the live child. The render target is retained only for a later inert exit snapshot;
+        // drawing it here produced opaque backgrounds on transparent HUD controls on some GPUs.
+        var liveModulate = args.Modulate;
+        args.Modulate = liveModulate.WithAlpha(liveModulate.A * _transition.Opacity);
+        base.RenderChildOverride(ref args, childIndex, position);
+        args.Modulate = liveModulate;
         _renderedOpacity = _transition.Opacity;
         _renderedOffset = VisualOffset.Y;
-        _renderedTint = args.Modulate;
+        _renderedTint = liveModulate;
     }
 
     private void Capture()

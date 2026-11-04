@@ -1,6 +1,7 @@
 // Arcane-Start
 using Content.Client.UserInterface.Motion;
 using Robust.Shared.Configuration;
+using System.Numerics;
 
 namespace Content.Client.UserInterface.Systems.Alerts.Controls;
 
@@ -12,7 +13,13 @@ public sealed partial class AlertControl
 
     private void InitializeAlertMotion()
     {
-        _motionHost = new UiMotionContainer { EnabledSetting = UiMotionSettings.Alerts, ClosingSetting = UiMotionSettings.Alerts };
+        _motionHost = new UiMotionContainer
+        {
+            EnabledSetting = UiMotionSettings.Alerts,
+            ClosingSetting = UiMotionSettings.Alerts,
+            ClampToRootBounds = false,
+            TravelDirection = -Vector2.UnitX
+        };
         _motionHost.AddChild(_icon);
         AddChild(_motionHost);
         _motionFeedback = new UiMotionFeedback();
@@ -20,17 +27,24 @@ public sealed partial class AlertControl
         UpdateMotionProfile();
     }
 
-    private void UpdateMotionProfile()
+    private void UpdateMotionProfile(bool updating = false)
     {
+        var duration = UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.AlertsEnterMs, 0, 1000);
         _motionHost.Profile = new UiMotionProfile(
-            TimeSpan.FromMilliseconds(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.AlertsEnterMs, 0, 1000)),
-            TimeSpan.FromMilliseconds(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.AlertsExitMs, 0, 1000)),
-            0, false) { Sequence = false };
+            TimeSpan.FromMilliseconds(duration),
+            TimeSpan.Zero,
+            UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.AlertsTravel, 0, 240),
+            true)
+        {
+            EnterEffectDuration = UiMotionSettings.SpatialEffectDuration(duration),
+            Fade = !updating,
+            Sequence = false
+        };
     }
 
-    public void AnimateAppearance()
+    public void AnimateAppearance(bool updating = false)
     {
-        UpdateMotionProfile();
+        UpdateMotionProfile(updating);
         _motionHost.Show();
     }
 

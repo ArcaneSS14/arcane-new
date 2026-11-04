@@ -24,7 +24,8 @@ public sealed partial class ActionButton
     public void AnimateAppearance(float delay)
     {
         foreach (var motion in _motionIcons)
-            motion.Start(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.ActionsEnterMs, 0, 1000), delay: delay);
+            motion.Start(UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.ActionsEnterMs, 0, 1000),
+                shrink: 0.08f, delay: delay);
     }
 
     private void UpdateMotion(float delta)

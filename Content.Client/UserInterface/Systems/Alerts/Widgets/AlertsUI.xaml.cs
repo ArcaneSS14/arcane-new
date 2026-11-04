@@ -140,6 +140,7 @@ public sealed partial class AlertsUI : UIWidget
                     AlertContainer.Children.Add(newAlertControl);
                 }
 
+                newAlertControl.AnimateAppearance(); // Arcane
                 _alertControls[newAlert.AlertKey] = newAlertControl;
             }
         }

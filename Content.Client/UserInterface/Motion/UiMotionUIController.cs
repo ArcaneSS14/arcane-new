@@ -14,6 +14,7 @@ using Content.Client.Administration.UI.CustomControls;
 using Content.Client.Administration.UI.Tabs.PlayerTab;
 using TreeItem = Content.Client.UserInterface.Controls.FancyTree.TreeItem;
 using System.Numerics;
+using Content.Client.Mapping;
 
 namespace Content.Client.UserInterface.Motion;
 
@@ -44,6 +45,7 @@ public sealed partial class UiMotionUIController : UIController
         public Vector2? Origin;
         public Vector2? AppliedPosition;
         public bool PopupPosition;
+        public bool SuppressChildren;
     }
 
     private sealed class ButtonFeedback
@@ -79,8 +81,8 @@ public sealed partial class UiMotionUIController : UIController
             button.OnMouseExited += ButtonMouseExited;
             button.OnButtonDown += ButtonDown;
             button.OnButtonUp += ButtonUp;
-            if (button is CheckBox checkbox)
-                checkbox.OnToggled += CheckboxToggled;
+            if (button is CheckBox or SwitchButton)
+                button.OnToggled += ToggleToggled;
         }
         Queue(control);
         foreach (var child in control.Children)
@@ -101,8 +103,8 @@ public sealed partial class UiMotionUIController : UIController
             button.OnMouseExited -= ButtonMouseExited;
             button.OnButtonDown -= ButtonDown;
             button.OnButtonUp -= ButtonUp;
-            if (button is CheckBox checkbox)
-                checkbox.OnToggled -= CheckboxToggled;
+            if (button is CheckBox or SwitchButton)
+                button.OnToggled -= ToggleToggled;
             ClearButtonFeedback(button);
         }
         _pending.Remove(control);
@@ -121,6 +123,8 @@ public sealed partial class UiMotionUIController : UIController
 
     private void Queue(Control control)
     {
+        if (control is AlertControl)
+            return;
         if (control.VisibleInTree && (control is BaseWindow or BaseButton or Popup or ActionButton or ItemGridPiece
             || control.Parent is TabContainer
             || IsListRow(control) || control.Parent == UIManager.PopupRoot) && !_pending.Contains(control))
@@ -130,20 +134,76 @@ public sealed partial class UiMotionUIController : UIController
     /// <summary>Queue a changed content control in its parent's appearance sequence.</summary>
     public void QueueAppearance(Control control) => Queue(control);
 
+    /// <summary>Animate one already-visible panel after its owner switches content or visibility.</summary>
+    public void AnimatePanel(Control control)
+    {
+        if (!control.VisibleInTree)
+            return;
+        _pending.Remove(control);
+        Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0,
+            suppressChildren: true);
+    }
+
+    /// <summary>Animate an explicitly opened popup without waiting for tree observation.</summary>
+    public void AnimatePopup(Control control)
+    {
+        if (!control.VisibleInTree)
+            return;
+        _pending.Remove(control);
+        Start(control, UiMotionSettings.Popups, Read(UiMotionSettings.PopupsMs, 0, 1000), 0,
+            suppressChildren: true);
+    }
+
+    /// <summary>Animate an embedded window without changing layout-managed coordinates.</summary>
+    public void AnimateWindow(Control control)
+    {
+        if (!control.VisibleInTree)
+            return;
+        _pending.Remove(control);
+        Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0,
+            suppressChildren: true);
+    }
+
+    /// <summary>Animate only a newly-added or replaced list row.</summary>
+    public void AnimateListItem(Control control, int index = 0)
+    {
+        if (!control.VisibleInTree)
+            return;
+        _pending.Remove(control);
+        var delay = UiMotionSequence.Delay(index, 1,
+            Read(UiMotionSettings.ButtonIntervalMs, 0, 150), 0,
+            Read(UiMotionSettings.ButtonMaxDelayMs, 0, 1000), 0) / 1000;
+        Start(control, UiMotionSettings.Lists, Read(UiMotionSettings.ListsEnterMs, 0, 1000), delay);
+    }
+
+    /// <summary>Animate a row after its owner has completed insertion and visibility changes for this frame.</summary>
+    public void AnimateListItemDeferred(Control control, int index = 0)
+    {
+        UIManager.DeferAction(() =>
+        {
+            if (control.IsInsideTree && control.VisibleInTree)
+                AnimateListItem(control, index);
+        });
+    }
+
     private static bool IsListRow(Control control) => control is PlayerListEntry or PlayerTabEntry or UiMotionListRow
+        or EntitySpawnButton or MappingSpawnButton
         || control.Parent?.Parent is TreeItem item && item.Button == control;
 
     private bool IsInsideAnimatedParent(Control control)
     {
         for (var parent = control.Parent; parent != null; parent = parent.Parent)
         {
+            if (_active.TryGetValue(parent, out var activeParent) && activeParent.SuppressChildren)
+                return true;
             if (parent is Popup popup)
             {
                 if (!IsDropdownPopup(popup))
                     return true;
                 continue;
             }
-            if (parent is TabContainer or UiMotionContainer { Profile.Opening: true }
+            if (parent is TabContainer && parent != control.Parent
+                || parent is UiMotionContainer { Profile.Opening: true }
                 || parent.Parent == UIManager.PopupRoot || IsListRow(parent))
                 return true;
         }
@@ -206,11 +266,17 @@ public sealed partial class UiMotionUIController : UIController
             button.Modulate = feedback.Original;
     }
 
-    private void CheckboxToggled(BaseButton.ButtonToggledEventArgs args)
+    private void ToggleToggled(BaseButton.ButtonToggledEventArgs args)
     {
-        if (args.Button is not CheckBox checkbox || _configuration.GetCVar(UiMotionSettings.Reduce))
+        var visual = args.Button switch
+        {
+            CheckBox checkbox => checkbox.TextureRect,
+            SwitchButton switchButton => switchButton.ThumbFill,
+            _ => null
+        };
+        if (visual == null || _configuration.GetCVar(UiMotionSettings.Reduce))
             return;
-        Start(checkbox.TextureRect, UiMotionSettings.Checkboxes,
+        Start(visual, UiMotionSettings.Checkboxes,
             Read(UiMotionSettings.CheckboxMs, 0, 1000), 0,
             1 - Read(UiMotionSettings.CheckboxIntensity, 0, 0.8f));
     }
@@ -218,7 +284,7 @@ public sealed partial class UiMotionUIController : UIController
     private float Read(CVarDef<float> setting, float min, float max) => UiMotionSettings.Read(_configuration, setting, min, max);
 
     private void Start(Control control, CVarDef<bool> enabled, float milliseconds, float delay, float from = 0,
-        float travel = 0, bool expressive = false, bool popupPosition = false)
+        float travel = 0, bool expressive = false, bool popupPosition = false, bool suppressChildren = false)
     {
         // Restart from the currently displayed opacity when toggling again.
         if (_active.TryGetValue(control, out var previous))
@@ -240,7 +306,8 @@ public sealed partial class UiMotionUIController : UIController
             Original = control.Modulate,
             Applied = control.Modulate.WithAlpha(control.Modulate.A * from),
             Delay = _configuration.GetCVar(UiMotionSettings.Reduce) ? 0 : delay,
-            PopupPosition = popupPosition
+            PopupPosition = popupPosition,
+            SuppressChildren = suppressChildren
         };
         if (travel > 0 && !_configuration.GetCVar(UiMotionSettings.Reduce))
         {
@@ -298,15 +365,19 @@ public sealed partial class UiMotionUIController : UIController
                 Start(control, UiMotionSettings.Popups, Read(UiMotionSettings.PopupsMs, 0, 1000), 0);
             else if (control is RadialMenu)
                 continue; // Its sectors own the entrance; do not multiply their opacity by a second fade.
-            else if (control is AlertControl alert)
-                alert.AnimateAppearance();
             else if (control is ItemGridPiece piece)
                 piece.AnimateAppearance();
             else if (control is BaseWindow)
+            {
+                var travel = control.Parent == UIManager.WindowRoot
+                    ? Read(UiMotionSettings.WindowTravel, 0, 24)
+                    : 0;
                 Start(control, UiMotionSettings.Windows, Read(UiMotionSettings.WindowEnterMs, 0, 1000), 0,
-                    travel: Read(UiMotionSettings.WindowTravel, 0, 24), expressive: true);
+                    travel: travel, expressive: travel > 0);
+            }
             else if (control.Parent is TabContainer)
-                Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0);
+                Start(control, UiMotionSettings.Tabs, Read(UiMotionSettings.TabsEnterMs, 0, 1000), 0,
+                    suppressChildren: true);
             else
             {
                 var row = IsListRow(control);

@@ -23,6 +23,7 @@ using Robust.Shared.Input.Binding;
 using Robust.Shared.Map;
 using Robust.Shared.Utility;
 using static Content.Client.Inventory.ClientInventorySystem;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Inventory;
 
@@ -247,7 +248,10 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         UpdateInventoryHotbar(_playerInventory);
         var shouldBeVisible = !_inventoryHotbar.Visible;
         _inventoryHotbar.Visible = shouldBeVisible;
-
+        // Arcane-Start
+        if (shouldBeVisible)
+            UIManager.GetUIController<UiMotionUIController>().AnimatePanel(_inventoryHotbar);
+        // Arcane-End
     }
 
     // Neuron Activation

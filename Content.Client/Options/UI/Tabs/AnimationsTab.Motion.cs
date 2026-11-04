@@ -109,7 +109,7 @@ public sealed partial class AnimationsTab
         var alerts = AddMotionGroup("alerts");
         MotionCheck(alerts, S.Alerts, "enabled");
         MotionSlider(alerts, S.AlertsEnterMs, "duration", 0, 1000, "ms");
-        MotionSlider(alerts, S.AlertsExitMs, "exit", 0, 1000, "ms");
+        MotionSlider(alerts, S.AlertsTravel, "travel", 0, 240, "pixels");
 
         var chat = AddMotionGroup("chat");
         MotionCheck(chat, S.Chat, "enabled");
@@ -126,7 +126,6 @@ public sealed partial class AnimationsTab
         var radial = AddMotionGroup("radial");
         MotionCheck(radial, S.Radial, "enabled");
         MotionSlider(radial, S.RadialEnterMs, "duration", 0, 1000, "ms");
-        MotionSlider(radial, S.RadialExitMs, "exit", 0, 1000, "ms");
 
         var lists = AddMotionGroup("lists");
         MotionCheck(lists, S.Lists, "enabled");
@@ -142,7 +141,6 @@ public sealed partial class AnimationsTab
         MotionSlider(votes, S.VotesTravel, "travel", 0, 240, "pixels");
 
         MotionCheck(slots, S.SlotHighlight, "highlight");
-        MotionSlider(slots, S.SlotScale, "scale", 0, 0.25f, "ratio");
         MotionCheck(actions, S.ActionsCooldownPulse, "cooldown-pulse");
         MotionCheck(alerts, S.AlertsSeverityPulse, "severity-pulse");
         MotionCheck(radial, S.RadialHover, "hover");
@@ -248,11 +246,11 @@ public sealed partial class AnimationsTab
                     _motionChecks[S.ActionsCooldownPulse].Pressed = false;
                     _motionChecks[S.AlertsSeverityPulse].Pressed = false;
                     _motionChecks[S.RadialHover].Pressed = false;
-                    _motionSliders[S.SlotScale].Set(0.03f);
                     _motionSliders[S.PopupsMs].Set(70);
                     _motionSliders[S.DropdownEnterMs].Set(150);
                     _motionSliders[S.DropdownTravel].Set(0);
                     _motionSliders[S.AlertsEnterMs].Set(100);
+                    _motionSliders[S.AlertsTravel].Set(0);
                     _motionSliders[S.ListsEnterMs].Set(100);
                 }
             }
@@ -299,11 +297,11 @@ public sealed partial class AnimationsTab
             && Matches(S.CheckboxIntensity, 0.15f)
             && Matches(S.WindowEnterMs, 150)
             && Matches(S.WindowTravel, 0)
-            && Matches(S.SlotScale, 0.03f)
             && Matches(S.PopupsMs, 70)
             && Matches(S.DropdownEnterMs, 150)
             && Matches(S.DropdownTravel, 0)
             && Matches(S.AlertsEnterMs, 100)
+            && Matches(S.AlertsTravel, 0)
             && Matches(S.ListsEnterMs, 100);
     }
 
