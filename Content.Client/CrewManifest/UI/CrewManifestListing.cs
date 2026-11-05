@@ -24,7 +24,7 @@ public sealed partial class CrewManifestListing : BoxContainer
     private const float SearchTransitionInitialOpacity = 0.35f;
     private static readonly TimeSpan SearchTransitionDuration = TimeSpan.FromMilliseconds(200);
 
-    private CrewManifestEntries? _entries;
+    private List<(DepartmentPrototype Department, List<CrewManifestEntry> Entries)>? _sections;
     private LineEdit? _searchBar;
 
     public LineEdit? SearchBar
@@ -51,16 +51,16 @@ public sealed partial class CrewManifestListing : BoxContainer
 
     public void AddCrewManifestEntries(CrewManifestEntries entries)
     {
-        // Arcane-Start
-        _entries = entries;
+        // Arcane-Edit-Start: group and sort entries once when the manifest changes
+        _sections = GroupAndSortEntries(entries);
         Refresh();
-        // Arcane-End
+        // Arcane-Edit-End
     }
 
     // Arcane-Start
     public void ClearCrewManifestEntries()
     {
-        _entries = null;
+        _sections = null;
         RemoveAllChildren();
         ResetSearchTransition();
     }
@@ -141,6 +141,33 @@ public sealed partial class CrewManifestListing : BoxContainer
             + parameter * parameter * parameter;
     }
 
+    private List<(DepartmentPrototype Department, List<CrewManifestEntry> Entries)> GroupAndSortEntries(
+        CrewManifestEntries entries)
+    {
+        var entriesByDepartment = new Dictionary<string, List<CrewManifestEntry>>();
+        var crewManifestSystem = _entitySystem.GetEntitySystem<CrewManifestSystem>();
+
+        foreach (var entry in entries.Entries)
+        {
+            foreach (var departmentId in crewManifestSystem.GetDepartmentsForJob(entry.JobPrototype))
+            {
+                entriesByDepartment.GetOrNew(departmentId).Add(entry);
+            }
+        }
+
+        var sections = new List<(DepartmentPrototype Department, List<CrewManifestEntry> Entries)>(
+            entriesByDepartment.Count);
+
+        foreach (var (departmentId, departmentEntries) in entriesByDepartment)
+        {
+            if (_prototypeManager.TryIndex<DepartmentPrototype>(departmentId, out var department))
+                sections.Add((department, departmentEntries));
+        }
+
+        sections.Sort((a, b) => DepartmentUIComparer.Instance.Compare(a.Department, b.Department));
+        return sections;
+    }
+
     private void Refresh(bool animate = false)
     {
         RemoveAllChildren();
@@ -148,59 +175,47 @@ public sealed partial class CrewManifestListing : BoxContainer
         if (!animate)
             ResetSearchTransition();
 
-        if (_entries == null)
+        if (_sections == null)
             return;
 
         if (animate)
             PlaySearchTransition();
 
-        var filter = _searchBar?.Text.Trim();
-        // Arcane-End
-        var entryDict = new Dictionary<DepartmentPrototype, List<CrewManifestEntry>>();
+        var filter = _searchBar?.Text.Trim() ?? string.Empty;
+        var hasFilter = filter.Length > 0;
+        var hasMatches = false;
 
-        foreach (var entry in _entries.Entries) // Arcane-Edit: entries.Entries > _entries.Entries
+        foreach (var (department, entries) in _sections)
         {
-            // Arcane-Start
-            if (!string.IsNullOrEmpty(filter) &&
-                !entry.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
-                !entry.JobTitle.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                continue;
-            // Arcane-End
-
-            foreach (var department in _prototypeManager.EnumeratePrototypes<DepartmentPrototype>())
+            if (!hasFilter)
             {
-                // this is a little expensive, and could be better
-                if (department.Roles.Contains(entry.JobPrototype))
-                {
-                    entryDict.GetOrNew(department).Add(entry);
-                }
+                AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, department, entries));
+                continue;
             }
+
+            var matchingEntries = new List<CrewManifestEntry>();
+            foreach (var entry in entries)
+            {
+                if (entry.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                    entry.JobTitle.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    matchingEntries.Add(entry);
+            }
+
+            if (matchingEntries.Count == 0)
+                continue;
+
+            hasMatches = true;
+            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, department, matchingEntries));
         }
 
-        // Arcane-Start
-        if (entryDict.Count == 0 && !string.IsNullOrEmpty(filter))
+        if (hasFilter && !hasMatches)
         {
             AddChild(new Label
             {
                 Text = Loc.GetString("crew-manifest-no-matches"),
                 HorizontalExpand = true,
             });
-            return;
-        }
-        // Arcane-End
-
-        var entryList = new List<(DepartmentPrototype section, List<CrewManifestEntry> entries)>();
-
-        foreach (var (section, listing) in entryDict)
-        {
-            entryList.Add((section, listing));
-        }
-
-        entryList.Sort((a, b) => DepartmentUIComparer.Instance.Compare(a.section, b.section));
-
-        foreach (var item in entryList)
-        {
-            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, item.section, item.entries));
         }
     }
+    // Arcane-End
 }
