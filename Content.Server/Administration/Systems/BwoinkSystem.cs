@@ -767,6 +767,11 @@ namespace Content.Server.Administration.Systems
                 return;
             }
 
+            // Arcane-Start: AHelp anti-spam, players only
+            if (!senderAHelpAdmin && CheckAHelpSpam(senderSession, message.Text))
+                return;
+            // Arcane-End
+
             if (_rateLimit.CountAction(eventArgs.SenderSession, RateLimitKey) != RateLimitStatus.Allowed)
                 return;
 
