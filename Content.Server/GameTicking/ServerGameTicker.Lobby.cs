@@ -7,6 +7,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using System.Text;
 using Content.Shared.Station.Components;
+using Robust.Shared.Enums; // Arcane
 
 namespace Content.Server.GameTicking;
 
@@ -56,7 +57,7 @@ public sealed partial class ServerGameTicker
             return string.Empty;
         }
 
-        var playerCount = $"{_playerManager.PlayerCount}";
+        var playerCount = $"{GetAdmittedPlayerCount()}"; // Arcane-Edit: connections > admitted players
         var readyCount = _playerGameStatuses.Values.Count(x => x == PlayerGameStatus.ReadyToPlay);
 
         var stationNames = new StringBuilder();
@@ -114,6 +115,10 @@ public sealed partial class ServerGameTicker
     {
         foreach (var player in _playerManager.Sessions)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                continue;
+            // Arcane-End
             RaiseNetworkEvent(GetStatusMsg(player), player.Channel);
         }
     }
@@ -166,15 +171,19 @@ public sealed partial class ServerGameTicker
         var status = ready ? PlayerGameStatus.ReadyToPlay : PlayerGameStatus.NotReadyToPlay;
         foreach (var playerUserId in _playerGameStatuses.Keys)
         {
-            _playerGameStatuses[playerUserId] = status;
-            if (!_playerManager.TryGetSessionById(playerUserId, out var playerSession))
+            if (!_playerManager.TryGetSessionById(playerUserId, out var playerSession) || playerSession.Status != SessionStatus.InGame) // Arcane-Edit: only admitted sessions participate in round readiness.
                 continue;
+            _playerGameStatuses[playerUserId] = status; // Arcane-Edit: moved after the admitted-session check.
             RaiseNetworkEvent(GetStatusMsg(playerSession), playerSession.Channel);
         }
     }
 
     public void ToggleReady(ICommonSession player, bool ready)
     {
+        // Arcane-Start
+        if (player.Status != SessionStatus.InGame)
+            return;
+        // Arcane-End
         if (!_playerGameStatuses.ContainsKey(player.UserId))
             return;
 

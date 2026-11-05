@@ -22,6 +22,7 @@ public sealed partial class ServerGameTicker
     private void InitializeStatusShell()
     {
         IoCManager.Resolve<IStatusHost>().OnStatusRequest += GetStatusResponse;
+        _adminManager.OnPermsChanged += _ => GetAdmittedPlayerCount(); // Arcane
     }
 
     private void GetStatusResponse(JsonNode jObject)
@@ -35,8 +36,10 @@ public sealed partial class ServerGameTicker
             jObject["map"] = _gameMapManager.GetSelectedMap()?.MapName;
             jObject["round_id"] = RoundId;
             jObject["players"] = Cfg.GetCVar(CCVars.AdminsCountInReportedPlayerCount)
-                ? _playerManager.PlayerCount
-                : _playerManager.PlayerCount - _adminManager.ActiveAdmins.Count();
+                // Arcane-Edit-Start: use main-thread snapshots; never raise content events on the status HTTP thread.
+                ? AdmittedPlayerCount
+                : AdmittedNonAdminPlayerCount;
+            // Arcane-Edit-End
             jObject["soft_max_players"] = Cfg.GetCVar(CCVars.SoftMaxPlayers);
             jObject["panic_bunker"] = Cfg.GetCVar(CCVars.PanicBunkerEnabled);
             jObject["run_level"] = (int) RunLevel;
