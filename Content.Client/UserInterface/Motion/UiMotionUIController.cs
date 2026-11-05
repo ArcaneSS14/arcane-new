@@ -350,7 +350,7 @@ public sealed partial class UiMotionUIController : UIController
             control.Modulate = fade.Original;
         if (fade.Origin is { } origin && fade.AppliedPosition is { } applied
             && GetPosition(control, fade.PopupPosition) == applied)
-            ApplyPosition(control, origin, 0, fade.PopupPosition);
+            ApplyPosition(control, origin, 0, fade.PopupPosition, clamp: false);
     }
 
     private static Vector2 GetPosition(Control control, bool popupPosition)
@@ -358,10 +358,10 @@ public sealed partial class UiMotionUIController : UIController
         return popupPosition ? PopupContainer.GetPopupOrigin(control) : control.Position;
     }
 
-    private static Vector2 ApplyPosition(Control control, Vector2 origin, float offset, bool popupPosition)
+    private static Vector2 ApplyPosition(Control control, Vector2 origin, float offset, bool popupPosition, bool clamp = true)
     {
         var position = origin + new Vector2(0, offset);
-        if (control.Parent is { } parent)
+        if (clamp && control.Parent is { } parent)
             position = Vector2.Clamp(position, Vector2.Zero, Vector2.Max(Vector2.Zero, parent.Size - control.Size));
         if (popupPosition)
             PopupContainer.SetPopupOrigin(control, position);

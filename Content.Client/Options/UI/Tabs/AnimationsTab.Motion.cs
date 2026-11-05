@@ -258,6 +258,8 @@ public sealed partial class AnimationsTab
                     _motionSliders[S.AlertsEnterMs].Set(100);
                     _motionSliders[S.AlertsTravel].Set(0);
                     _motionSliders[S.ListsEnterMs].Set(100);
+                    _motionSliders[S.VotesEnterMs].Set(150);
+                    _motionSliders[S.VotesTravel].Set(0);
                 }
             }
             Control.ValueChanged();
@@ -285,7 +287,7 @@ public sealed partial class AnimationsTab
             return MotionPreset.Expressive;
         if (modified == 1 && _motionChecks[S.Reduce].Pressed)
             return MotionPreset.Reduced;
-        return modified == 20 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
+        return modified == 22 && IsSubtleProfile() ? MotionPreset.Subtle : MotionPreset.Custom;
     }
 
     private bool IsSubtleProfile()
@@ -309,7 +311,9 @@ public sealed partial class AnimationsTab
             && Matches(S.AlertsEnterMs, 100)
             && Matches(S.AlertsTravel, 0)
             && Matches(S.AlertsBounce, 0)
-            && Matches(S.ListsEnterMs, 100);
+            && Matches(S.ListsEnterMs, 100)
+            && Matches(S.VotesEnterMs, 150)
+            && Matches(S.VotesTravel, 0);
     }
 
     private bool Matches(CVarDef<float> setting, float expected)

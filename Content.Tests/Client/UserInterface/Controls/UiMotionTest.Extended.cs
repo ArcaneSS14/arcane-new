@@ -335,6 +335,29 @@ public sealed partial class UiMotionTest
     }
 
     [Test]
+    public void DropdownRestoresItsOffscreenOriginAfterAnimation()
+    {
+        var ui = IoCManager.Resolve<IUserInterfaceManager>();
+        var popup = new Popup { StyleClasses = { OptionButton.StyleClassPopup } };
+        ui.ModalRoot.AddChild(popup);
+        try
+        {
+            popup.Open();
+            var origin = new Vector2(-50, -30);
+            PopupContainer.SetPopupOrigin(popup, origin);
+            _controller.FrameUpdate(new FrameEventArgs(0.02f));
+            Assert.That(PopupContainer.GetPopupOrigin(popup).X, Is.GreaterThanOrEqualTo(0));
+            _controller.FrameUpdate(new FrameEventArgs(2));
+            Assert.That(PopupContainer.GetPopupOrigin(popup), Is.EqualTo(origin));
+        }
+        finally
+        {
+            popup.Close();
+            popup.Orphan();
+        }
+    }
+
+    [Test]
     public void IndependentContainersStartTheirSequencesTogether()
     {
         _configuration.SetCVar(S.ButtonOrder, 1);
