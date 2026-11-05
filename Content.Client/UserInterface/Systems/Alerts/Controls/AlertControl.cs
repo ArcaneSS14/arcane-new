@@ -7,6 +7,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Alerts.Controls
 {
@@ -60,17 +61,18 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
             HorizontalAlignment = HAlignment.Left;
             _severity = severity;
-            _icon = new SpriteView
+            _icon = new AlertSpriteView // Arcane-Edit: SpriteView > AlertSpriteView
             {
-                Scale = new Vector2(2, 2),
+                Scale = new Vector2(BaseIconScale, BaseIconScale), // Arcane-Edit: 2 > BaseIconScale
                 MaxSize = new Vector2(64, 64),
+                RectClipContent = false, // Arcane
                 Stretch = SpriteView.StretchMode.None,
                 HorizontalAlignment = HAlignment.Left
             };
 
             SetupIcon();
 
-            Children.Add(_icon);
+            InitializeAlertMotion(); // Arcane-Edit: Children.Add(_icon) > animated visual host
             _cooldownGraphic = new CooldownGraphic
             {
                 MaxSize = new Vector2(64, 64)
@@ -99,11 +101,13 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
             var icon = Alert.GetIcon(_severity);
             if (_sprite.LayerMapTryGet((_spriteViewEntity, sprite), AlertVisualLayers.Base, out var layer, false))
                 _sprite.LayerSetSprite((_spriteViewEntity, sprite), layer, icon);
+            AnimateSeverityChange(); // Arcane
         }
 
         protected override void FrameUpdate(FrameEventArgs args)
         {
             base.FrameUpdate(args);
+            UpdateAlertMotion(args.DeltaSeconds); // Arcane
             UserInterfaceManager.GetUIController<AlertsUIController>().UpdateAlertSpriteEntity(_spriteViewEntity, Alert);
 
             if (!Cooldown.HasValue)
@@ -140,6 +144,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
         protected override void ExitedTree()
         {
+            AnimateRemoval(); // Arcane
             base.ExitedTree();
 
             if (!_entityManager.Deleted(_spriteViewEntity))
@@ -148,6 +153,7 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
 
         protected override void Dispose(bool disposing)
         {
+            AnimateRemoval(); // Arcane
             base.Dispose(disposing);
 
             if (!_entityManager.Deleted(_spriteViewEntity))

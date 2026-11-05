@@ -12,6 +12,7 @@ using Robust.Client.UserInterface.Controllers;
 using Robust.Shared.Collections;
 using Robust.Shared.Input;
 using Robust.Shared.Utility;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Client.Verbs.UI
 {
@@ -42,6 +43,11 @@ namespace Content.Client.Verbs.UI
         ///     of an entity menu element. If that happens, we need to be aware and close it properly.
         /// </summary>
         public ContextMenuPopup? OpenMenu = null;
+
+        // Arcane-Start
+        private long _requestId;
+        private EntityUid? _localTarget;
+        // Arcane-End
 
         public void OnStateEntered(GameplayState state)
         {
@@ -112,7 +118,8 @@ namespace Content.Client.Verbs.UI
             menu.MenuBody.RemoveAllChildren();
 
             CurrentTarget = target;
-            CurrentVerbs = _verbSystem.GetVerbs(target, user, Verb.VerbTypes, out ExtraCategories, force);
+            EntityManager.TryGetEntity(target, out _localTarget); // Arcane
+            CurrentVerbs = _verbSystem.GetVerbs(target, user, Verb.VerbTypes, out ExtraCategories, force, ++_requestId); // Arcane-Edit: target-only matching > request generation
             OpenMenu = menu;
 
             // Fill in client-side verbs.
@@ -284,16 +291,21 @@ namespace Content.Client.Verbs.UI
 
         private void Close()
         {
-            if (OpenMenu == null)
-                return;
-
-            OpenMenu.Close();
+            // Arcane-Edit-Start: invalidate responses before closing can invoke callbacks.
+            ++_requestId;
+            var menu = OpenMenu;
             OpenMenu = null;
+            _localTarget = null;
+            CurrentTarget = default;
+            CurrentVerbs.Clear();
+            ExtraCategories.Clear();
+            menu?.Close();
+            // Arcane-Edit-End
         }
 
         private void HandleVerbsResponse(VerbsResponseEvent msg)
         {
-            if (OpenMenu == null || !OpenMenu.Visible || CurrentTarget != msg.Entity)
+            if (OpenMenu == null || !OpenMenu.IsInsideTree || !OpenMenu.Visible || CurrentTarget != msg.Entity || msg.RequestId != _requestId) // Arcane-Edit: target-only matching > live menu and request generation
                 return;
 
             AddServerVerbs(msg.Verbs, OpenMenu);
@@ -307,5 +319,32 @@ namespace Content.Client.Verbs.UI
             if (verb.CloseMenu ?? verb.CloseMenuDefault)
                 _context.Close();
         }
+
+        // Arcane-Start
+        public override void FrameUpdate(FrameEventArgs args)
+        {
+            base.FrameUpdate(args);
+            if (OpenMenu == null)
+                return;
+
+            if (!OpenMenu.IsInsideTree || !OpenMenu.Visible)
+            {
+                Close();
+                return;
+            }
+
+            // Admin menus may legitimately target entities that have never entered the client's PVS.
+            if (_localTarget == null)
+                EntityManager.TryGetEntity(CurrentTarget, out _localTarget);
+            if (_localTarget is not { } target || !EntityManager.Deleted(target))
+                return;
+
+            if (OpenMenu == _context.RootMenu)
+                _context.Close();
+            else
+                Close();
+            _context.ClearExitVisuals();
+        }
+        // Arcane-End
     }
 }

@@ -16,6 +16,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Lathe.UI;
 
@@ -161,6 +162,7 @@ public sealed partial class LatheMenu : FancyWindow
                     RecipeQueueAction?.Invoke(s, amount);
                 };
                 RecipeList.AddChild(control);
+                UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItem(control, idx); // Arcane
             }
             else
             {
@@ -179,6 +181,7 @@ public sealed partial class LatheMenu : FancyWindow
                     child.SetRecipe(recipe.Proto, recipe.Name);
                     // NOTE: doesn't nicely handle prototype reloads.
                     child.SetDisplayControl(GetRecipeDisplayControl(recipe.Proto));
+                    UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItem(child, idx); // Arcane
                 }
             }
             idx++;
@@ -305,6 +308,7 @@ public sealed partial class LatheMenu : FancyWindow
                 queuedRecipeBox.OnMoveUpPressed += s => QueueMoveUpAction?.Invoke(s);
                 queuedRecipeBox.OnMoveDownPressed += s => QueueMoveDownAction?.Invoke(s);
                 QueueList.AddChild(queuedRecipeBox);
+                UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItem(queuedRecipeBox, idx); // Arcane
             }
             else
             {

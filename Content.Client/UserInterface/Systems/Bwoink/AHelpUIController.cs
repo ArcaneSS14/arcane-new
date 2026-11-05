@@ -28,6 +28,8 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 using Content.Client.Audio; // Arcane
+using Content.Client.UserInterface.Motion; // Arcane
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Client.UserInterface.Systems.Bwoink;
 
@@ -50,6 +52,12 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
     private bool _hasUnreadAHelp;
     private bool _bwoinkSoundEnabled;
     private string? _aHelpSound;
+    // Arcane-Start
+    private UiMotionVisual? _gameAHelpNotificationMotion;
+    private UiMotionVisual? _lobbyAHelpNotificationMotion;
+    private Control? _gameAHelpNotificationTarget;
+    private Control? _lobbyAHelpNotificationTarget;
+    // Arcane-End
 
     protected override string SawmillName => "c.s.go.es.bwoink";
 
@@ -256,13 +264,45 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
     {
         GameAHelpButton?.StyleClasses.Add(StyleClass.Negative);
         LobbyAHelpButton?.StyleClasses.Add(StyleClass.Negative);
+        // Arcane-Start
+        AnimateUnreadButton(GameAHelpButton, ref _gameAHelpNotificationMotion, ref _gameAHelpNotificationTarget);
+        AnimateUnreadButton(LobbyAHelpButton, ref _lobbyAHelpNotificationMotion, ref _lobbyAHelpNotificationTarget);
+        // Arcane-End
         _hasUnreadAHelp = true;
     }
+
+    // Arcane-Start
+    private void AnimateUnreadButton(Control? button, ref UiMotionVisual? motion, ref Control? target)
+    {
+        if (button == null)
+            return;
+
+        if (target != button)
+        {
+            motion?.Reset();
+            motion = null;
+            target = button;
+        }
+        (motion ??= new UiMotionVisual(button, _config, UiMotionSettings.Notifications)).Start(
+            UiMotionSettings.Read(_config, UiMotionSettings.NotificationsMs, 0, 1000));
+    }
+
+    public override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+        _gameAHelpNotificationMotion?.Advance(args.DeltaSeconds);
+        _lobbyAHelpNotificationMotion?.Advance(args.DeltaSeconds);
+    }
+    // Arcane-End
 
     private void UnreadAHelpRead()
     {
         GameAHelpButton?.StyleClasses.Remove(StyleClass.Negative);
         LobbyAHelpButton?.StyleClasses.Remove(StyleClass.Negative);
+        // Arcane-Start
+        _gameAHelpNotificationMotion?.Reset();
+        _lobbyAHelpNotificationMotion?.Reset();
+        // Arcane-End
         _hasUnreadAHelp = false;
     }
 

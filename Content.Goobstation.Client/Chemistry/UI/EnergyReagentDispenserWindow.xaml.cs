@@ -14,6 +14,7 @@ using Content.Shared.Power.EntitySystems;
 using Robust.Shared.Collections;
 using Robust.Shared.Timing;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Goobstation.Client.Chemistry.UI;
 
@@ -38,6 +39,7 @@ public sealed partial class EnergyReagentDispenserWindow : FancyWindow
     private int _lastContentsHash;
     private float _batteryCharge = -1;
     private int _selectedAmount = -1;
+    private HashSet<ProtoId<ReagentPrototype>> _displayedReagents = []; // Arcane
 
     public EnergyReagentDispenserWindow()
     {
@@ -102,6 +104,7 @@ public sealed partial class EnergyReagentDispenserWindow : FancyWindow
 
     private void BeakerChanged()
     {
+        _displayedReagents.Clear(); // Arcane
         View.SetEntity(_beaker);
 
         var empty = _beaker == null;
@@ -145,9 +148,14 @@ public sealed partial class EnergyReagentDispenserWindow : FancyWindow
     private void SolutionChanged(Solution sol)
     {
         ContainerReagents.RemoveAllChildren();
+        // Arcane-Start
+        var currentReagents = new HashSet<ProtoId<ReagentPrototype>>();
+        var rowIndex = 0;
+        // Arcane-End
         foreach (var pair in sol.Contents)
         {
             var id = pair.Reagent.Prototype;
+            currentReagents.Add(id); // Arcane
             var localizedName = _proto.Resolve(id, out var proto)
                 ? proto.LocalizedName
                 : $"??? {id} ???";
@@ -159,7 +167,7 @@ public sealed partial class EnergyReagentDispenserWindow : FancyWindow
                 StyleClasses = { StyleNano.StyleClassLabelSecondaryColor },
             };
 
-            ContainerReagents.Children.Add(new BoxContainer
+            var row = new BoxContainer // Arcane-Edit: anonymous rebuilt row > tracked row with new-item motion
             {
                 Orientation = LayoutOrientation.Horizontal,
                 Children =
@@ -167,8 +175,15 @@ public sealed partial class EnergyReagentDispenserWindow : FancyWindow
                     nameLabel,
                     quantityLabel
                 }
-            });
+            };
+            // Arcane-Start
+            ContainerReagents.Children.Add(row);
+            if (!_displayedReagents.Contains(id))
+                UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(row, rowIndex);
+            rowIndex++;
+            // Arcane-End
         }
+        _displayedReagents = currentReagents; // Arcane
     }
 
     delegate void Changed();

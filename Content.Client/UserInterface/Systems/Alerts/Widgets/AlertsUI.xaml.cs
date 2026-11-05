@@ -65,7 +65,11 @@ public sealed partial class AlertsUI : UIWidget
             _alertControls.Remove(alertKeyToRemove, out var control);
             if (control == null)
                 return true;
-            AlertContainer.Children.Remove(control);
+            // Arcane-Edit-Start
+            control.AnimateRemoval();
+            control.OnPressed -= AlertControlPressed;
+            control.Orphan();
+            // Arcane-Edit-End
         }
 
         return false;
@@ -100,12 +104,21 @@ public sealed partial class AlertsUI : UIWidget
             }
             else
             {
+                var replacingExistingAlert = existingAlertControl != null; // Arcane
+                var newAlertControl = CreateAlertControl(newAlert, alertState); // Arcane-Edit: create after removal > create before removal
                 if (existingAlertControl != null)
-                    AlertContainer.Children.Remove(existingAlertControl);
+                // Arcane-Edit-Start
+                {
+                    existingAlertControl.TransferAlertMotionTo(newAlertControl);
+                    existingAlertControl.OnPressed -= AlertControlPressed;
+                    existingAlertControl.Orphan();
+                }
+                // Arcane-Edit-End
 
-                // this is a new alert + alert key or just a different alert with the same
-                // key, create the control and add it in the appropriate order
-                var newAlertControl = CreateAlertControl(newAlert, alertState);
+                // Arcane-Edit-Start
+                // Create the replacement before removal to transfer its motion.
+                // Add the new control in the appropriate order.
+                // Arcane-Edit-End
 
                 //TODO: Can the presenter sort the states before giving it to us?
                 if (alertOrderPrototype != null)
@@ -131,6 +144,12 @@ public sealed partial class AlertsUI : UIWidget
                     AlertContainer.Children.Add(newAlertControl);
                 }
 
+                // Arcane-Edit-Start: new alerts enter spatially; an existing keyed alert changing sprite pulses in place.
+                if (replacingExistingAlert)
+                    newAlertControl.AnimateSeverityChange();
+                else
+                    newAlertControl.AnimateAppearance();
+                // Arcane-Edit-End
                 _alertControls[newAlert.AlertKey] = newAlertControl;
             }
         }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Client.UserInterface.Screens;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Trauma.Client.UserActions;
 
@@ -18,6 +19,10 @@ public sealed partial class UserActionsPanel : Control
         _controller.RegisterPanel(this);
 
         RegisterTabs();
+        // Arcane-Start
+        TabContainer.OnTabChanged += index => UserInterfaceManager.GetUIController<UiMotionUIController>()
+            .AnimatePanel(TabContainer.GetChild(index));
+        // Arcane-End
     }
 
     private void RegisterTabs()

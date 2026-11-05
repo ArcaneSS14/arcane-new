@@ -10,7 +10,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.UserInterface.Controls
 {
-    public abstract class SlotControl : Control, IEntityControl
+    public abstract partial class SlotControl : Control, IEntityControl // Arcane-Edit: class > partial class
     {
         public static int DefaultButtonSize = 64;
 
@@ -51,7 +51,7 @@ namespace Content.Client.UserInterface.Controls
             }
         }
 
-        public bool Highlight { get => HighlightRect.Visible; set => HighlightRect.Visible = value;}
+        public bool Highlight { get => _motionHighlight; set => SetMotionHighlight(value); } // Arcane-Edit: immediate visibility > visual transition
 
         public bool Blocked { get => BlockedRect.Visible; set => BlockedRect.Visible = value;}
 
@@ -249,6 +249,7 @@ namespace Content.Client.UserInterface.Controls
         public void SetPrototype(EntProtoId? proto, bool fade)
         {
             ProtoView.SetPrototype(proto);
+            SpriteView.SetEntity(null); // Arcane
             SpriteView.Visible = false;
             ProtoView.Visible = true;
 

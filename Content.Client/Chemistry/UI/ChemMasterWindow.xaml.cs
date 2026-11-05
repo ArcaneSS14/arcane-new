@@ -14,6 +14,7 @@ using Content.Shared.FixedPoint;
 using Robust.Client.Graphics;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 using Robust.Client.GameObjects;
+using Content.Client.UserInterface.Motion; // Arcane
 
 namespace Content.Client.Chemistry.UI
 {
@@ -27,6 +28,11 @@ namespace Content.Client.Chemistry.UI
         [Dependency] private IEntityManager _entityManager = default!;
 
         private readonly SpriteSystem _sprite;
+
+        // Arcane-Start
+        private HashSet<ReagentId> _displayedBufferReagents = [];
+        private readonly Dictionary<Control, HashSet<string>> _displayedContainerRows = [];
+        // Arcane-End
 
         public event Action<BaseButton.ButtonEventArgs, ReagentButton>? OnReagentButtonPressed;
         public readonly Button[] PillTypeButtons;
@@ -266,6 +272,7 @@ namespace Content.Client.Chemistry.UI
 
             if (!state.BufferReagents.Any())
             {
+                _displayedBufferReagents.Clear(); // Arcane
                 BufferInfo.Children.Add(new Label { Text = Loc.GetString("chem-master-window-buffer-empty-text") });
 
                 return;
@@ -322,18 +329,33 @@ namespace Content.Client.Chemistry.UI
 
             // initialises rowCount to allow for striped rows
             var rowCount = 0;
+            var currentBufferReagents = new HashSet<ReagentId>(); // Arcane
             foreach (var reagent in reagentList)
             {
-                BufferInfo.Children.Add(BuildReagentRow(reagent.color, rowCount++, reagent.name, reagent.reagentId, reagent.quantity, true, true));
+                // Arcane-Start
+                currentBufferReagents.Add(reagent.reagentId);
+                var row = BuildReagentRow(reagent.color, rowCount, reagent.name, reagent.reagentId, reagent.quantity, true, true);
+                BufferInfo.Children.Add(row);
+                if (!_displayedBufferReagents.Contains(reagent.reagentId))
+                    UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(row, rowCount);
+                rowCount++;
+                // Arcane-End
             }
+            _displayedBufferReagents = currentBufferReagents; // Arcane
         }
 
         private void BuildContainerUI(Control control, ContainerInfo? info, bool addReagentButtons)
         {
             control.Children.Clear();
+            // Arcane-Start
+            _displayedContainerRows.TryGetValue(control, out var displayedRows);
+            displayedRows ??= [];
+            var currentRows = new HashSet<string>();
+            // Arcane-End
 
             if (info is null)
             {
+                _displayedContainerRows.Remove(control); // Arcane
                 control.Children.Add(new Label
                 {
                     Text = Loc.GetString("chem-master-window-no-container-loaded-text")
@@ -363,7 +385,15 @@ namespace Content.Client.Chemistry.UI
             {
                 foreach (var (id, quantity) in info.Entities.Select(x => (x.Id, x.Quantity)))
                 {
-                    control.Children.Add(BuildReagentRow(default(Color), rowCount++, id, default(ReagentId), quantity, false, addReagentButtons));
+                    // Arcane-Start
+                    var key = $"entity:{id}";
+                    currentRows.Add(key);
+                    var row = BuildReagentRow(default(Color), rowCount, id, default(ReagentId), quantity, false, addReagentButtons);
+                    control.Children.Add(row);
+                    if (!displayedRows.Contains(key))
+                        UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(row, rowCount);
+                    rowCount++;
+                    // Arcane-End
                 }
             }
 
@@ -376,9 +406,18 @@ namespace Content.Client.Chemistry.UI
                     var name = proto?.LocalizedName ?? Loc.GetString("chem-master-window-unknown-reagent-text");
                     var reagentColor = proto?.SubstanceColor ?? default(Color);
 
-                    control.Children.Add(BuildReagentRow(reagentColor, rowCount++, name, reagent.Reagent, reagent.Quantity, false, addReagentButtons));
+                    // Arcane-Start
+                    var key = $"reagent:{reagent.Reagent}";
+                    currentRows.Add(key);
+                    var row = BuildReagentRow(reagentColor, rowCount, name, reagent.Reagent, reagent.Quantity, false, addReagentButtons);
+                    control.Children.Add(row);
+                    if (!displayedRows.Contains(key))
+                        UserInterfaceManager.GetUIController<UiMotionUIController>().AnimateListItemDeferred(row, rowCount);
+                    rowCount++;
+                    // Arcane-End
                 }
             }
+            _displayedContainerRows[control] = currentRows; // Arcane
         }
         /// <summary>
         /// Take reagent/entity data and present rows, labels, and buttons appropriately. todo sprites?

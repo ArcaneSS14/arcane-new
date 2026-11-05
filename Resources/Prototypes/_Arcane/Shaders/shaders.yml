@@ -2,3 +2,9 @@
   id: Flap
   kind: source
   path: "/Textures/_Arcane/Shaders/flap.swsl"
+
+- type: shader
+  id: UiMotionPremultiplied
+  kind: canvas
+  light_mode: unshaded
+  blend_mode: premultiplied

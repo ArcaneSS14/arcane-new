@@ -21,6 +21,8 @@ namespace Content.Shared.Verbs
 
         public readonly bool AdminRequest;
 
+        public long RequestId; // Arcane
+
         public RequestServerVerbsEvent(NetEntity entityUid, IEnumerable<Type> verbTypes, NetEntity? slotOwner = null, bool adminRequest = false)
         {
             EntityUid = entityUid;
@@ -40,6 +42,8 @@ namespace Content.Shared.Verbs
     {
         public readonly List<Verb>? Verbs;
         public readonly NetEntity Entity;
+
+        public long RequestId; // Arcane
 
         public VerbsResponseEvent(NetEntity entity, SortedSet<Verb>? verbs)
         {

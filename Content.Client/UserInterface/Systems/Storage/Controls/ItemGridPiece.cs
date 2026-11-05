@@ -9,7 +9,7 @@ using Robust.Client.UserInterface.CustomControls;
 
 namespace Content.Client.UserInterface.Systems.Storage.Controls;
 
-public sealed class ItemGridPiece : Control, IEntityControl
+public sealed partial class ItemGridPiece : Control, IEntityControl // Arcane-Edit: class > partial class
 {
     private readonly IEntityManager _entityManager;
     private readonly StorageUIController _storageController;
@@ -169,6 +169,11 @@ public sealed class ItemGridPiece : Control, IEntityControl
             (boundingGrid.Height + 1) * size.Y + iconOffset.Y);
         var iconRotation = Location.Rotation + Angle.FromDegrees(itemComponent.StoredRotation);
 
+        // Arcane-Start
+        var originalTint = handle.Modulate;
+        handle.Modulate = originalTint.WithAlpha(originalTint.A * MotionOpacity);
+        // Arcane-End
+
         if (itemComponent.StoredSprite is { } storageSprite)
         {
             var scale = 2 * UIScale;
@@ -202,6 +207,7 @@ public sealed class ItemGridPiece : Control, IEntityControl
                 overrideDirection: Direction.South);
         }
 
+        handle.Modulate = originalTint; // Arcane
         if (maybeMarkedPos is {} markedPos)
         {
             var markedTexture = Marked switch

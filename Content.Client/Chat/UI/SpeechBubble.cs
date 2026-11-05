@@ -50,7 +50,7 @@ namespace Content.Client.Chat.UI
         /// <summary>
         ///     The amount of time at the end of the bubble's life at which it starts fading.
         /// </summary>
-        private static readonly TimeSpan FadeTime = TimeSpan.FromSeconds(0.25f);
+        private TimeSpan FadeTime => TimeSpan.FromSeconds(BubbleFadeSeconds); // Arcane-Edit: fixed 250 ms > configured exit duration
 
         /// <summary>
         ///     The distance in world space to offset the speech bubble from the center of the entity.
@@ -139,6 +139,12 @@ namespace Content.Client.Chat.UI
                 return;
             }
 
+            // Arcane-Start
+            UpdateSpeechMotion(args.DeltaSeconds, timeLeft);
+            if (!BubbleMovementEnabled)
+                _verticalOffsetAchieved = VerticalOffset;
+            // Arcane-End
+
             // Lerp to our new vertical offset if it's been modified.
             if (MathHelper.CloseToPercent(_verticalOffsetAchieved - VerticalOffset, 0, 0.1))
             {
@@ -146,7 +152,7 @@ namespace Content.Client.Chat.UI
             }
             else
             {
-                _verticalOffsetAchieved = MathHelper.Lerp(_verticalOffsetAchieved, VerticalOffset, 10 * args.DeltaSeconds);
+                _verticalOffsetAchieved = MathHelper.Lerp(_verticalOffsetAchieved, VerticalOffset, Math.Clamp(10 * args.DeltaSeconds * BubbleSpeed, 0, 1)); // Arcane-Edit: fixed lerp > bounded playback speed
             }
 
             if (!_entityManager.TryGetComponent<TransformComponent>(_senderEntity, out var xform) || xform.MapID != _eyeManager.CurrentEye.Position.MapId)
@@ -155,16 +161,9 @@ namespace Content.Client.Chat.UI
                 return;
             }
 
-            if (timeLeft <= FadeTime.TotalSeconds)
-            {
-                // Update alpha if we're fading.
-                Modulate = Color.White.WithAlpha(timeLeft / (float)FadeTime.TotalSeconds);
-            }
-            else
-            {
-                // Make opaque otherwise, because it might have been hidden before
-                Modulate = Color.White;
-            }
+            // Arcane-Edit-Start: independently configurable entrance and exit, preserving the bubble lifetime.
+            Modulate = Color.White.WithAlpha(BubbleOpacity(timeLeft));
+            // Arcane-Edit-End
 
             var baseOffset = 0f;
 
@@ -243,7 +242,7 @@ namespace Content.Client.Chat.UI
                 OutlineColorOverride = TextOutline.Default.Color,
             };
 
-            label.SetMessage(FormatSpeech(message.WrappedMessage, fontColor), AllowedTags); // Trauma - added AllowedTags
+            InitializeTyping(label, FormatSpeech(message.WrappedMessage, fontColor)); // Arcane-Edit: SetMessage > configurable text reveal
 
             var panel = new PanelContainer
             {
@@ -274,7 +273,7 @@ namespace Content.Client.Chat.UI
                     OutlineColorOverride = TextOutline.Default.Color,
                 };
 
-                label.SetMessage(ExtractAndFormatSpeechSubstring(message, "BubbleContent", fontColor), AllowedTags); // Trauma - added AllowedTags
+                InitializeTyping(label, ExtractAndFormatSpeechSubstring(message, "BubbleContent", fontColor)); // Arcane-Edit: SetMessage > configurable text reveal
 
                 var unfanciedPanel = new PanelContainer
                 {
@@ -303,7 +302,7 @@ namespace Content.Client.Chat.UI
 
             //We'll be honest. *Yes* this is hacky. Doing this in a cleaner way would require a bottom-up refactor of how saycode handles sending chat messages. -Myr
             bubbleHeader.SetMessage(ExtractAndFormatSpeechSubstring(message, "BubbleHeader", fontColor), AllowedTags); // Trauma - added AllowedTags
-            bubbleContent.SetMessage(ExtractAndFormatSpeechSubstring(message, "BubbleContent", fontColor), AllowedTags); // Trauma - added AllowedTags
+            InitializeTyping(bubbleContent, ExtractAndFormatSpeechSubstring(message, "BubbleContent", fontColor)); // Arcane-Edit: SetMessage > configurable text reveal
 
             //As for below: Some day this could probably be converted to xaml. But that is not today. -Myr
             var mainPanel = new PanelContainer

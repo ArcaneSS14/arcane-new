@@ -340,6 +340,7 @@ namespace Content.Client.ContextMenu.UI
             // If this was the last entity, close the entity menu
             if (_context.RootMenu.MenuBody.ChildCount == 0)
                 _context.Close();
+            _context.ClearExitVisuals(); // Arcane
         }
 
         /// <summary>

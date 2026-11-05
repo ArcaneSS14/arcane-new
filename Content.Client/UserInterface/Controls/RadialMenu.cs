@@ -6,11 +6,16 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.Input;
+// Arcane-Start
+using Content.Client.UserInterface.Motion;
+using Robust.Shared.Configuration;
+using Robust.Shared.Timing;
+// Arcane-End
 
 namespace Content.Client.UserInterface.Controls;
 
 [Virtual]
-public class RadialMenu : BaseWindow
+public partial class RadialMenu : BaseWindow // Arcane-Edit: class > partial class
 {
     /// <summary>
     /// Contextual button used to traverse through previous layers of the radial menu
@@ -78,6 +83,7 @@ public class RadialMenu : BaseWindow
     /// </remarks>
     public RadialMenu()
     {
+        InitializeRadialMotion(); // Arcane
         // Hide all starting children (if any) except the first (this is the active layer)
         if (ChildCount > 1)
         {
@@ -420,6 +426,32 @@ public interface IRadialMenuItemWithSector
 [Virtual]
 public class RadialMenuButtonWithSector : RadialMenuButton, IRadialMenuItemWithSector
 {
+    // Arcane-Start
+    private float _motionHover;
+    private readonly UiMotionSpring _motionHoverSpring = new();
+    private readonly IConfigurationManager _motionConfiguration = IoCManager.Resolve<IConfigurationManager>();
+
+    protected override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+        var target = DrawMode == DrawModeEnum.Hover ? 1f : 0f;
+        var enabled = UiMotionSettings.IsEnabled(_motionConfiguration, UiMotionSettings.Radial)
+            && _motionConfiguration.GetCVar(UiMotionSettings.RadialHover) && !_motionConfiguration.GetCVar(UiMotionSettings.Reduce);
+        _motionHover = enabled
+            ? _motionHoverSpring.Advance(target, args.DeltaSeconds * UiMotionSettings.PlaybackSpeed(_motionConfiguration))
+            : _motionHoverSpring.Snap(target);
+    }
+
+    private Color MotionHoverColor(Color normal, Color hover) => new(
+        normal.R + (hover.R - normal.R) * _motionHover,
+        normal.G + (hover.G - normal.G) * _motionHover,
+        normal.B + (hover.B - normal.B) * _motionHover,
+        normal.A + (hover.A - normal.A) * _motionHover);
+
+    private float MotionHoverScale => UiMotionSettings.IsEnabled(_motionConfiguration, UiMotionSettings.Radial)
+        && _motionConfiguration.GetCVar(UiMotionSettings.RadialHover) && !_motionConfiguration.GetCVar(UiMotionSettings.Reduce)
+        ? 1 + _motionHover * UiMotionSettings.Read(_motionConfiguration, UiMotionSettings.RadialHoverScale, 0, 0.15f) : 1;
+    // Arcane-End
     private Vector2[]? _sectorPointsForDrawing;
 
     private float _angleSectorFrom;
@@ -548,24 +580,24 @@ public class RadialMenuButtonWithSector : RadialMenuButton, IRadialMenuItemWithS
         var angleTo = _angleSectorTo + _angleOffset;
         if (DrawBackground)
         {
-            var segmentColor = DrawMode == DrawModeEnum.Hover
-                ? _hoverBackgroundColorSrgb
-                : _backgroundColorSrgb;
+            // Arcane-Edit-Start
+            var segmentColor = MotionHoverColor(_backgroundColorSrgb, _hoverBackgroundColorSrgb);
+            // Arcane-Edit-End
 
-            DrawAnnulusSector(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale, angleFrom, angleTo, segmentColor);
+            DrawAnnulusSector(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale * MotionHoverScale, angleFrom, angleTo, segmentColor); // Arcane-Edit: fixed outer radius > visual hover radius
         }
 
         if (DrawBorder)
         {
-            var borderColor = DrawMode == DrawModeEnum.Hover
-                ? _hoverBorderColorSrgb
-                : _borderColorSrgb;
-            DrawAnnulusSector(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale, angleFrom, angleTo, borderColor, false);
+            // Arcane-Edit-Start
+            var borderColor = MotionHoverColor(_borderColorSrgb, _hoverBorderColorSrgb);
+            // Arcane-Edit-End
+            DrawAnnulusSector(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale * MotionHoverScale, angleFrom, angleTo, borderColor, false); // Arcane-Edit: fixed outer radius > visual hover radius
         }
 
         if (!_isWholeCircle && DrawBorder)
         {
-            DrawSeparatorLines(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale, angleFrom, angleTo, SeparatorColor);
+            DrawSeparatorLines(handle, containerCenter, _innerRadius * UIScale, _outerRadius * UIScale * MotionHoverScale, angleFrom, angleTo, SeparatorColor); // Arcane-Edit: fixed outer radius > visual hover radius
         }
     }
 

@@ -1,0 +1,244 @@
+// Arcane-Start
+using System.Numerics;
+using Robust.Client.Graphics;
+using Robust.Client.UserInterface;
+using Robust.Client.UserInterface.Controls;
+using Robust.Shared.Configuration;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
+
+namespace Content.Client.UserInterface.Motion;
+
+/// <summary>
+/// Opt-in host for a single UI subtree. Layout moves the real controls, keeping hit testing aligned.
+/// The last rendered image can outlive the subtree without retaining its input or gameplay state.
+/// </summary>
+public sealed partial class UiMotionContainer : Control
+{
+    [Dependency] private IConfigurationManager _configuration = default!;
+    [Dependency] private IClyde _clyde = default!;
+    [Dependency] private IPrototypeManager _prototypes = default!;
+
+    private static readonly ProtoId<ShaderPrototype> CompositeShader = "UiMotionPremultiplied";
+
+    private readonly UiMotionTransition _transition;
+    private readonly Action _capture;
+    private IRenderTexture? _texture;
+    private IRenderHandle? _renderHandle;
+    private Control? _renderChild;
+    private UiMotionSnapshot? _exit;
+    private float _renderedOpacity;
+    private float _renderedOffset;
+    private Color _renderedTint = Color.White;
+    private ShaderInstance? _shader;
+
+    public UiMotionProfile Profile { get; set; } = UiMotionProfile.Standard;
+    public CVarDef<bool> EnabledSetting { get; set; } = UiMotionSettings.Enabled;
+    public CVarDef<bool> ClosingSetting { get; set; } = UiMotionSettings.AnimateClosing;
+    public bool ClampToRootBounds { get; set; } = true;
+    public Vector2 TravelDirection { get; set; } = Vector2.UnitY;
+    public Vector2 VisualOffset { get; private set; }
+    private Vector2 _additionalVisualOffset;
+
+    public Vector2 AdditionalVisualOffset
+    {
+        get => _additionalVisualOffset;
+        set
+        {
+            if (_additionalVisualOffset == value)
+                return;
+            _additionalVisualOffset = value;
+            InvalidateArrange();
+        }
+    }
+
+    public void UseMenuProfile() => Profile = UiMotionSettings.MenuProfile(_configuration);
+
+    public void UseStableMenuProfile()
+    {
+        Profile = UiMotionSettings.MenuProfile(_configuration) with
+        {
+            ExitDuration = TimeSpan.Zero,
+            Travel = 0,
+            Overshoot = false
+        };
+    }
+
+    public UiMotionContainer()
+    {
+        IoCManager.InjectDependencies(this);
+        _transition = new UiMotionTransition(_configuration);
+        _capture = Capture;
+    }
+
+    /// <summary>Begin appearing, or reverse a still visible exit image.</summary>
+    public void Show()
+    {
+        Profile = UiMotionSettings.Resolve(_configuration, Profile);
+        var opacity = _transition.Finished ? 0f : _transition.Opacity;
+        var offset = _transition.Finished ? -Profile.Travel : _transition.Offset;
+        if (_exit is { IsInsideTree: true, Visible: true })
+        {
+            opacity = _exit.Opacity;
+            offset = _exit.Offset;
+        }
+        _exit?.Orphan();
+        _exit = null;
+        ReleaseTexture();
+        _transition.Start(Profile, true, opacity, offset);
+        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting))
+            _transition.Finish();
+        InvalidateArrange();
+    }
+
+    /// <summary>
+    /// Transfer the last frame to an inert exit image. The caller owns its UI parent and cancellation.
+    /// No image is produced if the subtree never rendered or motion is disabled.
+    /// </summary>
+    public UiMotionSnapshot? CreateExitVisual(Control? owner = null)
+    {
+        owner ??= this;
+        if (_texture == null || !UiMotionSettings.IsEnabled(_configuration, EnabledSetting)
+                             || !_configuration.GetCVar(ClosingSetting) || Profile.ExitDuration <= TimeSpan.Zero || owner.Root == null)
+        {
+            ReleaseTexture();
+            return null;
+        }
+
+        _exit?.Orphan();
+        _exit = new UiMotionSnapshot(_texture, _configuration, UiMotionSettings.Resolve(_configuration, Profile), owner.GlobalPosition,
+            _texture.Size / owner.UIScale, _renderedOpacity, _renderedOffset, _renderedTint,
+            _shader ??= _prototypes.Index(CompositeShader).Instance(), EnabledSetting, ClosingSetting);
+        _texture = null;
+        owner.Root.ModalRoot.AddChild(_exit);
+        return _exit;
+    }
+
+    /// <summary>Capture an unwrapped content control during its render pass. Recursion is explicitly suppressed.</summary>
+    internal void CaptureControl(Control control, in ControlRenderArguments args)
+    {
+        if (_renderChild != null)
+            return;
+        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting)
+            || !_configuration.GetCVar(ClosingSetting) || Profile.ExitDuration <= TimeSpan.Zero
+            || control.PixelWidth <= 0 || control.PixelHeight <= 0
+            || (long) control.PixelWidth * control.PixelHeight > 4_194_304)
+        {
+            ReleaseTexture();
+            return;
+        }
+        if (_texture?.Size != control.PixelSize)
+        {
+            ReleaseTexture();
+            _texture = _clyde.CreateRenderTarget(control.PixelSize, RenderTargetColorFormat.Rgba8Srgb,
+                name: nameof(UiMotionContainer));
+        }
+        _renderHandle = args.Handle;
+        _renderChild = control;
+        try
+        {
+            args.Handle.RenderInRenderTarget(_texture, _capture, Color.Transparent);
+        }
+        finally
+        {
+            _renderHandle = null;
+            _renderChild = null;
+        }
+        _renderedOpacity = 1;
+        _renderedOffset = 0;
+        _renderedTint = Color.White;
+    }
+
+    /// <summary>Opacity for an item in an opt-in sequence, sharing this host's timing and preferences.</summary>
+    public float GetStaggeredOpacity(int index, int count)
+    {
+        return _transition.GetStaggeredOpacity(index, count);
+    }
+
+    protected override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+        var offset = _transition.Offset;
+        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting))
+            _transition.Finish();
+        _transition.Advance(args.DeltaSeconds);
+        if (offset != _transition.Offset)
+            InvalidateArrange();
+    }
+
+    protected override Vector2 ArrangeOverride(Vector2 finalSize)
+    {
+        var offset = _transition.Offset * TravelDirection + AdditionalVisualOffset;
+        if (ClampToRootBounds && Root != null)
+        {
+            offset.X = Math.Clamp(offset.X, -GlobalPosition.X, Math.Max(-GlobalPosition.X, Root.Width - GlobalPosition.X - finalSize.X));
+            offset.Y = Math.Clamp(offset.Y, -GlobalPosition.Y, Math.Max(-GlobalPosition.Y, Root.Height - GlobalPosition.Y - finalSize.Y));
+        }
+        VisualOffset = offset;
+        foreach (var child in Children)
+            child.Arrange(UIBox2.FromDimensions(VisualOffset, finalSize));
+        return finalSize;
+    }
+
+    protected override void RenderChildOverride(ref ControlRenderArguments args, int childIndex, Vector2i position)
+    {
+        if (!UiMotionSettings.IsEnabled(_configuration, EnabledSetting) || !_configuration.GetCVar(ClosingSetting)
+            || Profile.ExitDuration <= TimeSpan.Zero)
+        {
+            ReleaseTexture();
+            var original = args.Modulate;
+            args.Modulate = original.WithAlpha(original.A * _transition.Opacity);
+            base.RenderChildOverride(ref args, childIndex, position);
+            args.Modulate = original;
+            return;
+        }
+
+        var child = GetChild(childIndex);
+        if (child.PixelWidth <= 0 || child.PixelHeight <= 0)
+        {
+            ReleaseTexture();
+            return;
+        }
+
+        CaptureControl(child, args);
+        // Render the live child. The render target is retained only for a later inert exit snapshot;
+        // drawing it here produced opaque backgrounds on transparent HUD controls on some GPUs.
+        var liveModulate = args.Modulate;
+        args.Modulate = liveModulate.WithAlpha(liveModulate.A * _transition.Opacity);
+        base.RenderChildOverride(ref args, childIndex, position);
+        args.Modulate = liveModulate;
+        _renderedOpacity = _transition.Opacity;
+        _renderedOffset = VisualOffset.Y;
+        _renderedTint = liveModulate;
+    }
+
+    private void Capture()
+    {
+        if (_renderHandle == null || _renderChild == null)
+            return;
+
+        _renderHandle.SetScissor(null);
+        _renderHandle.DrawingHandleScreen.SetTransform(Matrix3x2.Identity);
+        UserInterfaceManager.RenderControl(_renderHandle, _renderChild, Vector2i.Zero);
+    }
+
+    protected override void ExitedTree()
+    {
+        ReleaseTexture();
+        base.ExitedTree();
+    }
+
+    protected override void VisibilityChanged(bool newVisible)
+    {
+        if (!newVisible)
+            ReleaseTexture();
+        base.VisibilityChanged(newVisible);
+    }
+
+    internal void ReleaseTexture()
+    {
+        _texture?.Dispose();
+        _texture = null;
+    }
+}
+// Arcane-End

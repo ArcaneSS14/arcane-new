@@ -1,6 +1,11 @@
-<Popup xmlns="https://spacestation14.io">
+<!-- Arcane-Edit-Start -->
+<Popup xmlns="https://spacestation14.io"
+       xmlns:motion="clr-namespace:Content.Client.UserInterface.Motion">
+<!-- Arcane-Edit-End -->
+    <motion:UiMotionContainer Name="Motion"> <!-- Arcane -->
     <PanelContainer Name="MenuPanel">
         <ScrollContainer Name="Scroll" VerticalExpand="True" HScrollEnabled="False" ReturnMeasure="True" ReserveScrollbarSpace="False">
         </ScrollContainer>
     </PanelContainer>
+    </motion:UiMotionContainer> <!-- Arcane -->
 </Popup>
