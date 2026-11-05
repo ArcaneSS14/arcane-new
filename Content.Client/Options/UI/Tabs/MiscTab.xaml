@@ -5,16 +5,22 @@
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
             <BoxContainer Orientation="Vertical" Margin="8 8 8 8" VerticalExpand="True">
-                <Label Text="{Loc 'ui-options-general-ui-style'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="GeneralUiStyleLabel" Text="{Loc 'ui-options-general-ui-style'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <ui:OptionDropDown Name="DropDownLanguage" Title="{Loc 'ui-options-language'}" /> <!-- Arcane -->
                 <ui:OptionDropDown Name="DropDownHudTheme" Title="{Loc 'ui-options-hud-theme'}" />
                 <ui:OptionDropDown Name="DropDownHudLayout" Title="{Loc 'ui-options-hud-layout'}" />
-                <Label Text="{Loc 'ui-options-general-discord'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="GeneralDiscordLabel" Text="{Loc 'ui-options-general-discord'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="DiscordRich" Text="{Loc 'ui-options-discordrich'}" />
-                <Label Text="{Loc 'ui-options-general-speech'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="GeneralSpeechLabel" Text="{Loc 'ui-options-general-speech'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="ShowOocPatronColor" Text="{Loc 'ui-options-show-ooc-patron-color'}" />
                 <CheckBox Name="ShowLoocAboveHeadCheckBox" Text="{Loc 'ui-options-show-looc-on-head'}" />
                 <CheckBox Name="FancySpeechBubblesCheckBox" Text="{Loc 'ui-options-fancy-speech'}" />
@@ -25,18 +31,24 @@
                 <CheckBox Name="DetailedExamineCheckBox" Text="{Loc 'ui-options-detailed-examine'}" />
                 <!-- <.Trauma> -->
                 <CheckBox Name="ChatFollowButton" Text="{Loc 'ui-options-chat-follow-button'}" />
-                <Label Text="{Loc 'ui-options-general-cursor'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="GeneralCursorLabel" Text="{Loc 'ui-options-general-cursor'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="ShowHeldItemCheckBox" Text="{Loc 'ui-options-show-held-item'}" />
                 <CheckBox Name="ShowCursorCooldownCheckBox" Text="{Loc 'ui-options-show-cursor-cooldown'}" /> <!-- Arcane -->
                 <CheckBox Name="ShowCombatModeIndicatorsCheckBox" Text="{Loc 'ui-options-show-combat-mode-indicators'}" />
-                <Label Text="{Loc 'ui-options-general-storage'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="GeneralStorageLabel" Text="{Loc 'ui-options-general-storage'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="OpaqueStorageWindowCheckBox" Text="{Loc 'ui-options-opaque-storage-window'}" />
                 <CheckBox Name="StaticStorageUI" Text="{Loc 'ui-options-static-storage-ui'}" />
-                <!-- Goobstation Edit Start -->
-                <Label Text="{Loc 'ui-options-preferences'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="PreferencesLabel" Text="{Loc 'ui-options-preferences'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
+                <!-- Goobstation Edit Start -->
                 <CheckBox Name="AutoFocusSearchOnBuildMenuCheckBox" Text="{Loc 'ui-options-auto-focus-search-on-build-menu'}" />
                 <!-- Goobstation Edit End -->
                 <!-- <CheckBox Name="ToggleWalk" Text="{Loc 'ui-options-hotkey-toggle-walk'}" /> -->

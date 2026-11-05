@@ -21,6 +21,35 @@ public sealed partial class CustomizationTab : Control
     [Dependency] private IPrototypeManager _prototypes = default!;
     [Dependency] private IResourceCache _resources = default!;
 
+    /// <summary>Refreshes text without changing pending settings.</summary>
+    public void ReloadLocalization()
+    {
+        UseRunechat.Text = Loc.GetString("ui-options-runechat");
+        RunechatFontDropDown.Title = Loc.GetString("ui-options-runechat-font");
+        RunechatFontSizeSlider.Title = Loc.GetString("ui-options-runechat-font-size");
+        RunechatWhisperFontDropDown.Title = Loc.GetString("ui-options-runechat-whisper-font");
+        RunechatWhisperFontSizeSlider.Title = Loc.GetString("ui-options-runechat-whisper-font-size");
+        UseRunechatOutline.Text = Loc.GetString("ui-options-runechat-outline");
+        UseRandomRunechatColors.Text = Loc.GetString("ui-options-runechat-random-colors");
+        RunechatColorSlider.Title = Loc.GetString("ui-options-runechat-color");
+        RunechatColorSlider.Example = Loc.GetString("ui-options-runechat-color-example");
+        UseRunechatTypingAnimation.Text = Loc.GetString("ui-options-runechat-typing-animation");
+        RunechatTypingSpeedSlider.Title = Loc.GetString("ui-options-runechat-typing-speed");
+        RunechatPostTypingLifetimeSlider.Title = Loc.GetString("ui-options-runechat-post-typing-lifetime");
+        RadioChannelColorsHeaderLabel.Text = Loc.GetString("ui-options-radio-channel-colors-header");
+        UseCustomRadioChannelColors.Text = Loc.GetString("ui-options-use-custom-radio-channel-colors");
+        RadioChannelColorsExpandCollapsibleHeading.Title = Loc.GetString("ui-options-radio-channel-colors-expand");
+        InteractionOutlineHeaderLabel.Text = Loc.GetString("ui-options-interaction-outline-header");
+        UseCustomInteractionOutlineColors.Text = Loc.GetString("ui-options-use-custom-interaction-outline-color");
+        ValidInteractionOutlineColorSlider.Title = Loc.GetString("ui-options-interaction-outline-color-valid");
+        ValidInteractionOutlineColorSlider.Example = Loc.GetString("ui-options-interaction-outline-color-example");
+        InvalidInteractionOutlineColorSlider.Title = Loc.GetString("ui-options-interaction-outline-color-invalid");
+        InvalidInteractionOutlineColorSlider.Example = Loc.GetString("ui-options-interaction-outline-color-example");
+        Control.ReloadLocalization();
+        UpdateRunechatFontPreview(RunechatFontPreview, (string) RunechatFontDropDown.Button.SelectedMetadata!);
+        UpdateRunechatFontPreview(RunechatWhisperFontPreview, (string) RunechatWhisperFontDropDown.Button.SelectedMetadata!);
+    }
+
     public CustomizationTab()
     {
         RobustXamlLoader.Load(this);
@@ -62,9 +91,9 @@ public sealed partial class CustomizationTab : Control
     {
         return
         [
-            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.Grand9kFontId, Loc.GetString("ui-options-runechat-font-grand9k")),
-            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.PressStart2PFontId, Loc.GetString("ui-options-runechat-font-press-start-2p")),
-            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.Tiny5FontId, Loc.GetString("ui-options-runechat-font-tiny5")),
+            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.Grand9kFontId, () => Loc.GetString("ui-options-runechat-font-grand9k")),
+            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.PressStart2PFontId, () => Loc.GetString("ui-options-runechat-font-press-start-2p")),
+            new OptionDropDownCVar<string>.ValueOption(RunechatSheetlet.Tiny5FontId, () => Loc.GetString("ui-options-runechat-font-tiny5")),
         ];
     }
 
@@ -207,6 +236,15 @@ public sealed class OptionRadioChannelColors : BaseOption
             };
             container.AddChild(slider);
             _sliders.Add((channel, slider));
+        }
+    }
+
+    public override void ReloadLocalization()
+    {
+        foreach (var (channel, slider) in _sliders)
+        {
+            slider.Title = channel.LocalizedName;
+            slider.Example = Loc.GetString("ui-options-radio-channel-colors-example", ("channel", channel.LocalizedName));
         }
     }
 

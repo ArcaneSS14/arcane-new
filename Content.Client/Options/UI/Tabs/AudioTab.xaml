@@ -3,8 +3,10 @@
          xmlns:ui="clr-namespace:Content.Client.Options.UI">
     <BoxContainer Orientation="Vertical">
         <BoxContainer Orientation="Vertical" Margin="8 8 8 8" VerticalExpand="True">
-            <Label Text="{Loc 'ui-options-volume-label'}"
+            <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+            <Label Name="VolumeLabel" Text="{Loc 'ui-options-volume-label'}"
                    StyleClasses="LabelKeyText"/>
+            <!-- Arcane-Edit-End -->
             <BoxContainer Orientation="Vertical" Margin="0 3 0 0">
                 <ui:OptionDropDown Name="DropDownAudioDevice" Title="{Loc 'ui-options-audio-device'}"
                                    Margin="0 0 0 8" />

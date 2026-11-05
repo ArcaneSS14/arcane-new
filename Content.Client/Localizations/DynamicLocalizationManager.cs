@@ -4,13 +4,13 @@ using System.Linq;
 using Content.Client.Gameplay;
 using Content.Client.Lobby;
 using Content.Client.MainMenu;
-using Content.Client.Options.UI;
 using Content.Shared.Localizations;
 using Robust.Client.State;
 using Robust.Client.UserInterface;
 using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.Log;
+using Content.Client.UserInterface.Systems.EscapeMenu;
 
 namespace Content.Client.Localizations;
 
@@ -32,6 +32,7 @@ public sealed partial class DynamicLocalizationManager
     private readonly List<Action<CultureInfo, CultureInfo>> _cultureChangedHandlers = [];
     private bool _changingCulture;
     private bool _uiReady;
+    private bool _culturePrepared;
 
     public event Action<CultureInfo, CultureInfo>? CultureChanged
     {
@@ -86,8 +87,15 @@ public sealed partial class DynamicLocalizationManager
             return;
 
         var previous = _localization.DefaultCulture ?? CultureInfo.GetCultureInfo(FallbackCultureName);
-        if (TryApplyCulture(cultureName, out var culture))
+        var selected = GetAvailableCultures().FirstOrDefault(found =>
+            found.Name.Equals(cultureName, StringComparison.OrdinalIgnoreCase));
+        if (selected != null && _culturePrepared &&
+            previous.Name.Equals(selected.Name, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        if (selected != null && TryApplyCulture(selected, out var culture))
         {
+            _culturePrepared = true;
             if (previous.Name.Equals(culture.Name, StringComparison.OrdinalIgnoreCase))
                 return;
 
@@ -114,16 +122,9 @@ public sealed partial class DynamicLocalizationManager
         }
     }
 
-    private bool TryApplyCulture(string cultureName, out CultureInfo culture)
+    private bool TryApplyCulture(CultureInfo selected, out CultureInfo culture)
     {
         culture = default!;
-        var available = GetAvailableCultures();
-        var selected = available.FirstOrDefault(found =>
-            found.Name.Equals(cultureName, StringComparison.OrdinalIgnoreCase));
-
-        if (selected == null)
-            return false;
-
         var previous = _localization.DefaultCulture;
         try
         {
@@ -194,8 +195,7 @@ public sealed partial class DynamicLocalizationManager
                 break;
         }
 
-        if (_uiManager.TryGetFirstWindow<OptionsMenu>(out var optionsMenu))
-            optionsMenu?.ReloadLocalization();
+        _uiManager.GetUIController<OptionsUIController>().ReloadLocalization();
     }
 }
 // Arcane-End

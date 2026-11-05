@@ -20,7 +20,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <CheckBox Name="NetPredictCheckbox" Text="{Loc 'ui-options-net-predict'}" />
             </BoxContainer>
             <BoxContainer Orientation="Horizontal" Margin="4 10 4 0">
-                <Label Text="{Loc 'ui-options-net-interp-ratio'}" />
+                <Label Name="NetInterpRatioSettingLabel" Text="{Loc 'ui-options-net-interp-ratio'}" /> <!-- Arcane-Edit: unnamed > NetInterpRatioSettingLabel -->
                 <Control MinSize="8 0" />
                 <Slider Name="NetInterpRatioSlider"
                             ToolTip="{Loc 'ui-options-net-interp-ratio-tooltip'}"
@@ -33,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <Control MinSize="4 0"/>
             </BoxContainer>
             <BoxContainer Orientation="Horizontal" Margin="4 10 4 0">
-                <Label Text="{Loc 'ui-options-net-predict-tick-bias'}" />
+                <Label Name="NetPredictTickBiasSettingLabel" Text="{Loc 'ui-options-net-predict-tick-bias'}" /> <!-- Arcane-Edit: unnamed > NetPredictTickBiasSettingLabel -->
                 <Control MinSize="8 0" />
                 <Slider Name="NetPredictTickBiasSlider"
                             ToolTip="{Loc 'ui-options-net-predict-tick-bias-tooltip'}"
@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <Control MinSize="4 0"/>
             </BoxContainer>
             <BoxContainer Orientation="Horizontal" Margin="4 10 4 0">
-                <Label Text="{Loc 'ui-options-net-pvs-spawn'}" />
+                <Label Name="NetPvsSpawnSettingLabel" Text="{Loc 'ui-options-net-pvs-spawn'}" /> <!-- Arcane-Edit: unnamed > NetPvsSpawnSettingLabel -->
                 <Control MinSize="8 0" />
                 <Slider Name="NetPvsSpawnSlider"
                             ToolTip="{Loc 'ui-options-net-pvs-spawn-tooltip'}"
@@ -61,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <Control MinSize="4 0"/>
             </BoxContainer>
             <BoxContainer Orientation="Horizontal" Margin="4 10 4 0">
-                <Label Text="{Loc 'ui-options-net-pvs-entry'}" />
+                <Label Name="NetPvsEntrySettingLabel" Text="{Loc 'ui-options-net-pvs-entry'}" /> <!-- Arcane-Edit: unnamed > NetPvsEntrySettingLabel -->
                 <Control MinSize="8 0" />
                 <Slider Name="NetPvsEntrySlider"
                             ToolTip="{Loc 'ui-options-net-pvs-entry-tooltip'}"
@@ -75,7 +75,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <Control MinSize="4 0"/>
             </BoxContainer>
             <BoxContainer Orientation="Horizontal" Margin="4 10 4 10">
-                <Label Text="{Loc 'ui-options-net-pvs-leave'}" />
+                <Label Name="NetPvsLeaveSettingLabel" Text="{Loc 'ui-options-net-pvs-leave'}" /> <!-- Arcane-Edit: unnamed > NetPvsLeaveSettingLabel -->
                 <Control MinSize="8 0" />
                 <Slider Name="NetPvsLeaveSlider"
                             ToolTip="{Loc 'ui-options-net-pvs-leave-tooltip'}"

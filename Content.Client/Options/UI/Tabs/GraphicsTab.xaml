@@ -23,13 +23,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <ScrollContainer VerticalExpand="True">
             <BoxContainer Orientation="Vertical" Margin="8 8 8 8">
                 <!-- Display -->
-                <Label Text="{Loc 'ui-options-display-label'}" StyleClasses="LabelKeyText"/>
+                <Label Name="DisplayLabel" Text="{Loc 'ui-options-display-label'}" StyleClasses="LabelKeyText"/> <!-- Arcane-Edit: unnamed > DisplayLabel -->
                 <CheckBox Name="FullscreenCheckBox" Text="{Loc 'ui-options-fullscreen'}" />
                 <CheckBox Name="VSyncCheckBox" Text="{Loc 'ui-options-vsync'}" />
                 <BoxContainer Name="MaxFpsContainer"
                               Orientation="Horizontal"
                               ToolTip="{Loc 'ui-options-max-fps-tooltip'}">
-                    <Label Text="{Loc 'ui-options-max-fps'}" MinWidth="400" />
+                    <Label Name="MaxFpsLabel" Text="{Loc 'ui-options-max-fps'}" MinWidth="400" /> <!-- Arcane-Edit: unnamed > MaxFpsLabel -->
                     <ui:OptionIntInput Name="MaxFpsInput" HorizontalExpand="True" />
                     <Button Name="MaxFpsDisplayRateButton"
                             Text="{Loc 'ui-options-max-fps-display-rate'}"
@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 </BoxContainer>
 
                 <!-- Quality -->
-                <Label Text="{Loc 'ui-options-quality-label'}" StyleClasses="LabelKeyText"/>
+                <Label Name="QualityLabel" Text="{Loc 'ui-options-quality-label'}" StyleClasses="LabelKeyText"/> <!-- Arcane-Edit: unnamed > QualityLabel -->
                 <ui:OptionDropDown Name="DropDownLightingQuality" Title="{Loc 'ui-options-lighting-label'}" />
                 <ui:OptionDropDown Name="DropDownParticleQuality" Title="{Loc 'ui-options-particles-label'}" /> <!-- Starfall: Particles -->
                 <CheckBox Name="ViewportLowResCheckBox" Text="{Loc 'ui-options-vp-low-res'}" />
@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                 <ui:OptionSlider Name="SharpnessSlider" Title="{Loc 'ui-options-sharpness'}" />
 
                 <!-- Interface -->
-                <Label Text="{Loc 'ui-options-interface-label'}" StyleClasses="LabelKeyText"/>
+                <Label Name="InterfaceLabel" Text="{Loc 'ui-options-interface-label'}" StyleClasses="LabelKeyText"/> <!-- Arcane-Edit: unnamed > InterfaceLabel -->
                 <ui:OptionDropDown Name="DropDownUIScale" Title="{Loc 'ui-options-scale-label'}" />
                 <CheckBox Name="ViewportStretchCheckBox" Text="{Loc 'ui-options-vp-stretch'}" />
                 <ui:OptionSlider Name="ViewportScaleSlider" Title="{Loc ui-options-vp-scale}" />
@@ -60,7 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                           ToolTip="{Loc 'ui-options-vp-vertical-fit-tooltip'}" />
 
                 <!-- Misc -->
-                <Label Text="{Loc 'ui-options-misc-label'}" StyleClasses="LabelKeyText"/>
+                <Label Name="MiscLabel" Text="{Loc 'ui-options-misc-label'}" StyleClasses="LabelKeyText"/> <!-- Arcane-Edit: unnamed > MiscLabel -->
                 <CheckBox Name="FpsCounterCheckBox" Text="{Loc 'ui-options-fps-counter'}" />
             </BoxContainer>
         </ScrollContainer>

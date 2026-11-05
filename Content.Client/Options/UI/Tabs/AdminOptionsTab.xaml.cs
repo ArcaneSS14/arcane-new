@@ -21,6 +21,33 @@ public sealed partial class AdminOptionsTab : Control
     private const int OverlayGhostHideMin = 0;
     private const int OverlayGhostHideMax = 5;
 
+    // Arcane-Start
+    /// <summary>Refreshes text without changing pending settings.</summary>
+    public void ReloadLocalization()
+    {
+        AdminPlayerPanelLabel.Text = Loc.GetString("ui-options-admin-player-panel");
+        DropDownPlayerTabSymbolSetting.Title = Loc.GetString("ui-options-admin-player-tab-symbol-setting");
+        DropDownPlayerTabRoleSetting.Title = Loc.GetString("ui-options-admin-player-tab-role-setting");
+        DropDownPlayerTabColorSetting.Title = Loc.GetString("ui-options-admin-player-tab-color-setting");
+        AdminOverlayTitleLabel.Text = Loc.GetString("ui-options-admin-overlay-title");
+        DropDownOverlayAntagFormat.Title = Loc.GetString("ui-options-admin-overlay-antag-format");
+        DropDownOverlayAntagSymbol.Title = Loc.GetString("ui-options-admin-overlay-antag-symbol");
+        EnableOverlayPlaytimeCheckBox.Text = Loc.GetString("ui-options-admin-enable-overlay-playtime");
+        EnableOverlayStartingJobCheckBox.Text = Loc.GetString("ui-options-admin-enable-overlay-starting-job");
+        EnableOverlayUsernameCheckBox.Text = Loc.GetString("ui-options-enable-overlay-user-name");
+        EnableOverlayCharacterNameCheckBox.Text = Loc.GetString("ui-options-enable-overlay-character-name");
+        OverlayMergeDistanceSlider.Title = Loc.GetString("ui-options-admin-overlay-merge-distance");
+        OverlayGhostFadeSlider.Title = Loc.GetString("ui-options-admin-overlay-ghost-fade-distance");
+        OverlayGhostHideSlider.Title = Loc.GetString("ui-options-admin-overlay-ghost-hide-distance");
+        AdminNotificationsTitleLabel.Text = Loc.GetString("ui-options-admin-notifications-title");
+        NotificationsVolumeSlider.Title = Loc.GetString("ui-options-admin-notifications-volume");
+        AdminStripOverlayTitleLabel.Text = Loc.GetString("ui-options-admin-strip-overlay-title");
+        EnableAdminStripOverlayDefault.Text = Loc.GetString("ui-options-admin-strip-overlay-setting");
+        Control.ReloadLocalization();
+    }
+
+    // Arcane-End
+
     public AdminOptionsTab()
     {
         RobustXamlLoader.Load(this);
@@ -28,31 +55,31 @@ public sealed partial class AdminOptionsTab : Control
         var antagFormats = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var format in Enum.GetValues(typeof(AdminOverlayAntagFormat)))
         {
-            antagFormats.Add(new OptionDropDownCVar<string>.ValueOption(format.ToString()!, Loc.GetString($"ui-options-admin-overlay-antag-format-{format.ToString()!.ToLower()}")));
+            antagFormats.Add(new OptionDropDownCVar<string>.ValueOption(format.ToString()!, () => Loc.GetString($"ui-options-admin-overlay-antag-format-{format.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         var antagSymbolStyles = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var symbol in Enum.GetValues(typeof(AdminOverlayAntagSymbolStyle)))
         {
-            antagSymbolStyles.Add(new OptionDropDownCVar<string>.ValueOption(symbol.ToString()!, Loc.GetString($"ui-options-admin-overlay-antag-symbol-{symbol.ToString()!.ToLower()}")));
+            antagSymbolStyles.Add(new OptionDropDownCVar<string>.ValueOption(symbol.ToString()!, () => Loc.GetString($"ui-options-admin-overlay-antag-symbol-{symbol.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         var playerTabColorSettings = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var setting in Enum.GetValues(typeof(AdminPlayerTabColorOption)))
         {
-            playerTabColorSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, Loc.GetString($"ui-options-admin-player-tab-color-setting-{setting.ToString()!.ToLower()}")));
+            playerTabColorSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, () => Loc.GetString($"ui-options-admin-player-tab-color-setting-{setting.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         var playerTabRoleSettings = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var setting in Enum.GetValues(typeof(AdminPlayerTabRoleTypeOption)))
         {
-            playerTabRoleSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, Loc.GetString($"ui-options-admin-player-tab-role-setting-{setting.ToString()!.ToLower()}")));
+            playerTabRoleSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, () => Loc.GetString($"ui-options-admin-player-tab-role-setting-{setting.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         var playerTabSymbolSettings = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var setting in Enum.GetValues(typeof(AdminPlayerTabSymbolOption)))
         {
-            playerTabSymbolSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, Loc.GetString($"ui-options-admin-player-tab-symbol-setting-{setting.ToString()!.ToLower()}")));
+            playerTabSymbolSettings.Add(new OptionDropDownCVar<string>.ValueOption(setting.ToString()!, () => Loc.GetString($"ui-options-admin-player-tab-symbol-setting-{setting.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         Control.AddOptionDropDown(CCVars.AdminPlayerTabSymbolSetting, DropDownPlayerTabSymbolSetting, playerTabSymbolSettings);

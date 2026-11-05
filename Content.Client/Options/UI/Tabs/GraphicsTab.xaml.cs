@@ -15,6 +15,40 @@ public sealed partial class GraphicsTab : Control
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IClyde _clyde = default!;
 
+    // Arcane-Start
+    /// <summary>Refreshes text without changing pending settings.</summary>
+    public void ReloadLocalization()
+    {
+        DisplayLabel.Text = Loc.GetString("ui-options-display-label");
+        FullscreenCheckBox.Text = Loc.GetString("ui-options-fullscreen");
+        VSyncCheckBox.Text = Loc.GetString("ui-options-vsync");
+        MaxFpsContainer.ToolTip = Loc.GetString("ui-options-max-fps-tooltip");
+        MaxFpsLabel.Text = Loc.GetString("ui-options-max-fps");
+        MaxFpsDisplayRateButton.Text = Loc.GetString("ui-options-max-fps-display-rate");
+        QualityLabel.Text = Loc.GetString("ui-options-quality-label");
+        DropDownLightingQuality.Title = Loc.GetString("ui-options-lighting-label");
+        DropDownParticleQuality.Title = Loc.GetString("ui-options-particles-label");
+        ViewportLowResCheckBox.Text = Loc.GetString("ui-options-vp-low-res");
+        ParallaxLowQualityCheckBox.Text = Loc.GetString("ui-options-parallax-low-quality");
+        AmbientOcclusionCheckBox.Text = Loc.GetString("ui-options-ambient-occlusion");
+        SharpnessSlider.Title = Loc.GetString("ui-options-sharpness");
+        InterfaceLabel.Text = Loc.GetString("ui-options-interface-label");
+        DropDownUIScale.Title = Loc.GetString("ui-options-scale-label");
+        ViewportStretchCheckBox.Text = Loc.GetString("ui-options-vp-stretch");
+        ViewportScaleSlider.Title = Loc.GetString("ui-options-vp-scale");
+        ViewportWidthSlider.Title = Loc.GetString("ui-options-vp-width");
+        IntegerScalingCheckBox.Text = Loc.GetString("ui-options-vp-integer-scaling");
+        IntegerScalingCheckBox.ToolTip = Loc.GetString("ui-options-vp-integer-scaling-tooltip");
+        DropDownFilterMode.Title = Loc.GetString("ui-options-filter-label");
+        ViewportVerticalFitCheckBox.Text = Loc.GetString("ui-options-vp-vertical-fit");
+        ViewportVerticalFitCheckBox.ToolTip = Loc.GetString("ui-options-vp-vertical-fit-tooltip");
+        MiscLabel.Text = Loc.GetString("ui-options-misc-label");
+        FpsCounterCheckBox.Text = Loc.GetString("ui-options-fps-counter");
+        Control.ReloadLocalization();
+    }
+
+    // Arcane-End
+
     public GraphicsTab()
     {
         IoCManager.InjectDependencies(this);
@@ -40,21 +74,25 @@ public sealed partial class GraphicsTab : Control
             [
                 new OptionDropDownCVar<float>.ValueOption(
                     0f,
-                    Loc.GetString("ui-options-scale-auto", ("scale", UserInterfaceManager.DefaultUIScale))),
-                new OptionDropDownCVar<float>.ValueOption(0.75f, Loc.GetString("ui-options-scale-75")),
-                new OptionDropDownCVar<float>.ValueOption(1.00f, Loc.GetString("ui-options-scale-100")),
-                new OptionDropDownCVar<float>.ValueOption(1.25f, Loc.GetString("ui-options-scale-125")),
-                new OptionDropDownCVar<float>.ValueOption(1.50f, Loc.GetString("ui-options-scale-150")),
-                new OptionDropDownCVar<float>.ValueOption(1.75f, Loc.GetString("ui-options-scale-175")),
-                new OptionDropDownCVar<float>.ValueOption(2.00f, Loc.GetString("ui-options-scale-200")),
+                    // Arcane-Edit-Start: resolve labels in the current culture
+                    () => Loc.GetString("ui-options-scale-auto", ("scale", UserInterfaceManager.DefaultUIScale))),
+                new OptionDropDownCVar<float>.ValueOption(0.75f, () => Loc.GetString("ui-options-scale-75")),
+                new OptionDropDownCVar<float>.ValueOption(1.00f, () => Loc.GetString("ui-options-scale-100")),
+                new OptionDropDownCVar<float>.ValueOption(1.25f, () => Loc.GetString("ui-options-scale-125")),
+                new OptionDropDownCVar<float>.ValueOption(1.50f, () => Loc.GetString("ui-options-scale-150")),
+                new OptionDropDownCVar<float>.ValueOption(1.75f, () => Loc.GetString("ui-options-scale-175")),
+                new OptionDropDownCVar<float>.ValueOption(2.00f, () => Loc.GetString("ui-options-scale-200")),
+                    // Arcane-Edit-End
             ]);
 
         Control.AddOptionDropDown(
             CCVars.ViewportScalingFilterMode,
             DropDownFilterMode,
             [
-                new OptionDropDownCVar<string>.ValueOption("nearest", Loc.GetString("ui-options-filter-nearest")),
-                new OptionDropDownCVar<string>.ValueOption("bilinear", Loc.GetString("ui-options-filter-bilinear")),
+                // Arcane-Edit-Start: resolve labels in the current culture
+                new OptionDropDownCVar<string>.ValueOption("nearest", () => Loc.GetString("ui-options-filter-nearest")),
+                new OptionDropDownCVar<string>.ValueOption("bilinear", () => Loc.GetString("ui-options-filter-bilinear")),
+                // Arcane-Edit-End
             ]);
 
         var vpStretch = Control.AddOptionCheckBox(CCVars.ViewportStretch, ViewportStretchCheckBox);
@@ -145,10 +183,13 @@ public sealed partial class GraphicsTab : Control
             _cfg = cfg;
             _dropDown = dropDown;
             var button = dropDown.Button;
-            button.AddItem(Loc.GetString("ui-options-lighting-very-low"), QualityVeryLow);
-            button.AddItem(Loc.GetString("ui-options-lighting-low"), QualityLow);
-            button.AddItem(Loc.GetString("ui-options-lighting-medium"), QualityMedium);
-            button.AddItem(Loc.GetString("ui-options-lighting-high"), QualityHigh);
+            // Arcane-Edit-Start: populate labels through the shared refresh path.
+            button.AddItem(string.Empty, QualityVeryLow);
+            button.AddItem(string.Empty, QualityLow);
+            button.AddItem(string.Empty, QualityMedium);
+            button.AddItem(string.Empty, QualityHigh);
+            // Arcane-Edit-End
+            ReloadLocalization(); // Arcane
             button.OnItemSelected += OnOptionSelected;
         }
 
@@ -157,6 +198,16 @@ public sealed partial class GraphicsTab : Control
             _dropDown.Button.SelectId(obj.Id);
             ValueChanged();
         }
+
+        // Arcane-Start
+        public override void ReloadLocalization()
+        {
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityVeryLow), Loc.GetString("ui-options-lighting-very-low"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityLow), Loc.GetString("ui-options-lighting-low"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityMedium), Loc.GetString("ui-options-lighting-medium"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityHigh), Loc.GetString("ui-options-lighting-high"));
+        }
+        // Arcane-End
 
         public override void LoadValue()
         {

@@ -21,6 +21,36 @@ public sealed partial class AudioTab : Control
     [Dependency] private IClientAdminManager _admin = default!;
     [Dependency] private IConfigurationManager _cfg = default!;
 
+    // Arcane-Start
+    /// <summary>Refreshes text without changing pending settings.</summary>
+    public void ReloadLocalization()
+    {
+        VolumeLabel.Text = Loc.GetString("ui-options-volume-label");
+        DropDownAudioDevice.Title = Loc.GetString("ui-options-audio-device");
+        SliderVolumeMaster.Title = Loc.GetString("ui-options-master-volume");
+        SliderVolumeMidi.Title = Loc.GetString("ui-options-midi-volume");
+        SliderVolumeAmbientMusic.Title = Loc.GetString("ui-options-ambient-music-volume");
+        SliderVolumeAmbience.Title = Loc.GetString("ui-options-ambience-volume");
+        SliderVolumeLobby.Title = Loc.GetString("ui-options-lobby-volume");
+        SliderVolumeInterface.Title = Loc.GetString("ui-options-interface-volume");
+        SliderVolumeBarks.Title = Loc.GetString("ui-options-barks-volume");
+        SliderVolumeSpecial.Title = Loc.GetString("ui-options-special-volume");
+        SliderMaxAmbienceSounds.Title = Loc.GetString("ui-options-ambience-max-sounds");
+        SliderHighlightVolume.Title = Loc.GetString("ui-options-highlight-volume");
+        HearSelfCheckBox.Text = Loc.GetString("ui-options-hear-self");
+        LobbyMusicCheckBox.Text = Loc.GetString("ui-options-lobby-music");
+        RestartSoundsCheckBox.Text = Loc.GetString("ui-options-restart-sounds");
+        EventMusicCheckBox.Text = Loc.GetString("ui-options-event-music");
+        AdminSoundsCheckBox.Text = Loc.GetString("ui-options-admin-sounds");
+        BwoinkSoundCheckBox.Text = Loc.GetString("ui-options-bwoink-sound");
+        StreamerModeCheckBox.Text = Loc.GetString("ui-options-streamer-mode");
+        AudioHrtfCheckBox.Text = Loc.GetString("ui-options-audio-hrtf");
+        MuteUnfocusedCheckBox.Text = Loc.GetString("ui-options-mute-unfocused");
+        Control.ReloadLocalization();
+    }
+
+    // Arcane-End
+
     public AudioTab()
     {
         RobustXamlLoader.Load(this);
@@ -128,7 +158,7 @@ public sealed partial class AudioTab : Control
 
         options.Add(new OptionDropDownCVar<string>.ValueOption(
             string.Empty,
-            Loc.GetString("ui-options-audio-device-default")));
+            () => Loc.GetString("ui-options-audio-device-default"))); // Arcane-Edit: captured label > deferred localized label
 
         foreach (var device in _audio.GetAudioDevices())
         {

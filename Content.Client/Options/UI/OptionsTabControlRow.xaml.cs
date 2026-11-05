@@ -197,6 +197,18 @@ public sealed partial class OptionsTabControlRow : Control
         Initialize();
     }
 
+    // Arcane-Start
+    /// <summary>Refreshes presentation while preserving all pending option values.</summary>
+    public void ReloadLocalization()
+    {
+        DefaultButton.Text = _loc.GetString("ui-options-default");
+        ResetButton.Text = _loc.GetString("ui-options-reset-all");
+        ApplyButton.Text = _loc.GetString("ui-options-apply");
+        foreach (var option in _options)
+            option.ReloadLocalization();
+    }
+    // Arcane-End
+
     /// <summary>
     /// Called by <see cref="BaseOption"/> to signal that an option's value changed through user interaction.
     /// </summary>
@@ -279,6 +291,10 @@ public sealed partial class OptionsTabControlRow : Control
 /// <seealso cref="OptionsTabControlRow"/>
 public abstract class BaseOption(OptionsTabControlRow controller)
 {
+    // Arcane-Start
+    /// <summary>Refreshes localized presentation without loading or saving the option.</summary>
+    public virtual void ReloadLocalization() { }
+    // Arcane-End
     /// <summary>
     /// Should be called by derived implementations to indicate that their value changed, due to user interaction.
     /// </summary>
@@ -525,6 +541,8 @@ public sealed class OptionSliderFloatCVar : BaseOptionCVar<float>
         };
     }
 
+    public override void ReloadLocalization() => UpdateLabelValue(); // Arcane
+
     private void UpdateLabelValue()
     {
         _slider.ValueLabel.Text = _format(this, _slider.Slider.Value);
@@ -641,6 +659,8 @@ public sealed class OptionSliderIntCVar : BaseOptionCVar<int>
         };
     }
 
+    public override void ReloadLocalization() => UpdateLabelValue(); // Arcane
+
     private void UpdateLabelValue()
     {
         _slider.ValueLabel.Text = _format(this, (int) _slider.Slider.Value);
@@ -655,6 +675,7 @@ public sealed class OptionDropDownCVar<T> : BaseOptionCVar<T> where T : notnull
 {
     private readonly OptionDropDown _dropDown;
     private readonly ItemEntry[] _entries;
+    private readonly ValueOption[] _localizedOptions; // Arcane
 
     protected override T Value
     {
@@ -688,6 +709,7 @@ public sealed class OptionDropDownCVar<T> : BaseOptionCVar<T> where T : notnull
 
         _dropDown = dropDown;
         _entries = new ItemEntry[options.Count];
+        _localizedOptions = options.ToArray(); // Arcane
 
         var button = dropDown.Button;
         var i = 0;
@@ -729,8 +751,9 @@ public sealed class OptionDropDownCVar<T> : BaseOptionCVar<T> where T : notnull
     /// <param name="label">The visual text shown to the user for the option.</param>
     /// <seealso cref="OptionDropDownCVar{T}"/>
     /// <seealso cref="OptionsTabControlRow.AddOptionDropDown{T}"/>
-    public sealed class ValueOption(T key, string label)
+    public sealed class ValueOption(T key, Func<string> label) // Arcane-Edit: captured string > deferred localized label
     {
+        public ValueOption(T key, string label) : this(key, () => label) { } // Arcane
         /// <summary>
         /// The value that this option has. This is what will be written to the CVar if selected.
         /// </summary>
@@ -739,8 +762,17 @@ public sealed class OptionDropDownCVar<T> : BaseOptionCVar<T> where T : notnull
         /// <summary>
         /// The visual text shown to the user for the option.
         /// </summary>
-        public readonly string Label = label;
+        public string Label => label(); // Arcane-Edit: captured label > current localized label
     }
+
+    // Arcane-Start
+    public override void ReloadLocalization()
+    {
+        var index = 0;
+        foreach (var option in _localizedOptions)
+            _dropDown.Button.SetItemText(index++, option.Label);
+    }
+    // Arcane-End
 
     private struct ItemEntry
     {

@@ -37,13 +37,13 @@ public sealed partial class MiscTab : Control
         var themeEntries = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var gear in themes)
         {
-            themeEntries.Add(new OptionDropDownCVar<string>.ValueOption(gear.ID, Loc.GetString(gear.Name)));
+            themeEntries.Add(new OptionDropDownCVar<string>.ValueOption(gear.ID, () => Loc.GetString(gear.Name))); // Arcane-Edit: captured label > deferred localized label
         }
 
         var layoutEntries = new List<OptionDropDownCVar<string>.ValueOption>();
         foreach (var layout in Enum.GetValues(typeof(ScreenType)))
         {
-            layoutEntries.Add(new OptionDropDownCVar<string>.ValueOption(layout.ToString()!, Loc.GetString($"ui-options-hud-layout-{layout.ToString()!.ToLower()}")));
+            layoutEntries.Add(new OptionDropDownCVar<string>.ValueOption(layout.ToString()!, () => Loc.GetString($"ui-options-hud-layout-{layout.ToString()!.ToLower()}"))); // Arcane-Edit: captured label > deferred localized label
         }
 
         // Arcane-Start
@@ -84,9 +84,34 @@ public sealed partial class MiscTab : Control
     }
 
     // Arcane-Start
+    /// <summary>Refreshes text without changing pending settings.</summary>
     public void ReloadLocalization()
     {
+        GeneralUiStyleLabel.Text = Loc.GetString("ui-options-general-ui-style");
         DropDownLanguage.Title = Loc.GetString("ui-options-language");
+        DropDownHudTheme.Title = Loc.GetString("ui-options-hud-theme");
+        DropDownHudLayout.Title = Loc.GetString("ui-options-hud-layout");
+        GeneralDiscordLabel.Text = Loc.GetString("ui-options-general-discord");
+        DiscordRich.Text = Loc.GetString("ui-options-discordrich");
+        GeneralSpeechLabel.Text = Loc.GetString("ui-options-general-speech");
+        ShowOocPatronColor.Text = Loc.GetString("ui-options-show-ooc-patron-color");
+        ShowLoocAboveHeadCheckBox.Text = Loc.GetString("ui-options-show-looc-on-head");
+        FancySpeechBubblesCheckBox.Text = Loc.GetString("ui-options-fancy-speech");
+        FancyNameBackgroundsCheckBox.Text = Loc.GetString("ui-options-fancy-name-background");
+        LogInChatCheckBox.Text = Loc.GetString("ui-options-log-in-chat");
+        CoalesceIdenticalMessagesCheckBox.Text = Loc.GetString("ui-options-coalesce-identical-messages");
+        DetailedExamineCheckBox.Text = Loc.GetString("ui-options-detailed-examine");
+        ChatFollowButton.Text = Loc.GetString("ui-options-chat-follow-button");
+        GeneralCursorLabel.Text = Loc.GetString("ui-options-general-cursor");
+        ShowHeldItemCheckBox.Text = Loc.GetString("ui-options-show-held-item");
+        ShowCursorCooldownCheckBox.Text = Loc.GetString("ui-options-show-cursor-cooldown");
+        ShowCombatModeIndicatorsCheckBox.Text = Loc.GetString("ui-options-show-combat-mode-indicators");
+        GeneralStorageLabel.Text = Loc.GetString("ui-options-general-storage");
+        OpaqueStorageWindowCheckBox.Text = Loc.GetString("ui-options-opaque-storage-window");
+        StaticStorageUI.Text = Loc.GetString("ui-options-static-storage-ui");
+        PreferencesLabel.Text = Loc.GetString("ui-options-preferences");
+        AutoFocusSearchOnBuildMenuCheckBox.Text = Loc.GetString("ui-options-auto-focus-search-on-build-menu");
+        Control.ReloadLocalization();
     }
     // Arcane-End
 }

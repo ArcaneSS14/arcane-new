@@ -21,16 +21,29 @@ public sealed partial class GraphicsTab
             _cfg = cfg;
             _dropDown = dropDown;
             var button = dropDown.Button;
-            button.AddItem(Loc.GetString("ui-options-particles-off"),    QualityOff);
-            button.AddItem(Loc.GetString("ui-options-particles-low"),    QualityLow);
-            button.AddItem(Loc.GetString("ui-options-particles-medium"), QualityMedium);
-            button.AddItem(Loc.GetString("ui-options-particles-high"),   QualityHigh);
+            // Arcane-Edit-Start: populate labels through the shared refresh path.
+            button.AddItem(string.Empty,    QualityOff);
+            button.AddItem(string.Empty,    QualityLow);
+            button.AddItem(string.Empty, QualityMedium);
+            button.AddItem(string.Empty,   QualityHigh);
+            // Arcane-Edit-End
+            ReloadLocalization(); // Arcane
             button.OnItemSelected += args =>
             {
                 _dropDown.Button.SelectId(args.Id);
                 ValueChanged();
             };
         }
+
+        // Arcane-Start
+        public override void ReloadLocalization()
+        {
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityOff), Loc.GetString("ui-options-particles-off"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityLow), Loc.GetString("ui-options-particles-low"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityMedium), Loc.GetString("ui-options-particles-medium"));
+            _dropDown.Button.SetItemText(_dropDown.Button.GetIdx(QualityHigh), Loc.GetString("ui-options-particles-high"));
+        }
+        // Arcane-End
 
         public override void LoadValue()
         {
