@@ -25,7 +25,12 @@ public abstract partial class SharedPainFlashSystem : EntitySystem
         if (!args.DamageIncreased || args.DamageDelta is null)
             return false;
 
-        damage = DamageSpecifier.GetPositive(args.DamageDelta).GetTotal();
+        foreach (var value in args.DamageDelta.DamageDict.Values)
+        {
+            if (value > 0)
+                damage += value;
+        }
+
         return damage > 0;
     }
 }

@@ -15,6 +15,7 @@ public sealed class PainFlashOverlay : Overlay
     public override bool RequestScreenTexture => false;
 
     public float Intensity { get; set; } = 1f;
+    public float CurrentPain => _painAccumulator;
 
     private float _painAccumulator;
 

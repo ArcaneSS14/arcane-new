@@ -22,6 +22,8 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
     private bool _painFlashEnabled = true;
     private float _painFlashIntensity = 1f;
 
+    public int PendingPredictionCount => _painInstances.Count;
+
     private bool IsPainFlashVisible => _painFlashEnabled && _painFlashIntensity > 0f;
 
     public override void Initialize()
@@ -111,6 +113,9 @@ public sealed partial class PainFlashSystem : SharedPainFlashSystem
     private void OnPainFlashMessage(PainFlashMessage message)
     {
         if (!IsPainFlashVisible)
+            return;
+
+        if (GetNetEntity(_player.LocalEntity) != message.Entity)
             return;
 
         if (_painInstances.Remove(new PainFlashInstance(message.Damage, message.Tick)))

@@ -10,6 +10,6 @@ public sealed class PainFlashSystem : SharedPainFlashSystem
         if (!TryGetPain(args, out var damage))
             return;
 
-        RaiseNetworkEvent(new PainFlashMessage(damage, Timing.CurTick), ent);
+        RaiseNetworkEvent(new PainFlashMessage(GetNetEntity(ent.Owner), damage, Timing.CurTick), ent);
     }
 }
