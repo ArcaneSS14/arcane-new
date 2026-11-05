@@ -220,9 +220,11 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
             // Convert the job title to kebab-case and use it as a key for the loc file.
             var jobKey = RoleHighlightDefaults.GetKey(job.Value); // Arcane-Edit: construct locale suffix > use shared locale key
 
-            // Arcane-Edit-Start: prefer the player's per-role highlights over defaults
+            // Arcane-Start: prefer the player's per-role highlights over defaults
             if (TryGetSavedRoleHighlights(job.Value, out var savedHighlights))
                 newHighlights += '\n' + savedHighlights;
+            // Arcane-End
+            // Arcane-Edit-Start
             else if (_loc.TryGetString(jobKey, out var jobMatches))
                 newHighlights += '\n' + RoleHighlightDefaults.Normalize(jobMatches);
             // Arcane-Edit-End

@@ -84,6 +84,7 @@ public sealed partial class TestPair : RobustIntegrationTest.TestPair
     protected override RobustIntegrationTest.ClientIntegrationOptions ClientOptions()
     {
         var opts = base.ClientOptions();
+        var clientBeforeIoC = ((PoolSettings) Settings).ClientBeforeIoC; // Arcane
 
         opts.LoadTestAssembly = false;
         opts.ContentStart = true;
@@ -99,6 +100,18 @@ public sealed partial class TestPair : RobustIntegrationTest.TestPair
                 {
                     ClientBeforeIoC = () => IoCManager.Register<IParallaxManager, DummyParallaxManager>(true)
                 });
+
+            // Arcane-Start
+            if (clientBeforeIoC != null)
+            {
+                IoCManager.Resolve<IModLoader>().SetModuleBaseCallbacks(new ClientModuleTestingCallbacks
+                {
+                    ClientBeforeIoC = () => clientBeforeIoC(
+                        IoCManager.Resolve<IResourceManager>().UserData,
+                        ClientLogHandler),
+                });
+            }
+            // Arcane-End
         };
         return opts;
     }

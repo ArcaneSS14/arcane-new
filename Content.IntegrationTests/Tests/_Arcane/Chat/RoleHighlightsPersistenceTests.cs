@@ -15,15 +15,26 @@ public sealed class RoleHighlightsPersistenceTests : GameTest
     private static readonly ResPath Backup = new("/highlights.backup.yml");
     private const string ValidBackup = "version: 1\nhighlights:\n  Captain: bridge\n  Botanist: garden\n";
 
-    public override PoolSettings PoolSettings => new() { Connected = false, Fresh = true, Destructive = true };
+    public override PoolSettings PoolSettings
+    {
+        get
+        {
+            var testName = TestContext.CurrentContext.Test.Name;
+            return new()
+            {
+                Connected = false,
+                Fresh = true,
+                Destructive = true,
+                ClientBeforeIoC = (data, logHandler) => PrepareClientUserData(testName, data, logHandler),
+            };
+        }
+    }
 
     [Test]
     public async Task FailedBackupLoadRejectsSaveAndPreservesBothJobs()
     {
         var backup = ValidBackup.Replace("version: 1", "version: 999", StringComparison.Ordinal);
         var data = Client.ResolveDependency<IResourceManager>().UserData;
-        data.WriteAllText(Backup, backup);
-        Pair.ClientLogHandler.JudgeLog += (_, message) => message.RenderMessage().Contains("Failed to load role highlights", StringComparison.Ordinal);
 
         await Pair.Connect();
         await Client.WaitAssertion(() =>
@@ -39,9 +50,6 @@ public sealed class RoleHighlightsPersistenceTests : GameTest
     public async Task CorruptPrimaryLoadsBackupWithoutDeletingIt()
     {
         var data = Client.ResolveDependency<IResourceManager>().UserData;
-        data.WriteAllText(Primary, "invalid: [");
-        data.WriteAllText(Backup, ValidBackup);
-        Pair.ClientLogHandler.JudgeLog += (_, message) => message.RenderMessage().Contains("Failed to load role highlights", StringComparison.Ordinal);
 
         await Pair.Connect();
         await Client.WaitAssertion(() =>
@@ -66,6 +74,30 @@ public sealed class RoleHighlightsPersistenceTests : GameTest
     {
         Assert.That(RoleHighlightDefaults.GetKey("Head Of Personnel"), Is.EqualTo("highlights-head-of-personnel"));
         Assert.That(RoleHighlightDefaults.Normalize("Captain,  \"Cap\",Bridge,, "), Is.EqualTo("Captain\n\"Cap\"\nBridge"));
+    }
+
+    private static void PrepareClientUserData(
+        string testName,
+        IWritableDirProvider data,
+        PoolTestLogHandler logHandler)
+    {
+        switch (testName)
+        {
+            case nameof(FailedBackupLoadRejectsSaveAndPreservesBothJobs):
+                data.WriteAllText(
+                    Backup,
+                    ValidBackup.Replace("version: 1", "version: 999", StringComparison.Ordinal));
+                break;
+            case nameof(CorruptPrimaryLoadsBackupWithoutDeletingIt):
+                data.WriteAllText(Primary, "invalid: [");
+                data.WriteAllText(Backup, ValidBackup);
+                break;
+            default:
+                return;
+        }
+
+        logHandler.JudgeLog += (_, message) => message.RenderMessage()
+            .Contains("Failed to load role highlights", StringComparison.Ordinal);
     }
 }
 // Arcane-End
