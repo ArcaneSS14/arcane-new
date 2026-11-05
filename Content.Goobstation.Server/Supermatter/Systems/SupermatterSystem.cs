@@ -608,10 +608,10 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         else if (isProjectile)
             added = (float) projectile!.Damage.GetTotal();
 
-        ent.Comp.Power += added;
-
-        if (isMob)
-            ent.Comp.MatterPower += 200;
+        // Arcane-Edit-Start: mobs don't feed the supermatter
+        if (!isMob)
+            ent.Comp.Power += added;
+        // Arcane-Edit-End
 
         if (isProjectile)
             Consume(ent, target);
@@ -630,7 +630,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (!ent.Comp.Activated)
             ent.Comp.Activated = true;
 
-        ent.Comp.MatterPower += 200;
+        // ent.Comp.MatterPower += 200; // Arcane-Edit: mobs don't feed the supermatter
 
         Consume(ent, target);
     }

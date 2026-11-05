@@ -98,7 +98,7 @@
   productEntity: BriefcaseSyndieLobbyingBundleFilled
   # <Trauma>
   cost:
-    Telecrystal: 20 # was 4, 5x
+    Telecrystal: 10 # was 4, 5x # Arcane-Edit: 20 > 10
   conditions: # they get an envirosuit one
   - !type:BuyerSpeciesCondition
     blacklist:

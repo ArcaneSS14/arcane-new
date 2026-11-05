@@ -7,6 +7,10 @@ using Content.Shared.Rounding;
 using Content.Shared.SMES;
 using JetBrains.Annotations;
 using Robust.Shared.Timing;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Server.Power.SMES;
 
@@ -25,6 +29,10 @@ public sealed partial class SmesSystem : EntitySystem // goob edit - made public
 
         SubscribeLocalEvent<SmesComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<SmesComponent, ChargeChangedEvent>(OnBatteryChargeChanged);
+        // Arcane-Start
+        SubscribeLocalEvent<SmesComponent, RefreshPartsEvent>(OnPartsRefresh);
+        SubscribeLocalEvent<SmesComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
     }
 
     private void OnMapInit(EntityUid uid, SmesComponent component, MapInitEvent args)
@@ -36,6 +44,40 @@ public sealed partial class SmesSystem : EntitySystem // goob edit - made public
     {
         UpdateSmesState(uid, component);
     }
+
+    // Arcane-Start
+    private void OnPartsRefresh(EntityUid uid, SmesComponent component, RefreshPartsEvent args)
+    {
+        if (!TryComp<PowerNetworkBatteryComponent>(uid, out var netBattery))
+            return;
+
+        // The first refresh runs before any upgrade touched the battery (a machine built with parts refreshes
+        // on startup, before map init), so this is the unupgraded value; later refreshes reuse it.
+        component.BaseMaxSupply ??= netBattery.MaxSupply;
+        component.BaseMaxChargeRate ??= netBattery.MaxChargeRate;
+
+        var rating = Math.Max(1f, args.GetPartRatingSum(MachinePartIds.Capacitor));
+        component.FinalMaxSupply = component.BaseMaxSupply.Value * rating;
+        component.FinalMaxChargeRate = component.BaseMaxChargeRate.Value * rating;
+        netBattery.MaxSupply = component.FinalMaxSupply;
+        netBattery.MaxChargeRate = component.FinalMaxChargeRate;
+
+        UpdateSmesState(uid, component);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, SmesComponent component, UpgradeExamineEvent args)
+    {
+        var inputMultiplier = component.BaseMaxChargeRate is not > 0f
+            ? 1f
+            : component.FinalMaxChargeRate / component.BaseMaxChargeRate.Value;
+        var outputMultiplier = component.BaseMaxSupply is not > 0f
+            ? 1f
+            : component.FinalMaxSupply / component.BaseMaxSupply.Value;
+
+        args.AddPercentageUpgrade("machine-upgrade-power-input", inputMultiplier);
+        args.AddPercentageUpgrade("machine-upgrade-power-output", outputMultiplier);
+    }
+    // Arcane-End
 
     private void UpdateSmesState(EntityUid uid, SmesComponent smes)
     {

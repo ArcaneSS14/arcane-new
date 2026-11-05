@@ -5,13 +5,15 @@
   description: Finally, some decent reception around here...
   components:
   - type: Sprite
-    noRot: true
+    sprite: _Arcane/Structures/Machines/Computers/tv.rsi # Arcane
+    noRot: false # Arcane-Edit: true > false
     drawdepth: SmallObjects
     layers:
     - map: ["computerLayerBody"]
       state: television
     - map: ["computerLayerScreen"]
-      state: detective_television
+      state: television_playing # Arcane-Edit: detective_television > television_playing
+      shader: unshaded # Arcane
   - type: Computer
     board: ComputerTelevisionCircuitboard
   - type: PointLight

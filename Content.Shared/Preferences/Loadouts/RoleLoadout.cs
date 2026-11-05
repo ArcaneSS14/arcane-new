@@ -5,6 +5,8 @@ using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Random;
 using Robust.Shared.Collections;
 using Robust.Shared.Configuration;
+using Robust.Shared.Network; // Arcane
+using Content.Arcane.Common.Sponsors; // Arcane
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -63,6 +65,7 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
         var groupRemove = new ValueList<string>();
         var protoManager = collection.Resolve<IPrototypeManager>();
         var configManager = collection.Resolve<IConfigurationManager>();
+        var netManager = collection.Resolve<INetManager>(); // Arcane
 
         if (!protoManager.TryIndex(Role, out var roleProto))
         {
@@ -126,6 +129,27 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
 
             var loadouts = groupProto.MaxLimit > 0 ? groupLoadouts[..Math.Min(groupLoadouts.Count, groupProto.MaxLimit)] : groupLoadouts;
 
+            // Arcane-Start: sponsor loadouts are injected into the inventory group
+            var allowedLoadouts = groupProto.Loadouts;
+            if (groupProto.ID == "Inventory" && collection.TryResolveType<ISharedLoadoutsManager>(out var loadoutsManager))
+            {
+                var sponsored = new List<string>();
+                if (netManager.IsClient)
+                {
+                    sponsored = loadoutsManager.GetClientPrototypes();
+                }
+                else if (session != null &&
+                         loadoutsManager.TryGetServerPrototypes(session.UserId, out var sponsoredProtos) &&
+                         sponsoredProtos != null)
+                {
+                    sponsored = sponsoredProtos;
+                }
+
+                if (sponsored.Count > 0)
+                    allowedLoadouts = [.. groupProto.Loadouts, .. sponsored.Select(id => (ProtoId<LoadoutPrototype>) id)];
+            }
+            // Arcane-End
+
             // Validate first
             for (var i = loadouts.Count - 1; i >= 0; i--)
             {
@@ -139,7 +163,7 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
                 }
 
                 // Malicious client maybe, check the group even has it.
-                if (!groupProto.Loadouts.Contains(loadout.Prototype))
+                if (!allowedLoadouts.Contains(loadout.Prototype)) // Arcane-Edit: groupProto.Loadouts > allowedLoadouts
                 {
                     loadouts.RemoveAt(i);
                     continue;
@@ -283,7 +307,7 @@ public sealed partial class RoleLoadout : IEquatable<RoleLoadout>
 
         foreach (var effect in loadoutProto.Effects)
         {
-            valid = valid && effect.Validate(profile, this, session, collection, out reason);
+            valid = valid && effect.Validate(profile, this, loadoutProto, session, collection, out reason); // Arcane-Edit: added loadoutProto
         }
 
         return valid;

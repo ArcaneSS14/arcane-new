@@ -3,6 +3,10 @@
 - type: npcFaction
   id: DevilFaction
   hostile:
+  # Arcane-Start: Orion #16 InteQ factions
+  - InteQ
+  - InteQHostile
+  # Arcane-End
   - NanoTrasen
   - Syndicate
   - Zombie

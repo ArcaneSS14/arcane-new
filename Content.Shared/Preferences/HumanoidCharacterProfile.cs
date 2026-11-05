@@ -27,6 +27,8 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 using Robust.Shared;
 using YamlDotNet.RepresentationModel;
+using Content.Arcane.Common.Preferences; // Arcane
+using Content.Arcane.Common.Sponsors; // Arcane
 
 namespace Content.Shared.Preferences
 {
@@ -211,6 +213,7 @@ namespace Content.Shared.Preferences
             // Arcane-Start: Preserve scale settings when profiles are copied
             Scale = other.Scale;
             // Arcane-End
+            ExtendedFlavor = other.ExtendedFlavor; // Arcane
         }
 
         /// <summary>
@@ -691,10 +694,11 @@ namespace Content.Shared.Preferences
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
+            if (!ExtendedFlavor.Equals(other.ExtendedFlavor)) return false; // Arcane
             return Appearance.Equals(other.Appearance);
         }
 
-        public void EnsureValid(ICommonSession session, IDependencyCollection collection)
+        public void EnsureValid(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var configManager = collection.Resolve<IConfigurationManager>();
             var prototypeManager = collection.Resolve<IPrototypeManager>();
@@ -704,6 +708,14 @@ namespace Content.Shared.Preferences
                 Species = HumanoidCharacterProfile.DefaultSpecies;
                 speciesPrototype = prototypeManager.Index(Species);
             }
+
+            // Arcane-Start: reset sponsor-only species for non-sponsors
+            if (speciesPrototype.SponsorOnly && (sponsorPrototypes == null || !sponsorPrototypes.Contains(Species.Id)))
+            {
+                Species = HumanoidCharacterProfile.DefaultSpecies;
+                speciesPrototype = prototypeManager.Index(Species);
+            }
+            // Arcane-End
 
             var sex = Sex switch
             {
@@ -767,18 +779,13 @@ namespace Content.Shared.Preferences
             }
 
 
-            string flavortext;
+            // Arcane-Edit-Start: keep basic formatting, the examine window renders it
             var maxFlavorTextLength = configManager.GetCVar(CCVars.MaxFlavorTextLength);
-            if (FlavorText.Length > maxFlavorTextLength)
-            {
-                flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText)[..maxFlavorTextLength];
-            }
-            else
-            {
-                flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
-            }
+            var flavortext = ExtendedFlavorText.ValidateText(FlavorText, maxFlavorTextLength);
+            var extendedFlavor = ExtendedFlavor.Validated(configManager);
+            // Arcane-Edit-End
 
-            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
+            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex, sponsorPrototypes); // Arcane-Edit: added sponsorPrototypes
 
             var prefsUnavailableMode = PreferenceUnavailable switch
             {
@@ -826,6 +833,7 @@ namespace Content.Shared.Preferences
 
             Name = name;
             FlavorText = flavortext;
+            ExtendedFlavor = extendedFlavor; // Arcane
             Age = age;
             Sex = sex;
             Voice = voice;
@@ -912,10 +920,10 @@ namespace Content.Shared.Preferences
             return result;
         }
 
-        public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection)
+        public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var profile = new HumanoidCharacterProfile(this);
-            profile.EnsureValid(session, collection);
+            profile.EnsureValid(session, collection, sponsorPrototypes);
             return profile;
         }
 
@@ -948,6 +956,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(_loadouts);
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
+            hashCode.Add(ExtendedFlavor); // Arcane
             hashCode.Add(Species);
             // Arcane-Start: Hash character scale settings
             hashCode.Add(Scale);
@@ -1049,7 +1058,7 @@ namespace Content.Shared.Preferences
             }
 
             var collection = IoCManager.Instance;
-            profile.EnsureValid(session, collection!);
+            profile.EnsureValid(session, collection!, SponsorPrototypes.Get(session, collection)); // Arcane-Edit: resolve sponsor prototypes on import
             return profile;
         }
     }

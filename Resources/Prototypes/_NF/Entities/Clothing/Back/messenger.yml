@@ -469,6 +469,11 @@
       - state: inhand-right
       - state: inhand-right-unlit
         shader: unshaded
+  # Arcane-Start: built from an inert bag and a bluespace anomaly core
+  - type: Construction
+    graph: BagOfHoldingMessenger
+    node: bag_of_holding
+  # Arcane-End
 
 # ANTAGONISTS
 - type: entity

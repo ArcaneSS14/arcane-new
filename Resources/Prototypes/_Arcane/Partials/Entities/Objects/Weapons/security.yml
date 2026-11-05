@@ -1,0 +1,8 @@
+- type: entity
+  id: Stunbaton
+  components:
+  - type: StaminaDamageOnHit
+    damage: 60
+    overtime: 0
+    lightAttackDamageMultiplier: 1
+    lightAttackOvertimeDamageMultiplier: 1

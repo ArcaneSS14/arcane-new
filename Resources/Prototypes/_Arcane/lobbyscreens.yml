@@ -1,0 +1,5 @@
+- type: lobbyBackground
+  id: arcane-station
+  background: /Textures/_Arcane/LobbyScreens/arcane-station.webp
+  title: lobby-arcane-station-title
+  artist: lobby-arcane-station-artist

@@ -17,7 +17,7 @@
   - type: Clothing
     sprite: Objects/Devices/wristwatch.rsi
     slots:
-    - gloves
+    - wrists # Arcane-Edit: gloves > wrists (Orion #208)
   - type: Appearance
   - type: Damageable
   - type: Injurable

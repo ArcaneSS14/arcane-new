@@ -888,7 +888,7 @@
     - Snout
 
 - type: entity
-  parent: ClothingMaskBase
+  parent: ClothingMaskPullableBase # Arcane-Edit: ClothingMaskBase > ClothingMaskPullableBase (Orion #16)
   id: ClothingMaskNeckGaiter
   name: neck gaiter
   description: Stylish neck gaiter for your neck, can protect from the cosmic wind?...
@@ -903,6 +903,7 @@
     tags:
     - WhitelistChameleon
     - IPCMaskWearable # EE - IPCs
+  - type: BreathMask # Arcane
 
 - type: entity
   parent: ClothingMaskNeckGaiter

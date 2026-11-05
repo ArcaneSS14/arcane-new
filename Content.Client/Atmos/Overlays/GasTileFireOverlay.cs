@@ -38,8 +38,10 @@ public sealed partial class GasTileFireOverlay : Overlay
     // TODO combine textures into a single texture atlas.
     private readonly Texture[][] _frames;
 
-    private const int FireStates = 3;
-    private const string FireRsiPath = "/Textures/Effects/fire.rsi";
+    // Arcane-Edit-Start: Orion fire states
+    private const int FireStates = 7;
+    private const string FireRsiPath = "/Textures/_Arcane/Effects/tile_fire.rsi";
+    // Arcane-Edit-End
 
     public const int GasOverlayZIndex = (int)Shared.DrawDepth.DrawDepth.Effects; // Under ghosts, above mostly everything else
 

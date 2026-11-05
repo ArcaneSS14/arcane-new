@@ -1,6 +1,10 @@
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
+// Arcane-Start
+using Content.Shared.Construction.Prototypes;
+using Robust.Shared.Prototypes;
+// Arcane-End
 
 namespace Content.Shared.Power.Components;
 
@@ -12,6 +16,20 @@ public sealed partial class ChargerComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public float ChargeRate = 20.0f;
+
+    // Arcane-Start
+    /// <summary>
+    /// Charge rate before machine part upgrades. Taken from <see cref="ChargeRate"/> on the first part refresh.
+    /// </summary>
+    [DataField]
+    public float? BaseChargeRate;
+
+    /// <summary>
+    /// Machine part that speeds up charging.
+    /// </summary>
+    [DataField]
+    public ProtoId<MachinePartPrototype> ChargePart = "Capacitor";
+    // Arcane-End
 
     /// <summary>
     /// Passive draw when no power cell is inserted, in watts.

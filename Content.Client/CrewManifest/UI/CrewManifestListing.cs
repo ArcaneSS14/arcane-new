@@ -4,6 +4,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Robust.Client.UserInterface; // Arcane
 
 namespace Content.Client.CrewManifest.UI;
 
@@ -11,6 +12,7 @@ public sealed partial class CrewManifestListing : BoxContainer
 {
     [Dependency] private IEntitySystemManager _entitySystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IClipboardManager _clipboard = default!; // Arcane
     private readonly SpriteSystem _spriteSystem;
 
     public CrewManifestListing()
@@ -46,7 +48,7 @@ public sealed partial class CrewManifestListing : BoxContainer
 
         foreach (var item in entryList)
         {
-            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, item.section, item.entries));
+            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, _clipboard, item.section, item.entries)); // Arcane-Edit: added _clipboard argument
         }
     }
 }

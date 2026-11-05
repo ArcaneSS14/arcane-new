@@ -161,6 +161,7 @@
         visible: false
         shader: unshaded
     - type: Flash
+      flashingTime: 1 # Arcane
     - type: RevolutionaryConverter
     - type: LimitedCharges
       maxCharges: 5
@@ -174,7 +175,7 @@
       size: Small
       sprite: Objects/Weapons/Melee/flash.rsi
     - type: UseDelay
-      delay: 4 # has to be the same as the FlashingTime datafield in FlashComponent
+      delay: 1 # has to be the same as the FlashingTime datafield in FlashComponent # Arcane-Edit: 4 > 1
     - type: UseDelayOnMeleeHit
     - type: StaticPrice
       price: 40

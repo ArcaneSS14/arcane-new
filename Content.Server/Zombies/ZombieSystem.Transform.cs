@@ -285,6 +285,7 @@ public sealed partial class ZombieSystem
         */
         //Should prevent instances of zombies using comms for information they shouldnt be able to have.
         _inventory.TryUnequip(target, "ears", true, true);
+        _inventory.TryUnequip(target, "earsright", true, true); // Arcane: the second headset too
 
         //popup
         _popup.PopupEntity(

@@ -113,7 +113,9 @@
                                 <BoxContainer HorizontalExpand="True">
                                     <Label Text="{Loc 'humanoid-profile-editor-clothing'}" />
                                     <Control HorizontalExpand="True"/>
-                                    <Button Name="ShowClothes" Pressed="True" ToggleMode="True" Text="{Loc 'humanoid-profile-editor-clothing-show'}" HorizontalAlignment="Right" />
+                                    <!-- Arcane-Edit: ShowClothes toggle > clothes, underwear only or nothing -->
+                                    <!-- <Button Name="ShowClothes" Pressed="True" ToggleMode="True" Text="{Loc 'humanoid-profile-editor-clothing-show'}" HorizontalAlignment="Right" /> -->
+                                    <OptionButton Name="ClothesModeButton" HorizontalAlignment="Right" />
                                 </BoxContainer>
                                 <!-- Spawn Priority -->
                                 <BoxContainer HorizontalExpand="True">

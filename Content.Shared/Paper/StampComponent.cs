@@ -1,5 +1,6 @@
 using Robust.Shared.Serialization;
 using Robust.Shared.Audio;
+using Robust.Shared.GameStates; // Arcane
 
 namespace Content.Shared.Paper;
 
@@ -24,25 +25,25 @@ public partial struct StampDisplayInfo
     public Color StampedColor;
 };
 
-[RegisterComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: networked for the chameleon stamp
 public sealed partial class StampComponent : Component
 {
     /// <summary>
     ///     The loc string name that will be stamped to the piece of paper on examine.
     /// </summary>
-    [DataField("stampedName")]
+    [DataField("stampedName"), AutoNetworkedField] // Arcane-Edit
     public string StampedName { get; set; } = "stamp-component-stamped-name-default";
 
     /// <summary>
     ///     The sprite state of the stamp to display on the paper from paper Sprite path.
     /// </summary>
-    [DataField("stampState")]
+    [DataField("stampState"), AutoNetworkedField] // Arcane-Edit
     public string StampState { get; set; } = "paper_stamp-generic";
 
     /// <summary>
     /// The color of the ink used by the stamp in UIs
     /// </summary>
-    [DataField("stampedColor")]
+    [DataField("stampedColor"), AutoNetworkedField] // Arcane-Edit
     public Color StampedColor = Color.FromHex("#BB3232"); // StyleNano.DangerousRedFore
 
     /// <summary>

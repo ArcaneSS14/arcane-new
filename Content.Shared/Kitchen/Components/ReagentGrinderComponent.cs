@@ -3,6 +3,10 @@ using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+// Arcane-Start
+using Content.Shared.Construction.Prototypes;
+using Robust.Shared.Prototypes;
+// Arcane-End
 
 namespace Content.Shared.Kitchen.Components;
 
@@ -50,6 +54,17 @@ public sealed partial class ReagentGrinderComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public float WorkTimeMultiplier = 1.0f;
+
+    // Arcane-Start
+    [DataField]
+    public int BaseStorageMaxEntities = 6;
+
+    [DataField]
+    public ProtoId<MachinePartPrototype> ServoPart = "Servo";
+
+    [DataField]
+    public ProtoId<MachinePartPrototype> MatterBinPart = "MatterBin";
+    // Arcane-End
 
     /// <summary>
     /// Sound played when pressing a button on the UI.

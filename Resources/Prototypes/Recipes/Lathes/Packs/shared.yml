@@ -13,7 +13,14 @@
   recipes:
   - Igniter
   - ModularReceiver
-  - MicroManipulatorStockPart
+  # Arcane-Start
+  # Tier 1
+  - CapacitorStockPart
+  - ScanningModuleStockPart
+  - MicroServoStockPart # Arcane-Edit: Servo
+  - MicroLaserStockPart
+  - MatterBinStockPart
+  # Arcane-End
   - ConveyorBeltAssembly
 
 - type: latheRecipePack
@@ -31,6 +38,7 @@
 - type: latheRecipePack
   id: PowerCellsStatic
   recipes:
+  - MegaCellSmall # Arcane
   - PowerCellSmall
   - PowerCellMedium
 

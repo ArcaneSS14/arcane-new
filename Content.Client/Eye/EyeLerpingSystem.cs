@@ -199,7 +199,7 @@ public sealed partial class EyeLerpingSystem : EntitySystem
 
             if (!NeedsLerp(mover))
             {
-                _eye.SetRotation(entity, lerpInfo.TargetRotation, eye);
+                _eye.SetRotation(entity, lerpInfo.TargetRotation + GetArcaneScreenshakeRotation(entity), eye); // Arcane-Edit: lerpInfo.TargetRotation > lerpInfo.TargetRotation + GetArcaneScreenshakeRotation(entity)
                 continue;
             }
 
@@ -207,11 +207,11 @@ public sealed partial class EyeLerpingSystem : EntitySystem
 
             if (Math.Abs(shortest.Theta) < lerpMinimum)
             {
-                _eye.SetRotation(entity, lerpInfo.TargetRotation, eye);
+                _eye.SetRotation(entity, lerpInfo.TargetRotation + GetArcaneScreenshakeRotation(entity), eye); // Arcane-Edit: lerpInfo.TargetRotation > lerpInfo.TargetRotation + GetArcaneScreenshakeRotation(entity)
                 continue;
             }
 
-            _eye.SetRotation(entity, shortest * tickFraction + lerpInfo.LastRotation, eye);
+            _eye.SetRotation(entity, shortest * tickFraction + lerpInfo.LastRotation + GetArcaneScreenshakeRotation(entity), eye); // Arcane-Edit: shortest * tickFraction + lerpInfo.LastRotation > shortest * tickFraction + lerpInfo.LastRotation + GetArcaneScreenshakeRotation(entity)
         }
     }
 }

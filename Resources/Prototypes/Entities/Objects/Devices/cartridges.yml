@@ -21,8 +21,10 @@
   - type: Cartridge
     programName: notekeeper-program-name
     icon:
-      sprite:  Objects/Misc/books.rsi
-      state: book_icon
+    # Arcane-Edit-Start: Orion program icons
+      sprite: _Arcane/Interface/Misc/program_icons.rsi
+      state: notes
+    # Arcane-Edit-End
   - type: NotekeeperCartridge
 
 - type: entity
@@ -90,8 +92,10 @@
     - type: Cartridge
       programName: net-probe-program-name
       icon:
-        sprite: Structures/Machines/server.rsi
-        state: server
+      # Arcane-Edit-Start: Orion program icons
+        sprite: _Arcane/Interface/Misc/program_icons.rsi
+        state: netprobe
+      # Arcane-Edit-End
     - type: NetProbeCartridge
 
 - type: entity
@@ -110,8 +114,10 @@
     - type: Cartridge
       programName: log-probe-program-name
       icon:
-        sprite: Structures/Doors/Airlocks/Standard/security-base.rsi
-        state: closed
+      # Arcane-Edit-Start: Orion program icons
+        sprite: _Arcane/Interface/Misc/program_icons.rsi
+        state: logprobe
+      # Arcane-Edit-End
     - type: LogProbeCartridge
     - type: GuideHelp
       guides:
@@ -133,8 +139,10 @@
   - type: Cartridge
     programName: wanted-list-program-name
     icon:
-      sprite: Objects/Misc/books.rsi
-      state: icon_magnifier
+    # Arcane-Edit-Start: Orion program icons
+      sprite: _Arcane/Interface/Misc/program_icons.rsi
+      state: watchdog
+    # Arcane-Edit-End
   - type: WantedListCartridge
   - type: StealTarget
     stealGroup: WantedListCartridge
@@ -153,8 +161,10 @@
     - type: Cartridge
       programName: med-tek-program-name
       icon:
-        sprite: Objects/Specific/Medical/healthanalyzer.rsi
-        state: icon
+      # Arcane-Edit-Start: Orion program icons
+        sprite: _Arcane/Interface/Misc/program_icons.rsi
+        state: medtek
+      # Arcane-Edit-End
     - type: MedTekCartridge
 
 - type: entity
@@ -171,6 +181,8 @@
     - type: Cartridge
       programName: astro-nav-program-name
       icon:
-        sprite: Objects/Devices/gps.rsi
-        state: icon
+      # Arcane-Edit-Start: Orion program icons
+        sprite: _Arcane/Interface/Misc/program_icons.rsi
+        state: astronav
+      # Arcane-Edit-End
     - type: AstroNavCartridge

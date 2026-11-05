@@ -40,9 +40,11 @@
   id: ChiefMedicalOfficerMantle
   equipment:
     neck: ClothingNeckMantleCMO
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterCMO
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterCMO
+  # Arcane-Edit-End
 
 # Outer clothing
 - type: loadout
