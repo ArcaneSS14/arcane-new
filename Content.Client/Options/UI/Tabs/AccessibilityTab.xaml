@@ -45,6 +45,12 @@
                 <CheckBox Name="EnableColorNameCheckBox" Text="{Loc 'ui-options-enable-color-name'}" />
                 <CheckBox Name="ColorblindFriendlyCheckBox" Text="{Loc 'ui-options-colorblind-friendly'}" />
                 <ui:OptionSlider Name="ScreenShakeIntensitySlider" Title="{Loc 'ui-options-screen-shake-intensity'}" />
+                <!-- Arcane-Start -->
+                <BoxContainer Orientation="Horizontal" HorizontalExpand="True">
+                    <CheckBox Name="EnablePainFlashCheckBox" Text="{Loc 'ui-options-enable-pain-flash'}" Margin="0 0 8 0" />
+                    <ui:OptionSlider Name="PainFlashIntensitySlider" Title="{Loc 'ui-options-pain-flash-intensity'}" HorizontalExpand="True" />
+                </BoxContainer>
+                <!-- Arcane-End -->
                 <ui:OptionSlider Name="ChatWindowOpacitySlider" Title="{Loc 'ui-options-chat-window-opacity'}" />
                 <ui:OptionSlider Name="SpeechBubbleTextOpacitySlider" Title="{Loc 'ui-options-speech-bubble-text-opacity'}" />
                 <ui:OptionSlider Name="SpeechBubbleSpeakerOpacitySlider" Title="{Loc 'ui-options-speech-bubble-speaker-opacity'}" />
