@@ -74,9 +74,11 @@
   id: HeadofSecurityMantle
   equipment:
     neck: ClothingNeckMantleHOS
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterHoS
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterHoS
+  # Arcane-Edit-End
 
 - type: startingGear
   id: HeadofSecurityMantle

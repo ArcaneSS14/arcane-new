@@ -141,7 +141,7 @@
           amount: 2
 
 - type: entity
-  parent: CrateGenericSteel
+  parent: CrateLavender # Arcane-Edit: CrateGenericSteel > CrateLavender
   id: CrateServiceTheatre
   name: theatrical performances crate
   description: Contains a moth cloak, barber scissors, maid uniform, clown and mime attributes, and other performance charms.
@@ -176,6 +176,10 @@
           - id: ClothingMaskMime
           - id: ClothingBeltSuspendersRed
           - id: ClothingBeltSuspendersBlack
+        # Arcane-Start
+        - id: ConfettiGrenade
+          amount: 3
+        # Arcane-End
         - !type:AllSelector # Performer starter kit
           children:
           - id: ClothingUniformJumpskirtPerformer

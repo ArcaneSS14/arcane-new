@@ -32,3 +32,13 @@
   id: Synth
   name: species-name-synth
   text: "/ServerInfo/Guidebook/Mobs/_Arcane/Synth.xml"
+
+- type: guideEntry
+  id: Tajaran
+  name: species-name-tajaran
+  text: "/ServerInfo/Guidebook/Mobs/_Arcane/Tajaran.xml"
+
+- type: guideEntry
+  id: Shadowkin
+  name: species-name-shadowkin
+  text: "/ServerInfo/Guidebook/Mobs/_Arcane/Shadowkin.xml"

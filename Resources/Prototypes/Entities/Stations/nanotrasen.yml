@@ -32,6 +32,7 @@
     - BaseStationAllEventsEligible
     - BaseStationNanotrasen
     - BaseStationDeliveries
+    - BaseStationGoal # Arcane
   categories: [ HideSpawnMenu ]
   components:
     - type: Transform

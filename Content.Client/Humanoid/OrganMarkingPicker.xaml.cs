@@ -15,6 +15,7 @@ public sealed partial class OrganMarkingPicker : Control
 {
     [Dependency] private MarkingManager _marking = default!;
     [Dependency] private IEntityManager _entity = default!;
+    [Dependency] private IPrototypeManager _prototype = default!; // Arcane
 
     private readonly SpriteSystem _sprite;
 
@@ -76,6 +77,11 @@ public sealed partial class OrganMarkingPicker : Control
 
             if (allMarkings.Count == 0)
                 continue;
+
+            // Arcane-Start: layers turned off by the group, e.g. undergarments replaced by clothing
+            if (_prototype.Index(_group).Limits.GetValueOrDefault(layer) is { Limit: <= 0 })
+                continue;
+            // Arcane-End
 
             var control = new LayerMarkingPicker(_markingsModel, _organ, layer, allMarkings);
             LayerTabs.AddChild(control);

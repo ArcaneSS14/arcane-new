@@ -238,7 +238,7 @@ public sealed partial class GoobCVars
     /// Set to true to enable voice barks and disable default speech sounds.
     /// </summary>
     public static readonly CVarDef<bool> BarksEnabled =
-        CVarDef.Create("voice.barks_enabled", false, CVar.SERVER | CVar.REPLICATED | CVar.ARCHIVE);
+        CVarDef.Create("voice.barks_enabled", true, CVar.SERVER | CVar.REPLICATED | CVar.ARCHIVE); // Arcane-Edit: false > true (Orion #174)
 
     /// <summary>
     /// Client volume setting for barks.

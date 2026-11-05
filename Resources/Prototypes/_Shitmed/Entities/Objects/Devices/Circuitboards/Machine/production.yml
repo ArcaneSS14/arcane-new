@@ -10,12 +10,16 @@
     prototype: Autodoc
     stackRequirements:
       Cable: 3
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Steel: 10
     tagRequirements:
       BorgArm:
         amount: 3
         defaultPrototype: LeftArmBorg
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   parent: AutodocCircuitboard
@@ -48,5 +52,9 @@
     state: medical
   - type: MachineBoard
     prototype: MedicalBiofabricator
-    stackRequirements:
-      Manipulator: 4
+    # stackRequirements: # Arcane-Edit: machine parts only
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End

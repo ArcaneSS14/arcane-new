@@ -7,6 +7,10 @@
     - type: MachineBoard
       prototype: Holopad
       stackRequirements:
-        Manipulator: 4
+        # Manipulator: 4 # Arcane-Edit: replaced by machine parts
         Cable: 4
         Glass: 2
+      # Arcane-Start
+      partRequirements:
+        Capacitor: 1
+      # Arcane-End

@@ -37,6 +37,7 @@
     - id: ClothingShoesBootsJack
     - id: ClothingOuterCoatWarden
     - id: ClothingOuterWinterWarden
+    - id: ClothingOuterCoatWardenBlue # Arcane
     - id: RubberStampWarden
     - id: DoorRemoteArmory
     - id: HoloprojectorSecurity
@@ -122,6 +123,11 @@
       prob: 0.1
     - id: MedkitOxygenFilled
     - id: MedkitAdvancedFilled
+    # Arcane-Start
+    - id: HandheldCrewMonitorBrigmedic
+    - id: ClothingHeadHatBeretSecurityMedic
+      prob: 0.5
+    # Arcane-End
 
 - type: entity
   id: LockerDetectiveFilled
@@ -139,7 +145,6 @@
     children:
     # <Trauma>
     - id: BloodTrak
-    - id: Betty
     - id: BoxTapeRecorder
     # </Trauma>
     - id: ClothingEyesGlassesNoir
@@ -160,6 +165,7 @@
     - id: HandLabeler
     - id: PlushieLizardJobDetective
       prob: 0.02
+    - id: Betty # Arcane
 
 - type: entity
   id: ClosetBombFilled

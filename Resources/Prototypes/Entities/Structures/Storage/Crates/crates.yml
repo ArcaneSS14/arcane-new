@@ -32,6 +32,7 @@
     sprite: Structures/Storage/Crates/plastic.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/plastic.rsi
+    offset: 0, 0 # Arcane
   - type: Construction
     graph: CratePlastic
     node: crateplastic
@@ -54,6 +55,7 @@
     sprite: Structures/Storage/Crates/freezer.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/freezer.rsi
+    offset: 0, 0.25 # Arcane
   - type: AntiRottingContainer
   - type: ExplosionResistance
     damageCoefficient: 0.50
@@ -74,6 +76,7 @@
     sprite: Structures/Storage/Crates/hydroponics.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/hydroponics.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
   parent: CratePlastic
@@ -84,6 +87,7 @@
     sprite: Structures/Storage/Crates/medical.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/medical.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
   parent: CrateGenericSteel
@@ -105,6 +109,7 @@
     sprite: Structures/Storage/Crates/o2.rsi
   - type: Sprite
     sprite: Structures/Storage/Crates/o2.rsi
+    offset: 0, 0.25 # Arcane
 
 - type: entity
   parent: CrateGenericSteel
@@ -325,6 +330,10 @@
     sprite: Structures/Storage/Crates/sec_gear.rsi
   - type: AccessReader
     access: [["Armory"]]
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: Structures/Storage/Crates/sec_gear.rsi
+  # Arcane-End
 
 - type: entity
   parent: CrateBaseSecure
@@ -368,6 +377,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "-0.25,0.625"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/livestock.rsi
     state: base
@@ -428,6 +438,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "0.0,0.125"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/cage.rsi
     state: icon
@@ -494,6 +505,11 @@
         lid_overlay:
           True: { visible: false }
           False: { visible: true }
+        # Arcane-Start: Orion storage sprites
+        open_overlay:
+          True: { visible: true }
+          False: { visible: false }
+        # Arcane-End
   - type: OverrideSell
   - type: Fixtures
     fixtures:
@@ -517,13 +533,17 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#ad8c27"
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ad8c27"
       map: [ lid_overlay ]
+    - state: overlay-open
+      color: "#ad8c27"
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -547,13 +567,17 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#92c7e8"
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#92c7e8"
       map: [ lid_overlay ]
+    - state: overlay-open
+      color: "#92c7e8"
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -577,13 +601,17 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#ba4bf0"
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#ba4bf0"
       map: [ lid_overlay ]
+    - state: overlay-open
+      color: "#ba4bf0"
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -607,13 +635,17 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#c12d30"
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#c12d30"
       map: [ lid_overlay ]
+    - state: overlay-open
+      color: "#c12d30"
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -637,13 +669,17 @@
   - type: Sprite
     layers:
     - state: base
-    - state: overlay
-      color: "#53b723"
+    # Arcane-Edit-Start
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: overlay-closed
       color: "#53b723"
       map: [ lid_overlay ]
+    - state: overlay-open
+      color: "#53b723"
+      visible: false
+      map: [open_overlay]
+    # Arcane-Edit-End
     - state: welded
       visible: false
       map: ["enum.WeldableLayers.BaseWelded"]
@@ -679,6 +715,7 @@
       sprite: Structures/Storage/Crates/labels.rsi
       offset: "0.0,-0.09375"
       map: ["enum.PaperLabelVisuals.Layer"]
+    offset: 0, 0 # Arcane
   - type: Icon
     sprite: Structures/Storage/Crates/piratechest.rsi
     state: crate_icon

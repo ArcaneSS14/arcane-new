@@ -6,11 +6,9 @@
   dollPrototype: AppearanceRodentia
   defaultSkinTone: "#747474"
   skinColoration: Hues
-  # Arcane-Start
   defaultScale: 0.9
   minScale: 0.85
   maxScale: 0.95
-  # Arcane-End
   naming: FirstLast
   maleFirstNames: NamesRodentiaMale
   femaleFirstNames: NamesRodentiaFemale

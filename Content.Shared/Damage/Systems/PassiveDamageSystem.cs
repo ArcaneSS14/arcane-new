@@ -1,4 +1,7 @@
-using Content.Medical.Common.Targeting; // Shitmed Change
+// <Trauma>
+using Robust.Shared.Containers;
+using Content.Medical.Common.Targeting;
+// </Trauma>
 using Content.Shared.Damage.Components;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Timing;
@@ -7,6 +10,7 @@ namespace Content.Shared.Damage.Systems;
 
 public sealed partial class PassiveDamageSystem : EntitySystem
 {
+    [Dependency] private SharedContainerSystem _container = default!; // Trauma
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private IGameTiming _timing = default!;
 
@@ -50,6 +54,11 @@ public sealed partial class PassiveDamageSystem : EntitySystem
             if (comp.NextDamage > curTime)
                 continue;
 
+            // <Trauma>
+            if (comp.PauseWhenStored && _container.TryGetContainingContainer(uid, out _)) // Prevents damage if PauseWhenContained bool is true and entity is inside a container
+                continue; // Arcane-Edit: Skip only the stored entity, not every remaining passive-damage entity.
+            // </Trauma>
+
             // Set the next time they can take damage
             comp.NextDamage = curTime + TimeSpan.FromSeconds(1f);
             Dirty(uid, comp);
@@ -58,7 +67,7 @@ public sealed partial class PassiveDamageSystem : EntitySystem
             if (comp.AllowedStates == null || !TryComp<MobStateComponent>(uid, out var mobState))
             {
                 _damageable.ChangeDamage((uid, damage), comp.Damage, true, false);
-                return;
+                continue; // Arcane-Edit: Continue updating other entities after applying unrestricted passive damage.
             }
 
             // Damage them

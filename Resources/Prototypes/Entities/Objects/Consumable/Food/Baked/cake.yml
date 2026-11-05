@@ -66,10 +66,10 @@
   description: Stains your teeth.
   components:
   - type: Sprite
-    layers:
-    - state: plain
-    - state: alpha-filling
-      color: blue
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: blueberry
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeBlueberrySlice
@@ -81,13 +81,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: blue
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: blueberry-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: blue
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: blueberry-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: blueberry slice
@@ -153,6 +153,7 @@
   description: A favorite desert of a certain wascally wabbit.
   components:
   - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi # Arcane
     state: carrot
   - type: ToolRefinable
     refineResult:
@@ -178,15 +179,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-        color: "#f8e0af"
-      - state: alpha-filling-inhand-left
-        color: "#ffbd2f"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: carrot-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-        color: "#f8e0af"
-      - state: alpha-filling-inhand-right
-        color: "#ffbd2f"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: carrot-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of carrot cake
@@ -335,10 +334,10 @@
   description: A cake with added orange.
   components:
   - type: Sprite
-    layers:
-    - state: plain
-    - state: alpha-filling
-      color: "#ff9900"
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: orange
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeOrangeSlice
@@ -350,13 +349,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: "#ff9900"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: orange-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: "#ff9900"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: orange-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of orange cake
@@ -392,10 +391,10 @@
   description: A cake with added lime.
   components:
   - type: Sprite
-    layers:
-    - state: plain
-    - state: alpha-filling
-      color: "#00ff00"
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: lime
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeLimeSlice
@@ -407,13 +406,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: "#00ff00"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: lime-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: "#00ff00"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: lime-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of lime cake
@@ -449,10 +448,10 @@
   description: A cake with added lemon.
   components:
   - type: Sprite
-    layers:
-    - state: plain
-    - state: alpha-filling
-      color: "#ffff00"
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: lemon
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeLemonSlice
@@ -464,13 +463,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: "#ffff00"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: lemon-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: "#ffff00"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: lemon-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of lemon cake
@@ -585,9 +584,10 @@
   description: A cake with added chocolate.
   components:
   - type: Sprite
-    layers:
-    - state: alpha
-      color: "#ba672e"
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: chocolate
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeChocolateSlice
@@ -608,11 +608,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: alpha-inhand-left
-        color: "#ba672e"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: chocolate-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: alpha-inhand-right
-        color: "#ba672e"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: chocolate-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of chocolate cake
@@ -653,10 +655,10 @@
   description: A cake centred with apple.
   components:
   - type: Sprite
-    layers:
-    - state: plain
-    - state: alpha-filling
-      color: "#ff4300"
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: apple
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeAppleSlice
@@ -668,13 +670,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: "#ff4300"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: apple-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: "#ff4300"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: apple-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of apple cake
@@ -712,6 +714,7 @@
   description: A cake made of slimes. Probably not electrified.
   components:
   - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi # Arcane
     state: slime
   - type: ToolRefinable
     refineResult:
@@ -724,15 +727,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: alpha-inhand-left
-        color: "#00ffff"
-      - state: alpha-filling-inhand-left
-        color: "#00ffff"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: slime-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: alpha-inhand-right
-        color: "#00ffff"
-      - state: alpha-filling-inhand-right
-        color: "#00ffff"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: slime-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of slime cake
@@ -768,7 +769,10 @@
   description: A hollow cake with real pumpkin.
   components:
   - type: Sprite
-    state: pumpkinspice
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: pumpkin
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakePumpkinSlice
@@ -789,13 +793,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: plain-inhand-left
-      - state: alpha-filling-inhand-left
-        color: "#ffffff"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: pumpkin-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: plain-inhand-right
-      - state: alpha-filling-inhand-right
-        color: "#ffffff"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: pumpkin-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of pumpkin-spice cake
@@ -838,6 +842,7 @@
   description: A cake made of christmas.
   components:
   - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi # Arcane
     state: christmas
   - type: ToolRefinable
     refineResult:
@@ -850,11 +855,13 @@
   - type: Item
     inhandVisuals:
       left:
-      - state: alpha-inhand-left
-        color: "#ab5012"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: christmas-inhand-left
+      # Arcane-Edit-End
       right:
-      - state: alpha-inhand-right
-        color: "#ab5012"
+      # Arcane-Edit-Start: Orion cake resprite
+      - state: christmas-inhand-right
+      # Arcane-Edit-End
 
 - type: entity
   name: slice of christmas cake
@@ -885,13 +892,36 @@
   description: Happy Birthday little clown...
   components:
   - type: Sprite
-    state: birthday
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    layers:
+    - state: birthday
+    - state: birthday-light
+      shader: unshaded
+      map: [ "flame" ]
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeBirthdaySlice
       amount: 8
   - type: Item
-    heldPrefix: birthday
+    # Arcane-Edit-Start: Orion cake resprite
+    inhandVisuals:
+      left:
+      - state: birthday-inhand-left
+      - state: birthday-light-inhand-left
+        shader: unshaded
+        map: [ "flame" ]
+      right:
+      - state: birthday-inhand-right
+      - state: birthday-light-inhand-right
+        shader: unshaded
+        map: [ "flame" ]
+  - type: PointLight
+    netsync: false
+    radius: 1.1
+    color: orange
+    # Arcane-Edit-End
 
 - type: entity
   name: slice of birthday cake
@@ -945,13 +975,20 @@
   description: A funny cake with a clown face on it.
   components:
   - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi # Arcane
     state: clown
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeClownSlice
       amount: 8
   - type: Item
-    heldPrefix: clown
+    # Arcane-Edit-Start: Orion cake resprite
+    inhandVisuals:
+      left:
+      - state: clown-inhand-left
+      right:
+      - state: clown-inhand-right
+    # Arcane-Edit-End
 
 - type: entity
   name: slice of clown cake
@@ -972,7 +1009,10 @@
   description: A spaceman's trumpet frosted cake.
   components:
   - type: Sprite
-    state: trumpet
+    # Arcane-Edit-Start: Orion cake resprite
+    sprite: _Arcane/Objects/Consumable/Food/cake.rsi
+    state: spaceman
+    # Arcane-Edit-End
   - type: ToolRefinable
     refineResult:
     - id: FoodCakeSpacemanSlice
@@ -989,7 +1029,13 @@
       - ReagentId: PolypyryliumOligomers
         Quantity: 12
   - type: Item
-    heldPrefix: trumpet
+    # Arcane-Edit-Start: Orion cake resprite
+    inhandVisuals:
+      left:
+      - state: spaceman-inhand-left
+      right:
+      - state: spaceman-inhand-right
+    # Arcane-Edit-End
 
 - type: entity
   name: slice of spaceman's cake

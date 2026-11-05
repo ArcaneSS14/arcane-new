@@ -2,6 +2,7 @@
 
 using Content.Goobstation.Common.Research;
 using Content.Shared.Research.Prototypes;
+using Robust.Shared.Prototypes; // Arcane
 
 namespace Content.Goobstation.Client.Research.UI;
 
@@ -22,7 +23,7 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
     public Color BorderColor = DefaultBorderColor;
     public Color HoveredColor = DefaultHoveredColor;
 
-    public FancyResearchConsoleItem(TechnologyPrototype proto, SpriteSystem sprite, ResearchAvailability availability)
+    public FancyResearchConsoleItem(TechnologyPrototype proto, SpriteSystem sprite, IPrototypeManager prototypeManager, ResearchAvailability availability) // Arcane-Edit
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
@@ -31,6 +32,12 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
         Prototype = proto;
 
         ResearchDisplay.Texture = sprite.Frame0(proto.Icon);
+
+        // Arcane-Start
+        if (prototypeManager.TryIndex(proto.Discipline, out var discipline))
+            DisciplineDisplay.Texture = sprite.Frame0(discipline.Icon);
+        // Arcane-End
+
         Button.OnPressed += Selected;
         Button.OnDrawModeChanged += UpdateColor;
 
@@ -70,6 +77,13 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
     {
         var box = (BoxContainer) GetChild(0)!;
         box.SetSize = new Vector2(80 * scale, 80 * scale);
+
+        // Arcane-Start
+        var badgeSize = new Vector2(20 * scale, 20 * scale);
+        DisciplineBadge.SetSize = badgeSize;
+        SetPosition(DisciplineBadge, Vector2.Zero);
+        DisciplineDisplay.SetSize = badgeSize;
+        // Arcane-End
     }
 }
 

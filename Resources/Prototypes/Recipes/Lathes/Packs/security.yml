@@ -74,6 +74,14 @@
 - type: latheRecipePack
   id: SecurityEquipment
   recipes:
+  # Arcane-Start
+  - ClothingEyesNightVisionSecurityGoggles
+  - EnergyDomeTurtle
+  - SurveillanceWirelessCameraBodySecurity
+  - PepperSpray
+  - FlashlightSeclite
+  - SmokeGrenade
+  # Arcane-End
   - ClothingBackpackElectropack
   - HoloprojectorSecurity
   - HoloprojectorSecurityAdvanced # Goob
@@ -84,6 +92,13 @@
   - PowerCageSmall
   - TelescopicShield
   - ClothingBackpackHarmpack
+  # Arcane-Start
+  - EnergyDomeTurtle
+  - SurveillanceWirelessCameraBodySecurity
+  - PepperSpray
+  - FlashlightSeclite
+  - SmokeGrenade
+  # Arcane-End
 
 - type: latheRecipePack
   id: SecurityBoards
@@ -148,6 +163,9 @@
   - WeaponLaserCarbine
   - WeaponXrayCannon
 #  - WeaponTemperatureGun # Arcane-Edit
+  # Arcane-Start
+  - RiotBulletShield
+  # Arcane-End
 
 - type: latheRecipePack
   id: SecurityDisablers

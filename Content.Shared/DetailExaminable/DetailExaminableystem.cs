@@ -13,7 +13,7 @@ public sealed partial class DetailExaminableSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<DetailExaminableComponent, GetVerbsEvent<ExamineVerb>>(OnGetExamineVerbs);
+        // SubscribeLocalEvent<DetailExaminableComponent, GetVerbsEvent<ExamineVerb>>(OnGetExamineVerbs); // Arcane-Edit: replaced by the Arcane detail window
     }
 
     private void OnGetExamineVerbs(Entity<DetailExaminableComponent> ent, ref GetVerbsEvent<ExamineVerb> args)

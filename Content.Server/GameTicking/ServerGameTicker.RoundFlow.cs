@@ -808,7 +808,11 @@ public sealed partial class ServerGameTicker
                 return;
 
             var mapName = _gameMapManager.GetSelectedMap()?.MapName ?? Loc.GetString("discord-round-notifications-unknown-map");
-            var content = Loc.GetString("discord-round-notifications-started", ("id", RoundId), ("map", mapName));
+            // Arcane-Edit-Start: show the game mode (decoy title for secret modes, like the lobby)
+            var preset = Decoy ?? CurrentPreset;
+            var gameMode = preset != null ? Loc.GetString(preset.ModeTitle) : Loc.GetString("discord-round-notifications-unknown-gamemode");
+            var content = Loc.GetString("discord-round-notifications-started-gamemode", ("id", RoundId), ("map", mapName), ("mode", gameMode));
+            // Arcane-Edit-End
 
             var payload = new WebhookPayload { Content = content };
 

@@ -16,6 +16,28 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     VerticalAlignment="Bottom"
     Orientation="Horizontal"
     HorizontalAlignment="Center">
+    <!-- Arcane-Start: extra hotbar for underwear slots -->
+    <Control HorizontalAlignment="Center">
+        <controls:SlotButton
+            Name="ExtraButton"
+            Access="Public"
+            Visible="False"
+            VerticalAlignment="Bottom"
+            HorizontalExpand="False"
+            VerticalExpand="False"
+            ButtonTexturePath="Slots/toggle-alt"/>
+        <inventory:ItemSlotButtonContainer
+            Name="ExtraHotbar"
+            Access="Public"
+            Visible="False"
+            MaxColumns="3"
+            SlotGroup="Extra"
+            ExpandBackwards="True"
+            VerticalExpand="True"
+            HorizontalAlignment="Center"
+        />
+    </Control>
+    <!-- Arcane-End -->
     <Control HorizontalAlignment="Center">
         <!-- Needs to default to invisible because if we attach to a non-slots entity this will never get unset -->
         <controls:SlotButton

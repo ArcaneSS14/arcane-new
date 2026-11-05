@@ -17,6 +17,7 @@ public sealed partial class CrewManifestListing : BoxContainer
 {
     [Dependency] private IEntitySystemManager _entitySystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IClipboardManager _clipboard = default!; // Arcane
     private readonly SpriteSystem _spriteSystem;
 
     // Arcane-Start
@@ -189,7 +190,7 @@ public sealed partial class CrewManifestListing : BoxContainer
         {
             if (!hasFilter)
             {
-                AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, department, entries));
+                AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, _clipboard, department, entries));
                 continue;
             }
 
@@ -205,7 +206,7 @@ public sealed partial class CrewManifestListing : BoxContainer
                 continue;
 
             hasMatches = true;
-            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, department, matchingEntries));
+            AddChild(new CrewManifestSection(_prototypeManager, _spriteSystem, _clipboard, department, matchingEntries));
         }
 
         if (hasFilter && !hasMatches)
