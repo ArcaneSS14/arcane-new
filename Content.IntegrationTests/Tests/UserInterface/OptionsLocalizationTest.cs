@@ -1,4 +1,5 @@
 // Arcane-Start
+#nullable enable
 using System.Globalization;
 using System.Linq;
 using Content.Client.Localizations;
