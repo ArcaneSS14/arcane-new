@@ -11,10 +11,14 @@
   - type: MachineBoard
     prototype: SlimeGrinder
     stackRequirements:
-      Manipulator: 5
+      # Manipulator: 5 # Arcane-Edit: replaced by machine parts
       Steel: 5
     tagRequirements:
       Knife:
         amount: 2
         defaultPrototype: KitchenKnife
         examineName: construction-insert-info-examine-name-knife
+    # Arcane-Start
+    partRequirements:
+      Servo: 5
+    # Arcane-End

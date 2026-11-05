@@ -230,12 +230,12 @@
   - type: ContainerFill
     containers:
       board: [ WallmountSubstationElectronics ]
-      manipulator: [ MicroManipulatorStockPart ]
+      servo: [ MicroServoStockPart ] # Arcane-Edit: Replaced manipulator
       powercell: [ PowerCellSmall ]
   - type: ContainerContainer
     containers:
       board: !type:Container
-      manipulator: !type:Container
+      servo: !type:Container # Arcane-Edit: Replaced manipulator
       powercell: !type:Container
 
       # Construction Frame
