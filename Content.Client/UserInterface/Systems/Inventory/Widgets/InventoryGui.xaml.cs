@@ -13,6 +13,7 @@ public sealed partial class InventoryGui : UIWidget
 
         var inventoryUIController = UserInterfaceManager.GetUIController<InventoryUIController>();
         inventoryUIController.RegisterInventoryBarContainer(InventoryHotbar);
+        inventoryUIController.RegisterExtraHotbar(ExtraHotbar, ExtraButton); // Arcane
 
         LayoutContainer.SetGrowVertical(this, LayoutContainer.GrowDirection.Begin);
     }

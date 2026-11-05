@@ -18,6 +18,7 @@ using Robust.Shared.Input;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
+using Content.Arcane.Common.Input; // Arcane
 
 namespace Content.Client.Options.UI.Tabs
 {
@@ -216,6 +217,15 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.MoveStoredItem);
             AddButton(ContentKeyFunctions.RotateStoredItem);
             AddButton(ContentKeyFunctions.SaveItemLocation);
+            // Arcane-Start: posing
+            AddButton(ArcaneKeyFunctions.TogglePosing);
+            AddButton(ArcaneKeyFunctions.PosingOffsetLeft);
+            AddButton(ArcaneKeyFunctions.PosingOffsetRight);
+            AddButton(ArcaneKeyFunctions.PosingOffsetUp);
+            AddButton(ArcaneKeyFunctions.PosingOffsetDown);
+            AddButton(ArcaneKeyFunctions.PosingRotateNegative);
+            AddButton(ArcaneKeyFunctions.PosingRotatePositive);
+            // Arcane-End
 
             AddHeader("ui-options-header-interaction-adv");
             AddButton(TraumaKeyFunctions.Tackle); // Trauma

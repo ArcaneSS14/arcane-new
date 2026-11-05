@@ -5,7 +5,7 @@
     enum.HumanoidVisualLayers.Tail:
       limit: 1
       required: true
-      default: [ TajaranTailRetro ]
+      default: [ TajaranTailFluffy ]
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
       required: true
@@ -218,7 +218,7 @@
     - enum.HumanoidVisualLayers.Tail
 
 - type: entity
-  parent: [ OrganBaseHeadSexed, OrganBaseHeadBald, OrganTajaranExternal ] # Trauma - bald
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganTajaranExternal ]
   id: OrganTajaranHead
   components:
   - type: VisualOrganMarkings
@@ -302,7 +302,7 @@
   components:
   - type: VisualOrgan
     data:
-      sprite: Mobs/Customization/eyes.rsi
+      sprite: _Arcane/Mobs/Customization/Tajaran/tajaran_eyes.rsi
       state: eyes
 
 - type: entity

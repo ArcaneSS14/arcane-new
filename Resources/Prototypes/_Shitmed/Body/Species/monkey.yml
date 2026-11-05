@@ -14,6 +14,18 @@
           32:
             sprite: _Trauma/Mobs/Animals/displacements.rsi
             state: jumpsuit-monkey
+      # Arcane-Start: underwear slots (Orion #208)
+      underwear:
+        sizeMaps:
+          32:
+            sprite: _Trauma/Mobs/Animals/displacements.rsi
+            state: jumpsuit-monkey
+      undershirt:
+        sizeMaps:
+          32:
+            sprite: _Trauma/Mobs/Animals/displacements.rsi
+            state: jumpsuit-monkey
+      # Arcane-End
   - type: InitialBody
     organs:
       Torso: OrganMonkeyTorso

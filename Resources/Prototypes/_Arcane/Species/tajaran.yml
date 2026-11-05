@@ -6,11 +6,9 @@
   dollPrototype: AppearanceTajaran
   defaultSkinTone: "#b99464"
   skinColoration: Hues
-  # Arcane-Start
   defaultScale: 0.95
   minScale: 0.9
   maxScale: 1.05
-  # Arcane-End
   naming: First
   maleFirstNames: NamesTajaranFirst
   femaleFirstNames: NamesTajaranFirst

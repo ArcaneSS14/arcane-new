@@ -20,6 +20,14 @@ namespace Content.Shared.Humanoid.Markings
         [DataField("sexRestriction")]
         public Sex? SexRestriction { get; private set; }
 
+        // Arcane-Start
+        /// <summary>
+        /// Whether this marking is available only to sponsors.
+        /// </summary>
+        [DataField("sponsorOnly")]
+        public bool SponsorOnly { get; private set; }
+        // Arcane-End
+
         [DataField("forcedColoring")]
         public bool ForcedColoring { get; private set; } = false;
 
