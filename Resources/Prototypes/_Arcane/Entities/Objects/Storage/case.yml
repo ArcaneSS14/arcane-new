@@ -1,7 +1,7 @@
 # BASE
 
 - type: entity
-  parent: BoxCardboard
+  parent: [ BaseStorageItem, ContentsExplosionResistanceBase ]
   id: BaseCase
   abstract: true
   name: case
@@ -13,6 +13,8 @@
     maxItemSize: Huge
     grid:
     - 0,0,5,4
+  - type: ExplosionResistance
+    damageCoefficient: 0.1
   - type: Damageable
     damageModifierSet: Metallic
   - type: Destructible
@@ -73,3 +75,18 @@
   - type: Sprite
     sprite: _Arcane/Objects/Storage/security_case_mini.rsi
     state: icon
+
+- type: entity
+  parent: [BaseCase, BaseSecurityContraband]
+  id: CaseBrigmedic
+  name: brigmedic case
+  suffix: Brigmedic, Empty
+  description: Red and white case with a blood-stained medical cross. Only for a real combat medic.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Storage/brigmedic_case.rsi
+    state: icon
+  - type: Storage
+    defaultStorageOrientation: Vertical
+    grid:
+    - 0,0,11,3

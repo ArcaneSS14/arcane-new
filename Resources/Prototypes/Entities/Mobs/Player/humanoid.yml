@@ -47,7 +47,7 @@
 
 - type: randomHumanoidSettings
   id: DeathSquad
-  parent: EventHumanoidCentcomm
+  parent: [ EventHumanoidCentcomm, BaseResponseForce ] # Arcane-Edit: EventHumanoidCentcomm > [ EventHumanoidCentcomm, BaseResponseForce ]
   components:
     - type: GhostRole
       name: ghost-role-information-Death-Squad-name
@@ -545,7 +545,7 @@
 
 - type: randomHumanoidSettings
   id: CBURNAgent
-  parent: EventHumanoidCentcomm
+  parent: [ EventHumanoidCentcomm, BaseResponseForce ] # Arcane-Edit: EventHumanoidCentcomm > [ EventHumanoidCentcomm, BaseResponseForce ]
   components:
     - type: Loadout
       prototypes: [CBURNGear]

@@ -1012,6 +1012,7 @@
     groups:
     - AllAccess
     - Silicon
+    - InteQ # Arcane
     tags:
     # <Trauma>
     - NanotrasenRepresentative

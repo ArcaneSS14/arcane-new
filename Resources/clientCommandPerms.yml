@@ -116,3 +116,4 @@
 - Flags: ADMIN
   Commands:
     - admin_overlay
+    - responseforceui # Arcane

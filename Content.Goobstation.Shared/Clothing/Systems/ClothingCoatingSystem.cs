@@ -22,6 +22,14 @@ public sealed partial class ClothingCoatingSystem : EntitySystem
             !TryComp<ClothingComponent>(target, out var clothing))
             return;
 
+        // Arcane-Start
+        if (IsCoatingBlocked(ent, target, args.User))
+        {
+            args.Handled = true;
+            return;
+        }
+        // Arcane-End
+
         EntityManager.AddComponents(target, ent.Comp.Components, false);
         if (TryComp<ToggleableClothingComponent>(target, out var toggleable))
         {

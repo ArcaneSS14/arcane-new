@@ -1335,6 +1335,7 @@
   - SecurityHat
   - TrooperHat
   - SergeantBeret # Trauma
+  - SecuritySideCap # Arcane
 
 - type: loadoutGroup
   id: SecurityJumpsuit
