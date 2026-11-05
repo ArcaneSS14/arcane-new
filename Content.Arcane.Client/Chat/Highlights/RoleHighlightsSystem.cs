@@ -26,6 +26,7 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
     [Dependency] private ISerializationManager _serialization = default!;
 
     private Dictionary<ProtoId<JobPrototype>, string> _highlights = new();
+    private bool _persistenceWritable;
     private RoleHighlightEditorWindow? _window;
 
     public override void Initialize()
@@ -36,7 +37,6 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
         SubscribeLocalEvent<OpenRoleHighlightEditorEvent>((ref OpenRoleHighlightEditorEvent ev) => OnOpenRoleHighlightEditor(ev));
 
         RecoverInterruptedSave();
-        LoadHighlights();
     }
 
     public override void Shutdown()
@@ -77,18 +77,17 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
 
     private string GetDefaultHighlights(ProtoId<JobPrototype> job)
     {
-        var key = $"highlights-{job.Id.ToLowerInvariant()}";
+        var key = RoleHighlightDefaults.GetKey(job);
         if (!Loc.TryGetString(key, out var highlights))
             return string.Empty;
 
-        return string.Join(
-            '\n',
-            highlights.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+        return RoleHighlightDefaults.Normalize(highlights);
     }
 
-    private RoleHighlightsSaveResult SaveHighlights(ProtoId<JobPrototype> job, string value)
+    /// <summary>Persists the highlight override for a job without discarding other jobs.</summary>
+    public RoleHighlightsSaveResult SaveHighlights(ProtoId<JobPrototype> job, string value)
     {
-        if (!_prototypes.HasIndex<JobPrototype>(job))
+        if (!_persistenceWritable || !_prototypes.HasIndex<JobPrototype>(job))
             return RoleHighlightsSaveResult.Failed;
 
         if (!TryNormalize(value, out var normalized))
@@ -113,14 +112,15 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
         }
     }
 
-    private void LoadHighlights()
+    private LoadResult LoadHighlights(ResPath path, out Dictionary<ProtoId<JobPrototype>, string> loaded)
     {
-        if (!_resources.UserData.Exists(HighlightsPath))
-            return;
-
+        loaded = new();
         try
         {
-            using var stream = _resources.UserData.OpenRead(HighlightsPath);
+            if (!_resources.UserData.Exists(path))
+                return LoadResult.Missing;
+
+            using var stream = _resources.UserData.OpenRead(path);
             if (stream.Length > MaxFileSize)
                 throw new InvalidDataException($"Role highlights file exceeds {MaxFileSize} bytes.");
 
@@ -136,7 +136,6 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
             if (savedHighlights.Count > MaxSavedJobs)
                 throw new InvalidDataException($"Role highlights file contains more than {MaxSavedJobs} jobs.");
 
-            var loaded = new Dictionary<ProtoId<JobPrototype>, string>();
             foreach (var (id, value) in savedHighlights)
             {
                 if (!_prototypes.HasIndex<JobPrototype>(id) || !TryNormalize(value, out var normalized))
@@ -146,13 +145,13 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
                     loaded[id] = normalized;
             }
 
-            _highlights = loaded;
+            return LoadResult.Success;
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to load role highlights: {e}");
-            BackupInvalidFile();
-            _highlights.Clear();
+            Log.Error($"Failed to load role highlights from {path}: {e}");
+            loaded.Clear();
+            return LoadResult.Failed;
         }
     }
 
@@ -213,12 +212,13 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
 
     private void ReplaceHighlightsFile(ResPath temporaryPath)
     {
-        if (_resources.UserData.Exists(BackupPath))
-            _resources.UserData.Delete(BackupPath);
-
         var hadOriginal = _resources.UserData.Exists(HighlightsPath);
         if (hadOriginal)
+        {
+            if (_resources.UserData.Exists(BackupPath))
+                _resources.UserData.Delete(BackupPath);
             _resources.UserData.Rename(HighlightsPath, BackupPath);
+        }
 
         try
         {
@@ -251,35 +251,59 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
 
     private void RecoverInterruptedSave()
     {
-        try
+        var primary = LoadHighlights(HighlightsPath, out var loaded);
+        if (primary == LoadResult.Success)
         {
-            if (!_resources.UserData.Exists(HighlightsPath) && _resources.UserData.Exists(BackupPath))
-                _resources.UserData.Rename(BackupPath, HighlightsPath);
-            else if (_resources.UserData.Exists(HighlightsPath) && _resources.UserData.Exists(BackupPath))
-                _resources.UserData.Delete(BackupPath);
+            _highlights = loaded;
+            _persistenceWritable = true;
+            try
+            {
+                if (_resources.UserData.Exists(BackupPath))
+                    _resources.UserData.Delete(BackupPath);
+            }
+            catch (Exception e)
+            {
+                Log.Warning($"Failed to remove role highlights backup: {e}");
+            }
+            return;
         }
-        catch (Exception e)
-        {
-            Log.Error($"Failed to recover role highlights backup: {e}");
-        }
-    }
 
-    private void BackupInvalidFile()
-    {
-        if (!_resources.UserData.Exists(HighlightsPath))
+        var backup = LoadHighlights(BackupPath, out loaded);
+        if (backup == LoadResult.Success)
+        {
+            _highlights = loaded;
+            _persistenceWritable = primary == LoadResult.Missing || BackupInvalidFile();
+            return;
+        }
+
+        if (backup == LoadResult.Failed)
             return;
 
+        _persistenceWritable = primary == LoadResult.Missing || BackupInvalidFile();
+    }
+
+    private bool BackupInvalidFile()
+    {
         try
         {
             var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
             _resources.UserData.Rename(
                 HighlightsPath,
                 new ResPath($"/highlights.invalid-{timestamp}.yml"));
+            return true;
         }
         catch (Exception e)
         {
             Log.Error($"Failed to back up invalid role highlights file: {e}");
+            return false;
         }
+    }
+
+    private enum LoadResult : byte
+    {
+        Missing,
+        Success,
+        Failed,
     }
 
     private static bool TryNormalize(string value, out string normalized)
