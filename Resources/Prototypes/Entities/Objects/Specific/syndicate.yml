@@ -72,7 +72,7 @@
   suffix: Empty
   components:
   - type: Sprite
-    sprite: Objects/Devices/communication.rsi
+    sprite: _Arcane/Objects/Devices/syndicate_uplink.rsi # Arcane-Edit: Objects/Devices/communication.rsi > _Arcane/Objects/Devices/syndicate_uplink.rsi
     layers:
     - state: radio
   - type: Item
