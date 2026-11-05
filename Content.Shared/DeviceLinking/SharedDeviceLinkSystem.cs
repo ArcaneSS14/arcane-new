@@ -415,8 +415,10 @@ public abstract partial class SharedDeviceLinkSystem : EntitySystem
         {
             foreach (var (sourcePort, sinkPort) in ports)
             {
-                RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(sourcePort));
-                RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sinkPort));
+                // Arcane-Edit-Start: tell each side which entity was unlinked
+                RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(sourcePort, sinkUid));
+                RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sinkPort, sourceUid));
+                // Arcane-Edit-End
             }
         }
 
@@ -454,8 +456,8 @@ public abstract partial class SharedDeviceLinkSystem : EntitySystem
             else
                 _adminLogger.Add(LogType.DeviceLinking, LogImpact.Low, $"unlinked {ToPrettyString(sourceUid):source} {source} and {ToPrettyString(sinkUid):sink} {sink}");
 
-            RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(source));
-            RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sink));
+            RaiseLocalEvent(sourceUid, new PortDisconnectedEvent(source, sinkUid)); // Arcane-Edit: added sinkUid
+            RaiseLocalEvent(sinkUid, new PortDisconnectedEvent(sink, sourceUid)); // Arcane-Edit: added sourceUid
 
             outputs.Remove(sinkUid);
             linkedPorts.Remove((source, sink));
