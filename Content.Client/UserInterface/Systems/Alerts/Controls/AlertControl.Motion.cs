@@ -26,6 +26,7 @@ public sealed partial class AlertControl
     {
         _motionHost = new UiMotionContainer
         {
+            Profile = UiMotionProfile.Standard with { ExitDuration = TimeSpan.Zero },
             EnabledSetting = UiMotionSettings.Alerts,
             ClosingSetting = UiMotionSettings.Alerts,
             ClampToRootBounds = false,

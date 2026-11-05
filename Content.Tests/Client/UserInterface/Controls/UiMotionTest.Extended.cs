@@ -1,5 +1,6 @@
 // Arcane-Start
 using System;
+using System.Linq;
 using System.Numerics;
 using Content.Client.ContextMenu.UI;
 using Content.Client.UserInterface.Motion;
@@ -134,6 +135,36 @@ public sealed partial class UiMotionTest
         Assert.That(reveal.Count, Is.EqualTo(expected));
         Assert.That(reveal.Reveal(0).ToString(), Is.EqualTo(text));
         Assert.That(reveal.Reveal(expected).ToString(), Is.EqualTo(text));
+    }
+
+    [TestCase("A\u0301", 2, "A\u0301")]
+    [TestCase("👨‍👩‍👧‍👦", 2, "👨‍👩‍👧‍👦")]
+    [TestCase("🇺🇦", 2, "🇺🇦")]
+    [TestCase("\r\n", 2, "\r\n")]
+    [TestCase("\u1100\u1161", 3, "\u1100")]
+    [TestCase("\u0915\u094d\u0937", 3, "\u0915\u094d")]
+    public void TextRevealDocumentsSupportedClustersAndKnownSplits(string cluster, int expectedCount, string firstVisible)
+    {
+        var text = cluster + "X";
+        var reveal = new UiTextReveal(FormattedMessage.FromUnformatted(text));
+        Assert.That(reveal.Count, Is.EqualTo(expectedCount));
+        var intermediate = reveal.Reveal(1);
+        Assert.That(intermediate.ToString(), Is.EqualTo(text));
+        Assert.That(intermediate.Nodes.First(node => node.IsPlainText).Value.StringValue, Is.EqualTo(firstVisible));
+    }
+
+    [Test]
+    public void TextRevealKeepsCombiningClusterAcrossMarkupNodes()
+    {
+        var message = FormattedMessage.FromMarkupOrThrow("[bold]A[/bold]\u0301X");
+        var reveal = new UiTextReveal(message);
+        Assert.That(reveal.Count, Is.EqualTo(2));
+        var intermediate = reveal.Reveal(1);
+        Assert.That(intermediate.ToString(), Is.EqualTo(message.ToString()));
+        var textNodes = intermediate.Nodes.Where(node => node.IsPlainText).ToArray();
+        Assert.That(textNodes.Select(node => node.Value.StringValue), Is.EqualTo(new[] { "A", "\u0301", "X" }));
+        var hidden = intermediate.Nodes.ToList().FindIndex(node => node == textNodes[2]);
+        Assert.That(intermediate.Nodes[hidden - 1].Value.ColorValue, Is.EqualTo(Color.Transparent));
     }
 
     [SetUp]
