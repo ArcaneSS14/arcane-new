@@ -4,13 +4,14 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-// Arcane-Start
-using Robust.Client.Animations;
-using Robust.Client.UserInterface;
-using Robust.Shared.Animations;
-// Arcane-End
+using Robust.Client.UserInterface; // Arcane
 
 namespace Content.Client.CrewManifest.UI;
+
+// Arcane-Start
+using Robust.Client.Animations;
+using Robust.Shared.Animations;
+// Arcane-End
 
 public sealed partial class CrewManifestListing : BoxContainer
 {
