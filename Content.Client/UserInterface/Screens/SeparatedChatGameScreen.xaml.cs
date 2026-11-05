@@ -34,6 +34,7 @@ public sealed partial class SeparatedChatGameScreen : InGameScreen
             OnChatResized?.Invoke(new Vector2(ScreenContainer.SplitFraction, 0));
 
         ViewportContainer.OnResized += ResizeActionContainer;
+        Actions.ContainerReplaced += ResizeActionContainer; // Arcane
         // <Trauma>
         OnCreated?.Invoke(this);
         // </Trauma>
@@ -42,7 +43,7 @@ public sealed partial class SeparatedChatGameScreen : InGameScreen
     private void ResizeActionContainer()
     {
         float indent = 20;
-        Actions.ActionsContainer.MaxGridWidth = ViewportContainer.Size.X - indent;
+        Actions.ActionsContainer.MaxGridWidth = Math.Max(1f, ViewportContainer.Size.X - indent); // Arcane-Edit: allow setup before the first arrange
     }
 
     public override ChatBox ChatBox => GetWidget<ChatBox>()!;

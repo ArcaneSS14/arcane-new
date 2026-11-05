@@ -28,12 +28,13 @@ public sealed partial class DefaultGameScreen : InGameScreen
 
         MainViewport.OnResized += ResizeActionContainer;
         Inventory.OnResized += ResizeActionContainer;
+        Actions.ContainerReplaced += ResizeActionContainer; // Arcane
     }
 
     private void ResizeActionContainer()
     {
         float indent = Inventory.Size.Y + TopBar.Size.Y + 40;
-        Actions.ActionsContainer.MaxGridHeight = MainViewport.Size.Y - indent;
+        Actions.ActionsContainer.MaxGridHeight = Math.Max(1f, MainViewport.Size.Y - indent); // Arcane-Edit: allow setup before the first arrange
     }
 
     private void ChatOnResizeFinish(Vector2 _)

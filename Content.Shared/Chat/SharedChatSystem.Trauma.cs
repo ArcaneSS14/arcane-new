@@ -63,7 +63,7 @@ public abstract partial class SharedChatSystem
         if (colorOverride is { })
             color = Color.InterpolateBetween(color, colorOverride.Value, colorOverride.Value.A);
 
-        var fonts = GetFont(source, speech, language, message);
+        var fonts = GetFontData(source, speech, language, message); // Arcane-Edit
         speech ??= GetSpeechVerb(source, message);
 
         LocId finalWrapId = wrapId ?? (isRadio
@@ -96,13 +96,13 @@ public abstract partial class SharedChatSystem
             : Loc.GetString("chat-radio-message-name-with-icon", ("jobIcon", jobIcon), ("jobName", jobName ?? ""), ("name", entityName));
 
         return Loc.GetString(finalWrapId,
-            ("color", channel is { } ? channel.Color : color),
+            ("color", channel is { } ? channel.Color : fonts.Color ?? color), // Arcane-Edit
             // Arcane-Start
             ("channelId", channel?.ID ?? string.Empty),
             ("languageOverride", language.SpeechOverride.Color is null ? string.Empty : (baseColor ?? color).ToHex()),
             // Arcane-End
             ("entityName", entityName),
-            ("languageColor", baseColor ?? color),
+            ("languageColor", fonts.Color ?? baseColor ?? color), // Arcane-Edit
             ("fontType", fonts.FontType),
             ("fontSize", fonts.FontSize),
             ("boldFontType", boldFontType),
@@ -113,6 +113,14 @@ public abstract partial class SharedChatSystem
     }
 
     public (string VerbId, string FontType, string FontSize) GetFont(EntityUid source, SpeechVerbPrototype? speech, LanguagePrototype language, string message)
+    // Arcane-Start
+    {
+        var font = GetFontData(source, speech, language, message);
+        return (font.VerbId, font.FontType, font.FontSize);
+    }
+
+    private (string VerbId, string FontType, string FontSize, Color? Color) GetFontData(EntityUid source, SpeechVerbPrototype? speech, LanguagePrototype language, string message)
+    // Arcane-End
     {
         var random = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(source));
 
@@ -128,7 +136,7 @@ public abstract partial class SharedChatSystem
         var fontSizeEv = new SpeechFontSizeOverrideEvent(language.SpeechOverride.FontSize ?? speech.FontSize);
         RaiseLocalEvent(source, ref fontSizeEv);
 
-        return (Loc.GetString(verbId), fontEv.Font, fontSizeEv.FontSize.ToString());
+        return (Loc.GetString(verbId), fontEv.Font, fontSizeEv.FontSize.ToString(), fontEv.Color); // Arcane-Edit
     }
 
     private void CacheCollectiveMinds()
