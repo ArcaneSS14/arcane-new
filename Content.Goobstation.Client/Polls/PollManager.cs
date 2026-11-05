@@ -17,8 +17,14 @@ public sealed partial class PollManager
     public event Action<int>? OnPollClosed;
     public event Action<PollData, List<PollVoteData>>? OnPollDetailsReceived;
     public event Action<bool, string?>? OnVoteResponse;
+    // Arcane-Start
+    public event Action<IReadOnlyList<int>>? SeenPollIdsReceived;
+    public event Action<int>? PollDisplayed;
+    // Arcane-End
 
     public IReadOnlyDictionary<int, PollData> ActivePolls => _activePolls;
+
+    internal void NotifyPollDisplayed(int id) => PollDisplayed?.Invoke(id); // Arcane
 
     public void Initialize()
     {
@@ -106,6 +112,7 @@ public sealed partial class PollManager
             _activePolls[poll.PollId] = poll;
 
         OnActivePollsUpdated?.Invoke(msg.Polls);
+        SeenPollIdsReceived?.Invoke(msg.SeenPollIds); // Arcane
     }
 
     private void HandlePollDetailsResponse(MsgPollDetailsResponse msg)
