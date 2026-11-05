@@ -1,3 +1,4 @@
+using System.Linq; // Arcane
 // <Trauma>
 using Content.Shared.Whitelist;
 using Content.Medical.Common.Damage;
@@ -65,11 +66,25 @@ public sealed partial class BedSystem : EntitySystem
         // </Trauma>
         EnsureComp<HealOnBuckleHealingComponent>(bed);
         bed.Comp.NextHealTime = _timing.CurTime + TimeSpan.FromSeconds(bed.Comp.HealTime);
-        _actionsSystem.AddAction(args.Buckle, ref bed.Comp.SleepAction, SleepingSystem.SleepActionId, bed);
+        // Arcane-Edit-Start: double beds strap two entities, each gets an action of its own
+        // _actionsSystem.AddAction(args.Buckle, ref bed.Comp.SleepAction, SleepingSystem.SleepActionId, bed);
+        if (_actionsSystem.GetAction(bed.Comp.SleepAction, logError: false)?.Comp.AttachedEntity is { } holder &&
+            holder != args.Buckle.Owner && CompOrNull<BuckleComponent>(holder)?.BuckledTo == bed.Owner)
+        {
+            EntityUid? ownAction = null;
+            _actionsSystem.AddAction(args.Buckle, ref ownAction, SleepingSystem.SleepActionId, bed);
+        }
+        else
+        {
+            _actionsSystem.AddAction(args.Buckle, ref bed.Comp.SleepAction, SleepingSystem.SleepActionId, bed);
+        }
+        // Arcane-Edit-End
         Dirty(bed);
 
+        // Arcane-Edit-Start: double beds strap two entities
         // Single action entity, cannot strap multiple entities to the same bed.
-        DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // DebugTools.AssertEqual(args.Strap.Comp.BuckledEntities.Count, 1);
+        // Arcane-Edit-End
     }
 
     private void OnUnstrapped(Entity<HealOnBuckleComponent> bed, ref UnstrappedEvent args)
@@ -81,11 +96,25 @@ public sealed partial class BedSystem : EntitySystem
         // If the entity being unbuckled is terminating, we shouldn't try to act upon it, as some components may be gone
         if (!Terminating(args.Buckle.Owner))
         {
-            _actionsSystem.RemoveAction(args.Buckle.Owner, bed.Comp.SleepAction);
+            // Arcane-Edit-Start: remove the sleep action this occupant holds, whichever of the bed's it is
+            // _actionsSystem.RemoveAction(args.Buckle.Owner, bed.Comp.SleepAction);
+            foreach (var action in _actionsSystem.GetActions(args.Buckle.Owner).ToList())
+            {
+                if (action.Comp.Container != bed.Owner)
+                    continue;
+
+                _actionsSystem.RemoveAction(args.Buckle.Owner, (action, action.Comp));
+                if (action.Owner != bed.Comp.SleepAction)
+                    PredictedQueueDel(action.Owner);
+            }
+            // Arcane-Edit-End
             _sleepingSystem.TryWaking(args.Buckle.Owner);
         }
 
-        RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-Start: keep healing while a double bed is still occupied
+        if (args.Strap.Comp.BuckledEntities.Count == 0)
+            RemComp<HealOnBuckleHealingComponent>(bed);
+        // Arcane-Edit-End
     }
 
     private void OnStasisStrapped(Entity<StasisBedComponent> ent, ref StrappedEvent args)

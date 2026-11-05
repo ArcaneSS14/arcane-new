@@ -26,6 +26,15 @@
       uiWindowPos: 0,2
       strippingWindowPos: 0,0
       displayName: Head
+    # Arcane-Start
+    - name: eyes
+      slotTexture: glasses
+      slotFlags: EYES
+      stripTime: 3
+      uiWindowPos: 0,4 # above the head slot that Trauma partials move to 0,3
+      strippingWindowPos: 1,0
+      displayName: Eyes
+    # Arcane-End
     - name: mask
       slotTexture: mask
       slotFlags: MASK

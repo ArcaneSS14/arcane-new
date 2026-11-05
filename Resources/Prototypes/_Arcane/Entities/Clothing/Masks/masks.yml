@@ -28,3 +28,14 @@
   - type: Tag
     tags:
     - IPCMaskWearable # EE - IPCs
+
+- type: entity
+  parent: ClothingMaskGas
+  id: ClothingMaskGasEmerald
+  name: ancient gas mask
+  description: Gas mask is made of durable materials.
+  components:
+    - type: Sprite
+      sprite: _Arcane/Clothing/Mask/emerald.rsi
+    - type: Clothing
+      sprite: _Arcane/Clothing/Mask/emerald.rsi

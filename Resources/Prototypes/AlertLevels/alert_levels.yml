@@ -69,7 +69,7 @@
   id: DeltaNuke
   announcement: alert-level-delta-nuke-announcement
   sound:
-    path: /Audio/Misc/delta.ogg
+    path: /Audio/_Arcane/Misc/delta.ogg # Arcane-Edit
     params:
       volume: -3
   color: DarkRed

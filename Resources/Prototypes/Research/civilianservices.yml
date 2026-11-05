@@ -82,6 +82,7 @@
   tier: 1
   cost: 7500
   recipeUnlocks:
+    - ConfettiGrenade # Arcane
     - ComputerTelevisionCircuitboard
     - SynthesizerInstrument
     - DawInstrumentMachineCircuitboard
@@ -135,6 +136,7 @@
   # Arcane-Start
   - FauxTileAstroIronsand
   - FauxTileAstroIronsandBorderless
+  - TileItemBluespace
   # Arcane-End
   # Goobstation R&D Console rework start
   position: 1,5

@@ -48,7 +48,10 @@
 
 - type: loadout
   id: ChiefEngineerBeret
-  startingGear: EngineeringBeret
+  # Arcane-Edit-Start: own CE beret, was startingGear EngineeringBeret
+  equipment:
+    head: ClothingHeadHatBeretCEngineer
+  # Arcane-Edit-End
 
 
 # Neck
@@ -61,9 +64,11 @@
   id: ChiefEngineerMantle
   equipment:
     neck: ClothingNeckMantleCE
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterCE
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterCE
+  # Arcane-Edit-End
 
 - type: startingGear
   id: ChiefEngineerMantle
