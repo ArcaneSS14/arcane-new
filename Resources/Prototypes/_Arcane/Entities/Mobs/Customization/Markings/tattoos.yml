@@ -1,0 +1,64 @@
+- type: marking
+  id: TattooFaceLeft
+  bodyPart: Eyes
+  groupWhitelist: [Human]
+  coloring:
+    default:
+      type:
+        !type:EyeColoring
+          negative: true
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/adventure_tattoos.rsi
+    state: face_left
+
+- type: marking
+  id: TattooFaceRight
+  bodyPart: Eyes
+  groupWhitelist: [Human]
+  coloring:
+    default:
+      type:
+        !type:EyeColoring
+          negative: true
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/adventure_tattoos.rsi
+    state: face_right
+
+- type: marking
+  id: TattooHeartLeftLeg
+  bodyPart: LLeg
+  groupWhitelist: [Human]
+  coloring:
+    default:
+      type:
+        !type:TattooColoring
+      fallbackColor: "#666666"
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/adventure_tattoos.rsi
+    state: heart
+
+- type: marking
+  id: TattooChestCross
+  bodyPart: Chest
+  groupWhitelist: [Human]
+  coloring:
+    default:
+      type:
+        !type:TattooColoring
+      fallbackColor: "#666666"
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/adventure_tattoos.rsi
+    state: cross
+
+- type: marking
+  id: TattooChestFly
+  bodyPart: LArm
+  groupWhitelist: [Human]
+  coloring:
+    default:
+      type:
+        !type:TattooColoring
+      fallbackColor: "#666666"
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/adventure_tattoos.rsi
+    state: fly

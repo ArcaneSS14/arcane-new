@@ -1,0 +1,565 @@
+- type: entity
+  parent: [Clothing, SolutionFood]
+  id: BaseClothingPants
+  components:
+  - type: Item
+    size: Small
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+    slots: [pants]
+  - type: Butcherable
+    spawned:
+    - id: MaterialCloth1
+      amount: 1
+  - type: Edible
+    requiresSpecialDigestion: true
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 15
+  - type: Tag
+    tags:
+    - ClothMade
+  - type: StealTarget
+    stealGroup: Pants
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlack
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsOrange
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsGreen
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsCyan
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlue
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsRed
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsPink
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsHearts
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-box
+    - state: icon-box-heart
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-box
+      - state: equipped-box-heart
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsWhite
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlack2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsOrange2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsGreen2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsCyan2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlue2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsRed2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsPink2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-pant
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-pant
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsWhite3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlack3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsOrange3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsGreen3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsCyan3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlue3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsRed3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsPink3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsWhite4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlack4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsOrange4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsGreen4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsCyan4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsBlue4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsRed4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsPink4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-string2
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-string2
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingPants
+  id: ClothingPantsZasranes
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    layers:
+    - state: icon-zasranes
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    clothingVisuals:
+      pants:
+      - state: equipped-zasranes
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: Storage
+    grid:
+    - 0,0,1,1

@@ -1,0 +1,5 @@
+- type: weightedRandom
+  id: ThiefObjectiveGroupCollection
+  weights:
+    PantsStealCollectionObjective: 1
+    BrassStealCollectionObjective: 1

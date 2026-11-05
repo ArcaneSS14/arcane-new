@@ -1,0 +1,53 @@
+- type: entity
+  id: ClothingNeckCloakCap
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/cap.rsi
+
+- type: entity
+  id: ClothingNeckCloakCapFormal
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/capcloakformal.rsi
+
+- type: entity
+  id: ClothingNeckCloakCe
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/ce.rsi
+
+- type: entity
+  id: ClothingCloakCmo
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/cmo.rsi
+
+- type: entity
+  id: ClothingNeckCloakHop
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/hop.rsi
+
+- type: entity
+  id: ClothingNeckCloakHos
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/hos.rsi
+
+- type: entity
+  id: ClothingNeckCloakQm
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/qm.rsi
+
+- type: entity
+  id: ClothingNeckCloakRd
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Cloaks/rd.rsi
+
+- type: stealTargetGroup
+  id: HeadCloak
+  sprite:
+    sprite: _Arcane/Clothing/Neck/Cloaks/cap.rsi
+    state: icon

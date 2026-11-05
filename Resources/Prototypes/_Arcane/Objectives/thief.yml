@@ -1,0 +1,35 @@
+- type: stealTargetGroup
+  id: Pants
+  name: steal-target-groups-underpants
+  sprite:
+    sprite: _Arcane/Clothing/Underwear/underpants.rsi
+    state: icon-box
+
+- type: entity
+  parent: BaseThiefStealCollectionObjective
+  id: PantsStealCollectionObjective
+  components:
+  - type: StealCondition
+    stealGroup: Pants
+    minCollectionSize: 5
+    maxCollectionSize: 10
+  - type: Objective
+    difficulty: 1
+
+- type: stealTargetGroup
+  id: Brass
+  name: steal-target-groups-brassieres
+  sprite:
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    state: icon-box
+
+- type: entity
+  parent: BaseThiefStealCollectionObjective
+  id: BrassStealCollectionObjective
+  components:
+  - type: StealCondition
+    stealGroup: Brass
+    minCollectionSize: 5
+    maxCollectionSize: 10
+  - type: Objective
+    difficulty: 1

@@ -1,0 +1,7 @@
+- type: inventorySlot
+  id: brass
+  flags: BRASS
+
+- type: inventorySlot
+  id: pants
+  flags: PANTS

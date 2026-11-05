@@ -1,0 +1,215 @@
+- type: roleLoadout
+  id: JobCaptain
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobHeadOfPersonnel
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobPassenger
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobBartender
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobServiceWorker
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobChef
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobLibrarian
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobLawyer
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobChaplain
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobJanitor
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobBotanist
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobClown
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobMime
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobMusician
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobQuartermaster
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobCargoTechnician
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobSalvageSpecialist
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobChiefEngineer
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobTechnicalAssistant
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobStationEngineer
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobAtmosphericTechnician
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobResearchDirector
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobScientist
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobResearchAssistant
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobHeadOfSecurity
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobWarden
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobSecurityOfficer
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobDetective
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobSecurityCadet
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobChiefMedicalOfficer
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobMedicalDoctor
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobMedicalIntern
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobChemist
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobParamedic
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobReporter
+  groups:
+  - BrassGroup
+  - PantsGroup
+
+- type: roleLoadout
+  id: JobPsychologist
+  groups:
+  - BrassGroup
+  - PantsGroup

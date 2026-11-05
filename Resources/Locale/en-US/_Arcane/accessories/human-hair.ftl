@@ -1,0 +1,25 @@
+marking-HumanHairCombedShaved = Combed (Shaved Sides)
+marking-HumanHairCombedShaved-combed = Combed (Shaved Sides)
+marking-HumanHairCombedBackADV = Slicked Back (Shaved Sides)
+marking-HumanHairCombedBackADV-combedback = Slicked Back (Shaved Sides)
+marking-HumanHairPunk = Punk
+marking-HumanHairPunk-punk = Punk
+marking-HumanHairTopKnot = Top Knot
+marking-HumanHairTopKnot-topknot = Top Knot
+marking-HumanHairPunkBig = Anarchist
+marking-HumanHairPunkBig-punk_big = Anarchist
+
+marking-HumanFacialHairDED = Wizard Beard
+marking-HumanFacialHairDED-ded = Wizard Beard
+marking-HumanFacialHairGusar = Hussar Beard
+marking-HumanFacialHairGusar-gusar = Hussar Beard
+marking-HumanFacialHairLogan = Logan Beard
+marking-HumanFacialHairLogan-logan = Logan Beard
+marking-HumanFacialHairTrocki = Lion Beard
+marking-HumanFacialHairTrocki-trocki = Lion Beard
+marking-HumanFacialHairDwarfBig = Dwarven Braids
+marking-HumanFacialHairDwarfBig-Dwarf = Dwarven Braids
+marking-HumanFacialHairBismark = Bismarck Moustache
+marking-HumanFacialHairBismark-bismark = Bismarck Moustache
+marking-HumanFacialHairBrutalBig = Overgrown Beard
+marking-HumanFacialHairBrutalBig-big_Brutal = Overgrown Beard

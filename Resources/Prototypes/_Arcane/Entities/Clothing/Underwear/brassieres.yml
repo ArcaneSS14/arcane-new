@@ -1,0 +1,506 @@
+- type: entity
+  parent: BaseClothingPants
+  id: BaseClothingBrass
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+    slots: [brass]
+  - type: StealTarget
+    stealGroup: Brass
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlack
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassOrange
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassGreen
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassCyan
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlue
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassRed
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassPink
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-box
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-box
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassWhite
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlack2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassOrange2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassGreen2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassCyan2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlue2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassRed2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassPink2
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-pant
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-pant
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassWhite3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlack3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassOrange3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassGreen3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassCyan3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlue3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassRed3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassPink3
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string
+        color: "#f785f0"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassWhite4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlack4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#292739"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#292739"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassOrange4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#d5801c"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#d5801c"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassGreen4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#1cd543"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#1cd543"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassCyan4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#21eae3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#21eae3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassBlue4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#6c72f3"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#6c72f3"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassRed4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#fb0808"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#fb0808"
+
+- type: entity
+  parent: BaseClothingBrass
+  id: ClothingBrassPink4
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    layers:
+    - state: icon-string2
+      color: "#f785f0"
+  - type: Clothing
+    sprite: _Arcane/Clothing/Underwear/brassieres.rsi
+    clothingVisuals:
+      brass:
+      - state: equipped-string2
+        color: "#f785f0"
