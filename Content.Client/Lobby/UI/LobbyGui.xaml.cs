@@ -56,6 +56,18 @@ namespace Content.Client.Lobby.UI
             }
         }
 
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            ObserveButton.Text = Loc.GetString("ui-lobby-observe-button");
+            AHelpButton.Text = Loc.GetString("ui-lobby-ahelp-button");
+            OptionsButton.Text = Loc.GetString("ui-lobby-options-button");
+            LeaveButton.Text = Loc.GetString("ui-lobby-leave-button");
+            ServerInfoHeading.Text = Loc.GetString("ui-lobby-server-info-block");
+            CharacterPreview.ReloadLocalization();
+        }
+        // Arcane-End
+
         private void TogglePanel(bool value)
         {
             RightSide.Visible = value;

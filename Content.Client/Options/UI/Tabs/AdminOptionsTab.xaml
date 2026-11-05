@@ -4,13 +4,17 @@
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
             <BoxContainer Orientation="Vertical" Margin="8">
-                <Label Text="{Loc 'ui-options-admin-player-panel'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AdminPlayerPanelLabel" Text="{Loc 'ui-options-admin-player-panel'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <ui:OptionDropDown Name="DropDownPlayerTabSymbolSetting" Title="{Loc 'ui-options-admin-player-tab-symbol-setting'}" />
                 <ui:OptionDropDown Name="DropDownPlayerTabRoleSetting" Title="{Loc 'ui-options-admin-player-tab-role-setting'}" />
                 <ui:OptionDropDown Name="DropDownPlayerTabColorSetting" Title="{Loc 'ui-options-admin-player-tab-color-setting'}" />
-                <Label Text="{Loc 'ui-options-admin-overlay-title'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AdminOverlayTitleLabel" Text="{Loc 'ui-options-admin-overlay-title'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <ui:OptionDropDown Name="DropDownOverlayAntagFormat" Title="{Loc 'ui-options-admin-overlay-antag-format'}" />
                 <ui:OptionDropDown Name="DropDownOverlayAntagSymbol" Title="{Loc 'ui-options-admin-overlay-antag-symbol'}" />
                 <CheckBox Name="EnableOverlayPlaytimeCheckBox" Text="{Loc 'ui-options-admin-enable-overlay-playtime'}" />
@@ -20,14 +24,18 @@
                 <ui:OptionSlider Name="OverlayMergeDistanceSlider"  Title="{Loc 'ui-options-admin-overlay-merge-distance'}"/>
                 <ui:OptionSlider Name="OverlayGhostFadeSlider"  Title="{Loc 'ui-options-admin-overlay-ghost-fade-distance'}"/>
                 <ui:OptionSlider Name="OverlayGhostHideSlider"  Title="{Loc 'ui-options-admin-overlay-ghost-hide-distance'}"/>
-                <!-- Goobstation Start - Admin Notifications -->
                 <!-- Some may say this belongs in AudioTab. They're probably right. -->
-                <Label Text="{Loc 'ui-options-admin-notifications-title'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AdminNotificationsTitleLabel" Text="{Loc 'ui-options-admin-notifications-title'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
+                <!-- Goobstation Start - Admin Notifications -->
                 <ui:OptionSlider Name="NotificationsVolumeSlider" Title="{Loc 'ui-options-admin-notifications-volume'}"/>
                 <!-- Goobstation End - Admin Notifications -->
-                <Label Text="{Loc 'ui-options-admin-strip-overlay-title'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AdminStripOverlayTitleLabel" Text="{Loc 'ui-options-admin-strip-overlay-title'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="EnableAdminStripOverlayDefault" Text="{Loc 'ui-options-admin-strip-overlay-setting'}" />
             </BoxContainer>
         </ScrollContainer>

@@ -105,6 +105,21 @@ namespace Content.Client.Gameplay
             LoadMainScreen();
         }
 
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            switch (_uiManager.ActiveScreen)
+            {
+                case DefaultGameScreen defaultScreen:
+                    defaultScreen.TopBar.ReloadLocalization();
+                    break;
+                case SeparatedChatGameScreen separatedScreen:
+                    separatedScreen.TopBar.ReloadLocalization();
+                    break;
+            }
+        }
+        // Arcane-End
+
         private void UnloadMainScreen()
         {
             _loadController.UnloadScreen();

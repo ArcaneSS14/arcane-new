@@ -61,6 +61,26 @@ namespace Content.Client.MainMenu
             _mainMenuControl.Dispose();
         }
 
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            var address = _mainMenuControl.AddressBox.Text;
+            var username = _mainMenuControl.UsernameBox.Text;
+            var wasConnecting = _isConnecting;
+
+            Shutdown();
+            Startup();
+
+            _mainMenuControl.AddressBox.Text = address;
+            _mainMenuControl.UsernameBox.Text = username;
+            if (!wasConnecting)
+                return;
+
+            _setConnectingState(true);
+            _netManager.ConnectFailed += _onConnectFailed;
+        }
+        // Arcane-End
+
         private void ChangelogButtonPressed(BaseButton.ButtonEventArgs args)
         {
             _userInterfaceManager.GetUIController<ChangelogUIController>().ToggleWindow();

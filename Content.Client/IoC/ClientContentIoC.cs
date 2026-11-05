@@ -30,6 +30,10 @@ using Content.Shared.IoC;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
 
+// Arcane-Start
+using Content.Client.Localizations;
+// Arcane-End
+
 namespace Content.Client.IoC
 {
     internal static class ClientContentIoC
@@ -68,6 +72,7 @@ namespace Content.Client.IoC
             collection.Register<ClientFeedbackManager>();
             collection.Register<ISharedFeedbackManager, ClientFeedbackManager>();
             collection.Register<MidiFileCollectionManager>();
+            collection.Register<DynamicLocalizationManager>(); // Arcane
         }
     }
 }

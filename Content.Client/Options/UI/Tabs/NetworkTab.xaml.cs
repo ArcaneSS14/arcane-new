@@ -15,6 +15,28 @@ namespace Content.Client.Options.UI.Tabs
         [Dependency] private IConfigurationManager _cfg = default!;
         [Dependency] private IClientGameStateManager _stateMan = default!;
 
+        // Arcane-Start
+        /// <summary>Refreshes text without changing pending settings.</summary>
+        public void ReloadLocalization()
+        {
+            NetPredictCheckbox.Text = Loc.GetString("ui-options-net-predict");
+            NetInterpRatioSettingLabel.Text = Loc.GetString("ui-options-net-interp-ratio");
+            NetInterpRatioSlider.ToolTip = Loc.GetString("ui-options-net-interp-ratio-tooltip");
+            NetPredictTickBiasSettingLabel.Text = Loc.GetString("ui-options-net-predict-tick-bias");
+            NetPredictTickBiasSlider.ToolTip = Loc.GetString("ui-options-net-predict-tick-bias-tooltip");
+            NetPvsSpawnSettingLabel.Text = Loc.GetString("ui-options-net-pvs-spawn");
+            NetPvsSpawnSlider.ToolTip = Loc.GetString("ui-options-net-pvs-spawn-tooltip");
+            NetPvsEntrySettingLabel.Text = Loc.GetString("ui-options-net-pvs-entry");
+            NetPvsEntrySlider.ToolTip = Loc.GetString("ui-options-net-pvs-entry-tooltip");
+            NetPvsLeaveSettingLabel.Text = Loc.GetString("ui-options-net-pvs-leave");
+            NetPvsLeaveSlider.ToolTip = Loc.GetString("ui-options-net-pvs-leave-tooltip");
+            ResetButton.Text = Loc.GetString("ui-options-reset-all");
+            DefaultButton.Text = Loc.GetString("ui-options-default");
+            ApplyButton.Text = Loc.GetString("ui-options-apply");
+        }
+
+        // Arcane-End
+
         public NetworkTab()
         {
 

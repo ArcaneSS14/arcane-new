@@ -31,18 +31,18 @@
                 <ui:OptionSlider Name="RunechatPostTypingLifetimeSlider"
                                  Title="{Loc 'ui-options-runechat-post-typing-lifetime'}"/>
 
-                <Label Text="{Loc 'ui-options-radio-channel-colors-header'}"
+                <Label Name="RadioChannelColorsHeaderLabel" Text="{Loc 'ui-options-radio-channel-colors-header'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="UseCustomRadioChannelColors"
                           Text="{Loc 'ui-options-use-custom-radio-channel-colors'}"/>
                 <Collapsible Margin="0 5">
-                    <CollapsibleHeading Title="{Loc 'ui-options-radio-channel-colors-expand'}" DefaultCursorShape="Hand"/>
+                    <CollapsibleHeading Name="RadioChannelColorsExpandCollapsibleHeading" Title="{Loc 'ui-options-radio-channel-colors-expand'}" DefaultCursorShape="Hand"/>
                     <CollapsibleBody Margin="10 0 0 0">
                         <BoxContainer Name="RadioChannelColorsContainer" Orientation="Vertical"/>
                     </CollapsibleBody>
                 </Collapsible>
 
-                <Label Text="{Loc 'ui-options-interaction-outline-header'}"
+                <Label Name="InteractionOutlineHeaderLabel" Text="{Loc 'ui-options-interaction-outline-header'}"
                        StyleClasses="LabelKeyText"
                        Margin="0 10 0 0"/>
                 <CheckBox Name="UseCustomInteractionOutlineColors"

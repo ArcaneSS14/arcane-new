@@ -41,6 +41,7 @@ namespace Content.Client.Options.UI.Tabs
             new();
 
         private readonly List<Action> _deferCommands = new();
+        private readonly List<Action> _reloadLocalizedText = new(); // Arcane
 
         private void InitToggleWalk()
         {
@@ -110,6 +111,26 @@ namespace Content.Client.Options.UI.Tabs
             _cfg.SaveToFile();
         }
 
+        // Arcane-Start
+        /// <summary>Refreshes text without changing pending settings.</summary>
+        public void ReloadLocalization()
+        {
+            BindsExplanationLabel.Text = Loc.GetString("ui-options-binds-explanation");
+            ResetAllButton.Text = Loc.GetString("ui-options-binds-reset-all");
+            foreach (var refresh in _reloadLocalizedText)
+                refresh();
+            foreach (var control in _keyControls.Values)
+            {
+                control.ResetButton.Text = Loc.GetString("ui-options-bind-reset");
+                control.BindButton1.UpdateText();
+                control.BindButton2.UpdateText();
+            }
+            if (_currentlyRebinding != null)
+                _currentlyRebinding.Button.Text = Loc.GetString("ui-options-key-prompt");
+        }
+
+        // Arcane-End
+
         public KeyRebindTab()
         {
             IoCManager.InjectDependencies(this);
@@ -134,11 +155,15 @@ namespace Content.Client.Options.UI.Tabs
                 }
 
                 first = false;
-                KeybindsContainer.AddChild(new Label
+                var header = new Label // Arcane-Edit: inline child > retained label
                 {
                     Text = Loc.GetString(headerContents),
                     StyleClasses = { StyleClass.LabelKeyText }
-                });
+                }; // Arcane-Edit: inline AddChild completion > retained label initialization
+                // Arcane-Start
+                KeybindsContainer.AddChild(header);
+                _reloadLocalizedText.Add(() => header.Text = Loc.GetString(headerContents));
+                // Arcane-End
             }
 
             void AddButton(BoundKeyFunction function)
@@ -155,6 +180,7 @@ namespace Content.Client.Options.UI.Tabs
                 newCheckBox.OnToggled += callBackOnClick;
 
                 KeybindsContainer.AddChild(newCheckBox);
+                _reloadLocalizedText.Add(() => newCheckBox.Text = Loc.GetString(checkBoxName)); // Arcane
             }
 
             void AddToggleCvarCheckBox(string checkBoxName, CVarDef<bool> cvar)
@@ -168,6 +194,7 @@ namespace Content.Client.Options.UI.Tabs
                 };
 
                 KeybindsContainer.AddChild(newCheckBox);
+                _reloadLocalizedText.Add(() => newCheckBox.Text = Loc.GetString(checkBoxName)); // Arcane
             }
 
             AddHeader("ui-options-header-general");
@@ -547,6 +574,10 @@ namespace Content.Client.Options.UI.Tabs
                     HorizontalAlignment = HAlignment.Left
                 };
 
+                // Arcane-Start
+                parent._reloadLocalizedText.Add(() => name.Text = Loc.GetString(
+                    $"ui-options-function-{CaseConversion.PascalToKebab(function.FunctionName)}"));
+                // Arcane-End
                 BindButton1 = new BindButton(parent, this, StyleClass.ButtonOpenRight);
                 BindButton2 = new BindButton(parent, this, StyleClass.ButtonOpenLeft);
                 ResetButton = new Button { Text = Loc.GetString("ui-options-bind-reset"), StyleClasses = { StyleClass.Negative } };

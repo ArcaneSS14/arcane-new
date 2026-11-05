@@ -81,11 +81,11 @@
         Access="Public"
         Icon="{xe:Tex '/Textures/_Arcane/Interface/language.png'}"
         BoundKey = "{x:Static it:TraumaKeyFunctions.OpenLanguageMenu}"
-        ToolTip="Open the Language Menu"
+        ToolTip="{Loc 'game-hud-open-language-menu-button-tooltip'}"
         MinSize="42 64"
         HorizontalExpand="True"
         AppendStyleClass="{x:Static style:StyleClass.ButtonSquare}"
-        />
+        /> <!-- Arcane-Edit: hardcoded tooltip > localized tooltip -->
     <!-- </EE> -->
     <ui:MenuButton
         Name="AdminButton"

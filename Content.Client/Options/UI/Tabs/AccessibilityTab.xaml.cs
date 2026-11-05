@@ -11,6 +11,53 @@ namespace Content.Client.Options.UI.Tabs;
 [GenerateTypedNameReferences]
 public sealed partial class AccessibilityTab : Control
 {
+    // Arcane-Start
+    /// <summary>Refreshes text without changing pending settings.</summary>
+    public void ReloadLocalization()
+    {
+        AccessibilityHeaderReducedMotionLabel.Text = Loc.GetString("ui-options-accessibility-header-reduced-motion");
+        ReducedMotionCheckBox.Text = Loc.GetString("ui-options-reduced-motion");
+        ReducedMotionCheckBox.ToolTip = Loc.GetString("ui-options-reduced-motion-tooltip");
+        DisableRadiationNoiseCheckBox.Text = Loc.GetString("ui-options-disable-radiation-static");
+        DisableRadiationNoiseCheckBox.ToolTip = Loc.GetString("ui-options-disable-radiation-static-tooltip");
+        DisableAiStaticCheckBox.Text = Loc.GetString("ui-options-disable-ai-static");
+        DisableAiStaticCheckBox.ToolTip = Loc.GetString("ui-options-disable-ai-static-tooltip");
+        DisableBlurryVisionCheckBox.Text = Loc.GetString("ui-options-disable-blurry-vision");
+        DisableBlurryVisionCheckBox.ToolTip = Loc.GetString("ui-options-disable-blurry-vision-tooltip");
+        DisableDrunkOverlayCheckBox.Text = Loc.GetString("ui-options-disable-drunk-overlay");
+        DisableDrunkOverlayCheckBox.ToolTip = Loc.GetString("ui-options-disable-drunk-overlay-tooltip");
+        DisableFlashEffectCheckBox.Text = Loc.GetString("ui-options-disable-flash-effect");
+        DisableFlashEffectCheckBox.ToolTip = Loc.GetString("ui-options-disable-flash-effect-tooltip");
+        DisableHeatDistortionCheckBox.Text = Loc.GetString("ui-options-disable-heat-distortion");
+        DisableHeatDistortionCheckBox.ToolTip = Loc.GetString("ui-options-disable-heat-distortion-tooltip");
+        DisableNightVisionNoiseCheckBox.Text = Loc.GetString("ui-options-disable-nv-noise");
+        DisableNightVisionNoiseCheckBox.ToolTip = Loc.GetString("ui-options-disable-nv-noise-tooltip");
+        DisableRainbowOverlayCheckBox.Text = Loc.GetString("ui-options-disable-rainbow-overlay");
+        DisableRainbowOverlayCheckBox.ToolTip = Loc.GetString("ui-options-disable-rainbow-overlay-tooltip");
+        DisableSinguloWarpCheckBox.Text = Loc.GetString("ui-options-disable-singulo-warp");
+        DisableSinguloWarpCheckBox.ToolTip = Loc.GetString("ui-options-disable-singulo-warp-tooltip");
+        AccessibilityHeaderVisualsLabel.Text = Loc.GetString("ui-options-accessibility-header-visuals");
+        EnableColorNameCheckBox.Text = Loc.GetString("ui-options-enable-color-name");
+        ColorblindFriendlyCheckBox.Text = Loc.GetString("ui-options-colorblind-friendly");
+        ScreenShakeIntensitySlider.Title = Loc.GetString("ui-options-screen-shake-intensity");
+        ChatWindowOpacitySlider.Title = Loc.GetString("ui-options-chat-window-opacity");
+        SpeechBubbleTextOpacitySlider.Title = Loc.GetString("ui-options-speech-bubble-text-opacity");
+        SpeechBubbleSpeakerOpacitySlider.Title = Loc.GetString("ui-options-speech-bubble-speaker-opacity");
+        SpeechBubbleBackgroundOpacitySlider.Title = Loc.GetString("ui-options-speech-bubble-background-opacity");
+        AutoFillHighlightsCheckBox.Text = Loc.GetString("ui-options-auto-fill-highlights");
+        HighlightSoundCheckBox.Text = Loc.GetString("ui-options-highlight-sound");
+        SkillPopupsCheckBox.Text = Loc.GetString("ui-options-show-skill-popups");
+        MovieCreditsCheckBox.Text = Loc.GetString("round-end-credits-trauma-show-credits");
+        HighlightsColorSlider.Title = Loc.GetString("ui-options-highlights-color");
+        HighlightsColorSlider.Example = Loc.GetString("ui-options-highlights-color-example");
+        AccessibilityHeaderContentLabel.Text = Loc.GetString("ui-options-accessibility-header-content");
+        CensorNudityCheckBox.Text = Loc.GetString("ui-options-censor-nudity");
+        VisionGrainScaleSlider.Title = Loc.GetString("ui-options-vision-grain-scale");
+        Control.ReloadLocalization();
+    }
+
+    // Arcane-End
+
     public AccessibilityTab()
     {
         RobustXamlLoader.Load(this);

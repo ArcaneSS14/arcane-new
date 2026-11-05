@@ -11,5 +11,21 @@ namespace Content.Client.UserInterface.Systems.MenuBar.Widgets
         {
             RobustXamlLoader.Load(this);
         }
+
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            EscapeButton.ToolTip = Loc.GetString("game-hud-open-escape-menu-button-tooltip");
+            GuidebookButton.ToolTip = Loc.GetString("game-hud-open-guide-menu-button-tooltip");
+            CharacterButton.ToolTip = Loc.GetString("game-hud-open-character-menu-button-tooltip");
+            EmotesButton.ToolTip = Loc.GetString("game-hud-open-emotes-menu-button-tooltip");
+            CraftingButton.ToolTip = Loc.GetString("game-hud-open-crafting-menu-button-tooltip");
+            ActionButton.ToolTip = Loc.GetString("game-hud-open-actions-menu-button-tooltip");
+            LanguageButton.ToolTip = Loc.GetString("game-hud-open-language-menu-button-tooltip");
+            AdminButton.ToolTip = Loc.GetString("game-hud-open-admin-menu-button-tooltip");
+            SandboxButton.ToolTip = Loc.GetString("game-hud-open-sandbox-menu-button-tooltip");
+            AHelpButton.ToolTip = Loc.GetString("ui-options-function-open-a-help");
+        }
+        // Arcane-End
     }
 }

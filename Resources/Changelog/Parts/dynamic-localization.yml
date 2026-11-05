@@ -1,0 +1,6 @@
+# Arcane-Start
+author: AL-S
+changes:
+- type: Add
+  message: Added runtime interface language switching to the game options.
+# Arcane-End

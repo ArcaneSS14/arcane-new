@@ -47,6 +47,7 @@ public sealed partial class OptionsUIController : UIController
     {
         EnsureWindow();
 
+        _optionsWindow.ReloadLocalization(); // Arcane
         _optionsWindow.UpdateTabs();
 
         _optionsWindow.OpenCentered();
@@ -66,4 +67,13 @@ public sealed partial class OptionsUIController : UIController
             OpenWindow();
         }
     }
+
+    // Arcane-Start
+    /// <summary>Refreshes the existing open window without loading or saving settings.</summary>
+    public void ReloadLocalization()
+    {
+        if (_optionsWindow is { Disposed: false, IsOpen: true })
+            _optionsWindow.ReloadLocalization();
+    }
+    // Arcane-End
 }

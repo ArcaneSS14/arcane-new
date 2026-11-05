@@ -9,8 +9,10 @@ namespace Content.Shared.Localizations
     {
         [Dependency] private ILocalizationManager _loc = default!;
 
-        // If you want to change your codebase's language, do it here.
-        private const string Culture = "en-US";
+        // Arcane-Edit-Start: allow the client to load and switch cultures at runtime.
+        private const string DefaultCulture = "en-US";
+        private readonly HashSet<string> _initializedCultures = new(StringComparer.OrdinalIgnoreCase);
+        // Arcane-Edit-End
 
         /// <summary>
         /// Custom format strings used for parsing and displaying minutes:seconds timespans.
@@ -23,11 +25,20 @@ namespace Content.Shared.Localizations
             @"mm"
         };
 
+        // Arcane-Edit-Start: register content functions for every culture loaded at runtime.
         public void Initialize()
         {
-            var culture = new CultureInfo(Culture);
+            LoadCulture(CultureInfo.GetCultureInfo(DefaultCulture));
+        }
 
-            _loc.LoadCulture(culture);
+        public void LoadCulture(CultureInfo culture)
+        {
+            if (!_loc.HasCulture(culture))
+                _loc.LoadCulture(culture);
+
+            if (!_initializedCultures.Add(culture.Name))
+                return;
+
             _loc.AddFunction(culture, "PRESSURE", FormatPressure);
             _loc.AddFunction(culture, "POWERWATTS", FormatPowerWatts);
             _loc.AddFunction(culture, "POWERJOULES", FormatPowerJoules);
@@ -36,21 +47,22 @@ namespace Content.Shared.Localizations
             _loc.AddFunction(culture, "UNITS", FormatUnits);
             _loc.AddFunction(culture, "TOSTRING", args => FormatToString(culture, args));
             _loc.AddFunction(culture, "LOC", FormatLoc);
-            _loc.AddFunction(culture, "NATURALFIXED", FormatNaturalFixed);
-            _loc.AddFunction(culture, "NATURALPERCENT", FormatNaturalPercent);
+            _loc.AddFunction(culture, "NATURALFIXED", args => FormatNaturalFixed(culture, args));
+            _loc.AddFunction(culture, "NATURALPERCENT", args => FormatNaturalPercent(culture, args));
             _loc.AddFunction(culture, "PLAYTIME", FormatPlaytime);
-
 
             /*
              * The following language functions are specific to the english localization. When working on your own
              * localization you should NOT modify these, instead add new functions specific to your language/culture.
              * This ensures the english translations continue to work as expected when fallbacks are needed.
              */
-            var cultureEn = new CultureInfo("en-US");
+            if (!culture.Name.Equals(DefaultCulture, StringComparison.OrdinalIgnoreCase))
+                return;
 
-            _loc.AddFunction(cultureEn, "MAKEPLURAL", FormatMakePlural);
-            _loc.AddFunction(cultureEn, "MANY", FormatMany);
+            _loc.AddFunction(culture, "MAKEPLURAL", FormatMakePlural);
+            _loc.AddFunction(culture, "MANY", FormatMany);
         }
+        // Arcane-Edit-End
 
         private ILocValue FormatMany(LocArgs args)
         {
@@ -66,23 +78,25 @@ namespace Content.Shared.Localizations
             }
         }
 
-        private ILocValue FormatNaturalPercent(LocArgs args)
+        // Arcane-Edit-Start: format numbers with the culture owning the Fluent bundle.
+        private static ILocValue FormatNaturalPercent(CultureInfo culture, LocArgs args)
         {
             var number = ((LocValueNumber) args.Args[0]).Value * 100;
             var maxDecimals = (int)Math.Floor(((LocValueNumber) args.Args[1]).Value);
-            var formatter = (NumberFormatInfo)NumberFormatInfo.GetInstance(CultureInfo.GetCultureInfo(Culture)).Clone();
+            var formatter = (NumberFormatInfo)NumberFormatInfo.GetInstance(culture).Clone();
             formatter.NumberDecimalDigits = maxDecimals;
             return new LocValueString(string.Format(formatter, "{0:N}", number).TrimEnd('0').TrimEnd(char.Parse(formatter.NumberDecimalSeparator)) + "%");
         }
 
-        private ILocValue FormatNaturalFixed(LocArgs args)
+        private static ILocValue FormatNaturalFixed(CultureInfo culture, LocArgs args)
         {
             var number = ((LocValueNumber) args.Args[0]).Value;
             var maxDecimals = (int)Math.Floor(((LocValueNumber) args.Args[1]).Value);
-            var formatter = (NumberFormatInfo)NumberFormatInfo.GetInstance(CultureInfo.GetCultureInfo(Culture)).Clone();
+            var formatter = (NumberFormatInfo)NumberFormatInfo.GetInstance(culture).Clone();
             formatter.NumberDecimalDigits = maxDecimals;
             return new LocValueString(string.Format(formatter, "{0:N}", number).TrimEnd('0').TrimEnd(char.Parse(formatter.NumberDecimalSeparator)));
         }
+        // Arcane-Edit-End
 
         private static readonly Regex PluralEsRule = new("^.*(s|sh|ch|x|z)$");
 
@@ -113,13 +127,17 @@ namespace Content.Shared.Localizations
         /// </summary>
         public static string FormatList(List<string> list)
         {
+            // Arcane-Edit-Start: resolve list conjunctions in the active culture.
             return list.Count switch
             {
                 <= 0 => string.Empty,
                 1 => list[0],
-                2 => $"{list[0]} and {list[1]}",
-                _ => $"{string.Join(", ", list.GetRange(0, list.Count - 1))}, and {list[^1]}"
+                2 => Loc.GetString("dynamic-localization-list-two-and", ("first", list[0]), ("second", list[1])),
+                _ => Loc.GetString("dynamic-localization-list-many-and",
+                    ("initial", string.Join(", ", list.GetRange(0, list.Count - 1))),
+                    ("last", list[^1]))
             };
+            // Arcane-Edit-End
         }
 
         /// <summary>
@@ -127,13 +145,17 @@ namespace Content.Shared.Localizations
         /// </summary>
         public static string FormatListToOr(List<string> list)
         {
+            // Arcane-Edit-Start: resolve list conjunctions in the active culture.
             return list.Count switch
             {
                 <= 0 => string.Empty,
                 1 => list[0],
-                2 => $"{list[0]} or {list[1]}",
-                _ => $"{string.Join(", ", list.GetRange(0, list.Count - 1))}, or {list[^1]}"
+                2 => Loc.GetString("dynamic-localization-list-two-or", ("first", list[0]), ("second", list[1])),
+                _ => Loc.GetString("dynamic-localization-list-many-or",
+                    ("initial", string.Join(", ", list.GetRange(0, list.Count - 1))),
+                    ("last", list[^1]))
             };
+            // Arcane-Edit-End
         }
 
         /// <summary>

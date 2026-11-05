@@ -33,6 +33,7 @@ namespace Content.Client.Lobby
 
         private ClientGameTicker _gameTicker = default!;
         private ContentAudioSystem _contentAudioSystem = default!;
+        private LobbySoundtrackChangedEvent? _lastLobbySoundtrackChanged; // Arcane
 
         protected override Type? LinkedScreenType { get; } = typeof(LobbyGui);
         public LobbyGui? Lobby;
@@ -102,6 +103,27 @@ namespace Content.Client.Lobby
             // Yeah I hate this but LobbyState contains all the badness for now.
             Lobby?.SwitchState(state);
         }
+
+        // Arcane-Start
+        public void ReloadLocalization()
+        {
+            if (Lobby == null)
+                return;
+
+            Lobby.ReloadLocalization();
+
+            var lobbyNameCvar = _cfg.GetCVar(CCVars.ServerLobbyName);
+            var serverName = _baseClient.GameInfo?.ServerName ?? string.Empty;
+            Lobby.ServerName.Text = string.IsNullOrEmpty(lobbyNameCvar)
+                ? Loc.GetString("ui-lobby-title", ("serverName", serverName))
+                : lobbyNameCvar;
+
+            UpdateLobbyUi();
+            UpdateLobbyBackground();
+            if (_lastLobbySoundtrackChanged != null)
+                UpdateLobbySoundtrackInfo(_lastLobbySoundtrackChanged);
+        }
+        // Arcane-End
 
         private void OnSetupPressed(BaseButton.ButtonEventArgs args)
         {
@@ -227,6 +249,7 @@ namespace Content.Client.Lobby
 
         private void UpdateLobbySoundtrackInfo(LobbySoundtrackChangedEvent ev)
         {
+            _lastLobbySoundtrackChanged = ev; // Arcane
             if (ev.SoundtrackFilename == null)
             {
                 Lobby!.LobbySong.SetMarkup(Loc.GetString("lobby-state-song-no-song-text"));

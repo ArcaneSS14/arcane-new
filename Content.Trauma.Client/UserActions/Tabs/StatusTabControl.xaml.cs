@@ -59,13 +59,16 @@ public sealed partial class StatusTabControl : BaseTabControl
 
     public override bool UpdateState()
     {
+        _minutes = -1; // Arcane
         UpdateInfoBlob();
         return true;
     }
 
     private void UpdateInfoBlob()
     {
-        if (_status?.Info is { } info)
-            ServerInfo.SetInfoBlob(info);
+        // Arcane-Edit-Start: resolve status text in the active client culture.
+        if (_status?.Info != null)
+            ServerInfo.SetInfoBlob(_status.GetInfoText());
+        // Arcane-Edit-End
     }
 }

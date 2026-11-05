@@ -4,8 +4,10 @@
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
             <BoxContainer Orientation="Vertical" Margin="8">
-                <Label Text="{Loc 'ui-options-accessibility-header-reduced-motion'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AccessibilityHeaderReducedMotionLabel" Text="{Loc 'ui-options-accessibility-header-reduced-motion'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="ReducedMotionCheckBox"
                     Text="{Loc 'ui-options-reduced-motion'}"
                     ToolTip="{Loc 'ui-options-reduced-motion-tooltip'}" />
@@ -40,8 +42,10 @@
                         Text="{Loc 'ui-options-disable-singulo-warp'}"
                         ToolTip="{Loc 'ui-options-disable-singulo-warp-tooltip'}" />
                 </GridContainer>
-                <Label Text="{Loc 'ui-options-accessibility-header-visuals'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AccessibilityHeaderVisualsLabel" Text="{Loc 'ui-options-accessibility-header-visuals'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="EnableColorNameCheckBox" Text="{Loc 'ui-options-enable-color-name'}" />
                 <CheckBox Name="ColorblindFriendlyCheckBox" Text="{Loc 'ui-options-colorblind-friendly'}" />
                 <ui:OptionSlider Name="ScreenShakeIntensitySlider" Title="{Loc 'ui-options-screen-shake-intensity'}" />
@@ -54,13 +58,18 @@
                 <CheckBox Name="HighlightSoundCheckBox" Text="{Loc 'ui-options-highlight-sound'}" />
                 <CheckBox Name="SkillPopupsCheckBox" Text="{Loc 'ui-options-show-skill-popups'}" />
                 <CheckBox Name="MovieCreditsCheckBox" Text="{Loc 'round-end-credits-trauma-show-credits'}" />
-                <ui:OptionSlider Name="VisionGrainScaleSlider" Title="Vision cone grainyness"/>
                 <!-- </Trauma> -->
+                <!-- Arcane-Edit-Start: localize the existing grain scale setting -->
+                <ui:OptionSlider Name="VisionGrainScaleSlider" Title="{Loc 'ui-options-vision-grain-scale'}"/>
+                <!-- Arcane-Edit-End -->
+
                 <ui:OptionColorSlider Name="HighlightsColorSlider"
                     Title="{Loc 'ui-options-highlights-color'}"
                     Example="{Loc 'ui-options-highlights-color-example'}"/>
-                <Label Text="{Loc 'ui-options-accessibility-header-content'}"
+                <!-- Arcane-Edit-Start: name localized control for culture refresh -->
+                <Label Name="AccessibilityHeaderContentLabel" Text="{Loc 'ui-options-accessibility-header-content'}"
                        StyleClasses="LabelKeyText"/>
+                <!-- Arcane-Edit-End -->
                 <CheckBox Name="CensorNudityCheckBox" Text="{Loc 'ui-options-censor-nudity'}" />
             </BoxContainer>
         </ScrollContainer>
