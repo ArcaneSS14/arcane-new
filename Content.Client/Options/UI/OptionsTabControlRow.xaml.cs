@@ -52,6 +52,7 @@ public sealed partial class OptionsTabControlRow : Control
     [Dependency] private IConfigurationManager _cfg = default!;
 
     private ValueList<BaseOption> _options;
+    public event Action? ValuesReloaded; // Arcane
 
     public OptionsTabControlRow()
     {
@@ -239,6 +240,7 @@ public sealed partial class OptionsTabControlRow : Control
         }
 
         UpdateButtonState();
+        ValuesReloaded?.Invoke(); // Arcane
     }
 
     private void DefaultButtonPressed(BaseButton.ButtonEventArgs obj)
@@ -249,6 +251,7 @@ public sealed partial class OptionsTabControlRow : Control
         }
 
         UpdateButtonState();
+        ValuesReloaded?.Invoke(); // Arcane
     }
 
     private string FormatPercent(OptionSliderFloatCVar slider, float value)

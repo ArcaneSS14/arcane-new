@@ -278,9 +278,9 @@ public sealed partial class AnimationsTab
 
     private MotionPreset DetectProfile()
     {
-        var modified = _motionOptions.Count(option => option.IsModifiedFromDefault());
         if (!_motionChecks[S.Enabled].Pressed)
-            return modified == 1 ? MotionPreset.Off : MotionPreset.Custom;
+            return MotionPreset.Off;
+        var modified = _motionOptions.Count(option => option.IsModifiedFromDefault());
         if (modified == 0)
             return MotionPreset.Expressive;
         if (modified == 1 && _motionChecks[S.Reduce].Pressed)

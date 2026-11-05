@@ -13,6 +13,7 @@ public sealed partial class AnimationsTab : Control
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
         InitializeMotionOptions();
+        Control.ValuesReloaded += RefreshProfileSelection;
         Control.Initialize();
         _profileReady = true;
         RefreshProfileSelection();
