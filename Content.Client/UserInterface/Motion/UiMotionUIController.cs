@@ -15,6 +15,7 @@ using Content.Client.Administration.UI.Tabs.PlayerTab;
 using TreeItem = Content.Client.UserInterface.Controls.FancyTree.TreeItem;
 using System.Numerics;
 using Content.Client.Mapping;
+using Content.Client.Chemistry.UI;
 
 namespace Content.Client.UserInterface.Motion;
 
@@ -124,7 +125,7 @@ public sealed partial class UiMotionUIController : UIController
 
     private void Queue(Control control)
     {
-        if (control is AlertControl || IsInsideMappingSearchList(control))
+        if (control is AlertControl or ReagentButton || IsInsideMappingSearchList(control))
             return;
         if (control.VisibleInTree && (control is BaseWindow or BaseButton or Popup or ActionButton or ItemGridPiece
             || control.Parent is TabContainer

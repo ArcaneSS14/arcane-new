@@ -3,7 +3,9 @@ using System;
 using System.Linq;
 using System.Numerics;
 using Content.Client.ContextMenu.UI;
+using Content.Client.Chemistry.UI;
 using Content.Client.UserInterface.Motion;
+using Content.Shared.Chemistry;
 using NUnit.Framework;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -23,6 +25,51 @@ namespace Content.Tests.Client.UserInterface.Controls;
 
 public sealed partial class UiMotionTest
 {
+    [Test]
+    public void RecreatedReagentButtonsOnlyFadeWithNewRows()
+    {
+        _window = new TestWindow();
+        var list = new BoxContainer();
+        _window.AddChild(list);
+        _window.Open();
+        _controller.FrameUpdate(new FrameEventArgs(2));
+
+        var oldRow = new PanelContainer();
+        var oldButton = new ReagentButton("1", ChemMasterReagentAmount.U1, default, true, "test");
+        oldRow.AddChild(oldButton);
+        list.AddChild(oldRow);
+        _controller.AnimateListItem(oldRow);
+        _controller.FrameUpdate(new FrameEventArgs(2));
+
+        // ChemMaster rebuilds an existing row when only its amount changes.
+        oldRow.Orphan();
+        var updatedRow = new PanelContainer();
+        var updatedButton = new ReagentButton("1", ChemMasterReagentAmount.U1, default, true, "test");
+        updatedRow.AddChild(updatedButton);
+        list.AddChild(updatedRow);
+        _controller.FrameUpdate(new FrameEventArgs(0.02f));
+        Assert.That(updatedRow.Modulate, Is.EqualTo(Color.White));
+        Assert.That(updatedButton.Modulate, Is.EqualTo(Color.White));
+        Assert.That(updatedButton.Disabled, Is.False);
+        Assert.That(updatedButton.MouseFilter, Is.EqualTo(Control.MouseFilterMode.Stop));
+
+        var newRow = new PanelContainer();
+        var newButton = new ReagentButton("1", ChemMasterReagentAmount.U1, default, true, "test");
+        newRow.AddChild(newButton);
+        list.AddChild(newRow);
+        _controller.AnimateListItem(newRow);
+        _controller.FrameUpdate(new FrameEventArgs(0.02f));
+        Assert.That(newRow.Modulate.A, Is.InRange(0.01f, 0.99f));
+        Assert.That(newButton.Modulate, Is.EqualTo(Color.White));
+        Assert.That(newButton.Disabled, Is.False);
+        Assert.That(newButton.MouseFilter, Is.EqualTo(Control.MouseFilterMode.Stop));
+
+        var ordinary = new Button();
+        list.AddChild(ordinary);
+        _controller.FrameUpdate(new FrameEventArgs(0.02f));
+        Assert.That(ordinary.Modulate.A, Is.InRange(0.01f, 0.99f));
+    }
+
     private bool _slotPrototypesInitialized;
     private sealed class TestSlot : Content.Client.UserInterface.Controls.SlotControl
     {
