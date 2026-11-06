@@ -53,3 +53,4 @@
   components:
   - type: Knowledge
     experienceCost: 15
+    costs: null # Arcane
