@@ -4,16 +4,25 @@
   parent: BaseMedicalKnowledge
   id: SurgeryKnowledge
   name: Surgery
-  description: Does nothing currently. Don't waste points on it.
+  description: How quickly you perform surgery steps. # Arcane-Edit: Does nothing currently. Don't waste points on it. > How quickly you perform surgery steps.
   components:
   - type: Knowledge
     experienceCost: 24
+  # Arcane-Start
+  - type: MedicalTimeKnowledge
+    multipliers:
+      0: 1.25
+      25: 1.1
+      50: 1
+      75: 0.85
+      100: 0.7
+  # Arcane-End
 
 - type: entity
   parent: BaseMedicalKnowledge
   id: FirstAidKnowledge
   name: First Aid
-  description: How good you are with syringes.
+  description: How good you are with syringes, ointments and bandages. # Arcane-Edit: How good you are with syringes. > How good you are with syringes, ointments and bandages.
   components:
   - type: Knowledge
     experienceCost: 19
@@ -26,6 +35,15 @@
       skillScale: -1 # decrease with skill rather than increase
       curveOffset: 1 # multiplying time so has to be centered at 1
       curveScale: 1.4
+  # Arcane-Start
+  - type: MedicalTimeKnowledge
+    multipliers:
+      0: 1.15
+      25: 1.075
+      50: 1
+      75: 0.925
+      100: 0.8
+  # Arcane-End
 
 - type: entity
   parent: BaseMedicalKnowledge
