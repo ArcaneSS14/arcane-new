@@ -104,39 +104,49 @@
 - type: knowledgeCategory
   id: MartialArt
   name: knowledge-category-Martial
+  color: "#ff1744" # Arcane
 
 - type: knowledgeCategory
   id: Recipes
   name: knowledge-category-Recipes
+  color: "#ff9f1a" # Arcane
 
 - type: knowledgeCategory
   id: Crafting
   name: knowledge-category-Crafting
+  color: "#1de9b6" # Arcane
 
 - type: knowledgeCategory
   id: Language
   name: knowledge-category-Languages
+  color: "#7fe3ff" # Arcane
 
 - type: knowledgeCategory
   id: MeleeCombat
   name: knowledge-category-MeleeCombat
+  color: "#ff4d4d" # Arcane
 
 - type: knowledgeCategory
   id: RangedCombat
   name: knowledge-category-RangedCombat
+  color: "#ffd21a" # Arcane
 
 - type: knowledgeCategory
   id: Medical
   name: knowledge-category-Medical
+  color: "#38b6ff" # Arcane
 
 - type: knowledgeCategory
   id: Physical
   name: knowledge-category-Physical
+  color: "#5cff5c" # Arcane
 
 - type: knowledgeCategory
   id: Intellectual
   name: knowledge-category-Intellectual
+  color: "#b8c8ff" # Arcane
 
 - type: knowledgeCategory
   id: Scientific
   name: knowledge-category-Scientific
+  color: "#e040fb" # Arcane
