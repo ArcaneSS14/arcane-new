@@ -1,4 +1,3 @@
-using System.Linq; // Arcane
 // <Trauma>
 using Content.Shared.Whitelist;
 using Content.Medical.Common.Damage;
@@ -19,9 +18,10 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 // Arcane-Start
 using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+using System.Linq;
+using Content.Arcane.Common.Construction;
 // Arcane-End
-
-using Content.Arcane.Common.Construction; // Arcane
 
 namespace Content.Shared.Bed;
 

@@ -426,9 +426,3 @@ public abstract partial class SharedPuddleSystem : EntitySystem
 
     #endregion Spill
 }
-
-// Arcane-Start
-/// <summary>Raised by authoritative liquid spills so Arcane wall stains can consume the same solution.</summary>
-[ByRefEvent]
-public readonly record struct SplashOnWallEvent(EntityCoordinates Coordinates, Solution Solution);
-// Arcane-End

@@ -41,7 +41,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
-using Content.Shared.Construction; // Arcane // Arcane
+using Content.Shared.Construction.Events; // Arcane
 
 namespace Content.Server.Kitchen.EntitySystems
 {

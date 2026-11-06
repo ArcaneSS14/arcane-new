@@ -3,9 +3,8 @@ using Robust.Shared.Serialization;
 // Arcane-Start
 using Content.Shared.Research.Prototypes;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Research;
 // Arcane-End
-
-using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Shared.Research.Components
 {

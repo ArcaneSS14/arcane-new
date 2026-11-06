@@ -4,7 +4,6 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Robust.Shared.Exceptions;
 using Robust.Shared.Network;
-
 using Content.Arcane.Common.Interaction; // Arcane
 
 namespace Content.Shared.DoAfter;

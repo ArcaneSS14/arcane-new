@@ -4,7 +4,6 @@ using Content.Server.Construction.Components;
 using Content.Server.Stack;
 using Content.Server.Storage.EntitySystems;
 using Content.Shared.Construction.Components;
-using Content.Shared.Construction;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.DoAfter;
 using Content.Arcane.Shared.Construction;
@@ -19,8 +18,8 @@ using Content.Shared.Wires;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-
 using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Events;
 
 namespace Content.Arcane.Server.Construction;
 

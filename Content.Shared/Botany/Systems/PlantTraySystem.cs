@@ -12,9 +12,9 @@ using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 // Arcane-Start
 using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+using Content.Arcane.Common.Construction;
 // Arcane-End
-
-using Content.Arcane.Common.Construction; // Arcane
 
 namespace Content.Shared.Botany.Systems;
 

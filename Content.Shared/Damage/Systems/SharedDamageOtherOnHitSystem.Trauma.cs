@@ -18,7 +18,6 @@ using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Player;
-
 using Content.Arcane.Common.Camera; // Arcane
 
 namespace Content.Shared.Damage.Systems;

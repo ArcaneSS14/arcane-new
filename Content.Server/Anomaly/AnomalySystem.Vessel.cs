@@ -5,9 +5,10 @@ using Content.Shared.Anomaly.Components;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Research.Components;
-using Content.Shared.Research; // Arcane
-
-using Content.Arcane.Common.Research; // Arcane
+// Arcane-Start
+using Content.Shared.Research;
+using Content.Arcane.Common.Research;
+// Arcane-End
 
 namespace Content.Server.Anomaly;
 

@@ -7,11 +7,6 @@ namespace Content.Shared.Body.Components;
 [NetworkedComponent, AutoGenerateComponentState] // Trauma
 public sealed partial class BrainComponent : Component
 {
-    // Arcane-Start: brain owner names (Orion #252)
-    [DataField, AutoNetworkedField]
-    public bool Renamed;
-    // Arcane-End
-
     /// <summary>
     /// Shitmed Change: Is this brain currently controlling the entity?
     /// </summary>

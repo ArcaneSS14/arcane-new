@@ -13,11 +13,9 @@ using Robust.Shared.Input;
 // Arcane-Start
 using Content.Shared.Research;
 using Robust.Client.Graphics;
+using Content.Arcane.Common.Research;
+using Content.Client.Research.UI;
 // Arcane-End
-
-using Content.Arcane.Common.Research; // Arcane
-
-using Content.Client.Research.UI; // Arcane
 
 namespace Content.Goobstation.Client.Research.UI;
 

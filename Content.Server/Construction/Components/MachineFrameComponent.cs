@@ -3,9 +3,10 @@ using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-using Content.Shared.Construction.Prototypes; // Arcane
-
-using Content.Arcane.Common.Construction.Prototypes; // Arcane
+// Arcane-Start
+using Content.Shared.Construction.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Construction.Components
 {

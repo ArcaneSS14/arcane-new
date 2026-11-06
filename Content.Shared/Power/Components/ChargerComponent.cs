@@ -4,9 +4,8 @@ using Robust.Shared.Serialization;
 // Arcane-Start
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes;
 // Arcane-End
-
-using Content.Arcane.Common.Construction.Prototypes; // Arcane
 
 namespace Content.Shared.Power.Components;
 

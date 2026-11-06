@@ -4,7 +4,6 @@ using Content.Server.Research.Systems;
 using Content.Shared.Research;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
-using Content.Shared.Construction; // Arcane
 using Content.Shared.Chat;
 using Content.Shared.Item;
 using Robust.Server.Audio;
@@ -13,12 +12,10 @@ using Robust.Shared.Containers;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-
 using Content.Arcane.Common.Research;
-
 using Content.Arcane.Shared.Research.Components;
-
 using Content.Arcane.Shared.Research;
+using Content.Shared.Construction.Events;
 
 namespace Content.Arcane.Server.Research.Systems;
 

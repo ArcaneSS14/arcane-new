@@ -1,8 +1,6 @@
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
 
-using Robust.Shared.Audio; // Arcane
-
 namespace Content.Shared.Radio;
 
 /// <summary>
@@ -11,14 +9,6 @@ namespace Content.Shared.Radio;
 [Prototype]
 public sealed partial class RadioChannelPrototype : IPrototype
 {
-    // Arcane-Start: radio barks (Orion #452, #456)
-    /// <summary>
-    /// Played to headset wearers when a message arrives on this channel. Falls back to a generic bark.
-    /// </summary>
-    [DataField]
-    public SoundPathSpecifier? OnSendSound;
-    // Arcane-End
-
     [IdDataField, ViewVariables]
     public string ID { get; private set; } = default!;
 

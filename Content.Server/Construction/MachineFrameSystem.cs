@@ -8,9 +8,10 @@ using Content.Shared.Tag;
 using Content.Shared.Popups;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-using Content.Shared.Construction.Prototypes; // Arcane
-
-using Content.Arcane.Common.Construction.Prototypes; // Arcane
+// Arcane-Start
+using Content.Shared.Construction.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Construction;
 
@@ -71,12 +72,12 @@ public sealed partial class MachineFrameSystem : EntitySystem
         // If this changes in the future, then RegenerateProgress() also needs to be updated.
         // Note that one entity is ALLOWED to satisfy more than one kind of component or tag requirements. This is
         // necessary in order to avoid weird entity-ordering shenanigans in RegenerateProgress().
+        // Arcane-Edit-Start: move the TryInsertStack check into the outer condition
         if (TryComp<StackComponent>(args.Used, out var stack)
-            && TryInsertStack(uid, args.Used, component, stack)) // Arcane
+            && TryInsertStack(uid, args.Used, component, stack))
+        // Arcane-Edit-End
         {
-            // Arcane-Edit-Start
             args.Handled = true;
-            // Arcane-Edit-End
             return;
         }
 
@@ -252,10 +253,8 @@ public sealed partial class MachineFrameSystem : EntitySystem
 
         if (!_container.Insert(partToInsert, component.PartContainer))
         {
-            // Arcane-Start
             if (partToInsert != used)
                 QueueDel(partToInsert);
-            // Arcane-End
 
             return false;
         }
@@ -436,9 +435,3 @@ public sealed partial class MachineFrameSystem : EntitySystem
         args.PushMarkup(Loc.GetString("machine-frame-component-on-examine-label", ("board", Name(board))));
     }
 }
-
-// Arcane-Start
-/// <summary>Allows the part-exchanger module to handle an interaction before frame assembly.</summary>
-[ByRefEvent]
-public record struct MachinePartExchangeRequest(EntityUid Target, InteractUsingEvent Interaction, bool Handled = false);
-// Arcane-End

@@ -3,9 +3,8 @@ using Content.Shared.Research.Systems;
 using Content.Shared.Research;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
+using Content.Arcane.Common.Research;
 // Arcane-End
-
-using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Client.Research;
 

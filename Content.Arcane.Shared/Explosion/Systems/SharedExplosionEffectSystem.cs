@@ -3,7 +3,6 @@ using Content.Shared.Throwing;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Random;
-
 using Content.Arcane.Common.Explosion;
 
 namespace Content.Arcane.Shared.Explosion.Systems;

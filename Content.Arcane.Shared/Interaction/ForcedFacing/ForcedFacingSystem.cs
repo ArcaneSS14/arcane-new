@@ -6,7 +6,6 @@ using Content.Shared.Movement.Components;
 using Content.Shared.MouseRotator;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Timing;
-
 using Content.Arcane.Common.Interaction;
 
 namespace Content.Arcane.Shared.Interaction.ForcedFacing;

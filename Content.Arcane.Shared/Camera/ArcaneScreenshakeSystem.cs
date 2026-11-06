@@ -6,7 +6,6 @@ using Robust.Shared.Noise;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
-
 using Content.Shared.Camera;
 using Content.Arcane.Common.Camera;
 

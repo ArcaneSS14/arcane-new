@@ -45,11 +45,6 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using Content.Shared.Item;
 
-// Arcane-Start
-using Content.Shared.Camera;
-using Content.Arcane.Common.Camera;
-// Arcane-End
-
 namespace Content.Shared.Weapons.Ranged.Systems;
 
 public abstract partial class SharedGunSystem : EntitySystem
@@ -1036,13 +1031,6 @@ public abstract partial class SharedGunSystem : EntitySystem
         UpdateBattery(frameTime);
         UpdateBallistic(frameTime);
     }
-
-    // Arcane-Start
-    private void DoArcaneGunScreenshake(EntityUid user, Entity<GunComponent> gun)
-    {
-        ArcaneScreenshakeRequest.Raise(EntityManager, user, null, new ArcaneScreenshakeParameters(0.085f * gun.Comp.CameraRecoilScalarModified, 1.2f, 0.008f));
-    }
-    // Arcane-End
 }
 
 /// <summary>

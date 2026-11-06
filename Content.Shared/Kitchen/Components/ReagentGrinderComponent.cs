@@ -6,9 +6,8 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 // Arcane-Start
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes;
 // Arcane-End
-
-using Content.Arcane.Common.Construction.Prototypes; // Arcane
 
 namespace Content.Shared.Kitchen.Components;
 

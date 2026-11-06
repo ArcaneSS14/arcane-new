@@ -10,28 +10,10 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 
-// Arcane-Start
-using Content.Shared.Camera;
-using Content.Shared.GameTicking;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
-using Robust.Shared.Network;
-using Robust.Shared.Player;
-using Content.Arcane.Common.Camera;
-// Arcane-End
-
 namespace Content.Shared.Gravity;
 
 public abstract partial class SharedGravitySystem : EntitySystem
 {
-    // Arcane-Start
-    [Dependency] private GameTicker _arcaneTicker = default!;
-    [Dependency] private SharedAudioSystem _arcaneAudio = default!;
-    [Dependency] private INetManager _arcaneNetManager = default!;
-
-    private static readonly ArcaneScreenshakeParameters ArcaneGridShake = new(0.8f, 0.04f, 0.015f);
-    // Arcane-End
-
     [Dependency] protected IGameTiming Timing = default!;
     [Dependency] private AlertsSystem _alerts = default!;
 
@@ -265,23 +247,6 @@ public abstract partial class SharedGravitySystem : EntitySystem
     {
         args.Push |= IsWeightless((entity.Owner, entity.Comp));
     }
-
-    // Arcane-Start
-    private bool TryArcaneScreenshakeGrid(EntityUid uid, GravityComponent gravity)
-    {
-        if (Timing.CurTime - _arcaneTicker.RoundStartTimeSpan < TimeSpan.FromSeconds(30))
-            return false;
-
-        var filter = Filter.BroadcastGrid(uid);
-        ArcaneScreenshakeRequest.Raise(EntityManager, filter, ArcaneGridShake, null);
-        if (_arcaneNetManager.IsServer)
-        {
-            var audioParams = gravity.GravityShakeSound?.Params ?? AudioParams.Default;
-            _arcaneAudio.PlayGlobal(gravity.GravityShakeSound, filter, true, audioParams.AddVolume(-2f));
-        }
-        return true;
-    }
-    // Arcane-End
 }
 
 /// <summary>

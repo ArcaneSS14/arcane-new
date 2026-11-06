@@ -8,9 +8,8 @@ using Robust.Shared.Utility;
 // Arcane-Start
 using System.Linq;
 using Content.Shared.Research;
+using Content.Arcane.Common.Research;
 // Arcane-End
-
-using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Client.Research.UI;
 

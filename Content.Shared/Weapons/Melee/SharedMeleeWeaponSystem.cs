@@ -52,20 +52,10 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using ItemToggleMeleeWeaponComponent = Content.Shared.Item.ItemToggle.Components.ItemToggleMeleeWeaponComponent;
 
-// Arcane-Start
-using Content.Shared.Camera;
-using Content.Arcane.Common.Camera;
-// Arcane-End
-
 namespace Content.Shared.Weapons.Melee;
 
 public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 {
-    // Arcane-Start
-    private static readonly ArcaneScreenshakeParameters ArcaneMeleeUserShake = new(0.08f, 1.0f, 0.009f);
-    private static readonly ArcaneScreenshakeParameters ArcaneMeleeTargetShake = new(0.45f, 1.1f, 0.04f);
-    // Arcane-End
-
     [Dependency] protected IGameTiming Timing = default!;
     //[Dependency] private INetManager _netMan = default!; // Trauma - now unused
     //[Dependency] private IRobustRandom _random = default!; // Trauma - now unused
@@ -1269,13 +1259,4 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     /// </summary>
     /// <param name="ent">The weapon entity tracking swings.</param>
     protected virtual void ResetUndamagedSwingsCount(Entity<MeleeWeaponComponent> ent) { }
-
-    // Arcane-Start
-    private void DoArcaneMeleeScreenshake(EntityUid user, HashSet<EntityUid> targets)
-    {
-        ArcaneScreenshakeRequest.Raise(EntityManager, user, null, ArcaneMeleeUserShake);
-        foreach (var target in targets)
-            ArcaneScreenshakeRequest.Raise(EntityManager, target, ArcaneMeleeTargetShake, null);
-    }
-    // Arcane-End
 }

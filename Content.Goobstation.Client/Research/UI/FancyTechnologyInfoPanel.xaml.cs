@@ -11,9 +11,8 @@ using Content.Shared.Research;
 using Robust.Shared.Utility;
 using System.Linq;
 using Content.Shared.Research.Components;
+using Content.Arcane.Common.Research;
 // Arcane-End
-
-using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Goobstation.Client.Research.UI;
 

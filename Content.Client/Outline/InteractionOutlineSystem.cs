@@ -16,8 +16,6 @@ using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 
-using Content.Arcane.Common.CCVar; // Arcane
-
 namespace Content.Client.Outline;
 
 public sealed partial class InteractionOutlineSystem : EntitySystem
@@ -36,10 +34,6 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
     [Dependency] private SharedInteractionSystem _interactionSystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private SpriteSystem _sprite = default!;
-    // Arcane-Start
-    private Color _validOutlineColor = Color.FromHex(ArcaneCVars.ValidInteractionOutlineColor.DefaultValue);
-    private Color _invalidOutlineColor = Color.FromHex(ArcaneCVars.InvalidInteractionOutlineColor.DefaultValue);
-    // Arcane-End
 
     /// <summary>
     ///     Whether to currently draw the outline. The outline may be temporarily disabled by other systems
@@ -272,21 +266,4 @@ public sealed partial class InteractionOutlineSystem : EntitySystem
         return instance;
     }
 
-    // Arcane-Start
-    /// <summary>Updates outline colors and refreshes existing shader instances.</summary>
-    public void SetOutlineColors(Color valid, Color invalid)
-    {
-        _validOutlineColor = valid;
-        _invalidOutlineColor = invalid;
-        RefreshOutlineColors();
-    }
-
-    private void RefreshOutlineColors()
-    {
-        foreach (var ((inRange, _), shader) in _shaderCache)
-        {
-            shader.SetParameter("outline_color", (inRange ? _validOutlineColor : _invalidOutlineColor));
-        }
-    }
-    // Arcane-End
 }

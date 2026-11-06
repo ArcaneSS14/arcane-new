@@ -44,13 +44,6 @@ namespace Content.Client.Examine
             typeof(Robust.Client.UserInterface.RichText.HeadingTag),
             typeof(Robust.Client.UserInterface.RichText.ItalicTag),
         ];
-        private Type[] _markupTags = ExamineMarkupTags;
-
-        /// <summary>Allows client modules to extend the permitted examine markup.</summary>
-        public void SetAdditionalMarkupTags(params Type[] tags)
-        {
-            _markupTags = ExamineMarkupTags.Concat(tags).Distinct().ToArray();
-        }
         // Arcane-End
 
         public const string StyleClassEntityTooltip = "entity-tooltip";

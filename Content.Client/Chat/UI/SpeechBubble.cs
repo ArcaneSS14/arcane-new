@@ -1,6 +1,5 @@
 using Robust.Client.UserInterface.RichText; // Trauma
 using System.Numerics;
-using Content.Arcane.Common.CCVar; // Arcane
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Speech;
@@ -10,6 +9,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Client.Chat.UI
 {
@@ -77,11 +77,6 @@ namespace Content.Client.Chat.UI
 
         // man down
         public event Action<EntityUid, SpeechBubble>? OnDied;
-
-        // Arcane-Start
-        /// <summary>Optional presentation factory, evaluated before the standard speech bubbles.</summary>
-        public static Func<SpeechType, ChatMessage, EntityUid, SpeechBubble?>? CustomBubbleFactory { get; set; }
-        // Arcane-End
 
         public static SpeechBubble CreateSpeechBubble(SpeechType type, ChatMessage message, EntityUid senderEntity)
         {

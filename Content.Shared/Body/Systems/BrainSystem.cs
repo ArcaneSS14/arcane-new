@@ -15,8 +15,6 @@ namespace Content.Shared.Body.Systems;
 
 public sealed partial class BrainSystem : EntitySystem
 {
-    [Dependency] private MetaDataSystem _metaData = default!; // Arcane
-
     // <Trauma>
     [Dependency] private BodySystem _body = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -114,16 +112,4 @@ public sealed partial class BrainSystem : EntitySystem
     {
         args.Cancel();
     }
-
-    // Arcane-Start: brain owner names (Orion #252)
-    private void TryRenameBrain(Entity<BrainComponent> ent, EntityUid body)
-    {
-        if (ent.Comp.Renamed || _timing.ApplyingState || TerminatingOrDeleted(ent) || TerminatingOrDeleted(body))
-            return;
-
-        _metaData.SetEntityName(ent, Loc.GetString("comp-brain-name", ("name", Name(ent)), ("player", Name(body))));
-        ent.Comp.Renamed = true;
-        Dirty(ent);
-    }
-    // Arcane-End
 }

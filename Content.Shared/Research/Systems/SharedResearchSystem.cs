@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-
 using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Shared.Research.Systems;
@@ -137,7 +136,7 @@ public abstract partial class SharedResearchSystem : EntitySystem
         if (tech.DiscountExperiments.Count == 0)
             return 0;
 
-        var baseCost = GetTechnologyPointCost(tech, "General"); // Arcane-Edit
+        var baseCost = GetTechnologyPointCost(tech, "General");
         var flatDiscount = 0;
         var percentageDiscount = 0f;
 
@@ -167,10 +166,9 @@ public abstract partial class SharedResearchSystem : EntitySystem
 
     protected int GetTechnologyFinalCost(TechnologyDatabaseComponent component, TechnologyPrototype tech)
     {
-        return Math.Max(0, GetTechnologyPointCost(tech, "General") - GetTechnologyDiscounts(component, tech)); // Arcane-Edit
+        return Math.Max(0, GetTechnologyPointCost(tech, "General") - GetTechnologyDiscounts(component, tech));
     }
 
-    // Arcane-Start
     protected List<ResearchPointAmount> GetTechnologyFinalPointCosts(TechnologyDatabaseComponent component, TechnologyPrototype tech)
     {
         var costs = tech.PointCosts
@@ -218,7 +216,6 @@ public abstract partial class SharedResearchSystem : EntitySystem
         var key = $"research-point-type-{type.ToLowerInvariant()}";
         return Loc.TryGetString(key, out var localized) ? localized : type;
     }
-    // Arcane-End
 
     public virtual bool CanUnlockTechnology(TechnologyDatabaseComponent component, TechnologyPrototype tech)
     {

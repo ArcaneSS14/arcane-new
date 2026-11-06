@@ -13,9 +13,10 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Shared.Research; // Arcane
-
-using Content.Arcane.Common.Research; // Arcane
+// Arcane-Start
+using Content.Shared.Research;
+using Content.Arcane.Common.Research;
+// Arcane-End
 
 namespace Content.Client.Research.UI;
 
@@ -266,14 +267,3 @@ public sealed partial class ResearchConsoleMenu : FancyWindow
         }
     }
 }
-
-// Arcane-Start
-/// <summary>Presentation contract for an optional research journal supplied by a client module.</summary>
-public abstract class ResearchJournalWindow : FancyWindow
-{
-    public static Func<ResearchJournalWindow>? Factory { get; set; }
-
-    public abstract void SetExperimentEntries(List<Control> entries);
-    public abstract void SetLogsMessage(FormattedMessage message);
-}
-// Arcane-End

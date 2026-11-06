@@ -7,7 +7,6 @@ using Robust.Shared.ContentPack;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
-
 using Content.Arcane.Common.Chat;
 
 namespace Content.Arcane.Client.Chat.Highlights;

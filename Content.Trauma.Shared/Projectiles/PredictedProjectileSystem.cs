@@ -23,7 +23,6 @@ using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Content.Shared.Weapons.Ranged.Components;
-
 using Content.Arcane.Common.Camera; // Arcane
 
 namespace Content.Trauma.Shared.Projectiles;

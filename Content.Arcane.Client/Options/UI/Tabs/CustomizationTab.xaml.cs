@@ -10,7 +10,6 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
-
 using Content.Client.Options.UI;
 
 namespace Content.Arcane.Client.Options.UI.Tabs;
@@ -87,7 +86,7 @@ public sealed partial class CustomizationTab : Control
         var randomColors = UseRandomRunechatColors.Pressed;
         RunechatColorSlider.Slider.Visible = !randomColors;
         RunechatColorSlider.ExampleLabel.Visible = !randomColors;
-        RunechatTypingSpeedSlider.Slider.Disabled = !UseRunechatTypingAnimation.Pressed; // Arcane
+        RunechatTypingSpeedSlider.Slider.Disabled = !UseRunechatTypingAnimation.Pressed;
     }
 
     private sealed class OptionRunechatColor : BaseOptionCVar<string>

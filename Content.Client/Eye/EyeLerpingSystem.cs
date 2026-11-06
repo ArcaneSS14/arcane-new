@@ -8,10 +8,6 @@ using Robust.Client.Player;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
-using Content.Shared.Camera; // Arcane
-
-using Content.Arcane.Common.Camera; // Arcane
-
 namespace Content.Client.Eye;
 
 public sealed partial class EyeLerpingSystem : EntitySystem
@@ -218,13 +214,4 @@ public sealed partial class EyeLerpingSystem : EntitySystem
             _eye.SetRotation(entity, shortest * tickFraction + lerpInfo.LastRotation + GetArcaneScreenshakeRotation(entity), eye); // Arcane-Edit: shortest * tickFraction + lerpInfo.LastRotation > shortest * tickFraction + lerpInfo.LastRotation + GetArcaneScreenshakeRotation(entity)
         }
     }
-
-    // Arcane-Start
-    private Angle GetArcaneScreenshakeRotation(EntityUid uid)
-    {
-        var ev = new ArcaneGetEyeRotationEvent();
-        RaiseLocalEvent(uid, ref ev);
-        return ev.Rotation;
-    }
-    // Arcane-End
 }

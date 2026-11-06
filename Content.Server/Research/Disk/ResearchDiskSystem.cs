@@ -4,9 +4,10 @@ using Content.Server.Popups;
 using Content.Shared.Research.Prototypes;
 using Content.Server.Research.Systems;
 using Content.Shared.Research.Components;
-using Content.Shared.Research; // Arcane
-
-using Content.Arcane.Common.Research; // Arcane
+// Arcane-Start
+using Content.Shared.Research;
+using Content.Arcane.Common.Research;
+// Arcane-End
 
 namespace Content.Server.Research.Disk
 {
