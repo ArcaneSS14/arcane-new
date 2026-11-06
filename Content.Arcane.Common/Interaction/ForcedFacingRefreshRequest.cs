@@ -1,6 +1,8 @@
 namespace Content.Arcane.Common.Interaction;
 
-/// <summary>Requests an immediate refresh of facing constraints after an action changes.</summary>
+/// <summary>
+/// Requests an immediate refresh of facing constraints after an action changes.
+/// </summary>
 [ByRefEvent]
 public readonly record struct ForcedFacingRefreshRequest(EntityUid Target)
 {

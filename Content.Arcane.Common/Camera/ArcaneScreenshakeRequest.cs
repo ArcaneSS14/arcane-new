@@ -2,7 +2,9 @@ using Robust.Shared.Player;
 
 namespace Content.Arcane.Common.Camera;
 
-/// <summary>Requests a camera impulse without depending on its gameplay implementation.</summary>
+/// <summary>
+/// Requests a camera impulse without depending on its gameplay implementation.
+/// </summary>
 [ByRefEvent]
 public readonly record struct ArcaneScreenshakeRequest(EntityUid Target, ArcaneScreenshakeParameters? Translation, ArcaneScreenshakeParameters? Rotation)
 {

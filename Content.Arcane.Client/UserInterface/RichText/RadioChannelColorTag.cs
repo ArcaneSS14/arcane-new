@@ -2,7 +2,6 @@ using Content.Arcane.Client.Radio;
 using Robust.Client.UserInterface.RichText;
 using Robust.Shared.Utility;
 
-
 namespace Content.Arcane.Client.UserInterface.RichText;
 
 /// <summary>

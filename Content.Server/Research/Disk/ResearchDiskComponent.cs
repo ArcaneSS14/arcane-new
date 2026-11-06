@@ -1,4 +1,3 @@
-
 // Arcane-Start
 using Content.Shared.Research;
 using Content.Arcane.Common.Research;

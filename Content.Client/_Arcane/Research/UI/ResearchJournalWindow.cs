@@ -4,7 +4,9 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.Research.UI;
 
-/// <summary>Presentation contract for an optional research journal supplied by a client module.</summary>
+/// <summary>
+/// Presentation contract for an optional research journal supplied by a client module.
+/// </summary>
 public abstract class ResearchJournalWindow : FancyWindow
 {
     public static Func<ResearchJournalWindow>? Factory { get; set; }

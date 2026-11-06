@@ -3,7 +3,9 @@ using Content.Client.Research.UI;
 
 namespace Content.Arcane.Client.Research;
 
-/// <summary>Provides the Arcane journal window to research consoles.</summary>
+/// <summary>
+/// Provides the Arcane journal window to research consoles.
+/// </summary>
 public sealed class ResearchJournalSystem : EntitySystem
 {
     public override void Initialize()

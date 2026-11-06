@@ -3,7 +3,6 @@ using Content.Arcane.Common.CCVar;
 using Content.Shared.Radio;
 using Robust.Shared.Configuration;
 
-
 namespace Content.Arcane.Client.Radio;
 
 /// <summary>

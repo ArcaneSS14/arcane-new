@@ -8,7 +8,9 @@ using Robust.Shared.Configuration;
 
 namespace Content.Arcane.Client.Options;
 
-/// <summary>Registers Arcane speech bubbles and examine markup for the game session.</summary>
+/// <summary>
+/// Registers Arcane speech bubbles and examine markup for the game session.
+/// </summary>
 public sealed partial class CustomizationSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _configuration = default!;

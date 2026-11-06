@@ -9,7 +9,6 @@ using Robust.Shared.Configuration;
 using Content.Arcane.Common.CCVar;
 using static Content.Client.Stylesheets.StylesheetHelpers;
 
-
 namespace Content.Arcane.Client.Chat.UI;
 
 [CommonSheetlet]

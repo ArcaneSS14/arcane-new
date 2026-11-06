@@ -85,7 +85,9 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
         return RoleHighlightDefaults.Normalize(highlights);
     }
 
-    /// <summary>Persists the highlight override for a job without discarding other jobs.</summary>
+    /// <summary>
+    /// Persists the highlight override for a job without discarding other jobs.
+    /// </summary>
     public RoleHighlightsSaveResult SaveHighlights(ProtoId<JobPrototype> job, string value)
     {
         if (!_persistenceWritable || !_prototypes.HasIndex<JobPrototype>(job))

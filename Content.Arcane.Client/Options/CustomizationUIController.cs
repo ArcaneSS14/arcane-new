@@ -5,7 +5,9 @@ using Robust.Client.UserInterface.Controllers;
 
 namespace Content.Arcane.Client.Options;
 
-/// <summary>Registers the customization tab before settings can be opened from the main menu.</summary>
+/// <summary>
+/// Registers the customization tab before settings can be opened from the main menu.
+/// </summary>
 [UsedImplicitly]
 public sealed class CustomizationUIController : UIController
 {

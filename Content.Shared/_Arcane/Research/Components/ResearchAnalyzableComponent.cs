@@ -1,5 +1,3 @@
-
-
 using Content.Arcane.Common.Research;
 
 namespace Content.Shared.Research.Components;
