@@ -120,7 +120,7 @@ public sealed partial class KnowledgeGrantSystem : EntitySystem
                 continue;
 
             hasLearned = true;
-            _knowledge.AddExperience(skill.AsNullable(), user, xp, skillCap);
+            _knowledge.AddExperience(skill.AsNullable(), user, xp, skillCap, practice: false); // Arcane-Edit: reading counted as practice > not practice
         }
 
         args.Repeat = hasLearned;

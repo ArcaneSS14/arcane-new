@@ -125,6 +125,7 @@ public sealed partial class HealingSystem : EntitySystem
         // Logic to determine the whether or not to repeat the healing action
         args.Repeat = HasDamage((args.Used.Value, healing), target) && !dontRepeat;
         args.Handled = true;
+        RaiseAppliedHealing(args.User); // Arcane
 
         if (!args.Repeat)
         {

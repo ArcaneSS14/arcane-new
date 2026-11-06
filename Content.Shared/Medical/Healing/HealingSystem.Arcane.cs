@@ -11,5 +11,11 @@ public sealed partial class HealingSystem
         RaiseLocalEvent(user, ref ev);
         return ev.Multiplier;
     }
+
+    private void RaiseAppliedHealing(EntityUid user)
+    {
+        var ev = new UserAppliedHealingEvent();
+        RaiseLocalEvent(user, ref ev);
+    }
 }
 // Arcane-End

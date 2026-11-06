@@ -62,6 +62,8 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
         ]
     };
 
+    private const int PracticeExperienceMultiplier = 2; // Arcane
+
     public bool SkillsEnabled;
     private bool _skillGain;
     private TimeSpan _nextUpdate;
@@ -299,7 +301,7 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
         }
     }
 
-    public void AddExperience(Entity<KnowledgeComponent?> ent, EntityUid target, int added, int limit = 100)
+    public void AddExperience(Entity<KnowledgeComponent?> ent, EntityUid target, int added, int limit = 100, bool practice = true) // Arcane-Edit: no practice flag > practice flag
     {
         if (!_skillGain || !_query.Resolve(ent, ref ent.Comp))
             return;
@@ -309,7 +311,7 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
             return;
 
         ent.Comp.TimeToNextExperience = now + ent.Comp.TimeBetweenExperience;
-        ent.Comp.Experience += added + ent.Comp.BonusExperience;
+        ent.Comp.Experience += (practice ? added * PracticeExperienceMultiplier : added) + ent.Comp.BonusExperience; // Arcane-Edit: added > doubled for practice
         Dirty(ent);
 
         RollForLevelUp((ent, ent.Comp), target);

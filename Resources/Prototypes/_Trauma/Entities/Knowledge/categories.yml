@@ -8,6 +8,7 @@
   - type: Knowledge
     category: Medical
     color: "#1865d8"
+    timeBetweenExperience: 1 # Arcane
 
 - type: entity
   abstract: true
