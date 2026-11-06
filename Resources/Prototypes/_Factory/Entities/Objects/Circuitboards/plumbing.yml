@@ -10,9 +10,13 @@
   - type: MachineBoard
     prototype: PlumbingPump
     stackRequirements:
-      Manipulator: 4
+      # Manipulator: 4 # Arcane-Edit: replaced by machine parts
       Steel: 5
     tagRequirements:
       GlassBeaker:
         amount: 2
         defaultPrototype: Beaker
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End

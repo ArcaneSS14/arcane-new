@@ -10,6 +10,10 @@
     sprite: /Textures/_White/Objects/Devices/experimentalsyndicateteleporter.rsi
     layers:
     - state: icon
+    # Arcane-Start
+    - state: icon-unshaded
+      shader: unshaded
+    # Arcane-End
   - type: ExperimentalTeleporter
   - type: LimitedCharges
     maxCharges: 4

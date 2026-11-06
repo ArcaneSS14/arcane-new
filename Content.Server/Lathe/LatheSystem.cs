@@ -31,6 +31,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Shared.Construction.Events; // Arcane
 
 namespace Content.Server.Lathe
 {
@@ -65,6 +66,7 @@ namespace Content.Server.Lathe
             SubscribeLocalEvent<LatheComponent, MapInitEvent>(OnMapInit);
             SubscribeLocalEvent<LatheComponent, PowerChangedEvent>(OnPowerChanged);
             SubscribeLocalEvent<LatheComponent, TechnologyDatabaseModifiedEvent>(OnDatabaseModified);
+            SubscribeLocalEvent<LatheComponent, TechnologyDatabaseSynchronizedEvent>(OnDatabaseSynchronized); // Arcane
             SubscribeLocalEvent<LatheComponent, ResearchRegistrationChangedEvent>(OnResearchRegistrationChanged);
 
             SubscribeLocalEvent<LatheComponent, LatheQueueRecipeMessage>(OnLatheQueueRecipeMessage);
@@ -75,6 +77,10 @@ namespace Content.Server.Lathe
 
             SubscribeLocalEvent<LatheComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
             SubscribeLocalEvent<LatheComponent, MaterialAmountChangedEvent>(OnMaterialAmountChanged);
+            // Arcane-Start
+            SubscribeLocalEvent<LatheComponent, RefreshPartsEvent>(OnPartsRefresh);
+            SubscribeLocalEvent<LatheComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+            // Arcane-End
             SubscribeLocalEvent<TechnologyDatabaseComponent, LatheGetRecipesEvent>(OnGetRecipes);
             SubscribeLocalEvent<EmagLatheRecipesComponent, LatheGetRecipesEvent>(GetEmagLatheRecipes);
             SubscribeLocalEvent<LatheHeatProducingComponent, LatheStartPrintingEvent>(OnHeatStartPrinting);
@@ -207,7 +213,11 @@ namespace Content.Server.Lathe
                 component.Queue.RemoveFirst();
             var recipe = ProtoMan.Index(batch.Recipe);
 
-            var time = _reagentSpeed.ApplySpeed(uid, recipe.CompleteTime) * component.TimeMultiplier;
+            // Arcane-Start
+            var baseTime = _reagentSpeed.ApplySpeed(uid, recipe.CompleteTime).TotalSeconds;
+            var adjustedTime = baseTime * MathF.Pow(MathF.Max(0.1f, component.FinalTimeMultiplier), component.MachinePartEfficiencyExponent);
+            // Arcane-End
+            var time = TimeSpan.FromSeconds(Math.Max(0.1f, adjustedTime)); // Arcane-Edit
 
             var lathe = EnsureComp<LatheProducingComponent>(uid);
             lathe.StartTime = _timing.CurTime;
@@ -386,6 +396,49 @@ namespace Content.Server.Lathe
             UpdateUserInterfaceState(uid, component);
         }
 
+        // Arcane-Start
+        private void OnDatabaseSynchronized(EntityUid uid, LatheComponent component, ref TechnologyDatabaseSynchronizedEvent args)
+        {
+            UpdateUserInterfaceState(uid, component);
+        }
+
+        private void OnPartsRefresh(EntityUid uid, LatheComponent component, RefreshPartsEvent args)
+        {
+            var servoTierSum = args.GetPartRatingSum(component.MachinePartPrintSpeed);
+            var efficiency = Math.Clamp(component.BaseMachinePartEfficiency - servoTierSum * component.MachinePartEfficiencyTierStep,
+                component.MinMachinePartEfficiency,
+                component.BaseMachinePartEfficiency);
+
+            component.FinalTimeMultiplier = component.TimeMultiplier * efficiency;
+            component.FinalMaterialMultiplier = component.MaterialUseMultiplier * efficiency;
+
+            if (TryComp<MaterialStorageComponent>(uid, out var materialStorage))
+            {
+                component.BaseStorageLimit ??= materialStorage.StorageLimit;
+
+                if (component.BaseStorageLimit != null)
+                {
+                    var matterBinTierSum = args.GetPartRatingSum(component.MachinePartMaterialCapacity);
+                    var newLimit = component.BaseStorageLimit.Value + (int) MathF.Round(matterBinTierSum * component.MaterialStorageTierCapacityBonus);
+                    _materialStorage.SetStorageLimit(uid, Math.Max(component.BaseStorageLimit.Value, newLimit), materialStorage);
+                }
+            }
+
+            Dirty(uid, component);
+            UpdateUserInterfaceState(uid, component);
+        }
+
+        private static void OnUpgradeExamine(EntityUid uid, LatheComponent component, UpgradeExamineEvent args)
+        {
+            var speedMultiplier = component.FinalTimeMultiplier > 0f
+                ? component.TimeMultiplier / component.FinalTimeMultiplier
+                : 1f;
+
+            args.AddPercentageUpgrade("lathe-component-upgrade-speed", speedMultiplier, component.TimeMultiplier);
+            args.AddPercentageUpgrade("lathe-component-upgrade-material-use", component.FinalMaterialMultiplier, component.MaterialUseMultiplier);
+        }
+        // Arcane-End
+
         protected override bool HasRecipe(EntityUid uid, LatheRecipePrototype recipe, LatheComponent component)
         {
             return GetAvailableRecipes(uid, component).Contains(recipe.ID);
@@ -400,7 +453,7 @@ namespace Content.Server.Lathe
             foreach (var (mat, amount) in recipe.Materials)
             {
                 var adjustedAmount = recipe.ApplyMaterialDiscount
-                    ? (int)(amount * lathe.MaterialUseMultiplier)
+                    ? (int)(amount * lathe.FinalMaterialMultiplier) // Arcane-Edit: MaterialUseMultiplier > FinalMaterialMultiplier
                     : amount;
 
                 yield return (mat, adjustedAmount);

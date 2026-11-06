@@ -1,5 +1,5 @@
 - type: entity
-  abstract: true
+#  abstract: true # Arcane-Edit
   parent: Clothing
   id: ClothingHeadset
   name: headset
@@ -8,20 +8,22 @@
   - type: ContainerContainer
     containers:
       key_slots: !type:Container
-  - type: ContainerFill
-    containers:
-      key_slots:
-      - EncryptionKeyCommon
+#  - type: ContainerFill # Arcane-Edit
+#    containers:
+#      key_slots:
+#      - EncryptionKeyCommon
   - type: Headset
   - type: EncryptionKeyHolder
     keySlots: 4
   - type: Sprite
+    sprite: Clothing/Ears/Headsets/base.rsi # Arcane
     state: icon
   - type: Item
     size: Small
   - type: Clothing
     slots:
     - ears
+    - earsright # Arcane
     sprite: Clothing/Ears/Headsets/base.rsi
   - type: GuideHelp
     guides:
@@ -40,6 +42,10 @@
   id: ClothingHeadsetGrey
   name: passenger headset
   components:
+  - type: ContainerFill # Arcane
+    containers:
+      key_slots:
+      - EncryptionKeyCommon
   - type: Sprite
     sprite: Clothing/Ears/Headsets/base.rsi
 

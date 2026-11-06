@@ -262,6 +262,7 @@
     - TerrorObjective
     - MassArrestObjective
     - NinjaSurviveObjective
+    - NinjaProtectObjective # Arcane
   - type: AntagSelection
     agentName: ninja-round-end-agent-name
     antags:

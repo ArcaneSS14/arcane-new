@@ -19,7 +19,7 @@
       time: 60h
 
 # Head
-- type: startingGear
+- type: loadout # Arcane-Edit: startingGear > loadout
   id: EngineeringBeret
   equipment:
     head: ClothingHeadHatBeretEngineering
@@ -44,7 +44,10 @@
 
 - type: loadout
   id: SeniorEngineerBeret
-  startingGear: EngineeringBeret
+  # Arcane-Edit-Start: was startingGear EngineeringBeret
+  equipment:
+    head: ClothingHeadHatBeretEngineering
+  # Arcane-Edit-End
   effects:
   - !type:GroupLoadoutEffect
     proto: SeniorEngineering

@@ -145,3 +145,11 @@
   parent: BaseConcreteTileRecipe
   id: FloorTileItemOldConcreteSmooth
   result: FloorTileItemOldConcreteSmooth
+
+- type: latheRecipe
+  id: TileItemBluespace
+  result: FloorTileItemArcaneBluespace
+  completetime: 1.5
+  materials:
+    Uranium: 40
+    Steel: 100

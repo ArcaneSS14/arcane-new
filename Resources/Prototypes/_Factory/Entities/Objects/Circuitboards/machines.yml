@@ -10,6 +10,10 @@
     state: engineering
   - type: MachineBoard
     prototype: RoboticArm
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -21,6 +25,10 @@
     state: engineering
   - type: MachineBoard
     prototype: Constructor
+    # Arcane-Start
+    partRequirements:
+      Servo: 5
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -30,6 +38,10 @@
   components:
   - type: MachineBoard
     prototype: StorageBin
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -41,3 +53,7 @@
     state: engineering
   - type: MachineBoard
     prototype: Interactor
+    # Arcane-Start
+    partRequirements:
+      Servo: 4
+    # Arcane-End

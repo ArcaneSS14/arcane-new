@@ -14,6 +14,7 @@
     ClothingOuterCardborg: 2
     ClothingHeadHatSombrero: 2
     ClothingOuterPonchoClassic: 2
+    ClothingHeadHatBunny: 2 # Arcane
     ClothingHeadHatPwig: 2
     ClothingOuterRobesJudge: 2
     ClothingOuterPoncho: 2
@@ -75,12 +76,37 @@
     ClothingHeadHatTinfoilHat: 2
     ClothingOuterSuitCsij: 1
     # </Trauma>
+    # Arcane-Start: Cosmic Japan
+    ClothingUniformGi: 2
+    ClothingUniformKimonoBlue: 2
+    ClothingUniformKimonoPink: 2
+    ClothingUniformKimonoPurple: 2
+    ClothingUniformKimonoSky: 2
+    ClothingUniformKimonoGreen: 2
+    ClothingUniformKendoHakama: 1
+    ClothingOuterArmorKendoBogu: 1
+    ClothingHeadHelmetKendoMen: 1
+    # Funny Clothes
+    ClothingUniformJumpsuitClownis: 2
+    ClothingUniformJumpsuitFallout: 2
+    ClothingUniformJumpsuitFallout14: 2
+    ClothingUniformJumpsuitGoku: 1
+    ClothingUniformJumpsuitGokuAlt: 1
+    ClothingUniformJumpsuitRotten: 2
+    ClothingUniformJumpsuitMegaMan: 1
+    ClothingUniformJumpsuitMegaManX: 1
+    ClothingNeckMantleElderLizards: 2
+    # Arcane-End
   contrabandInventory:
     ClothingHeadHatRichard: 1
     ClothingShoesBling: 1
     ClothingShoesBootsCowboyFancy: 1
     ClothingOuterDogi: 1
-    ClothingOuterSuitCarp: 1
+    ClothingOuterSuitCarp: 2 # Arcane-Edit: 1 > 2
+    # Arcane-Start
+    ClothingNeckCloakCarp: 1
+    ClothingNeckCloakCarpAlt: 1
+    # Arcane-End
     ClothingMaskSexyClown: 1
     ClothingMaskSexyMime: 1
     ClothingHeadHatCowboyBountyHunter: 1

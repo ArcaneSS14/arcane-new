@@ -39,6 +39,14 @@
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
   - type: Appearance
+  # Arcane-Start: consoles placed side by side connect visually
+  - type: EdgeConnection
+    connectionKey: computer-console
+    allowedDirections: East, West
+    connectedSprite: /Textures/_Arcane/Structures/Machines/computers.rsi
+    connectedStates:
+      computer: computer_{0}
+  # Arcane-End
   - type: GenericVisualizer
     visuals:
       enum.ComputerVisuals.Powered:

@@ -474,6 +474,7 @@
         enum.WiresUiKey.Key:
           type: WiresBoundUserInterface
   - type: CrewMonitoringConsole
+  - type: CrewMonitoringAlert # Arcane
   - type: DeviceNetwork
     deviceNetId: Wireless
     receiveFrequencyId: CrewMonitor
@@ -627,6 +628,15 @@
     board: ResearchComputerCircuitboard
   - type: AccessReader
     access: [["Research"]]
+  # Arcane-Start: the console announces unlocked technologies
+  - type: Speech
+    speechSounds: Borg
+    speechVerb: Robotic
+  - type: Grammar
+    attributes:
+      gender: female
+      proper: true
+  # Arcane-End
   - type: PointLight
     radius: 1.5
     energy: 1.6

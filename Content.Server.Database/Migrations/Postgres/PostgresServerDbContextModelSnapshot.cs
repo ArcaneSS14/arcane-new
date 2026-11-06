@@ -1290,6 +1290,63 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("flavor_text");
 
+                    // Arcane-Start: extended flavor text
+                    b.Property<string>("CharacterFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("character_flavor_text");
+
+                    b.Property<string>("OocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ooc_flavor_text");
+
+                    b.Property<string>("TagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tags_flavor_text");
+
+                    b.Property<string>("LinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("links_flavor_text");
+
+                    b.Property<string>("GreenFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("green_flavor_text");
+
+                    b.Property<string>("YellowFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("yellow_flavor_text");
+
+                    b.Property<string>("RedFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("red_flavor_text");
+
+                    b.Property<string>("NsfwFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_flavor_text");
+
+                    b.Property<string>("NsfwOocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_ooc_flavor_text");
+
+                    b.Property<string>("NsfwLinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_links_flavor_text");
+
+                    b.Property<string>("NsfwTagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_tags_flavor_text");
+                    // Arcane-End
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("text")

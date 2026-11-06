@@ -53,9 +53,11 @@
   id: HoPMantle
   equipment:
     neck: ClothingNeckMantleHOP
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MasterHoP
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MasterHoP
+  # Arcane-Edit-End
 
 - type: startingGear
   id: HoPMantle

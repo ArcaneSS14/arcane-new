@@ -2,7 +2,7 @@
 
 - type: latheRecipe
   id: ClothingBackpackMessengerHolding
-  result: ClothingBackpackMessengerHolding
+  result: ClothingBackpackMessengerHoldingInert # Arcane-Edit: crafted with a bluespace anomaly core
   completetime: 5
   materials:
     Steel: 2000

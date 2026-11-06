@@ -86,7 +86,20 @@
   - type: Sprite
     sprite: Structures/Machines/computers.rsi
     drawdepth: Objects
-    state: broken
+    # Arcane-Edit-Start: named layer for edge connections
+    layers:
+    - map: [ "computerLayerBody" ]
+      state: broken
+    # Arcane-Edit-End
+  # Arcane-Start
+  - type: Appearance
+  - type: EdgeConnection
+    connectionKey: computer-console
+    allowedDirections: East, West
+    connectedSprite: /Textures/_Arcane/Structures/Machines/computers.rsi
+    connectedStates:
+      broken: computer_{0}-broken
+  # Arcane-End
   - type: Destructible
     thresholds:
     - trigger:

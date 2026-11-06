@@ -70,7 +70,7 @@ public sealed partial class MultiHandedItemSystem : EntitySystem
 
     private void OnVirtualItemDeleted(Entity<MultiHandedItemComponent> ent, ref VirtualItemDeletedEvent args)
     {
-        if (args.BlockingEntity != ent.Owner || _timing.ApplyingState)
+        if (args.BlockingEntity != ent.Owner || _timing.ApplyingState || ent.Comp.LifeStage > ComponentLifeStage.Running) // Arcane-Edit: Releasing the extra hands while folding must not drop the item.
             return;
 
         _hands.TryDrop(args.User, ent.Owner);
@@ -104,22 +104,13 @@ public sealed partial class MultiHandedItemSystem : EntitySystem
 
     private void OnComponentShutdown(Entity<MultiHandedItemComponent> ent, ref ComponentShutdown args)
     {
-        if (TerminatingOrDeleted(ent))
+        // Arcane-Edit-Start: Release the holder's virtual items before another state can claim those hands.
+        if (TerminatingOrDeleted(ent)
+            || _timing.ApplyingState
+            || !_container.TryGetContainingContainer((ent, null, null), out var container))
             return;
 
-        // Method exists for that but it calls an event on deleting the virtual item hence forces the item to drop
-        foreach (var hand in _hands.EnumerateHands(Transform(ent).ParentUid))
-        {
-            if (_timing.InPrediction
-                || !_hands.TryGetHeldItem(ent.Owner, hand, out var held)
-                || !TryComp(held, out VirtualItemComponent? virt)
-                || virt.BlockingEntity != ent.Owner)
-                continue;
-
-            if (TerminatingOrDeleted(held))
-                return;
-
-            QueueDel(held);
-        }
+        _virtualItem.DeleteInHandsMatching(container.Owner, ent.Owner, queueDel: false);
+        // Arcane-Edit-End
     }
 }

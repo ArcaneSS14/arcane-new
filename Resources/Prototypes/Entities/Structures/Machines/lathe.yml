@@ -111,18 +111,20 @@
   id: SolutionLatheLube # Its own prototype since some lathes might interface with solutions in other ways
   categories: [ HideSpawnMenu ]
 
-- type: entity
-  abstract: true
-  id: BaseHyperlathe
-  components:
-  - type: Lathe
-    materialUseMultiplier: 0.5
-    timeMultiplier: 1.5
-  - type: LatheHeatProducing
-  - type: ReagentSpeed
-    modifiers:
-      SpaceLube: 0.8 # being faster means less heat so lube needs to be nerfed
-      SpaceGlue: 5 # no change from normal lathe, overheat!!!
+# Arcane-Edit-Start: machine parts upgrade the base machine instead (Orion #385)
+#- type: entity
+#  abstract: true
+#  id: BaseHyperlathe
+#  components:
+#  - type: Lathe
+#    materialUseMultiplier: 0.5
+#    timeMultiplier: 1.5
+#  - type: LatheHeatProducing
+#  - type: ReagentSpeed
+#    modifiers:
+#      SpaceLube: 0.8 # being faster means less heat so lube needs to be nerfed
+#      SpaceGlue: 5 # no change from normal lathe, overheat!!!
+# Arcane-Edit-End
 
 - type: entity
   id: Autolathe
@@ -157,7 +159,7 @@
     runningState: building
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - NailsStatic
     - LatheMiscStatic
@@ -201,16 +203,18 @@
     containers:
     - blueprint
 
-- type: entity
-  id: AutolatheHyperConvection
-  parent: [Autolathe, BaseHyperlathe]
-  name: hyper convection autolathe
-  description: A highly-experimental autolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
-  components:
-  - type: Sprite
-    sprite: Structures/Machines/autolathe_hypercon.rsi
-  - type: Machine
-    board: AutolatheHyperConvectionMachineCircuitboard
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: entity
+#  id: AutolatheHyperConvection
+#  parent: [Autolathe, BaseHyperlathe]
+#  name: hyper convection autolathe
+#  description: A highly-experimental autolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
+#  components:
+#  - type: Sprite
+#    sprite: Structures/Machines/autolathe_hypercon.rsi
+#  - type: Machine
+#    board: AutolatheHyperConvectionMachineCircuitboard
+# Arcane-Edit-End
 
 - type: entity
   id: Protolathe
@@ -245,6 +249,7 @@
     #- ChemistryStatic
     #- SurgeryStatic
     dynamicPacks:
+    - BodyBagsDynamic # Arcane
     - AdvancedTools
     #- ScienceEquipment - Goobstation - Moved to Scifab
     #- ScienceExplosives - Goobstation - Moved to Scifab
@@ -272,6 +277,10 @@
     - TraumaScienceClothing
     # </Trauma>
   - type: EmagLatheRecipes
+    # Arcane-Start: syndicate body bag has no research unlock, so it is a static emag pack
+    emagStaticPacks:
+    - BodyBagsSyndicateStatic
+    # Arcane-End
     emagDynamicPacks:
     - SecurityAmmo
     - SecurityExplosives
@@ -283,16 +292,18 @@
     - RestraintTechnology
     - MiningWeapons
 
-- type: entity
-  id: ProtolatheHyperConvection
-  parent: [Protolathe, BaseHyperlathe]
-  name: hyper convection protolathe
-  description: A highly-experimental protolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
-  components:
-  - type: Sprite
-    sprite: Structures/Machines/protolathe_hypercon.rsi
-  - type: Machine
-    board: ProtolatheHyperConvectionMachineCircuitboard
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: entity
+#  id: ProtolatheHyperConvection
+#  parent: [Protolathe, BaseHyperlathe]
+#  name: hyper convection protolathe
+#  description: A highly-experimental protolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
+#  components:
+#  - type: Sprite
+#    sprite: Structures/Machines/protolathe_hypercon.rsi
+#  - type: Machine
+#    board: ProtolatheHyperConvectionMachineCircuitboard
+# Arcane-Edit-End
 
 - type: entity
   id: CircuitImprinter
@@ -317,18 +328,18 @@
     producingSound: /Audio/Machines/circuitprinter.ogg
     idleState: icon
     runningState: building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - SharedBoardsStatic
     - MedicalBoardsStaticGoob
     - SecurityBoardsStaticGoob
     # </Trauma>
-    #- ScienceBoardsStatic - Goobstation - Moved to Scifab
+    - ScienceBoardsStatic # Arcane-Edit
     - ServiceBoardsStatic
     - CargoBoardsStatic
-    #- MedicalBoardsStatic - Goobstation - Moved to Scifab and Medfab
+    - MedicalBoardsStatic # Arcane-Edit
     - EngineeringBoardsStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     # <Trauma>
     - SharedBoards
     - ReactorCircuitboards
@@ -337,25 +348,34 @@
     - CargoBoards
     - MedicalBoards
     - ServiceBoards
-    #- ScienceBoards - Goobstation - Moved to Scifab
+    - ScienceBoards # Arcane-Edit
     - CameraBoards
-    #- MechBoards - Goobstation - split between departmental lathes
+    # Arcane-Edit-Start: was "#- MechBoards - Goobstation - split between departmental lathes"
+    - MechBoards
+    - MechBoardsCargo
+    - MechBoardsCivilian
+    - MedicalBoardsGoob
+    - MechBoardsScience
+    - MechBoardsSecurity
+    # Arcane-Edit-End
     - ShuttleBoards
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist
   - type: OreSiloClient
   - type: RequireProjectileTarget
 
-- type: entity
-  id: CircuitImprinterHyperConvection
-  parent: [CircuitImprinter, BaseHyperlathe]
-  name: hyper convection circuit imprinter
-  description: A highly-experimental circuit imprinter that harnesses the power of extreme heat to slowly create objects more cost-effectively.
-  components:
-  - type: Sprite
-    sprite: Structures/Machines/circuit_imprinter_hypercon.rsi
-  - type: Machine
-    board: CircuitImprinterHyperConvectionMachineCircuitboard
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: entity
+#  id: CircuitImprinterHyperConvection
+#  parent: [CircuitImprinter, BaseHyperlathe]
+#  name: hyper convection circuit imprinter
+#  description: A highly-experimental circuit imprinter that harnesses the power of extreme heat to slowly create objects more cost-effectively.
+#  components:
+#  - type: Sprite
+#    sprite: Structures/Machines/circuit_imprinter_hypercon.rsi
+#  - type: Machine
+#    board: CircuitImprinterHyperConvectionMachineCircuitboard
+# Arcane-Edit-End
 
 - type: entity
   id: ExosuitFabricator
@@ -377,7 +397,11 @@
   - type: Lathe
     idleState: fab-idle
     runningState: fab-active
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
+    # Arcane-Start
+    - AILawboards
+    - PartsDynamic
+    # Arcane-End
     - RoboticsStatic
     - BorgModulesStatic
     - BorgLimbsStatic
@@ -390,7 +414,7 @@
     - CablesStatic
     - PowerCellsStatic
     - TraumaCyberneticsStatic # Trauma
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - Robotics
     - BorgModules
     - MechParts
@@ -492,7 +516,7 @@
     runningState: icon
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     - SecurityEquipmentStatic
     - SecurityPracticeStatic
     - SecurityAmmoStatic
@@ -506,7 +530,7 @@
     - PowerCellsStatic
     - ScienceExplosives
     - GrenadeTriggersStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - SalvageSecurityBoards
     - SalvageSecurityWeapons
     - SecurityEquipment
@@ -562,7 +586,7 @@
       runningState: icon
       unlitIdleState: unlit
       unlitRunningState: unlit-building
-      staticPacks:
+      dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
       - SecurityAmmoStatic
     # - type: EmagLatheRecipes
     #   emagStaticPacks:
@@ -601,7 +625,7 @@
     runningState: icon
     unlitIdleState: unlit
     unlitRunningState: unlit-building
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     # <Trauma>
     - ParamedHypoStatic
     - MedicalPatchesStatic
@@ -621,7 +645,11 @@
     - MedicalClothingStatic
     - EmptyMedkitsStatic
     - SurgeryStatic
-    dynamicPacks:
+    # Arcane-Start
+    - EmptyMedicalSprayBottlesStatic
+    - AbductorMedical
+    # Arcane-End
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     # <Trauma>
     - Surgery
     - MedicalCybernetics
@@ -681,6 +709,7 @@
     - Scarves
     - Carpets
     - Bedsheets
+    - DoubleBedsheets # Arcane
     # Goobstation Packs
     - ClothingCasualJumpsuits
     - ClothingCommandSummer
@@ -787,23 +816,25 @@
       - OreSmelting
       - RGlassSmelting
 
-- type: entity
-  parent: OreProcessor
-  id: OreProcessorIndustrial
-  name: industrial ore processor
-  description: An ore processor specifically designed for mass-producing metals in industrial applications.
-  components:
-  - type: Sprite
-    sprite: Structures/Machines/ore_processor_industrial.rsi
-  - type: Machine
-    board: OreProcessorIndustrialMachineCircuitboard
-  - type: Lathe
-    materialUseMultiplier: 0.75
-    timeMultiplier: 0.5
-    staticPacks:
-    - OreSmelting
-    - RGlassSmelting
-    - AdvancedSmelting
+# Arcane-Edit-Start: replaced by machine part upgrades (Orion #385)
+#- type: entity
+#  parent: OreProcessor
+#  id: OreProcessorIndustrial
+#  name: industrial ore processor
+#  description: An ore processor specifically designed for mass-producing metals in industrial applications.
+#  components:
+#  - type: Sprite
+#    sprite: Structures/Machines/ore_processor_industrial.rsi
+#  - type: Machine
+#    board: OreProcessorIndustrialMachineCircuitboard
+#  - type: Lathe
+#    materialUseMultiplier: 0.75
+#    timeMultiplier: 0.5
+#    staticPacks:
+#    - OreSmelting
+#    - RGlassSmelting
+#    - AdvancedSmelting
+# Arcane-Edit-End
 
 - type: entity
   parent: BaseLathe

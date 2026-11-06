@@ -35,6 +35,14 @@ public sealed partial class SpeciesPrototype : IPrototype
     [DataField(required: true)]
     public bool RoundStart { get; private set; } = false;
 
+    // Arcane-Start
+    /// <summary>
+    /// Whether the species is available only to sponsors.
+    /// </summary>
+    [DataField]
+    public bool SponsorOnly { get; private set; } = false;
+    // Arcane-End
+
     /// <summary>
     ///     Default skin tone for this species. This applies for non-human skin tones.
     /// </summary>

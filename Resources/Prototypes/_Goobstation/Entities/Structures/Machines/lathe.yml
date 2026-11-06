@@ -24,7 +24,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
+    - AbductorEngineering # Arcane
     - SharedBoardsStatic
     - EngineeringBoardsStatic
     - CircuitFloorsStatic
@@ -40,12 +41,16 @@
     - NailgunStatic
     - NailsStatic
     - ReactorPartsBasic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - ConstructionBagOfHolding
     - AdvancedTools
     - AtmosTools
     - EngineeringWeapons
     - PowerCells
+    # Arcane-Start
+    - MegaCells
+    - PartsDynamic
+    # Arcane-End
     - Equipment
     - SpecOpsGoogles
     - EngineeringBoards
@@ -94,7 +99,7 @@
   - type: Lathe
     idleState: icon
     runningState: icon
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
     - ToolsStatic
     - SharedBoardsStatic
     - CargoBoardsStatic
@@ -104,10 +109,11 @@
     - MiscSignallersStatic
     - CargoStatic
     - PartsStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - AdvancedTools
     - Mining
     - PowerCells
+    - MegaCells # Arcane
     - Equipment
     # - ServiceWeapons
     - MiningWeapons
@@ -159,7 +165,7 @@
   - type: Lathe
     idleState: icon
     runningState: icon
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
     - SharedBoardsStatic
     - EngineeringBoardsStatic
     - CircuitFloorsStatic
@@ -180,7 +186,7 @@
     - GrenadeTriggersStatic
     - MiscSignallersStatic
     - GeneticsStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - AdvancedTools
     - ScienceEquipment
     - ScienceClothing
@@ -189,6 +195,10 @@
     - AtmosTools
     - EngineeringWeapons
     - PowerCells
+    # Arcane-Start
+    - MegaCells
+    - PartsDynamic
+    # Arcane-End
     - Chemistry
     - Janitor
     - Equipment
@@ -246,7 +256,7 @@
   - type: Lathe
     idleState: icon
     runningState: icon
-    staticPacks:
+    dynamicPacks: # Arcane-Edit: Static > Dynamic
     - ServiceBoardsStatic
     - MaterialsStatic
     - LightsStatic
@@ -256,8 +266,12 @@
     - ChemistryStatic
     - TapeRecorderStatic
     - CondimentStatic
-    dynamicPacks:
+    # Arcane-Edit: the dynamicPacks list is merged into the one above
     - Translators
+    # Arcane-Start
+    - BasicService
+    - Hydroponic
+    # Arcane-End
     - Janitor
     - Instruments
     - FauxTiles

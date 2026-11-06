@@ -31,9 +31,20 @@ public abstract class SharedHeadsetSystem : EntitySystem
 
     protected virtual void OnGotEquipped(EntityUid uid, HeadsetComponent component, GotEquippedEvent args)
     {
-        component.IsEquipped = args.SlotFlags.HasFlag(component.RequiredSlot);
+        component.IsEquipped = IsHeadsetSlot(component, args.SlotFlags); // Arcane-Edit: HasFlag(RequiredSlot) > either ear
         Dirty(uid, component);
     }
+
+    // Arcane-Start
+    /// <summary>
+    /// Whether the headset works in this slot: its required slot or its additional one. NONE adds no slot,
+    /// unlike HasFlag(NONE), which is always true.
+    /// </summary>
+    public static bool IsHeadsetSlot(HeadsetComponent headset, SlotFlags slot)
+    {
+        return (slot & (headset.RequiredSlot | headset.AdditionalSlot)) != SlotFlags.NONE;
+    }
+    // Arcane-End
 
     protected virtual void OnGotUnequipped(EntityUid uid, HeadsetComponent component, GotUnequippedEvent args)
     {

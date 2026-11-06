@@ -3,6 +3,10 @@ using Content.Shared.Atmos.Piping.Unary.Components;
 using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Power.EntitySystems;
+// Arcane-Start
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Shared.Atmos.Piping.Unary.Systems;
 
@@ -18,6 +22,10 @@ public abstract partial class SharedGasThermoMachineSystem : EntitySystem
 
         SubscribeLocalEvent<GasThermoMachineComponent, GasThermomachineToggleMessage>(OnToggleMessage);
         SubscribeLocalEvent<GasThermoMachineComponent, GasThermomachineChangeTemperatureMessage>(OnChangeTemperature);
+        // Arcane-Start
+        SubscribeLocalEvent<GasThermoMachineComponent, RefreshPartsEvent>(OnRefreshParts);
+        SubscribeLocalEvent<GasThermoMachineComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
     }
 
     private void OnExamined(EntityUid uid, GasThermoMachineComponent thermoMachine, ExaminedEvent args)
@@ -58,4 +66,28 @@ public abstract partial class SharedGasThermoMachineSystem : EntitySystem
     }
 
     protected virtual void DirtyUI(EntityUid uid, GasThermoMachineComponent? thermoMachine, UserInterfaceComponent? ui=null) {}
+
+    // Arcane-Start
+    private void OnRefreshParts(EntityUid uid, GasThermoMachineComponent component, RefreshPartsEvent args)
+    {
+        var matterTier = args.GetPartRating(MachinePartIds.MatterBin);
+        var laserTier = args.GetPartRating(MachinePartIds.MicroLaser);
+
+        component.HeatCapacity = component.BaseHeatCapacity * RefreshPartsEvent.GetPositiveTierMultiplier(matterTier);
+
+        var rangeBonus = (laserTier - 1f) * 30f;
+        component.MinTemperature = MathF.Max(Atmospherics.TCMB, component.BaseMinTemperature - rangeBonus);
+        component.MaxTemperature = component.BaseMaxTemperature + rangeBonus;
+
+        component.TargetTemperature = Math.Clamp(component.TargetTemperature, component.MinTemperature, component.MaxTemperature);
+        Dirty(uid, component);
+        DirtyUI(uid, component);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, GasThermoMachineComponent component, UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-thermomachine-heat-capacity", component.HeatCapacity / component.BaseHeatCapacity);
+        args.AddPercentageUpgrade("machine-upgrade-thermomachine-temp-range", (component.MaxTemperature - component.MinTemperature) / (component.BaseMaxTemperature - component.BaseMinTemperature));
+    }
+    // Arcane-End
 }

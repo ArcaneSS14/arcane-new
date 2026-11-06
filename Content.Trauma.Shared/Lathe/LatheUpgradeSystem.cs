@@ -23,10 +23,18 @@ public sealed class LatheUpgradeSystem : EntitySystem
         if (!TryComp<LatheComponent>(ent, out var lathe))
             return;
 
+        // Arcane-Edit-Start: keep the machine part multipliers in step with the base ones
         if (ent.Comp.MaterialUseMultiplier is {} matMul)
+        {
+            lathe.FinalMaterialMultiplier *= lathe.MaterialUseMultiplier > 0f ? matMul / lathe.MaterialUseMultiplier : 1f;
             lathe.MaterialUseMultiplier = matMul;
+        }
         if (ent.Comp.TimeMultiplier is {} timeMul)
+        {
+            lathe.FinalTimeMultiplier *= lathe.TimeMultiplier > 0f ? timeMul / lathe.TimeMultiplier : 1f;
             lathe.TimeMultiplier = timeMul;
+        }
+        // Arcane-Edit-End
 
         Dirty(ent, lathe);
     }

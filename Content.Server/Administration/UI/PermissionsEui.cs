@@ -9,6 +9,10 @@ using Robust.Server.Player;
 using Robust.Shared.Network;
 using DbAdminRank = Content.Server.Database.AdminRank;
 using static Content.Shared.Administration.PermissionsEuiMsg;
+// Arcane-Start
+using Content.Arcane.Common.ServerProtection;
+using Content.Server.Chat.Managers;
+// Arcane-End
 
 
 namespace Content.Server.Administration.UI
@@ -19,6 +23,10 @@ namespace Content.Server.Administration.UI
         [Dependency] private IServerDbManager _db = default!;
         [Dependency] private IAdminManager _adminManager = default!;
         [Dependency] private ILogManager _logManager = default!;
+        // Arcane-Start
+        [Dependency] private IChatManager _chat = default!;
+        [Dependency] private IEntityManager _entityManager = default!;
+        // Arcane-End
 
         private readonly ISawmill _sawmill;
         private bool _isLoading;
@@ -153,6 +161,11 @@ namespace Content.Server.Administration.UI
 
             await _db.RemoveAdminRankAsync(rr.Id);
 
+            // Arcane-Start: one rank-wide change is one protection action, whatever the number of its admins
+            if (rank.Flags.Count > 0)
+                RaisePermissionsReduced(rank.Name, "remove-rank");
+            // Arcane-End
+
             _adminManager.ReloadAdminsWithRank(rr.Id);
         }
 
@@ -176,6 +189,8 @@ namespace Content.Server.Administration.UI
                 return;
             }
 
+            var oldRankFlags = AdminFlagsHelper.NamesToFlags(rank.Flags.Select(f => f.Flag)); // Arcane
+
             rank.Flags = GenRankFlagList(ur.Flags);
             rank.Name = ur.Name;
 
@@ -183,6 +198,11 @@ namespace Content.Server.Administration.UI
 
             var flagText = string.Join(' ', AdminFlagsHelper.FlagsToNames(ur.Flags).Select(f => $"+{f}"));
             _sawmill.Info($"{Player} updated admin rank {rank.Name}/{flagText}.");
+
+            // Arcane-Start
+            if ((oldRankFlags & ~ur.Flags) != 0)
+                RaisePermissionsReduced(rank.Name, "update-rank-restrict");
+            // Arcane-End
 
             _adminManager.ReloadAdminsWithRank(ur.Id);
         }
@@ -226,6 +246,7 @@ namespace Content.Server.Administration.UI
 
             var record = await _db.GetPlayerRecordByUserId(ra.UserId);
             _sawmill.Info($"{Player} removed admin {record?.LastSeenUserName ?? ra.UserId.ToString()}");
+            RaisePermissionsReduced(record?.LastSeenUserName ?? ra.UserId.ToString(), "remove-admin"); // Arcane
 
             if (_playerManager.TryGetSessionById(ra.UserId, out var player))
             {
@@ -259,6 +280,11 @@ namespace Content.Server.Administration.UI
                 return;
             }
 
+            // Arcane-Start
+            var newRank = ua.RankId is { } newRankId ? await _db.GetAdminRankAsync(newRankId) : null;
+            var permissionReduction = IsPermissionReduction(admin, ua, newRank);
+            // Arcane-End
+
             admin.Title = ua.Title;
             admin.AdminRankId = ua.RankId;
             admin.Flags = GenAdminFlagList(ua.PosFlags, ua.NegFlags);
@@ -272,6 +298,11 @@ namespace Content.Server.Administration.UI
             var flags = AdminFlagsHelper.PosNegFlagsText(ua.PosFlags, ua.NegFlags);
 
             _sawmill.Info($"{Player} updated admin {name} to {title}/{rankName}/{flags}");
+
+            // Arcane-Start
+            if (permissionReduction)
+                RaisePermissionsReduced(name, "update-admin-restrict");
+            // Arcane-End
 
             if (_playerManager.TryGetSessionById(ua.UserId, out var player))
             {
@@ -354,6 +385,27 @@ namespace Content.Server.Administration.UI
             }
         }
 
+        // Arcane-Start
+        private void RaisePermissionsReduced(string targetName, string action)
+        {
+            var ev = new AdminPermissionsReducedEvent(Player.UserId, Player.Name, targetName, action);
+            _entityManager.EventBus.RaiseEvent(EventSource.Local, ref ev);
+        }
+
+        /// <summary>
+        /// Compares the effective permissions before and after, rank included, the same way AdminManager computes them.
+        /// </summary>
+        private static bool IsPermissionReduction(Admin oldAdmin, UpdateAdmin update, DbAdminRank? newRank)
+        {
+            if (update.Suspended && !oldAdmin.Suspended)
+                return true;
+
+            var oldFlags = AdminManager.GetEffectiveFlags(oldAdmin.AdminRank, oldAdmin.Flags);
+            var newFlags = AdminManager.GetEffectiveFlags(newRank, GenAdminFlagList(update.PosFlags, update.NegFlags));
+            return (oldFlags & ~newFlags) != 0;
+        }
+        // Arcane-End
+
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private bool CheckCreatePerms(AdminFlags posFlags, AdminFlags negFlags)
         {
@@ -368,6 +420,7 @@ namespace Content.Server.Administration.UI
             {
                 // Can't create an admin with higher perms than yourself, obviously.
                 _sawmill.Warning($"{Player} tried to grant admin powers above their authorization.");
+                _chat.SendAdminAlert(Loc.GetString("admin-action-protection-rank-escalation", ("admin", Player.Name))); // Arcane
                 return false;
             }
 

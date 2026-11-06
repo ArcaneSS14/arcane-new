@@ -322,10 +322,16 @@ namespace Content.Client.Lobby.UI
 
             #endregion Left
 
-            ShowClothes.OnToggled += args =>
+            // Arcane-Edit-Start: three preview modes instead of the ShowClothes toggle
+            ClothesModeButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-all"), PreviewClothesAll);
+            ClothesModeButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-underwear"), PreviewClothesUnderwear);
+            ClothesModeButton.AddItem(Loc.GetString("humanoid-profile-editor-clothing-none"), PreviewClothesNone);
+            ClothesModeButton.OnItemSelected += args =>
             {
+                ClothesModeButton.SelectId(args.Id);
                 ReloadPreview();
             };
+            // Arcane-Edit-End
 
             SpeciesInfoButton.OnPressed += OnSpeciesInfoButtonPressed;
 
@@ -346,6 +352,12 @@ namespace Content.Client.Lobby.UI
             IsDirty = true;
         }
 
+        // Arcane-Start
+        private const int PreviewClothesAll = 0;
+        private const int PreviewClothesUnderwear = 1;
+        private const int PreviewClothesNone = 2;
+        // Arcane-End
+
         /// <summary>
         /// Reloads the entire dummy entity for preview.
         /// </summary>
@@ -357,7 +369,8 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
+            SpriteView.LoadPreview(Profile, JobOverride, ClothesModeButton.SelectedId == PreviewClothesAll, ClothesModeButton.SelectedId != PreviewClothesNone); // Arcane-Edit: ShowClothes.Pressed > preview mode
+            UpdateFlavorPreview(); // Arcane
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

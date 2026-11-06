@@ -26,6 +26,13 @@ public enum SlotFlags
     LEGS = 1 << 13,
     FEET = 1 << 14,
     SUITSTORAGE = 1 << 15,
+    // Arcane-Start: underwear slots (Orion #208)
+    EARSRIGHT = 1 << 16,
+    UNDERWEAR = 1 << 17,
+    UNDERSHIRT = 1 << 18,
+    SOCKS = 1 << 19,
+    WRISTS = 1 << 20,
+    // Arcane-End
     All = ~NONE,
 
     WITHOUT_POCKET = All & ~POCKET

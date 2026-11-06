@@ -5,7 +5,7 @@
   description: An impossible object. Should you be standing this close to it?
   components:
   - type: Anomaly
-    offset: 0, 0.15
+    # offset: 0, 0.15 # Arcane-Edit: offset: 0, 0.15 > removed
     pulseSound:
       collection: RadiationPulse
       params:
@@ -75,11 +75,17 @@
     supercriticalSoundAtAnimationStart:
       collection: AnomalyPyroSupercritical
   - type: Sprite
-    sprite: Structures/Specific/Anomalies/pyro_anom.rsi
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_fire.rsi # Arcane-Edit: sprite: Structures/Specific/Anomalies/pyro_anom.rsi > sprite: _Arcane/Structures/Specific/Anomalies/anomaly_fire.rsi
     layers:
-    - state: anom
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
     - state: pulse
+      shader: unshaded # Arcane
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
@@ -130,16 +136,27 @@
       collection: AnomalyGravitySupercritical
     supercriticalDuration: 15s
   - type: Sprite
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_gravity.rsi # Arcane
     layers:
-    - state: anom2
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
-    - state: anom2-pulse
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: pulse
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
     radius: 5.0
-    energy: 20
-    color: "#1e070e"
+    # Arcane-Edit-Start: Orion anomaly resprite
+    energy: 5
+    color: "#3C5E8BFF"
+    # Arcane-Edit-End
     castShadows: false
   - type: GravityAnomaly
   - type: GravityWell
@@ -150,8 +167,10 @@
   - type: CanMoveInAir
   - type: RandomWalk
   - type: SingularityDistortion
-    intensity: 1000
-    falloffPower: 2.7
+    # Arcane-Edit-Start: Orion anomaly resprite
+    intensity: 50
+    falloffPower: 1.8
+    # Arcane-Edit-End
 
 - type: entity
   id: AnomalyElectricity
@@ -164,10 +183,19 @@
     supercriticalSoundAtAnimationStart:
       collection: AnomalyElectricitySupercritical
   - type: Sprite
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_electric.rsi # Arcane
     layers:
-    - state: anom3
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
-    - state: anom3-pulse
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: pulse
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
@@ -191,10 +219,19 @@
     supercriticalSoundAtAnimationStart:
       collection: AnomalyFleshSupercritical
   - type: Sprite
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_flesh.rsi # Arcane
     layers:
-    - state: anom5
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
-    - state: anom5-pulse
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: pulse
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
@@ -279,10 +316,19 @@
   suffix: Bluespace
   components:
   - type: Sprite
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_bluespace.rsi # Arcane
     layers:
-    - state: anom4
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
-    - state: anom4-pulse
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: pulse
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
@@ -328,11 +374,17 @@
   suffix: Ice
   components:
   - type: Sprite
-    sprite: Structures/Specific/Anomalies/ice_anom.rsi
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_ice.rsi # Arcane-Edit: sprite: Structures/Specific/Anomalies/ice_anom.rsi > sprite: _Arcane/Structures/Specific/Anomalies/anomaly_ice.rsi
     layers:
-    - state: anom
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
     - state: pulse
+      shader: unshaded # Arcane
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight
@@ -876,11 +928,17 @@
   suffix: Liquid
   components:
   - type: Sprite
-    sprite: Structures/Specific/Anomalies/liquid_anom.rsi
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_liquid.rsi # Arcane-Edit: sprite: Structures/Specific/Anomalies/liquid_anom.rsi > sprite: _Arcane/Structures/Specific/Anomalies/anomaly_liquid.rsi
     layers:
+    # Arcane-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    # Arcane-End
     - state: anom
+      shader: unshaded # Arcane
       map: ["enum.AnomalyVisualLayers.Base"]
     - state: pulse
+      shader: unshaded # Arcane
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: RandomSprite
@@ -996,11 +1054,17 @@
   suffix: Shadow
   components:
   - type: Sprite
-    sprite: Structures/Specific/Anomalies/shadow_anom.rsi
+    sprite: _Arcane/Structures/Specific/Anomalies/anomaly_shadow.rsi # Arcane-Edit: sprite: Structures/Specific/Anomalies/shadow_anom.rsi > sprite: _Arcane/Structures/Specific/Anomalies/anomaly_shadow.rsi
     layers:
-    - state: anom
+    # Arcane-Edit-Start: Orion anomaly resprite
+    - state: shadow-anomaly
+      shader: unshaded
+    - state: vfx
+      shader: unshaded
+    # Arcane-Edit-End
       map: ["enum.AnomalyVisualLayers.Base"]
     - state: pulse
+      shader: unshaded # Arcane
       map: ["enum.AnomalyVisualLayers.Animated"]
       visible: false
   - type: PointLight

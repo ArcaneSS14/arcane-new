@@ -383,13 +383,13 @@
         - enum.DamageStateVisualLayers.Base:
             medibot: ""
           enum.DamageStateVisualLayers.BaseUnshaded:
-            powered: Rainbow
+            powered-unshaded: Rainbow # Arcane-Edit: powered > powered-unshaded
   - type: Sprite
-    sprite: _Goobstation/Mobs/Silicon/Bots/medibot.rsi
+    sprite: _Arcane/Mobs/Silicon/Bots/medibot.rsi # Arcane-Edit: _Goobstation/Mobs/Silicon/Bots/medibot.rsi > _Arcane/Mobs/Silicon/Bots/medibot.rsi
     layers:
       - state: medibot
         map: [ "enum.DamageStateVisualLayers.Base" ]
-      - state: powered
+      - state: powered-unshaded # Arcane-Edit: powered > powered-unshaded
         map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
         shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: HTN
