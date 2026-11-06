@@ -92,6 +92,7 @@
   - type: Knowledge
     category: MartialArt
     experienceCost: 10
+    timeBetweenExperience: 1 # Arcane
     color: "#c70000"
     costs: null # Being able to learn any of these roundstart is too much
   - type: MartialArtsKnowledge
