@@ -25,7 +25,8 @@ public sealed partial class CustomizationSystem : EntitySystem
 
     public override void Shutdown()
     {
-        if (SpeechBubble.CustomBubbleFactory == CreateBubble)
+        Func<SpeechBubble.SpeechType, ChatMessage, EntityUid, SpeechBubble?> factory = CreateBubble;
+        if (object.Equals(SpeechBubble.CustomBubbleFactory, factory))
             SpeechBubble.CustomBubbleFactory = null;
         _examine.SetAdditionalMarkupTags();
         base.Shutdown();

@@ -16,7 +16,8 @@ public sealed class ResearchJournalSystem : EntitySystem
 
     public override void Shutdown()
     {
-        if (ResearchJournalWindow.Factory == CreateWindow)
+        Func<ResearchJournalWindow> factory = CreateWindow;
+        if (object.Equals(ResearchJournalWindow.Factory, factory))
             ResearchJournalWindow.Factory = null;
         base.Shutdown();
     }
