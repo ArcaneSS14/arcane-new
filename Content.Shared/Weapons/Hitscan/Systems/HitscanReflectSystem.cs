@@ -41,7 +41,8 @@ public sealed partial class HitscanReflectSystem : EntitySystem
         {
             var trace = data.Trace;
             trace.Ignored = trace.Ignored == null ? [data.HitEntity.Value] : [..trace.Ignored, data.HitEntity.Value];
-            RaiseLocalEvent(hitscan, ref trace);
+            args.NextTrace = trace;
+            args.SkipEffects = true;
             return;
         }
         // Arcane-End
@@ -56,6 +57,6 @@ public sealed partial class HitscanReflectSystem : EntitySystem
             Shooter = data.HitEntity.Value,
         };
 
-        RaiseLocalEvent(hitscan, ref hitFiredEvent);
+        args.NextTrace = hitFiredEvent; // Arcane-Edit: RaiseLocalEvent > fired by the raycast system after its effects
     }
 }

@@ -104,6 +104,18 @@ public struct AttemptHitscanRaycastFiredEvent
     /// Cancelled hitscans should not apply damage or trigger follow-up effects.
     /// </summary>
     public bool Cancelled;
+
+    // Arcane-Start
+    /// <summary>
+    /// A trace to fire once this one has drawn its effects, for hitscans that carry on after being cancelled.
+    /// </summary>
+    public HitscanTraceEvent? NextTrace;
+
+    /// <summary>
+    /// Set when <see cref="NextTrace"/> repeats this shot, so this one draws nothing and the shot is only drawn once.
+    /// </summary>
+    public bool SkipEffects;
+    // Arcane-End
 }
 
 /// <summary>

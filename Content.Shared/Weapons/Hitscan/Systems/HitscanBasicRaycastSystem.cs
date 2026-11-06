@@ -67,11 +67,6 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
 
         var distanceTried = result?.Distance ?? ent.Comp.MaxDistance;
 
-        // Do visuals without an event. They should always happen and putting it on the attempt event is weird!
-        // If more stuff gets added here, it should probably be turned into an event.
-        // Trauma - passed Shooter, no i will turn this into an event
-        FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
-
         // Admin logging
         if (result?.HitEntity != null)
         {
@@ -92,6 +87,16 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
 
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };
         RaiseLocalEvent(ent, ref attemptEvent);
+
+        // Arcane-Edit-Start
+        if (!attemptEvent.SkipEffects)
+            FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
+        // Arcane-Edit-End
+
+        // Arcane-Start
+        if (attemptEvent.NextTrace is { } nextTrace)
+            RaiseLocalEvent(ent, ref nextTrace);
+        // Arcane-End
 
         if (attemptEvent.Cancelled)
             return;

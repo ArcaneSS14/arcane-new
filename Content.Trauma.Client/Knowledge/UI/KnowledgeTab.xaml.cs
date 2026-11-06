@@ -48,6 +48,9 @@ public sealed partial class KnowledgeTab : Control
     {
         base.FrameUpdate(args);
 
+        if (!VisibleInTree)
+            return;
+
         _nextRefresh -= args.DeltaSeconds;
         if (_nextRefresh > 0f)
             return;
