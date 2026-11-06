@@ -8,14 +8,29 @@ namespace Content.Arcane.Shared.MartialArts;
 public sealed partial class CapoeiraParryWindowComponent : Component
 {
     /// <summary>
-    /// When the window closes, it also closes after a single attempt.
+    /// One attempt per strike that landed, oldest first.
     /// </summary>
     [DataField, AutoNetworkedField]
+    public List<CapoeiraParryAttempt> Attempts = new();
+}
+
+/// <summary>
+/// A single chance to deflect an incoming attack.
+/// </summary>
+[DataRecord, Serializable, NetSerializable]
+public partial record struct CapoeiraParryAttempt
+{
+    /// <summary>
+    /// When this attempt runs out.
+    /// </summary>
     public TimeSpan End;
 
     /// <summary>
-    /// The chance to deflect the next incoming attack.
+    /// The chance to deflect the attack.
     /// </summary>
-    [DataField, AutoNetworkedField]
     public float Chance;
+
+    public CapoeiraParryAttempt()
+    {
+    }
 }

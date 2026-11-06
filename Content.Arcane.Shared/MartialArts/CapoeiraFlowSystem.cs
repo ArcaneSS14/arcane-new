@@ -1,6 +1,7 @@
 using Content.Shared.Standing;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Trauma.Common.MartialArts;
+using Robust.Shared.Timing;
 
 namespace Content.Arcane.Shared.MartialArts;
 
@@ -9,6 +10,7 @@ namespace Content.Arcane.Shared.MartialArts;
 /// </summary>
 public sealed partial class CapoeiraFlowSystem : EntitySystem
 {
+    [Dependency] private IGameTiming _timing = default!;
     [Dependency] private StandingStateSystem _standing = default!;
 
     [SubscribeLocalEvent]
@@ -19,6 +21,7 @@ public sealed partial class CapoeiraFlowSystem : EntitySystem
 
         var comp = EnsureComp<CapoeiraFlowUserComponent>(args.User);
         comp.Flips++;
+        comp.LastFlip = _timing.CurTime;
         Dirty(args.User, comp);
     }
 
@@ -31,6 +34,7 @@ public sealed partial class CapoeiraFlowSystem : EntitySystem
 
         var comp = EnsureComp<CapoeiraFlowUserComponent>(args.Performer);
         comp.Spins++;
+        comp.LastSpin = _timing.CurTime;
         Dirty(args.Performer, comp);
     }
 }

@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Client.UserInterface.Controls;
-using Content.Trauma.Common.Knowledge; // Arcane
-using Content.Trauma.Common.Knowledge.Prototypes; // Arcane
-using Robust.Shared.Prototypes; // Arcane
-using Robust.Shared.Timing; // Arcane
+// Arcane-Start
+using Content.Trauma.Common.Knowledge;
+using Content.Trauma.Common.Knowledge.Prototypes;
+using Robust.Client.Player;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
+using System.Linq;
+// Arcane-End
 
 namespace Content.Trauma.Client.Knowledge.UI;
 
@@ -12,7 +16,10 @@ namespace Content.Trauma.Client.Knowledge.UI;
 public sealed partial class KnowledgeTab : Control
 {
     [Dependency] private IEntitySystemManager _system = default!;
-    [Dependency] private IPrototypeManager _proto = default!; // Arcane
+    // Arcane-Start
+    [Dependency] private IPlayerManager _players = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    // Arcane-End
     private readonly KnowledgeSystem _knowledge;
     private readonly SpriteSystem _sprite;
     // Arcane-Start
@@ -24,7 +31,6 @@ public sealed partial class KnowledgeTab : Control
     private readonly Dictionary<ProtoId<KnowledgeCategoryPrototype>, (Collapsible Group, BoxContainer Stack)> _groups = new();
     private readonly Dictionary<(ProtoId<KnowledgeCategoryPrototype>, string), KnowledgeEntry> _entries = new();
     private readonly HashSet<(ProtoId<KnowledgeCategoryPrototype>, string)> _current = new();
-    private EntityUid? _player;
     private float _nextRefresh;
     // Arcane-End
 
@@ -43,11 +49,16 @@ public sealed partial class KnowledgeTab : Control
         base.FrameUpdate(args);
 
         _nextRefresh -= args.DeltaSeconds;
-        if (_nextRefresh > 0f || _player is not { } player)
+        if (_nextRefresh > 0f)
             return;
 
         _nextRefresh = RefreshDelay;
-        UpdateKnowledgeTab(player);
+
+        // following the local entity drops the old character's skills as soon as it is left
+        if (_players.LocalEntity is { } player)
+            UpdateKnowledgeTab(player);
+        else
+            SetKnowledge(null);
     }
 
     /// <summary>
@@ -58,12 +69,11 @@ public sealed partial class KnowledgeTab : Control
     {
         TabContainer.SetTabTitle(this, Loc.GetString("trauma-knowledge-title"));
 
-        _player = player;
         SetKnowledge(_knowledge.GrabAllKnowledge(player));
     }
 
     /// <summary>
-    /// Shows a list sorted by category then name, reusing the controls of anything already shown.
+    /// Shows a list of skills, reusing the controls of anything already shown.
     /// </summary>
     public void SetKnowledge(List<(ProtoId<KnowledgeCategoryPrototype> Category, KnowledgeInfo Info)>? knowledge)
     {
@@ -78,7 +88,8 @@ public sealed partial class KnowledgeTab : Control
         var entryIndex = 0;
         var count = 0;
         var experts = 0;
-        foreach (var (groupId, info) in knowledge ?? [])
+        var sorted = (knowledge ?? []).OrderBy(skill => skill.Category).ThenBy(skill => skill.Info.Name).ThenBy(skill => skill.Info.Id);
+        foreach (var (groupId, info) in sorted)
         {
             if (groupId != lastGroup)
             {
@@ -90,7 +101,8 @@ public sealed partial class KnowledgeTab : Control
             var (group, stack) = EnsureGroup(groupId);
             SetPosition(group, groupIndex);
 
-            var key = (groupId, info.Name);
+            // display names aren't guaranteed to be unique
+            var key = (groupId, info.Id);
             _current.Add(key);
             if (!_entries.TryGetValue(key, out var entry))
             {

@@ -17,6 +17,7 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
+using System.Linq; // Arcane
 
 namespace Content.Shared.Weapons.Hitscan.Systems;
 
@@ -49,6 +50,8 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         var mapCords = _transform.ToMapCoordinates(args.FromCoordinates);
         var ray = new CollisionRay(mapCords.Position, args.ShotDirection, (int) ent.Comp.CollisionMask);
         var rayCastResults = _physics.IntersectRay(mapCords.MapId, ray, ent.Comp.MaxDistance, shooter, false);
+        if (args.Ignored is { } ignored) // Arcane
+            rayCastResults = rayCastResults.Where(hit => !ignored.Contains(hit.HitEntity)); // Arcane
 
         var target = args.Target;
         // If you are in a container, use the raycast result
@@ -84,6 +87,7 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
             Hitscan = ent.Owner,
             Shooter = args.Shooter,
             HitEntity = result?.HitEntity,
+            Trace = args, // Arcane
         };
 
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };

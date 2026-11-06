@@ -36,6 +36,16 @@ public sealed partial class HitscanReflectSystem : EntitySystem
 
         args.Cancelled = true;
 
+        // Arcane-Start: the same shot again, as if the target wasn't there
+        if (ev.PassThrough)
+        {
+            var trace = data.Trace;
+            trace.Ignored = trace.Ignored == null ? [data.HitEntity.Value] : [..trace.Ignored, data.HitEntity.Value];
+            RaiseLocalEvent(hitscan, ref trace);
+            return;
+        }
+        // Arcane-End
+
         var fromEffect = Transform(data.HitEntity.Value).Coordinates;
 
         var hitFiredEvent = new HitscanTraceEvent

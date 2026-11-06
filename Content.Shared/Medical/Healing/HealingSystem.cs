@@ -133,9 +133,8 @@ public sealed partial class HealingSystem : EntitySystem
             return;
         }
 
-        // Update our self heal delay so it shortens as we heal more damage.
-        if (args.User == target.Owner)
-            args.Args.Delay = healing.Delay * GetScaledHealingPenalty(target.Owner, healing.SelfHealPenaltyMultiplier) * GetSkillTimeMultiplier(args.User); // Arcane-Edit: self-heal penalty > self-heal penalty and skill
+        // Update our delay so it shortens as we heal more damage and learn.
+        args.Args.Delay = GetHealingDelay((args.Used.Value, healing), target.Owner, args.User); // Arcane-Edit: self-heal only > every repeat
     }
 
     private bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target)
@@ -238,10 +237,7 @@ public sealed partial class HealingSystem : EntitySystem
             _popupSystem.PopupClient(msg, target, target, PopupType.Medium);
         }
 
-        var delay = isNotSelf || healing.Comp.SelfHealPenaltyMultiplier == 0f // Trauma - fix healing toolbox taking 1000 years to use
-            ? healing.Comp.Delay
-            : healing.Comp.Delay * GetScaledHealingPenalty(target, healing.Comp.SelfHealPenaltyMultiplier);
-        delay *= GetSkillTimeMultiplier(user); // Arcane
+        var delay = GetHealingDelay(healing, target.Owner, user); // Arcane-Edit: calculated here > shared with repeats
 
         // Play sound when starting the healing action
         // Goobstation

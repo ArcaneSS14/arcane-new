@@ -15,7 +15,7 @@ using Robust.Shared.Timing;
 namespace Content.Arcane.Shared.MartialArts;
 
 /// <summary>
-/// Handles <see cref="CapoeiraParryComponent"/>: each strike that lands gives one attempt to deflect a strike.
+/// Handles <see cref="CapoeiraParryComponent"/>: each strike that lands gives one attempt to deflect an attack.
 /// </summary>
 public sealed partial class CapoeiraParrySystem : EntitySystem
 {
@@ -38,16 +38,23 @@ public sealed partial class CapoeiraParrySystem : EntitySystem
         var range = Math.Max(ent.Comp.MaxLevel - ent.Comp.MinLevel, 1);
         var progress = Math.Clamp((float) (level - ent.Comp.MinLevel) / range, 0f, 1f);
 
+        var now = _timing.CurTime;
         var window = EnsureComp<CapoeiraParryWindowComponent>(args.User);
-        window.End = _timing.CurTime + ent.Comp.WindowTime;
-        window.Chance = MathHelper.Lerp(ent.Comp.MinChance, ent.Comp.MaxChance, progress);
+        window.Attempts.RemoveAll(attempt => now >= attempt.End);
+        window.Attempts.Add(new CapoeiraParryAttempt
+        {
+            End = now + ent.Comp.WindowTime,
+            Chance = MathHelper.Lerp(ent.Comp.MinChance, ent.Comp.MaxChance, progress),
+        });
         Dirty(args.User, window);
     }
 
     [SubscribeLocalEvent]
     private void OnBeforeHarmfulAction(Entity<CapoeiraParryWindowComponent> ent, ref BeforeHarmfulActionEvent args)
     {
-        if (args.Cancelled || TryComp<MeleeWeaponComponent>(args.Used, out var melee) && !melee.CanBeParried)
+        if (args.Cancelled
+            || !args.CanRiposte
+            || TryComp<MeleeWeaponComponent>(args.Used, out var melee) && !melee.CanBeParried)
             return;
 
         if (TryParry(ent, args.User))
@@ -65,21 +72,30 @@ public sealed partial class CapoeiraParrySystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnHitscan(Entity<CapoeiraParryWindowComponent> ent, ref HitScanReflectAttemptEvent args)
     {
-        // the shot carries on past the user
-        if (!args.Reflected && TryParry(ent, args.Shooter))
-            args.Reflected = true;
+        if (args.Reflected || !TryParry(ent, args.Shooter))
+            return;
+
+        args.Reflected = true;
+        args.PassThrough = true;
     }
 
     private bool TryParry(Entity<CapoeiraParryWindowComponent> ent, EntityUid? attacker)
     {
-        if (attacker == ent.Owner || _timing.CurTime >= ent.Comp.End || _standing.IsDown(ent.Owner))
+        if (attacker == ent.Owner || _standing.IsDown(ent.Owner))
+            return false;
+
+        var now = _timing.CurTime;
+        var attempts = ent.Comp.Attempts;
+        attempts.RemoveAll(attempt => now >= attempt.End);
+        if (attempts.Count == 0)
             return false;
 
         // one strike is one attempt, whether it works or not
-        ent.Comp.End = TimeSpan.Zero;
+        var chance = attempts[0].Chance;
+        attempts.RemoveAt(0);
         Dirty(ent);
 
-        if (!SharedRandomExtensions.PredictedProb(_timing, ent.Comp.Chance, GetNetEntity(ent)))
+        if (!SharedRandomExtensions.PredictedProb(_timing, chance, GetNetEntity(ent)))
             return false;
 
         _popup.PopupPredicted(Loc.GetString("capoeira-parry-popup"), ent, attacker);

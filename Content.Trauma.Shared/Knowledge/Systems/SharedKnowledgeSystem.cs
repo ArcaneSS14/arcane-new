@@ -355,7 +355,7 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
         var name = meta.EntityName;
         var desc = meta.EntityDescription;
         var levelStr = Loc.GetString("knowledge-info-description", ("level", ent.Comp.NetLevel), ("mastery", GetMasteryString(ent)));
-        var knowledgeInfo = new KnowledgeInfo(name, desc, levelStr, ent.Comp.Color, ent.Comp.Sprite, ent.Comp.LearnedLevel, ent.Comp.NetLevel, ent.Comp.Experience, ent.Comp.ExperienceCost);
+        var knowledgeInfo = new KnowledgeInfo(name, desc, levelStr, ent.Comp.Color, ent.Comp.Sprite, ent.Comp.LearnedLevel, ent.Comp.NetLevel, ent.Comp.Experience, ent.Comp.ExperienceCost, meta.EntityPrototype?.ID ?? name); // Arcane-Edit: no id > prototype id
         // TODO: make this an event raised on ent
         if (_langQuery.TryComp(ent, out var languageKnowledge))
         {

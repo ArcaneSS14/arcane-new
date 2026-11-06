@@ -20,6 +20,18 @@ public sealed partial class CapoeiraFlowUserComponent : Component
     public int Flips;
 
     /// <summary>
+    /// When the last spin was started, so that a client seeing this mob for the first time doesn't replay it.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan LastSpin;
+
+    /// <summary>
+    /// When the last somersault was started, so that a client seeing this mob for the first time doesn't replay it.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan LastFlip;
+
+    /// <summary>
     /// Client only: the value of <see cref="Spins"/> that was last shown.
     /// </summary>
     [ViewVariables]

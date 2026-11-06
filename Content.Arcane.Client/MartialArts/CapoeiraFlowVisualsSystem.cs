@@ -21,6 +21,14 @@ public sealed partial class CapoeiraFlowVisualsSystem : EntitySystem
     private const int SpinSteps = 4;
 
     private static readonly TimeSpan SpinTime = TimeSpan.FromSeconds(0.4);
+    private static readonly TimeSpan StaleTime = TimeSpan.FromSeconds(1);
+
+    [SubscribeLocalEvent]
+    private void OnShutdown(Entity<CapoeiraFlowUserComponent> ent, ref ComponentShutdown args)
+    {
+        if (ent.Comp.Spinning && TryComp<SpriteComponent>(ent, out var sprite))
+            sprite.EnableDirectionOverride = false;
+    }
 
     public override void FrameUpdate(float frameTime)
     {
@@ -31,7 +39,7 @@ public sealed partial class CapoeiraFlowVisualsSystem : EntitySystem
         while (query.MoveNext(out var uid, out var comp, out var sprite))
         {
             UpdateSpin((uid, comp), sprite, now);
-            UpdateFlip((uid, comp), sprite);
+            UpdateFlip((uid, comp), sprite, now);
         }
     }
 
@@ -41,9 +49,12 @@ public sealed partial class CapoeiraFlowVisualsSystem : EntitySystem
         if (comp.Spins != comp.ShownSpins && now >= comp.SpinEnd)
         {
             comp.ShownSpins = comp.Spins;
-            comp.SpinEnd = now + SpinTime;
-            comp.SpinStart = _transform.GetWorldRotation(ent).GetCardinalDir();
-            comp.Spinning = true;
+            if (now - comp.LastSpin <= StaleTime)
+            {
+                comp.SpinEnd = now + SpinTime;
+                comp.SpinStart = _transform.GetWorldRotation(ent).GetCardinalDir();
+                comp.Spinning = true;
+            }
         }
 
         if (!comp.Spinning)
@@ -64,7 +75,7 @@ public sealed partial class CapoeiraFlowVisualsSystem : EntitySystem
         sprite.EnableDirectionOverride = true;
     }
 
-    private void UpdateFlip(Entity<CapoeiraFlowUserComponent> ent, SpriteComponent sprite)
+    private void UpdateFlip(Entity<CapoeiraFlowUserComponent> ent, SpriteComponent sprite, TimeSpan now)
     {
         var comp = ent.Comp;
         var running = _animation.HasRunningAnimation(ent, FlipKey);
@@ -84,7 +95,8 @@ public sealed partial class CapoeiraFlowVisualsSystem : EntitySystem
             return;
 
         comp.ShownFlips = comp.Flips;
-        PlayFlip(ent, sprite.Rotation);
+        if (now - comp.LastFlip <= StaleTime)
+            PlayFlip(ent, sprite.Rotation);
     }
 
     private void PlayFlip(EntityUid uid, Angle start)

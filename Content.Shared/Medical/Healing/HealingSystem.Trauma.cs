@@ -276,6 +276,11 @@ public sealed partial class HealingSystem
         args.Handled = true;
         RaiseAppliedHealing(args.User); // Arcane
 
+        // Arcane-Start: repeats use the skill gained from this application
+        if (args.Repeat)
+            args.Args.Delay = GetHealingDelay((args.Used.Value, healing), ent, args.User);
+        // Arcane-End
+
         if (args.Repeat || dontRepeat)
             return;
 
