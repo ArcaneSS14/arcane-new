@@ -101,6 +101,10 @@ public sealed class ClumsyStatusTest : InteractionTest
         await UseInHand(); // Chamber the gun
         await RunSeconds(1.5f); // Trauma - was 0.5s, pistols can pistol whip so its melee was preventing firing so soon after picking it up
         await AttemptShoot(Target);
+        // Arcane-Start
+        // Apply the shot state on the client before deleting the gun and receiving physics deltas.
+        await RunUntilSynced();
+        // Arcane-End
         // <Trauma>
         await Delete(gun);
         AssertDeleted(gun);
