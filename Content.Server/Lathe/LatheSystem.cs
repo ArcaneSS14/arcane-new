@@ -31,7 +31,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-using Content.Shared.Construction.Events; // Arcane
+using Content.Shared.Construction; // Arcane // Arcane
 
 namespace Content.Server.Lathe
 {

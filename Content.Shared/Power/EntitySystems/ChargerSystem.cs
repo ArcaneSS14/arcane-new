@@ -8,7 +8,7 @@ using Content.Shared.Storage.Components;
 using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
-using Content.Shared.Construction.Events; // Arcane
+using Content.Shared.Construction; // Arcane // Arcane
 
 namespace Content.Shared.Power.EntitySystems;
 

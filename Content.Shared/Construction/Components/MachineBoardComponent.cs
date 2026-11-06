@@ -4,6 +4,8 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Content.Shared.Construction.Prototypes; // Arcane
 
+using Content.Arcane.Common.Construction.Prototypes; // Arcane
+
 namespace Content.Shared.Construction.Components;
 
 [RegisterComponent, NetworkedComponent]
@@ -60,3 +62,15 @@ public partial struct GenericPartInfo
     [DataField]
     public LocId? ExamineName;
 }
+
+// Arcane-Start
+[RegisterComponent]
+public sealed partial class MachinePartComponent : Component
+{
+    [DataField(required: true)]
+    public ProtoId<MachinePartPrototype> Part;
+
+    [DataField]
+    public int Tier = 1;
+}
+// Arcane-End

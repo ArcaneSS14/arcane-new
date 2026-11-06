@@ -17,6 +17,12 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
+using Content.Arcane.Common.Research;
+
+using Content.Arcane.Shared.Research.Components;
+
+using Content.Arcane.Shared.Research;
+
 namespace Content.Arcane.Server.Research.Systems;
 
 public sealed partial class DestructiveAnalyzerSystem : EntitySystem

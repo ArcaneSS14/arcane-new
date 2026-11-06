@@ -5,6 +5,8 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Content.Shared.Construction.Prototypes; // Arcane
 
+using Content.Arcane.Common.Construction.Prototypes; // Arcane
+
 namespace Content.Server.Construction.Components
 {
     [RegisterComponent]

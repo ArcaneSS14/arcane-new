@@ -2,6 +2,8 @@ using Content.Shared.Research.Components;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
+using Content.Arcane.Shared.Research.Components;
+
 namespace Content.Arcane.Client.Research.UI;
 
 [UsedImplicitly]

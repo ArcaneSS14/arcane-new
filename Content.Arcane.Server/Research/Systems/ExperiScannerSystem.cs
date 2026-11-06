@@ -11,6 +11,8 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 
+using Content.Arcane.Shared.Research.Components;
+
 namespace Content.Arcane.Server.Research.Systems;
 
 public sealed partial class ExperiScannerSystem : EntitySystem

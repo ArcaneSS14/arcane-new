@@ -19,10 +19,23 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Direction = Robust.Shared.Maths.Direction;
 
+// Arcane-Start
+using Content.Client.Cooldown;
+using Content.Shared.Timing.Components;
+using Content.Shared.Timing.Systems;
+// Arcane-End
+
 namespace Content.Client.Hands
 {
     public sealed partial class ShowHandItemOverlay : Overlay
     {
+        // Arcane-Start
+        [Dependency] private IUserInterfaceManager _ui = default!;
+
+        private UseDelaySystem? _useDelay;
+        private readonly CooldownGraphic _arcaneCooldownGraphic = CreateArcaneCooldownGraphic();
+        // Arcane-End
+
         [Dependency] private IConfigurationManager _cfg = default!;
         [Dependency] private IInputManager _inputManager = default!;
         [Dependency] private IClyde _clyde = default!;
@@ -161,5 +174,62 @@ namespace Content.Client.Hands
 
             screen.DrawTexture(_renderBackbuffer.Texture, mousePos.Position - halfSize + offsetVec, Color.White.WithAlpha(0.75f));
         }
+
+        // Arcane-Start
+        private static CooldownGraphic CreateArcaneCooldownGraphic()
+        {
+            var graphic = new CooldownGraphic
+            {
+                SetSize = new Vector2(64f, 64f),
+            };
+
+            graphic.Arrange(UIBox2.FromDimensions(Vector2.Zero, graphic.SetSize));
+            return graphic;
+        }
+
+        private void DrawArcaneCooldown(in OverlayDrawArgs args, EntityUid? handEntity, ScreenCoordinates mousePosition)
+        {
+            if (!_cfg.GetCVar(CCVars.HudCursorCooldownShow))
+            {
+                _arcaneCooldownGraphic.Visible = false;
+                return;
+            }
+
+            if (handEntity is not { } held
+                || args.ViewportControl is not Control viewport
+                || !_entMan.TryGetComponent(held, out UseDelayComponent? delay))
+            {
+                _arcaneCooldownGraphic.Visible = false;
+                return;
+            }
+
+            _useDelay ??= _entMan.System<UseDelaySystem>();
+            if (!_useDelay.GetLastActiveDelay((held, delay), out var cooldown))
+            {
+                _arcaneCooldownGraphic.Visible = false;
+                return;
+            }
+
+            _arcaneCooldownGraphic.FromTime(cooldown.StartTime, cooldown.EndTime);
+            if (!_arcaneCooldownGraphic.Visible)
+                return;
+
+            viewport.AddChild(_arcaneCooldownGraphic);
+            try
+            {
+                _ui.RenderControl(args.RenderHandle, _arcaneCooldownGraphic,
+                    (Vector2i) (mousePosition.Position - _arcaneCooldownGraphic.PixelSize / 2));
+            }
+            finally
+            {
+                viewport.RemoveChild(_arcaneCooldownGraphic);
+            }
+        }
+
+        private void DisposeArcaneCooldown()
+        {
+            _arcaneCooldownGraphic.Dispose();
+        }
+        // Arcane-End
     }
 }

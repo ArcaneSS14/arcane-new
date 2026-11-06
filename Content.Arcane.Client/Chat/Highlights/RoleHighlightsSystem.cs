@@ -8,6 +8,8 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 
+using Content.Arcane.Common.Chat;
+
 namespace Content.Arcane.Client.Chat.Highlights;
 
 public sealed partial class RoleHighlightsSystem : EntitySystem
@@ -77,7 +79,7 @@ public sealed partial class RoleHighlightsSystem : EntitySystem
 
     private string GetDefaultHighlights(ProtoId<JobPrototype> job)
     {
-        var key = RoleHighlightDefaults.GetKey(job);
+        var key = RoleHighlightDefaults.GetKey(job.Id);
         if (!Loc.TryGetString(key, out var highlights))
             return string.Empty;
 

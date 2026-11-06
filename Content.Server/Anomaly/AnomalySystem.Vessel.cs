@@ -7,6 +7,8 @@ using Content.Shared.Interaction;
 using Content.Shared.Research.Components;
 using Content.Shared.Research; // Arcane
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Server.Anomaly;
 
 /// <summary>

@@ -11,6 +11,14 @@ namespace Content.Client.Options.UI
     {
         [Dependency] private IClientAdminManager _adminManager = default!;
 
+        // Arcane-Start
+        /// <summary>Allows client modules to attach their own options tabs.</summary>
+        public static event Action<OptionsMenu>? ConfigureExtensions;
+
+        /// <summary>Reloads values in attached options tabs alongside the standard tabs.</summary>
+        public event Action? ReloadExtensions;
+        // Arcane-End
+
         public OptionsMenu()
         {
             RobustXamlLoader.Load(this);
@@ -23,7 +31,7 @@ namespace Content.Client.Options.UI
             Tabs.SetTabTitle(4, Loc.GetString("ui-options-tab-accessibility"));
             Tabs.SetTabTitle(5, Loc.GetString("ui-options-tab-admin"));
             Tabs.SetTabTitle(6, Loc.GetString("ui-options-tab-network"));
-            Tabs.SetTabTitle(7, Loc.GetString("ui-options-tab-customization")); // Arcane
+            ConfigureExtensions?.Invoke(this); // Arcane
 
             UpdateTabs();
         }
@@ -38,7 +46,7 @@ namespace Content.Client.Options.UI
             AccessibilityTab.Control.ReloadValues();
             AudioTab.Control.ReloadValues();
             AdminOptionsTab.Control.ReloadValues();
-            CustomizationTab.Control.ReloadValues(); // Arcane
+            ReloadExtensions?.Invoke(); // Arcane
         }
     }
 }

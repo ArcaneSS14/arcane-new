@@ -7,6 +7,8 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Shared.Research.Systems;
 
 public abstract partial class SharedResearchSystem : EntitySystem

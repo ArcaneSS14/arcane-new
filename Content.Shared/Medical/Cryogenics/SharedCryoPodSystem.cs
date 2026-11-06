@@ -32,8 +32,9 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 // Arcane-Start
 using Content.Shared.Construction;
-using Content.Shared.Construction.Events;
 // Arcane-End
+using Content.Arcane.Common.Construction; // Arcane
+
 namespace Content.Shared.Medical.Cryogenics;
 
 public abstract partial class SharedCryoPodSystem : EntitySystem

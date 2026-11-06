@@ -6,6 +6,8 @@ using Content.Server.Research.Systems;
 using Content.Shared.Research.Components;
 using Content.Shared.Research; // Arcane
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Server.Research.Disk
 {
     public sealed partial class ResearchDiskSystem : EntitySystem

@@ -78,11 +78,16 @@ namespace Content.Client.Chat.UI
         // man down
         public event Action<EntityUid, SpeechBubble>? OnDied;
 
+        // Arcane-Start
+        /// <summary>Optional presentation factory, evaluated before the standard speech bubbles.</summary>
+        public static Func<SpeechType, ChatMessage, EntityUid, SpeechBubble?>? CustomBubbleFactory { get; set; }
+        // Arcane-End
+
         public static SpeechBubble CreateSpeechBubble(SpeechType type, ChatMessage message, EntityUid senderEntity)
         {
             // Arcane-Start
-            if (IoCManager.Resolve<IConfigurationManager>().GetCVar(ArcaneCVars.ChatRunechat))
-                return new RunechatSpeechBubble(message, senderEntity, type);
+            if (CustomBubbleFactory?.Invoke(type, message, senderEntity) is { } custom)
+                return custom;
             // Arcane-End
 
             switch (type)

@@ -24,6 +24,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Content.Shared.Weapons.Ranged.Components;
 
+using Content.Arcane.Common.Camera; // Arcane
+
 namespace Content.Trauma.Shared.Projectiles;
 
 /// <summary>
@@ -37,10 +39,7 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
     [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private SharedCameraRecoilSystem _recoil = default!;
-    // Arcane-Start
-    [Dependency] private ArcaneScreenshakeSystem _arcaneScreenshake = default!;
-    private static readonly ArcaneScreenshakeParameters ArcaneProjectileHitShake = new(0.35f, 1.4f, 0.014f);
-    // Arcane-End
+    private static readonly ArcaneScreenshakeParameters ArcaneProjectileHitShake = new(0.35f, 1.4f, 0.014f); // Arcane
     [Dependency] private SharedColorFlashEffectSystem _color = default!;
     [Dependency] private SharedDestructibleSystem _destructible = default!;
     [Dependency] private SharedGunSystem _gun = default!;
@@ -208,7 +207,7 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
 
                 // Arcane-Start
                 if (_timing.IsFirstTimePredicted)
-                    _arcaneScreenshake.Screenshake(target, ArcaneProjectileHitShake, null);
+                    ArcaneScreenshakeRequest.Raise(EntityManager, target, ArcaneProjectileHitShake, null);
                 // Arcane-End
             }
 

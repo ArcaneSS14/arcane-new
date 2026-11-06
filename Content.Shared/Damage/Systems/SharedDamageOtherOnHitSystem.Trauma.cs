@@ -19,6 +19,8 @@ using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Player;
 
+using Content.Arcane.Common.Camera; // Arcane
+
 namespace Content.Shared.Damage.Systems;
 
 /// <summary>
@@ -31,7 +33,6 @@ public abstract partial class SharedDamageOtherOnHitSystem
     [Dependency] private SharedGunSystem _gun = default!;
     [Dependency] private SharedCameraRecoilSystem _recoil = default!;
     [Dependency] private SharedColorFlashEffectSystem _color = default!;
-    [Dependency] private ArcaneScreenshakeSystem _arcaneScreenshake = default!; // Arcane
 
     private List<EntityUid> _target = new(1);
 
@@ -84,7 +85,7 @@ public abstract partial class SharedDamageOtherOnHitSystem
         {
             var direction = body.LinearVelocity.Normalized();
             _recoil.KickCamera(args.Target, direction * 0.1f); // Arcane-Edit: direction > direction * 0.1f
-            _arcaneScreenshake.Screenshake(args.Target, new ArcaneScreenshakeParameters(0.35f, 1.4f, 0.014f), null); // Arcane
+            ArcaneScreenshakeRequest.Raise(EntityManager, args.Target, new ArcaneScreenshakeParameters(0.35f, 1.4f, 0.014f), null); // Arcane
         }
     }
 }

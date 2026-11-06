@@ -5,6 +5,8 @@ using Content.Shared.Research.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
 
+using Content.Arcane.Common.Research;
+
 namespace Content.Arcane.Server.Research.Systems;
 
 public sealed partial class ResearchServerControlConsoleSystem : EntitySystem

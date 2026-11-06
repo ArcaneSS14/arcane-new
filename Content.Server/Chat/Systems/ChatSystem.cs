@@ -30,6 +30,11 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 
+// Arcane-Start
+using Content.Shared.Cuffs.Components;
+using Content.Shared.Popups;
+// Arcane-End
+
 namespace Content.Server.Chat.Systems;
 
 // TODO refactor whatever active warzone this class and chatmanager have become
@@ -39,6 +44,8 @@ namespace Content.Server.Chat.Systems;
 /// </summary>
 public sealed partial class ChatSystem : SharedChatSystem
 {
+    [Dependency] private SharedPopupSystem _arcanePopup = default!; // Arcane
+
     // <Trauma>
     [Dependency] private CommonGhostVisibilitySystem _ghostVisibility = default!;
     [Dependency] private CommonScryingOrbSystem _scrying = default!;
@@ -347,6 +354,38 @@ public sealed partial class ChatSystem : SharedChatSystem
                 break;
         }
     }
+
+    // Arcane-Start: radio restrictions (Orion #339)
+    /// <summary>
+    /// Whether the source can talk on the radio. If not, the message is turned into a plain whisper.
+    /// </summary>
+    private bool TryUseRadio(EntityUid source, string radioMessage, ref string message, ref InGameICChatType type)
+    {
+        if (CanUseRadio(source))
+            return true;
+
+        message = radioMessage;
+        type = InGameICChatType.Whisper;
+        return false;
+    }
+
+    private bool CanUseRadio(EntityUid source)
+    {
+        if (_mobStateSystem.IsCritical(source))
+        {
+            _arcanePopup.PopupEntity(Loc.GetString("chat-manager-cannot-radio-while-critical"), source, source);
+            return false;
+        }
+
+        if (TryComp<CuffableComponent>(source, out var cuffable) && cuffable.CuffedHandCount > 0)
+        {
+            _arcanePopup.PopupEntity(Loc.GetString("chat-manager-cannot-radio-with-bound-hands"), source, source);
+            return false;
+        }
+
+        return true;
+    }
+    // Arcane-End
 }
 
 /// <summary>

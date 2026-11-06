@@ -1,5 +1,18 @@
 using Robust.Shared.Serialization;
 
+// Arcane-Start
+using Robust.Shared.Audio;
+using Robust.Shared.GameStates;
+// Arcane-End
+
+// Arcane-Start
+using Content.Shared.Construction.Prototypes;
+using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes;
+// Arcane-End
+
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Shared.Research.Components
 {
     /// <summary>
@@ -76,4 +89,85 @@ namespace Content.Shared.Research.Components
             SelectedServerId = selectedServerId;
         }
     }
+
+    // Arcane-Start
+    [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+    public sealed partial class ExperiScannerComponent : Component
+    {
+        [DataField, AutoNetworkedField]
+        public float ScanRange = 2f;
+
+        [DataField]
+        public SoundSpecifier SuccessSound = new SoundPathSpecifier("/Audio/Machines/scan_finish.ogg");
+
+        [DataField]
+        public SoundSpecifier FailureSound = new SoundPathSpecifier("/Audio/Machines/scanbuzz.ogg");
+
+        [DataField]
+        public string LastResult = string.Empty;
+    }
+    // Arcane-End
+
+    // Arcane-Start
+    [RegisterComponent]
+    public sealed partial class ExperimentalDestructiveScannerComponent : Component
+    {
+        [DataField]
+        public string ContainerId = "experimental-destructive-scanner-container";
+
+        [DataField]
+        public TimeSpan ScanDuration = TimeSpan.FromSeconds(3.5f);
+
+        /// <summary>
+        /// Scan duration without parts, taken at the first parts refresh before any upgrade applies.
+        /// </summary>
+        [DataField]
+        public TimeSpan? BaseScanDuration;
+
+        [DataField]
+        public TimeSpan CapsuleStepDuration = TimeSpan.FromSeconds(1.15f);
+
+        public bool IsProcessing;
+
+        public string LastSubject = string.Empty;
+
+        public string LastResult = string.Empty;
+
+        [DataField]
+        public SoundSpecifier SuccessSound = new SoundPathSpecifier("/Audio/Machines/scan_finish.ogg");
+
+        [DataField]
+        public SoundSpecifier FailureSound = new SoundPathSpecifier("/Audio/Machines/buzz-two.ogg");
+
+        [DataField]
+        public AudioParams AudioParams = AudioParams.Default.WithVolume(-8f).WithVariation(0.25f);
+
+        [DataField]
+        public ProtoId<MachinePartPrototype> ServoPart = "Servo";
+    }
+    // Arcane-End
+
+    // Arcane-Start
+    [RegisterComponent]
+    public sealed partial class ResearchAnalyzableComponent : Component
+    {
+        [DataField]
+        public Dictionary<string, List<ResearchPointAmount>> MethodPointRewards = new();
+
+        [DataField]
+        public List<string> SupportedMethods = new();
+
+        [DataField]
+        public List<string> UnlockTechnologies = new();
+
+        [DataField]
+        public List<string> RevealTechnologies = new();
+
+        [DataField]
+        public string? DiscoveryTrigger;
+
+        [DataField]
+        public List<string> ExperimentActions = new();
+    }
+    // Arcane-End
 }

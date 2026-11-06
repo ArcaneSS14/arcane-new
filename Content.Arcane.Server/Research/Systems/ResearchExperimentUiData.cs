@@ -7,6 +7,8 @@ using Content.Shared.Atmos.Prototypes;
 using Content.Shared.Chemistry.Reagent;
 using Robust.Shared.Prototypes;
 
+using Content.Arcane.Shared.Research.Components;
+
 namespace Content.Arcane.Server.Research.Systems;
 
 public static class ResearchExperimentUiData

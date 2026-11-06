@@ -5,6 +5,8 @@ using Content.Shared.Interaction;
 using Robust.Shared.Exceptions;
 using Robust.Shared.Network;
 
+using Content.Arcane.Common.Interaction; // Arcane
+
 namespace Content.Shared.DoAfter;
 
 public abstract partial class SharedDoAfterSystem : EntitySystem
@@ -195,7 +197,7 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
 
         // Arcane-Start
         if (doAfter.Args.FaceTarget)
-            _forcedFacing.RefreshForcedFacing(doAfter.Args.User);
+            ForcedFacingRefreshRequest.Raise(EntityManager, doAfter.Args.User);
         // Arcane-End
     }
 

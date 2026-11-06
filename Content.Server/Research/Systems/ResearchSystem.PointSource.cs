@@ -3,6 +3,8 @@ using Content.Server.Research.Components;
 using Content.Shared.Research.Components;
 using Content.Shared.Research; // Arcane
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Server.Research.Systems;
 
 public sealed partial class ResearchSystem

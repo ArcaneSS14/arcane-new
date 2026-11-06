@@ -13,8 +13,9 @@ using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 // Arcane-Start
 using Content.Shared.Construction;
-using Content.Shared.Construction.Events;
 // Arcane-End
+
+using Content.Arcane.Common.Construction; // Arcane
 
 namespace Content.Shared.SmartFridge;
 

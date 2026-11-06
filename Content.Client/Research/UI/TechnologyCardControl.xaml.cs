@@ -10,6 +10,8 @@ using System.Linq;
 using Content.Shared.Research;
 // Arcane-End
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Client.Research.UI;
 
 [GenerateTypedNameReferences]

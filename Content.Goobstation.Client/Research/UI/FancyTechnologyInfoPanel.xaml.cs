@@ -13,6 +13,8 @@ using System.Linq;
 using Content.Shared.Research.Components;
 // Arcane-End
 
+using Content.Arcane.Common.Research; // Arcane
+
 namespace Content.Goobstation.Client.Research.UI;
 
 [GenerateTypedNameReferences]

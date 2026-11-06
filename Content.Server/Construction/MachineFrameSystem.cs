@@ -10,6 +10,8 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Content.Shared.Construction.Prototypes; // Arcane
 
+using Content.Arcane.Common.Construction.Prototypes; // Arcane
+
 namespace Content.Server.Construction;
 
 public sealed partial class MachineFrameSystem : EntitySystem
@@ -19,7 +21,6 @@ public sealed partial class MachineFrameSystem : EntitySystem
     [Dependency] private StackSystem _stack = default!;
     [Dependency] private ConstructionSystem _construction = default!;
     [Dependency] private SharedPopupSystem _popupSystem = default!;
-    [Dependency] private PartExchangerSystem _partExchanger = default!; // Arcane
 
     public override void Initialize()
     {
@@ -54,7 +55,9 @@ public sealed partial class MachineFrameSystem : EntitySystem
             return;
 
         // Arcane-Start
-        if (_partExchanger.TryStartExchange(uid, args))
+        var exchange = new MachinePartExchangeRequest(uid, args);
+        RaiseLocalEvent(ref exchange);
+        if (exchange.Handled)
             return;
         // Arcane-End
 
@@ -433,3 +436,9 @@ public sealed partial class MachineFrameSystem : EntitySystem
         args.PushMarkup(Loc.GetString("machine-frame-component-on-examine-label", ("board", Name(board))));
     }
 }
+
+// Arcane-Start
+/// <summary>Allows the part-exchanger module to handle an interaction before frame assembly.</summary>
+[ByRefEvent]
+public record struct MachinePartExchangeRequest(EntityUid Target, InteractUsingEvent Interaction, bool Handled = false);
+// Arcane-End

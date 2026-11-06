@@ -6,6 +6,8 @@ using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
 // Arcane-End
 
+using Content.Arcane.Common.Construction.Prototypes; // Arcane
+
 namespace Content.Shared.Power.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]

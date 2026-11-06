@@ -1,4 +1,4 @@
-// Arcane-Start
+using Content.Arcane.Common.Chat;
 using Content.Arcane.Client.Chat.Highlights;
 using Content.Client.UserInterface.Systems.Chat;
 using Content.IntegrationTests.Fixtures;
@@ -100,4 +100,3 @@ public sealed class RoleHighlightsPersistenceTests : GameTest
             .Contains("Failed to load role highlights", StringComparison.Ordinal);
     }
 }
-// Arcane-End

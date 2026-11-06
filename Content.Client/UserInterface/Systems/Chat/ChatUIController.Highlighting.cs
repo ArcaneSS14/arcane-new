@@ -15,6 +15,13 @@ using Robust.Shared.Utility;
 using static Content.Client.CharacterInfo.CharacterInfoSystem;
 using Content.Client.Audio; // Arcane
 
+// Arcane-Start
+using Content.Shared.Roles;
+using Robust.Shared.Prototypes;
+// Arcane-End
+
+using Content.Arcane.Common.Chat; // Arcane
+
 namespace Content.Client.UserInterface.Systems.Chat;
 
 /// <summary>
@@ -218,7 +225,7 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         if (job != null)
         {
             // Convert the job title to kebab-case and use it as a key for the loc file.
-            var jobKey = RoleHighlightDefaults.GetKey(job.Value); // Arcane-Edit: construct locale suffix > use shared locale key
+            var jobKey = RoleHighlightDefaults.GetKey(job.Value.Id); // Arcane-Edit: construct locale suffix > use shared locale key
 
             // Arcane-Start: prefer the player's per-role highlights over defaults
             if (TryGetSavedRoleHighlights(job.Value, out var savedHighlights))
@@ -234,4 +241,35 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
         ReloadHighlights();
         _charInfoIsAttach = false;
     }
+
+    // Arcane-Start
+    private bool TryGetSavedRoleHighlights(ProtoId<JobPrototype> job, out string? highlights)
+    {
+        var ev = new GetRoleHighlightsEvent(job);
+        _ent.EventBus.RaiseEvent(EventSource.Local, ref ev);
+        highlights = ev.Highlights;
+        return !string.IsNullOrWhiteSpace(highlights);
+    }
+    // Arcane-End
 }
+
+// Arcane-Start
+/// <summary>
+///     Requests the owner-specific editor for a job's automatic chat highlights.
+/// </summary>
+[ByRefEvent]
+public readonly record struct OpenRoleHighlightEditorEvent(ProtoId<JobPrototype> job)
+{
+    public ProtoId<JobPrototype> Job { get; } = job;
+}
+
+/// <summary>
+///     Allows a client module to provide saved automatic highlights for a job.
+/// </summary>
+[ByRefEvent]
+public record struct GetRoleHighlightsEvent(ProtoId<JobPrototype> job)
+{
+    public ProtoId<JobPrototype> Job { get; } = job;
+    public string? Highlights { get; set; }
+}
+// Arcane-End

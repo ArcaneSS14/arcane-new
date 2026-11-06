@@ -15,6 +15,10 @@ using Content.Shared.Research;
 using Robust.Client.Graphics;
 // Arcane-End
 
+using Content.Arcane.Common.Research; // Arcane
+
+using Content.Client.Research.UI; // Arcane
+
 namespace Content.Goobstation.Client.Research.UI;
 
 [GenerateTypedNameReferences]
@@ -23,7 +27,7 @@ public sealed partial class FancyResearchConsoleMenu : FancyWindow
     public Action<string>? OnTechnologyCardPressed;
     public Action? OnServerButtonPressed;
     // Arcane-Start
-    private FancyResearchConsoleLogWindow? _journalWindow;
+    private ResearchJournalWindow? _journalWindow;
     private ResearchConsoleBoundInterfaceState? _lastState;
     // Arcane-End
 
@@ -221,7 +225,9 @@ public sealed partial class FancyResearchConsoleMenu : FancyWindow
     {
         if (_journalWindow == null)
         {
-            _journalWindow = new FancyResearchConsoleLogWindow();
+            _journalWindow = ResearchJournalWindow.Factory?.Invoke();
+            if (_journalWindow == null)
+                return;
             _journalWindow.OnClose += () => _journalWindow = null;
         }
 

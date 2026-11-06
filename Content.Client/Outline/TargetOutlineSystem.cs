@@ -9,6 +9,8 @@ using Robust.Client.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
+using Content.Arcane.Common.CCVar; // Arcane
+
 namespace Content.Client.Outline;
 
 /// <summary>
@@ -29,7 +31,10 @@ public sealed partial class TargetOutlineSystem : EntitySystem
     [Dependency] private SharedTransformSystem _transformSystem = default!;
     [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
     [Dependency] private SpriteSystem _sprite = default!;
-    [Dependency] private InteractionOutlineColorSystem _outlineColors = default!; // Arcane
+    // Arcane-Start
+    private Color _validOutlineColor = Color.FromHex(ArcaneCVars.ValidInteractionOutlineColor.DefaultValue);
+    private Color _invalidOutlineColor = Color.FromHex(ArcaneCVars.InvalidInteractionOutlineColor.DefaultValue);
+    // Arcane-End
 
     private bool _enabled = false;
 
@@ -87,13 +92,11 @@ public sealed partial class TargetOutlineSystem : EntitySystem
 
         _shaderTargetValid = ProtoMan.Index(ShaderTargetValid).InstanceUnique();
         _shaderTargetInvalid = ProtoMan.Index(ShaderTargetInvalid).InstanceUnique();
-        _outlineColors.ColorsChanged += RefreshOutlineColors; // Arcane
         RefreshOutlineColors(); // Arcane
     }
 
     public override void Shutdown()
     {
-        _outlineColors.ColorsChanged -= RefreshOutlineColors; // Arcane
         base.Shutdown();
     }
 
@@ -206,10 +209,18 @@ public sealed partial class TargetOutlineSystem : EntitySystem
     }
 
     // Arcane-Start
+    /// <summary>Updates outline colors and refreshes existing shader instances.</summary>
+    public void SetOutlineColors(Color valid, Color invalid)
+    {
+        _validOutlineColor = valid;
+        _invalidOutlineColor = invalid;
+        RefreshOutlineColors();
+    }
+
     private void RefreshOutlineColors()
     {
-        _shaderTargetValid?.SetParameter("outline_color", _outlineColors.GetOutlineColor(true));
-        _shaderTargetInvalid?.SetParameter("outline_color", _outlineColors.GetOutlineColor(false));
+        _shaderTargetValid?.SetParameter("outline_color", _validOutlineColor);
+        _shaderTargetInvalid?.SetParameter("outline_color", _invalidOutlineColor);
     }
     // Arcane-End
 }

@@ -7,10 +7,14 @@ using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 
+using Content.Shared.Whitelist; // Arcane
+
 namespace Content.Goobstation.Shared.Clothing.Systems;
 
 public sealed partial class ClothingCoatingSystem : EntitySystem
 {
+    [Dependency] private EntityWhitelistSystem _whitelist = default!; // Arcane
+
     [Dependency] private SharedPopupSystem _popup = default!;
 
     private StringBuilder sb = new();
@@ -67,4 +71,15 @@ public sealed partial class ClothingCoatingSystem : EntitySystem
 
         args.PushMarkup(Loc.GetString("clothing-coating-inspect", ("coatings", sb.ToString())));
     }
+
+    // Arcane-Start: coating blacklist (Orion #437)
+    private bool IsCoatingBlocked(Entity<ClothingCoatingComponent> ent, EntityUid target, EntityUid user)
+    {
+        if (!_whitelist.IsWhitelistPass(ent.Comp.Blacklist, target))
+            return false;
+
+        _popup.PopupClient(Loc.GetString("clothing-coating-blocked", ("target", target), ("source", ent.Owner)), target, user);
+        return true;
+    }
+    // Arcane-End
 }
