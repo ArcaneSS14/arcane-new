@@ -28,7 +28,7 @@ public sealed class PracticeExperienceTest : GameTest
     [SidedDependency(Side.Server)] private readonly SharedKnowledgeSystem _knowledge = null!;
 
     private int Experience(EntityUid user, EntProtoId skill)
-        => _knowledge.GetKnowledge(user, skill)!.Value.Comp.Experience;
+        => _knowledge.GetKnowledge(_knowledge.GetContainer(user)!.Value, skill)!.Value.Comp.Experience;
 
     private void Learn(EntityUid user, EntProtoId skill, int level = 0)
         => _knowledge.EnsureKnowledge(_knowledge.GetContainer(user)!.Value, skill, level);
