@@ -14,7 +14,7 @@
     sprite: Structures/Power/Generation/Singularity/emitter.rsi
     layers:
     - state: projectile
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
   - type: Fixtures
     fixtures:

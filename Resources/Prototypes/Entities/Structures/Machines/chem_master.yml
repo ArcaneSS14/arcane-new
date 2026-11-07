@@ -31,7 +31,7 @@
     layers:
     - state: mixer_empty
     - state: mixer_screens
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
       visible: false # Arcane
     # Arcane-Start

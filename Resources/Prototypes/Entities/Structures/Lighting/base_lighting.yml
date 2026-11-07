@@ -20,6 +20,7 @@
     anchored: true
   - type: Pullable
   - type: Clickable
+  - type: WallMount # Arcane
   - type: InteractionOutline
   - type: Sprite
     offset: 0, 1
@@ -29,7 +30,7 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
   - type: PointLight
     color: "#c9c7c2" # 5000K color temp | Arcane-Edit: Changed color/temp
     energy: 1.5 # Arcane-Edit: 0.8 > 1.5
@@ -94,7 +95,7 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
   - type: Destructible
     thresholds:
     - trigger:
@@ -153,6 +154,10 @@
       types:
         Heat: 2
     popupText: powered-light-component-burn-hand
+  # Arcane-Start
+  - type: LightingOverlay
+    spriteLow: _Arcane/Effects/LightMasks/lightmask_lamp_low.png
+  # Arcane-End
 
 - type: entity
   parent: PoweredlightEmpty
@@ -181,9 +186,9 @@
   - type: PoweredLight
     hasLampOnSpawn: LedLightTube
   - type: PointLight
-    radius: 10 # Orion-Edit: 15 > 10
-    energy: 0.7 # Orion-Edit: 1 > 0.7
-    softness: 1 # Orion-Edit: 0.9 > 1
+    radius: 10 # Arcane-Edit: 15 > 10
+    energy: 0.7 # Arcane-Edit: 1 > 0.7
+    softness: 1 # Arcane-Edit: 0.9 > 1
     color: "#EEEEFF"
   - type: DamageOnInteract
     damage:
@@ -198,8 +203,8 @@
   components:
   - type: PointLight
     radius: 15
-    energy: 1
-    softness: 0.9
+    energy: 0.7 # Arcane-Edit: 1 > 0.7
+    softness: 1 # Arcane-Edit: 0.9 > 1
     color: "#EEEEFF"
 
 #Exterior lights
@@ -227,9 +232,9 @@
   suffix: Always Powered, Exterior
   components:
   - type: PointLight
-    radius: 8 # Orion-Edit: 12 > 8
-    energy: 0.7 # Orion-Edit: 4.5 > 0.7
-    softness: 1 # Orion-Edit: 0.5 > 1
+    radius: 8 # Arcane-Edit: 10 # Arcane-Edit: 12 > 8 > 10
+    energy: 0.7 # Arcane-Edit: 0.7 # Arcane-Edit: 4.5 > 0.7 > 0.7
+    softness: 1 # Arcane-Edit: 1 # Arcane-Edit: 0.5 > 1 > 1
     color: "#B4FCF0"
 
 #Sodium lights
@@ -242,8 +247,8 @@
     hasLampOnSpawn: SodiumLightTube
   - type: PointLight
     radius: 10
-    energy: 0.7 # Orion-Edit: 2.5 > 0.7
-    softness: 0.9
+    energy: 0.7 # Arcane-Edit: 0.7 # Arcane-Edit: 2.5 > 0.7 > 0.7
+    softness: 1 # Arcane-Edit: 0.9 > 1
     color: "#FFAF38"
 
 - type: entity
@@ -253,8 +258,8 @@
   components:
   - type: PointLight
     radius: 10
-    energy: 0.7 # Orion-Edit: 4 > 0.7
-    softness: 1 # Orion-Edit: 0.5 > 1
+    energy: 0.7 # Arcane-Edit: 4 > 0.7
+    softness: 1 # Arcane-Edit: 0.5 > 1
     color: "#FFAF38"
 
 #Small lights
@@ -274,9 +279,9 @@
       sprite: Structures/Wallmounts/Lighting/light_small.rsi
       state: base
     - type: PointLight
-      energy: 0.7 # Orion-Edit: 1.0 > 0.7
-      radius: 4 # Orion-Edit: 6 > 4
-      softness: 1 # Orion-Edit: 1.1 > 1
+      energy: 0.7 # Arcane-Edit: 1.0 > 0.7
+      radius: 4 # Arcane-Edit: 6 > 4
+      softness: 1 # Arcane-Edit: 1.1 > 1
       enabled: true
     - type: Fixtures
       fixtures:
@@ -303,6 +308,11 @@
     - type: Construction
       graph: LightFixture
       node: bulbLight
+    # Arcane-Start
+    - type: LightingOverlay
+      sprite: _Arcane/Effects/LightMasks/lightmask_bulb.png
+      spriteLow: _Arcane/Effects/LightMasks/lightmask_bulb_low.png
+    # Arcane-End
 
 - type: entity
   parent: SmallLight
@@ -362,7 +372,7 @@
   - type: PointLight
     enabled: true
     radius: 8
-    energy: 0.7 # Orion-Edit: 1 > 0.7
+    energy: 0.7 # Arcane-Edit: 1 > 0.7
     softness: 1
     color: "#EEEEFF"
   - type: PoweredLight
@@ -431,8 +441,8 @@
   components:
   - type: PointLight
     enabled: false
-    radius: 3.5 # Orion-Edit: 5 > 3.5
-    energy: 2 # Orion-Edit: 0.6 > 2
+    radius: 3.5 # Arcane-Edit: 5 > 3.5
+    energy: 2 # Arcane-Edit: 0.6 > 2
     offset: "0, 0.4"
     color: "#7CFC00"
     lightMask: ConeDouble
@@ -460,7 +470,7 @@
     - state: emergency_light_on
       map: [ "enum.EmergencyLightVisualLayers.LightOn" ]
       color: "#7CFC00"
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Appearance
   - type: Construction

@@ -1,0 +1,32 @@
+blend_mode add;
+
+uniform sampler2D LIGHT_TEXTURE;
+uniform highp float intensity;
+
+highp float lightPeak(highp vec2 uv) {
+    highp vec3 light = texture2D(LIGHT_TEXTURE, uv).rgb;
+    return max(max(light.r, light.g), light.b);
+}
+
+void fragment() {
+    highp vec2 screenUV = FRAGCOORD.xy * SCREEN_PIXEL_SIZE;
+    highp vec3 light = texture2D(LIGHT_TEXTURE, screenUV).rgb;
+    highp float peak = max(max(light.r, light.g), light.b);
+    highp float highlight = smoothstep(0.6, 1.0, peak);
+
+    if (highlight <= 0.0) {
+        discard;
+    }
+
+    // The light texture is smooth, so four taps are enough to tell how crowded the area is.
+    const highp float MIN_HIGHLIGHT = 0.25;
+    highp vec2 r = 31.0 * SCREEN_PIXEL_SIZE;
+    highp float surrounding = (lightPeak(screenUV + r)
+        + lightPeak(screenUV - r)
+        + lightPeak(screenUV + vec2(r.x, -r.y))
+        + lightPeak(screenUV + vec2(-r.x, r.y))) * 0.25;
+    highlight *= mix(1.0, MIN_HIGHLIGHT, smoothstep(0.5, 1.0, surrounding));
+
+    // Additive blending adds this to the scene, so the screen doesn't have to be copied.
+    COLOR = vec4(light * highlight * intensity, 1.0);
+}

@@ -42,7 +42,7 @@
     layers:
     - state: frame
     - map: ["scanner"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       state: empty
     - state: wires
       map: ["enum.WiresVisualLayers.MaintenancePanel"]

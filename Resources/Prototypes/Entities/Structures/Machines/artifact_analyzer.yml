@@ -11,7 +11,7 @@
     layers:
     - state: icon
     - state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
   - type: Physics
     bodyType: Static
@@ -117,7 +117,7 @@
     - state: glass
     - state: lights
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:

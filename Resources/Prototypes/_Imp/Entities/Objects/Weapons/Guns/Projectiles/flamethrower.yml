@@ -10,7 +10,7 @@
     sprite: _Impstation/Objects/Weapons/Guns/Projectiles/flamer.rsi
     layers:
     - state: fireball
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
     muzzleFlash: null
   - type: Projectile

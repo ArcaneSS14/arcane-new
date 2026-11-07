@@ -1970,7 +1970,7 @@
       overlaySprite:
         sprite: Mobs/Silicon/chassis.rsi
         state: xenoborg_heavy_rad
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: RadiationSource
       intensity: 1 # Trauma - was 4
       slope: 1

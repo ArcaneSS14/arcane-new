@@ -192,7 +192,7 @@
     layers:
     - state: icon
     - state: icon-unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   # Arcane-Start: built from an inert bag and a bluespace anomaly core
   - type: Construction
     graph: BagOfHoldingSatchel

@@ -87,7 +87,7 @@
     layers:
     - state: peel
     - state: primed
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: TriggerOnSlip
   - type: ExplodeOnTrigger
   # Arcane-Start

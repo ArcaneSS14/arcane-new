@@ -82,5 +82,5 @@
     sprite: _Shitmed/Structures/Machines/abductor_camera_console.rsi
     layers:
     - state: eye
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: AiEye

@@ -22,7 +22,7 @@
     - sprite: Structures/Specific/carp_rift.rsi
       state: icon
       color: "#569fff"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: InteractionOutline
   - type: Clickable
   - type: PointLight

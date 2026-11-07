@@ -101,10 +101,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-blade
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Parry # Trauma - replaces Reflect
     reflects:
     - Energy
@@ -142,7 +142,7 @@
     - state: e_sword_blade
       color: "#FFFFFF"
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
   - type: Item
     sprite: Objects/Weapons/Melee/e_sword-inhands.rsi
@@ -208,7 +208,7 @@
       - state: e_sword_blade
         color: "#FFFFFF"
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "blade" ]
   - type: MeleeWeapon
     animationRotation: 135 # WWDP
@@ -290,7 +290,7 @@
       - state: e_sword_blade
         color: "#FFFFFF"
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "blade" ]
   - type: Item
     size: Tiny
@@ -370,7 +370,7 @@
       - state: e_cutlass_blade
         color: "#e95151"
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "blade" ]
   - type: Item
     sprite: Objects/Weapons/Melee/e_cutlass.rsi
@@ -460,7 +460,7 @@
       - state: e_sword_double_blade
         color: "#FFFFFF"
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "blade" ]
   - type: Item
     size: Small
@@ -516,12 +516,12 @@
     - state: hypereutactic_blade
       color: "#FFFFFF"
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
     - state: hypereutactic_gem
       color: "#FFFFFF"
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "gem" ]
   - type: Item
     size: Small

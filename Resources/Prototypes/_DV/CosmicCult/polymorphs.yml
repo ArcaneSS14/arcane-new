@@ -67,7 +67,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: humanoid
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     drawdepth: SmallMobs
     noRot: true
   - type: PointLight
@@ -110,7 +110,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: spider
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -121,7 +121,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: diona
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -132,7 +132,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: moth
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -143,7 +143,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: vox
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -154,7 +154,7 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: snail
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -165,4 +165,4 @@
     sprite: _DV/CosmicCult/Effects/ability_lapsepolymorph.rsi
     layers:
       - state: crab
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow

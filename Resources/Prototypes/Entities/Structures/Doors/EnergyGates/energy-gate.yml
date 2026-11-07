@@ -10,10 +10,10 @@
     layers:
     - state: security
     - state: idle-security
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "barrier" ]
     - state: direction
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -71,8 +71,9 @@
     node: energyGate
   - type: DirectionalArrowIndicator
   - type: IconSmooth
-    key: walls
-    mode: NoSprite
+    # Arcane-Edit-Start
+    key: doors
+    # Arcane-Edit-End
   - type: PointLight
     energy: 2.2
     color: "#cc3a41"
@@ -111,10 +112,10 @@
     layers:
     - state: regular
     - state: idle
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "barrier" ]
     - state: direction
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.TurnstileVisualLayers.Base:

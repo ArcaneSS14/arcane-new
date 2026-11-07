@@ -15,7 +15,7 @@
     color: "#ffff33"
     layers:
     - state: spark
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -69,7 +69,7 @@
     color: "#ffff33"
     layers:
     - state: tesla_projectile
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     enabled: true
     color: "#ffff33"
@@ -103,7 +103,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -150,7 +150,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -196,7 +196,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -270,7 +270,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
     layers:
     - state: crossbowbolt
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:

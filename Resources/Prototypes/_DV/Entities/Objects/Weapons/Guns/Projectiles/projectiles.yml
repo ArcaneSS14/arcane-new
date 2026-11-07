@@ -18,7 +18,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: heavylaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
   - type: Physics
   - type: Fixtures
@@ -56,7 +56,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser_greyscale
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: blue
   - type: Ammo
   - type: Physics
@@ -95,7 +95,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/energy_bolt.rsi
     layers:
     - state: bolt_red_heavy
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Ammo
   - type: Physics
   - type: Fixtures

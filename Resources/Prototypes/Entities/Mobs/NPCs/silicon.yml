@@ -391,7 +391,7 @@
         map: [ "enum.DamageStateVisualLayers.Base" ]
       - state: powered-unshaded # Arcane-Edit: powered > powered-unshaded
         map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: HTN
     rootTask:
       task: MedibotCompound

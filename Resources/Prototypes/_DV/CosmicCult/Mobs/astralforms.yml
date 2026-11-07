@@ -18,9 +18,9 @@
     sprite: _DV/CosmicCult/Mobs/astralform.rsi
     layers:
     - state: effect-underlay
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: ascended-body
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: NoSlip
   - type: Eye
     drawFov: false
@@ -67,7 +67,7 @@
     sprite: _DV/CosmicCult/Mobs/astralform.rsi
     layers:
     - state: base-body
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     drawdepth: Ghosts
   - type: NoSlip
   - type: CosmicAstralBody
@@ -127,7 +127,7 @@
     sprite: _DV/CosmicCult/Mobs/astralrogue.rsi
     layers:
     - state: base
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     drawdepth: Ghosts
   - type: NoSlip
   - type: Eye

@@ -27,7 +27,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/selectable_ammo.rsi
     layers:
     - state: omnilaser-yellow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectOrangeDisabler
     damage:
@@ -68,7 +68,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/selectable_ammo.rsi
     layers:
     - state: omnilaser-blue
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectDisabler
     damage:
@@ -105,7 +105,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectDisabler
     damage:
@@ -142,7 +142,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/selectable_ammo.rsi
     layers:
     - state: omnilaser-green
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectOrangeDisabler
     damage:
@@ -177,7 +177,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: heavylaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectOrangeDisabler
     damage:
@@ -214,7 +214,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/selectable_ammo.rsi
     layers:
     - state: omnilaser-pink
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectDisabler
     damage:
@@ -249,7 +249,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: omnilaser_greyscale
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectKinetic
     damage:
@@ -277,7 +277,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/selectable_ammo.rsi
     layers:
     - state: omnilaser-yellow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectDisabler
     damage:

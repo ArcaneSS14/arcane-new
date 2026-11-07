@@ -13,6 +13,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing; // Arcane
 using static Robust.Shared.Maths.Color;
 
 namespace Content.Client.Overlays;
@@ -24,6 +25,7 @@ public sealed class EntityHealthBarOverlay : Overlay
 {
     private readonly IEntityManager _entManager;
     private readonly IPrototypeManager _prototype;
+    private readonly IGameTiming _timing; // Arcane
 
     private readonly SharedTransformSystem _transform;
     private readonly MobStateSystem _mobStateSystem;
@@ -38,10 +40,18 @@ public sealed class EntityHealthBarOverlay : Overlay
     public HashSet<string> DamageContainers = new();
     public ProtoId<StatusIconPrototype>? StatusIcon;
 
+    // Arcane-Start: Vital damage goes through the body parts of the mob, which is too much to do every frame.
+    private static readonly TimeSpan ProgressUpdateInterval = TimeSpan.FromSeconds(0.25);
+    private static readonly TimeSpan CachePruneInterval = TimeSpan.FromSeconds(10);
+    private readonly Dictionary<EntityUid, (TimeSpan NextUpdate, (float ratio, bool inCrit)? Progress)> _cachedProgress = new();
+    private TimeSpan _nextCachePrune;
+    // Arcane-End
+
     public EntityHealthBarOverlay(IEntityManager entManager, IPrototypeManager prototype)
     {
         _entManager = entManager;
         _prototype = prototype;
+        _timing = IoCManager.Resolve<IGameTiming>(); // Arcane
         _transform = _entManager.System<SharedTransformSystem>();
         _mobStateSystem = _entManager.System<MobStateSystem>();
         _mobThresholdSystem = _entManager.System<MobThresholdSystem>();
@@ -93,7 +103,7 @@ public sealed class EntityHealthBarOverlay : Overlay
                 continue;
 
             // we are all progressing towards death every day
-            if (CalcProgress(uid, mobStateComponent, damageableComponent, mobThresholdsComponent) is not { } deathProgress)
+            if (GetCachedProgress(uid, mobStateComponent, damageableComponent, mobThresholdsComponent) is not { } deathProgress) // Arcane-Edit: CalcProgress > GetCachedProgress
                 continue;
 
             var worldPosition = _transform.GetWorldPosition(xform);
@@ -131,6 +141,32 @@ public sealed class EntityHealthBarOverlay : Overlay
 
         handle.SetTransform(Matrix3x2.Identity);
     }
+
+    // Arcane-Start
+    private (float ratio, bool inCrit)? GetCachedProgress(EntityUid uid, MobStateComponent component, DamageableComponent dmg, MobThresholdsComponent thresholds)
+    {
+        var now = _timing.RealTime;
+
+        // Entries of deleted mobs have expired by now. Live ones are simply calculated again, as they would be anyway.
+        if (now >= _nextCachePrune)
+        {
+            _nextCachePrune = now + CachePruneInterval;
+
+            foreach (var (cachedUid, entry) in _cachedProgress)
+            {
+                if (now >= entry.NextUpdate)
+                    _cachedProgress.Remove(cachedUid);
+            }
+        }
+
+        if (_cachedProgress.TryGetValue(uid, out var cached) && now < cached.NextUpdate)
+            return cached.Progress;
+
+        var progress = CalcProgress(uid, component, dmg, thresholds);
+        _cachedProgress[uid] = (now + ProgressUpdateInterval, progress);
+        return progress;
+    }
+    // Arcane-End
 
     /// <summary>
     /// Returns a ratio between 0 and 1, and whether the entity is in crit.

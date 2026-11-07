@@ -5,7 +5,7 @@
   - type: Sprite
     drawdepth: BelowMobs
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.EffectLayers.Unshaded" ]
       sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
       state: muzzle_bullet
@@ -26,7 +26,7 @@
     drawdepth: BelowMobs
     offset: 0.15, 0
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.EffectLayers.Unshaded" ]
       sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
       state: omnilaser_flash
@@ -40,7 +40,7 @@
     drawdepth: BelowMobs
     offset: 0.15, 0
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.EffectLayers.Unshaded" ]
       sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
       state: heavylaser_flash

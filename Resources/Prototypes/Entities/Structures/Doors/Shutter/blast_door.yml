@@ -65,8 +65,9 @@
   - type: SoundBlocker # Trauma
     soundBlockPercent: 0.8
   - type: IconSmooth
-    key: walls
-    mode: NoSprite
+    # Arcane-Edit-Start
+    key: doors
+    # Arcane-Edit-End
   - type: PlacementReplacement
     key: blastdoors
 

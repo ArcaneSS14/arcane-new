@@ -14,7 +14,7 @@
     layers:
       - state: icon
       - state: translator
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: [ "enum.ToggleableVisuals.Layer", "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Appearance

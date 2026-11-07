@@ -13,13 +13,13 @@
     layers:
     - state: base
     - state: powered
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - sprite: Effects/portal.rsi
       state: portal-gray
       map: ["portal"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: ApcPowerReceiver
     powerLoad: 2500

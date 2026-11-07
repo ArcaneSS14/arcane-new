@@ -13,7 +13,7 @@
     noRot: true
     layers:
     - state: bluespace_lifeline
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: EmitSoundOnSpawn
     sound:
       path: /Audio/_Goobstation/Weapons/ChronoLegionnaire/stasisgun_reload.ogg
@@ -36,7 +36,7 @@
     noRot: true
     layers:
     - state: bluespace_lifeline
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SpawnOnDespawn
     prototype: AnomalyCoreBluespace
   - type: EmitSoundOnSpawn

@@ -11,7 +11,7 @@
     layers:
     - state: base
     - state: lights_bottom
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["lights_bottom"]
     - state: thumper_unpowered
       visible: false
@@ -19,7 +19,7 @@
     - state: thumper
       map: ["thumper"]
     - state: lights_top
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["lights_top"]
   - type: Appearance
   - type: GenericVisualizer

@@ -11,7 +11,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: canister-1
       map: ["enum.SolutionContainerLayers.Fill"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: Item
     size: Small

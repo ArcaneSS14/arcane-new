@@ -11,7 +11,7 @@
     - state: base
     - state: screen
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
     - state: packing

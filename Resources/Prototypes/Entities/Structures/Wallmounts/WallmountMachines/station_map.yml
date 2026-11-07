@@ -6,10 +6,11 @@
   suffix: Wall broken
   components:
   - type: Sprite
-    sprite: Structures/Machines/station_map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
+    offset: 0, -0.25 # Arcane
     drawdepth: WallMountedItems
     layers:
-    - state: station_map_broken
+    - state: broken # Arcane-Edit: station_map_broken > broken
   - type: Destructible
     thresholds:
     - trigger:
@@ -34,15 +35,18 @@
   - type: Appearance
   - type: StationMap
   - type: Sprite
-    sprite: Structures/Machines/station_map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
+    offset: 0, -0.25 # Arcane
     layers:
-    - state: station_map0
+    - state: base # Arcane-Edit: station_map0 > base
     - state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Icon
-    sprite: Structures/Machines/station_map.rsi
-    state: station_map0
+    # Arcane-Edit-Start: Structures/Machines/station_map.rsi, station_map0 > Arcane resprite
+    sprite: Structures/Wallmounts/station-map.rsi
+    state: base
+    # Arcane-Edit-End
   - type: GenericVisualizer
     visuals:
       enum.PowerDeviceVisuals.Powered:
@@ -108,18 +112,21 @@
   - type: WallMount
     arc: 360
   - type: Sprite
-    sprite: Structures/Machines/station_map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
+    offset: 0, -0.25 # Arcane
     layers:
-    - state: station_map_frame1
+    - state: frame1 # Arcane-Edit: station_map_frame1 > frame1
       map: [ "enum.ConstructionVisuals.Layer" ]
   - type: Appearance
   - type: GenericVisualizer
     visuals:
       enum.ConstructionVisuals.Key:
         enum.ConstructionVisuals.Layer:
-          assembly: { state: station_map_frame0 }
-          wired: { state: station_map_frame1 }
-          electronics: { state: station_map_frame2 }
+          # Arcane-Edit-Start: station_map_frameN > frameN
+          assembly: { state: frame0 }
+          wired: { state: frame1 }
+          electronics: { state: frame2 }
+          # Arcane-Edit-End
   - type: Construction
     graph: StationMap
     node: assembly

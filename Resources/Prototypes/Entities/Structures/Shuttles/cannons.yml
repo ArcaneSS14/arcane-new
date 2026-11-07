@@ -52,7 +52,7 @@
     - state: lse-400c
     - state: mag-unshaded-9
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ContainerContainer
     containers:
       machine_board: !type:Container
@@ -104,7 +104,7 @@
     - state: lse-1200c
     - state: mag-unshaded-9
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ContainerContainer
     containers:
       machine_board: !type:Container

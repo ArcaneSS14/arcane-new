@@ -13,10 +13,13 @@
     noRot: true
   - type: IconSmooth
     key: stone
-    additionalKeys:
-    - doors
-    index: 0
-    base: stone
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stone, doors ]
+      base: stone
+      index: 0
+    # Arcane-Edit-End
   - type: Icon
     state: full
   - type: Sprite
@@ -74,7 +77,7 @@
         "gib":
           Primed:
             state: gibtonite_active
-            shader: unshaded
+            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
             visible: true
           Unprimed:
             state: gibtonite_inactive
@@ -495,8 +498,13 @@
       - *SoundStoneBreak
   - type: IconSmooth
     key: stone
-    index: 0
-    base: stone
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stone, doors ]
+      base: stone
+      index: 0
+    # Arcane-Edit-End
   - type: Icon
     sprite: Structures/Walls/stone-dirt.rsi
     state: full

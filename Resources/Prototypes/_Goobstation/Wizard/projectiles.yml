@@ -10,7 +10,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StunOnCollide
     stunAmount: 6
     knockdownAmount: 6
@@ -103,7 +103,7 @@
     sprite: _Goobstation/Wizard/Projectiles/spellcard.rsi
     layers:
     - state: red
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "base" ]
   - type: Reflective
     reflective: Magic
@@ -163,7 +163,7 @@
   - type: Sprite
     layers:
     - state: purple
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "base" ]
   - type: Trail
     color: "#AA00FFDD"
@@ -185,7 +185,7 @@
   - type: Sprite
     layers:
     - state: purple
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "base" ]
   - type: Trail
     color: "#AA00FFDD"
@@ -222,7 +222,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: arcane_barrage
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Reflective
     reflective: Magic
   - type: Projectile
@@ -289,7 +289,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm_cyan
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -337,7 +337,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm_red
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -377,7 +377,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: bluespace
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -408,7 +408,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: blastwave
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -435,7 +435,7 @@
     sprite: Structures/Specific/Anomalies/ice_anom.rsi
     layers:
     - state: bullet
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -463,7 +463,7 @@
     layers:
     - state: chronobolt
       color: black
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     deleteOnCollide: false
     penetrate: true
@@ -534,7 +534,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: declone
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     deleteOnCollide: false
     penetrationThreshold: 200
@@ -557,7 +557,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: ice
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -620,7 +620,7 @@
     sprite: _Goobstation/Wizard/Projectiles/magic.rsi
     layers:
     - state: solarflare
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     damage:
       types:
@@ -650,7 +650,7 @@
     sprite: _Goobstation/Wizard/Projectiles/magic.rsi
     layers:
     - state: soulslash
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     soundHit:
       path: /Audio/_Goobstation/Wizard/crackandbleed.ogg
@@ -690,7 +690,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Reflective
     reflective: Magic
   - type: PointLight

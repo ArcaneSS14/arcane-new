@@ -13,7 +13,7 @@
       map: ["enum.LatheVisualLayers.IsRunning"]
     - state: engi
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: inserting
       map: ["enum.MaterialStorageVisualLayers.Inserting"]
@@ -88,7 +88,7 @@
       map: ["enum.LatheVisualLayers.IsRunning"]
     - state: cargo
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: inserting
       map: ["enum.MaterialStorageVisualLayers.Inserting"]
@@ -154,7 +154,7 @@
       map: ["enum.LatheVisualLayers.IsRunning"]
     - state: sci
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: inserting
       map: ["enum.MaterialStorageVisualLayers.Inserting"]
@@ -245,7 +245,7 @@
       map: ["enum.LatheVisualLayers.IsRunning"]
     - state: service
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: inserting
       map: ["enum.MaterialStorageVisualLayers.Inserting"]

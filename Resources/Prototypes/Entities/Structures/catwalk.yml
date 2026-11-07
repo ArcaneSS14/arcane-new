@@ -19,7 +19,12 @@
     state: catwalk_preview
   - type: IconSmooth
     key: catwalk
-    base: catwalk_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ catwalk ]
+      base: catwalk_
+    # Arcane-Edit-End
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepCatwalk

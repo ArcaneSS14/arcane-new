@@ -12,7 +12,7 @@
     - state: plantanalyzer
     - state: unlit
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     storedRotation: -90
   - type: ActivatableUI

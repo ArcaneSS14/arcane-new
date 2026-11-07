@@ -625,7 +625,7 @@
       - state: icon
       - state: icon-light
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         map: [ "light" ]
   - type: Appearance
   - type: Clothing
@@ -657,7 +657,7 @@
     clothingVisuals:
       head:
       - state: on-equipped-HELMET
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     enabled: false
     radius: 1.4

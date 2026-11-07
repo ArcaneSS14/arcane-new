@@ -22,7 +22,7 @@
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StorageFillVisualizer
     maxFillLevels: 10
     fillBaseName: food
@@ -76,7 +76,7 @@
       color: "#909090"
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Construction
     graph: WallFreezer
     node: ShelfWallFreezerDark

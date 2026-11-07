@@ -51,13 +51,13 @@
     - state: rbase
       map: ["enum.StorageVisualLayers.Base"]
     - state: unlocked
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       # used to keep the unlocked light visible while open.
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: EntityStorageVisuals
     stateDoorOpen: open
@@ -162,7 +162,7 @@
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Destructible
     thresholds:
     - trigger: *DamageTrigger50
@@ -332,14 +332,14 @@
     - state: base
       map: ["enum.StorageVisualLayers.Base"]
     - state: unlocked
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: chem-0
     - map: ["enum.StorageFillLayers.Fill"]
     - state: closed
       map: ["enum.StorageVisualLayers.Door"]
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StorageFillVisualizer
     maxFillLevels: 7
     fillBaseName: chem

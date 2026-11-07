@@ -26,16 +26,16 @@
       - state: machine
       - state: p6
         map: ["powerLight"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: connected
         map: ["connectedLight"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: on
         map: ["onLight"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: charger
         map: ["chargerLight"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: lock
         map: ["enum.LockVisualLayers.Lock"]
         visible: false
@@ -262,7 +262,7 @@
     drawdepth: Overdoors
     layers:
     - state: field
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: _FarHorizons/Structures/Holo/holographic_field.rsi
     state: field
@@ -313,7 +313,7 @@
     drawdepth: Overdoors
     layers:
     - state: field
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Appearance
   - type: DamageVisuals
     thresholds: [20, 60, 150]

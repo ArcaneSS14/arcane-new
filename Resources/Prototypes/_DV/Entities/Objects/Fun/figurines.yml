@@ -11,7 +11,7 @@
     layers:
       - state: cosmiccultist
       - state: cosmiccultist_unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SpeakOnTrigger
     pack: FigurinesCosmicCultist
   - type: CosmicTransmutable

@@ -39,11 +39,11 @@
         gloves:
         - state: equipped-HAND-sealed
         - state: equipped-HAND-sealed-unshaded
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         gloves-vox:
         - state: equipped-HAND-sealed-vox
         - state: equipped-HAND-sealed-unshaded-vox
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: ComponentToggler
       components:
       - type: Insulated
@@ -92,15 +92,15 @@
       head:
       - state: equipped-HEAD-sealed
       - state: equipped-HEAD-sealed-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       head-vox:
       - state: equipped-HEAD-sealed-vox
       - state: equipped-HEAD-sealed-unshaded-vox
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       head-vulpkanin: #TODO: add vulp sprites
       - state: equipped-HEAD-sealed
       - state: equipped-HEAD-sealed-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ActivatableUI
     inHandsOnly: false # Goobstation
     singleUser: true
@@ -214,11 +214,11 @@
       shoes:
       - state: equipped-FEET-sealed
       - state: equipped-FEET-sealed-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       shoes-vox:
       - state: equipped-FEET-sealed-vox
       - state: equipped-FEET-sealed-unshaded-vox
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ItemToggle
   - type: ToggleClothing
     action: ActionToggleMagboots

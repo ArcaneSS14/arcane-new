@@ -52,7 +52,7 @@ public sealed partial class DisplacementMapSystem : EntitySystem
             //should be replaced by an engine-level solution, but this is an adequate temporary solution.
             //what's that phrase about temporary solutions?
             sprite.Comp.LayerSetShader(index,
-                (sprite.Comp[index] is SpriteComponent.Layer layer && layer.ShaderPrototype == UnshadedID)
+                (sprite.Comp[index] is SpriteComponent.Layer layer && (layer.ShaderPrototype == UnshadedID || layer.ShaderPrototype == "UnshadedGlow")) // Arcane-Edit: unshaded > unshaded or UnshadedGlow
                     ? data.ShaderOverrideUnshaded
                     : data.ShaderOverride);
         }

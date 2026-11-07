@@ -13,7 +13,7 @@
     layers:
     - state: icon
     - state: analyzer
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: true
   - type: Item
     heldPrefix: analyzer

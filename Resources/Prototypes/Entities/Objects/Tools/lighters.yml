@@ -88,7 +88,7 @@
     - state: basic_icon_top
     - state: lighter_flame
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "flame" ]
   - type: RandomSprite
     available:
@@ -109,10 +109,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     sprite: Objects/Tools/Lighters/lighters.rsi
 
@@ -131,7 +131,7 @@
     - state: cheap_icon_top
     - state: lighter_flame
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "flame" ]
   - type: RandomSprite
     available:
@@ -155,7 +155,7 @@
     - state: basic_icon_top
     - state: lighter_flame
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "flame" ]
   - type: Welder # the single worst lighter invented by mankind
     fuelConsumption: 0.4
@@ -168,10 +168,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     radius: 1.5
     color: yellow
@@ -212,7 +212,7 @@
     - state: flame
       map: [ "flame" ]
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.ToggleableVisuals.Enabled:
@@ -230,10 +230,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-lit
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-lit
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     radius: 1.5 #slightly stronger than the other lighters
 
@@ -257,7 +257,7 @@
     - state: lighter_flame
       map: ["flame"]
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     sprite: Objects/Tools/Lighters/lighters.rsi
     heldPrefix: zippo
@@ -265,10 +265,10 @@
     inhandVisuals:
       left:
       - state: zippo-inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: zippo-inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: FlippoLighter
@@ -290,7 +290,7 @@
     - state: lighter_flame
       map: ["flame"]
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StealTarget
     stealGroup: FlippoEngravedLighter
 

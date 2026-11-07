@@ -80,7 +80,7 @@ namespace Content.Client.Light
                 if (!_sprite.LayerMapTryGet((args.User, sprite), key, out var index, false) || sprite[index] is not Layer layer)
                     continue;
 
-                if (layer.ShaderPrototype == "unshaded")
+                if (layer.ShaderPrototype == "unshaded" || layer.ShaderPrototype == "UnshadedGlow" || layer.ShaderPrototype == "LightGlow") // Arcane-Edit: unshaded > unshaded, UnshadedGlow or LightGlow
                     rgb.HolderLayers.Add(key);
             }
         }
@@ -98,7 +98,7 @@ namespace Content.Client.Light
                 if (!_sprite.LayerMapTryGet((args.Equipee, sprite), key, out var index, false) || sprite[index] is not Layer layer)
                     continue;
 
-                if (layer.ShaderPrototype == "unshaded")
+                if (layer.ShaderPrototype == "unshaded" || layer.ShaderPrototype == "UnshadedGlow" || layer.ShaderPrototype == "LightGlow") // Arcane-Edit: unshaded > unshaded, UnshadedGlow or LightGlow
                     rgb.HolderLayers.Add(key);
             }
         }
@@ -132,7 +132,7 @@ namespace Content.Client.Light
 
                 for (var i = 0; i < layerCount; i++)
                 {
-                    if (sprite[i] is Layer layer && layer.ShaderPrototype == "unshaded")
+                    if (sprite[i] is Layer layer && (layer.ShaderPrototype == "unshaded" || layer.ShaderPrototype == "UnshadedGlow" || layer.ShaderPrototype == "LightGlow")) // Arcane-Edit: unshaded > unshaded, UnshadedGlow or LightGlow
                     {
                         rgb.Layers.Add(i);
                         rgb.OriginalLayerColors[i] = layer.Color;

@@ -148,7 +148,7 @@
       visible: false
     - state: core_weak
       map: ["core_glow"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Physics
   - type: Fixtures
@@ -182,9 +182,17 @@
   - type: Transform
     anchored: true
   - type: IconSmooth
-    mode: CardinalFlags
-    base: shield_
+    # Arcane-Edit-Start
+    # mode: CardinalFlags
+    # base: shield_
+    # Arcane-Edit-End
     key: ame_shield
+    # Arcane-Start
+    states:
+    - !type:DirectionSpriteSmoothing
+      mask: [ ame_shield ]
+      base: shield_
+    # Arcane-End
   - type: AmeShield
   - type: NodeContainer
     nodes:

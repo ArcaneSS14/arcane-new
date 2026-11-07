@@ -1028,7 +1028,7 @@
     layers:
     - map: [ "enum.DamageStateVisualLayers.Base" ]
       state: alive
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MeleeWeapon
     range: 2.5
     soundHit:

@@ -18,7 +18,7 @@
           visible: false
           map: [ "panel" ]
         - state: teg-op1
-          shader: unshaded
+          shader: UnshadedGlow
           visible: false
           map: [ "enum.TegVisualLayers.PowerOutput" ]
       # Arcane-Edit-End
@@ -168,11 +168,11 @@
         - state: circ-unassembled-0
           map: [ "enum.TegVisualLayers.CirculatorBase" ]
         - state: circ-off
-          shader: unshaded
+          shader: UnshadedGlow
           visible: false
           map: [ "heat" ]
         - state: circ-slow
-          shader: unshaded
+          shader: UnshadedGlow
           visible: false
           map: [ "enum.TegVisualLayers.CirculatorLight" ]
         - state: circ-panel

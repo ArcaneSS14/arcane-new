@@ -47,7 +47,7 @@
       visible: false
       map: ["running"]
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"] # Goobstation
   - type: Appearance
   - type: Machine

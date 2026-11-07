@@ -14,7 +14,7 @@
       map: ["enum.MMIVisualLayers.Base"]
     - state: mmi_light
       map: ["enum.MMIVisualLayers.Unlit"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Input
     context: human
@@ -81,7 +81,7 @@
       layers:
       - state: posibrain
       - map: ["light"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Input
       context: human
     - type: ToggleableGhostRole

@@ -11,7 +11,7 @@
     layers:
     - state: tablet
     - state: generic
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ActivatableUI
     inHandsOnly: true
     singleUser: true
@@ -34,7 +34,7 @@
     layers:
     - state: tablet
     - state: generic
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Appearance
@@ -82,7 +82,7 @@
     layers:
     - state: tablet
     - state: syndie
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Item

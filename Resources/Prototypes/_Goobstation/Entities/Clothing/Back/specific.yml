@@ -107,7 +107,7 @@
       back:
       - state: equipped-BACKPACK
       - state: green-equipped-BACKPACK
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: mag-equipped-BACKPACK
   - type: MagazineAmmoProvider
   - type: ItemSlots

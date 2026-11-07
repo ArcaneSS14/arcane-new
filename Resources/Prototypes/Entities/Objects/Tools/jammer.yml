@@ -11,7 +11,7 @@
     - state: jammer
     - state: jammer_high_charge
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: RadioJammer
     settings:

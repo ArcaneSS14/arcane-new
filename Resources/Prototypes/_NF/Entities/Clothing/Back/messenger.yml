@@ -451,24 +451,24 @@
     layers:
     - state: icon
     - state: icon-unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _NF/Clothing/Back/Messenger/holding.rsi
     clothingVisuals:
       back:
       - state: holding-equipped-BACKPACK
       - state: holding-equipped-BACKPACK-unlit
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     inhandVisuals:
       left:
       - state: inhand-left
       - state: inhand-left-unlit
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right
       - state: inhand-right-unlit
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   # Arcane-Start: built from an inert bag and a bluespace anomaly core
   - type: Construction
     graph: BagOfHoldingMessenger

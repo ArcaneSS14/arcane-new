@@ -6,7 +6,7 @@
     drawdepth: Effects
     noRot: true
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.EffectLayers.Unshaded"]
       sprite: Effects/chronofield.rsi
       state: chronofield

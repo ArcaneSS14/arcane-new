@@ -12,7 +12,7 @@
     layers:
       - state: icon
       - state: icon-overlay
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MeleeWeapon
     angle: 90
     animation: WeaponArcCosmic
@@ -74,7 +74,7 @@
     layers:
       - state: icon
       - state: icon-overlay
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MeleeWeapon
     range: 1.8 # Default is 1.5
     angle: 0
@@ -172,7 +172,7 @@
     layers:
       - state: icon
       - state: icon-overlay
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: UseDelayOnShoot
   - type: UseDelay
     delay: 1 # Visual, doesn't do shit

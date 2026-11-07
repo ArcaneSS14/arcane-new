@@ -11,19 +11,19 @@
     - state: reactor
       map: [ "enum.ReactorVisualLayers.Base" ]
     - state: reactor_status_active
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ReactorVisualLayers.Status" ]
     - state: reactor_gas_input_lights
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ReactorVisualLayers.Input" ]
     - state: reactor_gas_output_lights
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ReactorVisualLayers.Output" ]
     - state: reactor_lights_warning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
       map: [ "enum.ReactorVisualLayers.Lights" ]
     - state: reactor_fire

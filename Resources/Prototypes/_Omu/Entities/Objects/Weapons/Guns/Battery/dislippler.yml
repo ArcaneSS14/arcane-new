@@ -21,7 +21,7 @@
           map: ["enum.GunVisualLayers.Base"]
         - state: mag-unshaded-0
           map: ["enum.GunVisualLayers.MagUnshaded"]
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Clothing
       sprite: _Omu/Objects/Weapons/Guns/Battery/dislippler.rsi
       quickEquip: false
@@ -53,4 +53,4 @@
       sprite: _Omu/Objects/Weapons/Guns/Projectiles/dislippler_laser.rsi
       layers:
         - state: dislipplerlaser
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow

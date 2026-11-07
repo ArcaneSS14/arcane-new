@@ -11,7 +11,7 @@
     sprite: _Goobstation/Heretic/Effects/effects160x160.rsi
     layers:
     - state: entropic_plume
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     noRot: false
   - type: Physics
     bodyType: Dynamic
@@ -63,7 +63,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: cleave
   - type: Tag
@@ -85,7 +85,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: explosion
   - type: Tag
@@ -208,7 +208,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: cosmic_diamond
   - type: Tag
@@ -228,7 +228,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: cosmic_cloud
   - type: Tag
@@ -244,7 +244,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.EffectLayers.Unshaded"]
       sprite: _Goobstation/Heretic/Effects/effects64x64.rsi
       state: cosmic_explosion
@@ -261,7 +261,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.EffectLayers.Unshaded"]
       sprite: _Goobstation/Heretic/Effects/effects64x64.rsi
       state: space_explosion
@@ -279,7 +279,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects160x160.rsi
       state: cosmic_domain
   - type: Tag
@@ -297,7 +297,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: cosmic_slash
   - type: Tag
@@ -314,7 +314,7 @@
   - type: RandomRotation
   - type: Sprite
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: cosmic_slash
 
@@ -328,7 +328,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects160x160.rsi
       state: gazer_beam_charge
   - type: Tag
@@ -345,7 +345,7 @@
     noRot: true
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       sprite: _Goobstation/Heretic/Effects/effects.rsi
       state: voidball_closing
   - type: Tag
@@ -378,7 +378,7 @@
     layers:
     - sprite: _Goobstation/Heretic/void_overlay.rsi
       state: void_conduit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: InteractionOutline
   - type: Clickable
   - type: Damageable
