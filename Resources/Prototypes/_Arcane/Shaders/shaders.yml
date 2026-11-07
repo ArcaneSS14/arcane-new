@@ -18,8 +18,17 @@
   kind: source
   path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
   params:
+    glow_brightness: 1
+    draw_sprite: 1
+
+# GlowHaloOverlay draws lamps again above every sprite with this at Strong quality.
+- type: shader
+  id: LightGlowCore
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
+  params:
     glow_brightness: 25
-    draw_sprite: 0
+    draw_sprite: 1
 
 - type: shader
   id: UnshadedGlow

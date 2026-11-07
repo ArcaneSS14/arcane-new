@@ -4,9 +4,9 @@
   name: reinforced window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-base-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-base-reinf.rsi > sprite: _Arcane/Structures/Windows/window-base-reinf.rsi
+    sprite: Structures/Windows/window-base-reinf.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-base-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-base-reinf.rsi > sprite: _Arcane/Structures/Windows/window-base-reinf.rsi
+    sprite: Structures/Windows/window-base-reinf.rsi
     state: full
   - type: Repairable
     fuelCost: 10
@@ -52,7 +52,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -162,9 +162,7 @@
     - Window
   components:
   - type: Sprite
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-base-diagonal-reinf.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-base-diagonal-reinf.rsi
   - type: Tag
     tags:
     - Diagonal
@@ -182,7 +180,7 @@
       base: state
     # Arcane-Edit-End
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-base-diagonal-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-base-diagonal-reinf.rsi > sprite: _Arcane/Structures/Windows/window-base-diagonal-reinf.rsi
+    sprite: Structures/Windows/window-base-diagonal-reinf.rsi
     state: state0
   - type: Fixtures
     fixtures:

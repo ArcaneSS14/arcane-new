@@ -29,9 +29,9 @@
     - ForceFixRotations
     - Window
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-base.rsi # Arcane-Edit: sprite: Structures/Windows/window-base.rsi > sprite: _Arcane/Structures/Windows/window-base.rsi
+    sprite: Structures/Windows/window-base.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-base.rsi # Arcane-Edit: sprite: Structures/Windows/window-base.rsi > sprite: _Arcane/Structures/Windows/window-base.rsi
+    sprite: Structures/Windows/window-base.rsi
     state: full
   - type: Physics
     bodyType: Static
@@ -73,7 +73,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -109,9 +109,9 @@
   id: Window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-base.rsi # Arcane-Edit: sprite: Structures/Windows/window-base.rsi > sprite: _Arcane/Structures/Windows/window-base.rsi
+    sprite: Structures/Windows/window-base.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-base.rsi # Arcane-Edit: sprite: Structures/Windows/window-base.rsi > sprite: _Arcane/Structures/Windows/window-base.rsi
+    sprite: Structures/Windows/window-base.rsi
     state: full
   - type: Damageable
     damageModifierSet: GlassMod
@@ -136,9 +136,9 @@
   name: tinted window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-tinted.rsi # Arcane-Edit: sprite: Structures/Windows/window-tinted.rsi > sprite: _Arcane/Structures/Windows/window-tinted.rsi
+    sprite: Structures/Windows/window-tinted.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-tinted.rsi # Arcane-Edit: sprite: Structures/Windows/window-tinted.rsi > sprite: _Arcane/Structures/Windows/window-tinted.rsi
+    sprite: Structures/Windows/window-tinted.rsi
   - type: IconSmooth
     # Arcane-Edit-Start
     key: windows-tinted
@@ -160,7 +160,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -387,9 +387,7 @@
     - Window
   components:
   - type: Sprite
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-base-diagonal.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-base-diagonal.rsi
   - type: Tag
     tags:
     - Diagonal
@@ -407,7 +405,7 @@
       base: state
     # Arcane-Edit-End
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-base-diagonal.rsi # Arcane-Edit: sprite: Structures/Windows/window-base-diagonal.rsi > sprite: _Arcane/Structures/Windows/window-base-diagonal.rsi
+    sprite: Structures/Windows/window-base-diagonal.rsi
     state: state0
   - type: Fixtures
     fixtures:

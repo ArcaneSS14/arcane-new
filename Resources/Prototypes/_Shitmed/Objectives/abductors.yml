@@ -385,7 +385,7 @@
   - type: Objective
     icon:
       # Arcane-Edit-Start: Arcane wall sprite, which has no rgeneric state
-      sprite: _Arcane/Structures/Walls/solid.rsi
+      sprite: Structures/Walls/solid.rsi
       state: full
       # Arcane-Edit-End
 

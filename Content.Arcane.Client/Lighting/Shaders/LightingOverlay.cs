@@ -158,6 +158,7 @@ public sealed class LightingOverlay : Overlay
         _cfg.UnsubValueChanged(ArcaneCCVars.EnableLightsGlowing, _lightCvarChanged);
         _cfg.UnsubValueChanged(ArcaneCCVars.LightingShaderQuality, _qualityChanged);
         _cfg.UnsubValueChanged(CVars.LightResolutionScale, _lightScaleChanged);
+        _shader.Dispose();
         base.DisposeBehavior();
     }
 }

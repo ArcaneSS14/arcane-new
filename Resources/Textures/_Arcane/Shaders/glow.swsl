@@ -17,7 +17,8 @@ highp vec4 texel(highp vec2 uv, highp mat2 toFrame) {
     if (frame.x < 0.0 || frame.y < 0.0 || frame.x > 1.0 || frame.y > 1.0)
         return vec4(0.0);
 
-    highp vec4 c = texture2D(TEXTURE, uv);
+    // Through the helper, so sRGB textures get decoded like zTexture does on backends that emulate it.
+    highp vec4 c = zTextureSpec(TEXTURE, uv);
     return vec4(c.rgb * c.a, c.a);
 }
 

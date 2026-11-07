@@ -4,9 +4,9 @@
   parent: [BaseDeltaPressurePlasma, BaseWindowStructure, BaseRCDResistant, StructureHealthBarrier]
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-plasma.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma.rsi > sprite: _Arcane/Structures/Windows/window-plasma.rsi
+    sprite: Structures/Windows/window-plasma.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-plasma.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma.rsi > sprite: _Arcane/Structures/Windows/window-plasma.rsi
+    sprite: Structures/Windows/window-plasma.rsi
     state: full
   - type: Damageable
     damageModifierSet: GlassPlasmaMod
@@ -45,7 +45,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -159,9 +159,7 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-diagonal-plasma.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-diagonal-plasma.rsi
   - type: Tag
     tags:
     - Diagonal
@@ -179,7 +177,7 @@
       base: state
     # Arcane-Edit-End
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-diagonal-plasma.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-plasma.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-plasma.rsi
+    sprite: Structures/Windows/window-diagonal-plasma.rsi
     state: state0
   - type: Fixtures
     fixtures:

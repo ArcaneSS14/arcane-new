@@ -93,6 +93,11 @@ public sealed class ViewportFadeState(SpriteSystem sprite, EntityQuery<SpriteCom
     /// Where the eye was on the previous frame. While it stays there, visibility can't change much.
     /// </summary>
     public (MapCoordinates Position, Angle Rotation) LastEye;
+
+    /// <summary>
+    /// Frames the eye has to stay still before checks slow down, so every wall-mount is checked once from where it stopped.
+    /// </summary>
+    public uint MovingFramesLeft;
     // Arcane-End
 
     public void Dispose()

@@ -78,6 +78,11 @@ public sealed partial class IconSmoothSystem : EntitySystem
         if (!_spriteQuery.TryComp(entity, out var sprite))
             return;
 
+        // Whoever disabled smoothing now owns the sprite, such as puddles picking a small state. An update queued
+        // before that must not overwrite it.
+        if (!entity.Comp.Enabled)
+            return;
+
         // If this entity is not eligible for IconSmooth, or the grid stores no IconSmooth data for us to use, then skip populating the array.
         var xform = Transform(entity);
         if (xform.GridUid is not { } grid
@@ -128,9 +133,19 @@ public sealed partial class IconSmoothSystem : EntitySystem
         var xform = Transform(entity);
 
         if (enabled)
+        {
             AddTile((entity, entity.Comp, xform), entity.Comp.Key, update);
-        else
-            RemoveTile((entity, entity.Comp, xform), update);
+            return;
+        }
+
+        RemoveTile((entity, entity.Comp, xform), update);
+
+        // Queued updates skip disabled smoothing, so reset the sprite here when asked to.
+        if (update && _spriteQuery.TryComp(entity, out var sprite))
+        {
+            Array.Clear(_adjacentKeys);
+            ApplyStates((entity, entity.Comp, sprite));
+        }
     }
 
     /// <summary>

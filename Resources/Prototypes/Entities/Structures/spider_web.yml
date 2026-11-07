@@ -20,7 +20,7 @@
         path:
           "/Audio/Weapons/slash.ogg"
   - type: Sprite
-    sprite: _Arcane/Structures/floor_web.rsi # Arcane-Edit: sprite: Structures/floor_web.rsi > sprite: _Arcane/Structures/floor_web.rsi
+    sprite: Structures/floor_web.rsi
     drawdepth: Overdoors # Trauma
   - type: Appearance
   - type: Clickable

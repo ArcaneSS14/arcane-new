@@ -5,9 +5,9 @@
   parent: [BaseDeltaPressureReinforcedGlass, Window]
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-regal.rsi # Arcane-Edit: sprite: Structures/Windows/window-regal.rsi > sprite: _Arcane/Structures/Windows/window-regal.rsi
+    sprite: Structures/Windows/window-regal.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-regal.rsi # Arcane-Edit: sprite: Structures/Windows/window-regal.rsi > sprite: _Arcane/Structures/Windows/window-regal.rsi
+    sprite: Structures/Windows/window-regal.rsi
   - type: Damageable
     damageModifierSet: RGlass
   - type: Injurable
@@ -59,7 +59,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors

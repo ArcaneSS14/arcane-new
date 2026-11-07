@@ -30,6 +30,7 @@ public sealed partial class GlowHaloOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> UnshadedGlowShader = "UnshadedGlow";
     private static readonly ProtoId<ShaderPrototype> LightGlowShader = "LightGlow";
+    private static readonly ProtoId<ShaderPrototype> LightGlowCoreShader = "LightGlowCore";
     private static readonly ProtoId<ShaderPrototype> UnshadedHaloShader = "UnshadedGlowHalo";
     private static readonly ProtoId<ShaderPrototype> LightHaloShader = "LightGlowHalo";
 
@@ -51,6 +52,7 @@ public sealed partial class GlowHaloOverlay : Overlay
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IPrototypeManager _prototypes = default!;
 
+    private readonly SpriteSystem _sprite;
     private readonly SpriteTreeSystem _spriteTree;
     private readonly LightTreeSystem _lightTree;
     private readonly TransformSystem _transform;
@@ -75,6 +77,7 @@ public sealed partial class GlowHaloOverlay : Overlay
     public GlowHaloOverlay()
     {
         IoCManager.InjectDependencies(this);
+        _sprite = _entities.System<SpriteSystem>();
         _spriteTree = _entities.System<SpriteTreeSystem>();
         _lightTree = _entities.System<LightTreeSystem>();
         _transform = _entities.System<TransformSystem>();
@@ -84,12 +87,10 @@ public sealed partial class GlowHaloOverlay : Overlay
         _unshadedHalo = _prototypes.Index(UnshadedHaloShader).Instance();
         _lightHalo = _prototypes.Index(LightHaloShader).Instance();
 
-        _lamp = _prototypes.Index(LightGlowShader).InstanceUnique();
-        _lamp.SetParameter("draw_sprite", 1f);
-
-        _plainLamp = _prototypes.Index(LightGlowShader).InstanceUnique();
-        _plainLamp.SetParameter("draw_sprite", 1f);
-        _plainLamp.SetParameter("glow_brightness", 1f);
+        // The lamp layer draws its own plain core, which UI previews and post shaders rely on. This draws it again
+        // above every sprite, brightened at Strong quality.
+        _lamp = _prototypes.Index(LightGlowCoreShader).Instance();
+        _plainLamp = _prototypes.Index(LightGlowShader).Instance();
 
         _cfg.OnValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged, true);
     }
@@ -123,6 +124,11 @@ public sealed partial class GlowHaloOverlay : Overlay
         {
             // A sprite can get deleted, hidden or put in a container between scans.
             if (sprite.Deleted || !sprite.Visible || sprite.TreeUid == null || xform.MapID != args.MapId)
+                continue;
+
+            // Post shaders such as stealth hide the sprite as a whole. Drawn separately, its glow would give it away,
+            // so the layer's own draw is all it gets.
+            if (HasHidingPostShader(sprite))
                 continue;
 
             var (worldPosition, worldRotation) = _transform.GetWorldPositionRotation(xform);
@@ -192,6 +198,25 @@ public sealed partial class GlowHaloOverlay : Overlay
             if (HasLayer(entry.Comp1, UnshadedGlowShader) && !HasLayer(entry.Comp1, LightGlowShader))
                 glow.Sprites.Add(entry);
         }
+    }
+
+    /// <summary>
+    /// Whether a post shader other than an outline changes how the sprite looks. Outlines only add an edge, so
+    /// hovering an item keeps its glow.
+    /// </summary>
+    private bool HasHidingPostShader(SpriteComponent sprite)
+    {
+        foreach (var postShader in _sprite.GetPostShaders(sprite))
+        {
+            if (postShader.Id is not (ContentPostShaderIds.InteractionOutline
+                or ContentPostShaderIds.TargetOutline
+                or ContentPostShaderIds.DragDropOutline))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool HasLayer(SpriteComponent sprite, ProtoId<ShaderPrototype> shader)
@@ -280,8 +305,6 @@ public sealed partial class GlowHaloOverlay : Overlay
         _cfg.UnsubValueChanged(ArcaneCCVars.LightingShaderQuality, OnQualityChanged);
 
         _viewports.Dispose();
-        _lamp.Dispose();
-        _plainLamp.Dispose();
 
         base.DisposeBehavior();
     }

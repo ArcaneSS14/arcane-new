@@ -4,9 +4,9 @@
   name: shuttle window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-shuttle.rsi # Arcane-Edit: sprite: Structures/Windows/window-shuttle.rsi > sprite: _Arcane/Structures/Windows/window-shuttle.rsi
+    sprite: Structures/Windows/window-shuttle.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-shuttle.rsi # Arcane-Edit: sprite: Structures/Windows/window-shuttle.rsi > sprite: _Arcane/Structures/Windows/window-shuttle.rsi
+    sprite: Structures/Windows/window-shuttle.rsi
     state: full
   - type: Repairable
     fuelCost: 15
@@ -51,7 +51,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -83,9 +83,7 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-diagonal-shuttle.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-diagonal-shuttle.rsi
   - type: Tag
     tags:
     - Diagonal
@@ -103,7 +101,7 @@
       base: state
     # Arcane-Edit-End
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-diagonal-shuttle.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-shuttle.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-shuttle.rsi
+    sprite: Structures/Windows/window-diagonal-shuttle.rsi
     state: state0
   - type: Fixtures
     fixtures:

@@ -27,7 +27,7 @@
     - Anchorable
   - type: Sprite
     drawdepth: Walls
-    sprite: _Arcane/Structures/Walls/grille.rsi # Arcane-Edit: sprite: Structures/Walls/grille.rsi > sprite: _Arcane/Structures/Walls/grille.rsi
+    sprite: Structures/Walls/grille.rsi
     layers:
     - state: electrified
       sprite: Effects/electricity.rsi
@@ -35,7 +35,7 @@
       shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Icon
-    sprite: _Arcane/Structures/Walls/grille.rsi # Arcane-Edit: sprite: Structures/Walls/grille.rsi > sprite: _Arcane/Structures/Walls/grille.rsi
+    sprite: Structures/Walls/grille.rsi
     state: full
   - type: PlacementReplacement
     key: grilles
@@ -62,7 +62,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -192,10 +192,10 @@
   components:
   - type: Sprite
     drawdepth: Walls
-    sprite: _Arcane/Structures/Walls/grille.rsi # Arcane-Edit: sprite: Structures/Walls/grille.rsi > sprite: _Arcane/Structures/Walls/grille.rsi
+    sprite: Structures/Walls/grille.rsi
     state: broken
   - type: Icon
-    sprite: _Arcane/Structures/Walls/grille.rsi # Arcane-Edit: sprite: Structures/Walls/grille.rsi > sprite: _Arcane/Structures/Walls/grille.rsi
+    sprite: Structures/Walls/grille.rsi
     state: broken
   - type: RCDDeconstructable
     cost: 6

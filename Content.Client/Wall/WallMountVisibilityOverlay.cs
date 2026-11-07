@@ -151,7 +151,12 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
         // Arcane-Edit-Start: walls don't move, so wall-mounts don't all need a ray every frame
         viewportState.Frame++;
         var currentEye = (eye.Position, eye.Rotation);
-        var checkInterval = currentEye == viewportState.LastEye ? IdleCheckInterval : MovingCheckInterval;
+        var moved = currentEye != viewportState.LastEye;
+        var checkInterval = moved || viewportState.MovingFramesLeft > 0 ? MovingCheckInterval : IdleCheckInterval;
+        if (moved)
+            viewportState.MovingFramesLeft = MovingCheckInterval;
+        else if (viewportState.MovingFramesLeft > 0)
+            viewportState.MovingFramesLeft--;
         viewportState.LastEye = currentEye;
 
         _mounts.Clear();

@@ -4,9 +4,9 @@
   name: reinforced plasma window
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi
+    sprite: Structures/Windows/window-plasma-reinf.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-plasma-reinf.rsi
+    sprite: Structures/Windows/window-plasma-reinf.rsi
     state: full
   - type: Damageable
     damageModifierSet: GlassReinforcedPlasmaMod
@@ -50,7 +50,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -158,9 +158,7 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
   - type: Tag
     tags:
     - Diagonal
@@ -178,7 +176,7 @@
       base: state
     # Arcane-Edit-End
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-plasma-reinf.rsi
+    sprite: Structures/Windows/window-diagonal-plasma-reinf.rsi
     state: state0
   - type: Fixtures
     fixtures:

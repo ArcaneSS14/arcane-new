@@ -5,9 +5,9 @@
   description: Transparent and hardened, yet slightly sticky to the touch.
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Windows/exo-resin.rsi # Arcane-Edit: sprite: Structures/Windows/exo-resin.rsi > sprite: _Arcane/Structures/Windows/exo-resin.rsi
+    sprite: Structures/Windows/exo-resin.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/exo-resin.rsi # Arcane-Edit: sprite: Structures/Windows/exo-resin.rsi > sprite: _Arcane/Structures/Windows/exo-resin.rsi
+    sprite: Structures/Windows/exo-resin.rsi
   - type: IconSmooth
     # Arcane-Edit-Start
     key: windows-exo
@@ -29,7 +29,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors

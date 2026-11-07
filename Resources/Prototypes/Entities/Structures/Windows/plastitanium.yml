@@ -75,7 +75,7 @@
       - walls-shuttle
       - walls-plastitanium
       - walls-material
-      - walls-marble
+      - marble
       - walls
       - grilles
       - doors
@@ -90,9 +90,9 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    sprite: _Arcane/Structures/Windows/window-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-plastitanium.rsi
+    sprite: Structures/Windows/window-plastitanium.rsi
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-plastitanium.rsi
+    sprite: Structures/Windows/window-plastitanium.rsi
     state: full
   # Arcane-Edit-Start
   # - type: IconSmooth
@@ -167,15 +167,13 @@
   components:
   - type: Sprite
     drawdepth: WallTops
-    # Arcane-Edit-Start
-    sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi
-    # Arcane-Edit-End
+    sprite: Structures/Windows/window-diagonal-plastitanium.rsi
   - type: Tag
     tags:
     - Diagonal
     - Window
   - type: Icon
-    sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi # Arcane-Edit: sprite: Structures/Windows/window-diagonal-plastitanium.rsi > sprite: _Arcane/Structures/Windows/window-diagonal-plastitanium.rsi
+    sprite: Structures/Windows/window-diagonal-plastitanium.rsi
     state: state0
   - type: IconSmooth
     # Arcane-Edit-Start

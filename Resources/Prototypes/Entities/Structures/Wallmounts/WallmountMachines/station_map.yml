@@ -6,7 +6,7 @@
   suffix: Wall broken
   components:
   - type: Sprite
-    sprite: _Arcane/Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > _Arcane/Structures/Wallmounts/station-map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
     offset: 0, -0.25 # Arcane
     drawdepth: WallMountedItems
     layers:
@@ -35,7 +35,7 @@
   - type: Appearance
   - type: StationMap
   - type: Sprite
-    sprite: _Arcane/Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > _Arcane/Structures/Wallmounts/station-map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
     offset: 0, -0.25 # Arcane
     layers:
     - state: base # Arcane-Edit: station_map0 > base
@@ -44,7 +44,7 @@
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Icon
     # Arcane-Edit-Start: Structures/Machines/station_map.rsi, station_map0 > Arcane resprite
-    sprite: _Arcane/Structures/Wallmounts/station-map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi
     state: base
     # Arcane-Edit-End
   - type: GenericVisualizer
@@ -112,7 +112,7 @@
   - type: WallMount
     arc: 360
   - type: Sprite
-    sprite: _Arcane/Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > _Arcane/Structures/Wallmounts/station-map.rsi
+    sprite: Structures/Wallmounts/station-map.rsi # Arcane-Edit: Structures/Machines/station_map.rsi > Structures/Wallmounts/station-map.rsi
     offset: 0, -0.25 # Arcane
     layers:
     - state: frame1 # Arcane-Edit: station_map_frame1 > frame1

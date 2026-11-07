@@ -45,10 +45,10 @@
   - type: SyncSprite
   - type: Clickable
   - type: Sprite
-    sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-lava.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi
+    sprite: Tiles/TileEntities/liquid-lava.rsi
     drawdepth: BelowFloor
   - type: Icon
-    sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi # Arcane-Edit: sprite: Tiles/TileEntities/liquid-lava.rsi > sprite: _Arcane/Tiles/TileEntities/liquid-lava.rsi
+    sprite: Tiles/TileEntities/liquid-lava.rsi
     state: full
   - type: IconSmooth
     key: lava

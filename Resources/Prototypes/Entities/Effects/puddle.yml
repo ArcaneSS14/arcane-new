@@ -154,7 +154,7 @@
     anchored: true
   - type: Sprite
     # Arcane-Edit-Start
-    sprite: _Arcane/Fluids/puddle.rsi
+    sprite: Fluids/puddle.rsi
     # Arcane-Edit-End
     drawdepth: Puddles
     color: "#FFFFFF80"

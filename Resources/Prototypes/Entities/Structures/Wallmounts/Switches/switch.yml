@@ -10,15 +10,24 @@
   - type: Sprite
     drawdepth: SmallObjects
     sprite: Structures/Wallmounts/switch.rsi
+    offset: 0, -0.25 # Arcane
     # CorvaxGoob-ButtonsVisuals-Start
     layers:
-    - state: dead
+    # Arcane-Edit-Start: resprited switch.rsi, the lever and its light are separate states over a base
+    - state: base
     - state: on
       map: ["on"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      visible: false
+    - state: on-unshaded
+      map: ["onLight"]
+      shader: UnshadedGlow
+      visible: false
     - state: off
       map: ["off"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+    - state: off-unshaded
+      map: ["offLight"]
+      shader: UnshadedGlow
+    # Arcane-Edit-End
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -29,6 +38,14 @@
         on:
           On: { visible: true }
           Off: { visible: false }
+        # Arcane-Start
+        offLight:
+          On: { visible: false }
+          Off: { visible: true }
+        onLight:
+          On: { visible: true }
+          Off: { visible: false }
+        # Arcane-End
   # CorvaxGoob-ButtonsVisuals-End
   - type: SignalSwitch
   - type: UseDelay
@@ -75,7 +92,7 @@
   - type: StationAiWhitelist
   - type: Sprite
     drawdepth: SmallObjects
-    sprite: _Arcane/Structures/Wallmounts/switch.rsi # Arcane-Edit: Structures/Wallmounts/switch.rsi > _Arcane/Structures/Wallmounts/switch.rsi
+    sprite: Structures/Wallmounts/switch.rsi
     offset: 0, -0.25 # Arcane
     # Arcane-Edit-Start: state: dead
     layers:
@@ -126,10 +143,15 @@
   - type: Sprite
     drawdepth: SmallObjects
     sprite: Structures/Wallmounts/switch.rsi
+    offset: 0, -0.25 # Arcane
     # CorvaxGoob-ButtonsVisuals-End
     layers:
-    - state: dead
+    # Arcane-Edit-Start: resprited switch.rsi, the lever and its light are separate states over a base
+    - state: base
     - state: on
+    - state: on-unshaded
+      shader: UnshadedGlow
+    # Arcane-Edit-End
     # CorvaxGoob-ButtonsVisuals-End
   - type: Rotatable
   - type: ExtensionCableReceiver
