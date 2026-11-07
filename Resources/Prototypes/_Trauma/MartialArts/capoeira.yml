@@ -133,9 +133,11 @@
     multiplier: 1.5
     duration: 5
     scaling: false
-  - !type:RaiseNetworkEvents
-    events:
-    - !type:AnimationFlipEmoteEvent
+  # Arcane-Edit-Start: own flip > CapoeiraFlow somersaults on every combo
+  # - !type:RaiseNetworkEvents
+  #   events:
+  #   - !type:AnimationFlipEmoteEvent
+  # Arcane-Edit-End
   opponentEffects:
   - !type:HealthChange
     useTargeting: false

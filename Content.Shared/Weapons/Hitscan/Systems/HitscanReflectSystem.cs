@@ -36,6 +36,17 @@ public sealed partial class HitscanReflectSystem : EntitySystem
 
         args.Cancelled = true;
 
+        // Arcane-Start: the same shot again, as if the target wasn't there
+        if (ev.PassThrough)
+        {
+            var trace = data.Trace;
+            trace.Ignored = trace.Ignored == null ? [data.HitEntity.Value] : [..trace.Ignored, data.HitEntity.Value];
+            args.NextTrace = trace;
+            args.SkipEffects = true;
+            return;
+        }
+        // Arcane-End
+
         var fromEffect = Transform(data.HitEntity.Value).Coordinates;
 
         var hitFiredEvent = new HitscanTraceEvent
@@ -46,6 +57,6 @@ public sealed partial class HitscanReflectSystem : EntitySystem
             Shooter = data.HitEntity.Value,
         };
 
-        RaiseLocalEvent(hitscan, ref hitFiredEvent);
+        args.NextTrace = hitFiredEvent; // Arcane-Edit: RaiseLocalEvent > fired by the raycast system after its effects
     }
 }

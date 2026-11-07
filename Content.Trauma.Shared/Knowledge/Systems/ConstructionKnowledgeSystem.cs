@@ -21,6 +21,10 @@ public sealed partial class ConstructionKnowledgeSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popup = default!;
 
     private static readonly ProtoId<QualityPrototype> BaseQuality = "BaseQuality";
+    // Arcane-Start
+    private const int ConstructionExperience = 5;
+    private const int ForgingExperience = 10;
+    // Arcane-End
 
     [SubscribeLocalEvent]
     private void OnConstructAttempt(Entity<KnowledgeHolderComponent> ent, ref ConstructAttemptEvent args)
@@ -77,6 +81,8 @@ public sealed partial class ConstructionKnowledgeSystem : EntitySystem
             levelDeltas[id] = mastery;
         }
 
+        AddExperience(ent, levelDeltas.Keys, ConstructionExperience); // Arcane
+
         // ignore quality code if the prototype doesn't want it
         if (!proto.UseQuality)
             return;
@@ -97,6 +103,8 @@ public sealed partial class ConstructionKnowledgeSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnForgingCompleted(Entity<KnowledgeHolderComponent> ent, ref ForgingCompletedEvent args)
     {
+        AddExperience(ent, args.Item.Skills.Keys, ForgingExperience); // Arcane
+
         var item = args.Target;
         if (EnsureComp<QualityComponent>(item, out var quality))
             return;
@@ -112,4 +120,17 @@ public sealed partial class ConstructionKnowledgeSystem : EntitySystem
 
         _quality.RollQuality((item, quality), ent);
     }
+
+    // Arcane-Start
+    private void AddExperience(EntityUid user, IEnumerable<EntProtoId> skills, int experience)
+    {
+        if (_knowledge.GetContainer(user) is not { } brain)
+            return;
+
+        foreach (var id in skills)
+        {
+            _knowledge.AddExperience(brain, id, experience);
+        }
+    }
+    // Arcane-End
 }

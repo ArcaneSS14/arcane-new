@@ -40,6 +40,13 @@ public record struct HitscanTraceEvent
     /// Target that was being aimed at (Not necessarily hit).
     /// </summary>
     public EntityUid? Target;
+
+    // Arcane-Start
+    /// <summary>
+    /// Entities the ray passes through without hitting them.
+    /// </summary>
+    public HashSet<EntityUid>? Ignored;
+    // Arcane-End
 }
 
 /// <summary>
@@ -71,6 +78,13 @@ public record struct HitscanRaycastFiredData
     /// Player who shot the gun, if null the gun was fired by itself.
     /// </summary>
     public EntityUid? Shooter;
+
+    // Arcane-Start
+    /// <summary>
+    /// The trace that fired this, used to repeat the same shot.
+    /// </summary>
+    public HitscanTraceEvent Trace;
+    // Arcane-End
 }
 
 /// <summary>
@@ -90,6 +104,18 @@ public struct AttemptHitscanRaycastFiredEvent
     /// Cancelled hitscans should not apply damage or trigger follow-up effects.
     /// </summary>
     public bool Cancelled;
+
+    // Arcane-Start
+    /// <summary>
+    /// A trace to fire once this one has drawn its effects, for hitscans that carry on after being cancelled.
+    /// </summary>
+    public HitscanTraceEvent? NextTrace;
+
+    /// <summary>
+    /// Set when <see cref="NextTrace"/> repeats this shot, so this one draws nothing and the shot is only drawn once.
+    /// </summary>
+    public bool SkipEffects;
+    // Arcane-End
 }
 
 /// <summary>

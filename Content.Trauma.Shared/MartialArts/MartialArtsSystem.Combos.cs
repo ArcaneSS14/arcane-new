@@ -165,14 +165,7 @@ public partial class MartialArtsSystem
         // TODO: move xp logic into an event handler
         if (TryComp<MartialArtsKnowledgeComponent>(ent, out var comp) && comp.GiveExperience && !comp.Blocked && _mobState.IsAlive(target) && proto.GiveExperience)
         {
-            // you can only go up to your opponents level + 10, to encourage actual training between masters
-            var opponent = GetMartialArtLevel(target);
-            _knowledge.AddExperience(ent.Owner, performer, 1, opponent + 10);
+            _knowledge.AddExperience(ent.Owner, performer, 1); // Arcane-Edit: limit opponent level + 10 > no limit
         }
     }
-
-    private int GetMartialArtLevel(EntityUid uid)
-        => _knowledge.GetActiveMartialArt(uid) is { } unit
-            ? _knowledge.GetLevel(unit)
-            : 0;
 }
