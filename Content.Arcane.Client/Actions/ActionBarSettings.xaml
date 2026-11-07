@@ -1,0 +1,10 @@
+<actions:ActionBarSettings xmlns="https://spacestation14.io"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:actions="clr-namespace:Content.Arcane.Client.Actions"
+    Orientation="Vertical">
+    <Label Text="{Loc 'arcane-actions-settings'}" StyleClasses="LabelKeyText" />
+    <CheckBox Name="LockDrag" Text="{Loc 'arcane-actions-lock-drag'}" />
+    <CheckBox Name="FreePlacement" Text="{Loc 'arcane-actions-free-placement'}" />
+    <Button Name="ResetLayout" Text="{Loc 'arcane-actions-reset-layout'}"
+        ToolTip="{Loc 'arcane-actions-reset-layout-tooltip'}" />
+</actions:ActionBarSettings>
