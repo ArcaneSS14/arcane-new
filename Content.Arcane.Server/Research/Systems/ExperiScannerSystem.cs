@@ -1,11 +1,12 @@
 using System.Linq;
+using Content.Arcane.Shared.Research.Components;
 using Content.Server.Chat.Systems;
 using Content.Server.Popups;
 using Content.Server.Research.Systems;
-using Content.Shared.Research.Components;
-using Content.Shared.Research.Prototypes;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
+using Content.Shared.Research.Components;
+using Content.Shared.Research.Prototypes;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;

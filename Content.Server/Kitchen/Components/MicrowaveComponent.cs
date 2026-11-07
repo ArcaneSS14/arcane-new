@@ -3,7 +3,10 @@ using Content.Shared.Item;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-using Content.Shared.Construction.Prototypes; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Kitchen.Components
 {

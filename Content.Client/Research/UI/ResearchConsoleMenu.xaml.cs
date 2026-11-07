@@ -13,7 +13,10 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Shared.Research; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Client.Research.UI;
 

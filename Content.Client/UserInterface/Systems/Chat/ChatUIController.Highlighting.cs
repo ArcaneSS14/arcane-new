@@ -13,7 +13,10 @@ using Content.Client.CharacterInfo;
 using Content.Client.Gameplay;
 using Robust.Shared.Utility;
 using static Content.Client.CharacterInfo.CharacterInfoSystem;
-using Content.Client.Audio; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Chat;
+using Content.Client.Audio;
+// Arcane-End
 
 namespace Content.Client.UserInterface.Systems.Chat;
 
@@ -217,8 +220,7 @@ public sealed partial class ChatUIController : IOnSystemChanged<CharacterInfoSys
 
         if (job != null)
         {
-            // Convert the job title to kebab-case and use it as a key for the loc file.
-            var jobKey = RoleHighlightDefaults.GetKey(job.Value); // Arcane-Edit: construct locale suffix > use shared locale key
+            var jobKey = RoleHighlightDefaults.GetKey(job.Value.Id); // Arcane-Edit: construct locale suffix > use shared locale key
 
             // Arcane-Start: prefer the player's per-role highlights over defaults
             if (TryGetSavedRoleHighlights(job.Value, out var savedHighlights))

@@ -1,4 +1,3 @@
-using System.Linq; // Arcane
 // <Trauma>
 using Content.Shared.Whitelist;
 using Content.Medical.Common.Damage;
@@ -18,6 +17,8 @@ using Content.Shared.Power.EntitySystems;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 // Arcane-Start
+using System.Linq;
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
 // Arcane-End

@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 // Arcane-Start
 using System.Linq;
+using Content.Arcane.Common.Research;
 using Content.Shared.Research;
 // Arcane-End
 

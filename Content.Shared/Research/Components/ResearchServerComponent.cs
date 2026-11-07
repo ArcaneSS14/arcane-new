@@ -1,5 +1,6 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Content.Arcane.Common.Research; // Arcane
 
 namespace Content.Shared.Research.Components;
 

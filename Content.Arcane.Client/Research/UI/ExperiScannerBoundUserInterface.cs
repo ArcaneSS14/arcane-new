@@ -1,3 +1,4 @@
+using Content.Arcane.Shared.Research.Components;
 using Content.Shared.Research.Components;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;

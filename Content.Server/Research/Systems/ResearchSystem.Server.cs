@@ -2,10 +2,11 @@ using System.Linq;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Research.Components;
 // Arcane-Start
-using Content.Shared.Research;
-using Content.Shared.Examine;
-using Robust.Shared.Timing;
+using Content.Arcane.Common.Research;
 using Content.Shared.Emag.Systems;
+using Content.Shared.Examine;
+using Content.Shared.Research;
+using Robust.Shared.Timing;
 // Arcane-End
 
 namespace Content.Server.Research.Systems;

@@ -7,10 +7,11 @@ using Content.Goobstation.Common.Research;
 using Content.Goobstation.Client.Research.UI;
 using Content.Shared.Research.Prototypes;
 // Arcane-Start
-using Content.Shared.Research;
-using Robust.Shared.Utility;
 using System.Linq;
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
 using Content.Shared.Research.Components;
+using Robust.Shared.Utility;
 // Arcane-End
 
 namespace Content.Goobstation.Client.Research.UI;

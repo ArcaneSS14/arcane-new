@@ -4,6 +4,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 // Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
 // Arcane-End

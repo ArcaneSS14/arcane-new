@@ -1,7 +1,10 @@
 using Content.Server.Power.EntitySystems;
 using Content.Server.Research.Components;
 using Content.Shared.Research.Components;
-using Content.Shared.Research; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Server.Research.Systems;
 
