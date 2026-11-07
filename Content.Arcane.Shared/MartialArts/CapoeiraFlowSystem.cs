@@ -1,6 +1,6 @@
 using Content.Shared.Standing;
-using Content.Shared.Weapons.Melee.Events;
 using Content.Trauma.Common.MartialArts;
+using Content.Trauma.Shared.MartialArts;
 using Robust.Shared.Timing;
 
 namespace Content.Arcane.Shared.MartialArts;
@@ -14,9 +14,9 @@ public sealed partial class CapoeiraFlowSystem : EntitySystem
     [Dependency] private StandingStateSystem _standing = default!;
 
     [SubscribeLocalEvent]
-    private void OnMeleeHit(Entity<CapoeiraFlowComponent> ent, ref MeleeHitEvent args)
+    private void OnComboPerformed(Entity<CapoeiraFlowComponent> ent, ref ComboPerformedEvent args)
     {
-        if (!args.IsHit || _standing.IsDown(args.User))
+        if (_standing.IsDown(args.User))
             return;
 
         var comp = EnsureComp<CapoeiraFlowUserComponent>(args.User);
