@@ -14,6 +14,7 @@ public sealed class CustomizationUIController : UIController
     public override void Initialize()
     {
         base.Initialize();
+        OptionsMenu.ConfigureExtensions -= ConfigureOptions;
         OptionsMenu.ConfigureExtensions += ConfigureOptions;
     }
 
