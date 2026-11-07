@@ -69,6 +69,7 @@ namespace Content.Server.Database
         public DbSet<PollOption> PollOptions { get; set; } = default!;
         public DbSet<PollVote> PollVotes { get; set; } = default!;
         // </Trauma>
+        public DbSet<PollSeen> PollSeen { get; set; } = default!; // Arcane
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -421,6 +422,7 @@ namespace Content.Server.Database
             // </Trauma>
 
             ModelBan.OnModelCreating(modelBuilder);
+            ModelPollSeen.OnModelCreating(modelBuilder); // Arcane
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
         }
 

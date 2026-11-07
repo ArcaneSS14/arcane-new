@@ -15,6 +15,7 @@ public sealed class PollData
     public bool AllowMultipleChoices { get; set; }
     public List<PollOptionData> Options { get; set; } = [];
     public string? CreatedByName { get; set; }
+    public int SeenCount { get; set; } // Arcane
 }
 
 [Serializable, NetSerializable]
