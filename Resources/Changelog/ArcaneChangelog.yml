@@ -1,0 +1,328 @@
+# Arcane-Start
+Name: Arcane
+Order: -3
+Entries:
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Возвращены задания и документы представителя НТ, а также лазер передачи энергии.
+  time: '2026-09-15T08:01:50.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/2
+  prNumber: 2
+  labels: []
+  media: []
+  id: 1
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Обновлены спрайты предметов, станционного оборудования и напольных покрытий.
+  time: '2026-09-15T08:12:01.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/3
+  prNumber: 3
+  labels: []
+  media: []
+  id: 2
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Add
+    message: Тайлы более не выдают тёмно-розовые текстуры. (Практически)
+  id: 3
+  time: '2026-09-25T18:22:09.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/13
+  prNumber: 13
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Add
+    message: |-
+      Порт новых спрайтов окружения с WizDen.
+      - Для многих отсутствующих у WizDen прототипов и текстур пришлось спрайтить новые.
+  id: 4
+  time: '2026-10-01T15:44:41.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/5
+  prNumber: 5
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Обновлена базовая версия Trauma Station от 3 октября 2026 года.
+  time: '2026-10-03T05:42:51.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/15
+  prNumber: 15
+  labels: []
+  media: []
+  id: 5
+  historical: true
+- author: WatlerJe, UmbiMax
+  changes:
+  - type: Add
+    message: Новые, но невероятно качественные спрайты урны с трубами.
+  id: 6
+  time: '2026-10-03T05:59:55.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/16
+  prNumber: 16
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Add
+    message: Порт обновлённых спрайтов факсов, аварийных сигнализаций, стазисных кроватей и РПГ СИ
+  id: 7
+  time: '2026-10-08T05:56:15.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/17
+  prNumber: 17
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Обновлена базовая версия Trauma Station от 9 октября 2026 года.
+  time: '2026-10-09T12:58:49.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/23
+  prNumber: 23
+  labels: []
+  media: []
+  id: 8
+  historical: true
+- author: Pawn, Partheo, UmbiMax
+  changes:
+  - type: Add
+    message: Новые спрайты ТЭГа с 13 станции, включая панели, поломку и анимации работы.
+  - type: Add
+    message: Мультитулом можно переключать горячий и холодный режим циркулятора за 2 секунды. Режим сохраняется независимо от температуры газа.
+  - type: Add
+    message: Ломом можно развернуть поток циркулятора. Оба действия доступны и на закреплённых деталях с ЗАКРЫТОЙ ПАНЕЛЬЮ.
+  - type: Add
+    message: При осмотре циркулятора отображаются режим, давление и температура на входе и выходе.
+  - type: Add
+    message: Добавлены платы для сборки генератора и циркуляторов.
+  - type: Tweak
+    message: Детали ТЭГа ломаются при 100 урона и отключают комплект. Окончательно с 175. Сварочный ремонт восстанавливает по 25 урона за 5 секунд. После полного ремонта работа возобновляется автоматически.
+  - type: Tweak
+    message: ТЭГ нельзя разобрать, если урона > 25.
+  - type: Tweak
+    message: При уничтожении детали ТЭГа остаётся уничтоженная машинная рама, а плата и компоненты выпадают на пол.
+  id: 9
+  time: '2026-10-12T18:06:08.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/30
+  prNumber: 30
+  labels: []
+  media:
+  - https://github.com/user-attachments/assets/e549ec36-6618-4065-9f3f-2aa1c427f470
+  - https://github.com/user-attachments/assets/f23ade9c-6f19-46ba-8600-cdb109e8f4e3
+  - https://github.com/user-attachments/assets/11149dc0-27ae-41b4-8dd1-2a20f99e2e8e
+  - https://github.com/user-attachments/assets/b14b2336-b346-46de-b4f3-f44f095efc79
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Обновлена базовая версия Trauma Station от 15 октября 2026 года.
+  time: '2026-10-15T14:35:14.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/35
+  prNumber: 35
+  labels: []
+  media: []
+  id: 10
+  historical: true
+- author: UmbiMax, LuciferEOS
+  changes:
+  - type: Add
+    message: Tesla и сингулярность отображаются на сканере.
+  id: 11
+  time: '2026-10-17T15:29:16.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/51
+  prNumber: 51
+  labels: []
+  media:
+  - https://github.com/user-attachments/assets/be46e280-c039-413b-8c13-26a3e00b4aa9
+  historical: true
+- author: UmbiMax, LuciferEOS, pheenty
+  changes:
+  - type: Add
+    message: Добавлена симуляция сердцебиения с остановкой и фибрилляцией сердца. На пульс влияют особенности организма, препараты и кровопотеря.
+  - type: Tweak
+    message: Ослаблено снижение пульса от лексорина, свинца, трамадола и морфина.
+  - type: Add
+    message: В медицинский анализатор добавлено отображение пульса и опасных состояний сердца.
+  - type: Tweak
+    message: Стазис предотвращает последствия отсутствия работающего сердца.
+  id: 12
+  time: '2026-10-21T15:17:54.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/36
+  prNumber: 36
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax, CollenN, Ghommie
+  changes:
+  - type: Tweak
+    message: 'Перенесён и адаптирован баланс урона от давления из TG13: в вакууме урон нарастает с 2 до 5 единиц в секунду за минуту, при повышении давления до 20 кПа плавно снижается до нуля, а высокое давление наносит до 2 единиц в секунду.'
+  - type: Tweak
+    message: Накопление урона от давления прекращается при 200 единицах только у мёртвого организма. Живые и находящиеся в крите продолжают получать урон.
+  - type: Tweak
+    message: Урон от давления больше не вызывает раны и кровотечение.
+  - type: Add
+    message: Добавлено руководство по баротравме.
+  id: 13
+  time: '2026-10-21T17:17:51.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/58
+  prNumber: 58
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax, LuciferEOS
+  changes:
+  - type: Tweak
+    message: 'Изменено передвижение с поднятым щитом: теперь он замедляет персонажа вместо закрепления на месте.'
+  id: 14
+  time: '2026-10-22T03:53:50.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/52
+  prNumber: 52
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax, LuciferEOS
+  changes:
+  - type: Add
+    message: Добавлена кнопка MAX для заполнения свободного объёма ёмкости из доступного запаса реагентов.
+  - type: Add
+    message: Добавлены кнопки дозировки на 25, 50 и 100 единиц в химмастер и раздатчик реагентов.
+  - type: Fix
+    message: Исправлена выдача дробных остатков реагентов из раздатчика.
+  id: 15
+  time: '2026-10-22T03:54:10.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/53
+  prNumber: 53
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax, LuciferEOS
+  changes:
+  - type: Add
+    message: 'Добавлена контузия от взрывов и светошумовых гранат: белая пелена, звон в ушах, подавление окружающих звуков и речи, нарушения речи и понимания языков. Тяжёлая контузия замедляет персонажа.'
+  - type: Tweak
+    message: 'Переработано ослепление: яркий пересвеченный след последнего видимого кадра постепенно рассеивается. Reduced Motion сохраняет ту же силу и длительность ослепления.'
+  - type: Fix
+    message: Исправлена возможность видеть сквозь стены при ослеплении.
+  - type: Add
+    message: Некоторые гарнитуры и шлемы теперь снижают тяжесть контузии.
+  id: 16
+  time: '2026-10-22T14:42:50.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/49
+  prNumber: 49
+  labels: []
+  media:
+  - https://github.com/user-attachments/assets/4f86fff6-b9d4-41a9-bd2b-b5c558473526
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Fix
+    message: Исправлена ошибка создания призрака на удаляемой карте при остановке сервера.
+  id: 17
+  time: '2026-10-22T14:43:20.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/61
+  prNumber: 61
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: Доработка спрайтов тайлов.
+  id: 18
+  time: '2026-10-23T17:44:43.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/64
+  prNumber: 64
+  labels: []
+  media: []
+  historical: true
+- author: UmbiMax
+  changes:
+  - type: Tweak
+    message: 'Перенесены обновления Trauma Station за 15–29 октября 2026 года: изменения культа крови, еретика, фантома, игровых режимов и снаряжения, а также исправления ошибок.'
+  time: '2026-10-30T08:31:42.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/72
+  prNumber: 72
+  labels: []
+  media: []
+  id: 19
+  historical: true
+- author: AL-S
+  changes:
+  - type: Add
+    message: Добавлены Name Peek и настраиваемый Runechat.
+  - type: Add
+    message: Добавлены ручное закрепление переносных машин и forced-facing для do-after.
+  - type: Add
+    message: Добавлены визуальные эффекты взрывов и пятна растворов на поверхностях.
+  - type: Add
+    message: Добавлены настройки цветов радиоканалов, interaction outlines и кольца кулдауна у курсора.
+  - type: Tweak
+    message: Обновлены клиентские popups.
+  id: 20
+  time: '2026-11-01T07:27:10.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/68
+  prNumber: 68
+  labels: []
+  media:
+  - https://github.com/user-attachments/assets/0a3cf20d-8a73-4dc8-8dba-581ffc937752
+  - https://github.com/user-attachments/assets/9b86d1c9-6235-4e7e-b560-03aa7f7a4157
+  - https://github.com/user-attachments/assets/2a0e1aaf-edc6-4f8c-9c39-40284f0c80c9
+  - https://github.com/user-attachments/assets/1b03ffa8-f7c9-4ecb-893b-27d9a8f18bd2
+  - https://github.com/user-attachments/assets/976d3bf0-c8cc-4b3b-8f3c-cb03c68611de
+  - https://github.com/user-attachments/assets/1736a1a9-3146-4c97-8535-4fb0578978cd
+  - https://github.com/user-attachments/assets/a49c1a20-3411-4eee-8bbf-ed40dd5424de
+  - https://github.com/user-attachments/assets/2e95961e-db8f-44b8-bfa0-28413369e58a
+  - https://github.com/user-attachments/assets/3bc976a4-dfef-4b76-a5fc-6703a4daf962
+  - https://github.com/user-attachments/assets/18c3722c-7b43-40ec-b289-03b4376961d7
+  - https://github.com/user-attachments/assets/a6549b21-65f3-48a0-b13f-8b69ef352f93
+  - https://github.com/user-attachments/assets/e6860f00-8833-454d-ac8c-39ffee6dbb27
+  - https://github.com/user-attachments/assets/f7953d54-c76c-42bb-a25b-6016782bc9dc
+  - https://github.com/user-attachments/assets/b6bcd351-e4a4-44fe-a0eb-c6c2d96df99e
+  - https://github.com/user-attachments/assets/6c1e9074-44dc-46bb-b206-e4fc1bcf152e
+  - https://github.com/user-attachments/assets/5f979516-5d15-4a7b-8c3a-153518dc9d6b
+  - https://github.com/user-attachments/assets/f9b83032-01f2-435e-88d5-1b57f237874d
+  - https://github.com/user-attachments/assets/6f5ef6bf-03a4-4894-83fe-bdfae66c70de
+  - https://github.com/user-attachments/assets/5b24e1b8-82dc-43a1-acf5-29a7b74f085c
+  historical: true
+- author: UmbiMax, PuroSlavKing
+  changes:
+  - type: Tweak
+    message: Шкафы, гардеробы и ящики получили новые спрайты Orion, включая новые палитры робототехников и священника.
+  - type: Add
+    message: Добавлены тематические ящики для поставок, карт и событий.
+  id: 21
+  time: '2026-11-03T06:22:06.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/78
+  prNumber: 78
+  labels: []
+  media:
+  - https://raw.githubusercontent.com/ArcaneSS14/arcane-new/63add8c1369953e1d4928432bedb86193d160040/Resources/Textures/_Arcane/Structures/Storage/Closets/chaplain.rsi/icon.png
+  - https://raw.githubusercontent.com/ArcaneSS14/arcane-new/63add8c1369953e1d4928432bedb86193d160040/Resources/Textures/_Arcane/Structures/Storage/Closets/chaplain.rsi/icon_open.png
+  - https://raw.githubusercontent.com/ArcaneSS14/arcane-new/63add8c1369953e1d4928432bedb86193d160040/Resources/Textures/_Arcane/Structures/Storage/Closets/roboticist.rsi/icon.png
+  - https://raw.githubusercontent.com/ArcaneSS14/arcane-new/63add8c1369953e1d4928432bedb86193d160040/Resources/Textures/_Arcane/Structures/Storage/Crates/robotics_secure.rsi/icon.png
+  - https://raw.githubusercontent.com/ArcaneSS14/arcane-new/63add8c1369953e1d4928432bedb86193d160040/Resources/Textures/_Arcane/Structures/Storage/Crates/cybersun-night_secure.rsi/icon.png
+  historical: true
+- author: AL-S
+  changes:
+  - type: Add
+    message: Добавлена тряска камеры при попаданиях, стрельбе, взрывах и изменении гравитации.
+  - type: Tweak
+    message: Уменьшена стандартная сила отдачи камеры при стрельбе.
+  id: 22
+  time: '2026-11-03T07:34:56.000Z'
+  url: https://github.com/ArcaneSS14/arcane-new/pull/69
+  prNumber: 69
+  labels: []
+  media:
+  - https://github.com/user-attachments/assets/9e3f824e-a256-4d28-a76e-82dbc1eba40a
+  historical: true
+# Arcane-End

@@ -2,24 +2,60 @@ name: Publish
 
 concurrency:
   group: publish
-  cancel-in-progress: true
+  cancel-in-progress: false # Arcane-Edit: do not interrupt publication and Discord delivery
 
 on:
   workflow_dispatch:
+    # Arcane-Start: resolve an ambiguous Discord response only after inspecting the channel.
+    inputs:
+      changelog_confirmed:
+        description: Message hashes from delivery.json confirmed present in Discord (space-separated)
+        type: string
+        required: false
+      changelog_retry:
+        description: Message hashes from delivery.json confirmed absent in Discord (space-separated)
+        type: string
+        required: false
+      changelog_base_run:
+        description: Recovery only - completed publish run whose entire CL is confirmed delivered
+        type: string
+        required: false
+    # Arcane-End
   schedule:
   - cron: '0 8 */2 * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Arcane-Start
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    # Arcane-End
 
     steps:
     - name: Install dependencies
-      run: sudo apt-get install -y python3-paramiko python3-lxml
+      run: sudo apt-get install -y python3-paramiko python3-lxml python3-requests python3-yaml # Arcane-Edit: explicit changelog dependencies
 
     - uses: actions/checkout@v7
       with:
         submodules: 'recursive'
+
+    # Arcane-Start: package the recovered CL for this exact code revision.
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 24.x
+
+    - name: Reconcile build changelog
+      working-directory: Tools/changelog
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        CHANGELOG_BRANCH: ${{ github.ref_name }}
+      run: |
+        npm install --ignore-scripts --no-package-lock
+        node changelog.js --reconcile --snapshot "$GITHUB_SHA"
+    # Arcane-End
 
     - name: Get Engine Tag
       run: |
@@ -53,11 +89,39 @@ jobs:
         PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         GITHUB_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
 
+    # Arcane-Start: the built journal may include recovery entries absent from the commit.
+    - name: Save published changelog
+      uses: actions/upload-artifact@v4
+      with:
+        name: published-changelog
+        overwrite: true
+        path: Resources/Changelog/ArcaneChangelog.yml
+        if-no-files-found: error
+        retention-days: 90
+    # Arcane-End
+
     - name: Publish changelog (Discord)
       run: Tools/actions_changelogs_since_last_run.py
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DISCORD_WEBHOOK_URL: ${{ secrets.CHANGELOG_DISCORD_WEBHOOK }}
+        # Arcane-Start
+        CHANGELOG_DELIVERY_STATE: ${{ runner.temp }}/changelog-delivery/delivery.json
+        CHANGELOG_CONFIRMED_MESSAGES: ${{ inputs.changelog_confirmed }}
+        CHANGELOG_RETRY_MESSAGES: ${{ inputs.changelog_retry }}
+        CHANGELOG_BASE_RUN_ID: ${{ inputs.changelog_base_run }}
+        # Arcane-End
+
+    # Arcane-Start
+    - name: Save Discord delivery receipts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: changelog-delivery-${{ github.run_attempt }}
+        path: ${{ runner.temp }}/changelog-delivery/delivery.json
+        if-no-files-found: ignore
+        retention-days: 90
+    # Arcane-End
 
     - name: Publish changelog (RSS)
       continue-on-error: true

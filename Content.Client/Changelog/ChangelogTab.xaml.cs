@@ -35,19 +35,25 @@ public sealed partial class ChangelogTab : Control
 
     public void PopulateChangelog(ChangelogManager.Changelog changelog)
     {
+        // Arcane-Edit-Start: recovered old PRs belong above the existing unread divider.
+        var main = changelog.Name == MainChangelogName;
+        bool IsRead(ChangelogManager.ChangelogEntry entry) => main
+            ? _changelog.IsRead(entry)
+            : entry.Id <= _changelog.LastReadId;
         var byDay = changelog.Entries
-            .GroupBy(e => e.Time.ToLocalTime().Date)
-            .OrderByDescending(c => c.Key);
+            .GroupBy(e => (Read: main && IsRead(e), Day: e.Time.ToLocalTime().Date))
+            .OrderBy(c => c.Key.Read)
+            .ThenByDescending(c => c.Key.Day);
 
-        var hasRead = changelog.Name != MainChangelogName ||
-                      _changelog.MaxId <= _changelog.LastReadId;
+        var hasRead = !main || changelog.Entries.All(IsRead);
+        // Arcane-Edit-End
 
         foreach (var dayEntries in byDay)
         {
-            var day = dayEntries.Key;
+            var day = dayEntries.Key.Day; // Arcane-Edit: date within the read/unread section
 
             var groupedEntries = dayEntries
-                .GroupBy(c => (c.Author, Read: c.Id <= _changelog.LastReadId))
+                .GroupBy(c => (c.Author, Read: IsRead(c))) // Arcane-Edit: stable PR identities in Arcane
                 .OrderBy(c => c.Key.Read)
                 .ThenBy(c => c.Key.Author);
 

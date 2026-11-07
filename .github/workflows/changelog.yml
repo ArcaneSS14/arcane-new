@@ -1,30 +1,57 @@
 name: PR Changelogs
-concurrency: commit_action
+# Arcane-Edit-Start: keep queued merged PRs instead of replacing the pending update.
+concurrency:
+  group: commit_action
+  queue: max
+  cancel-in-progress: false
+# Arcane-Edit-End
 on:
   pull_request_target:
     types: [closed]
+  # Arcane-Start: bootstrap on the merge that installs or updates this collector.
+  push:
+    paths:
+      - '.github/workflows/changelog.yml'
+      - 'Tools/changelog/**'
+  # Arcane-End
+  # Arcane-Start: recover missed events and failed pushes from the actual merged-PR list.
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  # Arcane-End
 
 env:
-  GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.BOT_TOKEN || github.token }} # Arcane-Edit: bot token optional
   PR_NUMBER: ${{ github.event.number }}
+  CHANGELOG_BRANCH: ${{ vars.CHANGELOG_BRANCH || github.event.repository.default_branch }} # Arcane
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: (github.event_name != 'push' || github.ref_name == github.event.repository.default_branch) && (github.event_name != 'pull_request_target' || (github.event.pull_request.merged == true && github.event.pull_request.base.ref == github.event.repository.default_branch)) # Arcane-Edit: default-branch merges and reconciliation
     permissions:
       contents: write
+      pull-requests: read # Arcane
     steps:
       - name: Checkout Master
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_TOKEN }}
-          ref: "${{ vars.CHANGELOG_BRANCH }}"
+          # Arcane-Edit-Start
+          token: ${{ secrets.BOT_TOKEN || github.token }}
+          ref: ${{ vars.CHANGELOG_BRANCH || github.event.repository.default_branch }}
+          # Arcane-Edit-End
 
       - name: Setup Git
+        # Arcane-Start
+        env:
+          CHANGELOG_USER: ${{ vars.CHANGELOG_USER || 'arcane-changelog' }}
+          CHANGELOG_EMAIL: ${{ vars.CHANGELOG_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+        # Arcane-End
         run: |
-          git config --global user.name "${{ vars.CHANGELOG_USER }}"
-          git config --global user.email "${{ vars.CHANGELOG_EMAIL }}"
+          # Arcane-Edit-Start
+          git config user.name "$CHANGELOG_USER"
+          git config user.email "$CHANGELOG_EMAIL"
+          # Arcane-Edit-End
         shell: bash
 
       - name: Setup Node
@@ -35,21 +62,35 @@ jobs:
       - name: Install Dependencies
         run: |
           cd "Tools/changelog"
-          npm install
+          npm install --ignore-scripts --no-package-lock # Arcane-Edit: no install hooks or generated lockfile
         shell: bash
-        continue-on-error: true
+        # Arcane-Edit: dependency failures must fail the changelog job.
 
       - name: Generate Changelog
         run: |
           cd "Tools/changelog"
-          node changelog.js
+          # Arcane-Edit-Start
+          node changelog.js --reconcile --snapshot "$(git rev-parse HEAD)"
+          # Arcane-Edit-End
         shell: bash
-        continue-on-error: true
+        # Arcane-Edit: generation failures must fail the changelog job.
 
       - name: Commit Changelog
+        # Arcane-Start
+        env:
+          CHANGELOG_BRANCH: ${{ vars.CHANGELOG_BRANCH || github.event.repository.default_branch }}
+          CHANGELOG_MESSAGE: ${{ vars.CHANGELOG_MESSAGE || 'Automatic changelog update' }}
+        # Arcane-End
         run: |
-          git add *.yml
-          git commit -m "${{ vars.CHANGELOG_MESSAGE }} (PR ${{ env.PR_NUMBER }})"
-          git push
+          # Arcane-Edit-Start
+          git add -- Resources/Changelog/*.yml
+          if git diff --cached --quiet; then
+            echo "No new changelog entries"
+            exit 0
+          fi
+          git commit -m "$CHANGELOG_MESSAGE${PR_NUMBER:+ (PR $PR_NUMBER)}"
+          git pull --rebase origin "$CHANGELOG_BRANCH"
+          git push origin "HEAD:$CHANGELOG_BRANCH"
+          # Arcane-Edit-End
         shell: bash
-        continue-on-error: true
+        # Arcane-Edit: push failures must fail the changelog job.
