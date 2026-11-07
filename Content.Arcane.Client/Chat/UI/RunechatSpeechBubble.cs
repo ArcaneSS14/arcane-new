@@ -1,11 +1,11 @@
 using System.Numerics;
+using Content.Client.Chat.UI;
 using Content.Shared.Chat;
+using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Robust.Client.ResourceManagement;
-using Content.Client.Chat.UI;
 
 namespace Content.Arcane.Client.Chat.UI;
 

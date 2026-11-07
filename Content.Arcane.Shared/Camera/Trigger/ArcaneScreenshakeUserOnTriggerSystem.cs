@@ -1,5 +1,5 @@
-using Content.Shared.Trigger;
 using Content.Arcane.Common.Camera;
+using Content.Shared.Trigger;
 
 namespace Content.Arcane.Shared.Camera.Trigger;
 

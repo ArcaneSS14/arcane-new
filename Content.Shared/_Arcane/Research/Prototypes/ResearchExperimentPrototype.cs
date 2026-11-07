@@ -1,7 +1,7 @@
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Arcane.Common.Research;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
-using Content.Arcane.Common.Research;
-using Content.Arcane.Common.Construction.Prototypes;
 
 namespace Content.Shared.Research.Prototypes;
 

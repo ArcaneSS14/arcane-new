@@ -2,9 +2,9 @@ using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 // Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Common.Construction.Prototypes;
 // Arcane-End
 
 namespace Content.Shared.Power.Components;

@@ -5,8 +5,8 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 // Arcane-Start
 using System.Linq;
-using Content.Shared.Research;
 using Content.Arcane.Common.Research;
+using Content.Shared.Research;
 // Arcane-End
 
 namespace Content.Server.Research.Systems;

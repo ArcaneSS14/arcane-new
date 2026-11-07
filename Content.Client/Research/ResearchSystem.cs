@@ -1,9 +1,9 @@
 using Content.Shared.Research.Systems;
 // Arcane-Start
+using Content.Arcane.Common.Research;
 using Content.Shared.Research;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
-using Content.Arcane.Common.Research;
 // Arcane-End
 
 namespace Content.Client.Research;

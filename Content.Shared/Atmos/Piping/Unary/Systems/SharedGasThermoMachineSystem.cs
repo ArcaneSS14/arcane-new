@@ -4,9 +4,9 @@ using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Power.EntitySystems;
 // Arcane-Start
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
-using Content.Arcane.Common.Construction;
 // Arcane-End
 
 namespace Content.Shared.Atmos.Piping.Unary.Systems;

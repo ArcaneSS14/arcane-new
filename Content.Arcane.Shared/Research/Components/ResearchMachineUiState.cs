@@ -1,6 +1,6 @@
-using Robust.Shared.Serialization;
 using Content.Arcane.Common.Research;
 using Content.Shared.Research.Components;
+using Robust.Shared.Serialization;
 
 namespace Content.Arcane.Shared.Research.Components;
 

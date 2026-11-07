@@ -1,10 +1,10 @@
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction;
 using Content.Shared.Construction.Components;
 using Content.Shared.Construction.Prototypes;
-using Content.Shared.Construction;
 using Content.Shared.Construction.Steps;
 using Content.Shared.Examine;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Common.Construction.Prototypes;
 
 namespace Content.Shared.Construction.Steps;
 

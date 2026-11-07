@@ -1,5 +1,5 @@
-using Content.Shared.Camera;
 using Content.Arcane.Common.Camera;
+using Content.Shared.Camera;
 
 namespace Content.Shared.Weapons.Melee;
 

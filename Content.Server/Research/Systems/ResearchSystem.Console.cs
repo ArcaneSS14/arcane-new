@@ -13,8 +13,8 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 // Arcane-Start
-using Content.Shared.Research;
 using Content.Arcane.Common.Research;
+using Content.Shared.Research;
 // Arcane-End
 
 namespace Content.Server.Research.Systems;

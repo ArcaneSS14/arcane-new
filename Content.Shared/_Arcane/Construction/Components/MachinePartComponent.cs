@@ -1,5 +1,5 @@
-using Robust.Shared.Prototypes;
 using Content.Arcane.Common.Construction.Prototypes;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Construction.Components;
 

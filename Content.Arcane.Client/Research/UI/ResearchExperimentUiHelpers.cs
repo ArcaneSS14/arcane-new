@@ -1,9 +1,9 @@
+using Content.Arcane.Shared.Research.Components;
 using Content.Shared.Research.Components;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Utility;
-using Content.Arcane.Shared.Research.Components;
 
 namespace Content.Arcane.Client.Research.UI;
 

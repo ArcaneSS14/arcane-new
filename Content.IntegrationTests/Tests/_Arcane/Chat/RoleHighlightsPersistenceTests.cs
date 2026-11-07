@@ -1,5 +1,5 @@
-using Content.Arcane.Common.Chat;
 using Content.Arcane.Client.Chat.Highlights;
+using Content.Arcane.Common.Chat;
 using Content.Client.UserInterface.Systems.Chat;
 using Content.IntegrationTests.Fixtures;
 using Robust.Shared.ContentPack;

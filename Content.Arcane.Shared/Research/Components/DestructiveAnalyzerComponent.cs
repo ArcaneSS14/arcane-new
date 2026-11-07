@@ -1,5 +1,5 @@
-using Robust.Shared.Audio;
 using Content.Shared.Research.Components;
+using Robust.Shared.Audio;
 
 namespace Content.Arcane.Shared.Research.Components;
 

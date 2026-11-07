@@ -14,8 +14,8 @@ using Content.Client.Gameplay;
 using Robust.Shared.Utility;
 using static Content.Client.CharacterInfo.CharacterInfoSystem;
 // Arcane-Start
-using Content.Client.Audio;
 using Content.Arcane.Common.Chat;
+using Content.Client.Audio;
 // Arcane-End
 
 namespace Content.Client.UserInterface.Systems.Chat;

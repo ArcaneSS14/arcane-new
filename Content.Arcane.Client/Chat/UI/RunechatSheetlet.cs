@@ -1,13 +1,13 @@
 using System.Numerics;
+using Content.Arcane.Common.CCVar;
 using Content.Client.Stylesheets;
+using static Content.Client.Stylesheets.StylesheetHelpers;
 using Content.Client.Stylesheets.Stylesheets;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
-using Content.Arcane.Common.CCVar;
-using static Content.Client.Stylesheets.StylesheetHelpers;
 
 namespace Content.Arcane.Client.Chat.UI;
 

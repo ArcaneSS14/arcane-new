@@ -10,9 +10,9 @@ using Content.Shared.Power;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
 // Arcane-Start
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
-using Content.Arcane.Common.Construction;
 // Arcane-End
 
 namespace Content.Server.Atmos.Portable;

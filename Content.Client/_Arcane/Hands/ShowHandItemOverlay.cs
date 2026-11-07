@@ -1,12 +1,12 @@
 using System.Numerics;
 using Content.Client.Cooldown;
+using Content.Shared.CCVar;
 using Content.Shared.Timing.Components;
 using Content.Shared.Timing.Systems;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Client.UserInterface;
 using Robust.Shared.Map;
-using Content.Shared.CCVar;
 
 namespace Content.Client.Hands;
 

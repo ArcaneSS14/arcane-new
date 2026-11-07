@@ -1,13 +1,13 @@
 using System.Linq;
+using Content.Arcane.Common.Construction.Prototypes;
 using Content.Server.Construction.Components;
 using Content.Shared.Construction.Components;
+using Content.Shared.Construction.Events;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.Examine;
 using Content.Shared.Verbs;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.Construction.Prototypes;
-using Content.Shared.Construction.Events;
 
 namespace Content.Server.Construction;
 

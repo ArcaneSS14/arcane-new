@@ -1,7 +1,7 @@
+using Content.Arcane.Common.Construction.Prototypes;
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Common.Construction.Prototypes;
 
 namespace Content.Shared.Research.Components;
 

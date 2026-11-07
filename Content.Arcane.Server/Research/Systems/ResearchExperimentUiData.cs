@@ -1,12 +1,12 @@
 using System.Globalization;
 using System.Linq;
-using Content.Shared.Research.Components;
-using Content.Shared.Research.Prototypes;
+using Content.Arcane.Shared.Research.Components;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Prototypes;
 using Content.Shared.Chemistry.Reagent;
+using Content.Shared.Research.Components;
+using Content.Shared.Research.Prototypes;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Shared.Research.Components;
 
 namespace Content.Arcane.Server.Research.Systems;
 

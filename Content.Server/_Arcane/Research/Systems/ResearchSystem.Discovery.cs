@@ -1,10 +1,10 @@
 using System.Linq;
+using Content.Arcane.Common.Research;
 using Content.Server.Construction.Completions;
 using Content.Shared.Research;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 using Robust.Shared.Containers;
-using Content.Arcane.Common.Research;
 
 namespace Content.Server.Research.Systems;
 

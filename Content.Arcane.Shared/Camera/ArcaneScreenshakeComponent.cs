@@ -1,6 +1,6 @@
+using Content.Arcane.Common.Camera;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
-using Content.Arcane.Common.Camera;
 
 namespace Content.Arcane.Shared.Camera;
 

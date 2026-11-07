@@ -1,27 +1,27 @@
-using Content.Shared.FixedPoint;
+using Content.Arcane.Common.Research;
 using Content.Goobstation.Shared.Fishing.Components;
 using Content.Server.Construction.Components;
 using Content.Server.Research.Components;
-using Content.Shared.Research;
-using Content.Shared.Research.Prototypes;
-using Content.Shared.Construction.Components;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Piping.Unary.Components;
-using Content.Shared.Body.Components;
 using Content.Shared.Body;
+using Content.Shared.Body.Components;
 using Content.Shared.Chat;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Construction.Components;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Database;
 using Content.Shared.Explosion.Components;
+using Content.Shared.FixedPoint;
 using Content.Shared.Humanoid;
 using Content.Shared.Interaction;
+using Content.Shared.Research;
 using Content.Shared.Research.Components;
+using Content.Shared.Research.Prototypes;
 using Content.Shared.Tag;
-using Content.Arcane.Common.Research;
 
 namespace Content.Server.Research.Systems;
 

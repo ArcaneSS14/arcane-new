@@ -1,6 +1,6 @@
+using Content.Arcane.Common.Camera;
 using Content.Shared.Camera;
 using Content.Shared.Weapons.Ranged.Components;
-using Content.Arcane.Common.Camera;
 
 namespace Content.Shared.Weapons.Ranged.Systems;
 

@@ -5,8 +5,8 @@ using Content.Shared.Research.Prototypes;
 using Content.Server.Research.Systems;
 using Content.Shared.Research.Components;
 // Arcane-Start
-using Content.Shared.Research;
 using Content.Arcane.Common.Research;
+using Content.Shared.Research;
 // Arcane-End
 
 namespace Content.Server.Research.Disk

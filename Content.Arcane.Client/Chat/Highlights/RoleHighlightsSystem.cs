@@ -1,13 +1,13 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Content.Arcane.Common.Chat;
 using Content.Client.UserInterface.Systems.Chat;
 using Content.Shared.Roles;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
-using Content.Arcane.Common.Chat;
 
 namespace Content.Arcane.Client.Chat.Highlights;
 

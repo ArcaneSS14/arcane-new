@@ -1,14 +1,16 @@
 using System.Linq;
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Arcane.Server.Construction.Components;
+using Content.Arcane.Shared.Construction;
 using Content.Server.Beam;
+using Content.Server.Construction;
 using Content.Server.Construction.Components;
 using Content.Server.Stack;
 using Content.Server.Storage.EntitySystems;
 using Content.Shared.Construction.Components;
+using Content.Shared.Construction.Events;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.DoAfter;
-using Content.Arcane.Shared.Construction;
-using Content.Arcane.Server.Construction.Components;
-using Content.Server.Construction;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
@@ -18,8 +20,6 @@ using Content.Shared.Wires;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Common.Construction.Prototypes;
-using Content.Shared.Construction.Events;
 
 namespace Content.Arcane.Server.Construction;
 

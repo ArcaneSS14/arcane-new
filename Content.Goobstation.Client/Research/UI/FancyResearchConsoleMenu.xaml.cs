@@ -11,10 +11,10 @@ using Content.Shared.Research.Prototypes;
 using Robust.Client.Player;
 using Robust.Shared.Input;
 // Arcane-Start
-using Content.Shared.Research;
-using Robust.Client.Graphics;
 using Content.Arcane.Common.Research;
 using Content.Client.Research.UI;
+using Content.Shared.Research;
+using Robust.Client.Graphics;
 // Arcane-End
 
 namespace Content.Goobstation.Client.Research.UI;

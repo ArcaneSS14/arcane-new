@@ -1,9 +1,9 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 // Arcane-Start
-using Robust.Shared.Serialization;
-using Content.Shared.Radio;
 using Content.Arcane.Common.Research;
+using Content.Shared.Radio;
+using Robust.Shared.Serialization;
 // Arcane-End
 
 namespace Content.Shared.Research.Prototypes;

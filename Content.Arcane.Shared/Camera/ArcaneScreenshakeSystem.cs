@@ -1,13 +1,13 @@
-using System.Numerics;
 using System.Linq;
+using System.Numerics;
+using Content.Arcane.Common.Camera;
 using Content.Shared.CCVar;
+using Content.Shared.Camera;
 using Robust.Shared.Configuration;
-using Robust.Shared.Noise;
 using Robust.Shared.Network;
+using Robust.Shared.Noise;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
-using Content.Shared.Camera;
-using Content.Arcane.Common.Camera;
 
 namespace Content.Arcane.Shared.Camera;
 

@@ -17,10 +17,10 @@ using Content.Shared.Power.EntitySystems;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 // Arcane-Start
-using Content.Shared.Construction;
-using Content.Shared.Construction.Events;
 using System.Linq;
 using Content.Arcane.Common.Construction;
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
 // Arcane-End
 
 namespace Content.Shared.Bed;

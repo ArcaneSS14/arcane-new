@@ -1,8 +1,8 @@
 using System.Numerics;
+using Content.Arcane.Common.Camera;
 using Content.Shared.Camera;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
-using Content.Arcane.Common.Camera;
 
 namespace Content.Server.Explosion.EntitySystems;
 

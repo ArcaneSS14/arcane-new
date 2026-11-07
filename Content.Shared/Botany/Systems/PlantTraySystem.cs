@@ -11,9 +11,9 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 // Arcane-Start
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
-using Content.Arcane.Common.Construction;
 // Arcane-End
 
 namespace Content.Shared.Botany.Systems;

@@ -1,10 +1,10 @@
-using Content.Shared.FixedPoint;
+using Content.Arcane.Common.Construction.Prototypes;
 using Content.Shared.Construction.Components;
 using Content.Shared.Construction.Prototypes;
+using Content.Shared.FixedPoint;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.Construction.Prototypes;
 
 namespace Content.Shared.Construction.Events;
 

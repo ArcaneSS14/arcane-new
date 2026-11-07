@@ -3,8 +3,8 @@ using Content.Shared.Tag;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 // Arcane-Start
-using Content.Shared.Construction.Prototypes;
 using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Prototypes;
 // Arcane-End
 
 namespace Content.Shared.Construction.Components;

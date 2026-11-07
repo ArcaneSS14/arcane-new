@@ -1,9 +1,9 @@
 using Content.Goobstation.Common.Research;
 using Robust.Shared.Serialization;
 // Arcane-Start
+using Content.Arcane.Common.Research;
 using Content.Shared.Research.Prototypes;
 using Robust.Shared.Prototypes;
-using Content.Arcane.Common.Research;
 // Arcane-End
 
 namespace Content.Shared.Research.Components
