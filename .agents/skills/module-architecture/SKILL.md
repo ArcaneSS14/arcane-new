@@ -15,7 +15,7 @@ Verify repository identity/remotes/branch only for ownership, inherited-path, sy
 
 ## Правила и границы
 
-- Arcane runtime code belongs in root `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`; Arcane resources belong in existing `_Arcane` directories under `Resources`. `Modules/Arcane` contains guidance, not runtime projects.
+- Choose the destination through the [owner-local placement table](../../rules/architecture-and-ownership.md#owner-local-paths), including same-assembly partials and infrastructure exceptions; choose markers afterwards.
 - TraumaStation is the sync trajectory for inherited code. Keep Trauma-owned and vanilla root edits minimal and Arcane-marked; owner-local Arcane module/underscore paths receive no redundant marker. Never use foreign markers or an invalid comment format.
 - Classify inherited paths with `.agents/rules/fork-trajectory-priority.md` and use `CONTRIBUTING.md` for Arcane ownership/contributor conventions before selecting a sync-sensitive destination.
 - Choose Common for contracts below gameplay Shared, Shared for replicated/prediction-safe contracts, Server for authority/hidden state, Client for presentation/UI, and Resources for data. Do not choose a layer to bypass access.
@@ -48,7 +48,7 @@ Prefer an owner-local Arcane path for Arcane-only behavior. For a sync-trajector
 
 ## Проверка
 
-Confirm owner path, marker placement where applicable, assembly direction/access, existing test owner, and final changed paths. Use only the smallest project/build/test verification warranted by the altered surface.
+Confirm owner path, marker placement where applicable, assembly direction/access, existing test owner, and final changed paths. Use the [testing matrix](../testing/references/testing-matrix.md) for changed assembly/load boundaries; a successful compile alone does not establish sandbox compatibility.
 
 ## References
 

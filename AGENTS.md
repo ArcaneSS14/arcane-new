@@ -132,12 +132,12 @@ Our own changes carry Arcane markers only:
 * two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
 * over 5 changed lines: keep the active change inside an `Arcane-Edit` block; comment out removed content only when disabling it is the intended behavior
 * merge only contiguous Arcane blocks of the same kind into one pair; never bridge unchanged or unrelated content, or merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
-* an added `using` goes after all others, inside an Arcane block or trailing `Arcane`
+* in inherited files, Arcane imports form one sorted final group under [Added usings](.agents/rules/arcane-edit-markers.md#added-usings); preserve inherited groups
 * never put a bare `-Start` or `-End` on a line instead of a pair
 
 Never write `Trauma - `, `<Trauma>`, `Goobstation-`, `/* Trauma`, or any other fork's marker on our own change, whatever the surrounding file uses.
 
-Arcane owner-local paths take no marker, because nothing syncs into them: `Content.Arcane.*`, `Resources/**/_Arcane/**`, and `Resources/Locale/**/_Arcane/**`.
+Choose ownership before markers using the [placement table](.agents/rules/architecture-and-ownership.md#owner-local-paths). Owner-local Arcane modules, resources, same-assembly `_Arcane` partials and infrastructure need no wrappers. Mark only required changes in inherited files.
 
 Arcane changes inside `Content.Trauma.*`, `Resources/_Trauma/**`, `*.Trauma.cs`, `Content.Medical.*`, `Resources/_Shitmed/**`, and vanilla root paths require an Arcane marker when the file format supports comments. If a valid marker cannot be represented, stop before editing and report the limitation rather than corrupting the file or silently leaving an unmarked change.
 

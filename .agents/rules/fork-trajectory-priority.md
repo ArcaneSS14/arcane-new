@@ -79,20 +79,11 @@ Do not copy another fork's placement rule as an Arcane rule. Follow the file-for
 
 Before changing a sync-sensitive file, ask whether an Arcane-owned extension point can own the feature. Use it when it preserves the intended behavior and does not violate architecture.
 
-## Prefer a partial over an edit
+## Choose ownership before a partial
 
-The established mechanism for keeping root-project code out of sync conflicts is a fork-suffixed partial file in the same directory.
+Use the [owner-local placement table](architecture-and-ownership.md#owner-local-paths). Independent Arcane behavior belongs in its module; a coupled partial belongs in `_Arcane` within the same assembly. Keep only necessary marked hooks/declaration edits in the inherited file. Do not inline a large extension into that file merely to avoid a separate partial.
 
-```csharp
-// Content.Shared/Atmos/MobStateSystem.cs          base, edited rarely
-// Content.Shared/Atmos/MobStateSystem.Trauma.cs   owner-local, added freely
-```
-
-The suffix identifies the owner of the partial and can avoid changing a base file. Check for an established suffix and applicable scoped guidance before creating one.
-
-Use it whenever the change does not require altering the base declaration. Declaring a partial method in the base file and filling it in a `.Trauma.cs` partial keeps the base diff down to the one attribute line.
-
-When the base class is not already `partial`, adding a fork-suffixed partial may require a minimal edit to the base declaration. Mark that edit and explain why it is needed.
+Existing upstream fork-suffixed partials describe upstream organization, not a preferred destination for new Arcane files. Preserve their untouched content and attribution. A partial cannot cross assemblies; do not introduce cyclic references, reflection or string-based replacement of typed contracts just to move it.
 
 ## Prefer an owner resource path over a base resource edit
 

@@ -2,7 +2,8 @@
 | Change | Minimum meaningful verification |
 | --- | --- |
 | Shared/server/client C# | affected project build; focused test when it covers the changed behavior |
-| Network or prediction | focused test of the affected network/prediction path when available |
+| Network or prediction | focused test of the affected path; if asserting received client state, verify the existing synchronization helper contract rather than assuming fixed ticks imply delivery |
+| Code moved into or new API calls in client-sandboxed assemblies | affected build plus existing `Content.IntegrationTests.Tests.Utility.SandboxTest.Test`; inspect the rejected assembly/member before changing the fix |
 | Prototype | targeted schema/resource validation when available; build only if code also changed |
 | FTL | targeted localization validation when available; no build by default |
 | RSI or sprite state | targeted RSI validator and reference check when available |

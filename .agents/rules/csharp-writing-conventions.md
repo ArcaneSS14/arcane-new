@@ -5,7 +5,8 @@ These rules are derived from conventions the upstream project already enforces, 
 
 ## File layout
 
-- `using` directives first, then file-scoped namespace, then types.
+- Preserve license/header text; no blank lines before the first content. Place imports before the file-scoped namespace, with exactly one blank line before and after that namespace (no artificial header when imports are absent).
+- Keep adjacent imports contiguous. Sort owner-local imports System-first, then alphabetically. In inherited files, sort only the Arcane group under [Added usings](arcane-edit-markers.md#added-usings); preserve upstream order.
 - One primary type per file, named after the file.
 - Fields and auto-properties before every method. Readers orient by looking at the data first.
 - Non-auto properties (`=> _field.Trim()`) are not fields. Keep them with the methods, not above them.
@@ -37,7 +38,7 @@ if (HasComp<MindContainerComponent>(uid))
 
 Document with XML comments on public methods, `[DataField]` members, and prototype types. `Content.Shared/Polymorph/PolymorphPrototype.cs` carries `<summary>` on essentially every member because the types are consumed from YAML where the signature is the only documentation.
 
-Comments belong in components and prototype types, and beside genuinely non-obvious logic. They do not belong on straightforward statements, and there are no section banners. Placement rules and the measured density in this repository: `.agents/rules/commenting-conventions.md`.
+Use [commenting conventions](commenting-conventions.md) for XML documentation and explanations of non-obvious logic; do not narrate straightforward statements or add section banners.
 
 ## Modernize toward current C#
 

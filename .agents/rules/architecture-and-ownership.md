@@ -18,13 +18,17 @@ Do not infer ownership from a filename or namespace alone.
 
 ## Owner-local paths
 
-Treat these as owner-local when repository metadata confirms ownership:
+Choose ownership before marker syntax:
 
-- owner-specific project directories such as `Content.Arcane.*`
-- verified owner-specific resource directories such as `Resources/Prototypes/_Arcane`
-- projects explicitly created and maintained by the current repository
+| Material | Destination |
+| --- | --- |
+| Independent Arcane runtime feature | Existing root `Content.Arcane.*` project for its layer |
+| Arcane resources | Existing `Resources/**/_Arcane/**` owner paths |
+| Tightly coupled partial or contract that cannot reasonably move across assembly/private boundaries | `_Arcane` inside the existing owning `Content.*` project, preserving namespace and typed APIs |
+| Arcane test or database migration | `_Arcane` within the existing test or database-migration infrastructure; preserve migration IDs/provider |
+| Necessary integration with inherited code, including shared `Resources/migration.yml` | Minimal marked change in the inherited file |
 
-Owner-local files do not receive redundant owner edit markers.
+Owner-local files receive no ownership wrappers or per-line edit markers. `_Arcane` inside a base project is an exception for a demonstrated dependency constraint, not a default home for independent systems. A generator-required `partial` alone does not justify it. `Modules/Arcane` holds guidance, not runtime code. Preserve licenses and source attribution; our edits do not make a whole inherited file ours.
 
 Files inherited from an upstream repository and located outside owner-local paths receive the current repository marker around the smallest changed block under `.agents/rules/arcane-edit-markers.md` when the format supports safe comments. Otherwise, stop before editing and report the format limitation; do not corrupt the file or silently leave an unmarked change. An intention to upstream a change does not exempt it from the current destination's marker policy.
 
@@ -42,7 +46,7 @@ Moving a contract to Shared solely to bypass access is forbidden. Shared receive
 | `Content.Server` | Authoritative validation and mutation, protected outcomes, persistence coordination, and server-only simulation | Window/control code and decisions delegated to client input |
 | `Content.Client` | Presentation, XAML controls, local rendering, client input, and prediction-safe feedback | Security decisions, hidden-state calculation, authoritative outcomes |
 
-Put code in the narrowest layer that owns its dependencies. Arcane-only behavior belongs in Arcane owner projects; base projects own behavior reusable by base content. A namespace or project reference does not change these responsibilities.
+Put code in the narrowest layer that owns its dependencies, following the placement table above for coupled partials. Base projects own reusable base behavior; a namespace or project reference does not change these responsibilities.
 
 For UI, keep XAML focused on layout and code-behind focused on view state and translating control events into intent. A BUI or EUI adapter owns the UI lifecycle, state binding, and message transport. Shared owns only the serializable contract needed across the boundary; it does not own the window or the authority decision.
 
