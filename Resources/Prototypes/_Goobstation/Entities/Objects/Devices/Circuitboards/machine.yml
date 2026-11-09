@@ -11,9 +11,13 @@
   - type: MachineBoard
     prototype: VinylPlayer
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Steel: 1
       WoodPlank: 3
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -26,9 +30,13 @@
   - type: MachineBoard
     prototype: TapeDeck
     stackRequirements:
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
       Plastic: 3
       WoodPlank: 5
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -41,11 +49,15 @@
   - type: MachineBoard
     prototype: StationRadioServer
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Steel: 10
       Plastic: 10
       Plasma: 5
       CableHV: 4
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -58,10 +70,14 @@
   - type: MachineBoard
     prototype: StationRadioRig
     stackRequirements:
-      Manipulator: 3
+      # Manipulator: 3 # Arcane-Edit: replaced by machine parts
       Steel: 5
       Glass: 5
       Cable: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 3
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard
@@ -74,8 +90,12 @@
   - type: MachineBoard
     prototype: StationRadioReceiver
     stackRequirements:
-      Manipulator: 1
+      # Manipulator: 1 # Arcane-Edit: replaced by machine parts
       Cable: 2
+    # Arcane-Start
+    partRequirements:
+      Servo: 1
+    # Arcane-End
 
 - type: entity
   parent: BaseMachineCircuitboard

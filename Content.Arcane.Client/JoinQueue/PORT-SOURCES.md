@@ -20,7 +20,9 @@ entry or change queue order. Scores are bounded and accepted only from the
 current waiting connection. Network messages belong to the client application's
 lifetime; world systems are recreated on reconnect.
 
-Audio under `Resources/Audio/_Arcane/MiniGames` is CC0-1.0; its original
-`attributions.yml` retains the four Freesound links. The spacepod sprite is
+Audio under `Resources/Audio/_Arcane/MiniGames` was copied unchanged from old
+Arcane. Its inherited Freesound references have not been matched to the shipped
+files; their attribution remains unresolved. The files are retained in the draft
+pending source verification, not certified as CC0. The spacepod sprite is
 CC-BY-SA-3.0, credited to Paradise Station / Space Station 13 in its RSI metadata.
 Existing Trauma fonts and creature sprites are reused.

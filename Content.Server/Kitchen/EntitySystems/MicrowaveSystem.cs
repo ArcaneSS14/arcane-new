@@ -41,6 +41,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared.Construction.Events; // Arcane
 
 namespace Content.Server.Kitchen.EntitySystems
 {
@@ -94,6 +95,10 @@ namespace Content.Server.Kitchen.EntitySystems
             SubscribeLocalEvent<MicrowaveComponent, MicrowaveEjectMessage>(OnEjectMessage);
             SubscribeLocalEvent<MicrowaveComponent, MicrowaveEjectSolidIndexedMessage>(OnEjectIndex);
             SubscribeLocalEvent<MicrowaveComponent, MicrowaveSelectCookTimeMessage>(OnSelectTime);
+            // Arcane-Start
+            SubscribeLocalEvent<MicrowaveComponent, RefreshPartsEvent>(OnPartsRefresh);
+            SubscribeLocalEvent<MicrowaveComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+            // Arcane-End
 
             SubscribeLocalEvent<ActiveMicrowaveComponent, ComponentStartup>(OnCookStart);
             SubscribeLocalEvent<ActiveMicrowaveComponent, ComponentShutdown>(OnCookStop);
@@ -291,6 +296,42 @@ namespace Content.Server.Kitchen.EntitySystems
         {
             _deviceLink.EnsureSinkPorts(ent, ent.Comp.OnPort);
         }
+
+        // Arcane-Start
+        private void OnPartsRefresh(EntityUid uid, MicrowaveComponent component, RefreshPartsEvent args)
+        {
+            // The first refresh runs before any upgrade changed these (a machine built with parts refreshes on
+            // startup, before map init), so they are the unupgraded values; later refreshes reuse them.
+            component.BaseCookTimeMultiplier ??= component.CookTimeMultiplier;
+            component.BaseCapacity ??= component.Capacity;
+            component.BaseExplosionChance ??= component.ExplosionChance;
+
+            var microLaserTier = args.GetPartRating(component.MicroLaserPart);
+            var matterBinTier = args.GetPartRating(component.MatterBinPart);
+            component.CookTimeMultiplier = component.BaseCookTimeMultiplier.Value * RefreshPartsEvent.GetLinearMultiplier(microLaserTier, 0.1f, 0.5f, 1.2f);
+            component.ExplosionChance = MathF.Max(0f, component.BaseExplosionChance.Value - microLaserTier * 0.05f);
+            component.Capacity = (int)MathF.Round(component.BaseCapacity.Value * RefreshPartsEvent.GetPositiveTierMultiplier(matterBinTier));
+
+            UpdateUserInterfaceState(uid, component);
+        }
+
+        private static void OnUpgradeExamine(EntityUid uid, MicrowaveComponent component, UpgradeExamineEvent args)
+        {
+            var speedMultiplier = component.CookTimeMultiplier <= 0f
+                ? 1f
+                : 1f / component.CookTimeMultiplier;
+            var capacityMultiplier = component.BaseCapacity is not > 0
+                ? 1f
+                : (float)component.Capacity / component.BaseCapacity.Value;
+            var malfunctionReduction = component.BaseExplosionChance is not > 0f
+                ? 1f
+                : component.ExplosionChance / component.BaseExplosionChance.Value;
+
+            args.AddPercentageUpgrade("machine-upgrade-cook-speed", speedMultiplier);
+            args.AddPercentageUpgrade("machine-upgrade-capacity", capacityMultiplier);
+            args.AddPercentageUpgrade("machine-upgrade-malfunction-reduction", malfunctionReduction);
+        }
+        // Arcane-End
 
         /// <summary>
         /// Kills the user by microwaving their head

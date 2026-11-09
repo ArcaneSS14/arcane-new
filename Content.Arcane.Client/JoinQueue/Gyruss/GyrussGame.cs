@@ -28,7 +28,7 @@ public sealed class GyrussGame
 
     public float PlayerAngle { get; private set; }
     public int Score { get; private set; }
-    public int Lives { get; private set; }
+    public int Lives { get; private set; } = 3;
     public int Wave { get; private set; }
     public bool GameOver { get; private set; }
     public bool Victory { get; private set; }

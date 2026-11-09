@@ -288,6 +288,7 @@ public sealed partial class HumanoidProfileEditor
                 _jobPriorities.Add((job.ID, selector));
                 jobContainer.AddChild(selector);
                 jobContainer.AddChild(loadoutWindowBtn);
+                AddRoleHighlightEditorButton(jobContainer, job); // Arcane
                 category.AddChild(jobContainer);
             }
         }

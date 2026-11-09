@@ -34,7 +34,8 @@ public abstract partial class InteractionTest
     protected const string Rod = "MetalRod";
 
     // Parts
-    protected const string Manipulator1 = "MicroManipulatorStockPart";
+    protected const string Servo1 = "MicroServoStockPart"; // Arcane-Edit
+    protected const string MatterBin1 = "MatterBinStockPart"; // Arcane
     protected const string Battery1 = "PowerCellSmall";
     protected const string Battery4 = "PowerCellHyper";
 

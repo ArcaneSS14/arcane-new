@@ -101,7 +101,7 @@ public sealed partial class AtmosphereSystem
         // Start applying fire effects and spreading to adjacent tiles.
         if (tile.Hotspot.Bypassing)
         {
-            tile.Hotspot.State = 3;
+            // tile.Hotspot.State = 3; // Arcane-Edit: State = 3 > removed, PerformHotspotExposure sets the state from the temperature
 
             var gridUid = ent.Owner;
             var tilePos = tile.GridIndices;
@@ -148,11 +148,13 @@ public sealed partial class AtmosphereSystem
                 }
             }
         }
-        else
-        {
-            // Little baby fire. Set the sprite state based on the current size of the fire.
-            tile.Hotspot.State = (byte)(tile.Hotspot.Volume > Atmospherics.CellVolume * 0.4f ? 2 : 1);
-        }
+        // Arcane-Edit-Start: Orion fire states follow the temperature, set in PerformHotspotExposure
+        // else
+        // {
+        //     // Little baby fire. Set the sprite state based on the current size of the fire.
+        //     tile.Hotspot.State = (byte)(tile.Hotspot.Volume > Atmospherics.CellVolume * 0.4f ? 2 : 1);
+        // }
+        // Arcane-Edit-End
 
         if (tile.Hotspot.Temperature > tile.MaxFireTemperatureSustained)
             tile.MaxFireTemperatureSustained = tile.Hotspot.Temperature;
@@ -166,8 +168,10 @@ public sealed partial class AtmosphereSystem
             // The greater the fire state, the greater the volume.
             _audio.PlayPvs(HotspotSound,
                 coordinates,
-                HotspotSound.Params.WithVariation(0.15f / tile.Hotspot.State)
-                    .WithVolume(-5f + 5f * tile.Hotspot.State));
+                // Arcane-Edit-Start: keep the old loudness range with the 7 fire states
+                HotspotSound.Params.WithVariation(0.15f / Math.Min(tile.Hotspot.State, (byte) 3))
+                    .WithVolume(-5f + 5f * Math.Min(tile.Hotspot.State, (byte) 3)));
+                // Arcane-Edit-End
         }
 
         if (_hotspotSoundCooldown > HotspotSoundCooldownCycles)
@@ -274,6 +278,19 @@ public sealed partial class AtmosphereSystem
             tile.Hotspot.Volume = affected.ReactionResults[(byte)GasReaction.Fire] * Atmospherics.FireGrowthRate;
             Merge(tile.Air, affected);
         }
+
+        // Arcane-Start: Orion fire states, from the temperature after this cycle's reaction
+        tile.Hotspot.State = tile.Hotspot.Temperature switch
+        {
+            <= 390.15f => 1,
+            <= 475.15f => 2,
+            <= 570.15f => 3,
+            <= 1000.15f => 4,
+            <= 5000.15f => 5,
+            <= 10000.15f => 6,
+            _ => 7,
+        };
+        // Arcane-End
 
         var fireEvent = new TileFireEvent(tile.Hotspot.Temperature, tile.Hotspot.Volume);
         _entSet.Clear();

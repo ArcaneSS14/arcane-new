@@ -1,0 +1,13 @@
+- type: entity
+  parent: Jug
+  suffix: plasma
+  id: JugPlasma
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Label
+    localizedLabel: reagent-name-plasma
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Plasma
+        Quantity: 240

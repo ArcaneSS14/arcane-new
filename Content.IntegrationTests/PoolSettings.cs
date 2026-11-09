@@ -1,3 +1,5 @@
+using Robust.Shared.ContentPack; // Arcane
+
 namespace Content.IntegrationTests;
 
 /// <inheritdoc/>
@@ -25,6 +27,8 @@ public sealed class PoolSettings : PairSettings
     /// If true, this enables the creation of admin logs during the test.
     /// </summary>
     public bool AdminLogsEnabled { get; init; }
+
+    internal Action<IWritableDirProvider, PoolTestLogHandler> ClientBeforeIoC { get; init; } // Arcane
 
     /// <summary>
     /// Set to true if the given server/client pair should be in the lobby.

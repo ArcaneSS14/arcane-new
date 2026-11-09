@@ -358,9 +358,11 @@ public sealed partial class JoinQueueSystem : EntitySystem
 
     internal static int GetMaxScore(QueueMiniGameKind game) => game switch
     {
-        QueueMiniGameKind.Gyruss => 5000,
-        QueueMiniGameKind.GoGoShitcurity => 10000,
-        QueueMiniGameKind.SpaceInvaders => 6000,
+        // These games continue indefinitely; only the message's integer range bounds the score.
+        QueueMiniGameKind.Gyruss => int.MaxValue,
+        QueueMiniGameKind.GoGoShitcurity => int.MaxValue,
+        // Seven fixed waves, including every crawler and every hit on their cores.
+        QueueMiniGameKind.SpaceInvaders => 6535,
         _ => 0,
     };
 

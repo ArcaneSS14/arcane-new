@@ -1,10 +1,40 @@
+using System.Linq;
 using Content.Arcane.Client.JoinQueue.SpaceInvaders;
 using Content.Arcane.Client.JoinQueue.Gyruss;
+using Content.Arcane.Server.JoinQueue;
+using Content.Arcane.Shared.JoinQueue;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class QueueMiniGameLogicTest
 {
+    [Test]
+    public void InvadersFullVictoryScoreFitsTheServerLeaderboard()
+    {
+        var game = new SpaceInvadersGame();
+        game.Reset();
+        for (var wave = 1; wave <= 7; wave++)
+        {
+            Assert.That(game.Wave, Is.EqualTo(wave));
+            var health = game.CoreHealth;
+            for (var hit = 0; hit < health; hit++)
+            {
+                game.Bullets.Add(new SpaceInvadersGame.Bullet(game.CoreX + 1f, game.CoreY + 1f, 0f, 0f, true));
+                game.Update(0f, false, false, false);
+            }
+            foreach (var crawler in game.Crawlers.ToArray())
+            {
+                game.Bullets.Add(new SpaceInvadersGame.Bullet(crawler.X + 1f, crawler.Y + 1f, 0f, 0f, true));
+                game.Update(0f, false, false, false);
+            }
+        }
+
+        Assert.That(game.Victory, Is.True);
+        Assert.That(game.Score, Is.EqualTo(6535));
+        Assert.That(JoinQueueSystem.GetMaxScore(QueueMiniGameKind.SpaceInvaders), Is.GreaterThanOrEqualTo(game.Score),
+            "Completing the actual seven waves must not lose points when submitted to the server.");
+    }
+
     [TestCase(true)]
     [TestCase(false)]
     public void GyrussStopsAllGameChangesAfterEnemyOrBulletDefeat(bool enemyDefeat)

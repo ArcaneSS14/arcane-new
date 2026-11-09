@@ -15,6 +15,13 @@
         - id: FoodBoxPizzaCotton
         - id: LidSalami
           prob: 0.04
+  # Arcane-Start: Orion storage sprites
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+    offset: 0, 0.25
+  # Arcane-End
 
 - type: entity
   id: CrateFoodSoftdrinksLarge

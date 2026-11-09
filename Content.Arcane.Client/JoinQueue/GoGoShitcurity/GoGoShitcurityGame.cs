@@ -45,7 +45,7 @@ public sealed class GoGoShitcurityGame
     public readonly List<PowerUp> PowerUps = [];
 
     public int Score { get; private set; }
-    public int Lives { get; private set; }
+    public int Lives { get; private set; } = 3;
     public float RapidFireTime { get; private set; }
     public float SpreadShotTime { get; private set; }
     public float SlowFieldTime { get; private set; }

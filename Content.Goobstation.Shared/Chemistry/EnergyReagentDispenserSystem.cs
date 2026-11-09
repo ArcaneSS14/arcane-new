@@ -12,6 +12,11 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Player;
+// Arcane-Start
+using Content.Arcane.Common.Construction;
+using Content.Shared.Construction;
+using Content.Shared.Construction.Events;
+// Arcane-End
 
 namespace Content.Goobstation.Shared.Chemistry;
 
@@ -61,7 +66,7 @@ public sealed partial class EnergyReagentDispenserSystem : EntitySystem
     {
         if (ent.Comp.Beaker is not { } item ||
             !_solution.TryGetFitsInDispenser(item, out var solution, out var sol) ||
-            !ProtoMan.HasIndex(args.ReagentId) ||
+            !ent.Comp.Reagents.ContainsKey(args.ReagentId) || // Arcane-Edit: HasIndex > the machine's own list, other reagents would cost nothing
             !_batteryQuery.TryComp(ent, out var battery))
             return;
 
@@ -95,7 +100,7 @@ public sealed partial class EnergyReagentDispenserSystem : EntitySystem
             !_solution.TryGetFitsInDispenser(item, out var solution, out var soln))
             return;
 
-        var refundedEnergy = soln.Sum(reagent => GetEnergyCostForReagent(reagent.Reagent.Prototype, reagent.Quantity, ent));
+        var refundedEnergy = soln.Sum(reagent => GetEnergyCostForReagent(reagent.Reagent.Prototype, reagent.Quantity, ent)) * ent.Comp.RefundEnergyEfficiency;
         if (refundedEnergy > 0)
             _battery.ChangeCharge(ent.Owner, refundedEnergy);
 
@@ -110,6 +115,22 @@ public sealed partial class EnergyReagentDispenserSystem : EntitySystem
 
     private static float GetEnergyCostForReagent(ProtoId<ReagentPrototype> reagentId, FixedPoint2 amount, EnergyReagentDispenserComponent comp)
         => comp.Reagents.TryGetValue(reagentId, out var cost)
-            ? (amount * cost).Float()
+            ? (amount * cost).Float() * comp.EnergyCostMultiplier // Arcane-Edit
             : 0f;
+
+    // Arcane-Start
+    [SubscribeLocalEvent]
+    private void OnPartsRefresh(Entity<EnergyReagentDispenserComponent> ent, ref RefreshPartsEvent args)
+    {
+        var matterBinTier = args.GetPartRating(MachinePartIds.MatterBin);
+        ent.Comp.EnergyCostMultiplier = RefreshPartsEvent.GetLinearMultiplier(matterBinTier, 0.1f, 0.5f, 1.2f);
+        Dirty(ent);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnUpgradeExamine(Entity<EnergyReagentDispenserComponent> ent, ref UpgradeExamineEvent args)
+    {
+        args.AddPercentageUpgrade("machine-upgrade-energy-cost", ent.Comp.EnergyCostMultiplier);
+    }
+    // Arcane-End
 }

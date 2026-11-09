@@ -26,6 +26,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Preferences; // Arcane
+using Content.Arcane.Common.Sponsors; // Arcane
 
 namespace Content.Server.Preferences.Managers
 {
@@ -46,6 +48,7 @@ namespace Content.Server.Preferences.Managers
         [Dependency] private IPrototypeManager _prototypeManager = default!;
         [Dependency] private MarkingManager _marking = default!;
         [Dependency] private ISerializationManager _serialization = default!;
+        private ISharedSponsorsManager? _sponsors; // Arcane
 
         // Cache player prefs on the server so we don't need as much async hell related to them.
         private readonly Dictionary<NetUserId, PlayerPrefData> _cachedPlayerPrefs =
@@ -53,10 +56,18 @@ namespace Content.Server.Preferences.Managers
 
         private ISawmill _sawmill = default!;
 
-        private int MaxCharacterSlots => _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
+        // Arcane-Start: per-user character slots, sponsors can have extra
+        private int GetMaxUserCharacterSlots(NetUserId userId)
+        {
+            var maxSlots = _cfg.GetCVar(CCVars.GameMaxCharacterSlots);
+            var extraSlots = _sponsors?.GetServerExtraCharSlots(userId) ?? 0;
+            return maxSlots + extraSlots;
+        }
+        // Arcane-End
 
         public void Init()
         {
+            IoCManager.Instance!.TryResolveType(out _sponsors); // Arcane
             _netManager.RegisterNetMessage<MsgPreferencesAndSettings>();
             _netManager.RegisterNetMessage<MsgSelectCharacter>(HandleSelectCharacterMessage);
             _netManager.RegisterNetMessage<MsgUpdateCharacter>(HandleUpdateCharacterMessage);
@@ -205,7 +216,23 @@ namespace Content.Server.Preferences.Managers
                 // </Trauma>
             ) // Arcane-Edit
                 // Arcane-Start: Restore saved character scale
-                .WithScale(profile.Scale);
+                .WithScale(profile.Scale)
+                // Arcane-End
+                // Arcane-Start: extended flavor text
+                .WithExtendedFlavor(new ExtendedFlavorText
+                {
+                    Character = profile.CharacterFlavorText,
+                    Ooc = profile.OocFlavorText,
+                    Tags = profile.TagsFlavorText,
+                    Links = profile.LinksFlavorText,
+                    Green = profile.GreenFlavorText,
+                    Yellow = profile.YellowFlavorText,
+                    Red = profile.RedFlavorText,
+                    Nsfw = profile.NsfwFlavorText,
+                    NsfwOoc = profile.NsfwOocFlavorText,
+                    NsfwLinks = profile.NsfwLinksFlavorText,
+                    NsfwTags = profile.NsfwTagsFlavorText,
+                });
                 // Arcane-End
         }
 
@@ -220,7 +247,7 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            if (index < 0 || index >= MaxCharacterSlots)
+            if (index < 0 || index >= GetMaxUserCharacterSlots(userId)) // Arcane-Edit: MaxCharacterSlots > GetMaxUserCharacterSlots(userId)
             {
                 return;
             }
@@ -264,13 +291,13 @@ namespace Content.Server.Preferences.Managers
                 return;
             }
 
-            if (slot < 0 || slot >= MaxCharacterSlots)
+            if (slot < 0 || slot >= GetMaxUserCharacterSlots(userId)) // Arcane-Edit: MaxCharacterSlots > GetMaxUserCharacterSlots(userId)
                 return;
 
             var curPrefs = prefsData.Prefs!;
             var session = _playerManager.GetSessionById(userId);
 
-            profile.EnsureValid(session, _dependencies);
+            profile.EnsureValid(session, _dependencies, SponsorPrototypes.Get(session, _dependencies)); // Arcane-Edit: resolve sponsor prototypes
 
             var profiles = new Dictionary<int, HumanoidCharacterProfile>(curPrefs.Characters)
             {
@@ -440,7 +467,7 @@ namespace Content.Server.Preferences.Managers
             msg.Preferences = prefsData.Prefs;
             msg.Settings = new GameSettings
             {
-                MaxCharacterSlots = MaxCharacterSlots
+                MaxCharacterSlots = GetMaxUserCharacterSlots(session.UserId) // Arcane-Edit: MaxCharacterSlots > GetMaxUserCharacterSlots(session.UserId)
             };
             _netManager.ServerSendMessage(msg, session.Channel);
         }
@@ -527,9 +554,11 @@ namespace Content.Server.Preferences.Managers
             // Clean up preferences in case of changes to the game,
             // such as removed jobs still being selected.
 
+            var sponsorPrototypes = SponsorPrototypes.Get(session, collection); // Arcane
+
             return new PlayerPreferences(prefs.Characters.Select(p =>
             {
-                return new KeyValuePair<int, HumanoidCharacterProfile>(p.Key, p.Value.Validated(session, collection));
+                return new KeyValuePair<int, HumanoidCharacterProfile>(p.Key, p.Value.Validated(session, collection, sponsorPrototypes)); // Arcane-Edit: added sponsorPrototypes
             }), prefs.SelectedCharacterIndex, prefs.AdminOOCColor, prefs.ConstructionFavorites);
         }
 

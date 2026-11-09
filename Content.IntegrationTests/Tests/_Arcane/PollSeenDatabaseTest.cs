@@ -107,6 +107,61 @@ public sealed class PollSeenDatabaseTest : GameTest
         await migrator.MigrateAsync(own);
         Assert.That(await context.PollSeen.CountAsync(), Is.Zero);
         Assert.That(await context.PollVotes.CountAsync(), Is.EqualTo(1));
+        await VerifyUpgradeAfterLaterMigrations(context, own, player.UserId);
+    }
+
+    private static async Task VerifyUpgradeAfterLaterMigrations(ServerDbContext context, string own, Guid userId)
+    {
+        await context.Database.MigrateAsync();
+
+        // Model a server that already applied the newer master migrations before receiving this port.
+        // Remove only this migration using its provider-generated rollback, keeping the newer schema intact.
+        var assembly = context.GetService<IMigrationsAssembly>();
+        var migration = assembly.CreateMigration(assembly.Migrations[own], context.Database.ProviderName!);
+        var commands = context.GetService<IMigrationsSqlGenerator>()
+            .Generate(migration.DownOperations, null, MigrationsSqlGenerationOptions.Default);
+        foreach (var command in commands)
+            await context.Database.ExecuteSqlRawAsync(command.CommandText);
+        await context.Database.ExecuteSqlRawAsync(context.GetService<IHistoryRepository>().GetDeleteScript(own));
+        Assert.That(await context.Database.GetPendingMigrationsAsync(), Is.EqualTo(new[] { own }));
+
+        var profile = new Profile
+        {
+            CharacterName = "Existing character",
+            FlavorText = "Existing description",
+            CharacterFlavorText = "Extended description from master",
+            OocFlavorText = "Existing OOC description",
+            Scale = 1.1f,
+            Age = 30,
+            Sex = "Male",
+            Gender = "Male",
+            Species = "Human",
+            BarkVoice = "",
+            HairName = "HairBald",
+            HairColor = "#000000",
+            FacialHairName = "FacialHairShaved",
+            FacialHairColor = "#000000",
+            EyeColor = "#000000",
+            SkinColor = "#FFFFFF",
+            Preference = new Preference { UserId = userId, AdminOOCColor = "#FFFFFF" }
+        };
+        context.Profile.Add(profile);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        await context.Database.MigrateAsync();
+        var preserved = await context.Profile.SingleAsync();
+        Assert.Multiple(() =>
+        {
+            Assert.That(preserved.FlavorText, Is.EqualTo("Existing description"));
+            Assert.That(preserved.CharacterFlavorText, Is.EqualTo("Extended description from master"));
+            Assert.That(preserved.OocFlavorText, Is.EqualTo("Existing OOC description"));
+            Assert.That(preserved.Scale, Is.EqualTo(1.1f).Within(0.0001f));
+        });
+        Assert.That(await context.Database.GetPendingMigrationsAsync(), Is.Empty);
+        Assert.That(await context.Polls.CountAsync(), Is.EqualTo(1));
+        Assert.That(await context.PollVotes.CountAsync(), Is.EqualTo(1));
+        Assert.That(await context.PollSeen.CountAsync(), Is.Zero);
     }
 
     [Test]

@@ -50,4 +50,4 @@ Run the authored focused test and directly needed build when appropriate. Report
 
 ## References
 
-- [Regression test design](references/regression-test-design.md): Read this when designing a regression test for a defect with boundary, permission, deletion, cancellation, reconnect, stale-state, or provider-specific risk.
+- [Regression test design](references/regression-test-design.md): Read this when designing regression coverage or interpreting before/after evidence, including when the old revision cannot run the test.

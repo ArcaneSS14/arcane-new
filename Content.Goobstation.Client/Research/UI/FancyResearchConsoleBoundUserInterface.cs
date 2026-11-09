@@ -50,7 +50,7 @@ public sealed class FancyResearchConsoleBoundUserInterface : BoundUserInterface
             return;
 
         _consoleMenu?.UpdatePanels(rState.Researches);
-        _consoleMenu?.UpdateInformationPanel(rState.Points);
+        _consoleMenu?.UpdateInformationPanel(rState); // Arcane-Edit
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)
@@ -66,7 +66,7 @@ public sealed class FancyResearchConsoleBoundUserInterface : BoundUserInterface
             return;
         if (!_consoleMenu.List.SequenceEqual(castState.Researches))
             _consoleMenu.UpdatePanels(castState.Researches);
-        if (_consoleMenu.Points != castState.Points)
-            _consoleMenu.UpdateInformationPanel(castState.Points);
+
+        _consoleMenu.UpdateInformationPanel(castState); // Arcane-Edit
     }
 }

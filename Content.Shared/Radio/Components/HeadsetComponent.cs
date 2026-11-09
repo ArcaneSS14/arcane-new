@@ -17,4 +17,9 @@ public sealed partial class HeadsetComponent : Component
 
     [DataField, AutoNetworkedField]
     public SlotFlags RequiredSlot = SlotFlags.EARS;
+
+    // Arcane-Start: a second headset in the right ear (Orion #208)
+    [DataField]
+    public SlotFlags AdditionalSlot = SlotFlags.EARSRIGHT;
+    // Arcane-End
 }

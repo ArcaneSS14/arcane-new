@@ -17,9 +17,11 @@
 - type: loadout
   id: ScientificBeret
   startingGear: ScientificBeret
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: SeniorResearcher
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: SeniorResearcher
+  # Arcane-Edit-End
 
 - type: loadout
   id: RoboticistCap

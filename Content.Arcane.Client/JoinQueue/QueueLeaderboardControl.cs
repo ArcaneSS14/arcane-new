@@ -1,7 +1,6 @@
 using Content.Arcane.Shared.JoinQueue;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
-using Robust.Shared.Timing;
 using System.Linq;
 using System.Numerics;
 
@@ -110,16 +109,13 @@ public sealed class QueueMiniGameLeaderboardControl : BoxContainer
 public sealed class QueueTimeLeaderboardControl : BoxContainer
 {
     private const int MaxQueueRows = 5;
-    private const float RefreshInterval = 60f;
     private const float ColumnWidth = 320f;
     private const float TimeColumnWidth = 92f;
 
     private readonly List<QueueWaitEntry> _queueWaitTimes = [];
     private readonly List<(Label Name, Label Time)> _queueRows = [];
 
-    private float _refreshTimer;
     private string _yourName = string.Empty;
-    private bool _hasQueueRows;
 
     public QueueTimeLeaderboardControl()
     {
@@ -147,21 +143,6 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
         }
     }
 
-    protected override void FrameUpdate(FrameEventArgs args)
-    {
-        base.FrameUpdate(args);
-
-        if (!VisibleInTree || !_hasQueueRows)
-            return;
-
-        _refreshTimer -= args.DeltaSeconds;
-        if (_refreshTimer > 0f)
-            return;
-
-        _refreshTimer = RefreshInterval;
-        RefreshQueueRows();
-    }
-
     public void UpdateQueuePlayers(IReadOnlyList<string> playerNames, IReadOnlyList<float> playerWaitSeconds, string yourName)
     {
         _yourName = yourName;
@@ -172,12 +153,6 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
             var name = playerNames[i];
             var waitSeconds = i < playerWaitSeconds.Count ? playerWaitSeconds[i] : 0f;
             _queueWaitTimes.Add(new QueueWaitEntry(name, waitSeconds, i));
-        }
-
-        if (!_hasQueueRows)
-        {
-            _hasQueueRows = true;
-            _refreshTimer = RefreshInterval;
         }
 
         RefreshQueueRows();

@@ -7,6 +7,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.PDA;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
+using Content.Arcane.Common.PDA; // Arcane
 
 namespace Content.Client.PDA
 {
@@ -54,6 +55,8 @@ namespace Content.Client.PDA
             {
                 SendPredictedMessage(new ItemSlotButtonPressedEvent(PdaComponent.PdaPaiSlotId));
             };
+
+            _menu.PowerOffButton.OnPressed += _ => SendMessage(new PdaPowerOffMessage()); // Arcane
 
             _menu.ActivateMusicButton.OnPressed += _ =>
             {

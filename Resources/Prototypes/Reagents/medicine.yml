@@ -1295,6 +1295,17 @@
     Digestion:
       effects:
       # <Trauma>
+      - !type:AddComponents
+        conditions:
+        - !type:ReagentCondition
+          reagent: Holywater
+          min: 15
+        - !type:WhitelistCondition
+          whitelist:
+            components:
+            - BloodCultist
+        components:
+        - type: BloodCultDeconvert
       - !type:RemoveComponents
         conditions:
         - !type:ReagentCondition
