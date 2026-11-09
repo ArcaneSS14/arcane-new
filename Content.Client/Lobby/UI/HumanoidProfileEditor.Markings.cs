@@ -1,4 +1,4 @@
-using Content.Shared.Preferences;
+using Content.Shared.Preferences; // Arcane
 
 namespace Content.Client.Lobby.UI;
 
@@ -27,7 +27,7 @@ public sealed partial class HumanoidProfileEditor
         SetDirty();
     }
 
-    // <Arcane>
+    // Arcane-Start
     private void OnEarsAboveHairChanged(bool value)
     {
         if (Profile == null)
@@ -50,5 +50,5 @@ public sealed partial class HumanoidProfileEditor
         var profile = Profile!;
         return profile.WithCharacterAppearance(profile.Appearance.WithMarkings(_markingsModel.GetPreviewMarkings()));
     }
-    // </Arcane>
+    // Arcane-End
 }

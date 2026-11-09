@@ -300,9 +300,11 @@ namespace Content.Client.Lobby.UI
 
             _markingsModel.MarkingsChanged += (_, _) => OnMarkingChange();
             _markingsModel.MarkingsReset += OnMarkingChange;
-            _markingsModel.PreviewChanged += UpdateMarkingPreview; // Arcane: display only, without setting the dirty flag.
-            Markings.ShowEarsAboveHairOption = true; // Arcane
-            Markings.EarsAboveHairChanged += OnEarsAboveHairChanged; // Arcane
+            // Arcane-Start
+            _markingsModel.PreviewChanged += UpdateMarkingPreview;
+            Markings.ShowEarsAboveHairOption = true;
+            Markings.EarsAboveHairChanged += OnEarsAboveHairChanged;
+            // Arcane-End
 
             #endregion Markings
 
@@ -435,7 +437,7 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            UpdateMarkingPreview(); // Arcane
+            UpdateMarkingPreview(); // Arcane-Edit: SpriteView.ReloadProfilePreview(Profile) > UpdateMarkingPreview()
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

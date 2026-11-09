@@ -95,7 +95,7 @@ public sealed partial class HumanoidProfileEditor
         var species = _prototypeManager.Index<SpeciesPrototype>(Profile.Species);
         Profile = Profile.WithScale(species.DefaultScale);
         UpdateGrowthControls();
-        UpdateMarkingPreview(); // Arcane
+        UpdateMarkingPreview(); // Arcane-Edit: SpriteView.ReloadProfilePreview(Profile) > UpdateMarkingPreview()
         SetDirty();
     }
 
@@ -114,7 +114,7 @@ public sealed partial class HumanoidProfileEditor
         ScaleSlider.SetValueWithoutEvent(height);
         _updatingGrowth = false;
         UpdateGrowthLabels(species, height);
-        UpdateMarkingPreview(); // Arcane
+        UpdateMarkingPreview(); // Arcane-Edit: SpriteView.ReloadProfilePreview(Profile) > UpdateMarkingPreview()
         SetDirty();
     }
 

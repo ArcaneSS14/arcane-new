@@ -1,11 +1,14 @@
+// Arcane-Start
 using System.Linq;
 using Content.Shared.Body;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Robust.Shared.Prototypes;
+// Arcane-End
 
-namespace Content.Client.Humanoid;
+namespace Content.Client.Humanoid; // Arcane
 
+// Arcane-Start
 public sealed partial class MarkingsViewModel
 {
     private bool _animatedPreview;
@@ -67,3 +70,4 @@ public sealed partial class MarkingsViewModel
         };
     }
 }
+// Arcane-End

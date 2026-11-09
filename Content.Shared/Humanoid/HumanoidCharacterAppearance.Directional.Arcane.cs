@@ -1,5 +1,6 @@
-namespace Content.Shared.Humanoid;
+namespace Content.Shared.Humanoid; // Arcane
 
+// Arcane-Start
 public sealed partial class HumanoidCharacterAppearance
 {
     /// <summary>
@@ -11,3 +12,4 @@ public sealed partial class HumanoidCharacterAppearance
     public HumanoidCharacterAppearance WithEarsAboveHair(bool value)
         => new(EyeColor, SkinColor, Markings, value);
 }
+// Arcane-End

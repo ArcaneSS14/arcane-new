@@ -30,8 +30,10 @@
 - type: entity
   parent: ClothingHeadEnvirohelm
   id: ClothingHeadEnvirohelmEmpty
-  suffix: Legacy # Arcane-Edit: retain the ID for existing maps, without a cell slot.
-  categories: [ HideSpawnMenu ] # Arcane-Edit
+  # Arcane-Edit-Start: empty cell-slot variant > hidden legacy prototype
+  suffix: Legacy
+  categories: [ HideSpawnMenu ]
+  # Arcane-Edit-End
 
 - type: entity
   parent: ClothingHeadEnvirohelmBase

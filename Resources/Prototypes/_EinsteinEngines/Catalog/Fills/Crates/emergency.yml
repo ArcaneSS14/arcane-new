@@ -29,7 +29,7 @@
         children:
         - id: ClothingUniformEnvirosuit
           amount: 2
-        - id: ClothingHeadEnvirohelm # Arcane-Edit
+        - id: ClothingHeadEnvirohelm # Arcane-Edit: ClothingHeadEnvirohelmEmpty > ClothingHeadEnvirohelm
           amount: 2
         - id: ClothingHandsGlovesEnvirogloves
           amount: 2

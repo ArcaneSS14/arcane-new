@@ -1,7 +1,8 @@
-using Robust.Client.Graphics;
+using Robust.Client.Graphics; // Arcane
 
-namespace Content.Client.Lobby.UI.ProfileEditorControls;
+namespace Content.Client.Lobby.UI.ProfileEditorControls; // Arcane
 
+// Arcane-Start
 public sealed partial class ProfilePreviewSpriteView
 {
     protected override void Draw(IRenderHandle renderHandle)
@@ -18,3 +19,4 @@ public sealed partial class ProfilePreviewSpriteView
         base.Draw(renderHandle);
     }
 }
+// Arcane-End

@@ -1,8 +1,11 @@
+// Arcane-Start
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
+// Arcane-End
 
-namespace Content.Shared.Humanoid.Markings;
+namespace Content.Shared.Humanoid.Markings; // Arcane
 
+// Arcane-Start
 public sealed partial class MarkingManager
 {
     private FrozenDictionary<string, string> _waggingByStill = FrozenDictionary<string, string>.Empty;
@@ -34,3 +37,4 @@ public sealed partial class MarkingManager
     public bool TryGetStillMarking(string id, [NotNullWhen(true)] out string? still)
         => _stillByWagging.TryGetValue(id, out still);
 }
+// Arcane-End

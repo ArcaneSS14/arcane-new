@@ -1,10 +1,13 @@
+// Arcane-Start
 using Content.Shared.Body;
 using Content.Shared.Humanoid.Markings;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
+// Arcane-End
 
-namespace Content.Shared.Wagging;
+namespace Content.Shared.Wagging; // Arcane
 
+// Arcane-Start
 public sealed partial class WaggingSystem
 {
     [Dependency] private MarkingManager _markings = default!;
@@ -139,3 +142,4 @@ public sealed partial class WaggingSystem
         return ProtoMan.HasIndex<MarkingPrototype>(still);
     }
 }
+// Arcane-End

@@ -1,11 +1,14 @@
+// Arcane-Start
 using System.Linq;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Graphics.RSI;
 using Robust.Shared.Timing;
+// Arcane-End
 
-namespace Content.Client.Humanoid;
+namespace Content.Client.Humanoid; // Arcane
 
+// Arcane-Start
 /// <summary>
 /// Plays marking RSI frames without changing the saved marking or the editor's layout.
 /// </summary>
@@ -56,3 +59,4 @@ public sealed partial class AnimatedMarkingTextureRect : LayeredTextureRect
     private static RsiDirection GetDirection(IRsiStateLike state)
         => state.RsiDirections == RsiDirectionType.Dir1 ? RsiDirection.South : RsiDirection.North;
 }
+// Arcane-End

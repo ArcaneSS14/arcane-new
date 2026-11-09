@@ -38,7 +38,7 @@ public sealed class PdaPenVisualTest : InteractionTest
                     Assert.That(SEntMan.System<ItemSlotsSystem>().TryEject(uid, component.PenSlot, null, out _), Is.True);
                 });
             }
-            foreach (var disguise in new[] {"CaptainPDA", "ChronoPDA", "PassengerPDA"})
+            foreach (var disguise in new[] {"CaptainPDA", "AltCaptainPDA", "PassengerPDA"})
             {
                 await Server.WaitAssertion(() =>
                 {

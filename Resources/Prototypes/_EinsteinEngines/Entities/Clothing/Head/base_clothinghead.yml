@@ -38,10 +38,10 @@
   - type: TemperatureProtection
     coefficient: 0.2
   - type: IngestionBlocker
-  # Arcane-Edit-Start
+  # Arcane-Start
   - type: GlowShielding
     reduction: 0.3
-  # Arcane-Edit-End
+  # Arcane-End
   - type: Tag
     tags:
     - WhitelistChameleon
@@ -60,8 +60,10 @@
       - state: on-equipped-HELMET
         shader: unshaded
   - type: ItemTogglePointLight
-    toggleableVisualsColorModulatesLights: true # Arcane-Edit
-  - type: WearerLightColor # Arcane-Edit
+    # Arcane-Start
+    toggleableVisualsColorModulatesLights: true
+  - type: WearerLightColor
+    # Arcane-End
   - type: PointLight
     enabled: false
     color: "#ffa1ff"
@@ -73,7 +75,7 @@
   - type: Appearance
   - type: HandheldLight
     addPrefix: true
-    wattage: 0 # Arcane-Edit: no replaceable power cell is required.
+    wattage: 0 # Arcane: no replaceable power cell is required.
     blinkingBehaviourId: blinking
     radiatingBehaviourId: radiating
   - type: LightBehaviour

@@ -26,7 +26,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
     public HumanoidCharacterAppearance(
         Color eyeColor,
         Color skinColor,
-        Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>> markings,
+        Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>> markings, // Arcane-Edit: markings) > markings,
         bool earsAboveHair = false) // Arcane
     {
         EyeColor = ClampColor(eyeColor);
@@ -36,24 +36,24 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
     }
 
     public HumanoidCharacterAppearance(HumanoidCharacterAppearance other) :
-        this(other.EyeColor, other.SkinColor, new(other.Markings), other.EarsAboveHair) // Arcane
+        this(other.EyeColor, other.SkinColor, new(other.Markings), other.EarsAboveHair) // Arcane-Edit: this(other.EyeColor, other.SkinColor, new(other.Markings)) > this(other.EyeColor, other.SkinColor, new(other.Markings), other.EarsAboveHair)
     {
 
     }
 
     public HumanoidCharacterAppearance WithEyeColor(Color newColor)
     {
-        return new(newColor, SkinColor, Markings, EarsAboveHair); // Arcane
+        return new(newColor, SkinColor, Markings, EarsAboveHair); // Arcane-Edit: new(newColor, SkinColor, Markings) > new(newColor, SkinColor, Markings, EarsAboveHair)
     }
 
     public HumanoidCharacterAppearance WithSkinColor(Color newColor)
     {
-        return new(EyeColor, newColor, Markings, EarsAboveHair); // Arcane
+        return new(EyeColor, newColor, Markings, EarsAboveHair); // Arcane-Edit: new(EyeColor, newColor, Markings) > new(EyeColor, newColor, Markings, EarsAboveHair)
     }
 
     public HumanoidCharacterAppearance WithMarkings(Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>> newMarkings)
     {
-        return new(EyeColor, SkinColor, newMarkings, EarsAboveHair); // Arcane
+        return new(EyeColor, SkinColor, newMarkings, EarsAboveHair); // Arcane-Edit: new(EyeColor, SkinColor, newMarkings) > new(EyeColor, SkinColor, newMarkings, EarsAboveHair)
     }
 
     public static HumanoidCharacterAppearance DefaultWithSpecies(ProtoId<SpeciesPrototype> species, Sex sex)
@@ -156,7 +156,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
         HumanoidCharacterAppearance appearance = new(
             palette.EyeColor,
             palette.SkinColor,
-            markings,
+            markings, // Arcane-Edit: markings); > markings,
             baseAppearance?.EarsAboveHair ?? false); // Arcane
 
         // Safety step. Most systems which called Random() also called this, and not doing so caused issues with markings.
@@ -213,7 +213,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
         return new HumanoidCharacterAppearance(
             eyeColor,
             skinColor,
-            validatedMarkings,
+            validatedMarkings, // Arcane-Edit: validatedMarkings); > validatedMarkings,
             appearance.EarsAboveHair); // Arcane
     }
 
@@ -234,7 +234,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(EyeColor, SkinColor, Markings, EarsAboveHair); // Arcane
+        return HashCode.Combine(EyeColor, SkinColor, Markings, EarsAboveHair); // Arcane-Edit: HashCode.Combine(EyeColor, SkinColor, Markings) > HashCode.Combine(EyeColor, SkinColor, Markings, EarsAboveHair)
     }
 
     public HumanoidCharacterAppearance Clone()

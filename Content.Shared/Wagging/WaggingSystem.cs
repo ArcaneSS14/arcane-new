@@ -41,8 +41,10 @@ public sealed partial class WaggingSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnWaggingMapInit(Entity<WaggingComponent> ent, ref MapInitEvent args)
     {
-        if (_network.IsServer) // Arcane-Edit: evaluate after the complete initial organ/profile update.
+        // Arcane-Edit-Start
+        if (_network.IsServer)
             _pendingRefresh.Add(ent);
+        // Arcane-Edit-End
     }
 
     /// <summary>
@@ -108,8 +110,10 @@ public sealed partial class WaggingSystem : EntitySystem
         if (!applied.TryGetValue(ent.Comp.Organ, out var markingsSet))
             return false;
 
-        var targetWagging = desired ?? !ent.Comp.Wagging; // Arcane-Edit
-        var changed = false; // Arcane-Edit
+        // Arcane-Edit-Start
+        var targetWagging = desired ?? !ent.Comp.Wagging;
+        var changed = false;
+        // Arcane-Edit-End
 
         markingsSet = markingsSet.ShallowClone();
         foreach (var (layers, _) in markingsSet)
@@ -133,18 +137,18 @@ public sealed partial class WaggingSystem : EntitySystem
                     if (!TryGetStill(currentMarkingId, ent.Comp.Suffix, out newMarkingId))
                         continue;
                 }
-                layerMarkings[i] = new Marking(newMarkingId, layerMarkings[i].MarkingColors);
-                changed = true;
                 // Arcane-Edit-End
+                layerMarkings[i] = new Marking(newMarkingId, layerMarkings[i].MarkingColors);
+                changed = true; // Arcane
             }
         }
 
-        // Arcane-Edit-Start
+        // Arcane-Start
         if (!changed)
             return false;
         ent.Comp.Wagging = targetWagging;
         DirtyField(ent, nameof(WaggingComponent.Wagging));
-        // Arcane-Edit-End
+        // Arcane-End
 
         _visualBody.ApplyMarkings(ent, new()
         {

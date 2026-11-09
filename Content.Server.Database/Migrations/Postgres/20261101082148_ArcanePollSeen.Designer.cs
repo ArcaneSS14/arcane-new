@@ -1166,6 +1166,7 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.ToTable("poll_options", (string)null);
                 });
 
+            // Arcane-Start
             modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
                 {
                     b.Property<int>("Id")
@@ -1199,6 +1200,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.ToTable("poll_seen", (string)null);
                 });
+            // Arcane-End
 
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {
@@ -1292,6 +1294,12 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("integer")
                         .HasColumnName("age");
 
+                    // Arcane-Start: Character scale preference
+                    b.Property<float>("Scale")
+                        .HasColumnType("real")
+                        .HasColumnName("scale");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")
@@ -1321,6 +1329,63 @@ namespace Content.Server.Database.Migrations.Postgres
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("flavor_text");
+
+                    // Arcane-Start: extended flavor text
+                    b.Property<string>("CharacterFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("character_flavor_text");
+
+                    b.Property<string>("OocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ooc_flavor_text");
+
+                    b.Property<string>("TagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tags_flavor_text");
+
+                    b.Property<string>("LinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("links_flavor_text");
+
+                    b.Property<string>("GreenFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("green_flavor_text");
+
+                    b.Property<string>("YellowFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("yellow_flavor_text");
+
+                    b.Property<string>("RedFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("red_flavor_text");
+
+                    b.Property<string>("NsfwFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_flavor_text");
+
+                    b.Property<string>("NsfwOocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_ooc_flavor_text");
+
+                    b.Property<string>("NsfwLinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_links_flavor_text");
+
+                    b.Property<string>("NsfwTagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nsfw_tags_flavor_text");
+                    // Arcane-End
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -1357,10 +1422,6 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Property<int>("PreferenceUnavailable")
                         .HasColumnType("integer")
                         .HasColumnName("pref_unavailable");
-
-                    b.Property<float>("Scale")
-                        .HasColumnType("real")
-                        .HasColumnName("scale");
 
                     b.Property<string>("Sex")
                         .IsRequired()
@@ -2398,6 +2459,7 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Navigation("Poll");
                 });
 
+            // Arcane-Start
             modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
                 {
                     b.HasOne("Content.Server.Database.Player", "Player")
@@ -2419,6 +2481,7 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.Navigation("Poll");
                 });
+            // Arcane-End
 
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {

@@ -29,10 +29,10 @@ public sealed partial class ExpendableLightSystem : VisualizerSystem<ExpendableL
             return;
 
         if (AppearanceSystem.TryGetData<string>(uid, ExpendableLightVisuals.Behavior, out var lightBehaviourID, args.Component)
-            && lightBehaviourID != comp.CurrentBehaviour // Arcane-Edit
+            && lightBehaviourID != comp.CurrentBehaviour // Arcane
             && TryComp<LightBehaviourComponent>(uid, out var lightBehaviour))
         {
-            comp.CurrentBehaviour = lightBehaviourID; // Arcane-Edit
+            comp.CurrentBehaviour = lightBehaviourID; // Arcane
             _lightBehavior.StopLightBehaviour((uid, lightBehaviour));
 
             if (!string.IsNullOrEmpty(lightBehaviourID))

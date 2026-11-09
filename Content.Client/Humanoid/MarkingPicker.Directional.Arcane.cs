@@ -1,10 +1,13 @@
+// Arcane-Start
 using System.Linq;
 using Content.Shared.Body;
 using Content.Shared.Humanoid;
 using Robust.Shared.Prototypes;
+// Arcane-End
 
-namespace Content.Client.Humanoid;
+namespace Content.Client.Humanoid; // Arcane
 
+// Arcane-Start
 public sealed partial class MarkingPicker
 {
     private bool _showEarsAboveHairOption;
@@ -37,3 +40,4 @@ public sealed partial class MarkingPicker
                 .Any(marking => _marking.TryGetMarking(marking, out var prototype) && prototype.UnderHair);
     }
 }
+// Arcane-End

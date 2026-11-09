@@ -1,5 +1,6 @@
-namespace Content.Shared.Body;
+namespace Content.Shared.Body; // Arcane
 
+// Arcane-Start
 public abstract partial class SharedVisualBodySystem
 {
     private void SetEarsAboveHair(Entity<VisualBodyComponent> ent, bool value)
@@ -18,3 +19,4 @@ public abstract partial class SharedVisualBodySystem
             SetEarsAboveHair((target, targetVisual), sourceVisual.EarsAboveHair);
     }
 }
+// Arcane-End

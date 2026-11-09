@@ -88,14 +88,14 @@
   id: MobPlasmaman
   name: Urist McPlasma
   components:
-  # Arcane-Edit-Start: Goob body glow, using the current visual torso colour.
+  # Arcane-Start: Goob body glow, using the current visual torso colour.
   - type: PointLight
     enabled: true
     radius: 3
     energy: 1.5
     netsync: true
   - type: BodyGlow
-  # Arcane-Edit-End
+  # Arcane-End
   # stuff from organic that applies, notably no hunger or thirst
   - type: Absorbable
   - type: WraithAbsorbable

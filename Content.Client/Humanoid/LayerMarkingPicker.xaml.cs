@@ -130,6 +130,6 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     {
         base.Resized();
 
-        Items.Columns = Math.Max(1, (int)(Width / _columnWidth)); // Arcane: the initial/narrow layout still needs one column.
+        Items.Columns = Math.Max(1, (int)(Width / _columnWidth)); // Arcane-Edit: (int)(Width / _columnWidth) > Math.Max(1, (int)(Width / _columnWidth))
     }
 }

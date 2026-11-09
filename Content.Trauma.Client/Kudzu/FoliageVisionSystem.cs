@@ -25,13 +25,13 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         SubscribeLocalEvent<HideableFoliageComponent, ComponentShutdown>((uid, _, args) => OnKudzuComponentShutdown(uid, args));
     }
 
-    // Arcane-Edit-Start: restore ordinary layering before the local vision owner is torn down.
+    // Arcane-Start: restore ordinary layering before the local vision owner is torn down.
     public override void Shutdown()
     {
         SetFoliageIgnoringVision(false);
         base.Shutdown();
     }
-    // Arcane-Edit-End
+    // Arcane-End
 
     // Attaches detaches
     private void OnLocalPlayerAttached(LocalPlayerAttachedEvent args)
@@ -41,7 +41,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void OnLocalPlayerDetached(LocalPlayerDetachedEvent args)
     {
-        SetFoliageIgnoringVision(false); // Arcane-Edit: the old body may still be LocalEntity during this event.
+        SetFoliageIgnoringVision(false); // Arcane-Edit: UpdatePlayerFoliageIgnoringVision() > SetFoliageIgnoringVision(false); detach can still expose the old LocalEntity
     }
 
     // Player Startup/Shutdown
@@ -54,7 +54,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
     private void OnPlayerComponentShutdown(EntityUid uid, ComponentShutdown args)
     {
         if (uid == _player.LocalEntity)
-            SetFoliageIgnoringVision(false); // Arcane-Edit: HasComp is still true during shutdown.
+            SetFoliageIgnoringVision(false); // Arcane-Edit: UpdatePlayerFoliageIgnoringVision() > SetFoliageIgnoringVision(false); shutdown still has the component
     }
 
     // Kudzu Startup/Shutdown
@@ -65,7 +65,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void OnKudzuComponentShutdown(EntityUid uid, ComponentShutdown args)
     {
-        UpdateFoliageDrawDepth(uid, forceVisible: true); // Arcane-Edit
+        UpdateFoliageDrawDepth(uid, forceVisible: true); // Arcane-Edit: UpdateFoliageDrawDepth(uid) > UpdateFoliageDrawDepth(uid, forceVisible: true)
     }
 
     private void RefreshEveryPieceOfFoliage()
@@ -78,12 +78,12 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         }
     }
 
-    private void UpdateFoliageDrawDepth(EntityUid uid, SpriteComponent? sprite = null, bool forceVisible = false) // Arcane-Edit
+    private void UpdateFoliageDrawDepth(EntityUid uid, SpriteComponent? sprite = null, bool forceVisible = false) // Arcane-Edit: (EntityUid uid, SpriteComponent? sprite = null) > add bool forceVisible = false
     {
         if (!Resolve(uid, ref sprite, false))
             return;
 
-        var drawDepth = _enabled && !forceVisible // Arcane-Edit
+        var drawDepth = _enabled && !forceVisible // Arcane-Edit: _enabled > _enabled && !forceVisible
             ? DrawDepth.Default + LowDrawDepth
             : DrawDepth.Default + HighDrawDepth;
         _sprite.SetDrawDepth((uid, sprite), drawDepth);
@@ -91,12 +91,13 @@ public sealed partial class FoliageVisionSystem : EntitySystem
 
     private void UpdatePlayerFoliageIgnoringVision()
     {
+        // var previousEnabled = _enabled; // Arcane-Edit: local change tracking > SetFoliageIgnoringVision
         var attached = _player.LocalEntity;
         var shouldHaveFoliageIgnoringVision = attached != null && HasComp<FoliageIgnoringVisionComponent>(attached.Value);
-        SetFoliageIgnoringVision(shouldHaveFoliageIgnoringVision); // Arcane-Edit
+        SetFoliageIgnoringVision(shouldHaveFoliageIgnoringVision); // Arcane-Edit: inline enabled-state update and refresh > SetFoliageIgnoringVision(shouldHaveFoliageIgnoringVision)
     }
 
-    // Arcane-Edit-Start
+    // Arcane-Start
     private void SetFoliageIgnoringVision(bool enabled)
     {
         if (_enabled == enabled)
@@ -104,5 +105,5 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         _enabled = enabled;
         RefreshEveryPieceOfFoliage();
     }
-    // Arcane-Edit-End
+    // Arcane-End
 }

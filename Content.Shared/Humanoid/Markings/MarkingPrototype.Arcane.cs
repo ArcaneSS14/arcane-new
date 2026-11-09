@@ -1,7 +1,8 @@
-using Robust.Shared.Prototypes;
+using Robust.Shared.Prototypes; // Arcane
 
-namespace Content.Shared.Humanoid.Markings;
+namespace Content.Shared.Humanoid.Markings; // Arcane
 
+// Arcane-Start
 public sealed partial class MarkingPrototype
 {
     /// <summary>
@@ -16,3 +17,4 @@ public sealed partial class MarkingPrototype
     [DataField]
     public ProtoId<MarkingPrototype>? Wagging;
 }
+// Arcane-End

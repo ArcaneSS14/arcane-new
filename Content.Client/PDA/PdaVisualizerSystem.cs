@@ -20,18 +20,18 @@ public sealed partial class PdaVisualizerSystem : VisualizerSystem<PdaVisualsCom
         if (AppearanceSystem.TryGetData<bool>(uid, PdaVisuals.IdCardInserted, out var isCardInserted, args.Component))
             SpriteSystem.LayerSetVisible((uid, args.Sprite), PdaVisualLayers.IdLight, isCardInserted);
 
-        // <Arcane>
+        // Arcane-Start
         if (AppearanceSystem.TryGetData<bool>(uid, PdaVisuals.PenInserted, out var penInserted, args.Component) &&
             SpriteSystem.LayerMapTryGet((uid, args.Sprite), PdaVisualLayers.Pen, out var penLayer, false))
             SpriteSystem.LayerSetVisible((uid, args.Sprite), penLayer, penInserted);
-        // </Arcane>
+        // Arcane-End
     }
 
     public enum PdaVisualLayers : byte
     {
         Base,
         Flashlight,
-        IdLight,
+        IdLight, // Arcane-Edit: IdLight > IdLight,
         Pen // Arcane
     }
 }

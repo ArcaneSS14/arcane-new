@@ -154,10 +154,10 @@
   name: base hardsuit helmet
   categories: [ HideSpawnMenu ]
   components:
-  # Arcane-Edit-Start
+  # Arcane-Start
   - type: GlowShielding
     reduction: 0.3
-  # Arcane-Edit-End
+  # Arcane-End
   # <Trauma>
   - type: DiseaseProtection
     incoming:
