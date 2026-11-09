@@ -71,7 +71,7 @@ A bare `# Arcane` is the single-line addition form in YAML.
 
 ## Added usings
 
-In inherited files, collect Arcane imports into one contiguous final group after inherited imports, without blank lines between adjacent directives. Sort our group System-first, then alphabetically; do not reorder inherited groups. One Arcane import uses trailing `// Arcane`; two or more share one pair. In owner-local files, sort the whole import header the same way, without markers.
+Keep `global using` directives before all non-global usings. Within each category, collect Arcane imports into one contiguous group after inherited imports, without blank lines between adjacent directives. Sort our group System-first, then alphabetically; preserve inherited order within each category. One Arcane import uses trailing `// Arcane`; two or more share one pair. In owner-local files, sort each category the same way, without markers.
 
 ```csharp
 // one added using

@@ -6,7 +6,7 @@ These rules are derived from conventions the upstream project already enforces, 
 ## File layout
 
 - Preserve license/header text; no blank lines before the first content. Place imports before the file-scoped namespace, with exactly one blank line before and after that namespace (no artificial header when imports are absent).
-- Keep adjacent imports contiguous. Sort owner-local imports System-first, then alphabetically. In inherited files, sort only the Arcane group under [Added usings](arcane-edit-markers.md#added-usings); preserve upstream order.
+- Keep adjacent imports contiguous. Apply [Added usings](arcane-edit-markers.md#added-usings) for global/non-global ordering, sorting and inherited groups; owner-local imports need no markers.
 - One primary type per file, named after the file.
 - Fields and auto-properties before every method. Readers orient by looking at the data first.
 - Non-auto properties (`=> _field.Trim()`) are not fields. Keep them with the methods, not above them.

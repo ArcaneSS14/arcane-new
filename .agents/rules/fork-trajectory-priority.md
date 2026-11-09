@@ -11,9 +11,9 @@ Other fork-owned paths, including `Content.Goobstation.*`, `Content.Lavaland.*`,
 
 | Path class | Examples | Use |
 |---|---|---|
-| Arcane-owned | root `Content.Arcane.*`, `Resources/**/_Arcane/**` | default for Arcane-only behavior; no Arcane edit marker |
+| Arcane-owned | [Owner-local paths](architecture-and-ownership.md#owner-local-paths), including justified base-project/infrastructure exceptions | default for Arcane-only behavior; no Arcane edit marker |
 | Trauma-owned | `Content.Trauma.*`, `Resources/**/_Trauma/**`, `*.Trauma.cs` | use when the change belongs on the Trauma-compatible trajectory; mark our edits with Arcane markers |
-| Vanilla base | root `Content.*` not owned by a fork, `Resources` without an owner directory | change only when the extension cannot live in an owner project/resource path; keep the edit minimal and marked |
+| Inherited vanilla base | root `Content.*` not owned by a fork, `Resources` outside owner-local paths | change only when the extension cannot live in an owner project/resource path; keep the edit minimal and marked |
 | Other fork | `Content.Goobstation.*`, `Content.Lavaland.*`, `Resources/**/_Goobstation/**`, etc. | preserve that fork's conventions and markers; do not place Arcane-only work there |
 
 Prefer an Arcane-owned project/resource path for Arcane-only work. Use a Trauma-owned path only when compatibility with that code trajectory is an explicit design requirement or the supported architecture requires it. Do not choose a destination based only on fewer files or perceived sync cost.

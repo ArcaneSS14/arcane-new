@@ -24,11 +24,11 @@ Choose ownership before marker syntax:
 | --- | --- |
 | Independent Arcane runtime feature | Existing root `Content.Arcane.*` project for its layer |
 | Arcane resources | Existing `Resources/**/_Arcane/**` owner paths |
-| Tightly coupled partial or contract that cannot reasonably move across assembly/private boundaries | `_Arcane` inside the existing owning `Content.*` project, preserving namespace and typed APIs |
+| Tightly coupled partial or contract that cannot reasonably move across assembly/private boundaries | `_Arcane` inside the existing owning vanilla/base `Content.*` project, preserving namespace and typed APIs |
 | Arcane test or database migration | `_Arcane` within the existing test or database-migration infrastructure; preserve migration IDs/provider |
 | Necessary integration with inherited code, including shared `Resources/migration.yml` | Minimal marked change in the inherited file |
 
-Owner-local files receive no ownership wrappers or per-line edit markers. `_Arcane` inside a base project is an exception for a demonstrated dependency constraint, not a default home for independent systems. A generator-required `partial` alone does not justify it. `Modules/Arcane` holds guidance, not runtime code. Preserve licenses and source attribution; our edits do not make a whole inherited file ours.
+Owner-local files receive no ownership wrappers or per-line edit markers. `_Arcane` inside a base project is an exception for a demonstrated dependency constraint, not a default home for independent systems. It does not authorize Arcane-only logic in foreign-fork assemblies: keep that logic Arcane-owned and use a minimal marked integration hook in the inherited owner when necessary. A generator-required `partial` alone does not justify the exception. `Modules/Arcane` holds guidance, not runtime code. Preserve licenses and source attribution; our edits do not make a whole inherited file ours.
 
 Files inherited from an upstream repository and located outside owner-local paths receive the current repository marker around the smallest changed block under `.agents/rules/arcane-edit-markers.md` when the format supports safe comments. Otherwise, stop before editing and report the format limitation; do not corrupt the file or silently leave an unmarked change. An intention to upstream a change does not exempt it from the current destination's marker policy.
 
