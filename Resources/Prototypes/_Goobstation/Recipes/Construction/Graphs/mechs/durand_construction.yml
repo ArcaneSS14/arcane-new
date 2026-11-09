@@ -84,8 +84,13 @@
           key: "enum.MechAssemblyVisuals.State"
           data: 9
 
-      - material: Manipulator
-        amount: 1
+      # Arcane-Start
+      - machinePart: Servo
+        name: construction-graph-tag-servo
+        icon:
+          sprite: "Objects/Misc/stock_parts.rsi"
+          state: "micro_mani"
+      # Arcane-End
         completed:
         - !type:VisualizerDataInt
           key: "enum.MechAssemblyVisuals.State"

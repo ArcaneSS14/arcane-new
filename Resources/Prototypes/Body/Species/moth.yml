@@ -87,6 +87,23 @@
           32:
             sprite: Mobs/Species/Moth/displacement.rsi
             state: shoes
+      # Arcane-Start: underwear slots (Orion #208)
+      underwear:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: jumpsuit-female
+      undershirt:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: jumpsuit-female
+      socks:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: shoes
+      # Arcane-End
     displacements:
       jumpsuit:
         sizeMaps:
@@ -113,6 +130,23 @@
           32:
             sprite: Mobs/Species/Moth/displacement.rsi
             state: shoes
+      # Arcane-Start: underwear slots (Orion #208)
+      underwear:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: jumpsuit-male
+      undershirt:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: jumpsuit-male
+      socks:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Moth/displacement.rsi
+            state: shoes
+      # Arcane-End
   - type: InitialBody
     organs:
       Torso: OrganMothTorso

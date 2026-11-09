@@ -158,7 +158,8 @@ public sealed partial class HumanoidProfileSystem
             ent.Comp.BarkVoice,
             new(ent.Comp.Knowledge))
             // Arcane-Start
-            .WithScale(ent.Comp.Scale);
+            .WithScale(ent.Comp.Scale)
+            .WithExtendedFlavor(CompOrNull<DetailExaminableComponent>(ent)?.Extended ?? new());
             // Arcane-End
     }
 

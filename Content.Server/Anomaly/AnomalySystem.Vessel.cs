@@ -5,6 +5,10 @@ using Content.Shared.Anomaly.Components;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Research.Components;
+// Arcane-Start
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Server.Anomaly;
 
@@ -21,7 +25,7 @@ public sealed partial class AnomalySystem
         SubscribeLocalEvent<AnomalyVesselComponent, MapInitEvent>(OnVesselMapInit);
         SubscribeLocalEvent<AnomalyVesselComponent, InteractUsingEvent>(OnVesselInteractUsing);
         SubscribeLocalEvent<AnomalyVesselComponent, ExaminedEvent>(OnExamined);
-        SubscribeLocalEvent<AnomalyVesselComponent, ResearchServerGetPointsPerSecondEvent>(OnVesselGetPointsPerSecond);
+        SubscribeLocalEvent<AnomalyVesselComponent, ResearchServerGetPointsPerSecondByTypeEvent>(OnVesselGetPointsPerSecond); // Arcane-Edit: ResearchServerGetPointsPerSecondEvent > ResearchServerGetPointsPerSecondByTypeEvent
         SubscribeLocalEvent<AnomalyShutdownEvent>(OnVesselAnomalyShutdown);
     }
 
@@ -68,14 +72,25 @@ public sealed partial class AnomalySystem
         _radiation.SetSourceEnabled(uid, true);
         UpdateVesselAppearance(uid,  component);
         Popup.PopupEntity(Loc.GetString("anomaly-vessel-component-anomaly-assigned"), uid);
+
+        // Arcane-Start
+        if (_research.TryGetClientServer(uid, out var serverUid, out _))
+            _research.LogNetworkEvent(serverUid.Value, "anomaly", Loc.GetString("research-netlog-anomaly-vessel-bound", ("vessel", MetaData(uid).EntityName), ("anomaly", MetaData(anomaly).EntityName)));
+        // Arcane-End
     }
 
-    private void OnVesselGetPointsPerSecond(EntityUid uid, AnomalyVesselComponent component, ref ResearchServerGetPointsPerSecondEvent args)
+    private void OnVesselGetPointsPerSecond(EntityUid uid, AnomalyVesselComponent component, ref ResearchServerGetPointsPerSecondByTypeEvent args) // Arcane-Edit
     {
         if (!this.IsPowered(uid, EntityManager) || component.Anomaly is not {} anomaly)
             return;
 
-        args.Points += (int) (GetAnomalyPointValue(anomaly) * component.PointMultiplier);
+        // Arcane-Edit-Start
+        args.Points.Add(new ResearchPointAmount
+        {
+            Type = "General",
+            Amount = (int) (GetAnomalyPointValue(anomaly) * component.PointMultiplier),
+        });
+        // Arcane-Edit-End
     }
 
     private void OnVesselAnomalyShutdown(ref AnomalyShutdownEvent args)

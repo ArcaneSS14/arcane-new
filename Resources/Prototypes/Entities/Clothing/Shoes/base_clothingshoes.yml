@@ -3,6 +3,10 @@
   parent: [SolutionFood, SolutionToolNormal, Clothing]
   id: ClothingShoesBase
   components:
+  # Arcane-Start: socks are worn under shoes (Orion #208)
+  - type: SlotBlock
+    slots: SOCKS
+  # Arcane-End
   # Goobstation edit start
   - type: EmitSoundOnPickup
     sound:

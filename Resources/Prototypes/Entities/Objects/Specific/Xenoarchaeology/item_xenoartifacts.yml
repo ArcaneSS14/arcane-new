@@ -151,6 +151,20 @@
   - type: PhysicalComposition
     materialComposition:
       ArtifactFragment: 100
+  # Arcane-Start
+  - type: ResearchAnalyzable
+    supportedMethods:
+    - Deconstruct
+    methodPointRewards:
+      Deconstruct:
+      - type: General
+        amount: 250
+      - type: Experimental
+        amount: 30
+    discoveryTrigger: machine:artifact-fragment
+    experimentActions:
+    - analyze_artifact_fragment
+  # Arcane-End
   # Lavaland Change end
 
 - type: entity

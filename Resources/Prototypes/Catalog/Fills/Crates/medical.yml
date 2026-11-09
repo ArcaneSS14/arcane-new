@@ -1,5 +1,5 @@
 - type: entity
-  parent: CrateMedical
+  parent: CrateMedicalAlt # Arcane-Edit: CrateMedical > CrateMedicalAlt
   id: CrateMedicalSupplies
   name: medical supplies crate
   description: Basic medical supplies.

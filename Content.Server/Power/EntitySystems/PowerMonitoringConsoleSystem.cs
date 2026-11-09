@@ -27,6 +27,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
 
     // Note: this data does not need to be saved
     private Dictionary<EntityUid, Dictionary<Vector2i, PowerCableChunk>> _gridPowerCableChunks = new();
+    private readonly Dictionary<EntityUid, HashSet<EntityUid>> _consolesByGrid = new(); // Arcane
     private float _updateTimer = 1.0f;
 
     private const float UpdateTime = 1.0f;
@@ -38,6 +39,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
 
         // Console events
         SubscribeLocalEvent<PowerMonitoringConsoleComponent, ComponentInit>(OnConsoleInit);
+        SubscribeLocalEvent<PowerMonitoringConsoleComponent, ComponentShutdown>(OnConsoleShutdown); // Arcane
         SubscribeLocalEvent<PowerMonitoringConsoleComponent, EntParentChangedMessage>(OnConsoleParentChanged);
         SubscribeLocalEvent<PowerMonitoringCableNetworksComponent, ComponentInit>(OnCableNetworksInit);
         SubscribeLocalEvent<PowerMonitoringCableNetworksComponent, EntParentChangedMessage>(OnCableNetworksParentChanged);
@@ -61,11 +63,24 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
 
     private void OnConsoleInit(EntityUid uid, PowerMonitoringConsoleComponent component, ComponentInit args)
     {
+        TrackConsole(uid); // Arcane
         RefreshPowerMonitoringConsole(uid, component);
     }
 
+    // Arcane-Start
+    private void OnConsoleShutdown(EntityUid uid, PowerMonitoringConsoleComponent component, ComponentShutdown args)
+    {
+        UntrackConsole(uid, Transform(uid).GridUid);
+    }
+    // Arcane-End
+
     private void OnConsoleParentChanged(EntityUid uid, PowerMonitoringConsoleComponent component, EntParentChangedMessage args)
     {
+        // Arcane-Start
+        var oldGrid = GetTrackedGrid(args.OldParent);
+        UntrackConsole(uid, oldGrid);
+        TrackConsole(uid);
+        // Arcane-End
         RefreshPowerMonitoringConsole(uid, component);
     }
 
@@ -121,10 +136,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
     private void OnGridSplit(ref GridSplitEvent args)
     {
         // Collect grids
-        var allGrids = args.NewGrids.ToList();
-
-        if (!allGrids.Contains(args.Grid))
-            allGrids.Add(args.Grid);
+        var allGrids = new HashSet<EntityUid>(args.NewGrids) { args.Grid }; // Arcane-Edit: ToList() + Contains/Add > HashSet
 
         // Refresh affected power cable grids
         foreach (var grid in allGrids)
@@ -136,18 +148,22 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         }
 
         // Update power monitoring consoles that stand upon an updated grid
-        var query = AllEntityQuery<PowerMonitoringConsoleComponent, PowerMonitoringCableNetworksComponent, TransformComponent>();
-        while (query.MoveNext(out var ent, out var entConsole, out var entCableNetworks, out var entXform))
+        // Arcane-Edit-Start
+        foreach (var gridUid in allGrids)
         {
-            if (entXform.GridUid == null)
+            if (!_consolesByGrid.TryGetValue(gridUid, out var consoles))
                 continue;
 
-            if (!allGrids.Contains(entXform.GridUid.Value))
-                continue;
+            foreach (var ent in consoles)
+            {
+                if (TryComp(ent, out PowerMonitoringConsoleComponent? entConsole))
+                    RefreshPowerMonitoringConsole(ent, entConsole);
 
-            RefreshPowerMonitoringConsole(ent, entConsole);
-            RefreshPowerMonitoringCableNetworks(ent, entCableNetworks);
+                if (TryComp(ent, out PowerMonitoringCableNetworksComponent? entCableNetworks))
+                    RefreshPowerMonitoringCableNetworks(ent, entCableNetworks);
+            }
         }
+        // Arcane-Edit-End
     }
 
     public void OnCableAnchorStateChanged(EntityUid uid, CableComponent component, CableAnchorStateChangedEvent args)
@@ -178,10 +194,14 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         else
             chunk.PowerCableData[(int) component.CableType] &= ~flag;
 
-        var query = AllEntityQuery<PowerMonitoringCableNetworksComponent, TransformComponent>();
-        while (query.MoveNext(out var ent, out var entCableNetworks, out var entXform))
+        // Arcane-Edit-Start
+        if (!_consolesByGrid.TryGetValue(xform.GridUid.Value, out var consoles))
+            return;
+
+        foreach (var ent in consoles)
+        // Arcane-Edit-End
         {
-            if (entXform.GridUid != xform.GridUid)
+            if (!TryComp(ent, out PowerMonitoringCableNetworksComponent? entCableNetworks)) // Arcane-Edit: entXform.GridUid != xform.GridUid > !TryComp(entCableNetworks)
                 continue;
 
             entCableNetworks.AllChunks = allChunks;
@@ -200,10 +220,14 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         if (component.IsCollectionMasterOrChild)
             AssignEntityAsCollectionMaster(uid, component, xform);
 
-        var query = AllEntityQuery<PowerMonitoringConsoleComponent, TransformComponent>();
-        while (query.MoveNext(out var ent, out var entConsole, out var entXform))
+        // Arcane-Edit-Start
+        if (!_consolesByGrid.TryGetValue(gridUid.Value, out var consoles))
+            return;
+
+        foreach (var ent in consoles)
+        // Arcane-Edit-End
         {
-            if (gridUid != entXform.GridUid)
+            if (!TryComp(ent, out PowerMonitoringConsoleComponent? entConsole)) // Arcane-Edit: gridUid != entXform.GridUid > !TryComp(entConsole)
                 continue;
 
             if (!args.Anchored)
@@ -229,13 +253,60 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
         if (component.IsCollectionMasterOrChild)
             AssignEntityAsCollectionMaster(uid, component);
 
-        var query = AllEntityQuery<PowerMonitoringConsoleComponent, PowerMonitoringCableNetworksComponent>();
-        while (query.MoveNext(out var _, out var entConsole, out var entCableNetworks))
+        // Arcane-Edit-Start
+        var gridUid = Transform(uid).GridUid;
+        if (gridUid == null || !_consolesByGrid.TryGetValue(gridUid.Value, out var consoles))
+            return;
+
+        foreach (var ent in consoles)
+        // Arcane-Edit-End
         {
+            // Arcane-Start
+            if (!TryComp(ent, out PowerMonitoringConsoleComponent? entConsole) ||
+                !TryComp(ent, out PowerMonitoringCableNetworksComponent? entCableNetworks))
+                continue;
+            // Arcane-End
+
             if (entConsole.Focus == uid)
                 entCableNetworks.FocusChunks.Clear(); // Component is dirtied when these chunks are rebuilt
         }
     }
+
+    // Arcane-Start
+    private void TrackConsole(EntityUid uid)
+    {
+        var gridUid = Transform(uid).GridUid;
+        if (gridUid == null)
+            return;
+
+        if (!_consolesByGrid.TryGetValue(gridUid.Value, out var consoles))
+        {
+            consoles = new HashSet<EntityUid>();
+            _consolesByGrid[gridUid.Value] = consoles;
+        }
+
+        consoles.Add(uid);
+    }
+
+    private void UntrackConsole(EntityUid uid, EntityUid? gridUid)
+    {
+        if (gridUid == null || !_consolesByGrid.TryGetValue(gridUid.Value, out var consoles))
+            return;
+
+        consoles.Remove(uid);
+        if (consoles.Count == 0)
+            _consolesByGrid.Remove(gridUid.Value);
+    }
+
+    private EntityUid? GetTrackedGrid(EntityUid? parent)
+    {
+        if (parent == null)
+            return null;
+
+        var xform = Transform(parent.Value);
+        return xform.GridUid ?? parent;
+    }
+    // Arcane-End
 
     private void OnPowerGridCheckStarted(ref GameRuleStartedEvent ev)
     {

@@ -136,10 +136,16 @@
         # <Goob> - replace bottles with cartridge injector and stuff
         - id: HandheldCrewMonitor
         - id: ParamedHypo
-        - id: CartridgeSaline
-        - id: CartridgeBicaridine
-        - id: CartridgeDermaline
-        - id: CartridgeAtropine
+        # Arcane-Edit-Start: syringe case and pills instead of cartridges
+#        - id: CartridgeSaline
+#        - id: CartridgeBicaridine
+#        - id: CartridgeDermaline
+#        - id: CartridgeAtropine
+        - id: SyringeCaseFilledGeneral
+        - id: Crowbar
+        - id: PillCanisterHyronalin
+        - id: PillCanisterDylovene
+        # Arcane-Edit-End
         # </Goob>
 
 - type: entity

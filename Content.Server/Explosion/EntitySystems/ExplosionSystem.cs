@@ -30,6 +30,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Explosion; // Arcane
 
 namespace Content.Server.Explosion.EntitySystems;
 
@@ -348,9 +349,6 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
 
         var visualEnt = CreateExplosionVisualEntity(pos, queued.Proto.ID, spaceMatrix, spaceData, gridData.Values, iterationIntensity);
 
-        // camera shake
-        CameraShake(iterationIntensity.Count * 4f, pos, queued.TotalIntensity);
-
         //For whatever bloody reason, sound system requires ENTITY coordinates.
         var mapEntityCoords = _transformSystem.ToCoordinates(_map.GetMap(pos.MapId), pos);
 
@@ -371,6 +369,15 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
             : queued.Proto.Sound;
 
         _audio.PlayStatic(sound, filter, mapEntityCoords, true, sound.Params);
+        // Arcane-Start
+        var screenshakeRange = iterationIntensity.Count * 4f;
+        var screenshakeFilter = Filter.Empty().AddInRange(pos, screenshakeRange);
+        DoArcaneExplosionScreenshake(
+            screenshakeFilter,
+            pos,
+            screenshakeRange,
+            iterationIntensity.Count < queued.Proto.SmallSoundIterationThreshold);
+        // Arcane-End
 
         // play far sound
         // far sound should play for anyone who wasn't in range of any of the effects of the bomb

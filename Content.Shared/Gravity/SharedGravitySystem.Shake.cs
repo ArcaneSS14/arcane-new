@@ -44,6 +44,16 @@ public abstract partial class SharedGravitySystem
             shake.NextShake = Timing.CurTime;
         }
 
+        // Arcane-Start
+        if (TryArcaneScreenshakeGrid(uid, gravity))
+        {
+            shake.ArcaneSoundIsServerPlayed = true;
+            shake.ShakeTimes = 0;
+            Dirty(uid, shake);
+            return;
+        }
+        // Arcane-End
+
         shake.ShakeTimes = 10;
         Dirty(uid, shake);
     }

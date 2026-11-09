@@ -23,6 +23,15 @@
     sprite: _White/Clothing/Eyes/Goggles/nightvision.rsi
   - type: Clothing
     sprite: _White/Clothing/Eyes/Goggles/nightvision.rsi
+    equippedState: equipped-EYES-off # Arcane
+  # Arcane-Start
+  - type: Appearance
+  - type: ToggleableVisuals
+    spriteLayer: enum.ToggleableVisuals.Layer
+    clothingVisuals:
+      eyes:
+      - state: equipped-EYES
+  # Arcane-End
   - type: IdentityBlocker
     coverage: EYES
 
