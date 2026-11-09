@@ -55,6 +55,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         _polls.PollDisplayed += OnDisplayed;
         _net.Disconnect += OnDisconnect;
         SubscribeNetworkEvent<PollSeenAcknowledgedEvent>(OnAcknowledged);
+        SubscribeNetworkEvent<PollSeenCountChangedEvent>(OnSeenCountChanged);
     }
 
     public override void Shutdown()
@@ -119,6 +120,10 @@ public sealed partial class PollSeenSystem : EntitySystem
     }
 
     private void OnPoll(PollData poll) => RefreshUnseen();
+
+    private void OnSeenCountChanged(PollSeenCountChangedEvent message) =>
+        _polls.UpdateSeenCount(message.PollId, message.Count);
+
     private void OnClosed(int id) => RefreshUnseen();
 
     private void OnDisconnect(object? sender, NetDisconnectedArgs args)

@@ -23,6 +23,7 @@ public sealed partial class PollVotingWindow : FancyWindow
         _pollManager.OnPollClosed += HandlePollClosed;
         _pollManager.OnVoteResponse += HandleVoteResponse;
         _pollManager.OnPollDetailsReceived += HandlePollDetailsReceived;
+        _pollManager.SeenCountChanged += HandleSeenCountChanged; // Arcane
 
         RefreshPolls();
     }
@@ -38,6 +39,7 @@ public sealed partial class PollVotingWindow : FancyWindow
             _pollManager.OnPollClosed -= HandlePollClosed;
             _pollManager.OnVoteResponse -= HandleVoteResponse;
             _pollManager.OnPollDetailsReceived -= HandlePollDetailsReceived;
+            _pollManager.SeenCountChanged -= HandleSeenCountChanged; // Arcane
         }
     }
 
@@ -118,6 +120,20 @@ public sealed partial class PollVotingWindow : FancyWindow
         }
     }
 
+    // Arcane-Start
+    private void HandleSeenCountChanged(int pollId, int count)
+    {
+        foreach (var child in PollsList.Children)
+        {
+            if (child is PollControl poll && poll.PollId == pollId)
+            {
+                poll.UpdateSeenCount(count);
+                break;
+            }
+        }
+    }
+    // Arcane-End
+
     private void HandleVoteResponse(bool success, string? error)
     {
         if (!success && error != null)
@@ -154,6 +170,7 @@ public sealed class PollControl : BoxContainer
     private readonly Dictionary<int, CheckBox> _optionCheckBoxes = [];
     private readonly Dictionary<int, Button> _optionButtons = [];
     private bool _isVoting;
+    private Label _seenLabel = default!; // Arcane
 
     public int PollId => _poll.PollId;
 
@@ -280,12 +297,13 @@ public sealed class PollControl : BoxContainer
         }
 
         // Arcane-Start
-        metaBox.AddChild(new Label
+        _seenLabel = new Label
         {
             Text = Loc.GetString("arcane-poll-control-seen-by", ("count", _poll.SeenCount)),
             FontColorOverride = new Color(0.7f, 0.7f, 0.8f),
             StyleClasses = { "LabelSubText" }
-        });
+        };
+        metaBox.AddChild(_seenLabel);
         // Arcane-End
 
         var separator = new BoxContainer
@@ -504,6 +522,14 @@ public sealed class PollControl : BoxContainer
         _isVoting = false;
         BuildUI();
     }
+
+    // Arcane-Start
+    public void UpdateSeenCount(int count)
+    {
+        _poll.SeenCount = Math.Max(_poll.SeenCount, count);
+        _seenLabel.Text = Loc.GetString("arcane-poll-control-seen-by", ("count", _poll.SeenCount));
+    }
+    // Arcane-End
 
     public void UpdateWithNewData(PollData poll, List<PollVoteData> votes)
     {
