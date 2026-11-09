@@ -14,3 +14,10 @@ public sealed class PollSeenAcknowledgedEvent(int pollId, bool seen) : EntityEve
     public int PollId { get; } = pollId;
     public bool Seen { get; } = seen;
 }
+
+[Serializable, NetSerializable]
+public sealed class PollSeenCountChangedEvent(int pollId, int count) : EntityEventArgs
+{
+    public int PollId { get; } = pollId;
+    public int Count { get; } = count;
+}

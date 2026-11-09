@@ -1101,6 +1101,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("poll_options", (string)null);
                 });
 
+            // Arcane-Start
             modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
                 {
                     b.Property<int>("Id")
@@ -1132,6 +1133,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.ToTable("poll_seen", (string)null);
                 });
+            // Arcane-End
 
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {
@@ -1219,6 +1221,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("INTEGER")
                         .HasColumnName("age");
 
+                    // Arcane-Start: Character scale preference
+                    b.Property<float>("Scale")
+                        .HasColumnType("REAL")
+                        .HasColumnName("scale");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -1248,6 +1256,63 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("flavor_text");
+
+                    // Arcane-Start: extended flavor text
+                    b.Property<string>("CharacterFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("character_flavor_text");
+
+                    b.Property<string>("OocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("ooc_flavor_text");
+
+                    b.Property<string>("TagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("tags_flavor_text");
+
+                    b.Property<string>("LinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("links_flavor_text");
+
+                    b.Property<string>("GreenFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("green_flavor_text");
+
+                    b.Property<string>("YellowFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("yellow_flavor_text");
+
+                    b.Property<string>("RedFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("red_flavor_text");
+
+                    b.Property<string>("NsfwFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nsfw_flavor_text");
+
+                    b.Property<string>("NsfwOocFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nsfw_ooc_flavor_text");
+
+                    b.Property<string>("NsfwLinksFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nsfw_links_flavor_text");
+
+                    b.Property<string>("NsfwTagsFlavorText")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nsfw_tags_flavor_text");
+                    // Arcane-End
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -1284,10 +1349,6 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<int>("PreferenceUnavailable")
                         .HasColumnType("INTEGER")
                         .HasColumnName("pref_unavailable");
-
-                    b.Property<float>("Scale")
-                        .HasColumnType("REAL")
-                        .HasColumnName("scale");
 
                     b.Property<string>("Sex")
                         .IsRequired()
@@ -2303,6 +2364,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Navigation("Poll");
                 });
 
+            // Arcane-Start
             modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
                 {
                     b.HasOne("Content.Server.Database.Player", "Player")
@@ -2324,6 +2386,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.Navigation("Poll");
                 });
+            // Arcane-End
 
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {

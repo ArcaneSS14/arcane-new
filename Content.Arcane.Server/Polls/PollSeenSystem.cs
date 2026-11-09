@@ -50,7 +50,7 @@ public sealed partial class PollSeenSystem : EntitySystem
         if (!channel.IsConnected)
             return;
         var now = DateTime.UtcNow;
-        _offered[channel] = polls.Where(p => p.Active && p.StartTime <= now
+        _offered[channel] = polls.Where(p => p.Active
             && (p.EndTime == null || p.EndTime > now)).Select(p => p.PollId).ToHashSet();
         if (_confirmed.TryGetValue(channel, out var confirmed))
             confirmed.IntersectWith(_offered[channel]);
@@ -94,8 +94,11 @@ public sealed partial class PollSeenSystem : EntitySystem
                 RaiseNetworkEvent(new PollSeenAcknowledgedEvent(message.PollId, seen), channel);
                 acknowledged = true;
             }
-            if (added && await _polls.GetPoll(message.PollId) is { } updated)
-                _net.ServerSendToAll(new MsgPollUpdated { Poll = updated });
+            if (added)
+            {
+                var count = await _db.GetPollSeenCountAsync(message.PollId);
+                RaiseNetworkEvent(new PollSeenCountChangedEvent(message.PollId, count));
+            }
         }
         catch (Exception exception)
         {
