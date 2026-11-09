@@ -37,6 +37,25 @@ public sealed partial class JukeboxComponent : Component
 
     [ViewVariables]
     public float SelectAccumulator;
+
+    // Arcane-Start
+    /// <summary>
+    /// Volume set by the volume slider, from <see cref="MinSlider"/> to <see cref="MaxSlider"/>.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float Volume = 50f;
+
+    public const float MinVolume = -30f;
+    public const float MaxVolume = 0f;
+    public const float MinSlider = 0f;
+    public const float MaxSlider = 100f;
+
+    /// <summary>
+    /// Whether the current track restarts when it ends.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool LoopEnabled;
+    // Arcane-End
 }
 
 [Serializable, NetSerializable]
@@ -59,6 +78,17 @@ public sealed class JukeboxSetTimeMessage(float songTime) : BoundUserInterfaceMe
 {
     public float SongTime { get; } = songTime;
 }
+
+// Arcane-Start
+[Serializable, NetSerializable]
+public sealed class JukeboxSetVolumeMessage(float volume) : BoundUserInterfaceMessage
+{
+    public float Volume { get; } = volume;
+}
+
+[Serializable, NetSerializable]
+public sealed class JukeboxToggleLoopMessage : BoundUserInterfaceMessage;
+// Arcane-End
 
 [Serializable, NetSerializable]
 public enum JukeboxVisuals : byte

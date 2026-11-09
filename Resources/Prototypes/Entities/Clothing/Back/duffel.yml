@@ -249,6 +249,11 @@
     - state: icon
     - state: icon-unlit
       shader: unshaded
+  # Arcane-Start: built from an inert bag and a bluespace anomaly core
+  - type: Construction
+    graph: BagOfHoldingDuffel
+    node: bag_of_holding
+  # Arcane-End
 
 - type: entity
   parent: [ ClothingBackpackDuffel, BaseCentcommContraband ]

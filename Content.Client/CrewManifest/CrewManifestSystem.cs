@@ -71,4 +71,13 @@ public sealed partial class CrewManifestSystem : EntitySystem
             ? order
             : -1;
     }
+
+    // Arcane-Start
+    public IEnumerable<string> GetDepartmentsForJob(string jobPrototype)
+    {
+        return _jobDepartmentLookup.TryGetValue(jobPrototype, out var departments)
+            ? departments.Keys
+            : Array.Empty<string>();
+    }
+    // Arcane-End
 }

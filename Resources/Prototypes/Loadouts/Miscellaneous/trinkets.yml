@@ -88,9 +88,11 @@
 
 - type: loadout
   id: CigarCase
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: Command
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: Command
+  # Arcane-Edit-End
   storage:
     back:
     - CigarCase

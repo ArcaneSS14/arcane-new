@@ -6,6 +6,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Client.Explosion;
 
@@ -14,7 +15,7 @@ public sealed partial class ExplosionOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> UnshadedShader = "unshaded";
 
-    [Dependency] private IRobustRandom _robustRandom = default!;
+    [Dependency] private IGameTiming _timing = default!; // Arcane-Edit: IRobustRandom _robustRandom > IGameTiming _timing
     [Dependency] private IEntityManager _entMan = default!;
     [Dependency] private IPrototypeManager _proto = default!;
     private readonly SharedTransformSystem _transformSystem;
@@ -23,6 +24,7 @@ public sealed partial class ExplosionOverlay : Overlay
     public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowFOV;
 
     private ShaderInstance _shader;
+
 
     public ExplosionOverlay(SharedAppearanceSystem appearanceSystem)
     {
@@ -105,6 +107,7 @@ public sealed partial class ExplosionOverlay : Overlay
 
             var frameIndex = (int) Math.Min(visuals.Intensity[j] / textures.IntensityPerState, textures.FireFrames.Count - 1);
             var frames = textures.FireFrames[frameIndex];
+            var texture = GetAnimatedFrame(frames, textures.FireDelays[frameIndex]); // Arcane: one frame for the whole state
 
             foreach (var tile in tiles)
             {
@@ -113,9 +116,36 @@ public sealed partial class ExplosionOverlay : Overlay
                 if (!gridBounds.Contains(centre))
                     continue;
 
-                var texture = _robustRandom.Pick(frames);
+                // var texture = _robustRandom.Pick(frames); // Arcane-Edit: random frame > animated frame picked above
                 drawHandle.DrawTextureRect(texture, Box2.CenteredAround(centre, new Vector2(tileSize, tileSize)), textures.FireColor);
             }
         }
     }
+
+    // Arcane-Start
+    /// <summary>
+    ///     The frame of an animated state at the current time, following the state's own frame delays.
+    /// </summary>
+    private Texture GetAnimatedFrame(Texture[] frames, float[] delays)
+    {
+        var total = 0f;
+        foreach (var delay in delays)
+        {
+            total += delay;
+        }
+
+        if (frames.Length <= 1 || delays.Length != frames.Length || total <= 0f)
+            return frames[0];
+
+        var time = (float) (_timing.RealTime.TotalSeconds % total);
+        for (var i = 0; i < frames.Length; i++)
+        {
+            time -= delays[i];
+            if (time < 0f)
+                return frames[i];
+        }
+
+        return frames[^1];
+    }
+    // Arcane-End
 }

@@ -23,7 +23,7 @@
     sprite: _Goobstation/Clothing/Neck/Cloaks/breverb.rsi
 
 - type: entity
-  parent: [ ClothingNeckBase, BaseMagicalContraband ]
+  parent: ClothingNeckBase # Arcane-Edit: BaseMagicalContraband removed, sold in the theater vendor
   id: ClothingNeckCloakCarp
   name: carp cloak
   description: Getting up to some fishy business are we?
@@ -34,7 +34,7 @@
     sprite: _Goobstation/Clothing/Neck/Cloaks/carpcloak.rsi
 
 - type: entity
-  parent: [ ClothingNeckBase, BaseMagicalContraband ]
+  parent: ClothingNeckBase # Arcane-Edit: BaseMagicalContraband removed, sold in the theater vendor
   id: ClothingNeckCloakCarpAlt
   name: carp cloak
   description: Restricted to extraterrestrial entities. That means NOT you.

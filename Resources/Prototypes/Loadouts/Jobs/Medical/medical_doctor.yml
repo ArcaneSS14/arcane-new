@@ -9,9 +9,11 @@
 
 - type: loadout
   id: MedicalHeadMirror
-  effects:
-  - !type:GroupLoadoutEffect
-    proto: MedicalJourneymanTimer
+  # Arcane-Edit-Start: no loadout requirement
+#  effects:
+#  - !type:GroupLoadoutEffect
+#    proto: MedicalJourneymanTimer
+  # Arcane-Edit-End
   equipment:
     head: ClothingHeadMirror
 

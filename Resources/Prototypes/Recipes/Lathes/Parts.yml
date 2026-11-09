@@ -19,7 +19,9 @@
     Steel: 50
     Plastic: 50
 
-- type: latheRecipe
-  parent: BaseStockPartRecipe
-  id: MicroManipulatorStockPart
-  result: MicroManipulatorStockPart
+# Arcane-Edit-Start: replaced by the servo (Orion #385)
+#- type: latheRecipe
+#  parent: BaseStockPartRecipe
+#  id: MicroManipulatorStockPart
+#  result: MicroManipulatorStockPart
+# Arcane-Edit-End

@@ -6186,8 +6186,10 @@ entities:
     components:
     - type: Transform
       parent: 101
-    - type: Stack
-      count: 2
+    # Arcane-Edit-Start: stock parts no longer stack (Orion #385)
+    #    - type: Stack
+    #      count: 2
+    # Arcane-Edit-End
     - type: Physics
       angularDamping: 0
       linearDamping: 0

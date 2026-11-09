@@ -1,4 +1,62 @@
 - type: latheRecipe
+  id: Bloodpack
+  result: Bloodpack
+  categories:
+  - Medical
+  completetime: 4
+  materials:
+    Plastic: 200
+
+- type: latheRecipe
+  id: ClothingNeckStethoscope
+  result: ClothingNeckStethoscope
+  categories:
+  - Medical
+  completetime: 4
+  materials:
+    Steel: 200
+
+- type: latheRecipe
+  id: SprayBottleBlue
+  result: SprayBottleBlueEmpty
+  categories:
+  - Medical
+  completetime: 4
+  materials:
+    Plastic: 200
+
+- type: latheRecipe
+  id: SprayBottleOrange
+  result: SprayBottleOrangeEmpty
+  categories:
+  - Medical
+  completetime: 4
+  materials:
+    Plastic: 200
+
+- type: latheRecipe
+  id: SprayBottleRed
+  result: SprayBottleRedEmpty
+  categories:
+  - Medical
+  completetime: 4
+  materials:
+    Plastic: 200
+
+- type: latheRecipe
+  id: ClothingEyesNightVisionMedicalGoggles
+  result: ClothingEyesNightVisionMedicalGoggles
+  categories:
+  - Medical
+  completetime: 7
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+    Gold: 100
+    Plasma: 200
+
+- type: latheRecipe
   id: SynthBloodpack
   result: SynthBloodpack1
   completetime: 1

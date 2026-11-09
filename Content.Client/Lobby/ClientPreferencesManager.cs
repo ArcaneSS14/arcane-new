@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Arcane.Common.Sponsors; // Arcane
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.Preferences;
 using Robust.Client;
@@ -62,7 +63,7 @@ namespace Content.Client.Lobby
         public void UpdateCharacter(HumanoidCharacterProfile profile, int slot)
         {
             var collection = IoCManager.Instance!;
-            profile.EnsureValid(_playerManager.LocalSession!, collection);
+            profile.EnsureValid(_playerManager.LocalSession!, collection, SponsorPrototypes.Get(_playerManager.LocalSession, collection)); // Arcane-Edit: resolve sponsor prototypes
             var characters = new Dictionary<int, HumanoidCharacterProfile>(Preferences.Characters) {[slot] = profile};
             Preferences = new PlayerPreferences(characters, Preferences.SelectedCharacterIndex, Preferences.AdminOOCColor, Preferences.ConstructionFavorites);
             var msg = new MsgUpdateCharacter

@@ -34,6 +34,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using static Content.Client.Inventory.ClientInventorySystem;
 using static Robust.Client.UserInterface.Control;
+using Content.Shared.Interaction.Components; // Arcane
 
 namespace Content.Client.Inventory
 {
@@ -154,6 +155,7 @@ namespace Content.Client.Inventory
 
             if (EntMan.TryGetComponent<InventoryComponent>(Owner, out var inv))
             {
+                _coveredSlots = GetCoveredSlots(inv); // Arcane: once per menu update, not per slot
                 foreach (var slot in inv.Slots)
                 {
                     AddInventoryButton(Owner, slot.Name, inv);
@@ -310,6 +312,17 @@ namespace Content.Client.Inventory
             var button = new SlotButton(new SlotData(slotDef, container));
             button.Pressed += SlotPressed;
 
+            // Arcane-Start: slots covered by other clothing (Orion #208)
+            if (!EntMan.HasComponent<BypassInteractionChecksComponent>(_player.LocalEntity))
+            {
+                var (blocked, hidden) = _coveredSlots;
+                if ((slotDef.SlotFlags & (blocked | hidden)) != 0)
+                    entity = _virtualHiddenEntity;
+
+                button.Blocked = (slotDef.SlotFlags & blocked) != 0;
+            }
+            // Arcane-End
+
             _strippingMenu!.InventoryContainer.AddChild(button);
 
             UpdateEntityIcon(button, entity);
@@ -321,6 +334,31 @@ namespace Content.Client.Inventory
             if (slotDef.StrippingWindowPos.Y > _inventoryDimensions.Y)
                 _inventoryDimensions = new Vector2i(_inventoryDimensions.X, slotDef.StrippingWindowPos.Y);
         }
+
+        // Arcane-Start
+        private (SlotFlags Blocked, SlotFlags Hidden) _coveredSlots;
+
+        /// <summary>
+        /// Slots blocked or hidden by the clothing the target is wearing. Pockets do not count, the same as for
+        /// the server's equip checks: shoes kept in a pocket do not cover the socks.
+        /// </summary>
+        private (SlotFlags Blocked, SlotFlags Hidden) GetCoveredSlots(InventoryComponent inv)
+        {
+            var blocked = SlotFlags.NONE;
+            var hidden = SlotFlags.NONE;
+            var enumerator = new InventorySystem.InventorySlotEnumerator(inv, SlotFlags.WITHOUT_POCKET);
+            while (enumerator.NextItem(out var item))
+            {
+                if (!EntMan.TryGetComponent<SlotBlockComponent>(item, out var block))
+                    continue;
+
+                blocked |= block.Slots;
+                hidden |= block.HiddenSlots;
+            }
+
+            return (blocked, hidden);
+        }
+        // Arcane-End
 
         private void UpdateEntityIcon(SlotControl button, EntityUid? entity)
         {

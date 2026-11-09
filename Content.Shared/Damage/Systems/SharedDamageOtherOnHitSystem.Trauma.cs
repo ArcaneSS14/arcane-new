@@ -18,6 +18,7 @@ using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Player;
+using Content.Arcane.Common.Camera; // Arcane
 
 namespace Content.Shared.Damage.Systems;
 
@@ -82,7 +83,8 @@ public abstract partial class SharedDamageOtherOnHitSystem
         if (TryComp<PhysicsComponent>(uid, out var body) && body.LinearVelocity.LengthSquared() > 0f)
         {
             var direction = body.LinearVelocity.Normalized();
-            _recoil.KickCamera(args.Target, direction);
+            _recoil.KickCamera(args.Target, direction * 0.1f); // Arcane-Edit: direction > direction * 0.1f
+            ArcaneScreenshakeRequest.Raise(EntityManager, args.Target, new ArcaneScreenshakeParameters(0.35f, 1.4f, 0.014f), null); // Arcane
         }
     }
 }

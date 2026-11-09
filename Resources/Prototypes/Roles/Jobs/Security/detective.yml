@@ -29,6 +29,7 @@
     id: DetectivePDA
     ears: ClothingHeadsetSecurity
     belt: ClothingBeltHolsterFilled
+    pocket1: WeaponDisabler # Arcane
   storage:
     back:
     - Flash

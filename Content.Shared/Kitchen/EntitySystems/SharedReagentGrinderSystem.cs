@@ -17,6 +17,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
+using Content.Shared.Construction.Events; // Arcane
 
 namespace Content.Shared.Kitchen.EntitySystems;
 
@@ -58,6 +59,10 @@ public abstract partial class SharedReagentGrinderSystem : EntitySystem
         SubscribeLocalEvent<ReagentGrinderComponent, ReagentGrinderToggleAutoModeMessage>(OnToggleAutoModeMessage);
         SubscribeLocalEvent<ReagentGrinderComponent, ReagentGrinderEjectChamberAllMessage>(OnEjectChamberAllMessage);
         SubscribeLocalEvent<ReagentGrinderComponent, ReagentGrinderEjectChamberContentMessage>(OnEjectChamberContentMessage);
+        // Arcane-Start
+        SubscribeLocalEvent<ReagentGrinderComponent, RefreshPartsEvent>(OnPartsRefresh);
+        SubscribeLocalEvent<ReagentGrinderComponent, UpgradeExamineEvent>(OnUpgradeExamine);
+        // Arcane-End
     }
 
     private void OnBeakerSolutionContainerChanged(Entity<InsideReagentGrinderComponent> ent, ref SolutionChangedEvent args)
@@ -407,4 +412,30 @@ public abstract partial class SharedReagentGrinderSystem : EntitySystem
 
         return ent.Comp.JuiceSolution is not null;
     }
+
+    // Arcane-Start
+    private void OnPartsRefresh(EntityUid uid, ReagentGrinderComponent component, RefreshPartsEvent args)
+    {
+        var servoTier = args.GetPartRating(component.ServoPart, 1f);
+        var matterBinTier = args.GetPartRating(component.MatterBinPart, 1f);
+
+        component.WorkTimeMultiplier = 1f / MathF.Max(servoTier, 1f);
+        component.StorageMaxEntities = (int) MathF.Round(component.BaseStorageMaxEntities * RefreshPartsEvent.GetPositiveTierMultiplier(matterBinTier));
+        Dirty(uid, component);
+        UpdateUi(uid);
+    }
+
+    private static void OnUpgradeExamine(EntityUid uid, ReagentGrinderComponent component, UpgradeExamineEvent args)
+    {
+        var speedMultiplier = component.WorkTimeMultiplier <= 0f
+            ? 1f
+            : 1f / component.WorkTimeMultiplier;
+        var capacityMultiplier = component.BaseStorageMaxEntities <= 0
+            ? 1f
+            : (float) component.StorageMaxEntities / component.BaseStorageMaxEntities;
+
+        args.AddPercentageUpgrade("machine-upgrade-process-speed", speedMultiplier);
+        args.AddPercentageUpgrade("machine-upgrade-capacity", capacityMultiplier);
+    }
+    // Arcane-End
 }

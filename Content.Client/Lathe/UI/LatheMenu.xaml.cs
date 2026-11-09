@@ -194,7 +194,7 @@ public sealed partial class LatheMenu : FancyWindow
     private string GenerateTooltipText(LatheRecipePrototype prototype)
     {
         StringBuilder sb = new();
-        var multiplier = _entityManager.GetComponent<LatheComponent>(Entity).MaterialUseMultiplier;
+        var multiplier = _entityManager.GetComponent<LatheComponent>(Entity).FinalMaterialMultiplier; // Arcane-Edit: MaterialUseMultiplier > FinalMaterialMultiplier
 
         foreach (var (id, amount) in prototype.Materials)
         {

@@ -6,7 +6,7 @@
   description: uplink-bribe-plasmaman-desc
   productEntity: BriefcaseSyndieLobbyingBundlePlasmamanFilled
   cost:
-    Telecrystal: 20
+    Telecrystal: 10 # Arcane-Edit: 20 > 10
   categories:
     - UplinkDeception
   conditions:

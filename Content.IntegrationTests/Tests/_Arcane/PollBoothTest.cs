@@ -21,6 +21,7 @@ public sealed class PollBoothTest : InteractionTest
     public override PoolSettings PoolSettings => new() { Connected = true, DummyTicker = false, Dirty = true };
 
     [Test]
+    [NonParallelizable] // The database counters are shared by all test pairs.
     public async Task OnlyCardsInTheOpenWindowCountAndViewsSurviveReconnect()
     {
         var db = Server.ResolveDependency<IServerDbManager>();
@@ -43,11 +44,20 @@ public sealed class PollBoothTest : InteractionTest
         await ReceiveList(() => CEntMan.System<SharedInteractionSystem>().InteractionActivate(CPlayer, ToClient(booth)));
         await WaitForView(first.PollId);
         Assert.That(await db.GetPlayerVotesAsync(first.PollId, ServerSession!.UserId), Is.Empty);
+        var readsBeforeReplay = ServerDbManager.DbReadOpsMetric.Value;
+        var writesBeforeReplay = ServerDbManager.DbWriteOpsMetric.Value;
         await Client.WaitPost(() =>
         {
             CEntMan.EntityNetManager.SendSystemNetworkMessage(new Content.Arcane.Shared.Polls.MarkPollSeenEvent(first.PollId));
         });
-        await Pair.ReallyBeIdle(2);
+        await Pair.ReallyBeIdle(5);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ServerDbManager.DbReadOpsMetric.Value, Is.EqualTo(readsBeforeReplay),
+                "Acknowledging an already confirmed view must not read the database again.");
+            Assert.That(ServerDbManager.DbWriteOpsMetric.Value, Is.EqualTo(writesBeforeReplay),
+                "Acknowledging an already confirmed view must not attempt another database write.");
+        });
         Assert.That(await db.GetPollSeenCountAsync(first.PollId), Is.EqualTo(1));
         await Client.WaitPost(controller.CloseWindow);
 

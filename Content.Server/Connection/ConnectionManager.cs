@@ -19,6 +19,8 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
+using Content.Arcane.Common.Sponsors; // Arcane
+
 /*
  * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
  */
@@ -63,6 +65,7 @@ namespace Content.Server.Connection
         [Dependency] private IHttpClientHolder _http = default!;
         [Dependency] private IAdminManager _adminManager = default!;
         [Dependency] private IEntityManager _entityManager = default!;
+        private ISharedSponsorsManager? _sponsorsMgr; // Arcane
 
         private ServerGameTicker? _ticker;
 
@@ -80,6 +83,8 @@ namespace Content.Server.Connection
             _sawmill = _logManager.GetSawmill("connections");
 
             _ipintel = new IPIntel.IPIntel(new IPIntelApi(_http, _cfg), _db, _cfg, _logManager, _chatManager, _gameTiming);
+
+            IoCManager.Instance!.TryResolveType(out _sponsorsMgr); // Arcane
 
             _netMgr.Connecting += NetMgrOnConnecting;
             _netMgr.AssignUserIdCallback = AssignUserIdCallback;
@@ -244,7 +249,7 @@ namespace Content.Server.Connection
 
             var adminData = await _db.GetAdminDataForAsync(e.UserId);
 
-            if (_cfg.GetCVar(CCVars.PanicBunkerEnabled) && adminData == null)
+            if (_cfg.GetCVar(CCVars.PanicBunkerEnabled) && adminData == null && !(_sponsorsMgr?.HaveServerPriorityJoin(userId) ?? false)) // Arcane-Edit: sponsor priority join bypasses the bunker
             {
                 var showReason = _cfg.GetCVar(CCVars.PanicBunkerShowReason);
                 var customReason = _cfg.GetCVar(CCVars.PanicBunkerCustomReason);
@@ -296,6 +301,7 @@ namespace Content.Server.Connection
                             _ticker.PlayerGameStatuses.TryGetValue(userId, out var status) &&
                             status == PlayerGameStatus.JoinedGame;
             var adminBypass = _cfg.GetCVar(CCVars.AdminBypassMaxPlayers) && adminData != null;
+            var sponsorPriorityJoin = _sponsorsMgr?.HaveServerPriorityJoin(userId) ?? false; // Arcane
             var softPlayerCount = _plyMgr.PlayerCount;
 
             if (!_cfg.GetCVar(CCVars.AdminsCountForMaxPlayers))
@@ -303,7 +309,7 @@ namespace Content.Server.Connection
                 softPlayerCount -= _adminManager.ActiveAdmins.Count();
             }
 
-            if ((softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass) && !wasInGame)
+            if ((softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass && !sponsorPriorityJoin) && !wasInGame) // Arcane-Edit: added sponsorPriorityJoin
             {
                 return (ConnectionDenyReason.Full, Loc.GetString("soft-player-cap-full"), null);
             }

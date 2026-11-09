@@ -4,8 +4,8 @@ namespace Content.Shared.MassMedia.Systems;
 
 public abstract class SharedNewsSystem : EntitySystem
 {
-    public const int MaxTitleLength = 25;
-    public const int MaxContentLength = 2048;
+    public const int MaxTitleLength = 48; // Arcane-Edit: 25 > 48
+    public const int MaxContentLength = 4048; // Arcane-Edit: 2048 > 4048
 }
 
 [Serializable, NetSerializable]

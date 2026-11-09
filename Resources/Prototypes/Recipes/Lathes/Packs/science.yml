@@ -25,6 +25,16 @@
   - DeviceDesynchronizer
   - ClothingBackpackHarmpack
   - TeleporterChipBlank
+  # Arcane-Start
+  - ModularGrenade
+  - TrackingImplanter
+  - SadTromboneImplanter
+  - ClothingEyesHudMedical
+  - ClothingEyesHudDiagnostic
+  - SlimeScannerXenobio
+  - ExperiScanner
+  - ResearchDataDisk
+  # Arcane-End
 
 - type: latheRecipePack
   id: ScienceClothing
@@ -36,13 +46,22 @@
   - ClothingBackpackHolding
   - ClothingBackpackSatchelHolding
   - ClothingBackpackDuffelHolding
+  - ClothingBackpackMessengerHolding # Frontier
+  # Arcane-Start
+  - ClothingEyesNightVisionDiagnosticGoggles
+  # Arcane-End
 
 - type: latheRecipePack
   id: PowerCells
   recipes:
-  - PowerCellMicroreactor
   - PowerCellHigh
   - PowerCellHyper
+  # Arcane-Start
+  - PowerCellSuper
+  - PowerCellBluespace
+  - PowerCellBluespaceReactor
+  - PowerCellVortex
+  # Arcane-End
 
 - type: latheRecipePack
   id: ScienceWeapons
@@ -88,6 +107,15 @@
   - ArtifactCrusherMachineCircuitboard
   - StationTeleportersControlCircuitboard
   - StationTeleporterMachineCircuitboard
+  # Arcane-Start
+  - ResearchAndDevelopmentServerMachineCircuitboard
+  - ResearchServerControlConsoleCircuitboard
+  - ResearchComputerCircuitboard
+  - ResearchDestructiveAnalyzerMachineCircuitboard
+  - ResearchExperimentalDestructiveScannerMachineCircuitboard
+  - XenobiologyBountyComputerCircuitboard
+  - StationAiUploadCircuitboard
+  # Arcane-End
 
 - type: latheRecipePack
   id: CameraBoards
@@ -110,6 +138,10 @@
   - HonkerTargetingElectronics
   - HamtrCentralElectronics
   - HamtrPeripheralsElectronics
+  # Arcane-Start
+  - GygaxCentralElectronics
+  - DurandCentralElectronics
+  # Arcane-End
 
 - type: latheRecipePack
   id: ShuttleBoards

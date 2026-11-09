@@ -1,0 +1,23 @@
+- type: job
+  id: BitrunAvatar
+  name: job-name-bitrun-avatar
+  description: job-description-bitrun-avatar
+  playTimeTracker: JobBitrunAvatar
+  setPreference: false
+  startingGear: BitrunAvatarGear
+  icon: "JobIconBitrunAvatar"
+  supervisors: job-supervisors-qm
+  access:
+  - Cargo
+  - Maintenance
+  extendedAccess:
+  - Salvage
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: Condemned
+
+- type: startingGear
+  id: BitrunAvatarGear
+  equipment:
+    id: BitrunAvatarIDCard

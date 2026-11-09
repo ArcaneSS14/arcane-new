@@ -1,0 +1,361 @@
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateAtmospherics
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateCargo
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cargo.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateDeForest
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/deforest.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/deforest.rsi
+
+- type: entity
+  parent: CrateFreezer
+  id: CrateFreezerDonk
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/donk.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/donk.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateGolden
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/gold.rsi
+
+- type: entity
+  parent: CrateFreezer
+  id: CrateFreezerKitchen
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateLavender
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/lavender.rsi
+
+- type: entity
+  parent: CrateMedical
+  id: CrateMedicalAlt
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/medical-alt.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateMining
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateNakamura
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/nakamura.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/nakamura.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CratePink
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/pink.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/pink.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateRobotics
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/robotics.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/robotics.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateRobust
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/robust.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/robust.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateSELF
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/self.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/self.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateSilver
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/silver.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateWooden
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/wood.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/wood.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateAnimalRightsConsortiumSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/animal-rights-consortium_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/animal-rights-consortium_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateAtmospherics ]
+  id: CrateAtmosphericsSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/atmos_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/atmos_secure.rsi
+  - type: AccessReader
+    access: [["Atmospherics"]]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateBitrunSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/bitrun_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/bitrun_secure.rsi
+  - type: AccessReader
+    access: [["Salvage"]]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateCargo ]
+  id: CrateCargoSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cargo_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cargo_secure.rsi
+  - type: AccessReader
+    access: [["Cargo"]]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateCybersunDawnSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-dawn_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-dawn_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateCybersunDuskSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-dusk_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-dusk_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateCybersunNightSecure
+  components:
+  - type: Icon
+    sprite: Structures/Storage/Crates/syndicate_secure.rsi
+  - type: Sprite
+    sprite: Structures/Storage/Crates/syndicate_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateCybersunNoonSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-noon_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/cybersun-noon_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateFreezerDonk ]
+  id: CrateFreezerDonkSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/donk_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/donk_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateGorlexSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/gorlex_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/gorlex_secure.rsi
+  - type: AccessReader
+    access: [ ["NuclearOperative"], ["SyndicateAgent"] ]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGorlexSecure ]
+  id: CrateGorlexWeaponSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/gorlex-weapon_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/gorlex-weapon_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateInterdyneSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/interdyne_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/interdyne_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateFreezer ]
+  id: CrateFreezerInterdyneSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/interdyne-freezer_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/interdyne-freezer_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateFreezerKitchen ]
+  id: CrateFreezerKitchenSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/kitchen_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/kitchen_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateMI13Secure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mi13_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mi13_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateMining ]
+  id: CrateMiningSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/mining_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/mining_secure.rsi
+  - type: AccessReader
+    access: [["Salvage"]]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateRadiation ]
+  id: CrateRadiationSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/radiation_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/radiation_secure.rsi
+  - type: AccessReader
+    access: [["Engineering"]]
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateSELF ]
+  id: CrateSELFSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/self_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/self_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateTigerSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/tiger_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/tiger_secure.rsi
+
+- type: entity
+  parent: [ CrateBaseSecure, CrateGenericSteel ]
+  id: CrateWaffleSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/waffle_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/waffle_secure.rsi
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateInteQ
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/inteq.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/inteq.rsi
+
+- type: entity
+  parent: CrateBaseSecure
+  id: CrateInteQSecure
+  components:
+  - type: Icon
+    sprite: _Arcane/Structures/Storage/Crates/inteq_secure.rsi
+  - type: Sprite
+    sprite: _Arcane/Structures/Storage/Crates/inteq_secure.rsi
+
+- type: entity
+  parent: CrateBitrunSecure
+  id: CrateBitrunSecureReward
+  name: cache crate
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: BitrunningDespawnOnOpen

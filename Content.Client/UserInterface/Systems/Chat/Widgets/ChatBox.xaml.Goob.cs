@@ -22,6 +22,7 @@ public partial class ChatBox
         public void Repopulate()
         {
             Contents.Clear();
+            ResetCoalescing(); // Arcane
 
             // Goobstation start
             foreach (var child in Contents.Children.ToArray())
@@ -42,6 +43,7 @@ public partial class ChatBox
         private void OnChannelFilter(ChatChannel channel, bool active)
         {
             Contents.Clear();
+            ResetCoalescing(); // Arcane
 
             // Goobstation start
             foreach (var child in Contents.Children.ToArray())
@@ -63,4 +65,15 @@ public partial class ChatBox
                 _controller.ClearUnfilteredUnreads(channel);
             }
         }
+
+    // Arcane-Start
+    /// <summary>
+    /// The cleared contents no longer hold the last line, so the next message must not coalesce into it.
+    /// </summary>
+    private void ResetCoalescing()
+    {
+        _lastLine = null;
+        _lastLineRepeatCount = 0;
+    }
+    // Arcane-End
 }

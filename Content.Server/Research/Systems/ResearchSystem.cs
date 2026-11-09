@@ -9,6 +9,7 @@ using Content.Shared.Research.Systems;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
+using Robust.Shared.Random; // Arcane
 
 namespace Content.Server.Research.Systems
 {
@@ -22,6 +23,7 @@ namespace Content.Server.Research.Systems
         [Dependency] private UserInterfaceSystem _uiSystem = default!;
         [Dependency] private SharedPopupSystem _popup = default!;
         [Dependency] private RadioSystem _radio = default!;
+        [Dependency] private IRobustRandom _random = default!; // Arcane
 
         public override void Initialize()
         {
@@ -30,6 +32,11 @@ namespace Content.Server.Research.Systems
             InitializeConsole();
             InitializeSource();
             InitializeServer();
+            // Arcane-Start
+            InitializeArcane();
+            InitializeExperiments();
+            InitializeDiscovery();
+            // Arcane-End
 
             SubscribeLocalEvent<TechnologyDatabaseComponent, ResearchRegistrationChangedEvent>(OnDatabaseRegistrationChanged);
         }
@@ -77,15 +84,20 @@ namespace Content.Server.Research.Systems
             return GetServers(client).Select(x => x.Comp.Id).ToArray();
         }
 
-        public HashSet<Entity<ResearchServerComponent>> GetServers(EntityUid client)
+        public List<Entity<ResearchServerComponent>> GetServers(EntityUid client) // Arcane-Edit
         {
             var clientXform = Transform(client);
             if (clientXform.GridUid is not { } grid)
-                return [];
+                return new List<Entity<ResearchServerComponent>>(); // Arcane-Edit
 
-            var set = new HashSet<Entity<ResearchServerComponent>>();
-            _lookup.GetGridEntities(grid, set);
-            return set;
+            // Arcane-Edit-Start
+            var servers = new HashSet<Entity<ResearchServerComponent>>();
+            _lookup.GetGridEntities(grid, servers);
+
+            return servers
+                .OrderBy(ent => ent.Comp.Id)
+                .ToList();
+            // Arcane-Edit-End
         }
 
         public override void Update(float frameTime)

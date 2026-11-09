@@ -211,6 +211,29 @@ public sealed partial class MarkingManager
         }
     }
 
+    // Arcane-Start
+    /// <summary>
+    /// Ensures that the <see cref="markingSets"/> only contain sponsor markings the player is allowed to use.
+    /// </summary>
+    public void EnsureValidSponsors(Dictionary<HumanoidVisualLayers, List<Marking>> markingSets, string[]? sponsorPrototypes)
+    {
+        foreach (var (markingSet, markings) in markingSets)
+        {
+            for (var i = markings.Count - 1; i >= 0; i--)
+            {
+                if (!TryGetMarking(markings[i], out var marking))
+                    continue;
+
+                if (marking.SponsorOnly && (sponsorPrototypes == null || !sponsorPrototypes.Contains(marking.ID)))
+                    markings.RemoveAt(i);
+            }
+
+            if (markings.Count == 0)
+                markingSets.Remove(markingSet);
+        }
+    }
+    // Arcane-End
+
     /// <summary>
     /// Ensures the list of <see cref="markingSets"/> is valid per the limits of the <see cref="group"/>
     /// </summary>

@@ -21,6 +21,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.ServerProtection; // Arcane
 
 namespace Content.Server.Administration.Managers;
 
@@ -38,6 +39,7 @@ public sealed partial class BanManager : IBanManager, IPostInjectInit
     [Dependency] private IEntitySystemManager _systems = default!;
     [Dependency] private ITaskManager _taskManager = default!;
     [Dependency] private UserDbDataManager _userDbData = default!;
+    [Dependency] private IEntityManager _entityManager = default!; // Arcane
 
     private ISawmill _sawmill = default!;
 
@@ -168,6 +170,14 @@ public sealed partial class BanManager : IBanManager, IPostInjectInit
 
         _sawmill.Info(logMessage);
         _chat.SendAdminAlert(logMessage);
+
+        // Arcane-Start
+        if (banInfo.BanningAdmin is { } banningAdmin)
+        {
+            var protectionEv = new AdminBanPlacedEvent(banningAdmin, adminName, targetName);
+            _entityManager.EventBus.RaiseEvent(EventSource.Local, ref protectionEv);
+        }
+        // Arcane-End
 
         KickMatchingConnectedPlayers(banDef, "newly placed ban");
     }
