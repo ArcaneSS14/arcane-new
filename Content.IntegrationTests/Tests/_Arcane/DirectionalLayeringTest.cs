@@ -1,5 +1,5 @@
 using System.Linq;
-using Content.Client.Humanoid.DirectionalLayering;
+using Content.Arcane.Client.Humanoid.DirectionalLayering;
 using Content.Client.DisplacementMap;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Shared.Body;

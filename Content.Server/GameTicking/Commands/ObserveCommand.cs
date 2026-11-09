@@ -2,6 +2,7 @@ using Content.Server.Administration.Managers;
 using Content.Shared.Administration;
 using Content.Shared.GameTicking;
 using Robust.Shared.Console;
+using Robust.Shared.Enums; // Arcane
 
 namespace Content.Server.GameTicking.Commands
 {
@@ -23,6 +24,10 @@ namespace Content.Server.GameTicking.Commands
                 return;
             }
 
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             var ticker = _e.System<ServerGameTicker>();
 
             if (ticker.RunLevel == GameRunLevel.PreRoundLobby)

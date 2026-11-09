@@ -82,8 +82,10 @@
     bounds: -0.5,-0.5,0.5,0.5
   - type: JobStatus
   - type: RotationVisuals
-    defaultRotation: 90
-    horizontalRotation: 90
+    # Arcane-Edit-Start: lie on the other side, matching double beds
+    defaultRotation: -90
+    horizontalRotation: -90
+    # Arcane-Edit-End
   - type: HumanoidProfile
   - type: TypingIndicator
   - type: SlowOnDamage

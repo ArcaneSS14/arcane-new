@@ -211,7 +211,15 @@ public abstract partial class SharedAnomalySystem : EntitySystem
 
         if (spawnCore)
         {
-            var core = Spawn(supercritical ? component.CorePrototype : component.CoreInertPrototype, Transform(uid).Coordinates);
+            // Arcane-Edit-Start: always an active core that decays into the inert one over time
+            var core = Spawn(component.CorePrototype, Transform(uid).Coordinates);
+            if (TryComp<AnomalyCoreComponent>(core, out var coreComp))
+            {
+                coreComp.DecayPrototype = component.CoreInertPrototype;
+                coreComp.HazardousAnomalyPrototype = MetaData(uid).EntityPrototype?.ID;
+                Dirty(core, coreComp);
+            }
+            // Arcane-Edit-End
             _transform.PlaceNextTo(core, uid);
         }
 

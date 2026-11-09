@@ -196,6 +196,10 @@ namespace Content.Server.GameTicking
 
         public override void PlayerJoinGame(ICommonSession session, bool silent = false)
         {
+            // Arcane-Start
+            if (session.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (!silent)
                 _chatManager.DispatchServerMessage(session, Loc.GetString("game-ticker-player-join-game-message"));
 

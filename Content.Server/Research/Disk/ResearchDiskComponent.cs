@@ -1,3 +1,8 @@
+// Arcane-Start
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
+// Arcane-End
+
 namespace Content.Server.Research.Disk
 {
     [RegisterComponent]
@@ -5,6 +10,11 @@ namespace Content.Server.Research.Disk
     {
         [DataField("points"), ViewVariables(VVAccess.ReadWrite)]
         public int Points = 1000;
+
+        // Arcane-Start
+        [DataField]
+        public List<ResearchPointAmount> PointBalances = new();
+        // Arcane-End
 
         /// <summary>
         /// If true, the value of this disk will be set to the sum

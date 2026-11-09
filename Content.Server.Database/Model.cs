@@ -455,11 +455,24 @@ namespace Content.Server.Database
         public int Slot { get; set; }
         [Column("char_name")] public string CharacterName { get; set; } = null!;
         public string FlavorText { get; set; } = null!;
+        // Arcane-Start: extended flavor text
+        public string CharacterFlavorText { get; set; } = string.Empty;
+        public string OocFlavorText { get; set; } = string.Empty;
+        public string TagsFlavorText { get; set; } = string.Empty;
+        public string LinksFlavorText { get; set; } = string.Empty;
+        public string GreenFlavorText { get; set; } = string.Empty;
+        public string YellowFlavorText { get; set; } = string.Empty;
+        public string RedFlavorText { get; set; } = string.Empty;
+        public string NsfwFlavorText { get; set; } = string.Empty;
+        public string NsfwOocFlavorText { get; set; } = string.Empty;
+        public string NsfwLinksFlavorText { get; set; } = string.Empty;
+        public string NsfwTagsFlavorText { get; set; } = string.Empty;
+        // Arcane-End
         public int Age { get; set; }
         // Arcane-Start: Persist character scale settings
         public float Scale { get; set; } = 1f;
-        public bool EarsAboveHair { get; set; } // Arcane
         // Arcane-End
+        public bool EarsAboveHair { get; set; } // Arcane
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

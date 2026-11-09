@@ -1,6 +1,11 @@
+using Content.Arcane.Shared.PDA;
 using Content.Client.PDA;
 using Content.IntegrationTests.Tests.Interaction;
+using Content.Server.Clothing.Systems;
+using Content.Shared.Clothing.Components;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Light.Components;
+using Content.Shared.Light.EntitySystems;
 using Content.Shared.PDA;
 using Robust.Client.GameObjects;
 
@@ -8,6 +13,57 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class PdaPenVisualTest : InteractionTest
 {
+    [Test]
+    public async Task DisguisesKeepTheRealPenIdAndFlashlightWithTheSkin()
+    {
+        var pda = await Spawn("ChameleonPDA");
+        var card = await Spawn("PassengerIDCard");
+        var id = ToServer(card);
+        await Server.WaitAssertion(() =>
+        {
+            var uid = ToServer(pda);
+            var component = SEntMan.GetComponent<PdaComponent>(uid);
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(uid, component.IdSlot, id, null), Is.True);
+            Assert.That(component.ContainedId, Is.EqualTo(id));
+            SEntMan.System<UnpoweredFlashlightSystem>().SetLight(uid, true, quiet: true);
+        });
+        foreach (var penInserted in new[] {true, false})
+        {
+            if (!penInserted)
+            {
+                await Server.WaitAssertion(() =>
+                {
+                    var uid = ToServer(pda);
+                    var component = SEntMan.GetComponent<PdaComponent>(uid);
+                    Assert.That(SEntMan.System<ItemSlotsSystem>().TryEject(uid, component.PenSlot, null, out _), Is.True);
+                });
+            }
+            foreach (var disguise in new[] {"CaptainPDA", "ChronoPDA", "PassengerPDA"})
+            {
+                await Server.WaitAssertion(() =>
+                {
+                    var uid = ToServer(pda);
+                    SEntMan.System<ChameleonClothingSystem>().SetSelectedPrototype(uid, disguise);
+                    Assert.That(SEntMan.GetComponent<ChameleonClothingComponent>(uid).Default, Is.EqualTo(disguise));
+                    Assert.That(SEntMan.GetComponent<PdaComponent>(uid).ContainedId, Is.EqualTo(id));
+                    Assert.That(SEntMan.GetComponent<UnpoweredFlashlightComponent>(uid).LightOn, Is.True);
+                });
+                await Pair.RunUntilSynced();
+                await AssertPenVisible(pda, penInserted);
+                await Client.WaitAssertion(() =>
+                {
+                    var uid = ToClient(pda);
+                    var sprite = CEntMan.GetComponent<SpriteComponent>(uid);
+                    var sprites = CEntMan.System<SpriteSystem>();
+                    Assert.That(sprites.LayerMapTryGet((uid, sprite), PdaScreenLayers.Screen, out _, false), Is.True);
+                    Assert.That(sprite[PdaVisualizerSystem.PdaVisualLayers.Base].Visible, Is.False);
+                    Assert.That(sprite[PdaVisualizerSystem.PdaVisualLayers.IdLight].Visible, Is.True);
+                    Assert.That(sprite[PdaVisualizerSystem.PdaVisualLayers.Flashlight].Visible, Is.True);
+                });
+            }
+        }
+    }
+
     [TestCase("PassengerPDA")]
     [TestCase("CaptainPDA")]
     [TestCase("AltCaptainPDA")]

@@ -25,9 +25,11 @@
 - type: htnCompound
   id: MouseCompound
   branches:
-    - tasks:
-        - !type:HTNCompoundTask
-          task: FoodCompound
+    # Arcane-Edit-Start
+    #    - tasks: # Arcane-Remove
+    #        - !type:HTNCompoundTask
+    #          task: FoodCompound
+    # Arcane-Edit-End
     # Goobstation - for retaliation; yes, they care about food more
     - tasks:
         - !type:HTNCompoundTask
@@ -58,9 +60,11 @@
     - tasks:
         - !type:HTNCompoundTask
           task: InnateRangedCombatCompound
-    - tasks:
-        - !type:HTNCompoundTask
-          task: FoodCompound
+    # Arcane-Edit-Start
+    #    - tasks: # Arcane-Remove
+    #        - !type:HTNCompoundTask
+    #          task: FoodCompound
+    # Arcane-Edit-End
     - tasks:
         - !type:HTNCompoundTask
           task: IdleCompound

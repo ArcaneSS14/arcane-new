@@ -29,7 +29,7 @@ public sealed partial class ItemRandomizeMovementspeedComponent : Component
     /// The value we are moving towards.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float TargetModifier;
+    public float TargetModifier = 1f; // Arcane
 
     /// <summary>
     /// Next execution time.

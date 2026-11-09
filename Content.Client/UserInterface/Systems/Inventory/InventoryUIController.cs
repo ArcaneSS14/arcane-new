@@ -87,6 +87,8 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
             _inventoryHotbar.Visible = false;
         }
 
+        UpdateExtraHotbar(); // Arcane
+
         CommandBinds.Unregister<ClientInventorySystem>();
     }
 
@@ -164,39 +166,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         if (clothing.Count == 0)
             return;
 
-        foreach (var child in new List<Control>(_inventoryHotbar.Children))
-        {
-            if (child is not SlotControl)
-                _inventoryHotbar.RemoveChild(child);
-        }
-
-        var maxWidth = clothing.Max(p => p.Value.ButtonOffset.X) + 1;
-        var maxIndex = clothing.Select(p => GetIndex(p.Value.ButtonOffset)).Max();
-
-        _inventoryHotbar.MaxColumns = maxWidth;
-        _inventoryHotbar.Columns = maxWidth;
-
-        for (var i = 0; i <= maxIndex; i++)
-        {
-            var index = i;
-            if (clothing.FirstOrNull(p => GetIndex(p.Value.ButtonOffset) == index) is { } pair)
-            {
-                if (_inventoryHotbar.TryGetButton(pair.Key, out var slot))
-                    slot.SetPositionLast();
-            }
-            else
-            {
-                _inventoryHotbar.AddChild(new Control
-                {
-                    MinSize = new Vector2(64, 64)
-                });
-            }
-        }
-
-        int GetIndex(Vector2i position)
-        {
-            return position.Y * maxWidth + position.X;
-        }
+        LayoutHotbar(_inventoryHotbar, clothing); // Arcane-Edit: the grid layout moved into LayoutHotbar, shared with the extra hotbar
     }
 
     private void UpdateStrippingWindow(InventorySlotsComponent? clientInv)
@@ -247,6 +217,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         UpdateInventoryHotbar(_playerInventory);
         var shouldBeVisible = !_inventoryHotbar.Visible;
         _inventoryHotbar.Visible = shouldBeVisible;
+        UpdateExtraHotbar(); // Arcane
 
     }
 
@@ -406,6 +377,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         }
 
         UpdateInventoryHotbar(_playerInventory);
+        UpdateExtraHotbar(); // Arcane
     }
 
     private void UnloadSlots()
@@ -421,6 +393,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
         }
 
         UpdateInventoryHotbar(null);
+        UpdateExtraHotbar(); // Arcane
     }
 
     private void SpriteUpdated(SlotSpriteUpdate update)

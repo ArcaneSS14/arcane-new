@@ -26,8 +26,8 @@
 - type: latheRecipePack
   id: UpgradeKits
   recipes:
-  - LatheUpgradeKitHyper
-  - LatheUpgradeKitCryo
+#  - LatheUpgradeKitHyper # Arcane-Edit: Redundant
+#  - LatheUpgradeKitCryo # Arcane-Edit: Redundant
   - AutodocUpgradeKitBluespace
   - UpgradeKitTubeSpeed
 

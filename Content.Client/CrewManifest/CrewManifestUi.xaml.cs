@@ -14,11 +14,12 @@ public sealed partial class CrewManifestUi : DefaultWindow
         RobustXamlLoader.Load(this);
 
         StationName.AddStyleClass("LabelBig");
+        CrewManifestListing.SearchBar = SearchBar; // Arcane
     }
 
     public void Populate(string name, CrewManifestEntries? entries)
     {
-        CrewManifestListing.RemoveAllChildren();
+        CrewManifestListing.ClearCrewManifestEntries(); // Arcane-Edit: RemoveAllChildren() > ClearCrewManifestEntries()
 
         StationNameContainer.Visible = entries != null;
         StationName.Text = name;

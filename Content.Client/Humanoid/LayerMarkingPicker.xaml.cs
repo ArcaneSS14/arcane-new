@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Arcane.Common.Sponsors; // Arcane
 using Content.Client.UserInterface.ControlExtensions;
 using Content.Client.Guidebook.Controls;
 using Content.Shared.Body;
@@ -20,6 +21,7 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     private readonly ProtoId<OrganCategoryPrototype> _organ;
     private readonly HumanoidVisualLayers _layer;
     private readonly MarkingsViewModel _markingsModel;
+    private readonly HashSet<string> _sponsorMarkings; // Arcane
     private List<ISearchableControl> _searchable = new();
     private const int _columnWidth = 500;
 
@@ -32,6 +34,12 @@ public sealed partial class LayerMarkingPicker : BoxContainer
         _allMarkings = allMarkings;
         _organ = organ;
         _layer = layer;
+
+        // Arcane-Start: markings the player is allowed to use as a sponsor
+        _sponsorMarkings = IoCManager.Instance!.TryResolveType<ISharedSponsorsManager>(out var sponsorsManager)
+            ? sponsorsManager.GetClientPrototypes().ToHashSet()
+            : [];
+        // Arcane-End
 
         OrderingItems.AddChild(new LayerMarkingOrderer(markingsModel, organ, layer));
 
@@ -78,9 +86,17 @@ public sealed partial class LayerMarkingPicker : BoxContainer
     {
         foreach (var marking in _allMarkings.Values.OrderBy(marking => Loc.GetString($"marking-{marking.ID}")))
         {
-            // Arcane: the still row controls both versions; retain standalone animations without an available still row.
-            if (_markingManager.TryGetStillMarking(marking.ID, out var still) && _allMarkings.ContainsKey(still))
+            // Arcane-Start: hide sponsor markings the player can't use
+            if (marking.SponsorOnly && !_sponsorMarkings.Contains(marking.ID))
                 continue;
+            // Arcane-End
+
+            // Arcane-Start: deduplicate an animation only when its still row is available to this player.
+            if (_markingManager.TryGetStillMarking(marking.ID, out var still)
+                && _allMarkings.TryGetValue(still, out var stillPrototype)
+                && (!stillPrototype.SponsorOnly || _sponsorMarkings.Contains(still)))
+                continue;
+            // Arcane-End
 
             var item = new LayerMarkingItem(_markingsModel, _organ, _layer, marking, true);
             Items.AddChild(item);

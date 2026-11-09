@@ -34,6 +34,13 @@
   recipes:
   - ProximitySensor
   - Drone # Goob
+  # Arcane-Start
+  - Intellicard
+  - PersonalAI
+  - SyndicatePersonalAI
+  - ClothingHeadHatCardborg
+  - ClothingOuterCardborg
+  # Arcane-End
 
 - type: latheRecipePack
   id: BorgModules
@@ -43,6 +50,11 @@
   - BorgModuleAdvancedClowning
   #- BorgModuleAdvancedTopical # Goob
   - BorgModuleAdvancedMining
+  # Arcane-Start
+  - BorgModuleRPED
+  - BorgModuleMartyr
+  - BorgModuleSyndicateWeapon
+  # Arcane-End
 
 - type: latheRecipePack
   id: MechParts
@@ -70,3 +82,11 @@
     - MechEquipmentGrabber
     - MechEquipmentHorn
     - MechEquipmentGrabberSmall
+    # Arcane-Start
+    - MechEquipmentHonkerBananaMortar
+    - MechEquipmentHonkerMousetrapMortar
+    - WeaponMechCombatMissileRack6
+    - WeaponMechChainSword
+    - WeaponMechCombatTeslaCannon
+    - WeaponMechMeleeDrill
+    # Arcane-End

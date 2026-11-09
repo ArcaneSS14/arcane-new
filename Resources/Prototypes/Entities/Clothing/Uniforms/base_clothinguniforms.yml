@@ -26,6 +26,10 @@
     slots: [innerclothing]
     equipSound:
       path: /Audio/Items/jumpsuit_equip.ogg
+  # Arcane-Start: underwear is worn under the jumpsuit (Orion #208)
+  - type: SlotBlock
+    slots: UNDERSHIRT, UNDERWEAR
+  # Arcane-End
   - type: ToolRefinable
     refineResult:
     - id: MaterialCloth1
@@ -55,6 +59,11 @@
   - type: Clothing
     slots: [innerclothing]
     femaleMask: UniformTop
+  # Arcane-Start: the underwear stays reachable but hidden under a skirt
+  - type: SlotBlock
+    slots: UNDERSHIRT
+    hiddenSlots: UNDERWEAR
+  # Arcane-End
 
 
 - type: entity
@@ -83,6 +92,11 @@
   - type: Clothing
     slots: [innerclothing]
     femaleMask: UniformTop
+  # Arcane-Start: the underwear stays reachable but hidden under a skirt
+  - type: SlotBlock
+    slots: UNDERSHIRT
+    hiddenSlots: UNDERWEAR
+  # Arcane-End
   - type: Tag # Goob - add Skirt tag
     tags:
     - Skirt

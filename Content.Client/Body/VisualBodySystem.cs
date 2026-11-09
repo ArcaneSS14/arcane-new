@@ -310,13 +310,13 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
         RaiseLayersChanged(target.Owner); // Arcane
     }
 
-    // <Arcane>
+    // Arcane-Start
     private void RaiseLayersChanged(EntityUid body)
     {
         var ev = new VisualBodyLayersChangedEvent();
         RaiseLocalEvent(body, ref ev);
     }
-    // </Arcane>
+    // Arcane-End
 
     private void OnMarkingsChangedVisibility(Entity<VisualOrganMarkingsComponent> ent, ref BodyRelayedEvent<HumanoidLayerVisibilityChangedEvent> args)
     {

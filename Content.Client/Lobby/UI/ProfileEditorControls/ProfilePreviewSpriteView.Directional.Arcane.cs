@@ -1,4 +1,3 @@
-using Content.Client.Humanoid.DirectionalLayering;
 using Robust.Client.Graphics;
 
 namespace Content.Client.Lobby.UI.ProfileEditorControls;
@@ -9,14 +8,11 @@ public sealed partial class ProfilePreviewSpriteView
     {
         if (Entity is { } entity)
         {
-            var layering = EntMan.System<DirectionalLayeringSystem>();
-            if (OverrideDirection is { } direction)
-                layering.ApplyDummyOrdering(entity.Owner, direction);
-            else
-            {
-                var world = WorldRotation ?? EntMan.System<SharedTransformSystem>().GetWorldRotation(entity.Comp2);
-                layering.ApplyDummyOrdering(entity.Owner, world + EyeRotation);
-            }
+            var rotation = OverrideDirection == null
+                ? (WorldRotation ?? EntMan.System<SharedTransformSystem>().GetWorldRotation(entity.Comp2)) + EyeRotation
+                : Angle.Zero;
+            var ev = new ProfilePreviewSpriteDrawingEvent(OverrideDirection, rotation);
+            EntMan.EventBus.RaiseLocalEvent(entity.Owner, ref ev);
         }
 
         base.Draw(renderHandle);

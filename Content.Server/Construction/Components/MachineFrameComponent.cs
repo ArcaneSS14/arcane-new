@@ -3,6 +3,10 @@ using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Construction.Components
 {
@@ -18,6 +22,11 @@ namespace Content.Server.Construction.Components
         [ViewVariables]
         public readonly Dictionary<ProtoId<StackPrototype>, int> MaterialProgress = new();
 
+        // Arcane-Start
+        [ViewVariables]
+        public readonly Dictionary<ProtoId<MachinePartPrototype>, int> PartProgress = new();
+        // Arcane-End
+
         [ViewVariables]
         public readonly Dictionary<string, int> ComponentProgress = new();
 
@@ -26,6 +35,11 @@ namespace Content.Server.Construction.Components
 
         [ViewVariables]
         public Dictionary<ProtoId<StackPrototype>, int> MaterialRequirements = new();
+
+        // Arcane-Start
+        [ViewVariables]
+        public Dictionary<ProtoId<MachinePartPrototype>, int> PartRequirements = new();
+        // Arcane-End
 
         [ViewVariables]
         public Dictionary<string, GenericPartInfo> ComponentRequirements = new();

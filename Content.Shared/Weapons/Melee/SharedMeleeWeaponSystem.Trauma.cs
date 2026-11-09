@@ -32,6 +32,7 @@ public abstract partial class SharedMeleeWeaponSystem
     private EntityQuery<InteractionRelayComponent> _relayQuery;
 
     public static readonly ProtoId<TagPrototype> WideSwingIgnore = "WideSwingIgnore"; // for mice
+    public static readonly ProtoId<TagPrototype> MeleeHitIgnore = "MeleeHitIgnore"; // Arcane
     public static readonly EntProtoId MeleeKnowledge = "MeleeKnowledge";
 
     private float _shoveRange;
@@ -45,11 +46,11 @@ public abstract partial class SharedMeleeWeaponSystem
         Subs.CVar(_cfg, GoobCVars.ShoveSpeed, x => _shoveSpeed = x, true);
     }
 
-    public bool AttemptHeavyAttack(EntityUid user, EntityUid weaponUid, MeleeWeaponComponent weapon, List<EntityUid> targets, EntityCoordinates coordinates)
+    public bool AttemptHeavyAttack(EntityUid user, EntityUid weaponUid, MeleeWeaponComponent weapon, HashSet<EntityUid> targets, EntityCoordinates coordinates)
         => AttemptAttack(user,
             weaponUid,
             weapon,
-            new HeavyAttackEvent(GetNetEntity(weaponUid), GetNetEntityList(targets), GetNetCoordinates(coordinates)),
+            new HeavyAttackEvent(GetNetEntity(weaponUid), GetNetEntitySet(targets), GetNetCoordinates(coordinates)),
             null);
 
     private float CalculateShoveStaminaDamage(EntityUid disarmer, EntityUid disarmed)

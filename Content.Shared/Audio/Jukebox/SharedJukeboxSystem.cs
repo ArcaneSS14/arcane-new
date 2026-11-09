@@ -16,4 +16,17 @@ public abstract partial class SharedJukeboxSystem : EntitySystem
 
         return entity.Comp.AudioStream is { } audio && Audio.IsPlaying(audio);
     }
+
+    // Arcane-Start
+    /// <summary>
+    /// Converts a volume slider value to the audio volume in decibels.
+    /// </summary>
+    public static float SliderToVolume(float slider)
+    {
+        var value = Math.Clamp(slider, JukeboxComponent.MinSlider, JukeboxComponent.MaxSlider);
+        return JukeboxComponent.MinVolume + (value - JukeboxComponent.MinSlider)
+            * (JukeboxComponent.MaxVolume - JukeboxComponent.MinVolume)
+            / (JukeboxComponent.MaxSlider - JukeboxComponent.MinSlider);
+    }
+    // Arcane-End
 }

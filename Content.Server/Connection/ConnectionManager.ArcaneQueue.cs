@@ -14,6 +14,9 @@ public sealed partial class ConnectionManager
         if (HasTemporaryBypass(user))
             return true;
 
+        if (_sponsorsMgr?.HaveServerPriorityJoin(user) ?? false)
+            return true;
+
         _ticker ??= _entityManager.SystemOrNull<ServerGameTicker>();
         if (_ticker != null && _ticker.PlayerGameStatuses.TryGetValue(user, out var status)
             && status == PlayerGameStatus.JoinedGame)

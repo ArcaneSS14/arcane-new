@@ -1,3 +1,4 @@
+using Content.Arcane.Common.Gravity; // Arcane
 using Content.Shared.Gravity;
 using JetBrains.Annotations;
 using Robust.Shared.Map.Components;
@@ -34,6 +35,15 @@ namespace Content.Server.Gravity
                 enabled = true;
                 break;
             }
+
+            // Arcane-Start: other gravity providers (utility cores) take part in the recalculation
+            if (!enabled)
+            {
+                var providers = new GravityProviderQueryEvent(uid);
+                RaiseLocalEvent(ref providers);
+                enabled = providers.Enabled;
+            }
+            // Arcane-End
 
             if (enabled != gravity.Enabled)
             {

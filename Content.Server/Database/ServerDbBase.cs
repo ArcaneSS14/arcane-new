@@ -214,6 +214,19 @@ namespace Content.Server.Database
 
             profile.CharacterName = humanoid.Name;
             profile.FlavorText = humanoid.FlavorText;
+            // Arcane-Start: extended flavor text
+            profile.CharacterFlavorText = humanoid.ExtendedFlavor.Character;
+            profile.OocFlavorText = humanoid.ExtendedFlavor.Ooc;
+            profile.TagsFlavorText = humanoid.ExtendedFlavor.Tags;
+            profile.LinksFlavorText = humanoid.ExtendedFlavor.Links;
+            profile.GreenFlavorText = humanoid.ExtendedFlavor.Green;
+            profile.YellowFlavorText = humanoid.ExtendedFlavor.Yellow;
+            profile.RedFlavorText = humanoid.ExtendedFlavor.Red;
+            profile.NsfwFlavorText = humanoid.ExtendedFlavor.Nsfw;
+            profile.NsfwOocFlavorText = humanoid.ExtendedFlavor.NsfwOoc;
+            profile.NsfwLinksFlavorText = humanoid.ExtendedFlavor.NsfwLinks;
+            profile.NsfwTagsFlavorText = humanoid.ExtendedFlavor.NsfwTags;
+            // Arcane-End
             profile.Species = humanoid.Species;
             profile.Age = humanoid.Age;
             // Arcane-Start: Save character scale settings

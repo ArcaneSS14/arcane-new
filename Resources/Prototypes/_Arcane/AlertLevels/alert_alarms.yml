@@ -1,0 +1,137 @@
+- type: alertLevelAlarm
+  id: Blue
+  sound:
+    path: /Audio/_Arcane/Announcements/beep_beep.ogg
+    params:
+      pitch: 1.4
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 120
+
+- type: alertLevelAlarm
+  id: Violet
+  sound:
+    path: /Audio/_Arcane/Announcements/alien.ogg
+    params:
+      pitch: 1.1
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: Yellow
+  sound:
+    path: /Audio/_Arcane/Announcements/beep_beep.ogg
+    params:
+      pitch: 0.89
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: Amber
+  sound:
+    path: /Audio/_Arcane/Announcements/2_tone_alarm.ogg
+    params:
+      pitch: 0.89
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: Red
+  sound:
+    path: /Audio/_Arcane/Announcements/2_tone_alarm.ogg
+    params:
+      pitch: 0.89
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: Gamma
+  sound:
+    path: /Audio/_Arcane/Announcements/angry.ogg
+    params:
+      pitch: 0.6
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: DeltaNuke
+  sound:
+    path: /Audio/_Arcane/Announcements/overload.ogg
+    params:
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 45
+
+- type: alertLevelAlarm
+  id: DeltaBlob
+  sound:
+    path: /Audio/_Arcane/Announcements/overload.ogg
+    params:
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 45
+
+- type: alertLevelAlarm
+  id: DeltaDelam
+  sound:
+    path: /Audio/_Arcane/Announcements/overload.ogg
+    params:
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 45
+
+- type: alertLevelAlarm
+  id: DeltaSling
+  sound:
+    path: /Audio/_Arcane/Announcements/overload.ogg
+    params:
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 45
+
+- type: alertLevelAlarm
+  id: Epsilon
+  sound:
+    path: /Audio/_Arcane/Announcements/angry.ogg
+    params:
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 8
+
+- type: alertLevelAlarm
+  id: Omicron
+  sound:
+    path: /Audio/_Arcane/Announcements/alien.ogg
+    params:
+      pitch: 0.85
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 60
+
+- type: alertLevelAlarm
+  id: Octarine
+  sound:
+    path: /Audio/_Arcane/Announcements/angry.ogg
+    params:
+      pitch: 0.85
+      volume: -12
+      maxDistance: 10
+      rolloffFactor: 2
+  interval: 20

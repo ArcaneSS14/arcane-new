@@ -14,4 +14,8 @@
       Cable: 6
       Silver: 2
       Steel: 6
-      Manipulator: 2
+      # Manipulator: 2 # Arcane-Edit: replaced by machine parts
+    # Arcane-Start
+    partRequirements:
+      Servo: 2
+    # Arcane-End

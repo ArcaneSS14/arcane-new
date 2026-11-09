@@ -3,6 +3,10 @@ using Content.Shared.Item;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Server.Kitchen.Components
 {
@@ -11,6 +15,14 @@ namespace Content.Server.Kitchen.Components
     {
         [DataField]
         public float CookTimeMultiplier = 1;
+
+        // Arcane-Start
+        /// <summary>
+        /// Values without parts, taken at the first parts refresh before any upgrade applies; saved with the entity.
+        /// </summary>
+        [DataField]
+        public float? BaseCookTimeMultiplier;
+        // Arcane-End
 
         [DataField]
         public float BaseHeatMultiplier = 100;
@@ -83,6 +95,11 @@ namespace Content.Server.Kitchen.Components
         [DataField]
         public int Capacity = 10;
 
+        // Arcane-Start
+        [DataField]
+        public int? BaseCapacity;
+        // Arcane-End
+
         [DataField]
         public ProtoId<ItemSizePrototype> MaxItemSize = "Normal";
 
@@ -97,6 +114,17 @@ namespace Content.Server.Kitchen.Components
         /// </summary>
         [DataField]
         public float ExplosionChance = .1f;
+
+        // Arcane-Start
+        [DataField]
+        public float? BaseExplosionChance;
+
+        [DataField]
+        public ProtoId<MachinePartPrototype> MicroLaserPart = "MicroLaser";
+
+        [DataField]
+        public ProtoId<MachinePartPrototype> MatterBinPart = "MatterBin";
+        // Arcane-End
 
         /// <summary>
         /// Chance of lightning occurring when we microwave a metallic object
