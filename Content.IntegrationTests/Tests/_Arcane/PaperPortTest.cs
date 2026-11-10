@@ -8,15 +8,115 @@ using Content.Goobstation.Shared.Devil.Contract;
 using Content.Trauma.Shared.Paper;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Shared.Paper;
+using Content.Shared.Stunnable;
+using Content.Trauma.Common.Paper;
+using Robust.Client.UserInterface;
+using Robust.Client.UserInterface.Controls;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Input;
+using Robust.Shared.Map;
 using Robust.Shared.Utility;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class PaperPortTest : InteractionTest
 {
+    [TestCase("no-pen", "Unsaved draft")]
+    [TestCase("disabled", "Unsaved draft")]
+    [TestCase("sealed", "Unsaved draft")]
+    [TestCase("disabled", "")]
+    [TestCase("stunned", "Unsaved draft")]
+    public async Task RejectedSavePreservesDraftAndAllowsRetry(string rejection, string draft)
+    {
+        await SpawnTarget("Paper");
+        await PlaceInHands("Pen");
+        await Server.WaitPost(() => SEntMan.System<PaperSystem>().SetContent(STarget!.Value, "Original"));
+        await Interact();
+        await Pair.RunUntilSynced();
+        ArcanePaperWindow window = null!;
+        Button save = null!;
+        await Client.WaitAssertion(() =>
+        {
+            Assert.That(TryFindWindow(out ArcanePaperWindow? found), Is.True);
+            window = found!;
+            save = window.FindControl<Button>("SaveButton");
+            window.Input.TextRope = Rope.Leaf.Empty;
+            window.Input.CursorPosition = new TextEdit.CursorPos();
+            window.Input.InsertAtCursor(draft);
+        });
+
+        if (rejection == "no-pen")
+            await Drop();
+        else if (rejection == "stunned")
+            // InteractionTestMob has no status-effect container; use the real blocker component.
+            await Server.WaitPost(() => SEntMan.EnsureComponent<StunnedComponent>(SPlayer));
+        else
+            await Server.WaitPost(() =>
+            {
+                var paper = SEntMan.GetComponent<PaperComponent>(STarget!.Value);
+                if (rejection == "disabled")
+                    paper.EditingDisabled = true;
+                else
+                    paper.StampedBy.Add(new StampDisplayInfo { StampedName = "sealed" });
+            });
+
+        await ClickSave();
+        await Pair.RunUntilSynced();
+        if (rejection == "stunned")
+        {
+            await Server.WaitAssertion(() => Assert.That(SEntMan.System<SharedStunSystem>().TryUnstun(SPlayer), Is.True));
+            await Pair.RunUntilSynced();
+            // An unrelated/late reply must not acknowledge the retained draft.
+            await Server.WaitPost(() => SEntMan.System<SharedUserInterfaceSystem>().ServerSendUiMessage(
+                STarget!.Value, PaperComponent.PaperUiKey.Key, new PaperComponent.PaperSaveResultMessage(Guid.NewGuid(), true), SPlayer));
+            await Pair.RunUntilSynced();
+        }
+        await AssertContent("Original");
+        await Client.WaitAssertion(() =>
+        {
+            Assert.That(Rope.Collapse(window.Input.TextRope), Is.EqualTo(draft));
+            Assert.That(save.Disabled, Is.False, "A rejected save must allow retrying the retained draft.");
+            // Another viewer or prediction correction can switch the shared mode.
+            window.Populate(new("Original", [], PaperComponent.PaperAction.Read));
+            window.Populate(new("Original", [], PaperComponent.PaperAction.Write));
+            Assert.That(Rope.Collapse(window.Input.TextRope), Is.EqualTo(draft));
+        });
+        if (rejection == "no-pen")
+            await PlaceInHands("Pen");
+        await Server.WaitPost(() =>
+        {
+            var paper = SEntMan.GetComponent<PaperComponent>(STarget!.Value);
+            paper.EditingDisabled = false;
+            paper.StampedBy.Clear();
+        });
+        await Interact();
+        await Pair.RunUntilSynced();
+        await ClickSave();
+        await Pair.RunUntilSynced();
+        await AssertContent(draft);
+        await CloseBui(PaperComponent.PaperUiKey.Key);
+
+        async Task ClickSave()
+        {
+            GUIBoundKeyEventArgs down = null!;
+            GUIBoundKeyEventArgs up = null!;
+            await Client.WaitPost(() =>
+            {
+                var point = new ScreenCoordinates(save.GlobalPixelPosition + save.PixelSize / 2, save.Window?.Id ?? default);
+                var relative = point.Position / save.UIScale - save.GlobalPosition;
+                var pixels = point.Position - save.GlobalPixelPosition;
+                down = new(EngineKeyFunctions.UIClick, BoundKeyState.Down, point, default, relative, pixels);
+                up = new(EngineKeyFunctions.UIClick, BoundKeyState.Up, point, default, relative, pixels);
+            });
+            await Client.DoGuiEvent(save, down);
+            await Pair.ReallyBeIdle(1);
+            await Client.DoGuiEvent(save, up);
+            await Pair.ReallyBeIdle(1);
+        }
+    }
+
     [Test]
     public async Task FieldsUseCurrentDocumentAndServerSignature()
     {
@@ -165,7 +265,8 @@ public sealed class PaperPortTest : InteractionTest
     [Test]
     public async Task InlineSignaturesPreserveDevilContractPhasesAndLockOtherFields()
     {
-        const string content = "[signature] [signature] [signature] [form]";
+        var content = string.Empty;
+        var shoesBefore = 0;
         EntityUid owner = default;
         await SpawnTarget("PaperDevilContractBlank");
         await PlaceInHands("Pen");
@@ -177,7 +278,10 @@ public sealed class PaperPortTest : InteractionTest
             SEntMan.System<MetaDataSystem>().SetEntityName(SPlayer, "Victim");
             SEntMan.System<MetaDataSystem>().SetEntityName(owner, "Contractor");
             SEntMan.GetComponent<DevilContractComponent>(STarget!.Value).ContractOwner = owner;
+            var contractee = Loc.GetString("devil-contract-contractee");
+            content = $"{contractee}: brokeness\n{contractee}: strength\n[signature] [signature] [signature] [form]";
             SEntMan.System<PaperSystem>().SetContent(STarget.Value, content);
+            shoesBefore = CountShoes();
             Assert.That(Sign(owner), Is.False, "The owner cannot sign before the victim.");
         });
         await Activate();
@@ -195,6 +299,10 @@ public sealed class PaperPortTest : InteractionTest
                 PaperFieldKind.Form, 0, "Changed terms", paper.Content), Is.False);
             Assert.That(Sign(owner), Is.True, "The contract's editing lock must still permit its owner's signature.");
             Assert.That(contract.IsContractFullySigned, Is.True);
+            Assert.That(CountShoes(), Is.EqualTo(shoesBefore + 1), "Completing the contract grants its real item clause once.");
+            var duplicate = new PaperSignedEvent(owner);
+            SEntMan.EventBus.RaiseLocalEvent(uid, ref duplicate);
+            Assert.That(CountShoes(), Is.EqualTo(shoesBefore + 1), "A duplicate completion event must not grant the item again.");
             var completedText = paper.Content;
             Assert.That(Sign(owner), Is.False, "A third signature cannot apply a completed contract again.");
             Assert.That(paper.Content, Is.EqualTo(completedText));
@@ -209,6 +317,9 @@ public sealed class PaperPortTest : InteractionTest
             return SEntMan.System<PaperFieldSystem>().TryFill((STarget.Value, paper), actor,
                 PaperFieldKind.Signature, 0, "", paper.Content);
         }
+
+        int CountShoes() => SEntMan.EntityQuery<MetaDataComponent>()
+            .Count(meta => meta.EntityPrototype?.ID == "ClothingShoesRealJordansAutographed");
     }
 
     [Test]

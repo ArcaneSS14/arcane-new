@@ -44,6 +44,12 @@ namespace Content.Client.Paper.UI
 
         public event Action<string>? OnSaved;
 
+        // Arcane-Start
+        private bool _hasDraft;
+        private bool _populating;
+        private string? _pendingSave;
+        // Arcane-End
+
         private int _MaxInputLength = -1;
         public int MaxInputLength
         {
@@ -85,6 +91,10 @@ namespace Content.Client.Paper.UI
 
             Input.OnTextChanged += args =>
             {
+                // Arcane-Start
+                if (!_populating)
+                    _hasDraft = true;
+                // Arcane-End
                 UpdateFillState();
             };
 
@@ -248,7 +258,6 @@ namespace Content.Client.Paper.UI
         public virtual void Populate(PaperComponent.PaperBoundUserInterfaceState state) // Arcane-Edit
         {
             bool isEditing = state.Mode == PaperComponent.PaperAction.Write;
-            bool wasEditing = InputContainer.Visible;
             InputContainer.Visible = isEditing;
             EditButtons.Visible = isEditing;
 
@@ -256,17 +265,17 @@ namespace Content.Client.Paper.UI
 
             // For premade documents, we want to be able to edit them rather than
             // replace them.
-            var shouldCopyText = 0 == Input.TextLength && 0 != state.Text.Length;
-            if (!wasEditing || shouldCopyText)
+            // Arcane-Edit-Start
+            // Preserve local edits, including an empty draft, across prediction and other viewers.
+            if (!_hasDraft)
             {
-                // We can get repeated messages with state.Mode == Write if another
-                // player opens the UI for reading. In this case, don't update the
-                // text input, as this player is currently writing new text and we
-                // don't want to lose any text they already input.
+                _populating = true;
                 Input.TextRope = Rope.Leaf.Empty;
                 Input.CursorPosition = new TextEdit.CursorPos();
                 Input.InsertAtCursor(state.Text);
+                _populating = false;
             }
+            // Arcane-Edit-End
 
             for (var i = 0; i <= state.StampedBy.Count * 3 + 1; i++)
             {
@@ -332,10 +341,28 @@ namespace Content.Client.Paper.UI
 
         private void RunOnSaved()
         {
-            // Prevent further saving while text processing still in
-            SaveButton.Disabled = true;
+            _pendingSave = Rope.Collapse(Input.TextRope); // Arcane
+            // Arcane-Edit-Start
+            // Framework validation can discard the message without a reply. Keep retry available.
+            _hasDraft = true;
+            // Arcane-Edit-End
             OnSaved?.Invoke(Rope.Collapse(Input.TextRope));
         }
+
+        // Arcane-Start
+        public void ApplySaveResult(bool accepted)
+        {
+            if (_pendingSave == null)
+                return;
+
+            if (accepted && Rope.Collapse(Input.TextRope) == _pendingSave)
+                _hasDraft = false;
+            _pendingSave = null;
+            UpdateFillState();
+            if (!accepted)
+                FillStatus.Text = Loc.GetString("paper-ui-save-failed");
+        }
+        // Arcane-End
 
         private void UpdateFillState()
         {

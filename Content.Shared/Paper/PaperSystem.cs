@@ -19,6 +19,7 @@ using Robust.Shared.Random;
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Hands.EntitySystems;
+using Robust.Shared.Network;
 // Arcane-End
 
 namespace Content.Shared.Paper;
@@ -37,6 +38,7 @@ public sealed partial class PaperSystem : EntitySystem
     // Arcane-Start
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private ActionBlockerSystem _blocker = default!;
+    [Dependency] private INetManager _net = default!;
     // Arcane-End
 
     [Dependency] private EntityQuery<PaperComponent> _paperQuery = default!;
@@ -195,13 +197,19 @@ public sealed partial class PaperSystem : EntitySystem
     private void OnInputTextMessage(Entity<PaperComponent> entity, ref PaperInputTextMessage args)
     {
         // Arcane-Start
-        if (!CanWrite(entity, args.Actor, out _))
+        if (!CanWrite(entity, args.Actor, out _) || args.Text.Length > entity.Comp.ContentSize)
+        {
+            SendSaveResult(entity, args, false);
             return;
+        }
         // Arcane-End
         var ev = new PaperWriteAttemptEvent(entity.Owner);
         RaiseLocalEvent(args.Actor, ref ev);
         if (ev.Cancelled)
+        {
+            SendSaveResult(entity, args, false); // Arcane
             return;
+        }
 
         if (args.Text.Length <= entity.Comp.ContentSize)
         {
@@ -224,7 +232,16 @@ public sealed partial class PaperSystem : EntitySystem
 
         entity.Comp.Mode = PaperAction.Read;
         UpdateUserInterface(entity);
+        SendSaveResult(entity, args, true); // Arcane
     }
+
+    // Arcane-Start
+    private void SendSaveResult(EntityUid paper, PaperInputTextMessage request, bool accepted)
+    {
+        if (_net.IsServer)
+            _uiSystem.ServerSendUiMessage(paper, PaperUiKey.Key, new PaperSaveResultMessage(request.SaveId, accepted), request.Actor);
+    }
+    // Arcane-End
 
     private void OnRandomPaperContentMapInit(Entity<RandomPaperContentComponent> ent, ref MapInitEvent args)
     {

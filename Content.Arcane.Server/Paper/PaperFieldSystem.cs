@@ -65,8 +65,7 @@ public sealed partial class PaperFieldSystem : EntitySystem
 
         if (kind == PaperFieldKind.Signature)
             _signatures.NotifySigned(paper, actor);
-        else
-            _audio.PlayPvs(paper.Comp.Sound, paper);
+        _audio.PlayPvs(paper.Comp.Sound, paper);
         return true;
     }
 
