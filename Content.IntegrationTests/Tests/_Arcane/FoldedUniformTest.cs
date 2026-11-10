@@ -9,6 +9,7 @@ using Content.Shared.Inventory;
 using Robust.Client.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Maths;
+using Content.Shared.Verbs; // Arcane
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -207,7 +208,7 @@ public sealed class FoldedUniformTest : InteractionTest
     }
 
     [Test]
-    public async Task UnsupportedVariantsHaveNoFoldComponentsAfterServerSpawnAndReplication()
+    public async Task UnsupportedVariantsCannotFoldAfterServerSpawnAndReplication()
     {
         foreach (var prototype in Unsupported)
         {
@@ -215,17 +216,13 @@ public sealed class FoldedUniformTest : InteractionTest
             await Server.WaitAssertion(() =>
             {
                 var uid = ToServer(item);
-                Assert.That(SEntMan.HasComponent<FoldableComponent>(uid), Is.False, prototype);
-                Assert.That(SEntMan.HasComponent<FoldableClothingComponent>(uid), Is.False, prototype);
-                Assert.That(SEntMan.HasComponent<FoldedClothingVisualsComponent>(uid), Is.False, prototype);
+                AssertCannotFold(SEntMan, uid, SPlayer, prototype);
             });
             await Pair.RunUntilSynced();
             await Client.WaitAssertion(() =>
             {
                 var uid = ToClient(item);
-                Assert.That(CEntMan.HasComponent<FoldableComponent>(uid), Is.False, prototype);
-                Assert.That(CEntMan.HasComponent<FoldableClothingComponent>(uid), Is.False, prototype);
-                Assert.That(CEntMan.HasComponent<FoldedClothingVisualsComponent>(uid), Is.False, prototype);
+                AssertCannotFold(CEntMan, uid, CPlayer, prototype);
             });
         }
     }
@@ -283,26 +280,48 @@ public sealed class FoldedUniformTest : InteractionTest
             "ClothingUniformJumpsuitMilitaryVirology",
         })
         {
-            await Server.WaitAssertion(() => AssertDisabledInNullspace(SEntMan, prototype));
-            await Client.WaitAssertion(() => AssertDisabledInNullspace(CEntMan, prototype));
+            await Server.WaitAssertion(() => AssertDisabledInNullspace(SEntMan, SPlayer, prototype));
+            await Client.WaitAssertion(() => AssertDisabledInNullspace(CEntMan, CPlayer, prototype));
         }
     }
 
-    private static void AssertDisabledInNullspace(IEntityManager entities, string prototype)
+    private static void AssertDisabledInNullspace(IEntityManager entities, EntityUid user, string prototype)
     {
         var uid = entities.Spawn(prototype, doMapInit: false);
         try
         {
             Assert.That(entities.GetComponent<MetaDataComponent>(uid).EntityLifeStage,
                 Is.LessThan(EntityLifeStage.MapInitialized), prototype);
-            Assert.That(entities.HasComponent<FoldableComponent>(uid), Is.False, prototype);
-            Assert.That(entities.HasComponent<FoldableClothingComponent>(uid), Is.False, prototype);
-            Assert.That(entities.HasComponent<FoldedClothingVisualsComponent>(uid), Is.False, prototype);
+            AssertCannotFold(entities, uid, user, prototype);
         }
         finally
         {
             entities.DeleteEntity(uid);
         }
+    }
+
+    private static void AssertCannotFold(IEntityManager entities, EntityUid uid, EntityUid user, string prototype)
+    {
+        if (!entities.TryGetComponent<FoldableComponent>(uid, out var foldable))
+        {
+            Assert.That(entities.HasComponent<FoldableClothingComponent>(uid), Is.False, prototype);
+            Assert.That(entities.HasComponent<FoldedClothingVisualsComponent>(uid), Is.False, prototype);
+            return;
+        }
+
+        Assert.That(foldable.Enabled, Is.False, prototype);
+        Assert.That(entities.GetComponent<FoldedClothingVisualsComponent>(uid).Enabled, Is.False, prototype);
+        var clothing = entities.GetComponent<ClothingComponent>(uid);
+        var original = (clothing.RsiPath, clothing.EquippedPrefix);
+        var folding = entities.System<FoldableSystem>();
+        Assert.That(folding.CanToggleFold(uid, foldable), Is.False, prototype);
+        Assert.That(folding.TrySetFolded(uid, foldable, true, user), Is.False, prototype);
+        folding.SetFolded(uid, foldable, true, user);
+        Assert.That(foldable.IsFolded, Is.False, prototype);
+        Assert.That((clothing.RsiPath, clothing.EquippedPrefix), Is.EqualTo(original), prototype);
+        var verbs = entities.System<SharedVerbSystem>().GetLocalVerbs(uid, user, typeof(AlternativeVerb), force: true);
+        Assert.That(verbs.Select(verb => verb.Text), Does.Not.Contain(Loc.GetString(foldable.FoldVerbText)), prototype);
+        Assert.That(entities.HasComponent<HideLayerClothingComponent>(uid), Is.False, prototype);
     }
 
     private (string Rsi, string State, Color Color, Vector2 Scale, int Count) WornVisual(EntityUid wearer)

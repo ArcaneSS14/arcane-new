@@ -12,6 +12,11 @@ namespace Content.Shared.Foldable;
 [Access(typeof(FoldableSystem))]
 public sealed partial class FoldableComponent : Component
 {
+    // Arcane-Start: allow descendants with different artwork to opt out of inherited folding.
+    [DataField]
+    public bool Enabled = true;
+    // Arcane-End
+
     [DataField("folded"), AutoNetworkedField]
     public bool IsFolded = false;
 

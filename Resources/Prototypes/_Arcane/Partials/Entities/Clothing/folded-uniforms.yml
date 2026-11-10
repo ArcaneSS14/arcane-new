@@ -533,59 +533,79 @@
 - type: entity
   id: ClothingUniformJumpsuitMilitaryAtmospherics
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryCaptain
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryChemistry
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryCMO
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryEngineering
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryEngineeringChief
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryHoP
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryHydroponics
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryMedicalDoctor
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false
 
 - type: entity
   id: ClothingUniformJumpsuitMilitaryVirology
   components:
+  - type: Foldable
+    enabled: false
   - type: FoldedClothingVisuals
     enabled: false

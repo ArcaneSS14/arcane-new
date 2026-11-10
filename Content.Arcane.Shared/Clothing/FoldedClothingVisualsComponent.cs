@@ -9,7 +9,7 @@ public sealed partial class FoldedClothingVisualsComponent : Component
 {
     /// <summary>
     /// False on variants whose existing artwork has no compatible folded states.
-    /// The shared initialization system removes inherited folding components.
+    /// The corresponding Foldable component is also disabled in the prototype.
     /// </summary>
     [DataField]
     public bool Enabled = true;
