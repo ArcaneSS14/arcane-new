@@ -18,6 +18,47 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class DirectionalLayeringTest : InteractionTest
 {
+    [Test]
+    public async Task MothFrontWingsStayBetweenSuitAndBackThroughTurnsAndRebuilds()
+    {
+        await Client.WaitAssertion(() =>
+        {
+            var manager = Client.ResolveDependency<MarkingManager>();
+            var profile = HumanoidCharacterProfile.DefaultWithSpecies("Moth", Sex.Male);
+            var organ = manager.GetMarkingData("Moth").First(pair => pair.Value.Layers.Contains(HumanoidVisualLayers.Wings)).Key;
+            profile.Appearance.Markings[organ][HumanoidVisualLayers.Wings] = [new Marking("MothWingsDefault", 1)];
+            var dummy = CEntMan.SpawnEntity(CProtoMan.Index(profile.Species).DollPrototype, MapCoordinates.Nullspace);
+            try
+            {
+                var body = CEntMan.System<SharedVisualBodySystem>();
+                var ordering = CEntMan.System<DirectionalLayeringSystem>();
+                var sprites = CEntMan.System<SpriteSystem>();
+                var sprite = CEntMan.GetComponent<SpriteComponent>(dummy);
+                for (var rebuild = 0; rebuild < 2; rebuild++)
+                {
+                    body.ApplyProfileTo(dummy, profile);
+                    var count = sprite.AllLayers.Count();
+                    foreach (var direction in new[] {Direction.South, Direction.East, Direction.North, Direction.West, Direction.South})
+                    {
+                        ordering.ApplyDummyOrdering(dummy, direction);
+                        Assert.That(sprites.LayerMapTryGet((dummy, sprite), "MothWingsDefault-atlas", out var front, false), Is.True);
+                        Assert.That(sprites.LayerMapTryGet((dummy, sprite), "MothWingsDefaultBehind-atlas_behind", out var behind, false), Is.True);
+                        Assert.That(sprites.LayerMapTryGet((dummy, sprite), "back", out var back, false), Is.True);
+                        Assert.That(sprites.LayerMapTryGet((dummy, sprite), "outerClothing", out var suit, false), Is.True);
+                        Assert.That(front, Is.GreaterThan(suit));
+                        Assert.That(front, Is.LessThan(back));
+                        Assert.That(behind, Is.LessThan(suit));
+                        Assert.That(sprite.AllLayers.Count(), Is.EqualTo(count));
+                    }
+                }
+            }
+            finally
+            {
+                CEntMan.DeleteEntity(dummy);
+            }
+        });
+    }
+
     private static readonly ProtoId<DisplacementDataPrototype> TestDisplacement = "Dwarfism";
     protected override string PlayerPrototype => "MobVulpkanin";
 

@@ -20,7 +20,7 @@ namespace Content.Arcane.Client.Humanoid.DirectionalLayering;
 
 /// <summary>
 ///     Keeps a humanoid's ears against the hair and the cloak over the bag, and moves the tail by which side of the
-///     character faces the camera.
+///     character faces the camera. Moth front wings sit between the suit and the backpack.
 ///     Every pass pulls these blocks out of the sprite and re-inserts them next to base layers that never move, so the
 ///     result depends only on the current view, never on the views applied before it.
 /// </summary>
@@ -266,8 +266,9 @@ public sealed partial class DirectionalLayeringSystem : EntitySystem
 
         var cloakAnchor = GetCloakAnchor(ent);
         var cloak = cloakAnchor != null ? GetSlotKeys(ent, "neck", ears, tail) : new List<object>();
+        var wings = GetMothWingKeys(ent, ears, tail);
 
-        var blocks = ExtractBlocks(ent, ears, tail, cloak);
+        var blocks = ExtractBlocks(ent, ears, tail, cloak, wings);
         var earLayers = blocks[0];
         var tailLayers = blocks[1];
         var cloakLayers = blocks[2];
@@ -281,6 +282,21 @@ public sealed partial class DirectionalLayeringSystem : EntitySystem
 
         if (tailLayers.Count > 0)
             InsertBlock(ent, tailLayers, GetTailIndex(ent, state, view));
+
+        if (blocks[3].Count > 0)
+            InsertBlock(ent, blocks[3], TryGetIndex(ent, "back", out var backIndex) ? backIndex : null);
+    }
+
+    private List<object> GetMothWingKeys(Entity<VisualBodyComponent, SpriteComponent> ent,
+        List<object> ears, List<object> tail)
+    {
+        // Trauma still constructs and colours both wing parts; only the front part changes order.
+        if (!TryComp<HumanoidProfileComponent>(ent, out var profile) || profile.Species != "Moth" ||
+            !TryGetIndex(ent, "back", out _))
+            return new List<object>();
+        var keys = new List<object> { HumanoidVisualLayers.Wings };
+        AddMarkingLayerKeys(ent, HumanoidVisualLayers.Wings, keys);
+        return FilterExisting(ent, keys, ears, tail);
     }
 
     private int GetEarIndex(Entity<VisualBodyComponent, SpriteComponent> ent)

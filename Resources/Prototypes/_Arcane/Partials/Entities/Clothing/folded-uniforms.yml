@@ -1,0 +1,591 @@
+# Existing uniform appearance is preserved; only compatible folded states are supplied.
+
+- type: entity
+  id: ClothingUniformJumpskirtAtmos
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Engineering/atmosf.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtChemistry
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/chemistry.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtChiefEngineer
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Engineering/ce.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtCMO
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/cmo.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtDetective
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/detective.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtDetectiveGrey
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/detective_grey.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtEngineering
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Engineering/engineering.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtGenetics
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/genetics.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtHoP
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Civilian/hop.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtHoS
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/hos.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtHoSAlt
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/hos_alt.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtHydroponics
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Civilian/hydro.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtJanitor
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Civilian/janitor.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtMedicalDoctor
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/medical.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtOperative
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Syndicate/operative_s.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSec
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/security.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSecGrey
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/security_grey.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSeniorEngineer
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Engineering/senior_engineer.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSeniorOfficer
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/senior_officer.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSeniorPhysician
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/senior_physician.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtSeniorResearcher
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/RND/senior_researcher.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtVirology
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Medical/virology.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtWarden
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpskirt/Security/warden.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitAtmos
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Engineering/atmos.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitCaptain
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Civilian/captain.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitChemistry
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Medical/chemistry.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitChiefEngineer
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Engineering/ce.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitCMO
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Medical/cmo.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitDetective
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/detective.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitDetectiveGrey
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/detective_grey.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitEngineering
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Engineering/engineering.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitEngineeringHazard
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Engineering/engineering_hazard.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitHoP
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Civilian/hop.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitHoS
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/hos.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitHoSBlue
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/hos_blue.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitHoSGrey
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/hos_grey.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitHydroponics
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Civilian/hydro.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitMedicalDoctor
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Medical/medical.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitOperative
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Syndicate/operative.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitSecGrey
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Security/security_grey.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitSeniorEngineer
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Engineering/senior_engineer.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitSeniorPhysician
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Medical/senior_physician.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitSeniorResearcher
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/RND/senior_researcher.rsi
+
+- type: entity
+  id: ClothingUniformJumpsuitVirology
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: unfold-verb-clothing-jacket
+    foldVerbText: fold-verb-clothing-jacket
+  - type: FoldableClothing
+    foldedEquippedPrefix: null
+  - type: FoldedClothingVisuals
+    sprite: _Arcane/Clothing/Uniforms/Folded/Jumpsuit/Medical/virology.rsi
+
+# Different artwork must not inherit a working fold, even outside an initialized map.
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryAtmospherics
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryCaptain
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryChemistry
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryCMO
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryEngineering
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryEngineeringChief
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryHoP
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryHydroponics
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryMedicalDoctor
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
+
+- type: entity
+  id: ClothingUniformJumpsuitMilitaryVirology
+  components:
+  - type: FoldedClothingVisuals
+    enabled: false
