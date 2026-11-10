@@ -1,0 +1,11 @@
+- type: entity
+  id: FoodButter
+  components:
+  - type: Extractable
+    grindableSolutionName: food
+
+- type: entity
+  id: FoodButterSlice
+  components:
+  - type: Extractable
+    grindableSolutionName: food

@@ -1,0 +1,47 @@
+- type: entity
+  parent: BaseCigar
+  id: ECigarette
+  name: e-cigarette
+  description: A reusable e-cigarette, tastes like how magic smoke smells.
+  components:
+  - type: Cigar
+    selfIgniting: true
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Nicotine
+        Quantity: 15
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/ecigarette.rsi
+    state: unlit-icon
+  - type: BurnStateVisuals
+    unlitIcon: unlit-icon
+  - type: Clothing
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/ecigarette.rsi
+    slots: [mask]
+    equippedPrefix: unlit
+  - type: Item
+    size: Tiny
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/ecigarette.rsi
+    heldPrefix: unlit
+  - type: RefillableSolution
+    solution: smokable
+  - type: DrawableSolution
+    solution: smokable
+
+- type: entity
+  parent: ECigarette
+  id: CryostasisCigarette
+  name: cryostasis cigarette
+  description: A cryostasis e-cigarette, chemicals inside the pod cannot react.
+  components:
+  - type: Solution
+    solution:
+      canReact: false
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/cryostasiscigarette.rsi
+  - type: Clothing
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/cryostasiscigarette.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Consumable/Smokeables/Cigarettes/cryostasiscigarette.rsi

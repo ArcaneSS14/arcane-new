@@ -1,0 +1,21 @@
+- type: latheRecipe
+  id: ECigarette
+  result: ECigarette
+  categories:
+  - Medical
+  completetime: 2
+  materials:
+    Plastic: 50
+    Steel: 100
+    Glass: 100
+
+- type: latheRecipe
+  id: CryostasisCigarette
+  result: CryostasisCigarette
+  categories:
+  - Medical
+  completetime: 2
+  materials:
+    Plastic: 100
+    Steel: 150
+    Glass: 150

@@ -60,8 +60,23 @@ public partial struct ReagentId : IEquatable<ReagentId>
         if (other.Data == null)
             return false;
 
-        if (Data.Except(other.Data).Any() || other.Data.Except(Data).Any() || Data.Count != other.Data.Count)
+        // Arcane-Edit-Start
+        if (ReferenceEquals(Data, other.Data))
+            return true;
+
+        if (Data.Count != other.Data.Count)
             return false;
+
+        if (Data.Count == 0)
+            return true;
+
+        if (Data.Count == 1)
+            return other.Data.Contains(Data[0]) && Data.Contains(other.Data[0]);
+
+        // Keep the existing set comparison for larger metadata lists; repeated Contains becomes quadratic.
+        if (Data.Except(other.Data).Any() || other.Data.Except(Data).Any())
+            return false;
+        // Arcane-Edit-End
 
         return true;
     }

@@ -86,6 +86,7 @@
     Digestion:
       metabolites:
         Theobromine: 0.2
+        Caffeine: 2 # Arcane
       effects:
       - !type:Satiate
         satiationType: Thirst
