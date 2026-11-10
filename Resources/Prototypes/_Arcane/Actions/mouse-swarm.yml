@@ -4,10 +4,10 @@
   name: Join swarm
   description: Absorb a nearby mouse into your swarm.
   components:
+  - type: Sprite
+    sprite: Mobs/Animals/mouse.rsi
+    state: mouse-0
   - type: Action
-    icon:
-      sprite: Mobs/Animals/mouse.rsi
-      state: mouse-0
     useDelay: 2
   - type: TargetAction
     range: 1.5
