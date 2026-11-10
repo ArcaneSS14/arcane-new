@@ -81,6 +81,11 @@ public sealed partial class FoldableSystem : EntitySystem
     /// </summary>
     public void SetFolded(EntityUid uid, FoldableComponent component, bool folded, EntityUid? user = null)
     {
+        // Arcane-Start: disabled descendants must also reject direct state changes.
+        if (!component.Enabled)
+            return;
+        // Arcane-End
+
         component.IsFolded = folded;
         Dirty(uid, component);
         _appearance.SetData(uid, FoldedVisuals.State, folded);
@@ -114,6 +119,11 @@ public sealed partial class FoldableSystem : EntitySystem
         if (!Resolve(uid, ref fold))
             return false;
 
+        // Arcane-Start: keep prototype components intact while disabling inherited folding.
+        if (!fold.Enabled)
+            return false;
+        // Arcane-End
+
         // Can't un-fold in any container unless enabled (locker, hands, inventory, whatever).
         if (_container.IsEntityInContainer(uid) && !fold.CanFoldInsideContainer)
             return false;
@@ -146,7 +156,7 @@ public sealed partial class FoldableSystem : EntitySystem
 
     private void AddFoldVerb(EntityUid uid, FoldableComponent component, GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!args.CanAccess || !args.CanInteract || args.Hands == null)
+        if (!component.Enabled || !args.CanAccess || !args.CanInteract || args.Hands == null) // Arcane-Edit: omit disabled folding verbs.
             return;
 
         AlternativeVerb verb = new()

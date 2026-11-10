@@ -23,6 +23,11 @@ public sealed partial class FoldableClothingSystem : EntitySystem
     // Goobstation Start - #3632
     private void OnMapInit(Entity<FoldableClothingComponent> ent, ref MapInitEvent args)
     {
+        // Arcane-Start: disabled inherited folding must not add clothing visual state.
+        if (TryComp<FoldableComponent>(ent, out var foldable) && !foldable.Enabled)
+            return;
+        // Arcane-End
+
         if (ent.Comp.FoldedHideLayers != null || ent.Comp.UnfoldedHideLayers != null)
         {
             var hideLayer = EnsureComp<HideLayerClothingComponent>(ent.Owner);
