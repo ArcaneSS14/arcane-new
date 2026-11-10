@@ -141,7 +141,15 @@
       - !type:GroupSelector
         children: # Increased chances for special roaches on purpose. Makes it a bit more interesting.
         - id: MobCockroach
-        - id: MobMothroach
+        - !type:GroupSelector # Arcane-Edit: choose a variant within the existing mothroach family weight.
+          # Arcane-Start
+          children:
+          - id: MobMothroach
+          - id: MobMothroachMustard
+          - id: MobMothroachLeopard
+          - id: MobMothroachCecropia
+          - id: MobMothroachLunar
+          # Arcane-End
         - id: MobMoproach
           weight: 0.5
       - !type:GroupSelector

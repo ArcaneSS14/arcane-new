@@ -37,6 +37,11 @@
     - tasks:
         - !type:HTNCompoundTask
           task: MoveCallTargetCompound # Goobstation - move to mousecall target
+    # Arcane-Start: keep existing task priorities and the disabled normal food search.
+    - tasks:
+        - !type:HTNCompoundTask
+          task: GnawCorpseCompound
+    # Arcane-End
     - tasks:
         - !type:HTNCompoundTask
           task: IdleCompound
