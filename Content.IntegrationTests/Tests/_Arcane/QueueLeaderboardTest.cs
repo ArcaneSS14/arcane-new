@@ -1,3 +1,4 @@
+#nullable enable // Arcane
 using System.Linq;
 using Content.Arcane.Client.JoinQueue;
 using Robust.Client.UserInterface;
