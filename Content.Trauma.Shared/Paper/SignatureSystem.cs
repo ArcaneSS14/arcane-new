@@ -76,6 +76,7 @@ public sealed partial class SignatureSystem : EntitySystem
         }
 
         // Arcane-Edit-Start
+        _audio.PlayPredicted(paper.Comp.Sound, signer, signer);
         NotifySigned(paper, signer);
         return true;
     }
@@ -98,7 +99,6 @@ public sealed partial class SignatureSystem : EntitySystem
     /// <summary>Notify contract consumers only after a signature has actually been written.</summary>
     public void NotifySigned(Entity<PaperComponent> paper, EntityUid signer)
     {
-        _audio.PlayPredicted(paper.Comp.Sound, signer, signer);
         // Arcane-Edit-End
         _paper.UpdateUserInterface(paper);
 

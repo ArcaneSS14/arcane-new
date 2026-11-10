@@ -1,7 +1,5 @@
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
-using Robust.Client.UserInterface.Controls;
-using Robust.Shared.Utility;
 using Content.Shared.Paper;
 using static Content.Shared.Paper.PaperComponent;
 
@@ -13,6 +11,7 @@ public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: owner-
 {
     [ViewVariables]
     private PaperWindow? _window;
+    private Guid _saveId; // Arcane
 
     public PaperBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
     {
@@ -45,12 +44,19 @@ public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: owner-
 
     private void InputOnTextEntered(string text)
     {
-        SendPredictedMessage(new PaperInputTextMessage(text)); // Trauma - predict this shit
-
-        if (_window != null)
-        {
-            _window.Input.TextRope = Rope.Leaf.Empty;
-            _window.Input.CursorPosition = new TextEdit.CursorPos(0, TextEdit.LineBreakBias.Top);
-        }
+        // Arcane-Edit-Start
+        _saveId = Guid.NewGuid();
+        SendPredictedMessage(new PaperInputTextMessage(text, _saveId));
+        // Retain the draft; a reply from an earlier save/window cannot acknowledge it.
+        // Arcane-Edit-End
     }
+
+    // Arcane-Start
+    protected override void ReceiveMessage(BoundUserInterfaceMessage message)
+    {
+        base.ReceiveMessage(message);
+        if (message is PaperSaveResultMessage result && result.SaveId == _saveId)
+            _window?.ApplySaveResult(result.Accepted);
+    }
+    // Arcane-End
 }
