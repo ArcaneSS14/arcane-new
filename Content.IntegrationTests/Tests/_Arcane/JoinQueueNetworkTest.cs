@@ -1,5 +1,6 @@
 #nullable enable
 using System.Linq;
+using System.Diagnostics;
 using Content.Arcane.Client.JoinQueue;
 using Content.Arcane.Shared.JoinQueue;
 using Content.Goobstation.Common.CCVar;
@@ -62,7 +63,7 @@ public sealed class JoinQueueNetworkTest : GameTest
             var net = Client.ResolveDependency<IClientNetManager>();
             net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.Gyruss, Score = int.MaxValue });
             net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.GoGoShitcurity, Score = int.MaxValue });
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.SpaceInvaders, Score = 6535 });
+            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.SpaceInvaders, Score = 6480 });
         });
         await Pair.ReallyBeIdle(5);
         await Server.WaitAssertion(() =>
@@ -74,7 +75,7 @@ public sealed class JoinQueueNetworkTest : GameTest
             var scores = queue.BuildScores();
             Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.Gyruss).Score, Is.EqualTo(int.MaxValue));
             Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.GoGoShitcurity).Score, Is.EqualTo(int.MaxValue));
-            Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.SpaceInvaders).Score, Is.EqualTo(6535));
+            Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.SpaceInvaders).Score, Is.EqualTo(6480));
             Assert.That(session.Status, Is.EqualTo(SessionStatus.Connected));
             Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 1);
         });
@@ -121,8 +122,12 @@ public sealed class JoinQueueNetworkTest : GameTest
     public async Task ReconnectHonorsTheExistingTemporaryBypassAndCleansTheOldProfile()
     {
         var (name, session) = await ConnectQueued();
-        await Server.WaitPost(() => Server.ResolveDependency<IConnectionManager>()
-            .AddTemporaryConnectBypass(session.UserId, TimeSpan.FromMinutes(1)));
+        double previousAverage = -1;
+        await Server.WaitPost(() =>
+        {
+            previousAverage = SEntMan.System<ServerQueue>().AverageQueueWait;
+            Server.ResolveDependency<IConnectionManager>().AddTemporaryConnectBypass(session.UserId, TimeSpan.FromMinutes(1));
+        });
         await Client.WaitPost(() => Client.ResolveDependency<IClientNetManager>().ClientDisconnect("Queue reconnect test"));
         await Pair.ReallyBeIdle(20);
         await Server.WaitAssertion(() => Assert.Throws<KeyNotFoundException>(() => Server.ResolveDependency<UserDbDataManager>().GetLoadTask(session)));
@@ -135,7 +140,7 @@ public sealed class JoinQueueNetworkTest : GameTest
             Assert.That(current.UserId, Is.EqualTo(session.UserId));
             Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
             Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
-            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.EqualTo(-1), "Bypassing the queue must not create a queue-wait estimate.");
+            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.EqualTo(previousAverage), "Bypassing the queue must not change the queue-wait estimate.");
         });
     }
 
@@ -204,6 +209,167 @@ public sealed class JoinQueueNetworkTest : GameTest
         {
             Assert.That(returned.AttachedEntity, Is.Not.Null);
             Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
+        });
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task ReconnectWithoutBypassKeepsFifoAcrossRealSessions(bool interruptAdmission)
+    {
+        var (name, initial) = await ConnectQueued();
+        double previousAverage = -1;
+        await Server.WaitPost(() => previousAverage = SEntMan.System<ServerQueue>().AverageQueueWait);
+        await using var other = await PoolManager.GetServerClient(new PoolSettings { Connected = false, Dirty = true });
+        var otherName = "queue_second_" + Guid.NewGuid().ToString("N")[..10];
+        other.Client.SetConnectTarget(Server);
+        await other.Client.WaitPost(() => other.Client.ResolveDependency<IClientNetManager>().ClientConnect(null!, 0, otherName));
+        ICommonSession? second = null;
+        await PumpUntil(() =>
+        {
+            second = Server.ResolveDependency<IPlayerManager>().Sessions.FirstOrDefault(s => s.Name == otherName);
+            return second != null && second.Status == SessionStatus.Connected
+                && Server.ResolveDependency<UserDbDataManager>().IsLoadComplete(second)
+                && SEntMan.System<ServerQueue>().PlayerInQueueCount == 2;
+        });
+
+        // Execute between reservation and the next timer tick through public configuration/network entry points.
+        await Server.WaitAssertion(() =>
+        {
+            var cfg = Server.ResolveDependency<IConfigurationManager>();
+            var queue = SEntMan.System<ServerQueue>();
+            if (interruptAdmission)
+            {
+                cfg.SetCVar(CCVars.SoftMaxPlayers, 1);
+                Assert.That(initial.Status, Is.EqualTo(SessionStatus.Connected));
+                Assert.That(queue.ActualPlayersCount, Is.EqualTo(1), "The pending admission reserves one slot.");
+                Assert.That(SEntMan.System<ServerGameTicker>().AdmittedPlayerCount, Is.EqualTo(1), "Admission snapshots must not wait for the UI broadcast.");
+                cfg.SetCVar(CCVars.SoftMaxPlayers, 0);
+            }
+            initial.Channel.Disconnect("FIFO reconnect regression");
+            Server.ResolveDependency<IServerNetManager>().ProcessPackets();
+            Assert.That(initial.Status, Is.EqualTo(SessionStatus.Disconnected));
+            Assert.That(queue.ActualPlayersCount, Is.Zero);
+            Assert.That(SEntMan.System<ServerGameTicker>().AdmittedPlayerCount, Is.Zero);
+            Assert.That(queue.AverageQueueWait, Is.EqualTo(previousAverage), "A cancelled admission is not a completed wait.");
+        });
+        await PumpUntil(() => initial.Status == SessionStatus.Disconnected);
+        await Client.WaitAssertion(() => Assert.That(Client.Session, Is.Null));
+        await Client.WaitPost(() => Client.ResolveDependency<IClientNetManager>().ClientConnect(null!, 0, name));
+        ICommonSession? replacement = null;
+        await PumpUntil(() =>
+        {
+            replacement = Server.ResolveDependency<IPlayerManager>().Sessions.FirstOrDefault(s => s.UserId == initial.UserId);
+            return replacement != null && replacement != initial && replacement.Status == SessionStatus.Connected
+                && Server.ResolveDependency<UserDbDataManager>().IsLoadComplete(replacement)
+                && SEntMan.System<ServerQueue>().PlayerInQueueCount == 2;
+        });
+        await Server.WaitPost(() => Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 1));
+        await PumpUntil(() => replacement!.Status == SessionStatus.InGame || second!.Status == SessionStatus.InGame);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(replacement!.Status, Is.EqualTo(SessionStatus.InGame), "Reconnect must preserve the first FIFO place.");
+            Assert.That(second!.Status, Is.EqualTo(SessionStatus.Connected));
+            Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
+            Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 2);
+        });
+        await PumpUntil(() => second!.Status == SessionStatus.InGame);
+        await other.Client.WaitPost(() => other.Client.ResolveDependency<IClientNetManager>().ClientDisconnect("FIFO cleanup"));
+        await PumpUntil(() => second!.Status == SessionStatus.Disconnected);
+        await other.Client.WaitAssertion(() => Assert.That(other.Client.Session, Is.Null));
+        await other.Server.WaitAssertion(() => Assert.That(other.Server.ResolveDependency<IPlayerManager>().Sessions, Is.Empty));
+        other.Client.SetConnectTarget(other.Server);
+        await other.CleanReturnAsync();
+
+        async Task PumpUntil(Func<bool> predicate)
+        {
+            for (var i = 0; i < 200; i++)
+            {
+                await Pair.ReallyBeIdle(2);
+                await other.Client.WaitRunTicks(2);
+                await other.Client.WaitIdleAsync();
+                var done = false;
+                await Server.WaitPost(() => done = predicate());
+                if (done)
+                    return;
+            }
+            Assert.Fail("The two-client queue transition did not complete.");
+        }
+    }
+
+    [Test]
+    public async Task DirectObserverSpawnAlsoRequiresAdmission()
+    {
+        var (_, session) = await ConnectQueued();
+        await Server.WaitAssertion(() =>
+        {
+            var ticker = SEntMan.System<ServerGameTicker>();
+            ticker.SpawnObserver(session);
+            Assert.That(session.AttachedEntity, Is.Null);
+            Assert.That(session.GetMind(), Is.Null);
+            Assert.That(ticker.UserHasJoinedGame(session.UserId), Is.False);
+            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.EqualTo(1));
+            Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 1);
+        });
+        await WaitServer(() => session.Status == SessionStatus.InGame);
+        await Server.WaitAssertion(() =>
+        {
+            SEntMan.System<ServerGameTicker>().SpawnObserver(session);
+            Assert.That(session.AttachedEntity, Is.Not.Null);
+        });
+    }
+
+    [Test]
+    public async Task QueueChangesWaitForTheBroadcastInterval()
+    {
+        await ConnectQueued();
+        string? previous = null;
+        await Client.WaitPost(() => previous = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
+            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text);
+        // Establish a fresh observed deadline even when profile setup took longer than the initial broadcast.
+        await Server.WaitPost(() => Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, -3));
+        await WaitClientRealTime(() => Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
+            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text != previous,
+            "A fresh queue update did not reach the client before the interval check.");
+        var sinceInitialUpdate = Stopwatch.StartNew();
+        await Client.WaitPost(() => previous = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
+            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text);
+        await Server.WaitPost(() =>
+        {
+            var cfg = Server.ResolveDependency<IConfigurationManager>();
+            // Both still mean zero admissions, but the displayed cap changes.
+            cfg.SetCVar(CCVars.SoftMaxPlayers, -1);
+            cfg.SetCVar(CCVars.SoftMaxPlayers, -2);
+            SEntMan.System<ServerQueue>().Update(0);
+        });
+        await Client.WaitAssertion(() =>
+        {
+            Client.ResolveDependency<IClientNetManager>().ProcessPackets();
+            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
+            Assert.That(sinceInitialUpdate.Elapsed, Is.LessThan(TimeSpan.FromMilliseconds(500)),
+                "The negative assertion must run before the fresh broadcast deadline, not after a slow setup.");
+            Assert.That(gui.FindControl<Label>("ServerInfo").Text, Is.EqualTo(previous), "Changes must not bypass the one-second broadcast interval.");
+        });
+        await WaitClientRealTime(() =>
+        {
+            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
+            return gui.FindControl<Label>("ServerInfo").Text != previous;
+        }, "The coalesced update must eventually reach the client.");
+    }
+
+    [Test]
+    public async Task GhostReturnRejectsAnUnadmittedSessionBeforeReportingSuccess()
+    {
+        var (_, session) = await ConnectQueued();
+        await Server.WaitAssertion(() =>
+        {
+            var ghost = SEntMan.SpawnEntity("MobObserver", Robust.Shared.Map.MapCoordinates.Nullspace);
+            SEntMan.EnsureComponent<Content.Arcane.Shared.Ghost.GhostRespawnComponent>(ghost).RespawnAt = TimeSpan.Zero;
+            Server.ResolveDependency<IConfigurationManager>().SetCVar(Content.Arcane.Common.CCVar.ArcaneCVars.GhostRespawnMaxPlayers, 100);
+            var returned = SEntMan.System<Content.Arcane.Server.Ghost.GhostReturnToRoundSystem>().TryReturnToRound(ghost, session);
+            Assert.That(returned, Is.False, "A no-op Respawn must not be reported as a successful return.");
+            Assert.That(session.Status, Is.EqualTo(SessionStatus.Connected));
+            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.EqualTo(1));
+            SEntMan.DeleteEntity(ghost);
         });
     }
 
@@ -287,8 +453,26 @@ public sealed class JoinQueueNetworkTest : GameTest
                 && Server.ResolveDependency<UserDbDataManager>().IsLoadComplete(session)
                 && SEntMan.System<ServerQueue>().PlayerInQueueCount == 1;
         });
-        await Pair.ReallyBeIdle(5);
+        // UI coalescing uses real uptime. Advancing simulation ticks does not advance the production stopwatch.
+        await WaitClientRealTime(() => Client.ResolveDependency<IStateManager>().CurrentState is QueueState,
+            "The initial queue update did not reach the client.");
         return (name, session!);
+    }
+
+    private async Task WaitClientRealTime(Func<bool> predicate, string failure)
+    {
+        var deadline = Stopwatch.StartNew();
+        while (deadline.Elapsed < TimeSpan.FromSeconds(5))
+        {
+            await Pair.ReallyBeIdle(2);
+            var done = false;
+            await Client.WaitPost(() => done = predicate());
+            if (done)
+                return;
+            // Poll the real clock boundary without blocking either simulation thread.
+            await Task.Delay(25);
+        }
+        Assert.Fail(failure);
     }
 
     private async Task WaitServer(Func<bool> predicate)

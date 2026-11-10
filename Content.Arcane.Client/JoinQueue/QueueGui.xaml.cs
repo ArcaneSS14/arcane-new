@@ -68,6 +68,6 @@ public sealed partial class QueueGui : Control
 
         CritterWalk.UpdateCritters(msg.PlayerNames, msg.YourName);
         MiniGameLeaderboard.UpdateGameLeaderboard(msg.MiniGameLeaderboard);
-        QueueTimeLeaderboard.UpdateQueuePlayers(msg.QueueWaitLeaderboardNames, msg.QueueWaitLeaderboardSeconds, msg.YourName);
+        QueueTimeLeaderboard.UpdateQueuePlayers(msg.QueueWaitLeaderboardNames, msg.QueueWaitLeaderboardSeconds, msg.YourQueueWaitLeaderboardIndex);
     }
 }

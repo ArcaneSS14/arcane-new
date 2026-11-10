@@ -325,11 +325,15 @@ public sealed class GoGoShitcurityGame
         for (var i = Bullets.Count - 1; i >= 0; i--)
         {
             var b = Bullets[i];
+            var previousX = b.X;
+            var previousY = b.Y;
             var speedFactor = !b.IsPlayer && SlowFieldTime > 0f ? SlowFieldFactor : 1f;
             b.X += b.VX * dt * speedFactor;
             b.Y += b.VY * dt * speedFactor;
-
-            if (b.X > GameW + 8f || b.X < -16f || b.Y < -16f || b.Y > GameH + 16f)
+            var collisionX = b.X;
+            var collisionY = b.Y;
+            if (!QueueMiniGameCollision.ClipPath(ref previousX, ref previousY, ref collisionX, ref collisionY,
+                    -16f, -16f, GameW + 8f, GameH + 16f))
             {
                 Bullets.RemoveAt(i);
                 continue;
@@ -337,22 +341,29 @@ public sealed class GoGoShitcurityGame
 
             if (b.IsPlayer)
             {
-                var hit = false;
-                for (var j = Enemies.Count - 1; j >= 0 && !hit; j--)
+                var hitIndex = -1;
+                var firstHit = float.PositiveInfinity;
+                for (var j = Enemies.Count - 1; j >= 0; j--)
                 {
                     var e = Enemies[j];
-                    if (!Overlaps(b.X, b.Y, BulletW, BulletH, e.X + 4f, e.Y + 4f, EnemySize - 8f, EnemySize - 8f))
+                    if (!QueueMiniGameCollision.Intersects(previousX, previousY, collisionX, collisionY, BulletW, BulletH,
+                            e.X + 4f, e.Y + 4f, EnemySize - 8f, EnemySize - 8f, out var time) || time >= firstHit)
                         continue;
-
-                    Enemies.RemoveAt(j);
+                    hitIndex = j;
+                    firstHit = time;
+                }
+                if (hitIndex >= 0)
+                {
+                    var e = Enemies[hitIndex];
+                    Enemies.RemoveAt(hitIndex);
                     TrySpawnPowerUp(e.X + EnemySize / 2f, e.Y + EnemySize / 2f);
                     Bullets.RemoveAt(i);
                     Score += 10 * _waveNumber;
                     OnEnemyKilled?.Invoke(e.X + EnemySize / 2f, e.Y + EnemySize / 2f);
-                    hit = true;
+                    continue;
                 }
             }
-            else if (Overlaps(b.X, b.Y, BulletW, BulletH,
+            else if (QueueMiniGameCollision.Intersects(previousX, previousY, collisionX, collisionY, BulletW, BulletH,
                          PlayerX, PlayerY, PlayerSize * 0.76f, PlayerSize * 0.76f))
             {
                 Bullets.RemoveAt(i);
@@ -362,7 +373,10 @@ public sealed class GoGoShitcurityGame
                     EndGame();
                     return;
                 }
+                continue;
             }
+            if (b.X > GameW + 8f || b.X < -16f || b.Y < -16f || b.Y > GameH + 16f)
+                Bullets.RemoveAt(i);
         }
     }
 

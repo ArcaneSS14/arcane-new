@@ -7,6 +7,36 @@ namespace Content.IntegrationTests.Tests._Arcane;
 public sealed class JoinQueueStateTest
 {
     [Test]
+    public void InterruptedAdmissionKeepsItsPlaceUntilConfirmedAndRejectsStaleCompletion()
+    {
+        var queue = new JoinQueueState<object>();
+        var user = new NetUserId(Guid.NewGuid());
+        var first = new object();
+        var second = new object();
+        var replacement = new object();
+        queue.Connect(user, first, TimeSpan.Zero);
+        queue.MarkReady(user, first);
+        var secondId = new NetUserId(Guid.NewGuid());
+        queue.Connect(secondId, second, TimeSpan.FromSeconds(1));
+        queue.MarkReady(secondId, second);
+        Assert.That(queue.TryReserve(out var reserved), Is.True);
+        Assert.That(reserved.Session, Is.SameAs(first));
+        Assert.That(queue.TryGet(user, out _), Is.True, "Reservation is not confirmed admission.");
+        Assert.That(queue.Disconnect(user, first, TimeSpan.FromMinutes(2)), Is.True);
+        var reconnected = queue.Connect(user, replacement, TimeSpan.FromSeconds(10));
+        Assert.That(reconnected.WaitedSince, Is.EqualTo(TimeSpan.Zero));
+        Assert.That(queue.Remove(user, first, out _), Is.False);
+        queue.MarkReady(user, replacement);
+        Assert.That(queue.TryReserve(out reserved), Is.True);
+        Assert.That(reserved.Session, Is.SameAs(replacement));
+        Assert.That(queue.TryReserve(out reserved), Is.True);
+        Assert.That(reserved.Session, Is.SameAs(second), "A pending slot must not be reserved twice.");
+        Assert.That(queue.TryReserve(out _), Is.False);
+        Assert.That(queue.Remove(user, replacement, out _), Is.True);
+        Assert.That(queue.TryGet(user, out _), Is.False);
+    }
+
+    [Test]
     public void ASlowerProfileLoadCannotBeOvertakenByALaterPlayer()
     {
         var queue = new JoinQueueState<object>();
@@ -17,11 +47,11 @@ public sealed class JoinQueueStateTest
         queue.Connect(firstId, first, TimeSpan.Zero);
         queue.Connect(secondId, second, TimeSpan.Zero);
         queue.MarkReady(secondId, second);
-        Assert.That(queue.TryTake(out _), Is.False);
+        Assert.That(queue.TryReserve(out _), Is.False);
         queue.MarkReady(firstId, first);
-        Assert.That(queue.TryTake(out var entry), Is.True);
+        Assert.That(queue.TryReserve(out var entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(first));
-        Assert.That(queue.TryTake(out entry), Is.True);
+        Assert.That(queue.TryReserve(out entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(second));
     }
 
@@ -47,11 +77,11 @@ public sealed class JoinQueueStateTest
         Assert.That(queue.Disconnect(rejoiningId, old, TimeSpan.FromMinutes(2)), Is.False);
         Assert.That(queue.Remove(rejoiningId, old, out _), Is.False);
         queue.MarkReady(rejoiningId, replacement);
-        Assert.That(queue.TryTake(out var entry), Is.True);
+        Assert.That(queue.TryReserve(out var entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(first));
-        Assert.That(queue.TryTake(out entry), Is.True);
+        Assert.That(queue.TryReserve(out entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(replacement));
-        Assert.That(queue.TryTake(out entry), Is.True);
+        Assert.That(queue.TryReserve(out entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(last));
     }
 
@@ -70,15 +100,15 @@ public sealed class JoinQueueStateTest
         queue.Disconnect(user, disconnected, TimeSpan.FromMinutes(2));
         queue.Connect(secondId, second, TimeSpan.FromSeconds(10));
         queue.MarkReady(secondId, second);
-        Assert.That(queue.TryTake(out var entry), Is.True);
+        Assert.That(queue.TryReserve(out var entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(second));
         queue.Connect(thirdId, third, TimeSpan.FromSeconds(20));
         queue.MarkReady(thirdId, third);
         queue.Connect(user, returning, TimeSpan.FromMinutes(2));
         queue.MarkReady(user, returning);
-        Assert.That(queue.TryTake(out entry), Is.True);
+        Assert.That(queue.TryReserve(out entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(third));
-        Assert.That(queue.TryTake(out entry), Is.True);
+        Assert.That(queue.TryReserve(out entry), Is.True);
         Assert.That(entry.Session, Is.SameAs(returning));
     }
 }

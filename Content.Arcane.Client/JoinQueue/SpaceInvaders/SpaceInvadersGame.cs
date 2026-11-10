@@ -207,6 +207,8 @@ public sealed class SpaceInvadersGame
 
         for (var row = 1; row < 5; row++)
         {
+            if (row == 2)
+                continue; // This row was already added by the outer columns above.
             AddCrawler(2, row, 2, row);
             AddCrawler(6, row, 6, row);
         }
@@ -231,11 +233,17 @@ public sealed class SpaceInvadersGame
             crawler.SpawnAge += frameTime;
 
         _crawlerStepTimer -= frameTime;
-        if (_crawlerStepTimer > 0f)
-            return;
+        while (_crawlerStepTimer <= 0f)
+        {
+            _crawlerStepTimer += Math.Max(0.055f, 0.40f - Wave * 0.05f - (CrawlerRows * CrawlerCols - Crawlers.Count) * 0.008f);
+            StepCrawlers();
+            if (GameOver)
+                return;
+        }
+    }
 
-        _crawlerStepTimer = Math.Max(0.055f, 0.40f - Wave * 0.05f - (CrawlerRows * CrawlerCols - Crawlers.Count) * 0.008f);
-
+    private void StepCrawlers()
+    {
         var edge = false;
         foreach (var crawler in Crawlers)
         {
@@ -339,10 +347,14 @@ public sealed class SpaceInvadersGame
         for (var i = Bullets.Count - 1; i >= 0; i--)
         {
             var bullet = Bullets[i];
+            var previousX = bullet.X;
+            var previousY = bullet.Y;
             bullet.X += bullet.VX * frameTime;
             bullet.Y += bullet.VY * frameTime;
-
-            if (bullet.Y < -16f || bullet.Y > GameH + 16f || bullet.X < -18f || bullet.X > GameW + 18f)
+            var collisionX = bullet.X;
+            var collisionY = bullet.Y;
+            if (!QueueMiniGameCollision.ClipPath(ref previousX, ref previousY, ref collisionX, ref collisionY,
+                    -18f, -16f, GameW + 18f, GameH + 16f))
             {
                 Bullets.RemoveAt(i);
                 continue;
@@ -350,10 +362,13 @@ public sealed class SpaceInvadersGame
 
             if (bullet.IsPlayer)
             {
-                if (TryHitCrawler(bullet) || TryHitCore(bullet))
+                if (TryHitTarget(previousX, previousY, collisionX, collisionY))
+                {
                     Bullets.RemoveAt(i);
+                    continue;
+                }
             }
-            else if (Overlaps(bullet.X, bullet.Y, 4f, 10f, PlayerX, PlayerY, PlayerW, PlayerH))
+            else if (QueueMiniGameCollision.Intersects(previousX, previousY, collisionX, collisionY, 4f, 10f, PlayerX, PlayerY, PlayerW, PlayerH))
             {
                 Bullets.RemoveAt(i);
                 Lives--;
@@ -362,7 +377,10 @@ public sealed class SpaceInvadersGame
                     EndGame();
                     return;
                 }
+                continue;
             }
+            if (bullet.Y < -16f || bullet.Y > GameH + 16f || bullet.X < -18f || bullet.X > GameW + 18f)
+                Bullets.RemoveAt(i);
         }
     }
 
@@ -375,37 +393,34 @@ public sealed class SpaceInvadersGame
         OnGameOver?.Invoke();
     }
 
-    private bool TryHitCrawler(Bullet bullet)
+    private bool TryHitTarget(float previousX, float previousY, float collisionX, float collisionY)
     {
+        var hitIndex = -1;
+        var firstHit = float.PositiveInfinity;
         for (var i = Crawlers.Count - 1; i >= 0; i--)
         {
             var crawler = Crawlers[i];
-            if (!Overlaps(bullet.X, bullet.Y, 4f, 10f, crawler.X, crawler.Y, CrawlerW, CrawlerH))
+            if (!QueueMiniGameCollision.Intersects(previousX, previousY, collisionX, collisionY, 4f, 10f,
+                    crawler.X, crawler.Y, CrawlerW, CrawlerH, out var time) || time >= firstHit)
                 continue;
-
-            Score += 10 + crawler.Type * 5 + Wave * 2;
-            OnEnemyKilled?.Invoke(crawler.X + CrawlerW / 2f, crawler.Y + CrawlerH / 2f);
-            Crawlers.RemoveAt(i);
+            hitIndex = i;
+            firstHit = time;
+        }
+        if (CoreHealth > 0 && QueueMiniGameCollision.Intersects(previousX, previousY, collisionX, collisionY, 4f, 10f,
+                CoreX, CoreY, 44f, 28f, out var coreTime) && coreTime < firstHit)
+        {
+            CoreHealth--;
+            Score += 25;
+            OnEnemyKilled?.Invoke(CoreX + 22f, CoreY + 14f);
             return true;
         }
-
-        return false;
-    }
-
-    private bool TryHitCore(Bullet bullet)
-    {
-        if (CoreHealth <= 0 || !Overlaps(bullet.X, bullet.Y, 4f, 10f, CoreX, CoreY, 44f, 28f))
+        if (hitIndex < 0)
             return false;
-
-        CoreHealth--;
-        Score += 25;
-        OnEnemyKilled?.Invoke(CoreX + 22f, CoreY + 14f);
+        var hitCrawler = Crawlers[hitIndex];
+        Score += 10 + hitCrawler.Type * 5 + Wave * 2;
+        OnEnemyKilled?.Invoke(hitCrawler.X + CrawlerW / 2f, hitCrawler.Y + CrawlerH / 2f);
+        Crawlers.RemoveAt(hitIndex);
         return true;
-    }
-
-    private static bool Overlaps(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh)
-    {
-        return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
     }
 
     public sealed class Crawler
