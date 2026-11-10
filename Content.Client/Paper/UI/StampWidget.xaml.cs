@@ -10,6 +10,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Client.Paper.UI;
 
 [GenerateTypedNameReferences]
+[Virtual] // Arcane
 public partial class StampWidget : PanelContainer // Arcane-Edit: graphical imprint extension
 {
     private static readonly ProtoId<ShaderPrototype> PaperStamp = "PaperStamp";

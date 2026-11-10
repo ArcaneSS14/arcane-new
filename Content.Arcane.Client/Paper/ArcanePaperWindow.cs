@@ -27,13 +27,14 @@ public sealed class ArcanePaperWindow : PaperWindow
     protected override Type[] AllowedMarkupTags => PaperTags;
 
     protected override FormattedMessage FormatPaperText(PaperComponent.PaperBoundUserInterfaceState state)
-        => PaperFields.ForDisplay(state.Text, state.StampedBy.Count > 0);
+        // Advanced pens can write after stamping; the server checks the current tool.
+        => PaperFields.ForDisplay(state.Text, false);
 
     protected override StampWidget CreateStampWidget(StampDisplayInfo info) => new ArcaneStampWidget { StampInfo = info };
 
     public override void Populate(PaperComponent.PaperBoundUserInterfaceState state)
     {
-        if (_state?.Text != state.Text || state.StampedBy.Count > 0)
+        if (_state?.Text != state.Text)
             CloseDialog();
         _state = state;
         base.Populate(state);
@@ -41,7 +42,7 @@ public sealed class ArcanePaperWindow : PaperWindow
 
     public void OpenField(PaperFieldKind kind, int index)
     {
-        if (_state is not { } state || state.StampedBy.Count > 0)
+        if (_state is not { } state)
             return;
         CloseDialog();
         if (kind == PaperFieldKind.Signature)

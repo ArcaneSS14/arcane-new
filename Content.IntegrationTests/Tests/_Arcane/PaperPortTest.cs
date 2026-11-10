@@ -85,6 +85,45 @@ public sealed class PaperPortTest : InteractionTest
     }
 
     [Test]
+    public async Task AdvancedPenCanFillNewFieldsAfterStamping()
+    {
+        const string content = "[form] [signature]";
+        await SpawnTarget("Paper");
+        await InteractUsing("RubberStampCaptain");
+        await PlaceInHands("CyberPen");
+        await Interact();
+        await Pair.RunUntilSynced();
+        await SendBui(PaperComponent.PaperUiKey.Key, new PaperComponent.PaperInputTextMessage(content));
+        await AssertContent(content);
+        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Form, 0, "Written", content));
+        const string remaining = "Written [signature]";
+        await AssertContent(remaining);
+        await Client.WaitAssertion(() =>
+        {
+            using var window = new ArcanePaperWindow();
+            window.Populate(new PaperComponent.PaperBoundUserInterfaceState(remaining,
+                [new StampDisplayInfo { StampedName = "sealed" }]));
+            var submitted = false;
+            window.OnFieldSubmitted += (kind, index, value, snapshot) =>
+            {
+                submitted = true;
+                Assert.That(kind, Is.EqualTo(PaperFieldKind.Signature));
+                Assert.That(snapshot, Is.EqualTo(remaining));
+            };
+            window.OpenField(PaperFieldKind.Signature, 0);
+            Assert.That(submitted, Is.True, "The client must not override the advanced pen's server permission.");
+        });
+        await PlaceInHands("Pen");
+        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Signature, 0, "", remaining));
+        await AssertContent(remaining);
+        await PlaceInHands("CyberPen");
+        await Server.WaitPost(() => SEntMan.System<MetaDataSystem>().SetEntityName(SPlayer, "Advanced Writer"));
+        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Signature, 0, "", remaining));
+        await AssertContent("Written Advanced Writer");
+        await CloseBui(PaperComponent.PaperUiKey.Key);
+    }
+
+    [Test]
     public async Task GraphicalStampsRetainTextFallbackAndChameleonState()
     {
         await SpawnTarget("RubberStampChameleon");

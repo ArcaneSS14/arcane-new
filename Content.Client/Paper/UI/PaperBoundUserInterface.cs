@@ -8,6 +8,7 @@ using static Content.Shared.Paper.PaperComponent;
 namespace Content.Client.Paper.UI;
 
 [UsedImplicitly]
+[Virtual] // Arcane
 public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: owner-local paper window factory
 {
     [ViewVariables]

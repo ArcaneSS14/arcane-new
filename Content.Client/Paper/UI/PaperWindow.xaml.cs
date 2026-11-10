@@ -16,6 +16,7 @@ using Robust.Shared.Input;
 namespace Content.Client.Paper.UI
 {
     [GenerateTypedNameReferences]
+    [Virtual] // Arcane
     public partial class PaperWindow : BaseWindow // Arcane-Edit: allow the paper-specific field renderer
     {
         [Dependency] private IInputManager _inputManager = default!;
