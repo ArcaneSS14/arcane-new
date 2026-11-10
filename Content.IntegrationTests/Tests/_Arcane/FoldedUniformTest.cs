@@ -311,6 +311,8 @@ public sealed class FoldedUniformTest : InteractionTest
         Assert.That(CEntMan.System<SpriteSystem>().LayerMapTryGet((wearer, sprite), "jumpsuit-0", out var index, false), Is.True);
         var layer = sprite[index];
         Assert.That(layer.ActualRsi, Is.Not.Null);
-        return (layer.ActualRsi!.Path.ToString(), layer.RsiState.ToString(), layer.Color, layer.Scale, sprite.AllLayers.Count());
+        var state = layer.RsiState.ToString();
+        Assert.That(state, Is.Not.Null);
+        return (layer.ActualRsi!.Path.ToString(), state!, layer.Color, layer.Scale, sprite.AllLayers.Count());
     }
 }
