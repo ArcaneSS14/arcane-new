@@ -15,8 +15,9 @@ public sealed class WaggingAvailabilityTest : InteractionTest
     private static readonly ProtoId<OrganCategoryPrototype> Tail = "Tail";
     private static readonly ProtoId<MarkingPrototype> Still = "LizardTailSmooth";
     private static readonly ProtoId<MarkingPrototype> Animated = "LizardTailSmoothAnimated";
-    private static readonly ProtoId<MarkingPrototype> ExplicitStill = "ArcaneWaggingStillTest";
-    private static readonly ProtoId<MarkingPrototype> ExplicitAnimated = "ArcaneWaggingMotionTest";
+    // These IDs belong to TestPrototypes, not the production YAML validated by static-field checks.
+    private const string ExplicitStill = "ArcaneWaggingStillTest";
+    private const string ExplicitAnimated = "ArcaneWaggingMotionTest";
     protected override string PlayerPrototype => "MobReptilian";
 
     [Test]
@@ -88,18 +89,18 @@ public sealed class WaggingAvailabilityTest : InteractionTest
         {
             var manager = Server.ResolveDependency<MarkingManager>();
             Assert.That(manager.TryGetWaggingMarking(ExplicitStill, out var mapped), Is.True);
-            Assert.That(mapped, Is.EqualTo(ExplicitAnimated.Id));
+            Assert.That(mapped, Is.EqualTo(ExplicitAnimated));
             var component = SEntMan.GetComponent<WaggingComponent>(SPlayer);
             Assert.That(component.ActionEntity, Is.Not.Null);
             var wagging = SEntMan.System<WaggingSystem>();
             Assert.That(wagging.TryToggleWagging((SPlayer, component), true), Is.True);
             var organ = SEntMan.System<BodySystem>().GetOrgan(SPlayer, Tail)!.Value;
             var marking = SEntMan.GetComponent<VisualOrganMarkingsComponent>(organ).Markings[HumanoidVisualLayers.Tail][0];
-            Assert.That(marking.MarkingId, Is.EqualTo(ExplicitAnimated));
+            Assert.That(marking.MarkingId.Id, Is.EqualTo(ExplicitAnimated));
             Assert.That(marking.MarkingColors, Is.EqualTo(new[] {Color.Red, Color.Blue}));
             Assert.That(wagging.TryToggleWagging((SPlayer, component), false), Is.True);
             marking = SEntMan.GetComponent<VisualOrganMarkingsComponent>(organ).Markings[HumanoidVisualLayers.Tail][0];
-            Assert.That(marking.MarkingId, Is.EqualTo(ExplicitStill));
+            Assert.That(marking.MarkingId.Id, Is.EqualTo(ExplicitStill));
         });
     }
 
@@ -116,6 +117,7 @@ public sealed class WaggingAvailabilityTest : InteractionTest
 - type: marking
   id: ArcaneWaggingStillTest
   bodyPart: Tail
+  groupWhitelist: []
   wagging: ArcaneWaggingMotionTest
   sprites:
   - sprite: Mobs/Customization/reptilian_parts.rsi
@@ -126,6 +128,7 @@ public sealed class WaggingAvailabilityTest : InteractionTest
 - type: marking
   id: ArcaneWaggingMotionTest
   bodyPart: Tail
+  groupWhitelist: []
   sprites:
   - sprite: Mobs/Customization/reptilian_parts.rsi
     state: tail_smooth_wagging_primary
