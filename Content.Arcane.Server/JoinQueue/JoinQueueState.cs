@@ -20,6 +20,7 @@ internal sealed class JoinQueueState<TSession> where TSession : class
         {
             entry.Session = session;
             entry.Ready = false;
+            entry.Reserved = false;
             entry.ExpiresAt = null;
             return entry;
         }
@@ -47,6 +48,7 @@ internal sealed class JoinQueueState<TSession> where TSession : class
             return false;
         entry.Session = null;
         entry.Ready = false;
+        entry.Reserved = false;
         entry.ExpiresAt = expiresAt;
         return true;
     }
@@ -60,17 +62,25 @@ internal sealed class JoinQueueState<TSession> where TSession : class
         return true;
     }
 
-    public bool TryTake(out Entry entry)
+    public bool Reserve(NetUserId user, TSession session, out Entry entry)
+    {
+        if (!_byUser.TryGetValue(user, out entry!) || !ReferenceEquals(entry.Session, session)
+            || !entry.Ready || entry.Reserved)
+            return false;
+        entry.Reserved = true;
+        return true;
+    }
+
+    public bool TryReserve(out Entry entry)
     {
         foreach (var candidate in _entries)
         {
-            if (candidate.Session == null)
+            if (candidate.Session == null || candidate.Reserved)
                 continue;
             if (!candidate.Ready)
                 break;
 
-            Remove(candidate.User, candidate.Session, out entry);
-            return true;
+            return Reserve(candidate.User, candidate.Session, out entry);
         }
         entry = null!;
         return false;
@@ -104,5 +114,6 @@ internal sealed class JoinQueueState<TSession> where TSession : class
         public TSession? Session = session;
         public TimeSpan? ExpiresAt;
         public bool Ready;
+        public bool Reserved;
     }
 }

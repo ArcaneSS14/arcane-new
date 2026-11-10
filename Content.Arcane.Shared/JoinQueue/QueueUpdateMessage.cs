@@ -31,6 +31,7 @@ public sealed class QueueUpdateMessage : NetMessage
 
     // Critter display
     public string YourName { get; set; } = string.Empty;
+    public int YourQueueWaitLeaderboardIndex { get; set; } = -1;
     public List<string> PlayerNames { get; set; } = new();
     public List<float> PlayerWaitSeconds { get; set; } = new();
     public List<string> QueueWaitLeaderboardNames { get; set; } = new();
@@ -49,6 +50,7 @@ public sealed class QueueUpdateMessage : NetMessage
         RoundDurationMinutes = buffer.ReadInt32();
 
         YourName = buffer.ReadString();
+        YourQueueWaitLeaderboardIndex = buffer.ReadInt32();
         var count = buffer.ReadInt32();
         if (count < 0 || count > MaxQueuePlayerEntries)
             throw new InvalidDataException("Queue player count out of range.");
@@ -103,6 +105,7 @@ public sealed class QueueUpdateMessage : NetMessage
         buffer.Write(RoundDurationMinutes);
 
         buffer.Write(YourName);
+        buffer.Write(YourQueueWaitLeaderboardIndex);
         var playerCount = Math.Min(Math.Min(PlayerNames.Count, PlayerWaitSeconds.Count), MaxQueuePlayerEntries);
         buffer.Write(playerCount);
         for (var i = 0; i < playerCount; i++)

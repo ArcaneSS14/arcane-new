@@ -435,6 +435,10 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void SpawnObserver(ICommonSession player)
         {
+            // Arcane-Start: direct admin callers must also wait for queue admission.
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (DummyTicker)
                 return;
 

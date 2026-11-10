@@ -38,9 +38,10 @@ public sealed partial class JoinQueueSystem : EntitySystem
     private static readonly TimeSpan ReconnectGrace = TimeSpan.FromMinutes(2);
     private static readonly TimeSpan InfoInterval = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan ScoreInterval = TimeSpan.FromSeconds(1);
+    private const int DisplayPlayerLimit = 100;
 
     private readonly JoinQueueState<ICommonSession> _queue = new();
-    private readonly Dictionary<NetUserId, ICommonSession> _pending = new();
+    private readonly Dictionary<NetUserId, PendingAdmission> _pending = new();
     private readonly Dictionary<NetUserId, Dictionary<QueueMiniGameKind, ScoreState>> _scores = new();
     private readonly Dictionary<NetUserId, string> _scoreNames = new();
     private readonly Dictionary<NetUserId, WaitRecord> _waits = new();
@@ -49,10 +50,11 @@ public sealed partial class JoinQueueSystem : EntitySystem
     private TimeSpan _nextScoreBroadcast;
     private TimeSpan _nextPrune;
     private bool _scoresDirty;
+    private bool _queueDirty;
     private bool _enabled;
     private bool _shutdown;
 
-    internal int PlayerInQueueCount => _queue.Entries.Count(e => e.Session != null);
+    internal int PlayerInQueueCount => _queue.Entries.Count(e => e.Session != null && !e.Reserved);
     internal int ActualPlayersCount => _players.Sessions.Count(IsAdmitted);
     internal double AverageQueueWait => _recentWaits.Count > 0 ? _recentWaits.Average() : -1;
 
@@ -91,10 +93,11 @@ public sealed partial class JoinQueueSystem : EntitySystem
         var now = _timing.RealTime;
         if (now >= _nextPrune)
         {
-            _queue.Prune(now);
+            if (_queue.Prune(now))
+                _queueDirty = true;
             _nextPrune = now + ScoreInterval;
         }
-        if (now < _nextInfo && (!_scoresDirty || now < _nextScoreBroadcast))
+        if (now < _nextScoreBroadcast || now < _nextInfo && !_scoresDirty && !_queueDirty)
             return;
         SendUpdates();
     }
@@ -105,7 +108,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
             return;
         _queue.Connect(args.Session.UserId, args.Session, _timing.RealTime);
         args.Deferred = true;
-        SendUpdates();
+        QueueChanged();
     }
 
     private void OnCountRequested(ref GetAdmittedPlayerCountEvent args)
@@ -143,7 +146,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
             return;
         if (!_queue.MarkReady(session.UserId, session))
             return;
-        if (privileged && _queue.Remove(session.UserId, session, out var entry))
+        if (privileged && _queue.Reserve(session.UserId, session, out var entry))
             Admit(entry, countTowardsEstimate: false);
         ProcessQueue();
     }
@@ -154,19 +157,26 @@ public sealed partial class JoinQueueSystem : EntitySystem
         if (args.NewStatus == SessionStatus.Disconnected)
         {
             _queue.Disconnect(session.UserId, session, _timing.RealTime + ReconnectGrace);
-            if (_pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending, session))
+            if (_pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending.Session, session))
                 _pending.Remove(session.UserId);
             ClearScores(session.UserId);
             ProcessQueue();
         }
         else if (args.NewStatus == SessionStatus.InGame)
         {
+            var hasPending = _pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending.Session, session);
             if (_queue.Remove(session.UserId, session, out var queued))
             {
                 RecordWait(queued);
+                if (hasPending && pending.CountTowardsEstimate)
+                {
+                    _recentWaits.Enqueue(WaitSeconds(queued));
+                    while (_recentWaits.Count > 20)
+                        _recentWaits.Dequeue();
+                }
                 ClearScores(session.UserId);
             }
-            if (_pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending, session))
+            if (hasPending)
                 _pending.Remove(session.UserId);
             ProcessQueue();
         }
@@ -184,6 +194,8 @@ public sealed partial class JoinQueueSystem : EntitySystem
         }
         var sessions = _queue.Entries.Select(e => e.Session).OfType<ICommonSession>().ToArray();
         _queue.Clear();
+        _pending.Clear();
+        QueueChanged();
         foreach (var session in sessions)
         {
             ClearScores(session.UserId);
@@ -197,7 +209,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
 
     private bool IsAdmitted(ICommonSession session) => session.Status == SessionStatus.InGame
         || session.Status == SessionStatus.Connected
-        && _pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending, session);
+        && _pending.TryGetValue(session.UserId, out var pending) && ReferenceEquals(pending.Session, session);
 
     private int CountedPlayers() => _players.Sessions.Count(session => IsAdmitted(session)
         && (_cfg.GetCVar(CCVars.AdminsCountForMaxPlayers) || !_admins.IsAdmin(session)));
@@ -209,39 +221,39 @@ public sealed partial class JoinQueueSystem : EntitySystem
         _queue.Prune(_timing.RealTime);
         var count = CountedPlayers();
         var maximum = Math.Max(0, _cfg.GetCVar(CCVars.SoftMaxPlayers));
-        while (count < maximum && _queue.TryTake(out var entry))
+        while (count < maximum && _queue.TryReserve(out var entry))
         {
-            if (entry.Session is not { } session || !IsCurrentConnected(session) || !Admit(entry, countTowardsEstimate: true))
+            if (entry.Session is not { } session)
+                continue;
+            if (!IsCurrentConnected(session))
+            {
+                _queue.Disconnect(entry.User, session, _timing.RealTime + ReconnectGrace);
+                continue;
+            }
+            if (!Admit(entry, countTowardsEstimate: true))
                 continue;
             if (_cfg.GetCVar(CCVars.AdminsCountForMaxPlayers) || !_admins.IsAdmin(session))
                 count++;
         }
-        SendUpdates();
+        QueueChanged();
     }
 
     private bool Admit(JoinQueueState<ICommonSession>.Entry entry, bool countTowardsEstimate)
     {
         if (entry.Session is not { } session || !IsCurrentConnected(session)
-            || _pending.TryGetValue(session.UserId, out var existing) && ReferenceEquals(existing, session))
+            || _pending.TryGetValue(session.UserId, out var existing) && ReferenceEquals(existing.Session, session))
             return false;
 
-        var waited = WaitSeconds(entry);
-        RecordWait(entry);
-        if (countTowardsEstimate)
-        {
-            _recentWaits.Enqueue(waited);
-            while (_recentWaits.Count > 20)
-                _recentWaits.Dequeue();
-        }
-        ClearScores(session.UserId);
-        _pending[session.UserId] = session;
+        _pending[session.UserId] = new PendingAdmission(session, countTowardsEstimate);
         Timer.Spawn(0, () =>
         {
-            if (_shutdown || !_pending.TryGetValue(session.UserId, out var current) || !ReferenceEquals(current, session))
+            if (_shutdown || !_pending.TryGetValue(session.UserId, out var current) || !ReferenceEquals(current.Session, session))
                 return;
             if (!IsCurrentConnected(session))
             {
                 _pending.Remove(session.UserId);
+                _queue.Disconnect(session.UserId, session, _timing.RealTime + ReconnectGrace);
+                ProcessQueue();
                 return;
             }
             // Keep the reservation until the synchronous InGame status event takes over the count.
@@ -263,12 +275,20 @@ public sealed partial class JoinQueueSystem : EntitySystem
         _waits[entry.User] = new WaitRecord(session.Name, waited);
     }
 
+    private readonly record struct PendingAdmission(ICommonSession Session, bool CountTowardsEstimate);
+
+    private void QueueChanged()
+    {
+        // Admission snapshots are used off-thread by connection/status checks; do not throttle them with UI updates.
+        _ticker.GetAdmittedPlayerCount();
+        _queueDirty = true;
+    }
+
     private void SendUpdates()
     {
         if (_shutdown || !_enabled)
             return;
-        _ticker.GetAdmittedPlayerCount();
-        var entries = _queue.Entries.Where(e => e.Session is { } session && IsCurrentConnected(session)).ToArray();
+        var entries = _queue.Entries.Where(e => !e.Reserved && e.Session is { } session && IsCurrentConnected(session)).ToArray();
         foreach (var entry in entries)
             RecordWait(entry);
         var longest = _waits.OrderByDescending(p => p.Value.Seconds).Take(100).ToArray();
@@ -280,8 +300,8 @@ public sealed partial class JoinQueueSystem : EntitySystem
                     _waits.Remove(user);
         }
 
-        var names = entries.Select(e => e.Session!.Name).Take(1000).ToList();
-        var waits = entries.Take(1000).Select(e => (float) WaitSeconds(e)).ToList();
+        var names = entries.Select(e => e.Session!.Name).Take(DisplayPlayerLimit).ToList();
+        var waits = entries.Take(DisplayPlayerLimit).Select(e => (float) WaitSeconds(e)).ToList();
         var board = BuildScores();
         var average = AverageQueueWait;
         var preset = _ticker.Decoy ?? _ticker.CurrentPreset ?? _ticker.Preset;
@@ -311,10 +331,12 @@ public sealed partial class JoinQueueSystem : EntitySystem
                 PlayerWaitSeconds = waits,
                 QueueWaitLeaderboardNames = leaderboardNames,
                 QueueWaitLeaderboardSeconds = leaderboardSeconds,
+                YourQueueWaitLeaderboardIndex = Array.FindIndex(longest, p => p.Key == session.UserId),
                 MiniGameLeaderboard = board,
             });
         }
         _scoresDirty = false;
+        _queueDirty = false;
         _nextInfo = _timing.RealTime + InfoInterval;
         _nextScoreBroadcast = _timing.RealTime + ScoreInterval;
     }
@@ -362,7 +384,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
         QueueMiniGameKind.Gyruss => int.MaxValue,
         QueueMiniGameKind.GoGoShitcurity => int.MaxValue,
         // Seven fixed waves, including every crawler and every hit on their cores.
-        QueueMiniGameKind.SpaceInvaders => 6535,
+        QueueMiniGameKind.SpaceInvaders => 6480,
         _ => 0,
     };
 

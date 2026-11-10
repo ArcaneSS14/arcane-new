@@ -9,6 +9,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Audio.Sources;
+using Robust.Shared.Localization;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
 using System.Numerics;
@@ -21,6 +22,7 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
     [Dependency] private IClientNetManager _net = default!;
     [Dependency] private IAudioManager _audioManager = default!;
     [Dependency] private IResourceCache _cache = default!;
+    [Dependency] private ILocalizationManager _localization = default!;
 
     private static readonly Random Random = new();
     private static readonly QueueMiniGameKind[] MiniGameKinds = Enum.GetValues<QueueMiniGameKind>();
@@ -41,6 +43,7 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
     private int _lastHudScore = int.MinValue;
     private int _lastHudLives = int.MinValue;
     private int _lastHudWave = int.MinValue;
+    private string? _lastHudCultureName;
     private float _loadTimer;
 
     private IAudioSource? _musicSource;
@@ -127,6 +130,13 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
         MuteButton.Text = Loc.GetString(_muted ? "queue-minigame-unmute" : "queue-minigame-mute");
         if (_musicSource != null)
             _musicSource.Gain = _muted ? 0f : MusicGain;
+
+        if (_muted)
+        {
+            StopEffectSources(_shootSources);
+            StopEffectSources(_killSources);
+            StopEffectSources(_gameoverSources);
+        }
     }
 
     private void PlayEffect(IAudioSource?[] sources, ref int sourceIndex)
@@ -174,6 +184,15 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
             WaveLabel.Text = string.Empty;
             LivesLabel.Text = string.Empty;
             return;
+        }
+
+        var cultureName = _localization.DefaultCulture?.Name;
+        if (_lastHudCultureName != cultureName)
+        {
+            _lastHudCultureName = cultureName;
+            _lastHudScore = int.MinValue;
+            _lastHudLives = int.MinValue;
+            _lastHudWave = int.MinValue;
         }
 
         if (_lastHudScore != _currentScoreSource.Score)
@@ -282,6 +301,12 @@ public sealed partial class QueueMiniGameHostControl : BoxContainer
         _killSources = [];
         DisposeEffectSources(_gameoverSources);
         _gameoverSources = [];
+    }
+
+    private static void StopEffectSources(IAudioSource?[] sources)
+    {
+        foreach (var source in sources)
+            source?.StopPlaying();
     }
 
     private static void DisposeEffectSources(IAudioSource?[] sources)

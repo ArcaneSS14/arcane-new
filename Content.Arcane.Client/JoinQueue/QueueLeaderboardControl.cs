@@ -115,7 +115,7 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
     private readonly List<QueueWaitEntry> _queueWaitTimes = [];
     private readonly List<(Label Name, Label Time)> _queueRows = [];
 
-    private string _yourName = string.Empty;
+    private int _yourIndex = -1;
 
     public QueueTimeLeaderboardControl()
     {
@@ -143,15 +143,18 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
         }
     }
 
-    public void UpdateQueuePlayers(IReadOnlyList<string> playerNames, IReadOnlyList<float> playerWaitSeconds, string yourName)
+    public void UpdateQueuePlayers(IReadOnlyList<string> playerNames, IReadOnlyList<float> playerWaitSeconds, int yourIndex)
     {
-        _yourName = yourName;
+        _yourIndex = yourIndex;
         _queueWaitTimes.Clear();
 
         for (var i = 0; i < playerNames.Count; i++)
         {
             var name = playerNames[i];
             var waitSeconds = i < playerWaitSeconds.Count ? playerWaitSeconds[i] : 0f;
+            if (!float.IsFinite(waitSeconds) || waitSeconds < 0f || (double) waitSeconds > int.MaxValue)
+                continue;
+
             _queueWaitTimes.Add(new QueueWaitEntry(name, waitSeconds, i));
         }
 
@@ -177,7 +180,7 @@ public sealed class QueueTimeLeaderboardControl : BoxContainer
             }
 
             var entry = rankedPlayers[i];
-            var displayName = entry.Name == _yourName
+            var displayName = entry.QueueIndex == _yourIndex
                 ? Loc.GetString("queue-leaderboard-you", ("name", entry.Name))
                 : entry.Name;
 

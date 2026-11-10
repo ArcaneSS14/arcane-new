@@ -54,6 +54,7 @@ public sealed class GyrussGame
         Wave = 0;
         GameOver = false;
         Victory = false;
+        _shootTimer = 0f;
         Bullets.Clear();
         Enemies.Clear();
         StartNextWave();
@@ -189,21 +190,20 @@ public sealed class GyrussGame
         for (var i = Bullets.Count - 1; i >= 0; i--)
         {
             var bullet = Bullets[i];
+            var previousRadius = bullet.Radius;
             bullet.Radius += bullet.RadialSpeed * dt;
-
-            if (bullet.Radius < InnerRadius - 12f || bullet.Radius > PlayerRadius + 18f)
-            {
-                Bullets.RemoveAt(i);
-                continue;
-            }
 
             if (bullet.IsPlayer)
             {
-                if (TryHitEnemy(bullet))
+                if (TryHitEnemy(bullet, previousRadius, dt))
+                {
                     Bullets.RemoveAt(i);
+                    continue;
+                }
             }
             else if (MathF.Abs(AngleDelta(bullet.Angle, PlayerAngle)) < 0.13f &&
-                     MathF.Abs(bullet.Radius - PlayerRadius) < 10f)
+                     Math.Min(previousRadius, bullet.Radius) < PlayerRadius + 10f &&
+                     Math.Max(previousRadius, bullet.Radius) > PlayerRadius - 10f)
             {
                 Bullets.RemoveAt(i);
                 Lives--;
@@ -212,7 +212,11 @@ public sealed class GyrussGame
                     EndGame();
                     return;
                 }
+                continue;
             }
+
+            if (bullet.Radius < InnerRadius - 12f || bullet.Radius > PlayerRadius + 18f)
+                Bullets.RemoveAt(i);
         }
     }
 
@@ -225,23 +229,36 @@ public sealed class GyrussGame
         OnGameOver?.Invoke();
     }
 
-    private bool TryHitEnemy(Bullet bullet)
+    private bool TryHitEnemy(Bullet bullet, float previousRadius, float dt)
     {
+        var hitIndex = -1;
+        var firstHit = float.PositiveInfinity;
         for (var i = Enemies.Count - 1; i >= 0; i--)
         {
             var enemy = Enemies[i];
-            if (MathF.Abs(AngleDelta(bullet.Angle, enemy.Angle)) > EnemyHitAngle ||
-                MathF.Abs(bullet.Radius - enemy.Radius) > EnemyHitRadius)
-                continue;
-
-            Score += 20 + Wave * 8 + enemy.Kind * 5;
-            var point = PolarToPoint(enemy.Angle, enemy.Radius);
-            OnEnemyKilled?.Invoke(point.X, point.Y);
-            Enemies.RemoveAt(i);
-            return true;
+            var previousAngle = AngleDelta(bullet.Angle, enemy.Angle - enemy.AngularSpeed * dt);
+            var angle = previousAngle - enemy.AngularSpeed * dt;
+            var radius = previousRadius - (enemy.Radius - enemy.RadialSpeed * dt);
+            var endRadius = bullet.Radius - enemy.Radius;
+            // Work in relative polar coordinates so both radial and angular enemy motion are included.
+            for (var wrap = -1; wrap <= 1; wrap++)
+            {
+                if (!QueueMiniGameCollision.Intersects(previousAngle + wrap * Tau, radius,
+                    angle + wrap * Tau, endRadius, 0f, 0f,
+                    -EnemyHitAngle, -EnemyHitRadius, EnemyHitAngle * 2f, EnemyHitRadius * 2f, out var time) || time >= firstHit)
+                    continue;
+                hitIndex = i;
+                firstHit = time;
+            }
         }
-
-        return false;
+        if (hitIndex < 0)
+            return false;
+        var hitEnemy = Enemies[hitIndex];
+        Score += 20 + Wave * 8 + hitEnemy.Kind * 5;
+        var point = PolarToPoint(hitEnemy.Angle, hitEnemy.Radius);
+        OnEnemyKilled?.Invoke(point.X, point.Y);
+        Enemies.RemoveAt(hitIndex);
+        return true;
     }
 
     public static (float X, float Y) PolarToPoint(float angle, float radius)
