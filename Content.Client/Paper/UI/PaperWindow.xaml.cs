@@ -16,7 +16,7 @@ using Robust.Shared.Input;
 namespace Content.Client.Paper.UI
 {
     [GenerateTypedNameReferences]
-    public sealed partial class PaperWindow : BaseWindow
+    public partial class PaperWindow : BaseWindow // Arcane-Edit: allow the paper-specific field renderer
     {
         [Dependency] private IInputManager _inputManager = default!;
         [Dependency] private IResourceCache _resCache = default!;
@@ -244,15 +244,14 @@ namespace Content.Client.Paper.UI
         ///     Initialize the paper contents, i.e. the text typed by the
         ///     user and any stamps that have peen put on the page.
         /// </summary>
-        public void Populate(PaperComponent.PaperBoundUserInterfaceState state)
+        public virtual void Populate(PaperComponent.PaperBoundUserInterfaceState state) // Arcane-Edit
         {
             bool isEditing = state.Mode == PaperComponent.PaperAction.Write;
             bool wasEditing = InputContainer.Visible;
             InputContainer.Visible = isEditing;
             EditButtons.Visible = isEditing;
 
-            var msg = new FormattedMessage();
-            msg.AddMarkupPermissive(state.Text);
+            var msg = FormatPaperText(state); // Arcane-Edit: owner-specific paper markup
 
             // For premade documents, we want to be able to edit them rather than
             // replace them.
@@ -272,7 +271,7 @@ namespace Content.Client.Paper.UI
             {
                 msg.AddMarkupPermissive("\r\n");
             }
-            WrittenTextLabel.SetMessage(msg, UserFormattableTags.BaseAllowedTags, _writtenTextColor);
+            WrittenTextLabel.SetMessage(msg, AllowedMarkupTags, _writtenTextColor); // Arcane-Edit
 
             WrittenTextLabel.Visible = !isEditing && state.Text.Length > 0;
             BlankPaperIndicator.Visible = !isEditing && state.Text.Length == 0;
@@ -281,9 +280,18 @@ namespace Content.Client.Paper.UI
             StampDisplay.RemoveStamps();
             foreach(var stamper in state.StampedBy)
             {
-                StampDisplay.AddStamp(new StampWidget{ StampInfo = stamper });
+                StampDisplay.AddStamp(CreateStampWidget(stamper)); // Arcane-Edit
             }
         }
+
+        // Arcane-Start
+        protected virtual Type[] AllowedMarkupTags => UserFormattableTags.BaseAllowedTags;
+
+        protected virtual FormattedMessage FormatPaperText(PaperComponent.PaperBoundUserInterfaceState state)
+            => FormattedMessage.FromMarkupPermissive(state.Text);
+
+        protected virtual StampWidget CreateStampWidget(StampDisplayInfo info) => new() { StampInfo = info };
+        // Arcane-End
 
         /// <summary>
         ///     BaseWindow interface. Allow users to drag UI around by grabbing

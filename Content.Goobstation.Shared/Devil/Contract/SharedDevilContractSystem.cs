@@ -94,6 +94,13 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
 
     private void OnSignAttempt(Entity<DevilContractComponent> contract, ref SignAttemptEvent args)
     {
+        // Arcane-Start
+        if (contract.Comp.IsContractFullySigned)
+        {
+            args.Cancelled = true;
+            return;
+        }
+        // Arcane-End
         // Make sure that weight is set properly!
         UpdateContractWeight(contract);
 
@@ -144,6 +151,10 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
 
     private void OnSigned(Entity<DevilContractComponent> contract, ref PaperSignedEvent args)
     {
+        // Arcane-Start
+        if (contract.Comp.IsContractFullySigned)
+            return;
+        // Arcane-End
         // Determine signing phase
         if (!contract.Comp.IsVictimSigned)
             HandleVictimSign(contract, args.User);

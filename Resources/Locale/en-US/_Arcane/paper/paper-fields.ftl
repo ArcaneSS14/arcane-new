@@ -1,0 +1,8 @@
+paper-field-fill = Fill
+paper-field-sign = Sign
+paper-field-dialog-title = Fill in the document
+paper-field-too-long = This entry is too long.
+paper-field-save = Save
+paper-field-cancel = Cancel
+paper-field-rejected = You cannot fill that field now. Check your pen and the current document.
+paper-field-help = Use [form] for a text field, [check] for a checkbox, or [signature] for a signature. Fill fields while holding a pen. Stamping finalizes the document.

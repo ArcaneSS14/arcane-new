@@ -1,0 +1,97 @@
+# Graphical UI stamps only; existing world sprites, ink colors and distribution are preserved.
+
+- type: entity
+  id: RubberStampCaptain
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-cap.png
+
+- type: entity
+  id: RubberStampCentcom
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-centcom.png
+
+- type: entity
+  id: RubberStampChaplain
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-chap.png
+
+- type: entity
+  id: RubberStampLawyer
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-law.png
+
+- type: entity
+  id: RubberStampClown
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-clown.png
+
+- type: entity
+  id: RubberStampCE
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-ce.png
+
+- type: entity
+  id: RubberStampCMO
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-cmo.png
+
+- type: entity
+  id: RubberStampHop
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-hop.png
+
+- type: entity
+  id: RubberStampHos
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-hos.png
+
+- type: entity
+  id: RubberStampMime
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-mime.png
+
+- type: entity
+  id: RubberStampQm
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-qm.png
+
+- type: entity
+  id: RubberStampRd
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-rd.png
+
+- type: entity
+  id: RubberStampSyndicate
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-syndicate.png
+
+- type: entity
+  id: RubberStampApproved
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-ok.png
+
+- type: entity
+  id: RubberStampDenied
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-deny.png
+
+- type: entity
+  id: RubberStampNanorep
+  components:
+  - type: Stamp
+    stampLargeIcon: _Arcane/Interface/Paper/Stamps/large_stamp-centcom.png

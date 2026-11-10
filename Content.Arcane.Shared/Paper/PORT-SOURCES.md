@@ -1,0 +1,11 @@
+# Paper fields and graphical stamps
+
+Adapted from Goob-Station/Goob-Station at `cc1d2c911f5cb6c90b36e0899ce918010bd41262`:
+
+- [Goob #6400](https://github.com/Goob-Station/Goob-Station/pull/6400), commit `6e1a401d729c942ab506f9dbf7bc81e69e719333`, by madeline-celeste, changelog credit **rivermyth**. Source behavior: `Content.Shared/Paper/PaperSystem.cs`, `Content.Client/Paper/UI/PaperWindow.xaml.cs`, and `_Starlight/UserInterface/RichText/{FormTagHandler,CheckTagHandler,SignatureTagHandler}.cs` in the client project.
+- Its stated sources are [Starlight #1234](https://github.com/ss14Starlight/space-station-14/pull/1234), by RHSvenson with **STARLIGHT TEAM / Yagwog** credits; [RMC #7051](https://github.com/RMC-14/RMC-14/pull/7051), by yagwog; and [Space Wizards #38704](https://github.com/space-wizards/space-station-14/pull/38704), by yagwog.
+- [Goob #6175](https://github.com/Goob-Station/Goob-Station/pull/6175), commit `181d900ca35d6c7cff5fc43728b64a622d0ce530`, PR account **jorgun**, Git author **fishbait**. Source behavior: optional graphical stamp data and paper UI imprints. That PR describes its framework as a port from Impstation. No new Hamlet stamping ability or extra font is included here.
+
+The Goob source is distributed under AGPL-3.0-or-later. Existing notices on inherited paper UI files remain intact. These adaptations retain the repository's code license; no assets are relicensed. The unchanged TG stamp images, their CC BY-SA 3.0 attribution and exact primary source are documented separately in `Resources/Textures/_Arcane/Interface/Paper/Stamps/PORT-SOURCES.md` and `attributions.yml`.
+
+Arcane adaptations use the existing Paper, Stamp, Signature and Chameleon owners. Field requests carry a single field intent and the viewed document snapshot; the server checks the current tool, access, editable state, signature permissions and final length. Filled values are escaped as text. Indices belong to a document, with no global UI counters or author-supplied control indices. The existing Trauma signing verb remains available, including contract signature events; a completed Devil contract cannot be applied again by signing it again. Graphical imprints are copied as stamp-time snapshots, and stamps without an image retain the existing text rendering.

@@ -8,7 +8,7 @@ using static Content.Shared.Paper.PaperComponent;
 namespace Content.Client.Paper.UI;
 
 [UsedImplicitly]
-public sealed class PaperBoundUserInterface : BoundUserInterface
+public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: owner-local paper window factory
 {
     [ViewVariables]
     private PaperWindow? _window;
@@ -21,7 +21,7 @@ public sealed class PaperBoundUserInterface : BoundUserInterface
     {
         base.Open();
 
-        _window = this.CreateWindow<PaperWindow>();
+        _window = CreatePaperWindow(); // Arcane-Edit
         _window.OnSaved += InputOnTextEntered;
 
         if (EntMan.TryGetComponent<PaperComponent>(Owner, out var paper))
@@ -33,6 +33,8 @@ public sealed class PaperBoundUserInterface : BoundUserInterface
             _window.InitVisuals(Owner, visuals);
         }
     }
+
+    protected virtual PaperWindow CreatePaperWindow() => this.CreateWindow<PaperWindow>(); // Arcane
 
     protected override void UpdateState(BoundUserInterfaceState state)
     {
