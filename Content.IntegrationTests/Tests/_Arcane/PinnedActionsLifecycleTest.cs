@@ -41,7 +41,7 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
         await Server.WaitAssertion(() =>
         {
             Assert.That(ServerSession!.ContentData()!.PinnedActions.ContainsKey("ActionToggleLight"), Is.True);
-            Assert.That(ServerSession.ContentData()!.PinnedActions["ActionToggleLight"], Is.EqualTo(PinnedSlot));
+            Assert.That(ServerSession!.ContentData()!.PinnedActions["ActionToggleLight"], Is.EqualTo(PinnedSlot));
             var body = SEntMan.SpawnEntity("MobHuman", SEntMan.GetCoordinates(PlayerCoords));
             SEntMan.System<SharedMindSystem>().TransferTo(mind, body);
         });
