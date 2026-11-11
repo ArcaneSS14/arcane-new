@@ -82,9 +82,9 @@ public sealed class ChaplainPortTest : InteractionTest
             ownForms = SEntMan.GetComponent<NullrodBindingComponent>(_owner).Forms.ToArray();
             Assert.That(ownForms, Has.Length.EqualTo(2));
             Assert.That(ownForms.Select(Prototype), Is.EquivalentTo(new[] { "WeaponPistolCasul", "WeaponPistolJackal" }));
-            var other = Spawn("InteractionTestMob");
+            var other = SpawnNearby("InteractionTestMob");
             otherMind = CreateChaplain(other);
-            var extra = Spawn("Nullrod");
+            var extra = SpawnNearby("Nullrod");
             Assert.That(HandSys.TryPickupAnyHand(other, extra), Is.True);
             var coords = SEntMan.GetComponent<TransformComponent>(STarget!.Value).Coordinates;
             InteractSys.UserInteraction(other, coords, STarget.Value);
@@ -108,7 +108,7 @@ public sealed class ChaplainPortTest : InteractionTest
                 Assert.That(HandSys.IsHolding(SPlayer, form), Is.False);
                 Assert.That(Recall.TryBind(SPlayer, form), Is.False);
             }
-            Assert.That(Recall.TryBind(SPlayer, Spawn("Nullrod")), Is.False);
+            Assert.That(Recall.TryBind(SPlayer, SpawnNearby("Nullrod")), Is.False);
             Assert.That(Recall.TryStartRecall(SPlayer, STarget.Value), Is.False, "Full hands cannot start another recall.");
         });
     }
@@ -153,7 +153,7 @@ public sealed class ChaplainPortTest : InteractionTest
         EntityUid rod = default;
         await Server.WaitAssertion(() =>
         {
-            rod = Spawn("Nullrod");
+            rod = SpawnNearby("Nullrod");
             Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
             PutInNestedContainer(rod);
             Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
@@ -182,11 +182,11 @@ public sealed class ChaplainPortTest : InteractionTest
         EntityUid newBody = default;
         await Server.WaitAssertion(() =>
         {
-            rod = Spawn("Nullrod");
+            rod = SpawnNearby("Nullrod");
             Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
             PutInNestedContainer(rod);
             Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-            newBody = Spawn("InteractionTestMob");
+            newBody = SpawnNearby("InteractionTestMob");
             SEntMan.EnsureComponent<BibleUserComponent>(newBody);
             SEntMan.System<SharedMindSystem>().TransferTo(_owner, newBody, createGhost: false);
             CreateChaplain(SPlayer);
@@ -213,7 +213,7 @@ public sealed class ChaplainPortTest : InteractionTest
         EntityUid rod = default;
         await Server.WaitAssertion(() =>
         {
-            rod = Spawn(prototype);
+            rod = SpawnNearby(prototype);
             var restriction = SEntMan.GetComponent<UnremoveableComponent>(rod);
             restriction.DeleteOnDrop = deleteOnDrop;
             SEntMan.Dirty(rod, restriction);
@@ -241,9 +241,9 @@ public sealed class ChaplainPortTest : InteractionTest
         EntityUid victim = default;
         await Server.WaitAssertion(() =>
         {
-            rod = Spawn("RatvarianSpear");
+            rod = SpawnNearby("RatvarianSpear");
             Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
-            victim = Spawn("CrateGenericSteel");
+            victim = SpawnNearby("CrateGenericSteel");
             var embedded = SEntMan.GetComponent<EmbeddableProjectileComponent>(rod);
             embedded.DeleteOnRemove = deleteOnRemove;
             var thrown = SEntMan.EnsureComponent<ThrownItemComponent>(rod);
@@ -270,7 +270,7 @@ public sealed class ChaplainPortTest : InteractionTest
         EntityUid rod = default;
         await Server.WaitAssertion(() =>
         {
-            rod = Spawn("BlessingOfTheReaper");
+            rod = SpawnNearby("BlessingOfTheReaper");
             Assert.That(SEntMan.HasComponent<NullrodRecallBlockedComponent>(rod), Is.True);
             Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
             Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
@@ -372,7 +372,7 @@ public sealed class ChaplainPortTest : InteractionTest
     {
         await Server.WaitAssertion(() =>
         {
-            var beacon = Spawn("ChaplainUndeterminedBible");
+            var beacon = SpawnNearby("ChaplainUndeterminedBible");
             var sets = SEntMan.GetComponent<SetSelectorComponent>(beacon).AvailableSets;
             Assert.That(sets, Has.Count.EqualTo(13));
             Assert.That(sets.Distinct().Count(), Is.EqualTo(13));
@@ -382,7 +382,7 @@ public sealed class ChaplainPortTest : InteractionTest
                 Assert.That(set.Content, Has.Count.EqualTo(1));
                 var prototype = SProtoMan.Index<EntityPrototype>(set.Content.Single());
                 Assert.That(prototype.Abstract, Is.False, $"{id} must be selectable.");
-                var book = Spawn(set.Content.Single());
+                var book = SpawnNearby(set.Content.Single());
                 Assert.That(SEntMan.HasComponent<BibleComponent>(book), Is.True);
             }
             foreach (var id in new[] { "VisitorChaplain", "VisitorChaplainAlt" })
@@ -454,7 +454,7 @@ public sealed class ChaplainPortTest : InteractionTest
     }
 
     private NullrodRecallSystem Recall => SEntMan.System<NullrodRecallSystem>();
-    private EntityUid Spawn(string prototype) => SEntMan.SpawnEntity(prototype, SEntMan.GetCoordinates(PlayerCoords));
+    private EntityUid SpawnNearby(string prototype) => SEntMan.SpawnEntity(prototype, SEntMan.GetCoordinates(PlayerCoords));
     private string? Prototype(EntityUid uid) => SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID;
 
     private EntityUid CreateChaplain(EntityUid body)
@@ -470,8 +470,8 @@ public sealed class ChaplainPortTest : InteractionTest
     private void PutInNestedContainer(EntityUid item)
     {
         var containers = SEntMan.System<SharedContainerSystem>();
-        var outer = Spawn("TestArcaneRecallContainer");
-        var inner = Spawn("TestArcaneRecallContainer");
+        var outer = SpawnNearby("TestArcaneRecallContainer");
+        var inner = SpawnNearby("TestArcaneRecallContainer");
         Assert.That(containers.Insert(inner, containers.EnsureContainer<Container>(outer, "outer")), Is.True);
         Assert.That(containers.Insert(item, containers.EnsureContainer<Container>(inner, "inner")), Is.True);
     }
