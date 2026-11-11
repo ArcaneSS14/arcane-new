@@ -35,6 +35,7 @@ public sealed partial class GlowHaloOverlay : Overlay
     private static readonly ProtoId<ShaderPrototype> LightHaloShader = "LightGlowHalo";
 
     private const int QualityStrong = 2;
+    private const int HaloMargin = 6;
 
     /// <summary>
     /// Finding glow sprites means checking every sprite or light around the view, so it isn't done
@@ -147,24 +148,27 @@ public sealed partial class GlowHaloOverlay : Overlay
         var handle = args.WorldHandle;
         if (_strong)
         {
-            DrawLayers(handle, _unshadedHalo, _glowLayers);
-            DrawLayers(handle, _lightHalo, _lampLayers);
+            DrawLayers(handle, _unshadedHalo, _glowLayers, HaloMargin);
+            DrawLayers(handle, _lightHalo, _lampLayers, HaloMargin);
         }
 
-        DrawLayers(handle, _strong ? _lamp : _plainLamp, _lampLayers);
+        DrawLayers(handle, _strong ? _lamp : _plainLamp, _lampLayers, 0);
 
         handle.UseShader(null);
         handle.SetTransform(Matrix3x2.Identity);
     }
 
-    private static void DrawLayers(DrawingHandleWorld handle, ShaderInstance shader, List<(Matrix3x2 Matrix, Texture Texture, Color Color)> layers)
+    /// <param name="margin">Texels to draw past the frame on every side, room for a halo to spread into.</param>
+    private static void DrawLayers(DrawingHandleWorld handle, ShaderInstance shader, List<(Matrix3x2 Matrix, Texture Texture, Color Color)> layers, int margin)
     {
         handle.UseShader(shader);
         foreach (var layer in layers)
         {
-            var size = layer.Texture.Size / (float) EyeManager.PixelsPerMeter;
+            var texture = layer.Texture;
+            var size = (texture.Size + new Vector2i(margin * 2, margin * 2)) / (float) EyeManager.PixelsPerMeter;
+            var region = new UIBox2(-margin, -margin, texture.Width + margin, texture.Height + margin);
             handle.SetTransform(layer.Matrix);
-            handle.DrawTextureRect(layer.Texture, Box2.FromDimensions(size / -2, size), layer.Color);
+            handle.DrawTextureRectRegion(texture, Box2.FromDimensions(size / -2, size), layer.Color, region);
         }
     }
 
