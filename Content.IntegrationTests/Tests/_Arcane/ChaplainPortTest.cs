@@ -146,6 +146,41 @@ public sealed class ChaplainPortTest : InteractionTest
         });
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task AltarRejectsAnotherOwnersFormAndASecondBindingWithoutReplacingAnything(bool otherChaplain)
+    {
+        await SpawnTarget("AltarTechnology");
+        EntityUid bound = default;
+        EntityUid used = default;
+        await Server.WaitAssertion(() =>
+        {
+            bound = SpawnNearby("Nullrod");
+            Assert.That(Recall.TryBind(SPlayer, bound), Is.True);
+            var actor = SPlayer;
+            used = bound;
+            if (otherChaplain)
+            {
+                actor = SpawnNearby("InteractionTestMob");
+                CreateChaplain(actor);
+            }
+            else
+                used = SpawnNearby("Nullrod");
+            Assert.That(HandSys.TryPickupAnyHand(actor, used), Is.True);
+            var coords = SEntMan.GetComponent<TransformComponent>(STarget!.Value).Coordinates;
+            InteractSys.UserInteraction(actor, coords, STarget.Value);
+        });
+        await RunTicks(3);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(bound), Is.True);
+            Assert.That(SEntMan.EntityExists(used), Is.True);
+            Assert.That(SEntMan.GetComponent<BoundNullrodComponent>(bound).Mind, Is.EqualTo(_owner));
+            Assert.That(SEntMan.GetComponent<NullrodBindingComponent>(_owner).Forms, Is.EquivalentTo(new[] { bound }));
+            Assert.That(Count("WeaponPistolCasul") + Count("WeaponPistolJackal"), Is.Zero);
+        });
+    }
+
     [Test]
     public async Task CancellingARecallLeavesTheOriginalInsideNestedContainers()
     {

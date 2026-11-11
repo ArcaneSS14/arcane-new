@@ -218,12 +218,19 @@ public sealed partial class NullrodRecallSystem : EntitySystem
     {
         var trained = TryGetChaplainMind(args.User, out var mind);
         if (TryComp<BoundNullrodComponent>(ent, out var bound) && (!trained || bound.Mind != mind))
+        {
             args.Cancelled = true;
+            _popup.PopupEntity(Loc.GetString("arcane-nullrod-other-owner"), ent, args.User);
+            return;
+        }
 
         if (trained && TryComp<NullrodBindingComponent>(mind, out var binding)
             && binding.Forms.Count > 0
             && (binding.Forms.Count != 1 || !binding.Forms.Contains(ent)))
+        {
             args.Cancelled = true;
+            _popup.PopupEntity(Loc.GetString("arcane-nullrod-existing-binding"), ent, args.User);
+        }
     }
 
     private void OnTransformed(Entity<NullrodComponent> ent, ref NullrodTransformedEvent args)

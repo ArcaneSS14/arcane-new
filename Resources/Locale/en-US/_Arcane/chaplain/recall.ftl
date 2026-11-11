@@ -4,6 +4,8 @@ arcane-nullrod-recall = Recall bound nullrod
 arcane-nullrod-no-binding = You have no surviving bound nullrod.
 arcane-nullrod-recalled = Your bound nullrod answers your prayer.
 arcane-nullrod-recall-failed = Your nullrod could not return. You need a free hand and a movable bound item.
+arcane-nullrod-other-owner = This nullrod is bound to another soul.
+arcane-nullrod-existing-binding = You already have a bound nullrod. Recall your existing forms first.
 arcane-nullrod-dragontail-untrained = The dragon's power burns your unworthy hands!
 arcane-nullrod-chainsword-untrained = The chain sword punishes your lack of faith!
 arcane-construction-graph-plushie-carp = carp plushie
@@ -11,7 +13,7 @@ arcane-construction-graph-book = book
 
 arcane-chaplain-set-bible-name = The Holy Bible
 arcane-chaplain-set-bible-description = Sever any tie, but the ties that bind me to your service and to your heart.
-arcane-chaplain-set-quaran-name = The Quaran
+arcane-chaplain-set-quaran-name = The Quran
 arcane-chaplain-set-quaran-description = Then which of your Lord’s favours will you ˹humans and jinn˺ both deny?
 arcane-chaplain-set-tanakh-name = The Tanakh Scrolls
 arcane-chaplain-set-tanakh-description = As you teach, you learn.
@@ -35,12 +37,12 @@ ent-ClothingNeckCloakInquisitor = inquisitor cloak
 
 ent-SpawnArmamentsDraconic = dragon suit
 
-ent-SpawnArmamentsInquisitor = inquisitor armour
+ent-SpawnArmamentsInquisitor = inquisitor armor
 
-ent-BibleVeda = slavic-Aryan Vedas
+ent-BibleVeda = Slavic-Aryan Vedas
     .desc = A book of the new religious movement Ynglism, one of the Slavic neopaganisms.
 
-ent-BibleVelesBook = book of veles
+ent-BibleVelesBook = book of Veles
     .desc = It plays a significant role in many directions of Slavic neopaganism, where it is used as a basis and proof of neopagan religiosity.
 
 ent-BibleSatanic = satanic bible
@@ -50,7 +52,7 @@ arcane-chaplain-set-bible-veda-set-name = Slavic-Aryan Vedas
 
 arcane-chaplain-set-bible-veda-set-description = A book of the new religious movement Ynglism.
 
-arcane-chaplain-set-veles-book-set-name = Book of veles
+arcane-chaplain-set-veles-book-set-name = Book of Veles
 
 arcane-chaplain-set-veles-book-set-description = A book used in many directions of Slavic neopaganism.
 
@@ -66,7 +68,7 @@ arcane-chaplain-set-bible-satanic-set-name = Satanic Bible
 
 arcane-chaplain-set-bible-satanic-set-description = What could possibly go wrong?
 
-arcane-chaplain-set-bible-narsie-set-name = Tome of Nar'sie
+arcane-chaplain-set-bible-narsie-set-name = Tome of Nar'Sie
 
 arcane-chaplain-set-bible-narsie-set-description = What could possibly go wrong with a book covered in blood?
 
