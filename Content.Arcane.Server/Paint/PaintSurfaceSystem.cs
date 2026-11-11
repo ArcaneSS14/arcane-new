@@ -214,17 +214,17 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
                 return;
         }
 
-        var title = args.Title.Trim();
-        if (title.Length == 0)
-            title = Loc.GetString("paint-untitled");
+        var trimmed = args.Title.Trim();
+        string? title = trimmed.Length == 0 ? null : trimmed;
+        var displayTitle = title ?? Loc.GetString("paint-untitled");
 
         FlushLog(ent, user);
         SetFinished(ent, title, Identity.Name(user, EntityManager), "paint-finished-name");
-        _popup.PopupEntity(Loc.GetString("paint-finished-popup", ("title", title)), user, user);
-        _paintLog.LogFinished(ent.Owner, user, title, image);
+        _popup.PopupEntity(Loc.GetString("paint-finished-popup", ("title", displayTitle)), user, user);
+        _paintLog.LogFinished(ent.Owner, user, displayTitle, image);
     }
 
-    public void SetFinished(Entity<PaintSurfaceComponent> ent, string title, string? artist, LocId nameFormat)
+    public void SetFinished(Entity<PaintSurfaceComponent> ent, string? title, string? artist, LocId nameFormat)
     {
         ent.Comp.Finished = true;
         ent.Comp.Title = title;
@@ -232,7 +232,7 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
         Dirty(ent);
 
         ClearUndo(ent.Owner);
-        _metaData.SetEntityName(ent.Owner, Loc.GetString(nameFormat, ("title", title)));
+        _metaData.SetEntityName(ent.Owner, Loc.GetString(nameFormat, ("title", title ?? Loc.GetString("paint-untitled"))));
     }
 
     public override bool SetImage(Entity<PaintSurfaceComponent> ent, PaintImage image)

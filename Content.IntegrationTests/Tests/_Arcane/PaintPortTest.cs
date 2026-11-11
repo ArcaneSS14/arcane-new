@@ -132,8 +132,9 @@ public sealed class PaintPortTest : InteractionTest
         await CloseBui(FaxUiKey.Key);
     }
 
-    [Test]
-    public async Task StrokeReplayUndoAndFinishCrossBui()
+    [TestCase("A small painting", "A small painting")]
+    [TestCase("   ", null)]
+    public async Task StrokeReplayUndoAndFinishCrossBui(string requestedTitle, string? expectedTitle)
     {
         await Server.WaitPost(() => SEntMan.System<MetaDataSystem>().SetEntityName(SPlayer, "Painter"));
         await SpawnTarget("PaintCanvasSmall");
@@ -149,14 +150,16 @@ public sealed class PaintPortTest : InteractionTest
         await SendBui(PaintUiKey.Key, new PaintUndoMessage());
         await AssertPixel(3, 3, Color.White);
         await SendBui(PaintUiKey.Key, Stroke(2, 2, 7, 7));
-        await SendBui(PaintUiKey.Key, new PaintFinishMessage("A small painting"));
+        await SendBui(PaintUiKey.Key, new PaintFinishMessage(requestedTitle));
         await Server.WaitAssertion(() =>
         {
             var surface = SEntMan.GetComponent<PaintSurfaceComponent>(STarget!.Value);
             Assert.That(surface.Finished, Is.True);
-            Assert.That(surface.Title, Is.EqualTo("A small painting"));
+            Assert.That(surface.Title, Is.EqualTo(expectedTitle));
             Assert.That(surface.Artist, Is.Not.Null.And.Not.Empty);
         });
+        await Client.WaitAssertion(() => Assert.That(
+            CEntMan.GetComponent<PaintSurfaceComponent>(ToClient(STarget!.Value)).Title, Is.EqualTo(expectedTitle)));
         await SendBui(PaintUiKey.Key, Stroke(3, 3, 9, 9));
         await AssertPixel(9, 9, Color.White);
         await CloseBui(PaintUiKey.Key);
