@@ -318,6 +318,11 @@ public sealed partial class GhostRoleSystem : EntitySystem
 
     public void RegisterGhostRole(Entity<GhostRoleComponent> role)
     {
+        // Arcane-Start: mind removal must not revive a role after its only shutdown callback.
+        if (role.Comp.LifeStage > ComponentLifeStage.Running || TerminatingOrDeleted(role.Owner))
+            return;
+        // Arcane-End
+
         if (_ghostRoles.ContainsValue(role))
             return;
 
