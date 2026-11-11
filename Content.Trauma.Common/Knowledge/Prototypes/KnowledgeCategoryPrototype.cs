@@ -18,4 +18,12 @@ public sealed partial class KnowledgeCategoryPrototype : IPrototype
     /// </summary>
     [DataField(required: true)]
     public LocId Name;
+
+    // Arcane-Start
+    /// <summary>
+    /// Color identifying this category in the profile editor.
+    /// </summary>
+    [DataField]
+    public Color Color = Color.White;
+    // Arcane-End
 }

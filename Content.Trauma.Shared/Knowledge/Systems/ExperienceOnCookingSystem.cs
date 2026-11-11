@@ -29,7 +29,6 @@ public sealed partial class ExperienceOnCookingSystem : EntitySystem
 
         // TODO: scale XP gain by the nutrition or something
         var xp = args.Count * ent.Comp.Scale;
-        var limit = Math.Min(100, ent.Comp.Limit);
-        _knowledge.AddExperience(ent.Owner, args.User, xp, limit);
+        _knowledge.AddExperience(ent.Owner, args.User, xp); // Arcane-Edit: limit by unique recipes > no limit
     }
 }

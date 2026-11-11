@@ -9,6 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
             <BoxContainer Orientation="Vertical" Margin="8">
+                <Label Name="KnowledgeSummary" StyleClasses="LabelSubText" Margin="0 0 0 8" Visible="False"/> <!-- Arcane -->
                 <BoxContainer Orientation="Vertical" Name="KnowledgeBox" Access="Public"/>
                 <controls:Placeholder Name="KnowledgePlaceholder" Access="Public" PlaceholderText="{Loc 'ui-character-knowledge-placeholder-text'}"/>
             </BoxContainer>

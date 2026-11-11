@@ -127,6 +127,15 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
         RaiseLocalEvent(target, ref attemptEv);
         if (attemptEv.Cancelled)
         {
+            // Arcane-Start: passing through keeps the shooter, like penetrating does
+            if (attemptEv.PassThrough)
+            {
+                comp.IgnoredEntities.Add(target);
+                Dirty(uid, comp);
+                return;
+            }
+            // Arcane-End
+
             _projectile.SetShooter(uid, comp, target);
             _gun.SetTarget(uid, null, out _);
             comp.IgnoredEntities.Clear();

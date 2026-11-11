@@ -15,5 +15,12 @@ namespace Content.Shared.Weapons.Ranged.Events;
 // Trauma - add Damage and Target
 public record struct HitScanReflectAttemptEvent(EntityUid? Shooter, EntityUid SourceItem, ReflectType Reflective, Vector2 Direction, bool Reflected, DamageSpecifier? Damage, EntityUid Target) : IInventoryRelayEvent
 {
+    // Arcane-Start
+    /// <summary>
+    /// With <see cref="Reflected"/>, the shot ignores the target and carries on along its path instead of bouncing.
+    /// </summary>
+    public bool PassThrough;
+    // Arcane-End
+
     SlotFlags IInventoryRelayEvent.TargetSlots => SlotFlags.WITHOUT_POCKET;
 }
