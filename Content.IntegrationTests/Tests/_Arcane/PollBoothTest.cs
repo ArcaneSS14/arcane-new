@@ -227,17 +227,13 @@ public sealed class PollBoothTest : InteractionTest
             clientPolls.ActivePolls[poll!.PollId].EndTime = DateTime.UtcNow.AddMinutes(-1);
         });
 
-        var visible = true;
-        var deadline = DateTime.UtcNow.AddSeconds(5);
-        while (DateTime.UtcNow < deadline)
-        {
-            await Pair.ReallyBeIdle(2);
-            await Client.WaitPost(() => visible = CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible);
-            if (!visible)
-                break;
-            await Task.Delay(25);
-        }
-        Assert.That(visible, Is.False, "Expiry alone must refresh the sprite without a new poll message.");
+        // Let the one-second real-time throttle expire before driving the next frame.
+        // A wall-clock polling deadline can elapse while CI is busy between those frames.
+        await Task.Delay(TimeSpan.FromSeconds(1.1));
+        await Pair.ReallyBeIdle(2);
+        await Client.WaitAssertion(() => Assert.That(
+            CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible,
+            Is.False, "Expiry alone must refresh the sprite without a new poll message."));
         await Client.WaitAssertion(() => Assert.That(clientPolls.ActivePolls[poll!.PollId].Active, Is.True,
             "The alert must clear from the deadline, without closing the poll."));
         Assert.That(await Server.ResolveDependency<IServerDbManager>().GetPollSeenCountAsync(poll!.PollId), Is.Zero);
