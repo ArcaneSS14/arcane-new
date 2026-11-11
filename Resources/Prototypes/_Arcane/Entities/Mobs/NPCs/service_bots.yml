@@ -1,8 +1,6 @@
 - type: entity
   parent: MobSiliconBase
   id: MobFillBot
-  name: fillbot
-  description: Picks up compatible loose materials and loads the machine linked with a multitool. When linked to a disposal unit, it collects loose trash.
   components:
   - type: Fillbot
   - type: Sprite
@@ -51,8 +49,6 @@
 - type: entity
   parent: MobSiliconBase
   id: MobPlantbot
-  name: plantbot
-  description: A botanist's best friend! It waters and weeds nearby trays automatically.
   components:
   - type: Plantbot
   - type: Sprite
