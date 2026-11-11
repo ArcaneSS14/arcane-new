@@ -4,6 +4,8 @@ using Content.Arcane.Shared.MouseSwarm;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Medical.Common.Targeting;
 using Content.Server.NPC.HTN;
+using Content.Server.Ghost.Roles;
+using Content.Server.Ghost.Roles.Components;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.Damage;
@@ -21,6 +23,44 @@ namespace Content.IntegrationTests.Tests._Arcane;
 public sealed class MouseSwarmPortTest : InteractionTest
 {
     protected override string PlayerPrototype => "MobMouse";
+
+    [TestPrototypes]
+    private const string Prototypes = """
+- type: entity
+  parent: MobMouse
+  id: TestArcaneSwarmGhostMouse
+  components:
+  - type: GhostRole
+    prob: 1
+""";
+
+    [Test]
+    public async Task StoppedGhostRoleCannotReturnWhenItsMindLeaves()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var mouse = SpawnMouse("TestArcaneSwarmGhostMouse");
+            var roles = SEntMan.System<GhostRoleSystem>();
+            var minds = SEntMan.System<SharedMindSystem>();
+            var role = SEntMan.GetComponent<GhostRoleComponent>(mouse);
+            var available = roles.GetGhostRoleCount();
+            var mind = minds.CreateMind(null, "swarm role lifecycle");
+            minds.TransferTo(mind, mouse);
+            Assert.That(roles.GetGhostRoleCount(), Is.EqualTo(available - 1));
+            minds.TransferTo(mind, null, createGhost: false);
+            Assert.That(roles.GetGhostRoleCount(), Is.EqualTo(available),
+                "A running, available body still becomes a ghost role when its mind leaves.");
+            minds.TransferTo(mind, mouse);
+
+            SEntMan.RemoveComponentDeferred<GhostRoleComponent>(mouse);
+            Assert.That(role.LifeStage, Is.GreaterThan(ComponentLifeStage.Running));
+            minds.TransferTo(mind, null, createGhost: false);
+            Assert.That(roles.GetGhostRoleCount(), Is.EqualTo(available - 1),
+                "A stopped role must not re-enter the registry before deferred removal completes.");
+            SEntMan.DeleteEntity(mouse);
+            Assert.That(roles.GetGhostRoleCount(), Is.EqualTo(available - 1));
+        });
+    }
 
     [Test]
     public async Task GrantedActionRejectsOccupiedContainedDeadAndExcessMice()

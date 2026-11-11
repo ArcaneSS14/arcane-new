@@ -9,5 +9,11 @@ public sealed partial class LimbGnawerComponent : Component
     public TimeSpan Delay = TimeSpan.FromSeconds(6);
 
     [DataField]
-    public List<BodyPartType> PartTypes = [BodyPartType.Hand, BodyPartType.Foot, BodyPartType.Arm, BodyPartType.Leg];
+    public List<BodyPartType> PartTypes = new()
+    {
+        BodyPartType.Hand,
+        BodyPartType.Foot,
+        BodyPartType.Arm,
+        BodyPartType.Leg,
+    };
 }

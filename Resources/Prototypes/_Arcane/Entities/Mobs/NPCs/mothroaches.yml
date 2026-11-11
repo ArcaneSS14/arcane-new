@@ -1,8 +1,6 @@
 - type: entity
   parent: MobMothroach
   id: MobMothroachMustard
-  name: mustard mothroach
-  description: A delightful result of the world's chefs crossing meat with sauce.
   components:
   - type: Sprite
     sprite: _Arcane/Mobs/Animals/mustard_mothroach.rsi
@@ -12,8 +10,6 @@
 - type: entity
   parent: MobMothroach
   id: MobMothroachLeopard
-  name: leopard mothroach
-  description: A charming result of numerous attempts to crossbreed insects with predators.
   components:
   - type: Sprite
     sprite: _Arcane/Mobs/Animals/leopard_mothroach.rsi
@@ -23,8 +19,6 @@
 - type: entity
   parent: MobMothroach
   id: MobMothroachCecropia
-  name: cecropia mothroach
-  description: A charming result of numerous attempts to cross a genus of the nettle family with cockroaches.
   components:
   - type: Sprite
     sprite: _Arcane/Mobs/Animals/cecropia_mothroach.rsi
@@ -34,8 +28,6 @@
 - type: entity
   parent: MobMothroach
   id: MobMothroachLunar
-  name: lunar mothroach
-  description: Someone left the moth under the moonlight.
   components:
   - type: Sprite
     sprite: _Arcane/Mobs/Animals/lunar_mothroach.rsi

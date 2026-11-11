@@ -2,7 +2,6 @@
   parent: BasePlant
   id: SpaceshroomPlants
   categories: [HideSpawnMenu]
-  name: spaceshroom colony
   components:
   - type: Sprite
     sprite: _Arcane/Objects/Specific/Hydroponics/spaceshroom.rsi
@@ -31,7 +30,6 @@
 - type: entity
   parent: SeedBase
   id: SpaceshroomSeeds
-  name: packet of spaceshroom spores
   components:
   - type: Seed
     plantId: SpaceshroomPlants
