@@ -83,11 +83,13 @@ public sealed partial class SheathCounterAttackSystem : EntitySystem
 
                 var (sheath, weapon) = tuple;
 
+                // Arcane-Edit-Start
                 // if (!sheath.Comp.CanCounterNpc && HasComp<ActiveNPCComponent>(ent))
                 // {
                 //     _popup.PopupEntity(Loc.GetString("counter-attack-fail-npc-message"), user, user);
                 //     return;
                 // }
+                // Arcane-Edit-End
 
                 _status.TryAddStatusEffect(user,
                     sheath.Comp.StatusEffect,
