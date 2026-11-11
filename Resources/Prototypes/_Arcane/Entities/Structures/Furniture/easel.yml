@@ -1,0 +1,57 @@
+- type: entity
+  parent: BaseStructureDynamic
+  id: PaintEasel
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/Furniture/easel.rsi
+    noRot: true
+    layers:
+    - state: easel
+    - sprite: _Arcane/Objects/Fun/canvas.rsi
+      state: canvas_24x24
+      map: [ "canvas_backing" ]
+      visible: false
+    - map: [ "canvas_paint" ]
+      visible: false
+    - sprite: _Arcane/Objects/Fun/painting_frames.rsi
+      state: 24x24frame_simple
+      map: [ "canvas_frame" ]
+      visible: false
+  - type: Anchorable
+  - type: PaintEasel
+  - type: ItemSlots
+    slots:
+      canvas:
+        name: paint-slot-canvas
+        whitelist:
+          components:
+          - PaintCanvasVisuals
+  - type: ContainerContainer
+    containers:
+      canvas: !type:ContainerSlot
+  - type: Construction
+    graph: PaintEaselGraph
+    node: easel
+  - type: Damageable
+    damageModifierSet: Wood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 40
+      behaviors:
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroy
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 1
+            max: 2
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Tag
+    tags:
+    - Structure
+    - Wooden

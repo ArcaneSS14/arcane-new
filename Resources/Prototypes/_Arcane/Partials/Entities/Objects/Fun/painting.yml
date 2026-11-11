@@ -1,0 +1,21 @@
+- type: entity
+  id: CrayonInedible
+  components:
+  - type: PaintTool
+    colorMode: Crayon
+    maxBrushSize: 3
+    pixelsPerCharge: 256
+
+- type: entity
+  id: LockerClown
+  components:
+  - type: StorageFill
+    contents:
+    - id: PaintingFrameClown
+
+- type: entity
+  id: LockerMime
+  components:
+  - type: StorageFill
+    contents:
+    - id: PaintingFrameFrog

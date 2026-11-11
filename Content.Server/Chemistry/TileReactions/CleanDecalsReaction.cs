@@ -6,6 +6,7 @@ using Content.Shared.FixedPoint;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using System.Numerics;
+using Content.Shared.Maps; // Arcane
 
 namespace Content.Server.Chemistry.TileReactions;
 
@@ -37,6 +38,7 @@ public sealed partial class CleanDecalsReaction : ITileReaction
 
         var lookupSystem = entityManager.System<EntityLookupSystem>();
         var decalSystem = entityManager.System<DecalSystem>();
+        var turf = entityManager.System<TurfSystem>(); // Arcane
         // Very generous hitbox.
         var decals = decalSystem
             .GetDecalsIntersecting(tile.GridUid, lookupSystem.GetLocalBounds(tile, grid.TileSize).Enlarged(0.5f).Translated(new Vector2(-0.5f, -0.5f)));
@@ -46,6 +48,12 @@ public sealed partial class CleanDecalsReaction : ITileReaction
         {
             if (!decal.Comp.Data.Cleanable) // Trauma - decal entities
                 continue;
+
+            // Arcane-Start
+            var coordinates = entityManager.GetComponent<TransformComponent>(decal.Owner).Coordinates;
+            if (turf.GetTileRef(coordinates) is { } decalTile && turf.GetContentTileDefinition(decalTile).ProtectDecals)
+                continue;
+            // Arcane-End
 
             if (amount + CleanCost > reactVolume)
                 break;
