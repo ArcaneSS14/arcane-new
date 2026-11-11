@@ -98,8 +98,16 @@ public sealed partial class IdCardSystem : SharedIdCardSystem
 
             var random = _random.Pick(ids);
 
-            access.Tags.Add(random.ID);
+            var accessAdded = access.Tags.Add(random.ID); // Arcane-Edit: retain whether access was actually added
             Dirty(uid, access);
+
+            // Arcane-Start
+            if (accessAdded && args.User is { } user)
+            {
+                var changed = new MicrowaveIdAccessChangedEvent(uid);
+                RaiseLocalEvent(user, ref changed);
+            }
+            // Arcane-End
 
             _adminLogger.Add(LogType.Action, LogImpact.High,
                     $"{ToPrettyString(args.Microwave)} added {random.ID} access to {ToPrettyString(uid):entity}");
@@ -125,3 +133,8 @@ public sealed partial class IdCardSystem : SharedIdCardSystem
         return true;
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct MicrowaveIdAccessChangedEvent(EntityUid Card);
+// Arcane-End

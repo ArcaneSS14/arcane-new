@@ -306,7 +306,16 @@ public sealed partial class NukeSystem : EntitySystem
         if (args.Handled || args.Cancelled)
             return;
 
+        var wasArmed = component.Status == NukeStatus.ARMED; // Arcane
         DisarmBomb(uid, component);
+
+        // Arcane-Start
+        if (wasArmed && component.Status == NukeStatus.COOLDOWN)
+        {
+            var disarmed = new NukeDisarmedByUserEvent(uid);
+            RaiseLocalEvent(args.User, ref disarmed);
+        }
+        // Arcane-End
 
         var ev = new NukeDisarmSuccessEvent();
         RaiseLocalEvent(ev);
@@ -739,3 +748,8 @@ public sealed class NukeDisarmSuccessEvent : EntityEventArgs
 {
 
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct NukeDisarmedByUserEvent(EntityUid Nuke);
+// Arcane-End

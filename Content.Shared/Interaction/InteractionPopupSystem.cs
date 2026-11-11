@@ -54,12 +54,13 @@ public sealed partial class InteractionPopupSystem : EntitySystem
         SharedInteract(uid, component, args, args.Target, args.User);
     }
 
-    private void SharedInteract(
+    public void SharedInteract( // Arcane-Edit: private > public for the validated ghost hug caller
         EntityUid uid,
         InteractionPopupComponent component,
         HandledEntityEventArgs args,
         EntityUid target,
-        EntityUid user)
+        EntityUid user, // Arcane-Edit: user) > user,
+        bool ghostHug = false) // Arcane: spectral hugs have no physical success event
     {
         if (args.Handled || user == target)
             return;
@@ -109,8 +110,18 @@ public sealed partial class InteractionPopupSystem : EntitySystem
             if (component.InteractSuccessSpawn != null)
                 Spawn(component.InteractSuccessSpawn, _transform.GetMapCoordinates(uid));
 
-            var ev = new InteractionSuccessEvent(user);
-            RaiseLocalEvent(target, ref ev);
+            // Arcane-Edit-Start
+            if (ghostHug)
+            {
+                var spectral = new GhostHugSuccessEvent(user);
+                RaiseLocalEvent(target, ref spectral);
+            }
+            else
+            {
+                var ev = new InteractionSuccessEvent(user);
+                RaiseLocalEvent(target, ref ev);
+            }
+            // Arcane-Edit-End
         }
         else
         {

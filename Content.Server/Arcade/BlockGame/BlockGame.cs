@@ -81,6 +81,7 @@ public sealed partial class BlockGame
         && _entityManager.TryGetComponent<MetaDataComponent>(cabinet.Player, out var meta))
         {
             _highScorePlacement = _arcadeSystem.RegisterHighScore(meta.EntityName, Points);
+            _entityManager.System<BlockGameArcadeSystem>().NotifyGameOver(cabinet.Player!.Value, Points); // Arcane
             SendHighscoreUpdate();
         }
         SendMessage(new BlockGameMessages.BlockGameGameOverScreenMessage(Points, _highScorePlacement?.LocalPlacement, _highScorePlacement?.GlobalPlacement));

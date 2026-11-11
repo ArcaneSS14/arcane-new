@@ -10,12 +10,16 @@ public abstract partial class SharedDestructibleSystem : EntitySystem
     /// <summary>
     /// Force entity to be destroyed and deleted.
     /// </summary>
-    public bool DestroyEntity(EntityUid owner)
+    public bool DestroyEntity(EntityUid owner) => DestroyEntity(owner, null); // Arcane-Edit: inline implementation > compatible overload
+
+    // Arcane-Start
+    public bool DestroyEntity(EntityUid owner, EntityUid? cause)
+    // Arcane-End
     {
         if (!CanDestroy(owner))
             return false;
 
-        var eventArgs = new DestructionEventArgs();
+        var eventArgs = new DestructionEventArgs { Cause = cause }; // Arcane-Edit: no cause > pass cause
         RaiseLocalEvent(owner, eventArgs);
 
         PredictedQueueDel(owner);
@@ -57,7 +61,7 @@ public sealed class DestructionAttemptEvent : CancellableEntityEventArgs
 /// </summary>
 public sealed class DestructionEventArgs : EntityEventArgs
 {
-
+    public EntityUid? Cause; // Arcane
 }
 
 /// <summary>

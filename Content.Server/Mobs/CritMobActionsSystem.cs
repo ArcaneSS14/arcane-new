@@ -47,7 +47,16 @@ public sealed partial class CritMobActionsSystem : EntitySystem
         if (!TryComp<ActorComponent>(uid, out var actor) || !_mobState.IsCritical(uid) || _xeno.IsVictim(uid))
             return;
 
-        _host.ExecuteCommand(actor.PlayerSession, "ghost");
+        // Arcane-Edit-Start
+        var session = actor.PlayerSession;
+        _host.ExecuteCommand(session, "ghost");
+        if (TryComp<Content.Shared.Ghost.Components.GhostComponent>(session.AttachedEntity, out var ghost)
+            && (_mobState.IsDead(uid) || !ghost.CanReturnToBody))
+        {
+            var completed = new CritSuccumbedEvent(session);
+            RaiseLocalEvent(uid, ref completed);
+        }
+        // Arcane-Edit-End
         args.Handled = true;
     }
 
@@ -95,3 +104,9 @@ public sealed partial class CritMobActionsSystem : EntitySystem
         args.Handled = true;
     }
 }
+
+// Arcane-Start
+/// <summary>Raised after the crit action actually kills the user or permanently ghosts them.</summary>
+[ByRefEvent]
+public readonly record struct CritSuccumbedEvent(ICommonSession Session);
+// Arcane-End

@@ -997,6 +997,10 @@ public sealed partial class ShuttleSystem
                 {
                     _logger.Add(LogType.Gib, LogImpact.Extreme, $"{ToPrettyString(ent):player} got gibbed by the shuttle" +
                                                                 $" {ToPrettyString(uid)} arriving from FTL at {xform.Coordinates:coordinates}");
+                    // Arcane-Start
+                    var crushed = new ShuttleCrushedEvent(uid);
+                    RaiseLocalEvent(ent, ref crushed);
+                    // Arcane-End
                     var gibs = _gibbing.Gib(ent);
                     _immuneEnts.UnionWith(gibs);
                     continue;
@@ -1010,3 +1014,8 @@ public sealed partial class ShuttleSystem
         RaiseLocalEvent(ref ev);
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct ShuttleCrushedEvent(EntityUid Shuttle);
+// Arcane-End

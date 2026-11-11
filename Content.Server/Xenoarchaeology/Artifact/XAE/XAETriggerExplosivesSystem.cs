@@ -19,6 +19,6 @@ public sealed partial class XAETriggerExplosivesSystem : BaseXAESystem<XAETrigge
         if(!TryComp<ExplosiveComponent>(ent, out var explosiveComp))
             return;
 
-        _explosion.TriggerExplosive(ent, explosiveComp);
+        _explosion.TriggerExplosive(ent, explosiveComp, user: args.User); // Arcane-Edit: preserve the activator for the existing explosion result event
     }
 }
