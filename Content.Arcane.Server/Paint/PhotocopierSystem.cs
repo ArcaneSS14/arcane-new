@@ -200,9 +200,8 @@ public sealed partial class PhotocopierSystem : EntitySystem
         var copy = source.Image!.Clone();
         if (_paint.SetImage((target, destination), copy))
         {
-            var title = source.Title ?? Loc.GetString("paint-untitled");
             var artist = source.Artist is { } name ? Loc.GetString("paint-copy-artist", ("artist", name)) : null;
-            _paint.SetFinished((target, destination), title, artist, "paint-copy-name");
+            _paint.SetFinished((target, destination), source.Title, artist, "paint-copy-name");
             _paintLog.LogCopied(original, target, user, copy);
         }
 
