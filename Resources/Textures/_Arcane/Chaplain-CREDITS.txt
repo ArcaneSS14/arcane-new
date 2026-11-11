@@ -1,0 +1,142 @@
+Keeping the Faith - Arcane adaptation
+
+Source: https://github.com/Goob-Station/Goob-Station/tree/cc1d2c911f5cb6c90b36e0899ce918010bd41262
+Feature code and YAML: AGPL-3.0-or-later, as stated by the pinned source README License section.
+Feature authors: the biggest bruh (#5503), RedTerror (#5590), Kenkaitos (#6183, #6952),
+liegend (#6347), Rachel / 11BelowStudio (#7421), Aiden (#7433).
+Adapted to current Arcane ownership, minds, hands, containers, construction and item-toggle systems.
+No source sprites or sound samples were altered. The owner directory paths were changed.
+Two metadata files received whitespace-only cleanup; their JSON values and copyrights are unchanged.
+
+Sprite credits and original license notices follow; the original meta.json notices are also retained.
+CC-BY-SA-3.0: https://creativecommons.org/licenses/by-sa/3.0/
+CC-BY-SA-4.0: https://creativecommons.org/licenses/by-sa/4.0/
+
+Resources/Textures/_Arcane/Clothing/OuterClothing/Misc/dragonsuit.rsi
+  Source: Resources/Textures/_ShitChap/Clothing/OuterClothing/Misc/dragonsuit.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror
+
+Resources/Textures/_Arcane/Clothing/OuterClothing/Misc/inquisitor.rsi
+  Source: Resources/Textures/_ShitChap/Clothing/OuterClothing/Misc/inquisitor.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror
+
+Resources/Textures/_Arcane/Clothing/Head/Misc/dragonskull.rsi
+  Source: Resources/Textures/_ShitChap/Clothing/Head/Misc/dragonskull.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror
+
+Resources/Textures/_Arcane/Clothing/Head/Misc/inquisitor.rsi
+  Source: Resources/Textures/_ShitChap/Clothing/Head/Misc/inquisitor.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror(гойда)
+
+Resources/Textures/_Arcane/Clothing/Neck/Misc/inquisitor.rsi
+  Source: Resources/Textures/_ShitChap/Clothing/Neck/Misc/inquisitor.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror
+
+Resources/Textures/_Arcane/Objects/Weapons/Nullrod/dragontail.rsi
+  Source: Resources/Textures/_ShitChap/Objects/Weapons/Nullrod/dragontail.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: made by the_biggestbruh, resprite by RedTerror
+
+Resources/Textures/_Arcane/Objects/Weapons/Nullrod/chainsword.rsi
+  Source: Resources/Textures/_ShitChap/Objects/Weapons/Nullrod/chainsword.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: Taken from tgstation at https://github.com/tgstation/tgstation, remade by RedTerror
+
+Resources/Textures/_Arcane/Structures/dragonaltar.rsi
+  Source: Resources/Textures/_ShitChap/Structures/dragonaltar.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: dragonaltar used convertaltar as a base, miniportal used carp rift as a base, both modified by the_biggestbruh
+
+Resources/Textures/_Arcane/Structures/empirealtar.rsi
+  Source: Resources/Textures/_ShitChap/Structures/empirealtar.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: By RedTerror
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/veda.rsi
+  Source: Resources/Textures/_Goobstation/Objects/Specific/Chapel/veda.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: Sprited by 4_ydo
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/veles_book.rsi
+  Source: Resources/Textures/_Goobstation/Objects/Specific/Chapel/veles_book.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: Sprited by 4_ydo
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/satanicbible.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/satanicbible.rsi/meta.json
+  License: CC-BY-SA-3.0
+  Copyright: Originally drawn by @Trosling (Discord), modified by @SurrealShibe (Github)
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/mysteryofthedruids.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/mysteryofthedruids.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/communistmanifesto.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/communistmanifesto.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/tomeofnarsie.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/tomeofnarsie.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/codexnanotrasimus.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/codexnanotrasimus.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/honk.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/honk.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Resources/Textures/_Arcane/Objects/Specific/Chapel/ratvartablet.rsi
+  Source: Resources/Textures/Objects/Specific/Chapel/ratvartablet.rsi/meta.json
+  License: CC-BY-SA-4.0
+  Copyright: Sprites created by Davyei (Discord) for Spacestation 14.
+
+Reused current sound: Resources/Audio/Weapons/chainsaw_pull.ogg
+  License: CC-BY-4.0
+  Copyright: User SonoFxAudio on freesound.org, modified by Errant
+  Source: https://freesound.org/people/SonoFxAudio/sounds/656676/
+
+Reused current sound: Resources/Audio/Weapons/chainsaw_rev.ogg
+  License: CC-BY-4.0
+  Copyright: User kyles on freesound.org, modified by Errant
+  Source: https://freesound.org/people/kyles/sounds/453260/
+
+Imported sound: Resources/Audio/_Arcane/Weapons/ChainSword/chainEnd.ogg
+  Source: Resources/Audio/_Goobstation/Weapons/ChainSword/chainEnd.ogg at the pinned Goob revision.
+  Introduced by RedTerror in #5590.
+  The pinned REUSE.toml annotates Resources/Audio/** as MIT, copyright None.
+  No more specific notice exists in the source ChainSword directory or its Weapons directory.
+  The original MIT notice from the pinned LICENSES/MIT.txt is reproduced below.
+
+MIT License
+
+Copyright (c) 2017-2026 Space Wizards Federation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

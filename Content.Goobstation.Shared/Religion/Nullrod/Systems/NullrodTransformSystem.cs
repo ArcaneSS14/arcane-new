@@ -13,6 +13,7 @@ public sealed partial class NullrodTransformSystem : EntitySystem
 {
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private TagSystem _tag = default!;
+    [Dependency] private INetManager _net = default!; // Arcane
 
     public static readonly ProtoId<TagPrototype> NullrodTag = "Nullrod";
 
@@ -25,18 +26,38 @@ public sealed partial class NullrodTransformSystem : EntitySystem
     private void OnInteractUsing(EntityUid uid, AltarSourceComponent component, InteractUsingEvent args)
     {
         // Checks used entity for the tag we need.
-        if (args.Handled || !_tag.HasTag(args.Used, NullrodTag))
+        // Arcane-Edit-Start
+        if (args.Handled || _net.IsClient || EntityManager.IsQueuedForDeletion(args.Used)
+            || !_tag.HasTag(args.Used, NullrodTag))
+        // Arcane-Edit-End
             return;
 
+        // Arcane-Start
+        var attempt = new NullrodTransformAttemptEvent(args.User);
+        RaiseLocalEvent(args.Used, ref attempt);
+        if (attempt.Cancelled)
+        {
+            args.Handled = true;
+            return;
+        }
+        // Arcane-End
+
         // *flaaavor*
-        PredictedSpawnAtPosition(component.EffectProto, Transform(uid).Coordinates);
-        _audio.PlayPredicted(component.SoundPath, uid, args.User, AudioParams.Default.WithVolume(-4f));
+        // Arcane-Edit-Start
+        SpawnAtPosition(component.EffectProto, Transform(uid).Coordinates);
+        _audio.PlayPvs(component.SoundPath, uid, AudioParams.Default.WithVolume(-4f));
+        // Arcane-Edit-End
 
         // Spawn proto associated with the altar.
-        PredictedSpawnAtPosition(component.RodProto, args.ClickLocation.SnapToGrid(EntityManager));
+        var replacement = SpawnAtPosition(component.RodProto, args.ClickLocation.SnapToGrid(EntityManager)); // Arcane-Edit: PredictedSpawnAtPosition > SpawnAtPosition
+
+        // Arcane-Start
+        var transformed = new NullrodTransformedEvent(args.User, replacement);
+        RaiseLocalEvent(args.Used, ref transformed);
+        // Arcane-End
 
         // Remove the nullrod
-        PredictedQueueDel(args.Used);
+        QueueDel(args.Used); // Arcane-Edit: PredictedQueueDel > QueueDel
         args.Handled = true;
     }
 }

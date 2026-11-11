@@ -1,0 +1,73 @@
+- type: entity
+  parent: ClothingOuterArmorTemplar
+  id: ClothingOuterArmorDragon
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Misc/dragonsuit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Misc/dragonsuit.rsi
+
+- type: entity
+  parent: ClothingHeadHatHelmetTemplar
+  id: ClothingHeadHatHelmetDragon
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Misc/dragonskull.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Misc/dragonskull.rsi
+
+- type: entity
+  parent: ClothingOuterArmorTemplar
+  id: ClothingOuterArmorInquisitor
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Misc/inquisitor.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Misc/inquisitor.rsi
+
+- type: entity
+  parent: ClothingHeadHatHelmetTemplar
+  id: ClothingHeadHatHelmetInquisitor
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Misc/inquisitor.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Misc/inquisitor.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+  - type: HideLayerClothing
+    layers: {}
+
+- type: entity
+  parent: ClothingNeckBase
+  id: ClothingNeckCloakInquisitor
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Misc/inquisitor.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Neck/Misc/inquisitor.rsi
+
+- type: entity
+  parent: SpawnSupplyEmpty
+  id: SpawnArmamentsDraconic
+  categories: [HideSpawnMenu]
+  components:
+  - type: SpawnTableOnDespawn
+    table: !type:AllSelector
+      children:
+      - id: ClothingOuterArmorDragon
+      - id: ClothingHeadHatHelmetDragon
+
+- type: entity
+  parent: SpawnSupplyEmpty
+  id: SpawnArmamentsInquisitor
+  categories: [HideSpawnMenu]
+  components:
+  - type: SpawnTableOnDespawn
+    table: !type:AllSelector
+      children:
+      - id: ClothingHeadHatHelmetInquisitor
+      - id: ClothingOuterArmorInquisitor
+      - id: ClothingNeckCloakInquisitor
