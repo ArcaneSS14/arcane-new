@@ -64,9 +64,11 @@ public sealed partial class CapoeiraParrySystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnProjectile(Entity<CapoeiraParryWindowComponent> ent, ref ProjectileReflectAttemptEvent args)
     {
-        // the projectile carries on past the user
-        if (!args.Cancelled && TryParry(ent, args.Component.Shooter))
-            args.Cancelled = true;
+        if (args.Cancelled || !TryParry(ent, args.Component.Shooter))
+            return;
+
+        args.Cancelled = true;
+        args.PassThrough = true;
     }
 
     [SubscribeLocalEvent]

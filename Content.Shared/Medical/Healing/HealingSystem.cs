@@ -68,6 +68,7 @@ public sealed partial class HealingSystem : EntitySystem
         }
 
         TryComp<BloodstreamComponent>(target, out var bloodstream);
+        var bleedBefore = bloodstream?.BleedAmount ?? 0f; // Arcane
 
         // Heal some bloodloss damage.
         if (healing.BloodlossModifier != 0 && bloodstream != null)
@@ -84,8 +85,9 @@ public sealed partial class HealingSystem : EntitySystem
         }
 
         // Restores missing blood
+        var restoredBlood = false; // Arcane
         if (healing.ModifyBloodLevel != 0 && bloodstream != null)
-            _bloodstreamSystem.TryModifyBloodLevel((target.Owner, bloodstream), -healing.ModifyBloodLevel); // Goobedit
+            restoredBlood = _bloodstreamSystem.TryModifyBloodLevel((target.Owner, bloodstream), -healing.ModifyBloodLevel); // Arcane-Edit: result ignored > used for experience
 
         if (!_damageable.TryChangeDamage(target.Owner, healing.Damage * _damageable.UniversalTopicalsHealModifier, out var healed, true, origin: args.Args.User) && healing.BloodlossModifier != 0)
             return;
@@ -125,7 +127,8 @@ public sealed partial class HealingSystem : EntitySystem
         // Logic to determine the whether or not to repeat the healing action
         args.Repeat = HasDamage((args.Used.Value, healing), target) && !dontRepeat;
         args.Handled = true;
-        RaiseAppliedHealing(args.User); // Arcane
+        if (total != 0 || restoredBlood || bloodstream?.BleedAmount < bleedBefore) // Arcane
+            RaiseAppliedHealing(args.User); // Arcane
 
         if (!args.Repeat)
         {
