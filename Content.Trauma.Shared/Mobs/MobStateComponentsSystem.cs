@@ -64,6 +64,11 @@ public sealed partial class MobStateComponentsSystem : EntitySystem
 
     private void OnSleepStateChanged(Entity<AliveMobComponent> ent, ref SleepStateChangedEvent args)
     {
+        // Arcane-Start: removing sleep during deletion must not add state components again.
+        if (TerminatingOrDeleted(ent.Owner))
+            return;
+        // Arcane-End
+
         if (args.FellAsleep)
             RemComp<AwakeMobComponent>(ent);
         else // woke up while alive, must be awake
