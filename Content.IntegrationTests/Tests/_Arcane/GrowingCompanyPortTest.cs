@@ -70,6 +70,10 @@ public sealed class GrowingCompanyPortTest : InteractionTest
             Assert.That(changed.Volume, Is.EqualTo(FixedPoint2.New(3)));
 
             // Existing empty-chemistry crops keep Trauma's original clearing behavior.
+            var originalWheat = SEntMan.SpawnAtPosition("WheatBushel", coords);
+            Assert.That(solutions.TryGetSolution(originalWheat, "food", out _, out var originalFood), Is.True);
+            Assert.That(originalFood!.Volume, Is.GreaterThan(FixedPoint2.Zero));
+            SEntMan.DeleteEntity(originalWheat);
             var wheat = SEntMan.SpawnAtPosition("WheatPlants", coords);
             SEntMan.GetComponent<PlantChemicalsComponent>(wheat).Chemicals.Clear();
             var empty = HarvestOne(wheat);

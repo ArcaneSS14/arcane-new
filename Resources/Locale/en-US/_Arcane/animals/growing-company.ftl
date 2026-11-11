@@ -6,3 +6,16 @@ mouse-swarm-invalid = That mouse won't join your swarm.
 mouse-swarm-full = Your swarm can't get any bigger!
 mouse-swarm-absorbed = {CAPITALIZE(THE($target))} joins your swarm!
 mouse-swarm-lost = A mouse falls from your swarm!
+
+ent-ActionMouseSwarm = Join swarm
+    .desc = Absorb a nearby mouse into your swarm.
+ent-MobMothroachMustard = mustard mothroach
+    .desc = A delightful result of the world's chefs crossing meat with sauce.
+ent-MobMothroachLeopard = leopard mothroach
+    .desc = A charming result of numerous attempts to crossbreed insects with predators.
+ent-MobMothroachCecropia = cecropia mothroach
+    .desc = A charming result of numerous attempts to cross a genus of the nettle family with cockroaches.
+ent-MobMothroachLunar = lunar mothroach
+    .desc = Someone left the moth under the moonlight.
+ent-SpaceshroomPlants = spaceshroom colony
+ent-SpaceshroomSeeds = packet of spaceshroom spores

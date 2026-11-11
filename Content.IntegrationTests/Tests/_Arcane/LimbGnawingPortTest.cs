@@ -9,12 +9,18 @@ using Content.Shared.Body;
 using Content.Shared.DoAfter;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Nutrition.Components;
+using Content.Shared.Nutrition.EntitySystems;
+using Content.Shared.Nutrition.Prototypes;
 using Content.Shared.Verbs;
+using Content.Trauma.Common.CCVar;
+using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class LimbGnawingPortTest : InteractionTest
 {
+    private static readonly ProtoId<SatiationTypePrototype> Hunger = "Hunger";
     protected override string PlayerPrototype => "TestArcaneGnawMouse";
 
     [TestPrototypes]
@@ -33,6 +39,47 @@ public sealed class LimbGnawingPortTest : InteractionTest
   - type: Respirator
     updateInterval: 1000
 """;
+
+    [Test]
+    public async Task HungryNpcChoosesGnawVerbThroughItsHtn()
+    {
+        await OverrideCVar(Side.Server, TraumaCVars.DisablePathfinding, false);
+        await SetTile(Plating, TargetCoords);
+        var corpse = ToServer(await Spawn("TestArcaneGnawHuman"));
+        EntityUid mouse = default;
+        var before = 0;
+        var after = 0;
+        var sawGnaw = false;
+        await Server.WaitAssertion(() =>
+        {
+            SEntMan.RemoveComponent<HTNComponent>(SPlayer);
+            mouse = SEntMan.SpawnAtPosition("TestArcaneGnawMouse", SEntMan.GetCoordinates(PlayerCoords));
+            var nutrition = SEntMan.System<SatiationSystem>();
+            var satiation = SEntMan.GetComponent<SatiationComponent>(mouse);
+            Assert.That(nutrition.GetValueOrNull((mouse, satiation), Hunger), Is.Not.Null);
+            nutrition.SetValue((mouse, satiation), Hunger, 0f);
+            SEntMan.System<MobStateSystem>().ChangeMobState(corpse, MobState.Dead);
+            before = Parts(corpse).Length;
+        });
+        for (var i = 0; i < 80; i++)
+        {
+            await RunSeconds(0.25f);
+            await Server.WaitPost(() =>
+            {
+                sawGnaw |= SEntMan.GetComponent<DoAfterComponent>(mouse).DoAfters.Values
+                    .Any(value => value.Args.Event is LimbGnawDoAfterEvent && !value.Cancelled);
+                after = Parts(corpse).Length;
+            });
+            if (after < before)
+                break;
+        }
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.System<MobStateSystem>().IsAlive(mouse), Is.True);
+            Assert.That(sawGnaw, Is.True, "The actual NPC alternative interaction must select the gnaw do-after.");
+            Assert.That(after, Is.LessThan(before));
+        });
+    }
 
     [Test]
     public async Task GnawDetachesARealPartAndRevivalPreventsTheNextRemoval()

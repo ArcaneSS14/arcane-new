@@ -1,8 +1,6 @@
 - type: entity
   parent: BaseAction
   id: ActionMouseSwarm
-  name: Join swarm
-  description: Absorb a nearby mouse into your swarm.
   components:
   - type: Sprite
     sprite: Mobs/Animals/mouse.rsi
