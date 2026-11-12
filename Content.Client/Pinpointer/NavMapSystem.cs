@@ -57,17 +57,16 @@ public sealed partial class NavMapSystem : SharedNavMapSystem
         var prevRegionOwners = component.RegionProperties.Keys.ToList();
         var validRegionOwners = new List<NetEntity>();
 
-        component.RegionProperties.Clear();
-
         foreach (var (regionOwner, regionData) in regions)
         {
             if (!regionData.Seeds.Any())
                 continue;
 
+            var changed = !component.RegionProperties.TryGetValue(regionOwner, out var oldRegion) || !oldRegion.Matches(regionData); // Arcane
             component.RegionProperties[regionOwner] = regionData;
             validRegionOwners.Add(regionOwner);
 
-            if (component.RegionOverlays.ContainsKey(regionOwner))
+            if (!changed && component.RegionOverlays.ContainsKey(regionOwner)) // Arcane-Edit: re-flood when the definition changes
                 continue;
 
             if (component.QueuedRegionsToFlood.Contains(regionOwner))

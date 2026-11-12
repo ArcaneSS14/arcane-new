@@ -1,0 +1,25 @@
+- type: rcd
+  id: PipeManifold
+  category: Piping
+  sprite:
+    sprite: Structures/Piping/Atmospherics/manifold.rsi
+    state: storageManifold
+  mode: ConstructObject
+  prototype: GasPipeManifold
+  cost: 1
+  delay: 0
+  rotation: User
+  fx: EffectRCDConstruct0
+
+- type: rcd
+  id: PipePressureRegulator
+  category: PumpsValves
+  sprite:
+    sprite: Structures/Piping/Atmospherics/pump.rsi
+    state: pumpPressureRegulator
+  mode: ConstructObject
+  prototype: GasPressureRegulator
+  cost: 2
+  delay: 0
+  rotation: User
+  fx: EffectRCDConstruct0

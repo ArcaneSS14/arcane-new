@@ -1,0 +1,21 @@
+- type: entity
+  id: BaseHandheldStationMapSupermatterCe
+  parent: BaseItem
+  name: handheld supermatter console
+  description: A handheld engineering monitor that displays the supermatter readings on the current grid.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Objects/Devices/tablets.rsi
+    layers:
+    - state: tablet
+    - state: powerconsole
+      shader: unshaded
+  - type: SupermatterMonitor
+  - type: ActivatableUI
+    inHandsOnly: true
+    singleUser: true
+    key: enum.SupermatterMonitorUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.SupermatterMonitorUiKey.Key:
+        type: SupermatterMonitorBoundUserInterface

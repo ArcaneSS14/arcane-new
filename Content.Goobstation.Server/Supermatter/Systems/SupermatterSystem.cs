@@ -99,7 +99,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         sm.ZapAccumulator++;
         sm.YellAccumulator++;
 
-        ProcessAtmos(uid, sm);
+        var hasGasSample = ProcessAtmos(uid, sm); // Arcane-Edit: track whether the cycle sampled gas
         HandleDamage(uid, sm);
 
         if (sm.Damage >= sm.DelaminationPoint || sm.Delamming)
@@ -118,6 +118,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
             sm.YellAccumulator -= sm.YellTimer;
             HandleAnnouncements(uid, sm);
         }
+
+        // Arcane-Start
+        var cycle = new SupermatterCycleCompletedEvent(hasGasSample);
+        RaiseLocalEvent(uid, ref cycle);
+        // Arcane-End
     }
 
     #region Processing
@@ -125,18 +130,18 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     /// <summary>
     ///     Handle power and radiation output depending on atmospheric things.
     /// </summary>
-    private void ProcessAtmos(EntityUid uid, SupermatterComponent sm)
+    private bool ProcessAtmos(EntityUid uid, SupermatterComponent sm) // Arcane-Edit: report whether gas was sampled
     {
         var mix = _atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is not { })
-            return;
+            return false; // Arcane-Edit: no gas sample
 
         var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
         var moles = absorbedGas.TotalMoles;
 
         if (!(moles > 0f))
-            return;
+            return false; // Arcane-Edit: no gas sample
 
         var gases = sm.GasStorage;
         var facts = sm.GasDataFields;
@@ -163,6 +168,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         powerRatio = Math.Clamp(powerRatio, 0, 1);
         heatModifier = Math.Max(heatModifier, 0.5f);
         transmissionBonus *= h2OBonus;
+
+        // Arcane-Start
+        var sample = new SupermatterGasSampleEvent(absorbedGas, moles, heatModifier);
+        RaiseLocalEvent(uid, ref sample);
+        // Arcane-End
 
         // Effects the damage heat does to the crystal
         sm.DynamicHeatResistance = 1f;
@@ -250,6 +260,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         // After this point power is lowered
         // This wraps around to the begining of the function
         sm.Power = Math.Max(sm.Power - Math.Min(powerReduction * powerlossInhibitor, sm.Power * 0.83f * powerlossInhibitor), 0f);
+        return true; // Arcane
     }
 
     /// <summary>
@@ -288,7 +299,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
         var moles = absorbedGas.TotalMoles;
 
-        var totalDamage = 0f;
+        var totalDamage = sm.Damage; // Arcane-Edit: 0f > accumulate current damage
 
         var tempThreshold = Atmospherics.T0C + sm.HeatPenaltyThreshold;
 
@@ -337,7 +348,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
             break;
         }
 
-        sm.Damage = Math.Min(sm.DamageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage);
+        sm.Damage = Math.Max(Math.Min(sm.DamageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage), 0f); // Arcane-Edit: clamp damage at zero
 
         // Return the manipulated gas back to the mix
         _atmosphere.Merge(mix, absorbedGas);

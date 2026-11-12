@@ -28,6 +28,7 @@
       - JawsOfLife
       - GPS
       - WeldingMask
+      - MesonGoggles # Arcane
       - RemoteSignaller
       - UtilityKnife
       components:
@@ -42,9 +43,10 @@
       - Geiger
       - TrayScanner
       - GasAnalyzer
+      - RadarConsole # Arcane
       - HandLabeler
   - type: ItemMapper
-    sprite: &BeltOverlay Clothing/Belt/belt_overlay.rsi
+    sprite: _Arcane/Clothing/Belt/engineering_belt_overlay.rsi # Arcane-Edit: Clothing/Belt/belt_overlay.rsi > _Arcane/Clothing/Belt/engineering_belt_overlay.rsi
     mapLayers:
       drill:
         whitelist:
@@ -78,6 +80,20 @@
         whitelist:
           tags:
           - Multitool
+      # Arcane-Start
+      weldmask:
+        whitelist:
+          tags:
+          - WeldingMask
+      mass_scanner:
+        whitelist:
+          tags:
+          - GPS
+      meson:
+        whitelist:
+          tags:
+          - MesonGoggles
+      # Arcane-End
   - type: Appearance
 
 - type: entity
@@ -141,7 +157,7 @@
       - LightReplacer
       - CleanerGrenade
   - type: ItemMapper
-    sprite: *BeltOverlay
+    sprite: &BeltOverlay Clothing/Belt/belt_overlay.rsi # Arcane-Edit: moved anchor
     mapLayers:
       bottle:
         whitelist:
@@ -301,6 +317,7 @@
         - JawsOfLife
         - GPS
         - WeldingMask
+        - MesonGoggles # Arcane
         - RemoteSignaller
         - Hammer
         - Nailgun
@@ -324,7 +341,9 @@
         - Geiger
         - TrayScanner
         - GasAnalyzer
+        - RadarConsole # Arcane
   - type: ItemMapper
+    sprite: _Arcane/Clothing/Belt/engineering_belt_overlay.rsi
     mapLayers:
       bottle:
         whitelist:
@@ -376,6 +395,20 @@
         whitelist:
           tags:
           - Multitool
+      weldmask:
+        whitelist:
+          tags:
+          - WeldingMask
+      mass_scanner:
+        whitelist:
+          tags:
+          - GPS
+          components:
+          - RadarConsole
+      meson:
+        whitelist:
+          tags:
+          - MesonGoggles
   # Arcane-End
   - type: Sprite
     sprite: Clothing/Belt/emt.rsi

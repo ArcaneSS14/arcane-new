@@ -59,6 +59,12 @@
         Shock: 0.5
         Heat: 0.7
         Radiation: 0.05
+        # Arcane-Start
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Caustic: 0.7
+        # Arcane-End
   - type: ClothingSpeedModifier
     walkModifier: 0.85
     sprintModifier: 0.85

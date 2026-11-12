@@ -26,6 +26,7 @@
     - id: RCDRechargingCE # replaces regular RCD
     - id: RPD
     - id: BaseHandheldStationMapPowerCe
+    - id: BaseHandheldStationMapSupermatterCe # Arcane
     - id: CartridgeRocketSingularityBuster
     - id: CartridgeRocketSingularityBuster
     - id: WeaponLauncherSingularityBuster
