@@ -23,7 +23,7 @@ public sealed partial class LavalandSystem
         var random = new Random(lavaland.Comp.Seed);
 
         var usedSpace = GetOutpostBoundary(lavaland);
-        var coords = GetCoordinates(pool.RuinDistance, pool.MaxDistance);
+        var coords = GetCoordinates(pool.RuinDistance, pool.MaxDistance, pool.MinDistance); // Arcane-Edit
 
         random.Shuffle(coords);
 
@@ -31,16 +31,7 @@ public sealed partial class LavalandSystem
         Log.Debug($"Spawning {pool.GridRuins.Count} GridRuins on {ToPrettyString(lavaland)} planet.");
         SetupHugeRuins(pool.GridRuins, lavaland, preloader, random, ref coords, ref usedSpace);
 
-        // Create a new list that excludes all already used spaces that intersect with big ruins.
-        // Sweet optimization (another lag machine).
-        var newCoords = coords.ToHashSet();
-        foreach (var usedBox in usedSpace)
-        {
-            var list = coords.Where(coord => !usedBox.Contains(coord)).ToHashSet();
-            newCoords = newCoords.Concat(list).ToHashSet();
-        }
-
-        coords = newCoords.ToList();
+        coords.RemoveAll(coord => usedSpace.Any(box => box.Contains(coord))); // Arcane-Edit: remove candidates inside placed ruins
 
         // Load dungeon ruins
         // TODO: make it actual dungeons instead of spawning markers
@@ -141,7 +132,15 @@ public sealed partial class LavalandSystem
         if (coords.Count == 0)
             return false;
 
-        var coord = random.Pick(coords);
+        // Arcane-Edit-Start: keep distance overrides local to the selected ruin
+        var candidates = ruin.MinDistance != null || ruin.MaxDistance != null
+            ? coords.FindAll(point => InRuinDistance(point, ruin.MinDistance ?? 0, ruin.MaxDistance ?? int.MaxValue))
+            : coords;
+        if (candidates.Count == 0)
+            return false;
+
+        var coord = random.Pick(candidates);
+        // Arcane-Edit-End
         var mapXform = Transform(preloader);
 
         // Check if we already calculated that boundary before, and if we didn't then calculate it now
@@ -155,16 +154,15 @@ public sealed partial class LavalandSystem
         var spawned = spawnedBoundedGrid.Value;
         var ruinBox = spawnedBoundedGrid.Value.Comp.LocalAABB.Translated(coord);
 
-        // Teleport it into place on preloader map
-        _transform.SetCoordinates(spawned, new EntityCoordinates(preloader, coord));
-
         // If any used boundary intersects with current boundary, return
         if (usedSpace.Any(used => used.Intersects(ruinBox)))
         {
             Log.Debug($"Ruin {ruin.ID} can't be placed on picked coordinates {coord.ToString()} on {ToPrettyString(lavaland)} planet, skipping spawn.");
+            Del(spawned); // Arcane: discard the rejected preloaded grid
             return false;
         }
 
+        _transform.SetCoordinates(spawned, new EntityCoordinates(preloader, coord)); // Arcane: move only an accepted grid
         usedSpace.Add(ruinBox);
         coords.Remove(coord);
 
@@ -176,7 +174,7 @@ public sealed partial class LavalandSystem
             _metaData.SetEntityName(spawned, Loc.GetString(ruin.Name));
             _transform.SetParent(spawned, spawnedXForm, lavaland);
             _transform.SetCoordinates(spawned,
-                new EntityCoordinates(lavaland, spawnedXForm.Coordinates.Position.Rounded()));
+                new EntityCoordinates(lavaland, coord)); // Arcane-Edit: use the checked placement coordinate
 
             var componentsToGrant = EnsureComp<LavalandGridGrantComponent>(spawned);
             foreach (var (key, comp) in ruin.ComponentsToGrant)
@@ -218,9 +216,13 @@ public sealed partial class LavalandSystem
         return true;
     }
 
-    private List<Vector2i> GetCoordinates(int distance, int maxDistance)
+    private List<Vector2i> GetCoordinates(int distance, int maxDistance, int minDistance) // Arcane-Edit
     {
         var coords = new List<Vector2i>();
+        // Arcane-Start
+        if (distance <= 0 || maxDistance < minDistance || minDistance < 0)
+            return coords;
+        // Arcane-End
         var moveVector = new Vector2i(maxDistance, maxDistance);
 
         while (moveVector.Y >= -maxDistance)
@@ -247,8 +249,17 @@ public sealed partial class LavalandSystem
             moveVector += new Vector2i(0, -distance);
         }
 
+        coords.RemoveAll(coord => !InRuinDistance(coord, minDistance, maxDistance)); // Arcane
         return coords;
     }
+
+    // Arcane-Start
+    private static bool InRuinDistance(Vector2i point, int minDistance, int maxDistance)
+    {
+        var lengthSquared = (long) point.X * point.X + (long) point.Y * point.Y;
+        return lengthSquared >= (long) minDistance * minDistance && lengthSquared <= (long) maxDistance * maxDistance;
+    }
+    // Arcane-End
 
     private List<LavalandGridRuinPrototype> GetGridRuinProtos(Dictionary<ProtoId<LavalandGridRuinPrototype>, ushort> protos)
     {

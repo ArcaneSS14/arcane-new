@@ -6,6 +6,7 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
+using System.Linq; // Arcane
 
 namespace Content.Lavaland.Shared.Aggression;
 
@@ -17,6 +18,7 @@ public sealed partial class AggressorsSystem : EntitySystem
     [Dependency] private SharedTransformSystem _xform = default!;
 
     private EntityQuery<TransformComponent> _xformQuery;
+    private readonly List<EntityUid> _expiredAggressors = new(); // Arcane
 
     public override void Initialize()
     {
@@ -45,24 +47,36 @@ public sealed partial class AggressorsSystem : EntitySystem
         while (query.MoveNext(out var uid, out var aggressive, out var xform))
         {
             if (aggressive.ForgiveRange == null
-                || aggressive.NextUpdate < curTime)
+                || aggressive.NextUpdate > curTime) // Arcane-Edit: < > >
                 continue;
 
             aggressive.NextUpdate = curTime + aggressive.UpdateDelay;
+            _expiredAggressors.Clear(); // Arcane
 
             foreach (var aggressor in aggressive.Aggressors)
             {
-                if (!_xformQuery.TryComp(aggressor, out var aggroXform))
+                // Arcane-Edit-Start
+                if (!_xformQuery.TryComp(aggressor, out var aggroXform) || xform.MapID != aggroXform.MapID)
+                {
+                    _expiredAggressors.Add(aggressor);
                     continue;
+                }
+                // Arcane-Edit-End
 
                 var aggroPos = _xform.GetWorldPosition(aggroXform);
                 var aggressivePos = _xform.GetWorldPosition(xform);
                 var distance = (aggressivePos - aggroPos).Length();
 
-                if (distance > aggressive.ForgiveRange
-                    || xform.MapID != aggroXform.MapID)
-                    RemoveAggressor((uid, aggressive), aggressor);
+                // Arcane-Edit-Start
+                if (distance > aggressive.ForgiveRange)
+                    _expiredAggressors.Add(aggressor);
+                // Arcane-Edit-End
             }
+
+            // Arcane-Start
+            foreach (var aggressor in _expiredAggressors)
+                RemoveAggressor((uid, aggressive), aggressor);
+            // Arcane-End
         }
     }
 
@@ -126,31 +140,40 @@ public sealed partial class AggressorsSystem : EntitySystem
 
     public void RemoveAggressor(Entity<AggressiveComponent> ent, Entity<AggressorComponent?> aggressor)
     {
-        ent.Comp.Aggressors.Remove(aggressor);
+        // Arcane-Edit-Start
+        if (!ent.Comp.Aggressors.Remove(aggressor))
+            return;
+        // Arcane-Edit-End
+
+        // Arcane-Start
+        Dirty(ent.Owner, ent.Comp);
+        var ev = new AggressorRemovedEvent(aggressor);
+        RaiseLocalEvent(ent, ref ev);
+        // Arcane-End
         RemoveAggressorFrom(ent, aggressor);
     }
 
     public void RemoveAllAggressors(Entity<AggressiveComponent> ent)
     {
-        foreach (var aggressor in ent.Comp.Aggressors)
-        {
-            RemoveAggressorFrom(ent, aggressor);
-        }
-
-        ent.Comp.Aggressors.Clear();
+        // Arcane-Edit-Start
+        foreach (var aggressor in ent.Comp.Aggressors.ToArray())
+            RemoveAggressor(ent, aggressor);
+        // Arcane-Edit-End
     }
 
     private void RemoveAggressorFrom(Entity<AggressiveComponent> ent, Entity<AggressorComponent?> aggressor)
     {
-        if (!Resolve(aggressor, ref aggressor.Comp))
+        if (!Resolve(aggressor, ref aggressor.Comp, false)) // Arcane-Edit: ignore a target already removed
             return;
 
         aggressor.Comp.Aggressives.Remove(ent);
         if (aggressor.Comp.Aggressives.Count > 0)
+        // Arcane-Start
+        {
+            Dirty(aggressor.Owner, aggressor.Comp);
             return;
-
-        var ev = new AggressorRemovedEvent(aggressor);
-        RaiseLocalEvent(ent, ref ev);
+        }
+        // Arcane-End
         var ev2 = new AggressiveRemovedEvent(ent);
         RaiseLocalEvent(aggressor, ref ev2);
         RemComp(aggressor, aggressor.Comp);
@@ -165,13 +188,13 @@ public sealed partial class AggressorsSystem : EntitySystem
         if (!Resolve(aggressor, ref aggressor.Comp))
             return;
 
-        foreach (var aggressive in aggressor.Comp.Aggressives)
+        foreach (var aggressive in aggressor.Comp.Aggressives.ToArray()) // Arcane-Edit: removing a relation mutates the set
         {
             if (TryComp<AggressiveComponent>(aggressive, out var aggressors))
                 RemoveAggressor((aggressive, aggressors), aggressor);
         }
 
-        RemComp(aggressor, aggressor.Comp);
+        RemComp<AggressorComponent>(aggressor.Owner); // Arcane-Edit: the last relation can already remove this component
     }
 
     #endregion

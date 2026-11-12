@@ -11,6 +11,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
+using Content.Lavaland.Server.Mobs; // Arcane
+
 namespace Content.Lavaland.Server.Tendril;
 
 public sealed partial class TendrilSystem : EntitySystem
@@ -19,6 +21,7 @@ public sealed partial class TendrilSystem : EntitySystem
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private IGameTiming _time = default!;
+    [Dependency] private LavalandMobSpawnerSystem _mobSpawner = default!; // Arcane
 
     public override void Initialize()
     {
@@ -28,6 +31,7 @@ public sealed partial class TendrilSystem : EntitySystem
         SubscribeLocalEvent<TendrilComponent, DestructionEventArgs>(OnTendrilDestruction);
         SubscribeLocalEvent<TendrilComponent, ComponentStartup>(OnTendrilStartup);
         SubscribeLocalEvent<TendrilMobComponent, MobStateChangedEvent>(OnMobState);
+        SubscribeLocalEvent<TendrilMobComponent, EntityTerminatingEvent>(OnMobRemoved); // Arcane
     }
 
     public override void Update(float frameTime)
@@ -44,19 +48,36 @@ public sealed partial class TendrilSystem : EntitySystem
 
             comp.UpdateAccumulator = 0;
 
+            if (comp.Spawns.Count == 0) // Arcane
+                continue; // Arcane
+
             if (comp.Mobs.Count >= comp.MaxSpawns)
                 continue;
 
             if (comp.LastSpawn + TimeSpan.FromSeconds(comp.SpawnDelay) > _time.CurTime)
                 continue;
 
-            var mob = Spawn(_random.Pick(comp.Spawns), Transform(uid).Coordinates);
+            // Arcane-Start
+            var coordinates = Transform(uid).Coordinates;
+            if (!_mobSpawner.TryGetNearbyPlayer(coordinates, comp.ActivationRange, out _))
+                continue;
+            // Arcane-End
+
+            var mob = SpawnAtPosition(_random.Pick(comp.Spawns), coordinates); // Arcane-Edit
             var mobComp = EnsureComp<TendrilMobComponent>(mob);
             mobComp.Tendril = uid;
             comp.Mobs.Add(mob);
             comp.LastSpawn = _time.CurTime;
         }
     }
+
+    // Arcane-Start
+    private void OnMobRemoved(Entity<TendrilMobComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (ent.Comp.Tendril is { } tendril && TryComp<TendrilComponent>(tendril, out var component))
+            component.Mobs.Remove(ent.Owner);
+    }
+    // Arcane-End
 
     private void OnTendrilStartup(EntityUid uid, TendrilComponent comp, ComponentStartup args)
     {
@@ -65,7 +86,10 @@ public sealed partial class TendrilSystem : EntitySystem
 
     private void OnTendrilMobDeath(EntityUid uid, TendrilComponent comp, ref TendrilMobDeadEvent args)
     {
-        comp.Mobs.Remove(args.Entity);
+        // Arcane-Edit-Start
+        if (!comp.Mobs.Remove(args.Entity))
+            return;
+        // Arcane-Edit-End
         comp.DefeatedMobs++;
 
         // John Shitcode

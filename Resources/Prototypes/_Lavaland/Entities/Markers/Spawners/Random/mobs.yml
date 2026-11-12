@@ -26,7 +26,7 @@
 - type: entity
   name: lavaland heavy mob spawner
   id: SpawnerRandomMobLavaland
-  parent: MarkerBase
+  parent: ArcaneLavalandProximitySpawner # Arcane-Edit: MarkerBase > ArcaneLavalandProximitySpawner
   suffix: Lavaland
   components:
   - type: Sprite
@@ -34,14 +34,14 @@
     - state: red
     - sprite: Mobs/Aliens/Asteroid/goliath.rsi
       state: goliath
-  - type: EntityTableSpawner
+  - type: SpawnEntityTableOnTrigger # Arcane-Edit: EntityTableSpawner > SpawnEntityTableOnTrigger
     table: !type:NestedSelector
       tableId: LavalandHeavyMobs
 
 - type: entity
   name: lavaland light mob spawner
   id: SpawnerRandomLightMobLavaland
-  parent: MarkerBase
+  parent: ArcaneLavalandProximitySpawner # Arcane-Edit: MarkerBase > ArcaneLavalandProximitySpawner
   suffix: Lavaland
   components:
   - type: Sprite
@@ -49,6 +49,6 @@
     - state: red
     - sprite: Mobs/Aliens/Asteroid/goliath.rsi
       state: goliath
-  - type: EntityTableSpawner
+  - type: SpawnEntityTableOnTrigger # Arcane-Edit: EntityTableSpawner > SpawnEntityTableOnTrigger
     table: !type:NestedSelector
       tableId: LavalandLightMobs
