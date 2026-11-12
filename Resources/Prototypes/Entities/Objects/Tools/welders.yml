@@ -204,6 +204,7 @@
     color: lightblue
   - type: Welder
     fuelReagent: Plasma
+  - type: ExperimentalWeldingEffect # Arcane
   - type: RequiresEyeProtection
     statusEffectTime: 5 # less harmful; sunglasses can block it
 

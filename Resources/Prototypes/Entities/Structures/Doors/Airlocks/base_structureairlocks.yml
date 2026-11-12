@@ -105,6 +105,11 @@
   - type: Weldable
     fuel: 5
     time: 3
+  # Arcane-Start
+  - type: WeldingEffectPath
+    startOffset: 0,0.5
+    endOffset: 0,-0.5
+  # Arcane-End
   - type: Airlock
     openUnlitVisible: true
   - type: NavMapDoor

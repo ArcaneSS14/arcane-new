@@ -393,6 +393,11 @@ public sealed partial class ParticleSystem : EntitySystem
     /// </summary>
     public static void StopEffect(ActiveEmitter emitter) => emitter.Exhausted = true;
 
+    // Arcane-Start
+    /// <summary>Removes this emitter and its remaining particles, even when out of view.</summary>
+    public void RemoveEffectImmediately(ActiveEmitter emitter) => _emitters.Remove(emitter);
+    // Arcane-End
+
     /// <summary>
     /// Updates the intensity multiplier on a running emitter by handle.
     /// </summary>

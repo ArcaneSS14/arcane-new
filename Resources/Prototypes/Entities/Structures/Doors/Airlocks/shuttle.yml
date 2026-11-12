@@ -91,6 +91,11 @@
     node: airlock
   - type: StaticPrice
     price: 350
+  # Arcane-Start
+  - type: WeldingEffectPath
+    startOffset: -0.5,-0.2
+    endOffset: 0.5,0.2
+  # Arcane-End
   - type: Paintable
     group: null
   - type: DirectionalArrowIndicator
