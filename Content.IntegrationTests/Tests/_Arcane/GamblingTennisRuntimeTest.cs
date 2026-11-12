@@ -15,7 +15,6 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DeviceLinking;
 using Content.Shared.DoAfter;
 using Content.Shared.Emag.Components;
-using Content.Shared.GameTicking.Events;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mind;
@@ -47,6 +46,7 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
     private EntityUid? _mind;
 
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
+    private static PoolSettings JackpotPair => new() { Connected = true, Dirty = true, Fresh = true };
 
     [TestPrototypes]
     private const string Prototypes = """
@@ -341,6 +341,7 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
     }
 
     [Test]
+    [PairConfig(nameof(JackpotPair))]
     public async Task JackpotRequiresDeliveryAndQualifyingPrizeId()
     {
         await SpawnTarget(Slot);
@@ -349,8 +350,6 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
         var manager = SEntMan.System<AchievementManager>();
         await Server.WaitAssertion(() =>
         {
-            // A recycled pair can still have the previous round's cached eligibility.
-            SEntMan.EventBus.RaiseEvent(EventSource.Local, new RoundStartingEvent(1));
             var achievement = SProtoMan.Index<AchievementPrototype>(JackpotAchievement);
             Assert.That(manager.IsLoaded(ServerSession!), Is.True);
             Assert.That(SEntMan.System<AchievementSystem>().CanProgress(SPlayer, out _), Is.True);

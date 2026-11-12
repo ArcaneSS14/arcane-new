@@ -33,7 +33,7 @@ public sealed partial class RCDMenuBoundUserInterface : BoundUserInterface
             // <Trauma>
             ["Piping"] = ("rcd-component-piping", 5, new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RPD/fourway.png"))),
             ["AtmosphericUtility"] = ("rcd-component-atmosphericutility", 6, new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RPD/port.png"))),
-            ["PumpsValves"] = ("rcd-component-pumpsvalves", 7, new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RPD/pump_volume.png"))),
+            ["PumpsValves"] = ("rcd-component-pumps", 7, new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RPD/pump_volume.png"))), // Arcane-Edit: rcd-component-pumpsvalves > rcd-component-pumps
             ["Vents"] = ("rcd-component-vents", 8, new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RPD/vent_passive.png"))),
             // </Trauma>
         };
