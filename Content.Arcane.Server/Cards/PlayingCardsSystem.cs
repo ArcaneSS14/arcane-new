@@ -55,6 +55,9 @@ public sealed partial class PlayingCardsSystem : EntitySystem
 
     private void OnMapInit(Entity<PlayingCardsStorageComponent> ent, ref MapInitEvent args)
     {
+        if (!HasComp<PlayingCardsComponent>(ent) || !HasComp<ItemComponent>(ent))
+            return;
+
         if (ent.Comp.Cards.Count == 0)
         {
             foreach (var id in ent.Comp.Content.Take(MaxCards))
