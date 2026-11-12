@@ -91,7 +91,7 @@ public sealed partial class DiodeDiscSystem : EntitySystem
                 $"SUPERMATTER ACTIVATED BY {Name(ent)} AT {Transform(args.Target).Coordinates}");
             supermatter.Activated = true;
         }
-        supermatter.Damage += ent.Comp.IntegrityDamage;
+        supermatter.Damage = Math.Max(0f, supermatter.Damage + ent.Comp.IntegrityDamage);
         // Source also adds the unmodified projectile damage to its power on collision.
         supermatter.Power += ent.Comp.EnergyDamage + (float) projectile.Damage.GetTotal();
         Dirty(args.Target, supermatter);

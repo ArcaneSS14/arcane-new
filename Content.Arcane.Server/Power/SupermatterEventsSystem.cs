@@ -88,7 +88,6 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
         if (ent.Comp.Anger < ent.Comp.EventThreshold)
             return;
 
-        ent.Comp.Anger = 0f;
         var pool = ent.Comp.LastAnger >= ent.Comp.HarshThreshold ? HarshEvents : NormalEvents;
         var id = ProtoMan.Index(pool).Pick(_random);
         if (!ProtoMan.TryIndex<SupermatterEventPrototype>(id, out var effect))
@@ -108,8 +107,10 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
         {
             sm.ArcaneSurgeActive = true;
             ent.Comp.SurgeUntil = _timing.CurTime + ent.Comp.SurgeDuration;
+            _radiation.SetTransientIntensity(ent.Owner, sm.ArcaneTransmittedPower * sm.EffectiveRadiationOutputFactor);
         }
 
+        ent.Comp.Anger = 0f;
         _radio.SendRadioMessage(ent, Loc.GetString(effect.Announcement), ProtoMan.Index(Engineering), ent);
         _chat.SendAdminAlert($"{effect.ID} triggered by supermatter {ToPrettyString(ent)}");
     }

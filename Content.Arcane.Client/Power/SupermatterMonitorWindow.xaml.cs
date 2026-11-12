@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using Content.Arcane.Shared.Power;
 using Content.Client.UserInterface.Controls;
@@ -13,8 +14,10 @@ namespace Content.Arcane.Client.Power;
 public sealed partial class SupermatterMonitorWindow : FancyWindow
 {
     private readonly SharedAtmosphereSystem _atmosphere;
+    private readonly ILocalizationManager _localization;
     private readonly Dictionary<Gas, Label> _gasLabels = [];
     private SupermatterMonitorEntry[] _entries = [];
+    private CultureInfo? _entryCulture;
 
     public event Action<NetEntity>? FocusSelected;
 
@@ -22,13 +25,16 @@ public sealed partial class SupermatterMonitorWindow : FancyWindow
     {
         RobustXamlLoader.Load(this);
         _atmosphere = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SharedAtmosphereSystem>();
+        _localization = IoCManager.Resolve<ILocalizationManager>();
         CrystalSelection.OnItemSelected += args => FocusSelected?.Invoke(_entries[args.Id].Crystal);
     }
 
     public void UpdateReadings(SupermatterMonitorState state)
     {
-        if (!_entries.SequenceEqual(state.Crystals))
+        if (!Equals(_entryCulture, _localization.DefaultCulture) || !_entries.SequenceEqual(state.Crystals))
         {
+            _entryCulture = _localization.DefaultCulture;
+            NoCrystals.Text = Loc.GetString("arcane-supermatter-monitor-no-crystals");
             _entries = state.Crystals;
             CrystalSelection.Clear();
             for (var index = 0; index < _entries.Length; index++)

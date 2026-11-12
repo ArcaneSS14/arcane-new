@@ -226,6 +226,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         var transmittedpower = sm.Power * Math.Max(0, 1f + transmissionBonus / 10f);
         _radiation.SetIntensity(uid, transmittedpower * sm.RadiationOutputFactor);
         // Arcane-Start
+        sm.ArcaneTransmittedPower = transmittedpower;
         if (sm.ArcaneSurgeActive)
             _radiation.SetTransientIntensity(uid, transmittedpower * sm.EffectiveRadiationOutputFactor);
         // Arcane-End

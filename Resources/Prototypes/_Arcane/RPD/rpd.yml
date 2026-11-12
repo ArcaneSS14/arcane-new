@@ -19,6 +19,7 @@
     state: pumpPressureRegulator
   mode: ConstructObject
   prototype: GasPressureRegulator
+  collisionMask: Impassable
   cost: 2
   delay: 0
   rotation: User

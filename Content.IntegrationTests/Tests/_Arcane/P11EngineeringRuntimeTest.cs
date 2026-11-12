@@ -11,7 +11,6 @@ using Content.Shared.Atmos;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Projectiles;
 using Content.Shared.Radiation.Components;
-using Content.Shared.Radiation.Systems;
 using Content.Shared.Random;
 using Content.Shared.Random.Helpers;
 using Content.Shared.Singularity.Components;
@@ -67,6 +66,7 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
         await SetTile(Plating, TargetCoords, MapData.Grid);
         await SpawnTarget("Supermatter");
         var crystal = STarget!.Value;
+        var baselineRadiation = 0f;
         await Server.WaitAssertion(() =>
         {
             var atmosphere = SEntMan.System<AtmosphereSystem>();
@@ -77,6 +77,7 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
 
             var sm = SEntMan.GetComponent<SupermatterComponent>(crystal);
             sm.Damage = 50f;
+            sm.Power = 100f;
             SEntMan.System<SupermatterSystem>().Cycle(crystal, sm);
             Assert.That(sm.Damage, Is.GreaterThan(40f), "The gas cycle overwrote accumulated damage.");
             var reading = SEntMan.GetComponent<SupermatterEventsComponent>(crystal);
@@ -94,6 +95,12 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             Assert.That(sm.Power, Is.EqualTo(power + 100f + (float) projectile.Damage.GetTotal()).Within(0.001f));
             SEntMan.DeleteEntity(bolt);
 
+            sm.Damage = 0f;
+            var disruptive = SEntMan.SpawnAtPosition("EmitterBoltElectroDisruptive", Position(crystal));
+            SEntMan.EventBus.RaiseLocalEvent(disruptive, ref hit);
+            Assert.That(sm.Damage, Is.Zero);
+            SEntMan.DeleteEntity(disruptive);
+
             sm.Activated = false;
             var pool = Server.ResolveDependency<IPrototypeManager>().Index(NormalEvents);
             var sampleRandom = new RobustRandom();
@@ -110,14 +117,15 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             reading.LastAnger = 0f;
             reading.SurgeDuration = TimeSpan.FromSeconds(0.2);
             Server.ResolveDependency<IRobustRandom>().SetSeed(seed);
+            var source = SEntMan.GetComponent<RadiationSourceComponent>(crystal);
+            baselineRadiation = source.EffectiveIntensity;
+            Assert.That(baselineRadiation, Is.Positive);
             var cycle = new SupermatterCycleCompletedEvent(true);
             SEntMan.EventBus.RaiseLocalEvent(crystal, ref cycle);
             Assert.That(sm.ArcaneSurgeActive, Is.True);
             Assert.That(sm.EffectiveGasEfficiency, Is.EqualTo(0.30f));
-            var radiation = SEntMan.System<SharedRadiationSystem>();
-            radiation.SetIntensity(crystal, 4f);
-            radiation.SetTransientIntensity(crystal, 12f);
-            Assert.That(SEntMan.GetComponent<RadiationSourceComponent>(crystal).EffectiveIntensity, Is.EqualTo(12f));
+            Assert.That(source.EffectiveIntensity, Is.GreaterThan(baselineRadiation));
+            Assert.That(source.EffectiveIntensity, Is.EqualTo(sm.ArcaneTransmittedPower * 0.06f).Within(0.001f));
         });
         await RunSeconds(0.3f);
         await Server.WaitAssertion(() =>
@@ -128,7 +136,7 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             var sm = SEntMan.GetComponent<SupermatterComponent>(crystal);
             Assert.That(sm.ArcaneSurgeActive, Is.False);
             Assert.That(sm.EffectiveGasEfficiency, Is.EqualTo(sm.GasEfficiency));
-            Assert.That(SEntMan.GetComponent<RadiationSourceComponent>(crystal).EffectiveIntensity, Is.EqualTo(4f));
+            Assert.That(SEntMan.GetComponent<RadiationSourceComponent>(crystal).EffectiveIntensity, Is.EqualTo(baselineRadiation));
         });
     }
 
