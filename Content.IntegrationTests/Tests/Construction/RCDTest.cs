@@ -6,6 +6,7 @@ using Content.Shared.RCD.Components;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.RCD.Systems; // Arcane
 
 namespace Content.IntegrationTests.Tests.Construction;
 
@@ -231,6 +232,37 @@ public sealed class RCDTest : InteractionTest
         // Check that there are no entities left.
         await AssertEntityLookup();
     }
+
+    // Arcane-Start
+    [Test]
+    public async Task RpdAllowsPerpendicularPressureRegulatorsButRejectsDuplicates()
+    {
+        await SetTile(Plating, TargetCoords, MapData.Grid);
+        await SpawnTarget("GasPressureRegulator");
+        var regulator = STarget!.Value;
+        var rpd = await PlaceInHands("RPD");
+        ProtoId<RCDPrototype> setting = "PipePressureRegulator";
+        await SetRcdProto(rpd, setting);
+
+        await Server.WaitAssertion(() =>
+        {
+            var uid = ToServer(rpd);
+            var component = SEntMan.GetComponent<RCDComponent>(uid);
+            var grid = MapData.Grid;
+            var tile = MapSystem.GetTileRef(grid, grid.Comp, Position(regulator));
+            var transform = SEntMan.GetComponent<TransformComponent>(regulator);
+            var direction = transform.LocalRotation.GetCardinalDir();
+            var across = direction is Direction.North or Direction.South ? Direction.East : Direction.North;
+            var system = SEntMan.System<RCDSystem>();
+            Assert.That(transform.Anchored, Is.True);
+            Assert.That(component.ProtoId, Is.EqualTo(setting));
+            Assert.That(system.IsRCDOperationStillValid(uid, component, grid, grid.Comp,
+                tile, tile.GridIndices, direction, null, SPlayer, popMsgs: false), Is.False);
+            Assert.That(system.IsRCDOperationStillValid(uid, component, grid, grid.Comp,
+                tile, tile.GridIndices, across, null, SPlayer, popMsgs: false), Is.True);
+        });
+    }
+    // Arcane-End
 
     private async Task SetRcdProto(NetEntity rcd, ProtoId<RCDPrototype> protoId)
     {
