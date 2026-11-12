@@ -24,3 +24,4 @@
   delay: 0
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true
