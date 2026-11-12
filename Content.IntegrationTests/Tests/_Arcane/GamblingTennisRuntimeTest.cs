@@ -15,6 +15,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DeviceLinking;
 using Content.Shared.DoAfter;
 using Content.Shared.Emag.Components;
+using Content.Shared.GameTicking.Events;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mind;
@@ -45,7 +46,6 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
     private const string JackpotAchievement = "Jackpot";
     private EntityUid? _mind;
 
-    // Dirty pairs are disposed after each case, including their RNG and test-only systems.
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
 
     [TestPrototypes]
@@ -349,6 +349,8 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
         var manager = SEntMan.System<AchievementManager>();
         await Server.WaitAssertion(() =>
         {
+            // A recycled pair can still have the previous round's cached eligibility.
+            SEntMan.EventBus.RaiseEvent(EventSource.Local, new RoundStartingEvent(1));
             var achievement = SProtoMan.Index<AchievementPrototype>(JackpotAchievement);
             Assert.That(manager.IsLoaded(ServerSession!), Is.True);
             Assert.That(SEntMan.System<AchievementSystem>().CanProgress(SPlayer, out _), Is.True);
