@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Arcane.Shared.Gambling;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
@@ -13,8 +12,6 @@ using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Stacks;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 using Robust.Shared.Player;
 
 namespace Content.Arcane.Server.Gambling;
@@ -31,8 +28,6 @@ public sealed partial class SlotMachineSystem : EntitySystem
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private PrizeSystem _prizes = default!;
-    [Dependency] private IPrototypeManager _prototypes = default!;
-    [Dependency] private IRobustRandom _random = default!;
 
     public override void Initialize()
     {
@@ -143,18 +138,9 @@ public sealed partial class SlotMachineSystem : EntitySystem
             return;
         }
 
-        EntityUid? user = ent.Comp.User is { } original
+        EntityUid? user = !ent.Comp.EmagSpin && ent.Comp.User is { } original
                          && TryComp<ActorComponent>(original, out var actor)
                          && actor.PlayerSession.UserId == ent.Comp.UserId ? original : null;
-        if (ent.Comp.EmagSpin)
-        {
-            var entities = _prototypes.EnumeratePrototypes<EntityPrototype>().Where(p => !p.Abstract).ToList();
-            Reset(ent);
-            if (entities.Count > 0)
-                Spawn(_random.Pick(entities).ID, Transform(ent).Coordinates);
-            return;
-        }
-
         var prize = _prizes.Pick(ent.Comp.Prizes);
         if (prize == null)
         {

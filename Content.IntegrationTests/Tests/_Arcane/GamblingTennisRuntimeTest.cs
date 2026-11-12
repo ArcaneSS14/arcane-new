@@ -15,6 +15,8 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DeviceLinking;
 using Content.Shared.DoAfter;
 using Content.Shared.Emag.Components;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.IdentityManagement;
 using Content.Shared.Mind;
 using Content.Shared.Roles;
 using Content.Shared.Stacks;
@@ -228,6 +230,16 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
             Assert.That(CountPrizeItems(), Is.EqualTo(2), "Unlimited cash bought a free spin.");
             Assert.That(Stack.GetCount((Slots.GetItemOrNull(machine, "money")!.Value, null)), Is.EqualTo(750));
         });
+
+        await InteractUsing("Emag", awaitDoAfters: false);
+        await RunSeconds(1.1f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.HasComponent<EmaggedComponent>(machine), Is.True);
+            Assert.That(CountPrizeItems(), Is.EqualTo(4), "The free spin did not deliver the configured prize.");
+            Assert.That(PlayerProbe.Prizes, Is.EqualTo(new[] { DeliveredPrize }), "The free spin was credited as a paid win.");
+            Assert.That(Stack.GetCount((Slots.GetItemOrNull(machine, "money")!.Value, null)), Is.EqualTo(750));
+        });
     }
 
     [TestCase(true)]
@@ -320,6 +332,10 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
             Assert.That(PlayerProbe.Prizes, Is.EqualTo(new[] { "ClawGameEvil" }));
             Assert.That(PlayerProbe.UndeliveredEvents, Is.Zero);
             Assert.That(PlayerProbe.DeliveredEntities.All(uid => SEntMan.EntityExists(uid)), Is.True);
+            var item = PlayerProbe.DeliveredEntities.Single();
+            Assert.That(SEntMan.HasComponent<EvilClawPrizeComponent>(item), Is.True);
+            var original = SEntMan.GetComponent<MetaDataComponent>(item).EntityName;
+            Assert.That(Identity.Name(item, SEntMan), Is.EqualTo(Loc.GetString("arcane-clawmachine-evil-prize-name", ("name", original))));
             Assert.That(CountPrizeItems(), Is.Zero, "A cancelled earlier normal play eventually delivered.");
         });
     }
@@ -393,9 +409,24 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
             Assert.That(links.GetLinks(server, rig), Has.Count.EqualTo(1));
         });
 
-        await InteractUsing("TestArcaneP18CollectionVinyl");
+        await PlaceInHands("TestArcaneP18CollectionVinyl");
         await Server.WaitAssertion(() =>
         {
+            var fixtureRandom = new RobustRandom();
+            var seed = 0;
+            while (true)
+            {
+                fixtureRandom.SetSeed(seed);
+                if (fixtureRandom.Next(2) != fixtureRandom.Next(2))
+                    break;
+                seed++;
+            }
+
+            // A second selection would choose the other track with this seed.
+            var record = SEntMan.System<SharedHandsSystem>().GetActiveItem(SPlayer);
+            Assert.That(record, Is.Not.Null);
+            Server.ResolveDependency<IRobustRandom>().SetSeed(seed);
+            Assert.That(Slots.TryInsert(player, "vinyl", record!.Value, SPlayer), Is.True);
             var vinyl = Slots.GetItemOrNull(player, "vinyl");
             Assert.That(vinyl, Is.Not.Null, "The connected, powered player rejected the record.");
             Assert.That(SEntMan.GetComponent<VinylComponent>(vinyl!.Value).Song, Is.TypeOf<SoundCollectionSpecifier>());

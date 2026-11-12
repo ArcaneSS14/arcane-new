@@ -705,7 +705,7 @@
 - type: cardFace
   id: CardScAceOfDiamondsSyndicate
   name: card-sc-ace-diamonds
-  state: diamonds11
+  state: diamonds1
 
 - type: cardFace
   id: CardSc2OfDiamondsSyndicate

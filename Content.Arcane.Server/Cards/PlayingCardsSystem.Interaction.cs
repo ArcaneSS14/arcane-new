@@ -32,9 +32,7 @@ public sealed partial class PlayingCardsSystem
     {
         if (active == null)
             return TryDraw(user, source, source.Comp.Cards.Count - 1);
-        if (!TryComp<PlayingCardsStorageComponent>(active, out var target))
-            return false;
-        return TryTransfer(user, source, (active.Value, target), 1);
+        return TryTransfer(user, source, active.Value, 1);
     }
 
     private void OnInteractUsing(Entity<PlayingCardsStorageComponent> ent, ref InteractUsingEvent args)
@@ -55,7 +53,7 @@ public sealed partial class PlayingCardsSystem
             TryComp<PlayingCardsStorageComponent>(usingEntity, out var used))
         {
             args.Verbs.Add(new AlternativeVerb { Text = Loc.GetString("card-verb-join"), Priority = 8,
-                Act = () => TryTransfer(user, (usingEntity, used), ent, used.Cards.Count) });
+                Act = () => TryTransfer(user, usingEntity, ent, used.Cards.Count) });
         }
         if (ent.Comp.Cards.Count < 2)
             return;

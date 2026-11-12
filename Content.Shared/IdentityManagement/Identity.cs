@@ -7,6 +7,12 @@ using Content.Shared.IdentityManagement.Components;
 
 namespace Content.Shared.IdentityManagement;
 
+// Arcane-Start
+/// <summary>Gets a localized display name without replacing the entity's metadata.</summary>
+[ByRefEvent]
+public record struct GetEntityDisplayNameEvent(string Name);
+// Arcane-End
+
 /// <summary>
 ///     Static content API for getting the identity entities/names for a given entity.
 ///     This should almost always be used in favor of metadata name, if the entity in question is a human player that
@@ -45,7 +51,13 @@ public static class Identity
         var uidName = meta.EntityName;
 
         if (!ent.TryGetComponent<IdentityComponent>(uid, out var identity))
-            return FormattedMessage.EscapeText(uidName); // Goob Sanitize Text
+        {
+            // Arcane-Start
+            var displayName = new GetEntityDisplayNameEvent(uidName);
+            ent.EventBus.RaiseLocalEvent(uid, ref displayName);
+            // Arcane-End
+            return FormattedMessage.EscapeText(displayName.Name); // Arcane-Edit: use the presentation name
+        }
 
         var ident = identity.IdentityEntitySlot?.ContainedEntity;
         if (ident is null)
