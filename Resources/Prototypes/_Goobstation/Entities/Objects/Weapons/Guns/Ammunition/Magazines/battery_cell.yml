@@ -11,7 +11,7 @@
       state: icon
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: o4
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
@@ -246,13 +246,15 @@
     layers:
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: lethal_charge
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
         enum.PowerCellVisualLayers.Unshaded:
-          Full: { state: lethal_charge, shader: unshaded }
-          Neither: { state: lethal_charge, shader: unshaded }
+          # Arcane-Edit-Start: unshaded > UnshadedGlow
+          Full: { state: lethal_charge, shader: UnshadedGlow }
+          Neither: { state: lethal_charge, shader: UnshadedGlow }
+          # Arcane-Edit-End
           Empty: { state: lethal, shader: null }
   - type: BatteryAmmoProvider
     proto: RevolverLaser
@@ -269,13 +271,15 @@
     layers:
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: xray_charge
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
         enum.PowerCellVisualLayers.Unshaded:
-          Full: { state: xray_charge, shader: unshaded }
-          Neither: { state: xray_charge, shader: unshaded }
+          # Arcane-Edit-Start: unshaded > UnshadedGlow
+          Full: { state: xray_charge, shader: UnshadedGlow }
+          Neither: { state: xray_charge, shader: UnshadedGlow }
+          # Arcane-Edit-End
           Empty: { state: xray, shader: null }
   - type: BatteryAmmoProvider
     proto: RevolverLaserXray
@@ -292,13 +296,15 @@
     layers:
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: overcharge_charge
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
         enum.PowerCellVisualLayers.Unshaded:
-          Full: { state: overcharge_charge, shader: unshaded }
-          Neither: { state: overcharge_charge, shader: unshaded }
+          # Arcane-Edit-Start: unshaded > UnshadedGlow
+          Full: { state: overcharge_charge, shader: UnshadedGlow }
+          Neither: { state: overcharge_charge, shader: UnshadedGlow }
+          # Arcane-Edit-End
           Empty: { state: overcharge, shader: null }
   - type: BatteryAmmoProvider
     proto: RevolverLaserOverclocked
@@ -315,13 +321,15 @@
     layers:
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: pulse_charge
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
         enum.PowerCellVisualLayers.Unshaded:
-          Full: { state: pulse_charge, shader: unshaded }
-          Neither: { state: pulse_charge, shader: unshaded }
+          # Arcane-Edit-Start: unshaded > UnshadedGlow
+          Full: { state: pulse_charge, shader: UnshadedGlow }
+          Neither: { state: pulse_charge, shader: UnshadedGlow }
+          # Arcane-Edit-End
           Empty: { state: pulse, shader: null }
   - type: BatteryAmmoProvider
     proto: MediumPulseLaser
@@ -338,13 +346,15 @@
     layers:
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: ion_charge
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.BatteryVisuals.State:
         enum.PowerCellVisualLayers.Unshaded:
-          Full: { state: ion_charge, shader: unshaded }
-          Neither: { state: ion_charge, shader: unshaded }
+          # Arcane-Edit-Start: unshaded > UnshadedGlow
+          Full: { state: ion_charge, shader: UnshadedGlow }
+          Neither: { state: ion_charge, shader: UnshadedGlow }
+          # Arcane-Edit-End
           Empty: { state: ion, shader: null }
   - type: BatteryAmmoProvider
     proto: RevolverLaserIon

@@ -153,9 +153,9 @@
     noRot: true
     anchored: true
   - type: Sprite
-    layers:
-    - sprite: Fluids/puddle.rsi
-      state: splat0
+    # Arcane-Edit-Start
+    sprite: Fluids/puddle.rsi
+    # Arcane-Edit-End
     drawdepth: Puddles
     color: "#FFFFFF80"
   - type: Physics
@@ -173,10 +173,13 @@
         hard: false
   - type: IconSmooth
     key: puddles
-    additionalKeys:
-    - walls
-    base: splat
-    mode: CardinalFlags
+    # Arcane-Edit-Start
+    enabled: false # Let bum ass puddle system update this.
+    states:
+    - !type:DirectionSpriteSmoothing
+      mask: [ walls, windows, marble, puddles ]
+      base: splat
+    # Arcane-Edit-End
   - type: Puddle
   - type: Solution
     id: puddle

@@ -23,7 +23,7 @@
       state: base
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:
@@ -89,7 +89,7 @@
       state: base
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: red
   - type: PointLight
     radius: 1.5
@@ -112,7 +112,7 @@
       state: base
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: deepskyblue
   - type: PointLight
     radius: 1.5
@@ -138,7 +138,7 @@
       state: base
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: orangered
   - type: PointLight
     radius: 1.5
@@ -166,7 +166,7 @@
       state: base
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     radius: 1.5
     energy: 1

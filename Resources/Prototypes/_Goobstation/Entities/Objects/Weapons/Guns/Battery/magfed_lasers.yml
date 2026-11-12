@@ -161,7 +161,7 @@
       visible: false
     - state: mag-0
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.GunVisualLayers.Mag"]
     - state: off
       map: ["base"]
@@ -212,7 +212,7 @@
     - state: base
       map: ["enum.GunVisualLayers.Base"]
     - state: light
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.GunVisualLayers.BaseUnshaded"]
   - type: Item
     sprite: _Goobstation/Objects/Weapons/Guns/Battery/energy_lmg.rsi

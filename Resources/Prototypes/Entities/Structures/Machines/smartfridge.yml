@@ -23,7 +23,7 @@
     - state: smartfridge_open
       visible: false
       map: ["powered-open"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: smartfridge_door # This state should be toggled off while somebody is accessing the UI. Until that's implemented, we'll just always draw it on top of the "open" sprite.
       visible: false
       map: ["powered-closed"]

@@ -13,7 +13,7 @@
       state: charging
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: charging-unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     equippedPrefix: charging
     quickEquip: false

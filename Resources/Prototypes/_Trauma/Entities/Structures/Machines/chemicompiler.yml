@@ -18,7 +18,7 @@
     - state: chemicompiler_base
     # the screens only animate while powered, so the base sprite is the machine's off state
     - state: chemicompiler_screens
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.PowerDeviceVisualLayers.Powered"]
   - type: Icon
     sprite: _Trauma/Structures/Machines/chemicompiler.rsi

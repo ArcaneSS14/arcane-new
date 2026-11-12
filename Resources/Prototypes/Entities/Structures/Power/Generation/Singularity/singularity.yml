@@ -75,7 +75,7 @@
     layers:
     - map: [ "VisualLevel" ]
       state: singularity_1
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: GenericVisualizer
     visuals:
       enum.SingularityAppearanceKeys.Singularity:

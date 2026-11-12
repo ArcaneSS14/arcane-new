@@ -37,7 +37,7 @@
     - map: [ enum.ExpendableLightVisualLayers.Glow ]
       state: glowstick_glow
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - map: [ enum.ExpendableLightVisualLayers.Overlay ]
       state: glowstick_unlit
   - type: Item
@@ -146,7 +146,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi
@@ -177,7 +177,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi
@@ -209,7 +209,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi
@@ -249,7 +249,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi
@@ -280,7 +280,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi
@@ -311,7 +311,7 @@
     layers:
     - state: glowstick_base
     - state: glowstick_unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       color: "#FF0000"
   - type: Item
     sprite: Objects/Misc/glowstick.rsi

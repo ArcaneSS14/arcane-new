@@ -379,7 +379,7 @@
     layers:
     - state: dragon
     - state: dragon_veins
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Solution
     solution:
       reagents:
@@ -1700,7 +1700,7 @@
     layers:
     - state: dragoncutlet
     - state: dragoncutlet_veins
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Solution
     solution:
       reagents:

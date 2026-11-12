@@ -111,7 +111,7 @@
       state: custodian
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: custodian_unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:
@@ -169,7 +169,7 @@
       state: lodestar
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: lodestar_unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:

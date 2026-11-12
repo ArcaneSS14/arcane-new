@@ -1,0 +1,107 @@
+light_mode unshaded;
+
+uniform highp float glow_brightness; // brightness multiplier applied to the halo
+uniform highp float outline_width;   // blur radius around the sprite, in texels (up to 5.5)
+uniform highp float outline_alpha;   // opacity of the blurred halo, above 1 strengthens it
+
+const highp int KERNEL = 6;
+const highp float MAX_RADIUS = 5.5;
+// GlowHaloOverlay draws the halo this many texels past the sprite's frame on every side, so a glow at the
+// frame's edge isn't cut off there. Must match HaloMargin in GlowHaloOverlay.
+const highp float FRAME_MARGIN = 6.0;
+
+highp vec3 keepHue(highp vec3 color, highp vec3 tint) {
+    highp float peak = max(max(color.r * tint.r, color.g * tint.g), color.b * tint.b);
+    return peak > 1.0 ? color / peak : color;
+}
+
+// 1 when a position across the drawn quad (UV2) lies inside the sprite's own frame, 0 in the margin around it.
+highp float inFrame(highp vec2 frame, highp vec2 margin) {
+    return step(margin.x, frame.x) * step(frame.x, 1.0 - margin.x)
+         * step(margin.y, frame.y) * step(frame.y, 1.0 - margin.y);
+}
+
+highp vec4 texel(highp vec2 uv, highp mat2 toFrame, highp vec2 margin) {
+    if (inFrame(UV2 + toFrame * (uv - UV), margin) < 0.5)
+        return vec4(0.0);
+
+    // Through the helper, so sRGB textures get decoded like zTexture does on backends that emulate it.
+    highp vec4 c = zTextureSpec(TEXTURE, uv);
+    return vec4(c.rgb * c.a, c.a);
+}
+
+void fragment() {
+    // Maps an atlas UV offset to an offset in UV2 (0..1 across the drawn quad), so samples
+    // from a neighbouring atlas state can be rejected. Derivatives only exist in the fragment
+    // stage, while helper functions are also compiled into the vertex shader, so this stays here.
+    highp mat2 toFrame = mat2(0.0);
+#ifdef HAS_DFDX
+    highp mat2 uvJ = mat2(dFdx(UV), dFdy(UV));
+    highp mat2 uv2J = mat2(dFdx(UV2), dFdy(UV2));
+    highp float det = uvJ[0][0] * uvJ[1][1] - uvJ[1][0] * uvJ[0][1];
+    if (det != 0.0)
+        toFrame = uv2J * (mat2(uvJ[1][1], -uvJ[0][1], -uvJ[1][0], uvJ[0][0]) / det);
+#endif
+
+    // The margin in UV2 is FRAME_MARGIN texels' worth. Without derivatives, assume the usual 32 pixel frame.
+    highp vec2 ps = TEXTURE_PIXEL_SIZE;
+    highp vec2 margin = FRAME_MARGIN * vec2(abs((toFrame * vec2(ps.x, 0.0)).x), abs((toFrame * vec2(0.0, ps.y)).y));
+#ifndef HAS_DFDX
+    margin = vec2(FRAME_MARGIN / (32.0 + 2.0 * FRAME_MARGIN));
+#endif
+
+    // Outside the frame the quad shows neighbouring atlas states, not this sprite.
+    highp vec4 sprite = inFrame(UV2, margin) > 0.5 ? zTexture(UV) : vec4(0.0);
+
+    highp vec4 blur = vec4(0.0);
+
+    // The halo leaves the sprite uncovered, so its opaque pixels need no blur at all.
+    if (sprite.a < 0.996) {
+        // Weigh every texel around the pixel by its exact distance to it. The weight is continuous
+        // in the pixel position and falls to zero at the radius, so the halo is smooth inside and at
+        // its edge, and neighbouring colours blend into each other instead of forming a pattern.
+        highp vec2 p = UV / ps - 0.5;
+        highp vec2 base = floor(p);
+        highp float radius = clamp(outline_width, 0.5, MAX_RADIUS);
+        highp float radiusSquared = radius * radius;
+
+        highp float total = 0.0;
+        for (int y = 1 - KERNEL; y <= KERNEL; y++)
+        {
+            highp float dy = base.y + float(y) - p.y;
+            if (dy * dy < radiusSquared)
+            {
+                for (int x = 1 - KERNEL; x <= KERNEL; x++)
+                {
+                    highp float dx = base.x + float(x) - p.x;
+                    highp float k = 1.0 - (dx * dx + dy * dy) / radiusSquared;
+                    if (k > 0.0)
+                    {
+                        highp float w = k * k;
+                        blur += texel((vec2(p.x + dx, p.y + dy) + 0.5) * ps, toFrame, margin) * w;
+                        total += w;
+                    }
+                }
+            }
+        }
+        blur /= max(total, 0.0001);
+    }
+
+#ifndef HAS_DFDX
+    // Without derivatives we can't find the frame bounds, so fade the halo out near the
+    // frame border instead to keep the neighbouring atlas state from bleeding in.
+    highp float fadeMargin = 0.1;
+    blur *= smoothstep(0.0, fadeMargin, UV2.x) * (1.0 - smoothstep(1.0 - fadeMargin, 1.0, UV2.x))
+          * smoothstep(0.0, fadeMargin, UV2.y) * (1.0 - smoothstep(1.0 - fadeMargin, 1.0, UV2.y));
+#endif
+
+    // The halo takes the same brightness boost as the sprite, so bright sprites glow brighter.
+    highp vec3 haloColor = blur.a > 0.0 ? keepHue(blur.rgb / blur.a * glow_brightness, MODULATE.rgb) : vec3(0.0);
+
+    // Leave the sprite itself uncovered, the halo only lies around it.
+    COLOR = vec4(haloColor, clamp(blur.a * outline_alpha, 0.0, 1.0) * (1.0 - sprite.a));
+
+    if (COLOR.a < 0.004) {
+        discard;
+    }
+}

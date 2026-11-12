@@ -31,11 +31,11 @@
       state: "pda"
     - state: "light_overlay"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
     - state: "id_overlay"
       map: [ "enum.PdaVisualLayers.IdLight" ]
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
   - type: Icon
     sprite: Objects/Devices/pda.rsi
@@ -163,11 +163,11 @@
       state: "pda"
     - state: "light_overlay_wide"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
     - state: "id_overlay_wide"
       map: [ "enum.PdaVisualLayers.IdLight" ]
-      shader: "unshaded"
+      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
 
 - type: entity

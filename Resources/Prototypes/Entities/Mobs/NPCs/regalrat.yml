@@ -51,7 +51,7 @@
       state: regalrat
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: eyes
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: TypingIndicator
     proto: regal
   - type: Physics
@@ -160,7 +160,7 @@
       state: regalrat
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded"]
       state: eyes
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MobState
   - type: MobThresholds
     thresholds:
@@ -238,7 +238,7 @@
       state: rat
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded"]
       state: eyes
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SpriteMovement
     movementLayers:
       movement:

@@ -11,20 +11,20 @@
         map: ["enum.AnomalyScannerVisualLayers.Base"]
       - map: ["enum.AnomalyScannerVisualLayers.Screen"]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: severity_mask
         map: ["enum.AnomalyScannerVisualLayers.SeverityMask"]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - map: ["enum.AnomalyScannerVisualLayers.Stability"]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - visible: false
         map: ["enum.AnomalyScannerVisualLayers.Pulse"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: supercritical
         map: ["enum.AnomalyScannerVisualLayers.Supercritical"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
   - type: ActivatableUI
     key: enum.AnomalyScannerUiKey.Key
@@ -97,7 +97,7 @@
     layers:
       - state: icon
       - state: screen
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         visible: false
         map: ["enum.ToggleableVisuals.Layer"]
   - type: Appearance

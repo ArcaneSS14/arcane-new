@@ -11,7 +11,7 @@
     - state: icon
     - state: icon-flash
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "light" ]
   - type: Item
     size: Normal
@@ -54,7 +54,7 @@
     clothingVisuals:
       head:
       - state: on-equipped-HELMET
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ItemTogglePointLight
   - type: PointLight
     enabled: false
@@ -112,14 +112,14 @@
     inhandVisuals:
       left:
       - state: on-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: on-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     clothingVisuals:
       head:
       - state: on-equipped-HELMET
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Sprite
     sprite: _EinsteinEngines/Clothing/Head/Envirohelms/custom.rsi
     layers:
@@ -132,7 +132,7 @@
     - state: visor-icon
     - state: icon-flash
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "light" ]
   - type: Item
     inhandVisuals:

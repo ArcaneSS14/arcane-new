@@ -26,7 +26,7 @@
         - state: edagger_blade
           color: "#b5fbfa"
           visible: false
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
           map: [ "blade" ]
     - type: MeleeWeapon
       heavyStaminaCost: 10

@@ -391,7 +391,7 @@
         state: cobra
       - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
         state: glow
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:
@@ -497,7 +497,7 @@
       state: yellow_belly
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: DamageStateVisuals
     states:
       Alive:
@@ -593,7 +593,7 @@
       state: mantis_shrimp
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Physics
     bodyType: KinematicController
   - type: Fixtures
@@ -678,7 +678,7 @@
       state: shrimp
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: glow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:

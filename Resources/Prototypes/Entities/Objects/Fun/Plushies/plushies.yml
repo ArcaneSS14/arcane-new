@@ -251,15 +251,15 @@
     inhandVisuals:
       left:
       - state: inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-HELMET
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: BasePlushieSmall
@@ -485,16 +485,16 @@
     clothingVisuals:
       head:
       - state: rainbowlizardplush-equipped-HELMET
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         offset: "0, 0.03"
   - type: Item
     inhandVisuals:
       left:
       - state: rainbowlizardplush-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: rainbowlizardplush-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: PlushieLizard
@@ -877,10 +877,10 @@
     inhandVisuals:
       left:
       - state: rainbowcarpplush-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: rainbowcarpplush-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: PlushieCarp

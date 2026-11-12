@@ -73,7 +73,7 @@ public sealed partial class PaintVisualizerSystem : EntitySystem
             int i = index++;
             // don't replace layers that are unshaded (lights etc)
             if (iLayer is not SpriteComponent.Layer layer ||
-                layer.ShaderPrototype == SpriteSystem.UnshadedId)
+                layer.ShaderPrototype == SpriteSystem.UnshadedId || layer.ShaderPrototype == "UnshadedGlow") // Arcane-Edit: unshaded > unshaded or UnshadedGlow
                 continue;
 
             colors[i] = layer.Color;

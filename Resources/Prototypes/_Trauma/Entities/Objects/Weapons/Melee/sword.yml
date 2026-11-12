@@ -12,7 +12,7 @@
     - state: icon-off
     - state: icon-on
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
   - type: Item
     size: Ginormous
@@ -61,10 +61,10 @@
     inhandVisuals:
       left:
       - state: wielded-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: wielded-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ItemTogglePointLight
   - type: PointLight
     enabled: false

@@ -135,7 +135,7 @@
     layers:
     - state: space-christian
     - state: space-christian_lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/nanotrasen.rsi
     state: space-christian
@@ -160,7 +160,7 @@
     layers:
     - state: satana
     - state: satana_lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/nanotrasen.rsi
     state: satana
@@ -179,7 +179,7 @@
     layers:
     - state: technology
     - state: technology_lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/nanotrasen.rsi
     state: technology
@@ -241,7 +241,7 @@
     - state: maint
       sprite: _ShitChap/Structures/convertaltar.rsi # Trauma
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: _ShitChap/Structures/convertaltar.rsi
     state: maint
@@ -266,7 +266,7 @@
     layers:
     - state: blue
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: blue
@@ -291,7 +291,7 @@
     layers:
     - state: convertaltar
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: convertaltar
@@ -310,7 +310,7 @@
     layers:
     - state: convertaltar
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: convertaltar
@@ -337,7 +337,7 @@
     layers:
     - state: orange
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: orange
@@ -356,7 +356,7 @@
     layers:
     - state: red
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: red
@@ -382,7 +382,7 @@
     layers:
     - state: white
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: white
@@ -401,7 +401,7 @@
     layers:
     - state: yellow
     - state: lightning
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Gods/convertaltar.rsi
     state: yellow
@@ -428,7 +428,7 @@
     layers:
     - state: full
     - state: blood
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Icon
     sprite: Structures/Furniture/Altars/Cults/heaven.rsi
     state: full

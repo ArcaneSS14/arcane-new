@@ -23,10 +23,10 @@
     inhandVisuals:
       left:
       - state: singu-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: singu-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   parent: BaseItem
@@ -38,15 +38,15 @@
     sprite: Structures/Power/Generation/Tesla/energy_miniball.rsi
     layers:
     - state: tesla_projectile
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     inhandVisuals:
       left:
       - state: tesla-inhand-left
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: tesla-inhand-right
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     enabled: true
     radius: 5
@@ -72,7 +72,7 @@
     sprite: Objects/Fun/pondering_orb.rsi
     layers:
     - state: icon
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     radius: 2
     color: "#00CCFF"

@@ -71,7 +71,7 @@
       map: ["enum.StorageVisualLayers.Door"]
     - state: flame
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.ToggleableVisuals.Layer"]
   - type: GenericVisualizer
     visuals:
@@ -88,10 +88,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SolutionTransfer
     transferAmount: 5
     canChangeTransferAmount: false

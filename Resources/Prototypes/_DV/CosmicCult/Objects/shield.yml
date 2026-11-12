@@ -11,7 +11,7 @@
     layers:
       - state: icon
       - state: icon-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     sprite: _DV/CosmicCult/Objects/shield.rsi
     heldPrefix: null

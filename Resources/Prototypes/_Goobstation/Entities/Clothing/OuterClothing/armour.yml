@@ -73,7 +73,7 @@
     - state: icon
     - state: light-overlay
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clothing
     sprite: _Goobstation/Clothing/OuterClothing/Armor/helldiver.rsi
   - type: TemperatureProtection

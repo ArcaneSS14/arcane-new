@@ -9,7 +9,7 @@
     - state: icon
     - state: integrity-unshaded-0
       map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       visible: false
     - state: mask
       map: [ "enum.MaxPressureVisualLayers.Base" ]

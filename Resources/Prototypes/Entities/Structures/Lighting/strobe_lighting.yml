@@ -16,6 +16,7 @@
   - type: Transform
     anchored: true
   - type: Clickable
+  - type: WallMount # Arcane
   - type: InteractionOutline
   - type: Construction
     graph: LightFixture
@@ -29,12 +30,12 @@
       state: base
     - map: ["enum.PoweredLightLayers.Glow"]
       state: glow
-      shader: unshaded
+      shader: LightGlow # Arcane-Edit: unshaded > LightGlow
     state: base
   - type: PointLight
     lightMask: ConeDouble
-    color: "#FFE4CE"
-    energy: 5
+    color: "#e2dedb" # Arcane-Edit: Changed color
+    energy: 8 # Arcane-Edit: 5 > 8
     radius: 10
     softness: 1
     offset: "0, 0.35"

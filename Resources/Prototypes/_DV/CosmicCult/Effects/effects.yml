@@ -11,7 +11,7 @@
       layers:
       - sprite: _DV/CosmicCult/Effects/weaponarcs.rsi
         state: arc_cosmic
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: TimedDespawn
       lifetime: 0.66
     - type: PointLight
@@ -49,7 +49,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/tile_spawn.rsi
       state: floorglow
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     drawdepth: Mobs
   - type: Tag
     tags:
@@ -80,7 +80,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/ability_lapsevfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
 
 - type: entity
   categories: [ HideSpawnMenu ]
@@ -91,7 +91,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/ability_blankvfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 1.5
@@ -121,7 +121,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/effect_cleansevfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#ffd52e"
     radius: 1.5
@@ -151,7 +151,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/effect_glyphvfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 1.5
@@ -181,7 +181,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/ability_glarevfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 10
@@ -211,7 +211,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/ability_impositionvfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 10
@@ -239,7 +239,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.EffectLayers.Unshaded"]
       sprite: _DV/CosmicCult/Effects/ability_glarevfx.rsi
       state: vfx
@@ -280,7 +280,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/effect_echo.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Clickable
   - type: PointLight
     radius: 1.5
@@ -299,7 +299,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/effect_ns_flarevfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#a35d7b"
     radius: 1.5
@@ -329,7 +329,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/effect_ns_reboundvfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#a35d7b"
     radius: 1.5
@@ -367,7 +367,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/colossus_attack.rsi
       state: attack1
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 5
@@ -400,7 +400,7 @@
     layers:
     - sprite: _DV/CosmicCult/Effects/ability_sundervfx.rsi
       state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     color: "#42a4ae"
     radius: 10
@@ -422,4 +422,4 @@
     layers:
     - sprite: _DV/CosmicCult/Tileset/cosmiceffigy.rsi # Asset reuse go BRRRR
       state: unshaded_bg
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow

@@ -11,8 +11,13 @@
     sprite: _Lavaland/Structures/Walls/hierophant.rsi
   - type: Destructible
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: walls
-    base: hierophant
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: hierophant
+    # Arcane-Edit-End
   - type: SyncSprite
   - type: PointLight
     radius: 5.0
@@ -34,9 +39,14 @@
     sprite: _Lavaland/Structures/Walls/hierophant_temp.rsi
   - type: Destructible
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: hierofield
-    base: hierotemp
-    shader: unshaded
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ hierofield ]
+      base: hierotemp
+      shader: UnshadedGlow
+    # Arcane-Edit-End
   - type: Occluder
     enabled: false
   - type: RustRequiresPathStage
@@ -53,8 +63,13 @@
   - type: Icon
     sprite: _Arcane/Structures/Walls/necropolis.rsi
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: walls
-    base: necropolis
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: necropolis
+    # Arcane-Edit-End
   - type: Destructible
   - type: RustRequiresPathStage
     pathStage: 11 # Can't rust

@@ -11,7 +11,7 @@
     layers:
     - state: icon
     - state: unlit
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   # <Trauma>
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: running

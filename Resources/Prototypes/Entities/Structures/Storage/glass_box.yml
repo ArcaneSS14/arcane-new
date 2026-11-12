@@ -42,7 +42,7 @@
     - state: glass
       map: ["enum.OpenableVisuals.Layer"]
     - state: locked
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.LockVisualLayers.Lock"]
   - type: Fixtures
     fixtures:

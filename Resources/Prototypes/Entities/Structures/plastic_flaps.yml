@@ -45,7 +45,9 @@
     price: 100
   - type: IconSmooth
     key: walls
-    mode: NoSprite
+    # Arcane-Edit-Start
+    # mode: NoSprite
+    # Arcane-Edit-End
   - type: PlacementReplacement
     key: walls
   - type: StructureAligner

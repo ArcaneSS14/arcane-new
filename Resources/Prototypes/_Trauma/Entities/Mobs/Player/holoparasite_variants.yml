@@ -45,7 +45,7 @@
     - state: tech_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#40a7d7"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MeleeWeapon
     attackRate: 1.5
     resistanceBypass: true
@@ -73,7 +73,7 @@
     - state: magic_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#7b4dff"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Stealth
     lastVisibility: 0.3
     examineThreshold: 0.5
@@ -109,7 +109,7 @@
     - state: miner_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#5ec7ff"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: ActionGrant
     actions:
     - ActionSelfToggleGuardian
@@ -150,7 +150,7 @@
     - state: magic_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#ff5a36"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: IgniteOnMeleeHit
     fireStacks: 2
   - type: Guardian
@@ -183,7 +183,7 @@
     - state: magic_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#8fd8ff"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: StaminaDamageOnHit
     damage: 25
   - type: Guardian
@@ -215,7 +215,7 @@
     - state: miner_flare
       map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       color: "#5ee06f"
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MovementSpeedModifier
     baseWalkSpeed: 3.5
     baseSprintSpeed: 4.5

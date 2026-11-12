@@ -15,7 +15,7 @@
     - state: sleeper_0
       map: ["base"]
     - state: sleeper_0-overlay # Arcane
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["overlay"]
   - type: UserInterface
     interfaces:

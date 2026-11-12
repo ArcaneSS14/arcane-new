@@ -26,7 +26,7 @@
     - state: icon
     - state: welder_flame
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "enum.ToggleableVisuals.Layer" ]
   - type: EmitSoundOnLand
     sound:
@@ -82,10 +82,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: UseDelay
   - type: MeleeWeapon
     animationRotation: -90 # Trauma

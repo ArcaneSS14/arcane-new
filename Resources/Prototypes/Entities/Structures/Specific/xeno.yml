@@ -24,7 +24,7 @@
     layers:
       - state: wardingtower
       - state: wardingtower-unshaded
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Damageable
     damageModifierSet: Metallic
   - type: Injurable
@@ -64,9 +64,9 @@
     - state: statue
     - state: eyes
     - state: eyes_unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: teeth_unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Fixtures
     fixtures:
       fix1:
@@ -106,6 +106,6 @@
     - state: statue
     - state: eyes
     - state: eyes_unshaded
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Construction
     node: eyes

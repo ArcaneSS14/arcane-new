@@ -14,7 +14,7 @@
     - state: scanner
     - state: scanner-light
       map: ["light"]
-      shader: unshaded
+      shader: UnshadedGlow
       visible: false
     # Arcane-Edit-End
   # Arcane-Start

@@ -13,7 +13,7 @@
     - state: e_sword
     - state: e_sword_blade
       visible: false
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: [ "blade" ]
   - type: EnergySword
     colorOptions:

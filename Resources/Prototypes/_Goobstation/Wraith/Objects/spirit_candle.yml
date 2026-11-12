@@ -30,10 +30,10 @@
     inhandVisuals:
       left:
       - state: inhand-left-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       right:
       - state: inhand-right-flame
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: LimitedCharges
     maxCharges: 2
   - type: UseDelay

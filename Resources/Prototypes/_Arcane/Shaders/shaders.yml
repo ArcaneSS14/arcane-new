@@ -2,3 +2,63 @@
   id: Flap
   kind: source
   path: "/Textures/_Arcane/Shaders/flap.swsl"
+
+- type: shader
+  id: LightingOverlay
+  kind: source
+  path: "/Textures/_Arcane/Shaders/light.swsl"
+
+- type: shader
+  id: LightingOverlayLow
+  kind: source
+  path: "/Textures/_Arcane/Shaders/light_low.swsl"
+
+- type: shader
+  id: LightGlow
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
+  params:
+    glow_brightness: 1
+    draw_sprite: 1
+
+# GlowHaloOverlay draws lamps again above every sprite with this at Strong quality.
+- type: shader
+  id: LightGlowCore
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
+  params:
+    glow_brightness: 25
+    draw_sprite: 1
+
+- type: shader
+  id: UnshadedGlow
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
+  params:
+    glow_brightness: 1
+    draw_sprite: 1
+
+# Drawn by GlowHaloOverlay around the layers using the shader of the same name without the suffix.
+- type: shader
+  id: LightGlowHalo
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow.swsl"
+  params:
+    glow_brightness: 25
+    outline_width: 4.0
+    outline_alpha: 1
+
+- type: shader
+  id: UnshadedGlowHalo
+  kind: source
+  path: "/Textures/_Arcane/Shaders/glow.swsl"
+  params:
+    glow_brightness: 1
+    outline_width: 3.0
+    outline_alpha: 0.5
+
+- type: shader
+  id: LightingHighlights
+  kind: source
+  path: "/Textures/_Arcane/Shaders/lighting_highlights.swsl"
+

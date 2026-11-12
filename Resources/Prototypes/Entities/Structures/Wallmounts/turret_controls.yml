@@ -63,7 +63,7 @@
     - state: base
     - state: safe
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - state: wires
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
       visible: false

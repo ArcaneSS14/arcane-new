@@ -12,7 +12,7 @@
         - state: screen
           map: [ "enum.ToggleableVisuals.Layer" ]
           visible: false
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Appearance
     - type: GenericVisualizer
       visuals:
@@ -102,10 +102,10 @@
       - state: screen
         map: [ "enum.ToggleableVisuals.Layer" ]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: ready
         map: ["enum.PowerDeviceVisualLayers.Powered"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Item
     size: Normal
   - type: ToggleCellDraw
@@ -132,10 +132,10 @@
       - state: screen
         map: [ "enum.ToggleableVisuals.Layer" ]
         visible: false
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: ready
         map: ["enum.PowerDeviceVisualLayers.Powered"]
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: MeleeWeapon
     canWideSwing: false # Trauma - removed for balance purposes
     damage:

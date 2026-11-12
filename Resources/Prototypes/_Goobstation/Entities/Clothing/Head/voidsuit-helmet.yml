@@ -209,7 +209,7 @@
     clothingVisuals:
       head:
       - state: equipped-head-light
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PressureProtection
     highPressureMultiplier: 0.05
     lowPressureMultiplier: 1000

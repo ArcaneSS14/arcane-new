@@ -12,7 +12,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: heavylaser
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Reflective
     reflective:
     - Energy
@@ -84,7 +84,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_magnum.rsi
     layers:
     - state: magnum
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     enabled: true
     color: "#ff4300"
@@ -104,7 +104,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_magnum.rsi
     layers:
     - state: magnum_piercing
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: PointLight
     enabled: true
     color: "#ff4300"

@@ -25,6 +25,7 @@ public sealed partial class GraphicsTab : Control
         Control.AddOptionCheckBox(CCVars.AmbientOcclusion, AmbientOcclusionCheckBox);
         Control.AddOption(new OptionFullscreen(Control, _cfg, FullscreenCheckBox));
         Control.AddOption(new OptionLightingQuality(Control, _cfg, DropDownLightingQuality));
+        Control.AddOption(new OptionLightingShaderQuality(Control, _cfg, DropDownLightingShaderQuality)); // Arcane
         Control.AddOption(new OptionParticleQuality(Control, _cfg, DropDownParticleQuality)); // Starfall: Particle quality.
 
         Control.AddOptionSlider(
@@ -221,6 +222,68 @@ public sealed partial class GraphicsTab : Control
             return QualityHigh;
         }
     }
+
+    // Arcane-Start
+    private sealed class OptionLightingShaderQuality : BaseOption
+    {
+        private const string CVarName = "light.shader_highlights.quality";
+        private const int QualityNone = 0;
+        private const int QualitySilly = 1;
+        private const int QualityStrong = 2;
+        private const int QualityDefault = QualityStrong;
+
+        private readonly IConfigurationManager _cfg;
+        private readonly OptionDropDown _dropDown;
+
+        public OptionLightingShaderQuality(
+            OptionsTabControlRow controller,
+            IConfigurationManager cfg,
+            OptionDropDown dropDown) : base(controller)
+        {
+            _cfg = cfg;
+            _dropDown = dropDown;
+
+            var button = dropDown.Button;
+            button.AddItem(Loc.GetString("arcane-ui-options-lighting-shader-quality-none"), QualityNone);
+            button.AddItem(Loc.GetString("arcane-ui-options-lighting-shader-quality-silly"), QualitySilly);
+            button.AddItem(Loc.GetString("arcane-ui-options-lighting-shader-quality-strong"), QualityStrong);
+            button.OnItemSelected += OnOptionSelected;
+        }
+
+        private void OnOptionSelected(OptionButton.ItemSelectedEventArgs args)
+        {
+            _dropDown.Button.SelectId(args.Id);
+            ValueChanged();
+        }
+
+        public override void LoadValue()
+        {
+            var value = _cfg.GetCVar<int>(CVarName);
+            _dropDown.Button.SelectId(value is >= QualityNone and <= QualityStrong ? value : QualityDefault);
+        }
+
+        public override void SaveValue()
+        {
+            if (_dropDown.Button.SelectedId is >= QualityNone and <= QualityStrong)
+                _cfg.SetCVar(CVarName, _dropDown.Button.SelectedId);
+        }
+
+        public override void ResetToDefault()
+        {
+            _dropDown.Button.SelectId(QualityDefault);
+        }
+
+        public override bool IsModified()
+        {
+            return _dropDown.Button.SelectedId != _cfg.GetCVar<int>(CVarName);
+        }
+
+        public override bool IsModifiedFromDefault()
+        {
+            return _dropDown.Button.SelectedId != QualityDefault;
+        }
+    }
+    // Arcane-End
 
     private sealed class OptionFullscreen : BaseOptionCVar<int>
     {

@@ -386,7 +386,7 @@
         - state: eshield-on
           color: "#FFFFFF"
           visible: false
-          shader: unshaded
+          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
           map: [ "shield" ]
     - type: Item
       size: Small
@@ -399,10 +399,10 @@
       inhandVisuals:
         left:
           - state: inhand-left-shield
-            shader: unshaded
+            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
         right:
           - state: inhand-right-shield
-            shader: unshaded
+            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: PointLight
       netsync: false
       enabled: false

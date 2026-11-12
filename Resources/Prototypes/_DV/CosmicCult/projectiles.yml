@@ -39,7 +39,7 @@
     sprite: _DV/CosmicCult/Effects/ability_novavfx.rsi
     layers:
     - state: vfx
-      shader: unshaded
+      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: SingularityDistortion
     intensity: +20
     falloffPower: 1.5
@@ -69,7 +69,7 @@
     sprite: _DV/CosmicCult/Effects/weaponprojectiles.rsi
     layers:
       - state: razor
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
   - type: Projectile
     impactEffect: BulletImpactEffectCosmic
     damage:
@@ -135,7 +135,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: unshaded
+    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       map: ["enum.EffectLayers.Unshaded"]
       sprite: _DV/CosmicCult/Effects/weaponarcs.rsi
       state: arc_cosmic

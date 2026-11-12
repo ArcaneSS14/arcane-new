@@ -107,7 +107,7 @@
       - state: decor_wingette_circle
         color: "#95ffff"
       - state: icon_magic_forcewall
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
       - state: detail_rivets
         color: gold
     - type: Spellbook
@@ -199,7 +199,7 @@
         color: "#e89b3c"
       - state: overlay_blood
       - state: icon_magic_fireball
-        shader: unshaded
+        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
     - type: Spellbook
       spellActions:
         ActionFireball: null
