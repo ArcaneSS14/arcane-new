@@ -12,26 +12,12 @@ public sealed partial class SupermatterEventsComponent : Component
 
     public float Anger;
     public float LastAnger;
-    public bool Surging;
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
     public TimeSpan SurgeUntil;
-
-    public float PriorGasEfficiency;
-    public float PriorRadiationFactor;
 
     public readonly float[] GasSample = new float[Atmospherics.TotalNumberOfGases];
     public float SampleMoles;
     public float SampleTemperature;
     public float WasteMultiplier;
-}
-
-[Prototype]
-public sealed partial class SupermatterEventPrototype : IPrototype
-{
-    [IdDataField] public string ID { get; private set; } = default!;
-    [DataField] public Gas? GasToSpawn;
-    [DataField] public EntProtoId? ProtoToSpawn;
-    [DataField] public bool Surge;
-    [DataField(required: true)] public LocId Announcement;
 }

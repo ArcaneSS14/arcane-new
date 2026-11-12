@@ -18,6 +18,11 @@ public sealed partial class RadiationSourceComponent : Component
     [DataField("intensity")]
     public float Intensity = 1;
 
+    // Arcane-Start: temporary effects do not change saved radiation intensity.
+    public float? TransientIntensity;
+    public float EffectiveIntensity => TransientIntensity ?? Intensity;
+    // Arcane-End
+
     /// <summary>
     ///     Defines how fast radiation rays will loose intensity
     ///     over distance. The bigger the value, the shorter range

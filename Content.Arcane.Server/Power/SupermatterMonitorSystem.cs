@@ -19,6 +19,7 @@ public sealed partial class SupermatterMonitorSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        SubscribeLocalEvent<SupermatterMonitorComponent, BoundUserInterfaceMessageAttempt>(OnUiAttempt);
         SubscribeLocalEvent<SupermatterMonitorComponent, BoundUIOpenedEvent>(OnOpen);
         SubscribeLocalEvent<SupermatterMonitorComponent, BoundUIClosedEvent>(OnClose);
         SubscribeLocalEvent<SupermatterMonitorComponent, ComponentShutdown>(OnShutdown);
@@ -33,9 +34,19 @@ public sealed partial class SupermatterMonitorSystem : EntitySystem
         Refresh(ent);
     }
 
+    private void OnUiAttempt(Entity<SupermatterMonitorComponent> ent, ref BoundUserInterfaceMessageAttempt args)
+    {
+        if (!args.UiKey.Equals(SupermatterMonitorUiKey.Key))
+            return;
+        if (_hands.GetActiveItem(args.Actor) != ent.Owner ||
+            _ui.IsUiOpen(ent.Owner, SupermatterMonitorUiKey.Key) &&
+            !_ui.IsUiOpen(ent.Owner, SupermatterMonitorUiKey.Key, args.Actor))
+            args.Cancel();
+    }
+
     private void OnClose(Entity<SupermatterMonitorComponent> ent, ref BoundUIClosedEvent args)
     {
-        if (args.UiKey.Equals(SupermatterMonitorUiKey.Key))
+        if (args.UiKey.Equals(SupermatterMonitorUiKey.Key) && !_ui.IsUiOpen(ent.Owner, SupermatterMonitorUiKey.Key))
             _openMonitors.Remove(ent);
     }
 
@@ -46,7 +57,7 @@ public sealed partial class SupermatterMonitorSystem : EntitySystem
     {
         if (!args.UiKey.Equals(SupermatterMonitorUiKey.Key) ||
             !_ui.IsUiOpen(ent.Owner, SupermatterMonitorUiKey.Key, args.Actor) ||
-            !_hands.IsHolding(args.Actor, ent) ||
+            _hands.GetActiveItem(args.Actor) != ent.Owner ||
             !TryGetEntity(args.Crystal, out var crystal) || crystal is not { Valid: true } target ||
             TerminatingOrDeleted(target) || EntityManager.IsQueuedForDeletion(target) ||
             !HasComp<SupermatterComponent>(target) || Transform(ent).GridUid is not { Valid: true } grid ||
@@ -142,9 +153,9 @@ public sealed partial class SupermatterMonitorSystem : EntitySystem
         return new SupermatterMonitorReading(
             crystal,
             sm.DelaminationPoint > 0 ? Math.Clamp(100f - 100f * sm.Damage / sm.DelaminationPoint, 0f, 100f) : 0f,
-            sm.Power, radiation?.Intensity ?? 0f, sample?.SampleMoles ?? 0f, sample?.SampleTemperature ?? 0f,
+            sm.Power, radiation?.EffectiveIntensity ?? 0f, sample?.SampleMoles ?? 0f, sample?.SampleTemperature ?? 0f,
             (Atmospherics.T0C + sm.HeatPenaltyThreshold) * sm.DynamicHeatResistance,
-            sample?.WasteMultiplier ?? 0f, sm.GasEfficiency * 100f, gases.ToArray());
+            sample?.WasteMultiplier ?? 0f, sm.EffectiveGasEfficiency * 100f, gases.ToArray());
     }
 
     private static SupermatterMonitorStatus GetStatus(SupermatterComponent sm)

@@ -51,7 +51,7 @@ public partial class RadiationSystem
             var worldPos = _transform.GetWorldPosition(xform);
 
             // Intensity is scaled by stack size.
-            var intensity = source.Intensity * _stack.GetCount(uid);
+            var intensity = source.EffectiveIntensity * _stack.GetCount(uid); // Arcane-Edit: include temporary radiation effects
 
             // Apply rad modifier if the source is enclosed within a radiation blocking container
             // Note that this also applies to receivers, and it doesn't bother to check if the container sits between them.
@@ -144,7 +144,7 @@ public partial class RadiationSystem
         var dist = Math.Max(dir.Length(), 0.5f);
         if (TryComp(source.Entity.Owner, out EventHorizonComponent? horizon)) // if we have a horizon emit radiation from the horizon,
             dist = Math.Max(dist - horizon.Radius, 0.5f);
-        var rads = source.Intensity / dist;
+        var rads = source.EffectiveIntensity / dist; // Arcane-Edit: include temporary radiation effects
         if (rads < MinIntensity)
             return null;
         // Goobstation End - Radiation Overhaul

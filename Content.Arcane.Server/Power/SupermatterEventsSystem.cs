@@ -1,10 +1,12 @@
+using Content.Arcane.Shared.Power;
 using Content.Goobstation.Shared.Supermatter;
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Server.Atmos.EntitySystems;
-using Content.Server.Chat.Systems;
+using Content.Server.Chat.Managers;
 using Content.Server.Radio.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Radio;
+using Content.Shared.Radiation.Systems;
 using Content.Shared.Random;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Random;
@@ -15,8 +17,9 @@ namespace Content.Arcane.Server.Power;
 public sealed partial class SupermatterEventsSystem : EntitySystem
 {
     [Dependency] private AtmosphereSystem _atmosphere = default!;
-    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private IChatManager _chat = default!;
     [Dependency] private RadioSystem _radio = default!;
+    [Dependency] private SharedRadiationSystem _radiation = default!;
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private IGameTiming _timing = default!;
 
@@ -35,8 +38,10 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<SupermatterComponent, SupermatterGasSampleEvent>(OnGasSample);
+        SubscribeLocalEvent<SupermatterEventsComponent, SupermatterCycleStartingEvent>(OnCycleStarting);
         SubscribeLocalEvent<SupermatterEventsComponent, SupermatterCycleCompletedEvent>(OnCycleCompleted);
         SubscribeLocalEvent<SupermatterEventsComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<SupermatterComponent, ComponentShutdown>(OnCrystalShutdown);
     }
 
     private void OnGasSample(Entity<SupermatterComponent> ent, ref SupermatterGasSampleEvent args)
@@ -58,14 +63,19 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
         events.Anger = Math.Max(events.Anger + events.LastAnger, 0f);
     }
 
+    private void OnCycleStarting(Entity<SupermatterEventsComponent> ent, ref SupermatterCycleStartingEvent args)
+    {
+        if (ent.Comp.SurgeUntil == default || _timing.CurTime < ent.Comp.SurgeUntil)
+            return;
+        ent.Comp.SurgeUntil = default;
+        EndSurge(ent.Owner);
+    }
+
     private void OnCycleCompleted(Entity<SupermatterEventsComponent> ent, ref SupermatterCycleCompletedEvent args)
     {
         if (!TryComp<SupermatterComponent>(ent, out var sm) || TerminatingOrDeleted(ent) ||
             EntityManager.IsQueuedForDeletion(ent))
             return;
-
-        if (ent.Comp.Surging && _timing.CurTime >= ent.Comp.SurgeUntil)
-            EndSurge(ent.Comp, sm);
 
         if (!args.HasGasSample)
         {
@@ -86,26 +96,18 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
 
         if (effect.GasToSpawn is { } gas)
         {
-            if (_atmosphere.GetContainingMixture(ent, true, true) is not { Immutable: false } mixture)
+            if (_atmosphere.GetContainingMixture(ent.Owner, true, true) is not { Immutable: false } mixture)
                 return;
             mixture.AdjustMoles(gas, 2000f);
         }
         else if (effect.ProtoToSpawn is { } prototype)
         {
-            Spawn(prototype, Transform(ent).Coordinates.Offset(new Vector2(0f, -1f)));
+            SpawnAtPosition(prototype, Transform(ent).Coordinates.Offset(new Vector2(0f, -1f)));
         }
         else if (effect.Surge)
         {
-            if (!ent.Comp.Surging)
-            {
-                ent.Comp.PriorGasEfficiency = sm.GasEfficiency;
-                ent.Comp.PriorRadiationFactor = sm.RadiationOutputFactor;
-            }
-
-            ent.Comp.Surging = true;
+            sm.ArcaneSurgeActive = true;
             ent.Comp.SurgeUntil = _timing.CurTime + ent.Comp.SurgeDuration;
-            sm.GasEfficiency = 0.30f;
-            sm.RadiationOutputFactor = 0.06f;
         }
 
         _radio.SendRadioMessage(ent, Loc.GetString(effect.Announcement), ProtoMan.Index(Engineering), ent);
@@ -113,15 +115,19 @@ public sealed partial class SupermatterEventsSystem : EntitySystem
     }
 
     private void OnShutdown(Entity<SupermatterEventsComponent> ent, ref ComponentShutdown args)
+        => EndSurge(ent.Owner);
+
+    private void OnCrystalShutdown(Entity<SupermatterComponent> ent, ref ComponentShutdown args)
     {
-        if (ent.Comp.Surging && TryComp<SupermatterComponent>(ent, out var sm))
-            EndSurge(ent.Comp, sm);
+        if (ent.Comp.ArcaneSurgeActive)
+            _radiation.SetTransientIntensity(ent.Owner, null);
     }
 
-    private static void EndSurge(SupermatterEventsComponent events, SupermatterComponent sm)
+    private void EndSurge(EntityUid uid)
     {
-        sm.GasEfficiency = events.PriorGasEfficiency;
-        sm.RadiationOutputFactor = events.PriorRadiationFactor;
-        events.Surging = false;
+        if (!TryComp<SupermatterComponent>(uid, out var sm) || !sm.ArcaneSurgeActive)
+            return;
+        sm.ArcaneSurgeActive = false;
+        _radiation.SetTransientIntensity(uid, null);
     }
 }

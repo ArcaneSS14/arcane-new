@@ -96,6 +96,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
     public void Cycle(EntityUid uid, SupermatterComponent sm)
     {
+        // Arcane-Start
+        var starting = new SupermatterCycleStartingEvent();
+        RaiseLocalEvent(uid, ref starting);
+        // Arcane-End
+
         sm.ZapAccumulator++;
         sm.YellAccumulator++;
 
@@ -137,7 +142,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (mix is not { })
             return false; // Arcane-Edit: no gas sample
 
-        var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
+        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: apply the active surge
         var moles = absorbedGas.TotalMoles;
 
         if (!(moles > 0f))
@@ -220,6 +225,10 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         //Radiate stuff
         var transmittedpower = sm.Power * Math.Max(0, 1f + transmissionBonus / 10f);
         _radiation.SetIntensity(uid, transmittedpower * sm.RadiationOutputFactor);
+        // Arcane-Start
+        if (sm.ArcaneSurgeActive)
+            _radiation.SetTransientIntensity(uid, transmittedpower * sm.EffectiveRadiationOutputFactor);
+        // Arcane-End
 
         //Power * 0.55 * a value between 1 and 0.8
         var energy = sm.Power * sm.ReactionPowerModifier;
@@ -296,7 +305,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         }
 
         // Absorbed gas from surrounding area
-        var absorbedGas = mix.Remove(sm.GasEfficiency * mix.TotalMoles);
+        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: apply the active surge
         var moles = absorbedGas.TotalMoles;
 
         var totalDamage = sm.Damage; // Arcane-Edit: 0f > accumulate current damage
