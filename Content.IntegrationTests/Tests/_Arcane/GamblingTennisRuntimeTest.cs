@@ -24,6 +24,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Random;
 using Robust.Shared.Audio;
+using Robust.Shared.Audio.Components;
+using Robust.Shared.Audio.Systems;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -71,6 +73,7 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
   id: TestArcaneP18RadioMusic
   files:
   - /Audio/_Goobstation/RadioStation/music/goonstation/adventure_3.ogg
+  - /Audio/_Goobstation/RadioStation/music/WantYouGone.ogg
 
 - type: entity
   id: TestArcaneP18CollectionVinyl
@@ -396,8 +399,11 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
             var vinyl = Slots.GetItemOrNull(player, "vinyl");
             Assert.That(vinyl, Is.Not.Null, "The connected, powered player rejected the record.");
             Assert.That(SEntMan.GetComponent<VinylComponent>(vinyl!.Value).Song, Is.TypeOf<SoundCollectionSpecifier>());
-            AssertCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity);
-            AssertCopyrightedSound(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).SoundEntity);
+            var local = GetCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity);
+            var broadcast = GetCopyrightedSound(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).SoundEntity);
+            Assert.That(broadcast.FileName, Is.EqualTo(local.FileName));
+            var duration = SEntMan.System<SharedAudioSystem>().GetAudioLength(new ResolvedPathSpecifier(local.FileName));
+            Assert.That(SEntMan.GetComponent<ActiveVinylComponent>(vinyl.Value).EndTime, Is.EqualTo(local.AudioStart + duration));
         });
         await Activate(receiverNet, awaitDoAfters: false);
         await Server.WaitAssertion(() =>
@@ -409,7 +415,7 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
         });
 
         await InteractUsing("TestArcaneP18CollectionVinyl");
-        await Server.WaitAssertion(() => AssertCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity));
+        await Server.WaitAssertion(() => GetCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity));
         await SetPower(player, false);
         await Server.WaitAssertion(() =>
         {
@@ -418,10 +424,11 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
         });
     }
 
-    private void AssertCopyrightedSound(EntityUid? sound)
+    private AudioComponent GetCopyrightedSound(EntityUid? sound)
     {
         Assert.That(sound, Is.Not.Null);
         Assert.That(SEntMan.HasComponent<CopyrightedAudioComponent>(sound!.Value), Is.True);
+        return SEntMan.GetComponent<AudioComponent>(sound.Value);
     }
 
     [Test]

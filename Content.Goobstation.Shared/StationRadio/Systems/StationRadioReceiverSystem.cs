@@ -40,7 +40,7 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
     private void OnMediaPlayed(EntityUid uid, StationRadioReceiverComponent comp, ref StationRadioMediaPlayedEvent args)
     {
         // client cant predict storing a long term sound
-        if (_net.IsClient || _audio.PlayPredicted(args.MediaPlayed, uid, uid, comp.DefaultParams) is not {} audio)
+        if (_net.IsClient || _audio.PlayPvs(args.MediaPlayed, uid, comp.DefaultParams) is not {} audio) // Arcane-Edit: play the already selected track
             return;
 
         comp.SoundEntity = audio.Entity;
