@@ -38,7 +38,8 @@ public sealed class AchievementRuntimeTest : InteractionTest
     private static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
     protected override string PlayerPrototype => "TestArcaneAchievementHuman";
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
-    private static PoolSettings LobbyPair => new() { InLobby = true, Dirty = true };
+    // This test broadcasts a synthetic round start without changing the ticker's round ID.
+    private static PoolSettings LobbyPair => new() { InLobby = true, Fresh = true, Destructive = true };
 
     [TestPrototypes]
     private const string Prototypes = """
