@@ -32,6 +32,247 @@ public sealed class IconSmoothTest : GameTest
     private static readonly string[] IconSmoothEntities = GameDataScrounger.EntitiesWithComponent("IconSmooth");
     private List<EntityUid> _spawned = new ();
 
+    /// <summary>
+    /// Every pair of these keys is its own key set: 276 of them, more than a byte could index.
+    /// </summary>
+    private const int StressKeys = 24;
+
+    [TestPrototypes]
+    private const string StressPrototypes = @"
+- type: entity
+  id: IconSmoothStressBase
+  abstract: true
+  components:
+  - type: Transform
+    anchored: true
+  - type: Sprite
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress0
+  components:
+  - type: IconSmooth
+    key: stress0
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress1
+  components:
+  - type: IconSmooth
+    key: stress1
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress2
+  components:
+  - type: IconSmooth
+    key: stress2
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress3
+  components:
+  - type: IconSmooth
+    key: stress3
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress4
+  components:
+  - type: IconSmooth
+    key: stress4
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress5
+  components:
+  - type: IconSmooth
+    key: stress5
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress6
+  components:
+  - type: IconSmooth
+    key: stress6
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress7
+  components:
+  - type: IconSmooth
+    key: stress7
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress8
+  components:
+  - type: IconSmooth
+    key: stress8
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress9
+  components:
+  - type: IconSmooth
+    key: stress9
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress10
+  components:
+  - type: IconSmooth
+    key: stress10
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress11
+  components:
+  - type: IconSmooth
+    key: stress11
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress12
+  components:
+  - type: IconSmooth
+    key: stress12
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress13
+  components:
+  - type: IconSmooth
+    key: stress13
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress14
+  components:
+  - type: IconSmooth
+    key: stress14
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress15
+  components:
+  - type: IconSmooth
+    key: stress15
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress16
+  components:
+  - type: IconSmooth
+    key: stress16
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress17
+  components:
+  - type: IconSmooth
+    key: stress17
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress18
+  components:
+  - type: IconSmooth
+    key: stress18
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress19
+  components:
+  - type: IconSmooth
+    key: stress19
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress20
+  components:
+  - type: IconSmooth
+    key: stress20
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress21
+  components:
+  - type: IconSmooth
+    key: stress21
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress22
+  components:
+  - type: IconSmooth
+    key: stress22
+
+- type: entity
+  parent: IconSmoothStressBase
+  id: IconSmoothStress23
+  components:
+  - type: IconSmooth
+    key: stress23
+";
+
+    /// <summary>
+    /// Fills the key cache with more different key sets than a byte index can tell apart, and checks that every tile
+    /// still resolves to its own keys instead of one that wrapped around onto it.
+    /// </summary>
+    [Test]
+    public async Task ManyKeySetsKeepTheirOwnCache()
+    {
+        await Pair.CreateTestMap();
+        await Pair.SyncTicks();
+
+        var pairs = new List<(int A, int B)>();
+        for (var a = 0; a < StressKeys; a++)
+        {
+            for (var b = a + 1; b < StressKeys; b++)
+            {
+                pairs.Add((a, b));
+            }
+        }
+
+        var side = (int) Math.Ceiling(Math.Sqrt(pairs.Count));
+        Assert.That(pairs.Count, Is.GreaterThan(256));
+
+        await Server.WaitPost(() =>
+        {
+            for (var i = 0; i < pairs.Count; i++)
+            {
+                var tile = new Vector2i(i % side, i / side);
+                _map.SetTile(TestMap!.Grid, TestMap!.Grid, tile, new Tile(_tileDefMan[TileRef].TileId));
+
+                var coords = new EntityCoordinates(TestMap!.Grid, tile.X + 0.5f, tile.Y + 0.5f);
+                _spawned.Add(SEntMan.SpawnAtPosition($"IconSmoothStress{pairs[i].A}", coords));
+                _spawned.Add(SEntMan.SpawnAtPosition($"IconSmoothStress{pairs[i].B}", coords));
+            }
+        });
+        await Pair.RunUntilSynced();
+
+        var grid = TestMap!.CGridUid;
+        await Client.WaitAssertion(() =>
+        {
+            var cache = CComp<IconSmoothGridComponent>(grid);
+            for (var i = 0; i < pairs.Count; i++)
+            {
+                var keys = _iconSmooth.GetCachedKeys((grid, cache), new Vector2i(i % side, i / side));
+                Assert.That(keys, Is.EquivalentTo(new[] { $"stress{pairs[i].A}", $"stress{pairs[i].B}" }), $"Tile {i}");
+            }
+
+            Assert.That(_iconSmooth.CountTracked(), Is.EqualTo(pairs.Count));
+        });
+
+        await Server.WaitPost(DeleteAll);
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() =>
+        {
+            Assert.That(_iconSmooth.CountTracked(), Is.Zero);
+        });
+    }
+
     [Test]
     public async Task PreventIconSmoothCacheLeaks()
     {

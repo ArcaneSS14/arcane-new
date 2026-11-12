@@ -90,9 +90,9 @@ void fragment() {
 #ifndef HAS_DFDX
     // Without derivatives we can't find the frame bounds, so fade the halo out near the
     // frame border instead to keep the neighbouring atlas state from bleeding in.
-    highp float margin = 0.1;
-    blur *= smoothstep(0.0, margin, UV2.x) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.x))
-          * smoothstep(0.0, margin, UV2.y) * (1.0 - smoothstep(1.0 - margin, 1.0, UV2.y));
+    highp float fadeMargin = 0.1;
+    blur *= smoothstep(0.0, fadeMargin, UV2.x) * (1.0 - smoothstep(1.0 - fadeMargin, 1.0, UV2.x))
+          * smoothstep(0.0, fadeMargin, UV2.y) * (1.0 - smoothstep(1.0 - fadeMargin, 1.0, UV2.y));
 #endif
 
     // The halo takes the same brightness boost as the sprite, so bright sprites glow brighter.

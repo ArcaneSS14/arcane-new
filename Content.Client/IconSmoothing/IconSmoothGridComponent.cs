@@ -19,7 +19,7 @@ public sealed partial class IconSmoothGridComponent : Component
     /// </summary>
     /// <remarks>
     /// Intentionally not saved.
-    /// If you need more than 256 possible different key states, then you may have a problem, change to ushort instead:tm:
+    /// Holds up to 65536 different key states at once, the most a ushort cache index can tell apart.
     /// </remarks>
     [ViewVariables]
     public readonly Dictionary<Vector2i, IconChunkData> Chunks = new();
@@ -27,22 +27,22 @@ public sealed partial class IconSmoothGridComponent : Component
 
 /// <summary>
 /// A simple struct that stores chunk data in a jagged array to be easily retrieved later.
-/// Stores a byte which corresponds to a cache for similar <see cref="IconSmoothComponent.Key"/> Hashsets.
+/// Stores an index into the cache of similar <see cref="IconSmoothComponent.Key"/> Hashsets.
 /// </summary>
 public record struct IconChunkData()
 {
-    public byte?[] Tiles = new byte?[MapGridComponent.DefaultChunkSize * MapGridComponent.DefaultChunkSize];
+    public ushort?[] Tiles = new ushort?[MapGridComponent.DefaultChunkSize * MapGridComponent.DefaultChunkSize];
 
     // 0 actually means 256.
     public byte Count;
 
-    public bool TryGetTileCache(Vector2i index, [NotNullWhen(true)] out byte? cache)
+    public bool TryGetTileCache(Vector2i index, [NotNullWhen(true)] out ushort? cache)
     {
         cache = GetTileCache(index);
         return cache != null;
     }
 
-    public bool TryGetTileCache(int x, int y, [NotNullWhen(true)] out byte? cache)
+    public bool TryGetTileCache(int x, int y, [NotNullWhen(true)] out ushort? cache)
     {
         cache = GetTileCache(x, y);
         return cache != null;
@@ -54,18 +54,18 @@ public record struct IconChunkData()
     /// <param name="index">Index of our cache, top 4 bits represent Y, bottom for represent X</param>
     /// <param name="cache">The cached value. Not null when true.</param>
     /// <returns>Whether a value existed or not.</returns>
-    public bool TryGetTileCache(byte index, [NotNullWhen(true)] out byte? cache)
+    public bool TryGetTileCache(byte index, [NotNullWhen(true)] out ushort? cache)
     {
         cache = GetTileCache(index);
         return cache != null;
     }
 
-    public byte? GetTileCache(Vector2i index)
+    public ushort? GetTileCache(Vector2i index)
     {
         return GetTileCache(index.X, index.Y);
     }
 
-    public byte? GetTileCache(int x, int y)
+    public ushort? GetTileCache(int x, int y)
     {
         DebugTools.Assert(x >= 0 && x < MapGridComponent.DefaultChunkSize && y >= 0 && y < MapGridComponent.DefaultChunkSize, "Vector2i passed exceeded the bounds of our jagged array!!!");
         return GetTileCache((byte)(x + (y << 4)));
@@ -76,17 +76,17 @@ public record struct IconChunkData()
     /// </summary>
     /// <param name="index">Index of our cache, top 4 bits represent Y, bottom for represent X</param>
     /// <returns>The cached value</returns>
-    public byte? GetTileCache(byte index)
+    public ushort? GetTileCache(byte index)
     {
         return Tiles[index];
     }
 
-    public void SetTileCache(Vector2i index, byte value)
+    public void SetTileCache(Vector2i index, ushort value)
     {
         SetTileCache(index.X, index.Y, value);
     }
 
-    public void SetTileCache(int x, int y, byte value)
+    public void SetTileCache(int x, int y, ushort value)
     {
         DebugTools.Assert(x >= 0 && x < MapGridComponent.DefaultChunkSize && y >= 0 && y < MapGridComponent.DefaultChunkSize, $"Coordinates ({x},{y}) did not fit within the bounds of a chunk");
         SetTileCache((byte)(x + (y << 4)), value);
@@ -97,18 +97,18 @@ public record struct IconChunkData()
     /// </summary>
     /// <param name="index">Index of our cache, top 4 bits represent Y, bottom for represent X</param>
     /// <param name="value">Cached value</param>
-    public void SetTileCache(byte index, byte value)
+    public void SetTileCache(byte index, ushort value)
     {
         DebugTools.Assert(Tiles[index] != null, $"SetTileCache overwrote an empty index without incrementing the ref count!");
         Tiles[index] = value;
     }
 
-    public void AddTileCache(Vector2i index, byte value)
+    public void AddTileCache(Vector2i index, ushort value)
     {
         AddTileCache(index.X, index.Y, value);
     }
 
-    public void AddTileCache(int x, int y, byte value)
+    public void AddTileCache(int x, int y, ushort value)
     {
         DebugTools.Assert(x < MapGridComponent.DefaultChunkSize && y < MapGridComponent.DefaultChunkSize, "Vector2i passed exceeded the bounds of our jagged array!!!");
         AddTileCache((byte)(x + (y << 4)), value);
@@ -119,7 +119,7 @@ public record struct IconChunkData()
     /// </summary>
     /// <param name="index">Index of our cache, top 4 bits represent Y, bottom for represent X</param>
     /// <param name="value">Cached value</param>
-    public void AddTileCache(byte index, byte value)
+    public void AddTileCache(byte index, ushort value)
     {
         DebugTools.Assert(Tiles[index] == null, $"AddTileCache overwrote an existing value, and incremented the cache as if it were empty. Use SetTileCache!");
         Count++;

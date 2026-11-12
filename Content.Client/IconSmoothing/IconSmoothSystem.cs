@@ -46,7 +46,12 @@ public sealed partial class IconSmoothSystem : EntitySystem
 
     // First free position in _toleranceData.
     // -1 indicates there are no free slots left and the storage must be expanded.
-    private short _freeListHead = -1;
+    private int _freeListHead = -1;
+
+    /// <summary>
+    /// Tiles store their cache index as a ushort, so this many different key sets can exist at once.
+    /// </summary>
+    private const int MaxCacheEntries = ushort.MaxValue + 1;
 
     public override void Initialize()
     {
@@ -437,7 +442,7 @@ public sealed partial class IconSmoothSystem : EntitySystem
         AddTileCache(grid, index, chunkData, AddOrCreateCacheIndex());
     }
 
-    private void AddTileCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, IconChunkData chunkData, byte cache)
+    private void AddTileCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, IconChunkData chunkData, ushort cache)
     {
         chunkData.AddTileCache(index.Relative, cache);
         grid.Comp.Chunks[index.Chunk] = chunkData;
@@ -448,13 +453,13 @@ public sealed partial class IconSmoothSystem : EntitySystem
         SetTileCache(grid, index, chunkData, AddOrCreateCacheIndex());
     }
 
-    private void SetTileCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, IconChunkData chunkData, byte cache)
+    private void SetTileCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, IconChunkData chunkData, ushort cache)
     {
         chunkData.SetTileCache(index.Relative, cache);
         grid.Comp.Chunks[index.Chunk] = chunkData;
     }
 
-    private bool TryGetCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, out IconChunkData chunkData, [NotNullWhen(true)] out byte? cache)
+    private bool TryGetCache(Entity<IconSmoothGridComponent> grid, (Vector2i Chunk, Vector2i Relative) index, out IconChunkData chunkData, [NotNullWhen(true)] out ushort? cache)
     {
         cache = null;
         if (!grid.Comp.Chunks.TryGetValue(index.Chunk, out chunkData))
@@ -471,7 +476,7 @@ public sealed partial class IconSmoothSystem : EntitySystem
         return _keyCaches[i].Keys?.SetEquals(_workingKeyRing) ?? false;
     }
 
-    private byte CreateCacheIndex()
+    private ushort CreateCacheIndex()
     {
         if (_freeListHead < 0)
             ExpandCache();
@@ -480,14 +485,14 @@ public sealed partial class IconSmoothSystem : EntitySystem
         _freeListHead = _keyCaches[index].RefCount;
         _keyCaches[index] = new KeyCache(_workingKeyRing);
 
-        return (byte)index;
+        return (ushort)index;
     }
 
     /// <summary>
     /// Searches for an existing Cache in our keyIndex, and creates a new one if it does not already exist.
     /// </summary>
     /// <returns>The index of the Hashset in our cache.</returns>
-    private byte AddOrCreateCacheIndex()
+    private ushort AddOrCreateCacheIndex()
     {
         // Faster to iterate backwards since our cache populates top down!
         for (var i = _keyCaches.Count - 1; i >= 0; i--)
@@ -497,13 +502,13 @@ public sealed partial class IconSmoothSystem : EntitySystem
 
             // Cache found, increment ref count
             _keyCaches[i].RefCount++;
-            return (byte)i;
+            return (ushort)i;
         }
 
         return CreateCacheIndex();
     }
 
-    private void DecrementRefCount(byte index)
+    private void DecrementRefCount(ushort index)
     {
         ref var cacheEntry = ref _keyCaches[index];
 
@@ -519,16 +524,35 @@ public sealed partial class IconSmoothSystem : EntitySystem
 
     private void ExpandCache()
     {
-        var newCacheSize = Math.Max(16, _keyCaches.Count * 2);
-        DebugTools.Assert(newCacheSize <= 256, $"Number of cached keys exceeded what can be stored in a short. {DumpCache()}");
         var curSize = _keyCaches.Count;
+
+        // Going past this would hand out indices that wrap around onto ones already in use.
+        if (curSize >= MaxCacheEntries)
+            throw new InvalidOperationException($"{MaxCacheEntries} different icon smoothing key sets are in use at once, more than tiles can index. {DumpCache()}");
+
+        var newCacheSize = Math.Min(Math.Max(16, curSize * 2), MaxCacheEntries);
 
         _keyCaches.EnsureLength(newCacheSize);
         for (var i = curSize; i < newCacheSize; i++)
         {
             _keyCaches[i].RefCount = _freeListHead;
-            _freeListHead = (byte)i;
+            _freeListHead = i;
         }
+    }
+
+    /// <summary>
+    /// Debug method, the keys cached for a tile, or null if nothing is cached there.
+    /// </summary>
+    public IReadOnlySet<string>? GetCachedKeys(Entity<IconSmoothGridComponent> grid, Vector2i tile)
+    {
+        var chunk = SharedMapSystem.GetChunkIndices(tile, ChunkSize);
+        if (!grid.Comp.Chunks.TryGetValue(chunk, out var chunkData)
+            || !chunkData.TryGetTileCache(SharedMapSystem.GetChunkRelative(tile, ChunkSize), out var cache))
+        {
+            return null;
+        }
+
+        return _keyCaches[cache.Value].Keys;
     }
 
     /// <summary>
@@ -580,7 +604,7 @@ public sealed partial class IconSmoothSystem : EntitySystem
         /// When empty, stores a reference to the next available index in _keyCache
         /// If there is no reference available, is set to -1
         /// </summary>
-        public short RefCount = 1; // Doubles as freelist chain
+        public int RefCount = 1; // Doubles as freelist chain
     }
 }
 

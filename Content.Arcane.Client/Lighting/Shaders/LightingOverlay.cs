@@ -11,6 +11,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
+using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
@@ -40,6 +41,10 @@ public sealed class LightingOverlay : Overlay
     private readonly List<Entity<SharedPointLightComponent, TransformComponent>> _lights = new();
     private readonly List<(Vector2 Pos, Color Color, Matrix3x2 Matrix, LightingOverlayComponent Comp)> _visible = new();
     private readonly Dictionary<SpriteSpecifier, Texture> _masks = new();
+
+    // Visible lights by OverlapRadius sized cell, so a light only has to look at lights in the neighbouring cells.
+    private readonly Dictionary<Vector2i, List<int>> _cells = new();
+    private readonly Stack<List<int>> _cellPool = new();
     private const float OverlapRadius = 4f;
     private const float OverlapStrength = 2f;
     private const int QualityNone = 0;
@@ -120,16 +125,10 @@ public sealed class LightingOverlay : Overlay
 
         // Silly quality, or a reduced light resolution, draws the low resolution masks.
         var lowMask = _useLowResMask || _quality == QualitySilly;
+        BuildCells();
         foreach (var (pos, baseColor, worldMatrix, component) in _visible)
         {
-            var overlap = 0f;
-            foreach (var other in _visible)
-            {
-                var distanceSquared = (other.Pos - pos).LengthSquared();
-                if (distanceSquared < OverlapRadius * OverlapRadius)
-                    overlap += 1f - MathF.Sqrt(distanceSquared) / OverlapRadius;
-            }
-
+            var overlap = GetOverlap(pos);
             var color = baseColor.WithAlpha(baseColor.A / (1f + (overlap - 1f) * OverlapStrength));
             handle.SetTransform(worldMatrix);
 
@@ -143,6 +142,59 @@ public sealed class LightingOverlay : Overlay
 
         handle.UseShader(null);
         handle.SetTransform(Matrix3x2.Identity);
+    }
+
+    private static Vector2i CellOf(Vector2 position)
+    {
+        return new Vector2i((int) MathF.Floor(position.X / OverlapRadius), (int) MathF.Floor(position.Y / OverlapRadius));
+    }
+
+    private void BuildCells()
+    {
+        foreach (var cell in _cells.Values)
+        {
+            cell.Clear();
+            _cellPool.Push(cell);
+        }
+
+        _cells.Clear();
+
+        for (var i = 0; i < _visible.Count; i++)
+        {
+            var key = CellOf(_visible[i].Pos);
+            if (!_cells.TryGetValue(key, out var cell))
+                _cells[key] = cell = _cellPool.Count > 0 ? _cellPool.Pop() : new List<int>();
+
+            cell.Add(i);
+        }
+    }
+
+    /// <summary>
+    /// How much the lights within <see cref="OverlapRadius"/> of a position overlap it, counting a light there.
+    /// Cells are as wide as the radius, so any light close enough is in one of the 3x3 cells around it.
+    /// </summary>
+    private float GetOverlap(Vector2 position)
+    {
+        var overlap = 0f;
+        var center = CellOf(position);
+
+        for (var y = -1; y <= 1; y++)
+        {
+            for (var x = -1; x <= 1; x++)
+            {
+                if (!_cells.TryGetValue(center + new Vector2i(x, y), out var cell))
+                    continue;
+
+                foreach (var index in cell)
+                {
+                    var distanceSquared = (_visible[index].Pos - position).LengthSquared();
+                    if (distanceSquared < OverlapRadius * OverlapRadius)
+                        overlap += 1f - MathF.Sqrt(distanceSquared) / OverlapRadius;
+                }
+            }
+        }
+
+        return overlap;
     }
 
     private Texture GetMask(SpriteSpecifier specifier)
