@@ -25,7 +25,6 @@ public sealed partial class ClawMachineSystem : EntitySystem
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private PrizeSystem _prizes = default!;
-    [Dependency] private MetaDataSystem _metadata = default!;
 
     public override void Initialize()
     {
@@ -122,7 +121,7 @@ public sealed partial class ClawMachineSystem : EntitySystem
             if (evil)
             {
                 foreach (var item in rewards)
-                    _metadata.SetEntityName(item, Loc.GetString("arcane-clawmachine-evil-prize-name", ("name", Name(item))));
+                    EnsureComp<EvilClawPrizeComponent>(item);
             }
         }
     }

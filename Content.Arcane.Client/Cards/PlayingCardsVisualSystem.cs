@@ -10,6 +10,7 @@ public sealed partial class PlayingCardsVisualSystem : EntitySystem
 
     public override void Initialize()
     {
+        base.Initialize();
         SubscribeLocalEvent<PlayingCardsComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<PlayingCardsComponent, AfterAutoHandleStateEvent>(OnState);
     }

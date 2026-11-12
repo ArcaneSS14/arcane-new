@@ -37,6 +37,7 @@ public sealed partial class PlayingCardsSystem : EntitySystem
 
     public override void Initialize()
     {
+        base.Initialize();
         SubscribeLocalEvent<PlayingCardsStorageComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<PlayingCardsStorageComponent, ExaminedEvent>(OnExamined);
         SubscribeLocalEvent<PlayingCardsStorageComponent, UseInHandEvent>(OnUse);
@@ -107,9 +108,13 @@ public sealed partial class PlayingCardsSystem : EntitySystem
     }
 
     /// <summary>One authoritative mutation; hidden records never have network entity identities.</summary>
-    public bool TryTransfer(EntityUid user, Entity<PlayingCardsStorageComponent> source,
-        Entity<PlayingCardsStorageComponent> target, int count)
+    public bool TryTransfer(EntityUid user, EntityUid sourceUid, EntityUid targetUid, int count)
     {
+        if (!TryComp<PlayingCardsStorageComponent>(sourceUid, out var sourceStorage) ||
+            !TryComp<PlayingCardsStorageComponent>(targetUid, out var targetStorage))
+            return false;
+        Entity<PlayingCardsStorageComponent> source = (sourceUid, sourceStorage);
+        Entity<PlayingCardsStorageComponent> target = (targetUid, targetStorage);
         if (source.Owner == target.Owner || !CanUse(user, source) || !CanUse(user, target) ||
             count <= 0 || count > source.Comp.Cards.Count || target.Comp.Cards.Count + count > MaxCards)
             return false;
@@ -166,8 +171,11 @@ public sealed partial class PlayingCardsSystem : EntitySystem
             Refresh(ent);
     }
 
-    public bool TryDraw(EntityUid user, Entity<PlayingCardsStorageComponent> source, int index)
+    public bool TryDraw(EntityUid user, EntityUid sourceUid, int index)
     {
+        if (!TryComp<PlayingCardsStorageComponent>(sourceUid, out var sourceStorage))
+            return false;
+        Entity<PlayingCardsStorageComponent> source = (sourceUid, sourceStorage);
         if (!CanUse(user, source) || index < 0 || index >= source.Comp.Cards.Count)
             return false;
         if (source.Comp.Cards.Count == 1)
@@ -208,7 +216,7 @@ public sealed partial class PlayingCardsSystem : EntitySystem
         if (!CanUse(user, ent) || ent.Comp.Cards.Count < 2)
             return;
         var pile = Spawn("CardDeckBase", Transform(ent).Coordinates);
-        if (!TryTransfer(user, ent, (pile, Comp<PlayingCardsStorageComponent>(pile)), ent.Comp.Cards.Count / 2))
+        if (!TryTransfer(user, ent, pile, ent.Comp.Cards.Count / 2))
         {
             QueueDel(pile);
             return;

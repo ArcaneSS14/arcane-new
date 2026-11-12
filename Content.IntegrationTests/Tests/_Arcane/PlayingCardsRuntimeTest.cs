@@ -64,8 +64,7 @@ public sealed class PlayingCardsRuntimeTest : InteractionTest
             Assert.That(Storage(hand).Cards.All(card => !card.FaceDown), Is.True);
             Execute(hand, "cards-verb-organize-down");
             Assert.That(Storage(hand).Cards.All(card => card.FaceDown), Is.True);
-            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, (hand, Storage(hand)),
-                (deck, Storage(deck)), 2), Is.True);
+            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, hand, deck, 2), Is.True);
         });
         await RunTicks(2);
         await Server.WaitAssertion(() =>
@@ -83,14 +82,12 @@ public sealed class PlayingCardsRuntimeTest : InteractionTest
             Execute(split, "arcane-cards-convert-to-hand");
             Execute(split, "cards-verb-flip");
             Assert.That(Storage(split).Cards.All(c => c.FaceDown), Is.True);
-            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, (deck, Storage(deck)),
-                (split, Storage(split)), 1), Is.True);
+            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, deck, split, 1), Is.True);
             Assert.That(Storage(split).Cards.All(c => c.FaceDown), Is.True,
                 "Adding a card revealed a hand concealed after splitting a face-up deck.");
-            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, (split, Storage(split)),
-                (deck, Storage(deck)), 27), Is.True);
-            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, (split, Storage(split)),
-                (deck, Storage(deck)), 27), Is.False, "A repeated transfer duplicated consumed cards.");
+            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, split, deck, 27), Is.True);
+            Assert.That(SEntMan.System<PlayingCardsSystem>().TryTransfer(SPlayer, split, deck, 27), Is.False,
+                "A repeated transfer duplicated consumed cards.");
             Assert.That(AllFaces(), Is.EqualTo(original));
         });
     }
@@ -150,6 +147,30 @@ public sealed class PlayingCardsRuntimeTest : InteractionTest
         await RunTicks(10);
         await Client.WaitAssertion(() => Assert.That(CEntMan.HasComponent<PlayingCardDeckComponent>(CEntMan.GetEntity(netHand)),
             Is.True, "Converted decks do not satisfy the deck-box whitelist on the client."));
+
+        await Pickup(netHand);
+        var revisionToDraw = 0;
+        var drawnFace = string.Empty;
+        var keptFace = string.Empty;
+        await Server.WaitAssertion(() =>
+        {
+            Execute(hand, "arcane-cards-convert-to-hand");
+            var storage = Storage(hand);
+            revisionToDraw = storage.Revision;
+            drawnFace = storage.Cards[0].Face.Id;
+            keptFace = storage.Cards[1].Face.Id;
+            SEntMan.System<UserInterfaceSystem>().OpenUi(hand, PlayingCardsUiKey.Key, SPlayer);
+        });
+        await RunTicks(10);
+        await SendBui(PlayingCardsUiKey.Key, new PlayingCardsDrawMessage(revisionToDraw, 0), netHand);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(Storage(hand).Cards.Single().Face.Id, Is.EqualTo(keptFace));
+            Assert.That(SEntMan.AllEntities<PlayingCardsStorageComponent>().Any(other =>
+                other.Owner != hand && Xform(other.Owner).MapID == MapId &&
+                other.Comp.Cards.Count == 1 && other.Comp.Cards[0].Face.Id == drawnFace), Is.True);
+            Assert.That(AllFaces().Length, Is.EqualTo(53));
+        });
     }
 
     [Test]
