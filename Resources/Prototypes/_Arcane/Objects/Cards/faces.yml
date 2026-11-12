@@ -1,0 +1,939 @@
+- type: cardFace
+  id: CardSc2OfClubsBlack
+  name: card-sc-2-clubs
+  state: clubs2
+
+- type: cardFace
+  id: CardSc3OfClubsBlack
+  name: card-sc-3-clubs
+  state: clubs3
+
+- type: cardFace
+  id: CardSc4OfClubsBlack
+  name: card-sc-4-clubs
+  state: clubs4
+
+- type: cardFace
+  id: CardSc5OfClubsBlack
+  name: card-sc-5-clubs
+  state: clubs5
+
+- type: cardFace
+  id: CardSc6OfClubsBlack
+  name: card-sc-6-clubs
+  state: clubs6
+
+- type: cardFace
+  id: CardSc7OfClubsBlack
+  name: card-sc-7-clubs
+  state: clubs7
+
+- type: cardFace
+  id: CardSc8OfClubsBlack
+  name: card-sc-8-clubs
+  state: clubs8
+
+- type: cardFace
+  id: CardSc9OfClubsBlack
+  name: card-sc-9-clubs
+  state: clubs9
+
+- type: cardFace
+  id: CardSc10OfClubsBlack
+  name: card-sc-10-clubs
+  state: clubs10
+
+- type: cardFace
+  id: CardScAceOfClubsBlack
+  name: card-sc-ace-clubs
+  state: clubs1
+
+- type: cardFace
+  id: CardScJackOfClubsBlack
+  name: card-sc-jack-clubs
+  state: clubs11
+
+- type: cardFace
+  id: CardScKingOfClubsBlack
+  name: card-sc-king-clubs
+  state: clubs13
+
+- type: cardFace
+  id: CardScQueenOfClubsBlack
+  name: card-sc-queen-clubs
+  state: clubs12
+
+- type: cardFace
+  id: CardScJackOfDiamondsBlack
+  name: card-sc-jack-diamonds
+  state: diamonds11
+
+- type: cardFace
+  id: CardScQueenOfDiamondsBlack
+  name: card-sc-queen-diamonds
+  state: diamonds12
+
+- type: cardFace
+  id: CardScKingOfDiamondsBlack
+  name: card-sc-king-diamonds
+  state: diamonds13
+
+- type: cardFace
+  id: CardScAceOfDiamondsBlack
+  name: card-sc-ace-diamonds
+  state: diamonds1
+
+- type: cardFace
+  id: CardSc2OfDiamondsBlack
+  name: card-sc-2-diamonds
+  state: diamonds2
+
+- type: cardFace
+  id: CardSc3OfDiamondsBlack
+  name: card-sc-3-diamonds
+  state: diamonds3
+
+- type: cardFace
+  id: CardSc4OfDiamondsBlack
+  name: card-sc-4-diamonds
+  state: diamonds4
+
+- type: cardFace
+  id: CardSc5OfDiamondsBlack
+  name: card-sc-5-diamonds
+  state: diamonds5
+
+- type: cardFace
+  id: CardSc6OfDiamondsBlack
+  name: card-sc-6-diamonds
+  state: diamonds6
+
+- type: cardFace
+  id: CardSc7OfDiamondsBlack
+  name: card-sc-7-diamonds
+  state: diamonds7
+
+- type: cardFace
+  id: CardSc8OfDiamondsBlack
+  name: card-sc-8-diamonds
+  state: diamonds8
+
+- type: cardFace
+  id: CardSc9OfDiamondsBlack
+  name: card-sc-9-diamonds
+  state: diamonds9
+
+- type: cardFace
+  id: CardSc10OfDiamondsBlack
+  name: card-sc-10-diamonds
+  state: diamonds10
+
+- type: cardFace
+  id: CardSc2OfHeartsBlack
+  name: card-sc-2-hearts
+  state: hearts2
+
+- type: cardFace
+  id: CardSc3OfHeartsBlack
+  name: card-sc-3-hearts
+  state: hearts3
+
+- type: cardFace
+  id: CardSc4OfHeartsBlack
+  name: card-sc-4-hearts
+  state: hearts4
+
+- type: cardFace
+  id: CardSc5OfHeartsBlack
+  name: card-sc-5-hearts
+  state: hearts5
+
+- type: cardFace
+  id: CardSc6OfHeartsBlack
+  name: card-sc-6-hearts
+  state: hearts6
+
+- type: cardFace
+  id: CardSc7OfHeartsBlack
+  name: card-sc-7-hearts
+  state: hearts7
+
+- type: cardFace
+  id: CardSc8OfHeartsBlack
+  name: card-sc-8-hearts
+  state: hearts8
+
+- type: cardFace
+  id: CardSc9OfHeartsBlack
+  name: card-sc-9-hearts
+  state: hearts9
+
+- type: cardFace
+  id: CardSc10OfHeartsBlack
+  name: card-sc-10-hearts
+  state: hearts10
+
+- type: cardFace
+  id: CardScKingOfHeartsBlack
+  name: card-sc-king-hearts
+  state: hearts13
+
+- type: cardFace
+  id: CardScQueenOfHeartsBlack
+  name: card-sc-queen-hearts
+  state: hearts12
+
+- type: cardFace
+  id: CardScJackOfHeartsBlack
+  name: card-sc-jack-hearts
+  state: hearts11
+
+- type: cardFace
+  id: CardScAceOfHeartsBlack
+  name: card-sc-ace-hearts
+  state: hearts1
+
+- type: cardFace
+  id: CardSc2OfSpadesBlack
+  name: card-sc-2-spades
+  state: spades2
+
+- type: cardFace
+  id: CardSc3OfSpadesBlack
+  name: card-sc-3-spades
+  state: spades3
+
+- type: cardFace
+  id: CardSc4OfSpadesBlack
+  name: card-sc-4-spades
+  state: spades4
+
+- type: cardFace
+  id: CardSc5OfSpadesBlack
+  name: card-sc-5-spades
+  state: spades5
+
+- type: cardFace
+  id: CardSc6OfSpadesBlack
+  name: card-sc-6-spades
+  state: spades6
+
+- type: cardFace
+  id: CardSc7OfSpadesBlack
+  name: card-sc-7-spades
+  state: spades7
+
+- type: cardFace
+  id: CardSc8OfSpadesBlack
+  name: card-sc-8-spades
+  state: spades8
+
+- type: cardFace
+  id: CardSc9OfSpadesBlack
+  name: card-sc-9-spades
+  state: spades9
+
+- type: cardFace
+  id: CardSc10OfSpadesBlack
+  name: card-sc-10-spades
+  state: spades10
+
+- type: cardFace
+  id: CardScKingOfSpadesBlack
+  name: card-sc-king-spades
+  state: spades13
+
+- type: cardFace
+  id: CardScQueenOfSpadesBlack
+  name: card-sc-queen-spades
+  state: spades12
+
+- type: cardFace
+  id: CardScJackOfSpadesBlack
+  name: card-sc-jack-spades
+  state: spades11
+
+- type: cardFace
+  id: CardScAceOfSpadesBlack
+  name: card-sc-ace-spades
+  state: spades1
+
+- type: cardFace
+  id: CardScJokerBlack
+  name: card-sc-joker
+  state: joker
+  components:
+  - type: EmbeddableProjectile
+    netsync: false
+    sound: /Audio/Weapons/star_hit.ogg
+  - type: ThrowingAngle
+    netsync: false
+    angularVelocity: true # spins
+  - type: ThrowableBlocked
+    netsync: false
+  - type: LandAtCursor
+    netsync: false
+  - type: DamageOtherOnHit
+    netsync: false
+    ignoreResistances: true
+    damage:
+      types:
+        Slash: 0.1
+  - type: Solution
+    netsync: false
+    id: injector
+    solution:
+      maxVol: 4
+      reagents:
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionRegeneration
+    netsync: false
+    duration: 0.25
+    generated:
+      reagents:
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionInjectWhileEmbedded
+    netsync: false
+    transferAmount: 4
+    updateInterval: 0.1
+    maxInjections: 1
+    solution: injector
+    pierceArmor: false
+
+- type: cardFace
+  id: CardSc2OfClubsNanotrasen
+  name: card-sc-2-clubs
+  state: clubs2
+
+- type: cardFace
+  id: CardSc3OfClubsNanotrasen
+  name: card-sc-3-clubs
+  state: clubs3
+
+- type: cardFace
+  id: CardSc4OfClubsNanotrasen
+  name: card-sc-4-clubs
+  state: clubs4
+
+- type: cardFace
+  id: CardSc5OfClubsNanotrasen
+  name: card-sc-5-clubs
+  state: clubs5
+
+- type: cardFace
+  id: CardSc6OfClubsNanotrasen
+  name: card-sc-6-clubs
+  state: clubs6
+
+- type: cardFace
+  id: CardSc7OfClubsNanotrasen
+  name: card-sc-7-clubs
+  state: clubs7
+
+- type: cardFace
+  id: CardSc8OfClubsNanotrasen
+  name: card-sc-8-clubs
+  state: clubs8
+
+- type: cardFace
+  id: CardSc9OfClubsNanotrasen
+  name: card-sc-9-clubs
+  state: clubs9
+
+- type: cardFace
+  id: CardSc10OfClubsNanotrasen
+  name: card-sc-10-clubs
+  state: clubs10
+
+- type: cardFace
+  id: CardScAceOfClubsNanotrasen
+  name: card-sc-ace-clubs
+  state: clubs1
+
+- type: cardFace
+  id: CardScJackOfClubsNanotrasen
+  name: card-sc-jack-clubs
+  state: clubs11
+
+- type: cardFace
+  id: CardScKingOfClubsNanotrasen
+  name: card-sc-king-clubs
+  state: clubs13
+
+- type: cardFace
+  id: CardScQueenOfClubsNanotrasen
+  name: card-sc-queen-clubs
+  state: clubs12
+
+- type: cardFace
+  id: CardScJackOfDiamondsNanotrasen
+  name: card-sc-jack-diamonds
+  state: diamonds11
+
+- type: cardFace
+  id: CardScQueenOfDiamondsNanotrasen
+  name: card-sc-queen-diamonds
+  state: diamonds12
+
+- type: cardFace
+  id: CardScKingOfDiamondsNanotrasen
+  name: card-sc-king-diamonds
+  state: diamonds13
+
+- type: cardFace
+  id: CardScAceOfDiamondsNanotrasen
+  name: card-sc-ace-diamonds
+  state: diamonds1
+
+- type: cardFace
+  id: CardSc2OfDiamondsNanotrasen
+  name: card-sc-2-diamonds
+  state: diamonds2
+
+- type: cardFace
+  id: CardSc3OfDiamondsNanotrasen
+  name: card-sc-3-diamonds
+  state: diamonds3
+
+- type: cardFace
+  id: CardSc4OfDiamondsNanotrasen
+  name: card-sc-4-diamonds
+  state: diamonds4
+
+- type: cardFace
+  id: CardSc5OfDiamondsNanotrasen
+  name: card-sc-5-diamonds
+  state: diamonds5
+
+- type: cardFace
+  id: CardSc6OfDiamondsNanotrasen
+  name: card-sc-6-diamonds
+  state: diamonds6
+
+- type: cardFace
+  id: CardSc7OfDiamondsNanotrasen
+  name: card-sc-7-diamonds
+  state: diamonds7
+
+- type: cardFace
+  id: CardSc8OfDiamondsNanotrasen
+  name: card-sc-8-diamonds
+  state: diamonds8
+
+- type: cardFace
+  id: CardSc9OfDiamondsNanotrasen
+  name: card-sc-9-diamonds
+  state: diamonds9
+
+- type: cardFace
+  id: CardSc10OfDiamondsNanotrasen
+  name: card-sc-10-diamonds
+  state: diamonds10
+
+- type: cardFace
+  id: CardSc2OfHeartsNanotrasen
+  name: card-sc-2-hearts
+  state: hearts2
+
+- type: cardFace
+  id: CardSc3OfHeartsNanotrasen
+  name: card-sc-3-hearts
+  state: hearts3
+
+- type: cardFace
+  id: CardSc4OfHeartsNanotrasen
+  name: card-sc-4-hearts
+  state: hearts4
+
+- type: cardFace
+  id: CardSc5OfHeartsNanotrasen
+  name: card-sc-5-hearts
+  state: hearts5
+
+- type: cardFace
+  id: CardSc6OfHeartsNanotrasen
+  name: card-sc-6-hearts
+  state: hearts6
+
+- type: cardFace
+  id: CardSc7OfHeartsNanotrasen
+  name: card-sc-7-hearts
+  state: hearts7
+
+- type: cardFace
+  id: CardSc8OfHeartsNanotrasen
+  name: card-sc-8-hearts
+  state: hearts8
+
+- type: cardFace
+  id: CardSc9OfHeartsNanotrasen
+  name: card-sc-9-hearts
+  state: hearts9
+
+- type: cardFace
+  id: CardSc10OfHeartsNanotrasen
+  name: card-sc-10-hearts
+  state: hearts10
+
+- type: cardFace
+  id: CardScKingOfHeartsNanotrasen
+  name: card-sc-king-hearts
+  state: hearts13
+
+- type: cardFace
+  id: CardScQueenOfHeartsNanotrasen
+  name: card-sc-queen-hearts
+  state: hearts12
+
+- type: cardFace
+  id: CardScJackOfHeartsNanotrasen
+  name: card-sc-jack-hearts
+  state: hearts11
+
+- type: cardFace
+  id: CardScAceOfHeartsNanotrasen
+  name: card-sc-ace-hearts
+  state: hearts1
+
+- type: cardFace
+  id: CardSc2OfSpadesNanotrasen
+  name: card-sc-2-spades
+  state: spades2
+
+- type: cardFace
+  id: CardSc3OfSpadesNanotrasen
+  name: card-sc-3-spades
+  state: spades3
+
+- type: cardFace
+  id: CardSc4OfSpadesNanotrasen
+  name: card-sc-4-spades
+  state: spades4
+
+- type: cardFace
+  id: CardSc5OfSpadesNanotrasen
+  name: card-sc-5-spades
+  state: spades5
+
+- type: cardFace
+  id: CardSc6OfSpadesNanotrasen
+  name: card-sc-6-spades
+  state: spades6
+
+- type: cardFace
+  id: CardSc7OfSpadesNanotrasen
+  name: card-sc-7-spades
+  state: spades7
+
+- type: cardFace
+  id: CardSc8OfSpadesNanotrasen
+  name: card-sc-8-spades
+  state: spades8
+
+- type: cardFace
+  id: CardSc9OfSpadesNanotrasen
+  name: card-sc-9-spades
+  state: spades9
+
+- type: cardFace
+  id: CardSc10OfSpadesNanotrasen
+  name: card-sc-10-spades
+  state: spades10
+
+- type: cardFace
+  id: CardScKingOfSpadesNanotrasen
+  name: card-sc-king-spades
+  state: spades13
+
+- type: cardFace
+  id: CardScQueenOfSpadesNanotrasen
+  name: card-sc-queen-spades
+  state: spades12
+
+- type: cardFace
+  id: CardScJackOfSpadesNanotrasen
+  name: card-sc-jack-spades
+  state: spades11
+
+- type: cardFace
+  id: CardScAceOfSpadesNanotrasen
+  name: card-sc-ace-spades
+  state: spades1
+
+- type: cardFace
+  id: CardScJokerNanotrasen
+  name: card-sc-joker
+  state: joker
+  components:
+  - type: EmbeddableProjectile
+    netsync: false
+    sound: /Audio/Weapons/star_hit.ogg
+  - type: ThrowingAngle
+    netsync: false
+    angularVelocity: true # spins
+  - type: ThrowableBlocked
+    netsync: false
+  - type: LandAtCursor
+    netsync: false
+  - type: DamageOtherOnHit
+    netsync: false
+    ignoreResistances: true
+    damage:
+      types:
+        Slash: 0.1
+  - type: Solution
+    netsync: false
+    id: injector
+    solution:
+      maxVol: 4
+      reagents:
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionRegeneration
+    netsync: false
+    duration: 0.25
+    generated:
+      reagents:
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionInjectWhileEmbedded
+    netsync: false
+    transferAmount: 4
+    updateInterval: 0.1
+    maxInjections: 1
+    solution: injector
+    pierceArmor: false
+
+- type: cardFace
+  id: CardSc2OfClubsSyndicate
+  name: card-sc-2-clubs
+  state: clubs2
+
+- type: cardFace
+  id: CardSc3OfClubsSyndicate
+  name: card-sc-3-clubs
+  state: clubs3
+
+- type: cardFace
+  id: CardSc4OfClubsSyndicate
+  name: card-sc-4-clubs
+  state: clubs4
+
+- type: cardFace
+  id: CardSc5OfClubsSyndicate
+  name: card-sc-5-clubs
+  state: clubs5
+
+- type: cardFace
+  id: CardSc6OfClubsSyndicate
+  name: card-sc-6-clubs
+  state: clubs6
+
+- type: cardFace
+  id: CardSc7OfClubsSyndicate
+  name: card-sc-7-clubs
+  state: clubs7
+
+- type: cardFace
+  id: CardSc8OfClubsSyndicate
+  name: card-sc-8-clubs
+  state: clubs8
+
+- type: cardFace
+  id: CardSc9OfClubsSyndicate
+  name: card-sc-9-clubs
+  state: clubs9
+
+- type: cardFace
+  id: CardSc10OfClubsSyndicate
+  name: card-sc-10-clubs
+  state: clubs10
+
+- type: cardFace
+  id: CardScAceOfClubsSyndicate
+  name: card-sc-ace-clubs
+  state: clubs1
+
+- type: cardFace
+  id: CardScJackOfClubsSyndicate
+  name: card-sc-jack-clubs
+  state: clubs11
+
+- type: cardFace
+  id: CardScKingOfClubsSyndicate
+  name: card-sc-king-clubs
+  state: clubs13
+
+- type: cardFace
+  id: CardScQueenOfClubsSyndicate
+  name: card-sc-queen-clubs
+  state: clubs12
+
+- type: cardFace
+  id: CardScJackOfDiamondsSyndicate
+  name: card-sc-jack-diamonds
+  state: diamonds11
+
+- type: cardFace
+  id: CardScQueenOfDiamondsSyndicate
+  name: card-sc-queen-diamonds
+  state: diamonds12
+
+- type: cardFace
+  id: CardScKingOfDiamondsSyndicate
+  name: card-sc-king-diamonds
+  state: diamonds13
+
+- type: cardFace
+  id: CardScAceOfDiamondsSyndicate
+  name: card-sc-ace-diamonds
+  state: diamonds11
+
+- type: cardFace
+  id: CardSc2OfDiamondsSyndicate
+  name: card-sc-2-diamonds
+  state: diamonds2
+
+- type: cardFace
+  id: CardSc3OfDiamondsSyndicate
+  name: card-sc-3-diamonds
+  state: diamonds3
+
+- type: cardFace
+  id: CardSc4OfDiamondsSyndicate
+  name: card-sc-4-diamonds
+  state: diamonds4
+
+- type: cardFace
+  id: CardSc5OfDiamondsSyndicate
+  name: card-sc-5-diamonds
+  state: diamonds5
+
+- type: cardFace
+  id: CardSc6OfDiamondsSyndicate
+  name: card-sc-6-diamonds
+  state: diamonds6
+
+- type: cardFace
+  id: CardSc7OfDiamondsSyndicate
+  name: card-sc-7-diamonds
+  state: diamonds7
+
+- type: cardFace
+  id: CardSc8OfDiamondsSyndicate
+  name: card-sc-8-diamonds
+  state: diamonds8
+
+- type: cardFace
+  id: CardSc9OfDiamondsSyndicate
+  name: card-sc-9-diamonds
+  state: diamonds9
+
+- type: cardFace
+  id: CardSc10OfDiamondsSyndicate
+  name: card-sc-10-diamonds
+  state: diamonds10
+
+- type: cardFace
+  id: CardSc2OfHeartsSyndicate
+  name: card-sc-2-hearts
+  state: hearts2
+
+- type: cardFace
+  id: CardSc3OfHeartsSyndicate
+  name: card-sc-3-hearts
+  state: hearts3
+
+- type: cardFace
+  id: CardSc4OfHeartsSyndicate
+  name: card-sc-4-hearts
+  state: hearts4
+
+- type: cardFace
+  id: CardSc5OfHeartsSyndicate
+  name: card-sc-5-hearts
+  state: hearts5
+
+- type: cardFace
+  id: CardSc6OfHeartsSyndicate
+  name: card-sc-6-hearts
+  state: hearts6
+
+- type: cardFace
+  id: CardSc7OfHeartsSyndicate
+  name: card-sc-7-hearts
+  state: hearts7
+
+- type: cardFace
+  id: CardSc8OfHeartsSyndicate
+  name: card-sc-8-hearts
+  state: hearts8
+
+- type: cardFace
+  id: CardSc9OfHeartsSyndicate
+  name: card-sc-9-hearts
+  state: hearts9
+
+- type: cardFace
+  id: CardSc10OfHeartsSyndicate
+  name: card-sc-10-hearts
+  state: hearts10
+
+- type: cardFace
+  id: CardScKingOfHeartsSyndicate
+  name: card-sc-king-hearts
+  state: hearts13
+
+- type: cardFace
+  id: CardScQueenOfHeartsSyndicate
+  name: card-sc-queen-hearts
+  state: hearts12
+
+- type: cardFace
+  id: CardScJackOfHeartsSyndicate
+  name: card-sc-jack-hearts
+  state: hearts11
+
+- type: cardFace
+  id: CardScAceOfHeartsSyndicate
+  name: card-sc-ace-hearts
+  state: hearts1
+
+- type: cardFace
+  id: CardSc2OfSpadesSyndicate
+  name: card-sc-2-spades
+  state: spades2
+
+- type: cardFace
+  id: CardSc3OfSpadesSyndicate
+  name: card-sc-3-spades
+  state: spades3
+
+- type: cardFace
+  id: CardSc4OfSpadesSyndicate
+  name: card-sc-4-spades
+  state: spades4
+
+- type: cardFace
+  id: CardSc5OfSpadesSyndicate
+  name: card-sc-5-spades
+  state: spades5
+
+- type: cardFace
+  id: CardSc6OfSpadesSyndicate
+  name: card-sc-6-spades
+  state: spades6
+
+- type: cardFace
+  id: CardSc7OfSpadesSyndicate
+  name: card-sc-7-spades
+  state: spades7
+
+- type: cardFace
+  id: CardSc8OfSpadesSyndicate
+  name: card-sc-8-spades
+  state: spades8
+
+- type: cardFace
+  id: CardSc9OfSpadesSyndicate
+  name: card-sc-9-spades
+  state: spades9
+
+- type: cardFace
+  id: CardSc10OfSpadesSyndicate
+  name: card-sc-10-spades
+  state: spades10
+
+- type: cardFace
+  id: CardScKingOfSpadesSyndicate
+  name: card-sc-king-spades
+  state: spades13
+
+- type: cardFace
+  id: CardScQueenOfSpadesSyndicate
+  name: card-sc-queen-spades
+  state: spades12
+
+- type: cardFace
+  id: CardScJackOfSpadesSyndicate
+  name: card-sc-jack-spades
+  state: spades11
+
+- type: cardFace
+  id: CardScAceOfSpadesSyndicate
+  name: card-sc-ace-spades
+  state: spades1
+
+- type: cardFace
+  id: CardScJokerSyndicate
+  name: card-sc-joker
+  state: joker
+  components:
+  - type: EmbeddableProjectile
+    netsync: false
+    sound: /Audio/Weapons/star_hit.ogg
+  - type: ThrowingAngle
+    netsync: false
+    angularVelocity: true # spins
+  - type: ThrowableBlocked
+    netsync: false
+  - type: LandAtCursor
+    netsync: false
+  - type: DamageOtherOnHit
+    netsync: false
+    ignoreResistances: true
+    damage:
+      types:
+        Slash: 6
+  - type: Solution
+    netsync: false
+    id: injector
+    solution:
+      maxVol: 7
+      reagents:
+      - ReagentId: Tirizene
+        Quantity: 3
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionRegeneration
+    netsync: false
+    duration: 0.25
+    generated:
+      reagents:
+      - ReagentId: Tirizene
+        Quantity: 3
+      - ReagentId: Bananadine
+        Quantity: 1.5
+      - ReagentId: Honk
+        Quantity: 0.5
+      - ReagentId: Laughter
+        Quantity: 2
+  - type: SolutionInjectWhileEmbedded
+    netsync: false
+    transferAmount: 7
+    updateInterval: 0.1
+    maxInjections: 1
+    solution: injector
+    pierceArmor: false

@@ -18,6 +18,7 @@
     BooksBag: 3
     Magic9Ball: 2
     PokerChipsBox: 1 # Arcane
+    CardBoxBlack: 3 # Arcane
   contrabandInventory:
     Basketball: 1
     FoodSnackBoritos: 3
@@ -28,4 +29,5 @@
     WeaponRussianRevolver: 1
     MagazineBoxMagnum: 1
     Handcuffs: 1
+    CardBoxSyndicate: 1 # Arcane
   #</Trauma>
