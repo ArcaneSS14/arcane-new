@@ -23,6 +23,8 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class P11EngineeringRuntimeTest : InteractionTest
 {
+    private static readonly ProtoId<WeightedRandomPrototype> NormalEvents = "ArcaneSupermatterNormalEvents";
+
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
 
     [Test]
@@ -93,16 +95,17 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             SEntMan.DeleteEntity(bolt);
 
             sm.Activated = false;
-            var pool = Server.ResolveDependency<IPrototypeManager>().Index<WeightedRandomPrototype>("ArcaneSupermatterNormalEvents");
+            var pool = Server.ResolveDependency<IPrototypeManager>().Index(NormalEvents);
             var sampleRandom = new RobustRandom();
             var seed = 0;
-            while (true)
+            while (seed < 100)
             {
                 sampleRandom.SetSeed(seed);
                 if (pool.Pick(sampleRandom) == "SMSurge")
                     break;
                 seed++;
             }
+            Assert.That(seed, Is.LessThan(100), "The normal event table never selected a surge.");
             reading.Anger = reading.EventThreshold;
             reading.LastAnger = 0f;
             reading.SurgeDuration = TimeSpan.FromSeconds(0.2);

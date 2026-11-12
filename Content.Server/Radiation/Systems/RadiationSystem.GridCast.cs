@@ -144,7 +144,7 @@ public partial class RadiationSystem
         var dist = Math.Max(dir.Length(), 0.5f);
         if (TryComp(source.Entity.Owner, out EventHorizonComponent? horizon)) // if we have a horizon emit radiation from the horizon,
             dist = Math.Max(dist - horizon.Radius, 0.5f);
-        var rads = source.EffectiveIntensity / dist; // Arcane-Edit: include temporary radiation effects
+        var rads = source.Intensity / dist;
         if (rads < MinIntensity)
             return null;
         // Goobstation End - Radiation Overhaul
