@@ -28,6 +28,7 @@ public abstract partial class SharedBiomeSystem : EntitySystem
 
     public override void Initialize()
     {
+        base.Initialize();
         SubscribeLocalEvent<MapRemovedEvent>(OnNoiseMapRemoved);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnNoiseRoundCleanup);
     }
@@ -394,14 +395,17 @@ public abstract partial class SharedBiomeSystem : EntitySystem
 
     // Arcane-Start
     private FastNoiseLite GetNoise(FastNoiseLite seedNoise, int seed)
-        => _noiseCache.GetOrAdd((seedNoise, seed), static (key, system) => system.CreateNoise(key.Noise, key.Seed), this);
+    {
+        var effectiveSeed = seedNoise.GetSeed() + seed;
+        return _noiseCache.GetOrAdd((seedNoise, effectiveSeed), static (key, system) => system.CreateNoise(key.Noise, key.Seed), this);
+    }
     // Arcane-End
 
-    private FastNoiseLite CreateNoise(FastNoiseLite seedNoise, int seed) // Arcane-Edit: GetNoise > CreateNoise
+    private FastNoiseLite CreateNoise(FastNoiseLite seedNoise, int effectiveSeed) // Arcane-Edit: GetNoise > CreateNoise with the effective seed
     {
         var noiseCopy = new FastNoiseLite();
         _serManager.CopyTo(seedNoise, ref noiseCopy, notNullableOverride: true);
-        noiseCopy.SetSeed(noiseCopy.GetSeed() + seed);
+        noiseCopy.SetSeed(effectiveSeed); // Arcane-Edit: the cache key already includes the layer seed
         // Ensure re-calculate is run.
         noiseCopy.SetFractalOctaves(noiseCopy.GetFractalOctaves());
         return noiseCopy;
