@@ -17,8 +17,27 @@ public sealed partial class PollManager
     public event Action<int>? OnPollClosed;
     public event Action<PollData, List<PollVoteData>>? OnPollDetailsReceived;
     public event Action<bool, string?>? OnVoteResponse;
+    // Arcane-Start
+    public event Action<IReadOnlyList<int>>? SeenPollIdsReceived;
+    public event Action<int>? PollDisplayed;
+    public event Action<int, int>? SeenCountChanged;
+    // Arcane-End
 
     public IReadOnlyDictionary<int, PollData> ActivePolls => _activePolls;
+
+    internal void NotifyPollDisplayed(int id) => PollDisplayed?.Invoke(id); // Arcane
+
+    // Arcane-Start
+    public void UpdateSeenCount(int id, int count)
+    {
+        if (!_activePolls.TryGetValue(id, out var poll) || count <= poll.SeenCount)
+            return;
+
+        // A delayed view count must not replace newer votes or reopen a closed poll.
+        poll.SeenCount = count;
+        SeenCountChanged?.Invoke(id, count);
+    }
+    // Arcane-End
 
     public void Initialize()
     {
@@ -106,6 +125,7 @@ public sealed partial class PollManager
             _activePolls[poll.PollId] = poll;
 
         OnActivePollsUpdated?.Invoke(msg.Polls);
+        SeenPollIdsReceived?.Invoke(msg.SeenPollIds); // Arcane
     }
 
     private void HandlePollDetailsResponse(MsgPollDetailsResponse msg)
