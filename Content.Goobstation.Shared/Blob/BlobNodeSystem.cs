@@ -100,14 +100,18 @@ public sealed partial class BlobNodeSystem : EntitySystem
             if (now < ent.Comp.NextPulse)
                 continue;
 
-            ent.Comp.NextPulse = now + ent.Comp.PulseFrequency;
-
             if (_tileQuery.CompOrNull(ent)?.Core is not { } core ||
                 !_coreQuery.TryComp(core, out var coreComp))
             {
                 PredictedQueueDel(ent);
                 continue;
             }
+
+            // Arcane-Start
+            var chem = ProtoMan.Index(coreComp.CurrentChem);
+            var interval = chem.NodePulseSeconds is { } seconds ? TimeSpan.FromSeconds(seconds) : ent.Comp.PulseFrequency;
+            ent.Comp.NextPulse = now + interval;
+            // Arcane-End
 
             Pulse(ent, (core, coreComp));
         }

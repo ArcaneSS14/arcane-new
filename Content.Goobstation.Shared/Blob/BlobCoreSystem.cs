@@ -11,6 +11,7 @@ using Content.Shared.Weapons.Melee;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Prototypes; // Arcane
 
 namespace Content.Goobstation.Shared.Blob;
 
@@ -140,6 +141,16 @@ public abstract partial class BlobCoreSystem : EntitySystem
 
             ChangeBlobEntChem((tile, tileComp), chem, old);
 
+            // Arcane-Start
+            if (old != null && _nodeQuery.TryComp(tile, out var node))
+            {
+                var oldInterval = old.NodePulseSeconds is { } oldSeconds ? TimeSpan.FromSeconds(oldSeconds) : node.PulseFrequency;
+                var newInterval = chem.NodePulseSeconds is { } newSeconds ? TimeSpan.FromSeconds(newSeconds) : node.PulseFrequency;
+                if (oldInterval != newInterval)
+                    node.NextPulse = _timing.CurTime + newInterval;
+            }
+            // Arcane-End
+
             // TODO: this should be an event
             if (_factoryQuery.CompOrNull(tile)?.Blobbernaut is not { } mob)
                 continue;
@@ -156,18 +167,36 @@ public abstract partial class BlobCoreSystem : EntitySystem
                 Dirty(mob, melee);
             }
 
-            ChangeBlobEntChem(mob, chem, old);
+            ChangeBlobEntChem(mob, chem, old, chem.BlobbernautDamageModifiers); // Arcane-Edit: separate mob and tile modifiers
         }
     }
 
-    private void ChangeBlobEntChem(Entity<BlobTileComponent?> ent, BlobChemPrototype chem, BlobChemPrototype? old)
+    // Arcane-Edit-Start: allow the blobbernaut's own modifiers
+    private void ChangeBlobEntChem(Entity<BlobTileComponent?> ent, BlobChemPrototype chem, BlobChemPrototype? old,
+        ProtoId<DamageModifierSetPrototype>? modifierOverride = null)
+    // Arcane-Edit-End
     {
         if (ProtoMan.TryIndex(ent.Comp?.Tile, out var tile) && !tile.CanChangeChem)
             return;
 
-        _damage.SetDamageModifierSetId(ent.Owner, chem.DamageModifiers);
+        _damage.SetDamageModifierSetId(ent.Owner, modifierOverride ?? chem.DamageModifiers); // Arcane-Edit
         if (old?.AddedComponents is { } oldAdded)
+        {
             EntityManager.RemoveComponents(ent, oldAdded);
+            // Arcane-Start: an outgoing chemistry may have overridden a native component.
+            if (MetaData(ent).EntityPrototype is { } prototype)
+            {
+                var restore = new ComponentRegistry();
+                foreach (var name in oldAdded.Keys)
+                {
+                    if (chem.AddedComponents?.ContainsKey(name) != true &&
+                        prototype.Components.TryGetValue(name, out var original))
+                        restore.Add(name, original);
+                }
+                EntityManager.AddComponents(ent, restore, removeExisting: false);
+            }
+            // Arcane-End
+        }
         if (chem.AddedComponents is { } added)
             EntityManager.AddComponents(ent, added);
     }
@@ -322,6 +351,14 @@ public abstract partial class BlobCoreSystem : EntitySystem
         return false;
     }
 
+    // Arcane-Start
+    public int GetTileCost(BlobCoreComponent core, ProtoId<BlobTilePrototype> tile)
+    {
+        var chem = ProtoMan.Index(core.CurrentChem);
+        return chem.TileCostOverrides.TryGetValue(tile, out var cost) ? cost : ProtoMan.Index(tile).Cost;
+    }
+    // Arcane-End
+
     public void TransformSpecialTile(Entity<BlobCoreComponent> core, BlobTransformTileActionEvent args)
     {
         if (GetTargetTile(args.Target) is not { } tile || tile.Comp.Core == null)
@@ -333,6 +370,16 @@ public abstract partial class BlobCoreSystem : EntitySystem
 
         if (!CheckValidBlobTile(tile, node, args.RequireNode, args))
             return;
+
+        // Arcane-Start
+        if (tile.Comp.Core != core.Owner || TerminatingOrDeleted(tile) || EntityManager.IsQueuedForDeletion(tile))
+            return;
+
+        var chem = ProtoMan.Index(core.Comp.CurrentChem);
+        if (chem.ChargeSpecialTileCosts && tileType != BlobCoreActionSystem.GrowthTile
+            && !TryUseAbility(core.AsNullable(), GetTileCost(core.Comp, tileType), coords))
+            return;
+        // Arcane-End
 
         TransformBlobTile(
             tile.AsNullable(),
