@@ -1,9 +1,11 @@
 #nullable enable
 using System.Linq;
 using Content.IntegrationTests.Tests.Interaction;
+using Content.Server.Resist;
 using Content.Server.Station.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.DoAfter;
 using Content.Shared.Emp;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -72,12 +74,21 @@ public sealed class P13SecurityRuntimeTest : InteractionTest
     {
         await Server.WaitAssertion(() =>
         {
+            var stations = SEntMan.System<ServerStationSystem>();
+            var station = SEntMan.SpawnAttachedTo(new EntProtoId("TestStation"), Center);
+            stations.AddGridToStation(station, MapData.Grid);
             var user = SEntMan.SpawnAttachedTo(Human, Center);
             var button = SEntMan.SpawnAttachedTo(new EntProtoId("PanicButton"), Center);
+            SEntMan.AddComponent<TelecomExemptComponent>(button);
+            var receiver = SEntMan.SpawnAttachedTo(null, Center);
+            SEntMan.AddComponent<ActiveRadioComponent>(receiver).ReceiveAllChannels = true;
+            var probe = SEntMan.AddComponent<P09RadioProbeComponent>(receiver);
+            probe.ExpectedSource = button;
             var hands = SEntMan.System<SharedHandsSystem>();
             Assert.That(hands.TryPickupAnyHand(user, button, checkActionBlocker: false), Is.True);
             Assert.That(SEntMan.System<SharedInteractionSystem>().UseInHandInteraction(user, button), Is.True);
             Assert.That(SEntMan.System<UseDelaySystem>().IsDelayed(button), Is.False);
+            Assert.That(probe.Channels, Is.Empty);
         });
     }
 
@@ -127,14 +138,52 @@ public sealed class P13SecurityRuntimeTest : InteractionTest
             var sensors = SEntMan.System<SharedSuitSensorSystem>();
             var emp = SEntMan.System<SharedEmpSystem>();
             sensors.SetSensor(uniform, SuitSensorMode.SensorVitals);
+            var user = SEntMan.SpawnAttachedTo(Human, Center);
+            var change = new SuitSensorChangeDoAfterEvent(SuitSensorMode.SensorCords);
+            var doAfter = new DoAfterArgs(SEntMan, user, 0.5f, change, uniform, target: uniform);
+            Assert.That(SEntMan.System<SharedDoAfterSystem>().TryStartDoAfter(doAfter), Is.True);
             Assert.That(emp.TryEmpEffects(uniform, 0, TimeSpan.FromSeconds(1)), Is.True);
-            Assert.That(emp.TryEmpEffects(uniform, 0, TimeSpan.FromSeconds(2)), Is.True);
             Assert.That(SEntMan.GetComponent<SuitSensorComponent>(uniform).Mode, Is.EqualTo(SuitSensorMode.SensorOff));
+        });
+
+        await RunSeconds(0.7f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.GetComponent<SuitSensorComponent>(uniform).Mode, Is.EqualTo(SuitSensorMode.SensorOff));
+            Assert.That(SEntMan.System<SharedEmpSystem>().TryEmpEffects(uniform, 0, TimeSpan.FromSeconds(2)), Is.True);
         });
 
         await RunSeconds(2.2f);
         await Server.WaitAssertion(() =>
             Assert.That(SEntMan.GetComponent<SuitSensorComponent>(uniform).Mode, Is.EqualTo(SuitSensorMode.SensorVitals)));
+    }
+
+    [Test]
+    public async Task CancellingEscapeKeepsCarrierAndBothVirtualItems()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var carrier = SEntMan.SpawnAttachedTo(Human, Center);
+            var carried = SEntMan.SpawnAttachedTo(Human, Center);
+            var carrying = SEntMan.System<CarryingSystem>();
+            var hands = SEntMan.System<SharedHandsSystem>();
+            Assert.That(carrying.TryCarry(carrier, carried), Is.True);
+            var heldItems = hands.EnumerateHeld(carrier).ToArray();
+            Assert.That(heldItems, Has.Length.EqualTo(2));
+
+            var mover = SEntMan.GetComponent<InputMoverComponent>(carried);
+            mover.HeldMoveButtons = MoveButtons.Up;
+            var input = new MoveInputEvent((carried, mover), MoveButtons.None, Direction.North, true);
+            SEntMan.EventBus.RaiseLocalEvent(carried, ref input);
+            var escape = SEntMan.GetComponent<CanEscapeInventoryComponent>(carried);
+            Assert.That(escape.IsEscaping, Is.True);
+            SEntMan.System<SharedDoAfterSystem>().Cancel(escape.DoAfter);
+
+            Assert.That(escape.IsEscaping, Is.False);
+            Assert.That(carrying.GetCarrier(carried), Is.EqualTo(carrier));
+            Assert.That(SEntMan.HasComponent<CarryingComponent>(carrier), Is.True);
+            Assert.That(hands.EnumerateHeld(carrier).ToArray(), Is.EquivalentTo(heldItems));
+        });
     }
 
     [Test]
