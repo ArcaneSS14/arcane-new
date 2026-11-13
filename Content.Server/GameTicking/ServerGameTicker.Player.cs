@@ -12,6 +12,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Server.GameTicking.Events; // Arcane
 
 namespace Content.Server.GameTicking
 {
@@ -53,9 +54,13 @@ namespace Content.Server.GameTicking
                         session.Data.ContentDataUncast = data;
                     }
 
-                    // Make the player actually join the game.
-                    // timer time must be > tick length
-                    Timer.Spawn(0, () => _playerManager.JoinGame(args.Session));
+                    // Arcane-Edit-Start: load before a possible queue wait, without entering the world twice.
+                    var joining = new PlayerJoinRequestedEvent(session);
+                    RaiseLocalEvent(ref joining);
+                    _userDb.ClientConnected(session);
+                    if (!joining.Deferred)
+                        Timer.Spawn(0, () => _playerManager.JoinGame(args.Session));
+                    // Arcane-Edit-End
 
                     var record = await _db.GetPlayerRecordByUserId(args.Session.UserId);
                     var firstConnection = record != null &&
@@ -72,18 +77,21 @@ namespace Content.Server.GameTicking
                             Filter.Empty().AddPlayers(_adminManager.ActiveAdmins), false,
                             audioParams: new AudioParams { Volume = -5f });
 
-                    if (LobbyEnabled && _roundStartCountdownHasNotStartedYetDueToNoPlayers)
-                    {
-                        _roundStartCountdownHasNotStartedYetDueToNoPlayers = false;
-                        _roundStartTime = Timing.CurTime + LobbyDuration;
-                    }
+                    // Arcane-Edit: countdown begins on admission below, rather than while waiting Connected.
 
                     break;
                 }
 
                 case SessionStatus.InGame:
                 {
-                    _userDb.ClientConnected(session);
+                    // Arcane-Edit: user data now starts loading in Connected, before queue admission.
+                    // Arcane-Start
+                    if (LobbyEnabled && _roundStartCountdownHasNotStartedYetDueToNoPlayers)
+                    {
+                        _roundStartCountdownHasNotStartedYetDueToNoPlayers = false;
+                        _roundStartTime = Timing.CurTime + LobbyDuration;
+                    }
+                    // Arcane-End
                     if (mind == null)
                     {
                         if (LobbyEnabled)
@@ -188,6 +196,10 @@ namespace Content.Server.GameTicking
 
         public override void PlayerJoinGame(ICommonSession session, bool silent = false)
         {
+            // Arcane-Start
+            if (session.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (!silent)
                 _chatManager.DispatchServerMessage(session, Loc.GetString("game-ticker-player-join-game-message"));
 
