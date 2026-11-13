@@ -9,10 +9,14 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Emp;
 using Content.Shared.Inventory;
+using Content.Shared.Mech.Components;
+using Content.Shared.Mech.EntitySystems;
 using Content.Shared.Mind;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
 using Content.Shared.Storage;
+using Content.Shared.Weapons.Ranged.Components;
+using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 
@@ -37,6 +41,7 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             var containers = SEntMan.System<SharedContainerSystem>();
             var actions = SEntMan.System<SharedActionsSystem>();
             var minds = SEntMan.System<SharedMindSystem>();
+            var mechs = SEntMan.System<SharedMechSystem>();
             var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
 
             Assert.That(inventory.TryEquip(host, backpack, "back", silent: true, force: true), Is.True);
@@ -62,7 +67,19 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             minds.TransferTo(mind.Owner, clone, mind: mind.Comp);
             roles.MindAddRole(mind.Owner, "MindRoleGemini", mind: mind.Comp);
             Assert.That(containers.Insert(original, copyStorage), Is.True);
+
+            var mech = SEntMan.SpawnAttachedTo("MechRipleyBattery", position);
+            var gun = SEntMan.SpawnAttachedTo("WeaponMechDebugLaser", position);
+            var shot = new ShotAttemptedEvent { User = mech, Used = (gun, SEntMan.GetComponent<GunComponent>(gun)) };
+            SEntMan.EventBus.RaiseLocalEvent(mech, ref shot);
+            Assert.That(shot.Cancelled, Is.False);
+            Assert.That(mechs.TryInsert(mech, clone), Is.True);
+            SEntMan.EventBus.RaiseLocalEvent(mech, ref shot);
+            Assert.That(shot.Cancelled, Is.True);
+
             Assert.That(actions.PerformAction(host, actionEntity), Is.True);
+            Assert.That(SEntMan.HasComponent<MechPilotComponent>(clone), Is.False);
+            Assert.That(SEntMan.GetComponent<MechComponent>(mech).PilotSlot.ContainedEntity, Is.Null);
             Assert.That(SEntMan.HasComponent<GhostRoleComponent>(clone), Is.False);
             Assert.That(mind.Comp.OwnedEntity, Is.EqualTo(clone));
             Assert.That(copyStorage.Count, Is.Zero);

@@ -11,7 +11,10 @@ using Content.Shared.Interaction.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item;
+using Content.Shared.Mech.Components;
+using Content.Shared.Mech.EntitySystems;
 using Content.Trauma.Common.Carrying;
+using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Systems;
 
@@ -22,6 +25,7 @@ public sealed partial class CloneProjectorSystem
     [Dependency] private CommonCarryingSystem _carrying = default!;
     [Dependency] private SharedBuckleSystem _buckle = default!;
     [Dependency] private SharedJointSystem _joints = default!;
+    [Dependency] private SharedMechSystem _mechs = default!;
     [Dependency] private SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
 
@@ -59,8 +63,11 @@ public sealed partial class CloneProjectorSystem
         foreach (var (_, solution) in _solutions.EnumerateSolutions(copy))
             _solutions.RemoveAllSolution(solution);
 
+        if (!TryComp(copy, out ContainerManagerComponent? manager))
+            return;
+
         // Keep the suit's attached clothing and its actions. Discard generated items from fills.
-        foreach (var container in _containers.GetAllContainers(copy))
+        foreach (var container in _containers.GetAllContainers(copy, manager))
         {
             foreach (var content in container.ContainedEntities.ToArray())
             {
@@ -77,7 +84,14 @@ public sealed partial class CloneProjectorSystem
         if (TryComp(clone, out CarryingComponent? carrying))
             _carrying.DropCarried(clone, carrying.Carried);
         if (!TerminatingOrDeleted(clone))
+        {
+            if (TryComp(clone, out MechPilotComponent? pilot)
+                && TryComp(pilot.Mech, out MechComponent? mech)
+                && mech.PilotSlot?.ContainedEntity == clone.Owner)
+                _mechs.TryEject(pilot.Mech, mech, clone.Owner);
+
             _buckle.Unbuckle(clone.Owner, null);
+        }
         _joints.RecursiveClearJoints(clone);
 
         if (_transform.TryGetMapOrGridCoordinates(clone, out var clonePosition))
@@ -98,7 +112,10 @@ public sealed partial class CloneProjectorSystem
 
     private void ReleaseRealItems(EntityUid owner, EntityCoordinates position)
     {
-        foreach (var container in _containers.GetAllContainers(owner))
+        if (!TryComp(owner, out ContainerManagerComponent? manager))
+            return;
+
+        foreach (var container in _containers.GetAllContainers(owner, manager))
         {
             foreach (var item in container.ContainedEntities.ToArray())
             {

@@ -1,3 +1,4 @@
+using Content.Shared.Mech.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.Weapons.Ranged.Events;
 
@@ -10,11 +11,15 @@ public sealed partial class GeminiHologramSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<GeminiHologramComponent, ShotAttemptedEvent>(OnShotAttempt);
+        SubscribeLocalEvent<GeminiHologramComponent, MechPilotRelayedEvent<ShotAttemptedEvent>>(OnMechShotAttempt);
     }
+
+    private void OnMechShotAttempt(Entity<GeminiHologramComponent> ent, ref MechPilotRelayedEvent<ShotAttemptedEvent> args) =>
+        OnShotAttempt(ent, ref args.Args);
 
     private void OnShotAttempt(Entity<GeminiHologramComponent> ent, ref ShotAttemptedEvent args)
     {
-        if (!ent.Comp.RestrictRangedWeapons)
+        if (args.Cancelled || !ent.Comp.RestrictRangedWeapons)
             return;
 
         args.Cancel();
