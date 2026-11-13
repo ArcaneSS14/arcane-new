@@ -6,6 +6,8 @@ using Content.Server.NPC.HTN;
 using Content.Server.StationEvents.Components;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.CombatMode;
 using Content.Shared.CombatMode.Pacification;
@@ -44,6 +46,7 @@ public sealed partial class ZombieSystem
     [Dependency] private HandOrganSystem _zombieHandOrgans = default!;
     [Dependency] private ExtraHandsEquipmentSystem _zombieEquipmentHands = default!;
     [Dependency] private SharedContainerSystem _zombieContainers = default!;
+    [Dependency] private BodySystem _body = default!;
 
     private static readonly (string Reagent, int Dose, bool Inoculates)[] ZombieCures =
     [
@@ -77,6 +80,7 @@ public sealed partial class ZombieSystem
     private void InitializeCure()
     {
         SubscribeLocalEvent<ZombieComponent, SolutionChangedEvent>(OnZombieSolutionChanged);
+        SubscribeLocalEvent<StomachComponent, SolutionChangedEvent>(OnZombieStomachSolutionChanged);
         SubscribeLocalEvent<ZombieRecoveryComponent, BeingGibbedEvent>(OnZombieGibbed);
     }
 
@@ -190,6 +194,13 @@ public sealed partial class ZombieSystem
             _zombieCureCandidates.Add(ent.Owner);
     }
 
+    private void OnZombieStomachSolutionChanged(Entity<StomachComponent> ent, ref SolutionChangedEvent args)
+    {
+        if (ent.Comp.Solution?.Owner == args.Solution.Owner &&
+            _body.GetBody(ent) is { } body && HasComp<ZombieComponent>(body) && !HasComp<SiliconZombieComponent>(body))
+            _zombieCureCandidates.Add(body);
+    }
+
     private void QueueZombieCureOnIncapacitation(EntityUid uid, MobState state)
     {
         if (state is MobState.SoftCrit or MobState.Critical or MobState.Dead && !HasComp<SiliconZombieComponent>(uid))
@@ -230,21 +241,38 @@ public sealed partial class ZombieSystem
             if (!TryComp<ZombieComponent>(uid, out var zombie) ||
                 !TryComp<ZombieRecoveryComponent>(uid, out var snapshot) ||
                 HasComp<IncurableZombieComponent>(uid) ||
-                !_mobState.IsCritical(uid) && !_mobState.IsDead(uid) ||
-                !TryComp<BloodstreamComponent>(uid, out var blood) ||
-                !_zombieSolutions.ResolveSolution(uid, blood.BloodSolutionName, ref blood.BloodSolution, out var solution))
+                HasComp<SiliconZombieComponent>(uid) ||
+                !_mobState.IsCritical(uid) && !_mobState.IsDead(uid))
                 continue;
 
-            foreach (var (reagent, dose, inoculates) in ZombieCures)
-            {
-                if (solution.GetTotalPrototypeQuantity(reagent) < dose)
-                    continue;
+            if (TryComp<BloodstreamComponent>(uid, out var blood) &&
+                _zombieSolutions.ResolveSolution(uid, blood.BloodSolutionName, ref blood.BloodSolution) &&
+                TryCureFromSolution(uid, zombie, snapshot, blood.BloodSolution!.Value))
+                continue;
 
-                _zombieSolutions.RemoveReagent(blood.BloodSolution!.Value, reagent, dose);
-                RestoreZombie(uid, zombie, snapshot, inoculates);
-                break;
+            foreach (var stomach in _body.EnumerateOrgans<StomachComponent>(uid))
+            {
+                if (_zombieSolutions.ResolveSolution(stomach.Owner, StomachSystem.DefaultSolutionName, ref stomach.Comp2.Solution) &&
+                    TryCureFromSolution(uid, zombie, snapshot, stomach.Comp2.Solution!.Value))
+                    break;
             }
         }
+    }
+
+    private bool TryCureFromSolution(EntityUid uid, ZombieComponent zombie, ZombieRecoveryComponent snapshot,
+        Entity<SolutionComponent> solution)
+    {
+        foreach (var (reagent, dose, inoculates) in ZombieCures)
+        {
+            if (solution.Comp.Solution.GetTotalPrototypeQuantity(reagent) < dose)
+                continue;
+
+            _zombieSolutions.RemoveReagent(solution, reagent, dose);
+            RestoreZombie(uid, zombie, snapshot, inoculates);
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryPurgeSiliconZombie(EntityUid uid)

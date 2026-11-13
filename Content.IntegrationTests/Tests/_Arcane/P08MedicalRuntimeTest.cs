@@ -6,6 +6,8 @@ using Content.Medical.Shared.Body;
 using Content.Server.Zombies;
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Emp;
 using Content.Shared.FixedPoint;
@@ -132,6 +134,37 @@ public sealed class P08MedicalRuntimeTest : InteractionTest
             Assert.That(hands.EnumerateHeld(uid), Does.Contain(paper));
             Assert.That(blood.BloodReferenceSolution.Volume, Is.EqualTo(before.Volume));
             Assert.That(blood.BloodReferenceSolution.GetTotalPrototypeQuantity("Blood"), Is.EqualTo(before.GetTotalPrototypeQuantity("Blood")));
+        });
+    }
+
+    [Test]
+    public async Task StomachMedicineCuresDeadZombieAtFullDose()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var uid = SEntMan.SpawnAttachedTo(Human, Center);
+            var body = SEntMan.System<BodySystem>();
+            var stomach = body.EnumerateOrgans<StomachComponent>(uid).Single();
+            var digestion = SEntMan.System<StomachSystem>();
+            var blood = SEntMan.GetComponent<BloodstreamComponent>(uid);
+            var zombies = SEntMan.System<ZombieSystem>();
+            var mobs = SEntMan.System<MobStateSystem>();
+
+            zombies.ZombifyEntity(uid);
+            mobs.ChangeMobState(uid, MobState.Dead);
+            zombies.Update(0);
+            Assert.That(digestion.TryTransferSolution((stomach.Owner, stomach.Comp2, null), new Solution([new("Ambuzol", 9)])), Is.True);
+            zombies.Update(0);
+            Assert.That(SEntMan.HasComponent<ZombieComponent>(uid), Is.True);
+
+            Assert.That(digestion.TryTransferSolution((stomach.Owner, stomach.Comp2, null), new Solution([new("Ambuzol", 1)])), Is.True);
+            Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.Zero));
+            Assert.That(stomach.Comp2.Solution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.New(10)));
+            Assert.That(mobs.IsDead(uid), Is.True);
+            zombies.Update(0);
+            Assert.That(SEntMan.HasComponent<ZombieComponent>(uid), Is.False);
+            Assert.That(mobs.IsDead(uid), Is.True);
+            Assert.That(stomach.Comp2.Solution.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.Zero));
         });
     }
 
