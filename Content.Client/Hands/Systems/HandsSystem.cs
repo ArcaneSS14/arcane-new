@@ -283,7 +283,8 @@ namespace Content.Client.Hands.Systems
 
             foreach (var key in layers)
             {
-                if (_sprite.LayerMapTryGet((ent.Owner, ent.Comp2), key, out var index, false) && ent.Comp2[index].Visible)
+                if (_sprite.LayerMapTryGet((ent.Owner, ent.Comp2), key, out var index, false) &&
+                    ent.Comp2[index] is SpriteComponent.Layer layer && _sprite.IsVisible(layer))
                     return true;
             }
             return false;

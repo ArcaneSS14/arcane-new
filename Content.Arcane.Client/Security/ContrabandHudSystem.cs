@@ -83,7 +83,8 @@ public sealed partial class ContrabandHudSystem : EquipmentHudSystem<ContrabandH
     {
         foreach (var key in keys)
         {
-            if (_sprite.LayerMapTryGet(sprite.AsNullable(), key, out var index, false) && sprite.Comp[index].Visible)
+            if (_sprite.LayerMapTryGet(sprite.AsNullable(), key, out var index, false) &&
+                sprite.Comp[index] is SpriteComponent.Layer layer && _sprite.IsVisible(layer))
                 return true;
         }
         return false;
