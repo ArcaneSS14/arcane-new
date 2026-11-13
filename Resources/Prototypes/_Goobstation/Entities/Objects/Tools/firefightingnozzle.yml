@@ -74,5 +74,5 @@
     smokePrototype: Resin
   - type: AutoStartTimer
   - type: TimerTrigger
-    delay: 0.3
+    delay: 0.5 # Arcane-Edit: 0.3 > 0.5
   - type: DeleteOnTrigger

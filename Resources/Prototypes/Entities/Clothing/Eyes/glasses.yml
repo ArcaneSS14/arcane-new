@@ -68,6 +68,7 @@
   - type: Tag
     tags:
     - PetWearable
+    - MesonGoggles # Arcane
     - WhitelistChameleon
 
 - type: entity

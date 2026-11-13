@@ -25,6 +25,11 @@ public abstract partial class SharedAtmosPipeLayersSystem : EntitySystem
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
 
+    // Arcane-Start
+    public bool IsPrimaryLayer(Entity<AtmosPipeLayersComponent> ent) =>
+        ent.Comp.CurrentPipeLayer == AtmosPipeLayer.Primary;
+    // Arcane-End
+
     public override void Initialize()
     {
         base.Initialize();

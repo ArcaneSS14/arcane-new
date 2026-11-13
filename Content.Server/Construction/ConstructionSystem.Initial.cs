@@ -432,7 +432,7 @@ namespace Content.Server.Construction
                     GetCoordinates(ev.Location),
                     ev.Angle,
                     ev.Ack,
-                    args.SenderSession);
+                    args.SenderSession, ev.With); // Arcane-Edit: validate the supplied material
         }
 
         /// <summary>
@@ -444,7 +444,10 @@ namespace Content.Server.Construction
             EntityCoordinates location,
             Angle angle,
             int ack = 0,
-            ICommonSession? senderSession = null)
+            // Arcane-Edit-Start: preserve the existing constructor call and accept player material.
+            ICommonSession? senderSession = null,
+            NetEntity? with = null)
+            // Arcane-Edit-End
         {
             // </Trauma>
             if (!ProtoMan.TryIndex(prototypeName, out ConstructionPrototype? constructionPrototype))
@@ -547,46 +550,50 @@ namespace Content.Server.Construction
             if(edge == null)
                 throw new InvalidDataException($"Can't find edge from starting node to the next node in pathfinding! Recipe: {prototypeName}");
 
-            var valid = false;
-            if (_handsSystem.GetActiveItem((user, hands)) is not {Valid: true} holding // Trauma - renamed holding to holdingUid
-                && senderSession != null) // Trauma - don't check this for constructor machine
+            // Arcane-Edit-Start: validate the material the player actually uses.
+            if (senderSession != null) // Constructor machines collect their own materials.
             {
-                Cleanup();
-                return false;
-            }
-            // <Trauma> - constructor doesn't use it
-            else
-            {
-                holding = EntityUid.Invalid;
-            }
-
-            if (holding.IsValid())
-            {
-            // </Trauma>
-            // No support for conditions here!
-
-            foreach (var step in edge.Steps)
-            {
-                switch (step)
+                var candidate = _handsSystem.GetActiveItem((user, hands));
+                if (with is { } netMaterial)
                 {
-                    case EntityInsertConstructionGraphStep entityInsert:
-                        if (entityInsert.EntityValid(holding, EntityManager, Factory))
-                            valid = true;
-                        break;
-                    case ToolConstructionGraphStep _:
-                        throw new InvalidDataException("Invalid first step for item recipe!");
+                    if (!TryGetEntity(netMaterial, out var material) || material is not { Valid: true } materialUid ||
+                        TerminatingOrDeleted(materialUid) ||
+                        !_container.IsInSameOrParentContainer(user, materialUid) ||
+                        !_interactionSystem.InRangeUnobstructed(user, materialUid, 2f))
+                    {
+                        Cleanup();
+                        return false;
+                    }
+
+                    candidate = materialUid;
                 }
 
-                if (valid)
-                    break;
-            }
+                if (candidate is not { Valid: true } holding)
+                {
+                    Cleanup();
+                    return false;
+                }
 
-            if (!valid)
-            {
-                Cleanup();
-                return false;
+                var valid = false;
+                foreach (var step in edge.Steps)
+                {
+                    if (step is ToolConstructionGraphStep)
+                        throw new InvalidDataException("Invalid first step for item recipe!");
+
+                    if (step is EntityInsertConstructionGraphStep insert && insert.EntityValid(holding, EntityManager, Factory))
+                    {
+                        valid = true;
+                        break;
+                    }
+                }
+
+                if (!valid)
+                {
+                    Cleanup();
+                    return false;
+                }
             }
-            } // Trauma - close IsValid condition above
+            // Arcane-Edit-End
 
             if (await Construct(user,
                     (ack + constructionPrototype.GetHashCode()).ToString(),

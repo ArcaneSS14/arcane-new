@@ -80,6 +80,13 @@ public sealed partial class SupermatterComponent : Component
 
     [DataField]
     public float RadiationOutputFactor = 0.03f;
+
+    // Arcane-Start: transient surge values must not become saved map settings.
+    public bool ArcaneSurgeActive;
+    public float ArcaneTransmittedPower;
+    public float EffectiveGasEfficiency => ArcaneSurgeActive ? 0.30f : GasEfficiency;
+    public float EffectiveRadiationOutputFactor => ArcaneSurgeActive ? 0.06f : RadiationOutputFactor;
+    // Arcane-End
     #endregion SM Base
 
     #region SM Sound
