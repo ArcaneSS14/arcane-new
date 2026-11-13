@@ -1,0 +1,38 @@
+- type: htnCompound
+  id: FillbotCompound
+  branches:
+  - tasks:
+    - !type:HTNCompoundTask
+      task: FillMachineCompound
+
+- type: htnCompound
+  id: FillMachineCompound
+  branches:
+  # Resume delivery after an interrupted plan without trying to pick up another item.
+  - tasks:
+    - !type:HTNPrimitiveTask
+      operator: !type:FindLinkedMachineOperator
+        requireHeldItem: true
+    - !type:HTNPrimitiveTask
+      operator: !type:MoveToOperator
+        pathfindInPlanning: false
+        brakeMaxVelocity: null
+    - !type:HTNPrimitiveTask
+      operator: !type:FillLinkedMachineOperator
+  - tasks:
+    - !type:HTNPrimitiveTask
+      operator: !type:PickNearbyFillableItemOperator
+    - !type:HTNPrimitiveTask
+      operator: !type:MoveToOperator
+        pathfindInPlanning: false
+        brakeMaxVelocity: null
+    - !type:HTNPrimitiveTask
+      operator: !type:PickupFillableItemOperator
+    - !type:HTNPrimitiveTask
+      operator: !type:FindLinkedMachineOperator
+    - !type:HTNPrimitiveTask
+      operator: !type:MoveToOperator
+        pathfindInPlanning: false
+        brakeMaxVelocity: null
+    - !type:HTNPrimitiveTask
+      operator: !type:FillLinkedMachineOperator

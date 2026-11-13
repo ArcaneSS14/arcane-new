@@ -340,6 +340,39 @@ public abstract partial class SharedMaterialStorageSystem : EntitySystem
         return TryChangeMaterialAmount(uid, materialId, delta, component);
     }
 
+    // Arcane-Start: let item-carrying NPCs check ordinary insertion without consuming the item.
+    /// <summary>
+    /// Checks ordinary material eligibility without raising insertion events or changing storage.
+    /// A successful check does not reserve capacity; callers must still use TryInsertMaterialEntity.
+    /// </summary>
+    [PublicAPI]
+    public bool CanInsertMaterialEntity(
+        EntityUid toInsert,
+        EntityUid receiver,
+        MaterialStorageComponent? storage = null,
+        MaterialComponent? material = null,
+        PhysicalCompositionComponent? composition = null)
+    {
+        if (!Resolve(receiver, ref storage, false) ||
+            !Resolve(toInsert, ref material, ref composition, false) ||
+            _whitelistSystem.IsWhitelistFail(storage.Whitelist, toInsert) ||
+            HasComp<UnremoveableComponent>(toInsert))
+            return false;
+
+        var multiplier = TryComp<StackComponent>(toInsert, out var stack) ? stack.Count : 1;
+        var totalVolume = 0;
+        foreach (var (mat, vol) in composition.MaterialComposition)
+        {
+            if (!CanChangeMaterialAmount(receiver, mat, vol * multiplier, storage))
+                return false;
+
+            totalVolume += vol * multiplier;
+        }
+
+        return CanTakeVolume(receiver, totalVolume, storage, localOnly: true);
+    }
+    // Arcane-End
+
     /// <summary>
     /// Tries to insert an entity into the material storage.
     /// </summary>
@@ -363,25 +396,12 @@ public abstract partial class SharedMaterialStorageSystem : EntitySystem
             return !attemptEv.Cancelled;
         // </Trauma>
 
-        if (_whitelistSystem.IsWhitelistFail(storage.Whitelist, toInsert))
+        // Arcane-Edit-Start: share the ordinary eligibility check while retaining the insertion event above.
+        if (!CanInsertMaterialEntity(toInsert, receiver, storage, material, composition))
             return false;
-
-        if (HasComp<UnremoveableComponent>(toInsert))
-            return false;
-
-        // Material Whitelist checked implicitly by CanChangeMaterialAmount();
 
         var multiplier = TryComp<StackComponent>(toInsert, out var stackComponent) ? stackComponent.Count : 1;
-        var totalVolume = 0;
-        foreach (var (mat, vol) in composition.MaterialComposition)
-        {
-            if (!CanChangeMaterialAmount(receiver, mat, vol * multiplier, storage))
-                return false;
-            totalVolume += vol * multiplier;
-        }
-
-        if (!CanTakeVolume(receiver, totalVolume, storage, localOnly: true))
-            return false;
+        // Arcane-Edit-End
 
         foreach (var (mat, vol) in composition.MaterialComposition)
         {
