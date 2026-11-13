@@ -14,11 +14,6 @@
         toggleAction: ActionShowStationMap
   - type: StationMap # Show location on the map
   - type: Targeting
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
-    canUseInCrit: true
   - type: LanguageSpeaker
     speaks:
     - TauCetiBasic
@@ -39,6 +34,22 @@
       WallsKnowledge: 10
       InfrastructureKnowledge: 10
       ElectronicsKnowledge: 10
+      # Arcane-Start: crew languages available while using this chassis
+      LanguageTauCetiBasic: 100
+      LanguageRobotTalk: 100
+      LanguageBubblish: 100
+      LanguageDraconic: 100
+      LanguageSolCommon: 100
+      LanguageRootSpeak: 100
+      LanguageMoffic: 100
+      LanguageSiikMaas: 100
+      LanguageMarish: 100
+      LanguageElyran: 100
+      LanguageFreespeak: 100
+      LanguageTradeband: 100
+      LanguageSchechi: 100
+      LanguageNewKinPidgin: 100
+      # Arcane-End
   - type: TwistedConstructionTarget
     replacementProto: ConstructShell
   # </Trauma>
@@ -134,14 +145,14 @@
   - type: IntrinsicRadioReceiver
   - type: IntrinsicRadioTransmitter
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
     - Science
+    - Binary # Arcane
   - type: ActiveRadio
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
     - Science
+    - Binary # Arcane
   - type: ZombieImmune
   - type: Repairable
     allowSelfRepair: true # Trauma
@@ -429,12 +440,12 @@
     subverted: true
   - type: IntrinsicRadioTransmitter
     channels:
-    # - Binary  # Goobstation - replaced with collective mind
     - Syndicate
+    - Binary # Arcane
   - type: ActiveRadio
     channels:
-    #- Binary # Goob - replaced with collective mind
     - Syndicate
+    - Binary # Arcane
   - type: ShowSyndicateIcons
   - type: MovementAlwaysTouching
   - type: Speech
@@ -518,10 +529,6 @@
   components:
   # <Trauma>
   - type: BlockShuttleRecall
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
   # </Trauma>
   - type: RandomMetadata
     nameSegments:
@@ -543,12 +550,12 @@
   - type: IntrinsicRadioTransmitter # can only use binary and xenoborg channel
     channels:
     - Xenoborg
-    #- Binary # Goob
+    - Binary # Arcane
   - type: ActiveRadio # but can hear the mothership channel
     channels:
     - Mothership
     - Xenoborg
-    #- Binary # Goob
+    - Binary # Arcane
   - type: BorgChassis
     # <Trauma>
     brainWhitelist:

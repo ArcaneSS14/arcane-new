@@ -85,11 +85,6 @@
     channels:
     # - Binary # Goobstation - replaced with collective mind
     - Common
-  # Goobstation
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
   - type: ZombieImmune
   - type: DoAfter
   - type: Pullable

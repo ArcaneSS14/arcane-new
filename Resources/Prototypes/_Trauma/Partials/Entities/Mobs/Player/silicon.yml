@@ -3,10 +3,6 @@
 - type: entity
   id: AiHeld
   components:
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
   - type: ShowHealthIcons
   - type: ShowHealthBars
     damageContainers:
@@ -23,15 +19,6 @@
       enum.CamWarpUiKey.Key:
         type: AiCameraWarpBoundUserInterface
 
-- type: entity
-  id: AiHeldIntellicard
-  components:
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
-    canUseInCrit: true
-
 # The actual brain inside the core
 - type: entity
   id: StationAiBrain
@@ -41,6 +28,41 @@
     voice: Borg
   - type: SiliconLawProvider
     laws: NTDefault
+  # Arcane-Start: station AI crew languages
+  - type: LanguageSpeaker
+    speaks:
+    - TauCetiBasic
+    - RobotTalk
+    - DroneTalk
+    - Bubblish
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - SiikMaas
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Schechi
+    - NewKinPidgin
+    understands:
+    - TauCetiBasic
+    - RobotTalk
+    - DroneTalk
+    - Bubblish
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - SiikMaas
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Schechi
+    - NewKinPidgin
+  # Arcane-End
 
 # Hologram projection that the AI's eye tracks.
 - type: entity

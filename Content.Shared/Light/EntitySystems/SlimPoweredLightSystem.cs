@@ -30,25 +30,8 @@ public sealed partial class SlimPoweredLightSystem : EntitySystem
 
     private void OnLightPowerChanged(Entity<SlimPoweredLightComponent> ent, ref PowerChangedEvent args)
     {
-        // Early out if we don't need to trycomp.
-        if (args.Powered)
-        {
-            if (!ent.Comp.Enabled)
-                return;
-        }
-        else
-        {
-            if (!ent.Comp.Enabled)
-                return;
-        }
-
-        if (!_lights.TryGetLight(ent.Owner, out var light))
-            return;
-
-        var enabled = ent.Comp.Enabled && args.Powered;
-        _setting = true;
-        _lights.SetEnabled(ent.Owner, enabled, light);
-        _setting = false;
+        if (ent.Comp.Enabled || ent.Comp.AiIllumination) // Arcane
+            RefreshLight(ent, args.Powered); // Arcane
     }
 
     public void SetEnabled(Entity<SlimPoweredLightComponent?> entity, bool enabled)
@@ -61,6 +44,27 @@ public sealed partial class SlimPoweredLightSystem : EntitySystem
 
         entity.Comp.Enabled = enabled;
         Dirty(entity);
-        _lights.SetEnabled(entity.Owner, enabled);
+        RefreshLight((entity.Owner, entity.Comp), _receiver.IsPowered(entity.Owner)); // Arcane
     }
+
+    // Arcane-Start: automatic illumination does not own the manual switch.
+    public void SetAiIllumination(Entity<SlimPoweredLightComponent?> entity, bool enabled)
+    {
+        if (!Resolve(entity.Owner, ref entity.Comp, false) || entity.Comp.AiIllumination == enabled)
+            return;
+
+        entity.Comp.AiIllumination = enabled;
+        RefreshLight((entity.Owner, entity.Comp), _receiver.IsPowered(entity.Owner));
+    }
+
+    private void RefreshLight(Entity<SlimPoweredLightComponent> entity, bool powered)
+    {
+        if (!_lights.TryGetLight(entity.Owner, out var light))
+            return;
+
+        _setting = true;
+        _lights.SetEnabled(entity.Owner, powered && (entity.Comp.Enabled || entity.Comp.AiIllumination), light);
+        _setting = false;
+    }
+    // Arcane-End
 }

@@ -790,6 +790,29 @@ public sealed partial class HolopadSystem : SharedHolopadSystem
         }
     }
 
+    // Arcane-Start: resolve the sole live projection controlled by the station AI.
+    public EntityUid? GetPointingOrigin(EntityUid user)
+    {
+        if (!HasComp<StationAiHeldComponent>(user) ||
+            !TryComp<HolopadUserComponent>(user, out var holopadUser) || holopadUser.LinkedHolopads.Count != 1 ||
+            !_stationAiSystem.TryGetCore(user, out var core) || core.Comp is not { Remote: false } ||
+            !TryComp<TelephoneComponent>(core, out var sourceTelephone) || sourceTelephone.LinkedTelephones.Count != 1)
+            return null;
+
+        var source = holopadUser.LinkedHolopads.Single();
+        var receiver = sourceTelephone.LinkedTelephones.Single();
+        if (source.Owner != core.Owner || source.Comp.User != user ||
+            !TryComp<HolopadComponent>(receiver, out var holopad) ||
+            !TryComp<TelephoneComponent>(receiver, out var receiverTelephone) ||
+            !_telephoneSystem.IsSourceConnectedToReceiver((core.Owner, sourceTelephone), (receiver, receiverTelephone)) ||
+            !TryComp<HolopadHologramComponent>(holopad.Hologram, out var hologram) || hologram.LinkedEntity != user ||
+            TerminatingOrDeleted(holopad.Hologram.Value))
+            return null;
+
+        return holopad.Hologram;
+    }
+    // Arcane-End
+
     private HashSet<Entity<HolopadComponent>> GetLinkedHolopads(Entity<HolopadComponent> entity)
     {
         var linkedHolopads = new HashSet<Entity<HolopadComponent>>();

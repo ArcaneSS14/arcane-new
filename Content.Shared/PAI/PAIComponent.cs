@@ -1,4 +1,5 @@
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes; // Arcane
 
 namespace Content.Shared.PAI;
 
@@ -15,6 +16,13 @@ namespace Content.Shared.PAI;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class PAIComponent : Component
 {
+    // Arcane-Start: opt-in camera for station AI
+    [DataField]
+    public EntProtoId? CameraAction;
+
+    public EntityUid? CameraActionEntity;
+    // Arcane-End
+
     /// <summary>
     /// The last person who activated this PAI.
     /// Used for assigning the name.

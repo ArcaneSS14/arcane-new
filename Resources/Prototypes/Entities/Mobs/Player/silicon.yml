@@ -7,7 +7,6 @@
   - type: IntrinsicRadioReceiver
   - type: IntrinsicRadioTransmitter
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
     - Command
     - Engineering
@@ -16,9 +15,9 @@
     - Security
     - Service
     - Supply
+    - Binary # Arcane
   - type: ActiveRadio
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
     - Command
     - Engineering
@@ -27,6 +26,7 @@
     - Security
     - Service
     - Supply
+    - Binary # Arcane
   - type: IgnoreUIRange
   - type: StationAiHeld
   - type: StationAiOverlay
@@ -34,6 +34,8 @@
   - type: ActionGrant
     actions:
     - ActionJumpToCore
+    - ActionStationAiCameraLights # Arcane
+    - ActionStationAiRetire # Arcane
     - ActionAIViewLaws
     - ActionOpenBorisDevices # Arcane
   - type: UserInterface
@@ -85,13 +87,15 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: IntrinsicRadioReceiver
-  #- type: IntrinsicRadioTransmitter
-  #  channels:
-  # - Binary # Goobstation - replaced with collective mind
+  # Arcane-Start: station AI retains Binary in an Intellicard
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Binary
+  # Arcane-End
   - type: ActiveRadio
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
+    - Binary # Arcane
   - type: ActionGrant
     actions:
     - ActionAIViewLaws

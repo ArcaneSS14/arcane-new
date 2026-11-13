@@ -83,10 +83,6 @@
   id: MobSiliconBase
   components:
   # <Trauma>
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
   - type: IntellicardableMind
   # </Trauma>
   - type: NpcFactionMember

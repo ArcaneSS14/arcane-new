@@ -17,11 +17,11 @@
     - Service
     - Supply
     - Freelance
-    # - Binary # replaced with collective mind
     - Handheld
     - CentCom
     - Future
     - Syndicate
+    - Binary # Arcane
   - type: Sprite
     sprite: Objects/Devices/encryption_keys.rsi
     layers:

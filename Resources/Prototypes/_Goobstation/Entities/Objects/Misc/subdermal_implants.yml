@@ -120,16 +120,14 @@
   parent: BaseSubdermalImplant
   id: BinaryImplant
   name: binary decoder implant
-  description: This implant allows the user to access Binary and communicate with silicons (use +b).
+  description: This implant allows the user to access Binary and communicate with silicons (use :b). # Arcane-Edit: +b > :b
   categories: [ HideSpawnMenu ]
   components:
-  - type: ImplantEffects
-    added:
-    - !type:AddCollectiveMind
-      channel: Binary
-    removed:
-    - !type:RemoveCollectiveMind
-      channel: Binary
+  # Arcane-Start: grant the Binary radio channel
+  - type: RadioImplant
+    radioChannels:
+    - Binary
+  # Arcane-End
 
 # Admeme
 

@@ -1,0 +1,35 @@
+- type: stationAiCustomization
+  parent: StationAiIconBase
+  id: StationAiIconBlank
+  name: station-ai-icon-blank
+  layerData:
+    Occupied:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_blank
+    Dead:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_blank
+
+- type: stationAiCustomization
+  parent: StationAiIconBase
+  id: StationAiIconBingle
+  name: station-ai-icon-bingle
+  layerData:
+    Occupied:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_bingle
+    Dead:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_bingle_dead
+
+- type: stationAiCustomization
+  parent: StationAiIconBase
+  id: StationAiIconPerformer
+  name: station-ai-icon-performer
+  layerData:
+    Occupied:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_performer
+    Dead:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_icons.rsi
+      state: ai_performer_dead
