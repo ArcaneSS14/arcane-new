@@ -25,6 +25,16 @@ public sealed class PollBoothTest : InteractionTest
     protected override string PlayerPrototype => "MobHuman";
     public override PoolSettings PoolSettings => new() { Connected = true, DummyTicker = false, Dirty = true };
 
+    // Expiry checks the last unseen poll across the entire database.
+    private static PoolSettings ExpiryPair => new()
+    {
+        Connected = true,
+        DummyTicker = false,
+        Dirty = true,
+        Fresh = true,
+        Destructive = true,
+    };
+
     [Test]
     [NonParallelizable] // The database counters are shared by all test pairs.
     public async Task OnlyCardsInTheOpenWindowCountAndViewsSurviveReconnect()
@@ -196,6 +206,7 @@ public sealed class PollBoothTest : InteractionTest
     }
 
     [Test]
+    [PairConfig(nameof(ExpiryPair))]
     public async Task AlertDisappearsWhenTheLastUnseenPollExpiresWithoutAnUpdateMessage()
     {
         var clientPolls = Client.ResolveDependency<ClientPollManager>();
@@ -220,11 +231,12 @@ public sealed class PollBoothTest : InteractionTest
 
         await Client.WaitAssertion(() =>
         {
+            Assert.That(clientPolls.ActivePolls.Keys, Is.EquivalentTo(new[] { poll!.PollId }));
             Assert.That(CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible, Is.True,
                 "The available unseen poll must first show the alert.");
             // Move the cached deadline across the time boundary without a server update or a manual refresh.
             // This controls the availability input; it does not simulate the passage of UTC time.
-            clientPolls.ActivePolls[poll!.PollId].EndTime = DateTime.UtcNow.AddMinutes(-1);
+            clientPolls.ActivePolls[poll.PollId].EndTime = DateTime.UtcNow.AddMinutes(-1);
         });
 
         // Let the one-second real-time throttle expire before driving the next frame.
