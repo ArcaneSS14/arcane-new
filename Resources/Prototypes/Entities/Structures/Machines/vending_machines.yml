@@ -16,10 +16,6 @@
     understands:
     - TauCetiBasic
     - RobotTalk
-  - type: CollectiveMind
-    defaultChannel: Binary
-    channels:
-    - Binary
   - type: IntellicardableMind
   # </Trauma>
   - type: ActionGrant
@@ -96,13 +92,15 @@
     messageSet: SpookySpeakerMessagesGeneric
     speakChance: 0.2
   - type: IntrinsicRadioReceiver
-  #- type: IntrinsicRadioTransmitter
-  #  channels:
-  #  - Binary # Goobstation - replaced with collective mind
+  # Arcane-Start: Binary radio for vending machines with a mind
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Binary
+  # Arcane-End
   - type: ActiveRadio
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
+    - Binary # Arcane
   - type: DoAfter
   - type: Electrified
     enabled: false

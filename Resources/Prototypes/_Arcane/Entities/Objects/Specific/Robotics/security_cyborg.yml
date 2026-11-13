@@ -50,11 +50,13 @@
     - Common
     - Science
     - Security
+    - Binary
   - type: ActiveRadio
     channels:
     - Common
     - Science
     - Security
+    - Binary
   - type: Hailer
     messages:
     - sound: /Audio/_Goobstation/Hailer/bobby.ogg

@@ -147,16 +147,12 @@
     channels:
     - Mothership
     - Xenoborg
-    # - Binary # Trauma - replaced with collective mind
+    - Binary # Arcane
   - type: ActiveRadio
     channels:
     - Mothership
     - Xenoborg
-    # - Binary # Trauma - replaced with collective mind
-  - type: CollectiveMind # Trauma
-    defaultChannel: Binary
-    channels:
-    - Binary
+    - Binary # Arcane
   - type: Xenoborg
     mindRole: MindRoleMothershipCore
     briefingText: mothership-welcome

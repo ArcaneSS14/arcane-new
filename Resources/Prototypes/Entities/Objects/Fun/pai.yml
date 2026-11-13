@@ -66,6 +66,12 @@
   - type: Input
     context: "human"
   - type: PAI
+    cameraAction: ActionTogglePAICamera # Arcane
+  # Arcane-Start: optional view for the station AI
+  - type: StationAiVision
+    enabled: false
+    range: 1
+  # Arcane-End
   - type: BlockMovement
   - type: ToggleableGhostRole
     examineTextMindPresent: pai-system-pai-installed
@@ -148,6 +154,10 @@
   name: syndicate personal ai device
   description: Your Syndicate pal who's fun to be with!
   components:
+  # Arcane-Start: exclude the Syndicate device from station cameras
+  - type: PAI
+    cameraAction: null
+  # Arcane-End
   - type: Sprite
     sprite: Objects/Fun/pai.rsi
     layers:
@@ -192,6 +202,10 @@
   name: golden personal ai device
   description: Your electronic pal who's fun to be with! Special golden edition!
   components:
+  # Arcane-Start: camera sharing is available on the ordinary device
+  - type: PAI
+    cameraAction: null
+  # Arcane-End
   - type: Sprite
     sprite: Objects/Fun/pai.rsi
     layers:
@@ -213,6 +227,10 @@
   name: potato artificial intelligence
   description: It's a potato. You forced it to be sentient, you monster.
   components:
+  # Arcane-Start: camera sharing is available on the ordinary device
+  - type: PAI
+    cameraAction: null
+  # Arcane-End
   - type: Sprite
     sprite: Objects/Fun/pai.rsi
     layers:
@@ -245,6 +263,23 @@
       - state: potato-inhand-right
 
 # PAI Actions
+
+# Arcane-Start: optional view for the station AI
+- type: entity
+  parent: BaseMentalAction
+  id: ActionTogglePAICamera
+  name: Share camera with station AI
+  description: Enable or disable the station AI's view through your device.
+  components:
+  - type: Action
+    useDelay: 0.5
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: Interface/Actions/actions_ai.rsi
+    state: ai_core
+  - type: InstantAction
+    event: !type:TogglePAICameraEvent
+# Arcane-End
 
 - type: entity
   parent: ActionIntrinsicStore

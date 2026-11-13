@@ -71,7 +71,6 @@
   - type: IntrinsicRadioReceiver
   - type: ActiveRadio
     channels:
-    # - Binary # Goobstation - replaced with collective mind
     - Common
     - Command
     - CentCom
@@ -82,6 +81,7 @@
     - Service
     - Supply
     - Syndicate
+    - Binary # Arcane
     globalReceive: true
   # Goobstation
   - type: CollectiveMind
@@ -94,7 +94,6 @@
     - Blobmind
     - MansusLink
     - Abductormind
-    - Binary
     - Dronemind
     - Mousemind
     - Binglemind
