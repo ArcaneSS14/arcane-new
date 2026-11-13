@@ -17,9 +17,9 @@ public sealed partial class SidearmFlashlightMountSystem : EntitySystem
     [Dependency] private IGameTiming _timing = default!;
 
     [SubscribeLocalEvent]
-    private void OnInit(Entity<SidearmFlashlightMountComponent> ent, ref ComponentInit args)
+    private void OnMapInit(Entity<SidearmFlashlightMountComponent> ent, ref MapInitEvent args)
     {
-        // Weapon variants can replace the inherited YAML magazine or cell slot dictionary.
+        // Register independently of the ammo-slot YAML, after uninitialized maps can be saved.
         if (!_slots.TryGetSlot(ent.Owner, SidearmFlashlightMountComponent.SlotId, out _))
             _slots.AddItemSlot(ent.Owner, SidearmFlashlightMountComponent.SlotId, ent.Comp.Slot);
     }

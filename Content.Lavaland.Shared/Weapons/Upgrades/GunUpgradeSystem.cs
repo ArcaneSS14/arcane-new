@@ -152,7 +152,7 @@ public sealed partial class GunUpgradeSystem : EntitySystem
     public HashSet<Entity<GunUpgradeComponent>> GetCurrentUpgrades(Entity<UpgradeableWeaponComponent> ent, ItemSlotsComponent? itemSlots = null)
     {
         _upgrades.Clear();
-        if (!Resolve(ent, ref itemSlots))
+        if (!Resolve(ent, ref itemSlots, logMissing: false)) // Arcane: dynamic mounts may register after the gun initializes.
             return _upgrades;
 
         foreach (var itemSlot in itemSlots.Slots.Values)
