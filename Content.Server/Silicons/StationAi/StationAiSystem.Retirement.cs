@@ -50,7 +50,7 @@ public sealed partial class StationAiSystem
         return true;
     }
 
-    private void RetireStationAi(ICommonSession player, EntityUid ai, EntityUid core, EntityUid station, EntityUid mindId)
+    internal void RetireStationAi(ICommonSession player, EntityUid ai, EntityUid core, EntityUid station, EntityUid mindId)
     {
         if (!TryValidateRetirement(player, ai, core, station, mindId, out var mind))
             return;
