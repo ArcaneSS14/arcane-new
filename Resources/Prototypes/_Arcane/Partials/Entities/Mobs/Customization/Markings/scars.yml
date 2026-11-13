@@ -1,0 +1,39 @@
+- type: marking
+  id: ScarEyeRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarEyeLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarFace1
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarTopSurgeryShort
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarNeck
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarTopSurgeryLong
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarChest
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarChestBullets
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarStomachBullets
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: ScarFace2
+  groupWhitelist: [ Demon ]

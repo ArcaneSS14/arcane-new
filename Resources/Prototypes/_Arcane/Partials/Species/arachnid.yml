@@ -1,3 +1,6 @@
 - type: species
   id: Arachnid
   customName: true
+  sexes:
+  - Male
+  - Female

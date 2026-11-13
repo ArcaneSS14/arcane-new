@@ -1,0 +1,123 @@
+- type: marking
+  id: FaceEyelashLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyecornerLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceLowercheekLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceBindi
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceLipcornerRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceChesireLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyebrows
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceFullblush
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyebrowRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNeckWide
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceChesireRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceLowercheekRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceGlabella
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEarRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNosestripe
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNeckSlim
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceCheekspotLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceCrowRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceCrowLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyecornerRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyelashRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyebrowLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNeckWideThick
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceCheekspotRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceUnibrow
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEyestripe
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceLipcornerLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNosetip
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNosetape
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceNeckSlimThick
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: FaceEarLeft
+  groupWhitelist: [ Demon ]

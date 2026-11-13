@@ -1,0 +1,40 @@
+- type: damageModifierSet
+  id: Diona
+  coefficients:
+    Shock: 1.4
+
+- type: damageModifierSet
+  id: Moth
+  coefficients:
+    Blunt: 0.8
+    Slash: !Remove
+
+- type: damageModifierSet
+  id: Scale
+  coefficients:
+    Heat: 0.7
+    Piercing: 1.1
+    Slash: 0.8
+
+- type: damageModifierSet
+  id: Slime
+  coefficients:
+    Bloodloss: 1.1
+    Heat: 1.3
+    Piercing: !Remove
+    Slash: 1.3
+
+- type: damageModifierSet
+  id: Vox
+  coefficients:
+    Caustic: 0.6
+    Heat: 0.75
+    Piercing: 1.1
+    Slash: 1.1
+
+- type: damageModifierSet
+  id: Vulpkanin
+  coefficients:
+    Heat: 1.3
+    Slash: 0.9
+    Cold: 0.8

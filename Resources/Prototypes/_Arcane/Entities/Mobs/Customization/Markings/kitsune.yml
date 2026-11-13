@@ -1,7 +1,7 @@
 - type: marking
   id: KitsuneTail
   bodyPart: Tail
-  groupWhitelist: [ Vulpkanin ]
+  groupWhitelist: [ Human, Oni, Vulpkanin, Slime ]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
     state: Tail
@@ -11,7 +11,7 @@
 - type: marking
   id: KitsuneTripleTail
   bodyPart: Tail
-  groupWhitelist: [ Vulpkanin ]
+  groupWhitelist: [ Human, Oni, Vulpkanin, Slime ]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
     state:  TripleTail
@@ -21,7 +21,7 @@
 - type: marking
   id: KitsuneNineTails
   bodyPart: Tail
-  groupWhitelist: [ Vulpkanin ]
+  groupWhitelist: [ Human, Oni, Vulpkanin, Slime ]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
     state:  NineTails

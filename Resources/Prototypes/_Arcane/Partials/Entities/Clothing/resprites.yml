@@ -6,3 +6,11 @@
     sprite: _Arcane/Clothing/Head/Hats/beret_warden.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Head/Hats/beret_warden.rsi
+
+- type: entity
+  id: ClothingUniformJumpskirtPerformer
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpskirt/performer.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpskirt/performer.rsi

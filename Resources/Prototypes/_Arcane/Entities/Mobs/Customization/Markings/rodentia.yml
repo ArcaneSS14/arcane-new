@@ -17,7 +17,7 @@
 - type: marking
   id: RodentiaTailDefault
   bodyPart: Tail
-  groupWhitelist: [Rodentia]
+  groupWhitelist: [Rodentia, Human]
   coloring:
     default:
       type: !type:TattooColoring

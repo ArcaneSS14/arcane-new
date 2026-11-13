@@ -1,3 +1,6 @@
 - type: species
   id: IPC
   customName: true
+  sexes:
+  - Male
+  - Female

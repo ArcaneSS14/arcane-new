@@ -1,0 +1,28 @@
+- type: species
+  id: HumanoidXeno
+  name: species-name-xeno
+  roundStart: true
+  prototype: MobHumanoidXeno
+  dollPrototype: AppearanceHumanoidXeno
+  skinColoration: Hues
+  maleFirstNames: names_xeno_first
+  femaleFirstNames: names_xeno_first
+  lastNames: names_xeno_last
+  sexes:
+  - Unsexed
+  - Male
+  - Female
+  minAge: 18
+  maxAge: 1000
+  youngAge: 300
+  oldAge: 600
+  averageWeight: 80
+  defaultScale: 1
+  minScale: 0.9
+  maxScale: 1.35
+  defaultSoundsBySex:
+  - XenoHumanoid
+  - XenoHumanoid
+  - XenoHumanoid
+  voices:
+  - XenoHumanoid

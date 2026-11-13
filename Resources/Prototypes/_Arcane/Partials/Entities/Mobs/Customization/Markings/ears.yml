@@ -1,23 +1,29 @@
 - type: marking
   id: LongEarsUpwards
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: LongEarsWide
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: HumanLongEars
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: LongEarsThin
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: LongEarsSmall
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: LongEarsTall
   underHair: true
+  groupWhitelist: [ Demon ]

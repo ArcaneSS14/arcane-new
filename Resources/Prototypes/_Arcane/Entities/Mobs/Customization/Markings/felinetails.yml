@@ -1,7 +1,7 @@
 - type: marking
   id: Felinetailstripes
   bodyPart: Tail
-  groupWhitelist: [] # Trauma cat tails take no markings
+  groupWhitelist: [ Human ]
   coloring:
     default:
       type:

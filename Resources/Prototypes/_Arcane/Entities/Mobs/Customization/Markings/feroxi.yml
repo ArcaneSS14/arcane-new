@@ -251,7 +251,7 @@
 - type: marking
   id: FeroxiTipTwoToneTail
   bodyPart: Tail
-  groupWhitelist: [ Feroxi ]
+  groupWhitelist: [ Feroxi, Human, Slime ]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Feroxi/tail_markings.rsi #RedTerror Goob Resprite
     state: feroxi-tail

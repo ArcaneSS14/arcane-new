@@ -385,3 +385,10 @@
   minLimit: 0
   loadouts:
   - RadioHostMicrophonePatron
+
+- type: loadoutGroup
+  id: GroupGrimoire
+  name: loadout-group-grimoire
+  hidden: true
+  loadouts:
+  - CantripGrimoire

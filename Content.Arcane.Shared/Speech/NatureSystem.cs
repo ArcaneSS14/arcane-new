@@ -1,0 +1,84 @@
+using Content.Shared.Speech.EntitySystems;
+using Content.Shared.Chat;
+using Content.Shared.Chat.Prototypes;
+using Content.Shared.Emoting;
+using Content.Shared.Humanoid;
+using Content.Shared.Speech.Components;
+using Content.Shared.Tag;
+using Content.Goobstation.Common.Speech;
+using Robust.Shared.Prototypes;
+
+namespace Content.Arcane.Shared.Speech;
+
+public sealed partial class NatureSystem : EntitySystem
+{
+    [Dependency] private TagSystem _tagSystem = default!;
+    [Dependency] private SharedChatSystem _chat = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<NatureComponent, ComponentStartup>(OnStartup);
+        SubscribeLocalEvent<NatureComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<NatureComponent, EmoteEvent>(OnNatureEmote, before: [typeof(VocalSystem)]);
+    }
+
+    private void OnStartup(EntityUid uid, NatureComponent component, ComponentStartup args)
+    {
+        if (component.emoteTag != null)
+        {
+            component.AddedTag = _tagSystem.AddTag(uid, component.emoteTag.Value);
+        }
+    }
+
+    private void OnShutdown(EntityUid uid, NatureComponent component, ref ComponentShutdown args)
+    {
+        if (component.emoteTag != null && component.AddedTag)
+        {
+            _tagSystem.RemoveTag(uid, component.emoteTag.Value);
+        }
+    }
+
+    private void OnNatureEmote(EntityUid uid, NatureComponent component, ref EmoteEvent args)
+    {
+        if (args.Handled || !args.Emote.Category.HasFlag(EmoteCategory.Vocal))
+            return;
+
+        if (!TryComp<HumanoidProfileComponent>(uid, out var humanoid))
+            return;
+
+        TryComp<VocalComponent>(uid, out var vocal);
+
+        var getSoundEv = new GetEmoteSoundsEvent();
+        RaiseLocalEvent(uid, ref getSoundEv);
+        if (getSoundEv.Handled)
+        {
+            if (getSoundEv.EmoteSoundProtoId is not { } protoId)
+                return;
+
+            if (_proto.TryIndex(protoId, out EmoteSoundsPrototype? overrideSounds))
+                args.Handled = _chat.TryPlayEmoteSound(uid, overrideSounds, args.Emote);
+            return;
+        }
+
+        // Traits always take priority; species' own sounds are only used if the character
+        // has no trait-specific emote sound
+        if (component.newSounds != null
+            && component.newSounds.TryGetValue(humanoid.Sex, out var traitId)
+            && _proto.TryIndex(traitId, out var traitSounds)
+            && _chat.TryPlayEmoteSound(uid, traitSounds, args.Emote))
+        {
+            args.Handled = true;
+            return;
+        }
+
+        if (vocal != null
+            && vocal.EmoteSounds is { } raceId
+            && _proto.TryIndex(raceId, out var raceSounds)
+            && _chat.TryPlayEmoteSound(uid, raceSounds, args.Emote))
+        {
+            args.Handled = true;
+        }
+    }
+}

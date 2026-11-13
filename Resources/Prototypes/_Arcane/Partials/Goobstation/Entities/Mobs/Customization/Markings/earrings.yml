@@ -1,151 +1,189 @@
 - type: marking
   id: EarringsCrystalBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneDoubleLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrescentRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDangleLongRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDangleLongLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHoopMiniLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHoopBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsEightRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropLongLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropColoredLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsStudLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneLongRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneDoubleRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrossBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrossSaintPeterRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHeavyRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrossSaintPeterLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneLongLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDangleBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrossBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsBangleRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsBangleLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHeavyLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrescentLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHoopBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsGemstoneBasicRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrystalLongLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsStudRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDangleBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsHoopMiniRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropLongRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrystalBasicLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsDropColoredRight
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsEightLeft
   underHair: true
+  groupWhitelist: [ Demon ]
 
 - type: marking
   id: EarringsCrystalLongRight
   underHair: true
+  groupWhitelist: [ Demon ]
