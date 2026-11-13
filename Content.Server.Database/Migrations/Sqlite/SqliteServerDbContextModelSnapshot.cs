@@ -1333,6 +1333,10 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnName("hair_gradient_enabled");
                     // Arcane-End
 
+                    b.Property<int>("ErpPreference")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("erp_preference"); // Arcane
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")

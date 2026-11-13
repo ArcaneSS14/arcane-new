@@ -18,3 +18,14 @@
   - type: BodyPart
     slots:
     - Tail
+
+- type: entity
+  id: MobIPC
+  components:
+  - type: Reactive
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCumOverlayReaction
+  - type: SparkEjaculation

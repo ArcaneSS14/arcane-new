@@ -106,6 +106,7 @@ public sealed partial class HumanoidProfileEditor
         panel.SetPositionInParent(0);
 
         OnSetProfile += _ => UpdateCustomization();
+        InitializeErp();
     }
 
     private Button SuggestionButton(string name, Action onPressed)

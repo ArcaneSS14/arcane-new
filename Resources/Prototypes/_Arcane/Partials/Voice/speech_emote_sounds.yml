@@ -1,6 +1,8 @@
 - type: emoteSounds
   id: FemaleDwarf
   sounds:
+    Moan:
+      collection: MoansFemale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -8,6 +10,8 @@
 - type: emoteSounds
   id: UnisexDwarf
   sounds:
+    Moan:
+      collection: MoansMale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -15,6 +19,8 @@
 - type: emoteSounds
   id: MaleSlime
   sounds:
+    Moan:
+      collection: MoansMale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -22,6 +28,8 @@
 - type: emoteSounds
   id: FemaleSlime
   sounds:
+    Moan:
+      collection: MoansFemale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -29,6 +37,8 @@
 - type: emoteSounds
   id: FemaleHuman
   sounds:
+    Moan:
+      collection: MoansFemale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -36,6 +46,8 @@
 - type: emoteSounds
   id: MaleHuman
   sounds:
+    Moan:
+      collection: MoansMale
     CatHisses: !Remove
     Hiss:
       collection: CatHisses
@@ -43,6 +55,8 @@
 - type: emoteSounds
   id: FemaleVulpkanin
   sounds:
+    Moan:
+      collection: MoansFemale
     Growl:
       collection: FemaleVulpkaninGrowls
     Howl:
@@ -59,6 +73,8 @@
 - type: emoteSounds
   id: MaleVulpkanin
   sounds:
+    Moan:
+      collection: MoansMale
     Growl:
       collection: MaleVulpkaninGrowls
     Howl:
@@ -71,3 +87,33 @@
       collection: MaleVulpkaninHowls
     Crying:
       collection: VulpkaninCry
+
+- type: emoteSounds
+  id: FemaleReptilian
+  sounds:
+    Moan:
+      collection: MoansFemale
+
+- type: emoteSounds
+  id: MaleReptilian
+  sounds:
+    Moan:
+      collection: MoansMale
+
+- type: emoteSounds
+  id: UnisexArachnid
+  sounds:
+    Moan:
+      collection: MoansMale
+
+- type: emoteSounds
+  id: UnisexDiona
+  sounds:
+    Moan:
+      collection: MoansMale
+
+- type: emoteSounds
+  id: UnisexMoth
+  sounds:
+    Moan:
+      collection: MoansMale

@@ -28,3 +28,13 @@
     slots:
     - Tail
     - Wings
+
+- type: entity
+  id: MobSlimePerson
+  components:
+  - type: Reactive
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCumOverlayReaction
