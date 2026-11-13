@@ -7,6 +7,11 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Noise;
 using Robust.Shared.Serialization.Manager;
 
+// Arcane-Start
+using System.Collections.Concurrent;
+using Content.Shared.GameTicking;
+// Arcane-End
+
 namespace Content.Shared.Parallax.Biomes;
 
 public abstract partial class SharedBiomeSystem : EntitySystem
@@ -17,6 +22,23 @@ public abstract partial class SharedBiomeSystem : EntitySystem
     [Dependency] private SharedMapSystem _map = default!;
 
     public const byte ChunkSize = 8; // Lavaland change - make it public
+
+    // Arcane-Start
+    private readonly ConcurrentDictionary<(FastNoiseLite Noise, int Seed), FastNoiseLite> _noiseCache = new();
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<MapRemovedEvent>(OnNoiseMapRemoved);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnNoiseRoundCleanup);
+    }
+
+    private void OnNoiseMapRemoved(MapRemovedEvent args) => _noiseCache.Clear();
+
+    private void OnNoiseRoundCleanup(RoundRestartCleanupEvent args) => _noiseCache.Clear();
+
+    protected void ClearNoiseCache() => _noiseCache.Clear();
+    // Arcane-End
 
     private T Pick<T>(List<T> collection, float value)
     {
@@ -371,11 +393,19 @@ public abstract partial class SharedBiomeSystem : EntitySystem
         return TryGetDecals(indices, layers, seed, grid == null ? null : (grid.Owner, grid), out decals);
     }
 
+    // Arcane-Start
     private FastNoiseLite GetNoise(FastNoiseLite seedNoise, int seed)
+    {
+        var effectiveSeed = seedNoise.GetSeed() + seed;
+        return _noiseCache.GetOrAdd((seedNoise, effectiveSeed), static (key, system) => system.CreateNoise(key.Noise, key.Seed), this);
+    }
+    // Arcane-End
+
+    private FastNoiseLite CreateNoise(FastNoiseLite seedNoise, int effectiveSeed) // Arcane-Edit: GetNoise > CreateNoise with the effective seed
     {
         var noiseCopy = new FastNoiseLite();
         _serManager.CopyTo(seedNoise, ref noiseCopy, notNullableOverride: true);
-        noiseCopy.SetSeed(noiseCopy.GetSeed() + seed);
+        noiseCopy.SetSeed(effectiveSeed); // Arcane-Edit: the cache key already includes the layer seed
         // Ensure re-calculate is run.
         noiseCopy.SetFractalOctaves(noiseCopy.GetFractalOctaves());
         return noiseCopy;

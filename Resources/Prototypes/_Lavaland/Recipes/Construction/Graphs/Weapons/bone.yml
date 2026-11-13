@@ -7,13 +7,54 @@
   graph:
   - node: start
     edges:
-    - to: axe
+    - to: incompleteAxe # Arcane-Edit: axe > incompleteAxe
       steps:
       - material: Bones
         amount: 6
+        # Arcane-Start
+        doAfter: 2
+      - material: AshwoodPlank
+        amount: 2
+        doAfter: 2
+        # Arcane-End
       - material: LegionSkull
         amount: 2
-        doAfter: 10
+        doAfter: 2 # Arcane-Edit: 10 > 2
+      # Arcane-Start
+      - material: Cloth
+        amount: 10
+        doAfter: 5
+  - node: incompleteAxe
+    entity: IncompleteBoneAxe
+    edges:
+    - to: start
+      steps:
+      - tool: Cutting
+        doAfter: 2
+      - tool: Prying
+        doAfter: 2
+      completed:
+      - !type:SpawnPrototype
+        prototype: MaterialAshwoodPlank1
+        amount: 2
+      - !type:SpawnPrototype
+        prototype: MaterialBones1
+        amount: 6
+      - !type:SpawnPrototype
+        prototype: MaterialLegionSkull1
+        amount: 2
+      - !type:SpawnPrototype
+        prototype: MaterialCloth10
+      - !type:DeleteEntity {}
+    - to: axe
+      steps:
+      - tool: Slicing
+        doAfter: 6
+      completed:
+      - !type:AdminLog
+        message: "Construction"
+        impact: High
+      # Arcane-End
   - node: axe
     entity: BoneAxe
 

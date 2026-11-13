@@ -23,6 +23,7 @@
   - WeaponProtoKineticRepeater
   - WeaponProtoKineticPistol
   - WeaponPlasmaCutter
+  - WeaponSuperPlasmaCutter # Arcane
   # - WeaponPlasmaRifle
 
 - type: latheRecipePack

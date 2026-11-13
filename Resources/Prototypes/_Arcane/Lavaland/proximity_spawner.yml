@@ -1,0 +1,7 @@
+- type: entity
+  abstract: true
+  parent: MarkerBase
+  id: ArcaneLavalandProximitySpawner
+  components:
+  - type: LavalandMobSpawner
+  - type: DeleteOnTrigger

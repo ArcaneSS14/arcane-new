@@ -167,4 +167,26 @@
   - AdvancedMineralScannerEmpty
   - MiningDrillDiamond
   - MechEquipmentDrillDiamond
+  - PickaxeDiamond
   position: 5,8
+
+- type: technology
+  id: SuperSalvageEquipment
+  name: research-technology-super-salvage-name
+  description: research-technology-super-salvage-desc
+  icon:
+    sprite: Objects/Tools/handdrilldiamond.rsi
+    state: handdrill
+  discipline: Shaft
+  tier: 5
+  announceChannels:
+  - Supply
+  pointCosts:
+  - type: General
+    amount: 15000
+  technologyPrerequisites:
+  - AdvancedMining
+  recipeUnlocks:
+  - MiningDrillSuper
+  - WeaponSuperPlasmaCutter
+  position: 6,8

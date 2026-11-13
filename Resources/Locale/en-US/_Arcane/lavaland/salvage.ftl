@@ -1,0 +1,9 @@
+materials-ashwood = ashwood
+stack-ashwood-plank = ashwood plank
+stack-ashwood-stick = ashwood stick
+stack-wood-stick = wood stick
+stack-flowers-ash = ash flowers
+stack-flowers-pale = pale flowers
+research-technology-super-salvage-name = High-Yield Salvage Equipment
+research-technology-super-salvage-desc = Higher-output drills and plasma cutters for extended excavation.
+tiles-arcane-lavaland-pale-grass = pale grass

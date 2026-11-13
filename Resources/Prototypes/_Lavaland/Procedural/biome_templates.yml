@@ -16,6 +16,17 @@
       fractalType: FBm
       octaves: 2
       lacunarity: 2
+  # Arcane-Start: add pale forest within the existing Lavaland noise bands
+  - !type:BiomeMetaLayer
+    template: PaleForest
+    threshold: -0.33
+    noise:
+      frequency: 0.003
+      noiseType: OpenSimplex2
+      fractalType: FBm
+      octaves: 2
+      lacunarity: 2
+  # Arcane-End
   - !type:BiomeMetaLayer
     template: Ashlands
     threshold: 0
@@ -209,6 +220,19 @@
     entities:
     - AsteroidRock
   # Actual Ashlands from here!
+  # Arcane-Start
+  - !type:BiomeEntityLayer
+    allowedTiles:
+    - FloorPlanetAsh
+    threshold: 0.63
+    noise:
+      seed: -1
+      noiseType: OpenSimplex2
+      fractalType: PingPong
+      frequency: 2
+    entities:
+    - FloraAshSprouts
+  # Arcane-End
   # Vegetation
   - !type:BiomeEntityLayer
     allowedTiles:
