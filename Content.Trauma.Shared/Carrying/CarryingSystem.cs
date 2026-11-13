@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared.ActionBlocker;
+using Content.Shared.Bed.Sleep; // Arcane
 using Content.Shared.Buckle.Components;
 using Content.Shared.Climbing.Events;
 using Content.Shared.DoAfter;
@@ -27,6 +28,7 @@ using Content.Shared.Verbs;
 using Content.Trauma.Common.Carrying;
 using Content.Trauma.Common.Polymorph;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.Trauma.Shared.Carrying;
 
@@ -43,6 +45,7 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
     [Dependency] private StandingStateSystem _standingState = default!;
     [Dependency] private SharedVirtualItemSystem _virtualItem = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private IGameTiming _timing = default!; // Arcane
     [Dependency] private EntityQuery<BeingCarriedComponent> _carriedQuery = default!;
     [Dependency] private EntityQuery<CarryBlacklistComponent> _blacklistQuery = default!;
 
@@ -55,7 +58,7 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
         SubscribeLocalEvent<BeingCarriedComponent, UnbuckledEvent>(OnDrop);
         SubscribeLocalEvent<BeingCarriedComponent, StrappedEvent>(OnDrop);
         SubscribeLocalEvent<BeingCarriedComponent, UnstrappedEvent>(OnDrop);
-        SubscribeLocalEvent<BeingCarriedComponent, EscapeInventoryEvent>(OnDrop);
+        SubscribeLocalEvent<BeingCarriedComponent, EscapeInventoryEvent>(OnEscapeDrop); // Arcane
     }
 
     [SubscribeLocalEvent]
@@ -139,6 +142,9 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
     [SubscribeLocalEvent]
     private void OnParentChanged(Entity<CarryingComponent> ent, ref EntParentChangedMessage args)
     {
+        if (_timing.ApplyingState) // Arcane: the server supplies the resulting relationship.
+            return;
+
         var xform = Transform(ent);
         if (xform.MapUid != args.OldMapId)
             return;
@@ -153,7 +159,31 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
     [SubscribeLocalEvent]
     private void OnMobStateChanged(Entity<CarryingComponent> ent, ref MobStateChangedEvent args)
     {
+        if (_timing.ApplyingState) // Arcane
+            return;
+
         DropCarried(ent, ent.Comp.Carried);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnCarrierAsleep(Entity<CarryingComponent> ent, ref SleepStateChangedEvent args)
+    {
+        if (args.FellAsleep && !_timing.ApplyingState)
+            DropCarried(ent, ent.Comp.Carried);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnCarrierStunned(Entity<CarryingComponent> ent, ref UpdateCanMoveEvent args)
+    {
+        if (!_timing.ApplyingState && HasComp<StunnedComponent>(ent))
+            DropCarried(ent, ent.Comp.Carried);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnCarrierTerminating(Entity<CarryingComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (!_timing.ApplyingState)
+            DropCarried(ent, ent.Comp.Carried);
     }
 
     [SubscribeLocalEvent]
@@ -207,6 +237,19 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
     {
         DropCarried(ent.Comp.Carrier, ent);
     }
+
+    // Arcane: the do-after also raises this event when it is cancelled.
+    private void OnEscapeDrop(Entity<BeingCarriedComponent> ent, ref EscapeInventoryEvent args)
+    {
+        if (!args.Cancelled && args.Args.Target == ent.Comp.Carrier)
+            DropCarried(ent.Comp.Carrier, ent);
+    }
+
+    public override EntityUid? GetCarrier(EntityUid carried) =>
+        _carriedQuery.TryComp(carried, out var component) &&
+        !TerminatingOrDeleted(component.Carrier) && Transform(carried).ParentUid == component.Carrier
+            ? component.Carrier
+            : null;
 
     [SubscribeLocalEvent]
     private void OnDoAfter(Entity<CarriableComponent> ent, ref CarryDoAfterEvent args)
@@ -286,19 +329,28 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
 
     public override void DropCarried(EntityUid carrier, EntityUid carried)
     {
-        Drop(carried);
-        RemComp<CarryingComponent>(carrier); // get rid of this first so we don't recursively fire that event
+        // Arcane: ignore a stale reference after the target has moved to another carrier.
+        if (!TerminatingOrDeleted(carried) &&
+            _carriedQuery.TryComp(carried, out var carriedComp) && carriedComp.Carrier == carrier)
+            Drop(carried, carrier);
+
+        if (TerminatingOrDeleted(carrier) ||
+            !TryComp<CarryingComponent>(carrier, out var carrying) || carrying.Carried != carried) // Arcane
+            return;
+
+        RemComp(carrier, carrying); // get rid of this first so we don't recursively fire that event
         RemComp<CarryingSlowdownComponent>(carrier);
         _virtualItem.DeleteInHandsMatching(carrier, carried);
         _movementSpeed.RefreshMovementSpeedModifiers(carrier);
     }
 
-    private void Drop(EntityUid carried)
+    private void Drop(EntityUid carried, EntityUid carrier)
     {
         RemComp<BeingCarriedComponent>(carried);
         RemComp<KnockedDownComponent>(carried); // TODO SHITMED: make sure this doesnt let you make someone with no legs walk
         _actionBlocker.UpdateCanMove(carried);
-        _transform.AttachToGridOrMap(carried);
+        if (Transform(carried).ParentUid == carrier) // Arcane: preserve a new parent, such as a cryo chamber.
+            _transform.AttachToGridOrMap(carried);
         _standingState.Stand(carried);
     }
 

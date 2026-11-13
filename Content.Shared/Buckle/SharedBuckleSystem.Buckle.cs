@@ -200,10 +200,13 @@ public abstract partial class SharedBuckleSystem
     // WD EDIT START
     private void OnUnbuckleDoAfter(EntityUid uid, BuckleComponent component, UnbuckleDoAfterEvent args)
     {
-        if (args.Cancelled || !CanUnbuckle((uid, component), uid, true, out var strap))
+        if (args.Cancelled || args.Handled ||
+            args.Target != component.BuckledTo ||
+            !CanUnbuckle((uid, component), uid, true, out var strap))
             return;
 
         Unbuckle((uid, component), strap, uid);
+        args.Handled = true; // Arcane
     }
     // WD EDIT END
 
@@ -454,7 +457,12 @@ public abstract partial class SharedBuckleSystem
         // WD EDIT START
         if (buckle.Owner == user && strap.Comp.SelfUnBuckleDelay != TimeSpan.Zero)
         {
-            var doAfter = new DoAfterArgs(EntityManager, buckle.Owner, strap.Comp.SelfUnBuckleDelay, new UnbuckleDoAfterEvent(), buckle.Owner);
+            var doAfter = new DoAfterArgs(EntityManager, buckle.Owner, strap.Comp.SelfUnBuckleDelay, new UnbuckleDoAfterEvent(),
+                buckle.Owner, target: strap.Owner) // Arcane: keep the action tied to this strap
+            {
+                BreakOnMove = true,
+                BreakOnDamage = true,
+            };
             return _doAfter.TryStartDoAfter(doAfter);
         }
         // WD EDIT END

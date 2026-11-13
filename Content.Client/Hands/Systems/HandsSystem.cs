@@ -274,6 +274,23 @@ namespace Content.Client.Hands.Systems
         }
 
         /// <summary>
+        ///     Checks whether the hand contributes a visible sprite layer.
+        /// </summary>
+        public bool HasVisibleHeldLayers(Entity<HandsComponent, SpriteComponent> ent, HandLocation location)
+        {
+            if (!ent.Comp1.ShowInHands || !ent.Comp1.RevealedLayers.TryGetValue(location, out var layers))
+                return false;
+
+            foreach (var key in layers)
+            {
+                if (_sprite.LayerMapTryGet((ent.Owner, ent.Comp2), key, out var index, false) &&
+                    ent.Comp2[index] is SpriteComponent.Layer layer && _sprite.IsVisible(layer))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         ///     Update the players sprite with new in-hand visuals.
         /// </summary>
         private void UpdateHandVisuals(Entity<HandsComponent?, SpriteComponent?> ent, EntityUid held, string handId)

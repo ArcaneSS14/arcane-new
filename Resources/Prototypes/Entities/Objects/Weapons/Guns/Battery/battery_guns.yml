@@ -343,7 +343,7 @@
 
 - type: entity
   name: pulse pistol
-  parent: [BaseWeaponBatterySmall, BaseCentcommContraband]
+  parent: [BaseWeaponBatterySmall, BaseCentcommContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponPulsePistol
   description: A state-of-the-art pulse based weapon. It's smaller frame allows it to passively regenerate charge. # Goobstation
   components:
@@ -610,7 +610,7 @@
 
 - type: entity
   name: practice disabler
-  parent: BaseWeaponBatterySmall
+  parent: [BaseWeaponBatterySmall, BaseSidearmFlashlightMount] # Arcane
   id: WeaponDisablerPractice
   description: A self-defense weapon that exhausts organic targets, weakening them until they collapse. This one has been undertuned for cadets making it mostly harmless.
   components:
@@ -735,7 +735,7 @@
 
 - type: entity
   name: taser
-  parent: [BaseWeaponBatterySmall, BaseSecurityContraband]
+  parent: [BaseWeaponBatterySmall, BaseSecurityContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponTaser
   description: A low-capacity, energy-based stun gun used by security teams to subdue targets at close range.
   components:
@@ -790,7 +790,7 @@
 
 - type: entity
   name: antique laser pistol
-  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband]
+  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponAntiqueLaser
   description: This is an antique laser pistol. All craftsmanship is of the highest quality. It is decorated with a mahogany grip and chrome filigree. The object menaces with spikes of energy. On the item is an image of a captain and a clown. The clown is dead. The captain is striking a heroic pose.
   components:
@@ -834,7 +834,7 @@
 
 - type: entity
   name: advanced laser pistol
-  parent: [BaseWeaponBatterySmall, BaseSecurityContraband]
+  parent: [BaseWeaponBatterySmall, BaseSecurityContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponAdvancedLaser
   description: An experimental high-energy laser pistol with a self-charging nuclear battery.
   components:
@@ -875,7 +875,7 @@
 
 - type: entity
   name: C.H.I.M.P. handcannon
-  parent: [BaseWeaponBatterySmall, BaseScienceContraband]
+  parent: [BaseWeaponBatterySmall, BaseScienceContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponPistolCHIMP
   description: Just because it's a little C.H.I.M.P. doesn't mean it can't punch like an A.P.E.
   components:
@@ -1036,7 +1036,7 @@
 
 - type: entity
   name: energy magnum
-  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband]
+  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponEnergyMagnum
   description: A high powered self-charging energy pistol designed for elite security personnel. It has has three firing modes allowing for either high damage, window piercing, or non-lethal disabling.
   components:

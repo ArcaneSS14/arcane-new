@@ -53,6 +53,7 @@
     whitelist:
       tags:
       - BolaEnergy
+      - EnergyMagAmmo # Arcane
       - EnergySpeedloader
       - MilitaryPowerCell
       - Truncheon

@@ -2,7 +2,7 @@
 
 - type: entity
   abstract: true
-  parent: [BasePistolWhip, BaseItem] # Arcane-Edit: BasePistolWhip > [BasePistolWhip, BaseItem]
+  parent: [BasePistolWhip, BaseItem, BaseSidearmFlashlightMount] # Arcane-Edit: flashlight mount
   id: BaseWeaponPistol
   components:
   - type: WeaponClass
