@@ -4,6 +4,7 @@ using Content.Trauma.Common.Cargo;
 // </Trauma>
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Arcane.Common.AlmanacBlade; // Arcane
 using Content.Server.Cargo.Components;
 using Content.Shared.Cargo;
 using Content.Shared.Cargo.BUI;
@@ -75,7 +76,7 @@ namespace Content.Server.Cargo.Systems
                 return;
             }
 
-            if (!ent.Comp.AllowedGroups.Contains(product.Group))
+            if (!ent.Comp.AllowedGroups.Contains(product.Group) || !IsCargoProductAvailable(product.ID)) // Arcane
                 return;
 
             var orderId = GenerateOrderId(orderDatabase);
@@ -197,7 +198,7 @@ namespace Content.Server.Cargo.Systems
             // </Trauma>
 
             // Invalid order
-            if (!ProtoMan.Resolve(order.Product, out var product))
+            if (!ProtoMan.Resolve(order.Product, out var product) || !IsCargoProductAvailable(product.ID)) // Arcane
             {
                 _popup.PopupCursor(Loc.GetString("cargo-console-invalid-product"), args.Actor);
                 PlayDenySound(uid, component);
@@ -625,6 +626,9 @@ namespace Content.Server.Cargo.Systems
 
         public bool TryAddOrder(EntityUid dbUid, ProtoId<CargoAccountPrototype> account, CargoOrderData data, StationCargoOrderDatabaseComponent component)
         {
+            if (!IsCargoProductAvailable(data.Product.Id)) // Arcane
+                return false;
+
             component.Orders[account].Add(data);
             UpdateOrders(dbUid);
             return true;
@@ -767,13 +771,21 @@ namespace Content.Server.Cargo.Systems
             var markets = ent.Comp.AllowedGroups.Intersect(db.Markets).ToList();
             foreach (var product in ProtoMan.EnumeratePrototypes<CargoProductPrototype>())
             {
-                if (!markets.Contains(product.Group))
+                if (!markets.Contains(product.Group) || !IsCargoProductAvailable(product.ID)) // Arcane
                     continue;
 
                 products.Add(product.ID);
             }
 
             return products;
+        }
+
+        // Arcane: use the same availability rule for the catalogue and server-side purchase paths.
+        private bool IsCargoProductAvailable(string product)
+        {
+            var ev = new CargoProductAvailabilityEvent(product);
+            RaiseLocalEvent(ref ev);
+            return !ev.Hidden;
         }
 
         #region Station
