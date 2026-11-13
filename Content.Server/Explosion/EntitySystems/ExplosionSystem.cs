@@ -168,7 +168,7 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
         // Arcane-Start
         if (totalIntensity > 0 && explosive.IntensitySlope > 0 && ProtoMan.HasIndex(explosive.ExplosionType))
         {
-            var ev = new ExplosiveTriggeredEvent();
+            var ev = new ExplosiveTriggeredEvent(user);
             RaiseLocalEvent(uid, ref ev);
         }
         // Arcane-End

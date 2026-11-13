@@ -71,6 +71,10 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
         var pos = cassette.Comp.CurrentPosition;
         var language = args.Language;
         cassette.Comp.Buffer.Add(new TapeCassetteRecordedMessage(pos, name, verb, args.Message, language));
+        // Arcane-Start
+        var recorded = new TapeRecordedEvent(ent);
+        RaiseLocalEvent(args.Source, ref recorded);
+        // Arcane-End
     }
 
     [SubscribeLocalEvent]
@@ -122,3 +126,9 @@ public sealed partial class TapeRecorderSystem : SharedTapeRecorderSystem
         comp.CooldownEndTime = Timing.CurTime + comp.PrintCooldown;
     }
 }
+
+// Arcane-Start
+/// <summary>Raised on the speaker after their speech is buffered by a tape recorder.</summary>
+[ByRefEvent]
+public readonly record struct TapeRecordedEvent(EntityUid Recorder);
+// Arcane-End

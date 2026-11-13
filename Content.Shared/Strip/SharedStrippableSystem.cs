@@ -578,8 +578,15 @@ public abstract partial class SharedStrippableSystem : EntitySystem
         if (!CanStripRemoveHand(user, target, item, handName))
             return;
 
-        _handsSystem.TryDrop(target, item, checkActionBlocker: false);
+        var removed = _handsSystem.TryDrop(target, item, checkActionBlocker: false); // Arcane-Edit: ignore result > capture result
         _handsSystem.PickupOrDrop(user, item, animateUser: stealth, animate: !stealth, handsComp: user.Comp);
+        // Arcane-Start
+        if (removed)
+        {
+            var stripped = new HandItemStrippedEvent(target, item);
+            RaiseLocalEvent(user, ref stripped);
+        }
+        // Arcane-End
         _adminLogger.Add(LogType.Stripping, LogImpact.High, $"{ToPrettyString(user):actor} has stripped the item {ToPrettyString(item):item} from {ToPrettyString(target):target}'s hands");
 
         // Hand update will trigger strippable update.
@@ -715,3 +722,8 @@ public abstract partial class SharedStrippableSystem : EntitySystem
         return !HasComp<BypassInteractionChecksComponent>(viewer);
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct HandItemStrippedEvent(EntityUid Target, EntityUid Item);
+// Arcane-End

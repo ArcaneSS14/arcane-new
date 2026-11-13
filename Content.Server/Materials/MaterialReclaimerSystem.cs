@@ -88,7 +88,7 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
             Filter.PvsExcept(victim, entityManager: EntityManager),
             true);
 
-        _gibbing.Gib(victim);
+        DamageRecyclerVictim(entity, victim, entity.Comp); // Arcane-Edit: gibbing > ordinary recycler limb damage
         _appearance.SetData(entity.Owner, RecyclerVisuals.Bloody, true);
         args.Handled = true;
     }
@@ -185,9 +185,10 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         {
             var didBloody = false;
 
-            // Trauma - add targetPart and canMiss
-            if (component.DamageOnEmag is not null && _damage.TryChangeDamage(item, component.DamageOnEmag, false, targetPart: _body.GetRandomExtremity(item), canMiss: false)) // It shouldn't ignore resistance
+            // Arcane-Edit-Start
+            if (DamageRecyclerVictim(uid, item, component))
                 didBloody = true;
+            // Arcane-Edit-End
 
             /* Trauma - just delimb instead of gibbing, the mob itself doesnt have destructible thresholds
             if (_destructible.CanDestroy(item) && component.GibOnEmag)
@@ -213,6 +214,23 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
 
         _destructible.DestroyEntity(item);
     }
+
+    // Arcane-Start
+    private bool DamageRecyclerVictim(EntityUid reclaimer, EntityUid victim, MaterialReclaimerComponent component)
+    {
+        if (component.DamageOnEmag is not { } damage
+            || !_damage.TryChangeDamage(victim, damage, out var result, false,
+                targetPart: _body.GetRandomExtremity(victim), canMiss: false))
+            return false;
+
+        if (result.GetTotal() > 0)
+        {
+            var damaged = new RecyclerDamagedEvent(reclaimer);
+            RaiseLocalEvent(victim, ref damaged);
+        }
+        return true;
+    }
+    // Arcane-End
 
     private void SpawnMaterialsFromComposition(EntityUid reclaimer,
         EntityUid item,
@@ -298,3 +316,8 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         }
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct RecyclerDamagedEvent(EntityUid Recycler);
+// Arcane-End

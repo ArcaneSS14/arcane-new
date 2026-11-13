@@ -166,7 +166,7 @@ public sealed partial class PaperSystem : EntitySystem
         }
 
         // If a stamp, attempt to stamp paper
-        if (TryComp<StampComponent>(args.Used, out var stampComp) && TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState))
+        if (TryComp<StampComponent>(args.Used, out var stampComp) && TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState, args.User)) // Arcane-Edit: TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState) > TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState, args.User)
         {
             // successfully stamped, play popup
             var stampPaperOtherMessage = Loc.GetString("paper-component-action-stamp-paper-other",
@@ -275,15 +275,13 @@ public sealed partial class PaperSystem : EntitySystem
     /// <summary>
     ///     Accepts the name and state to be stamped onto the paper, returns true if successful.
     /// </summary>
-    public bool TryStamp(Entity<PaperComponent> entity, StampDisplayInfo stampInfo, string spriteStampState)
+    public bool TryStamp(Entity<PaperComponent> entity, StampDisplayInfo stampInfo, string spriteStampState, EntityUid? user = null) // Arcane-Edit: spriteStampState) > spriteStampState, EntityUid? user = null)
     {
         if (!entity.Comp.StampedBy.Contains(stampInfo))
         {
             entity.Comp.StampedBy.Add(stampInfo);
-            // Arcane-Start
-            var ev = new PaperStampAppliedEvent();
-            RaiseLocalEvent(entity, ref ev);
-            // Arcane-End
+            var ev = new PaperStampAppliedEvent(user); // Arcane-Edit: new PaperStampAppliedEvent() > new PaperStampAppliedEvent(user)
+            RaiseLocalEvent(entity, ref ev); // Arcane
             Dirty(entity);
             if (entity.Comp.StampState == null && TryComp<AppearanceComponent>(entity, out var appearance))
             {
@@ -378,5 +376,5 @@ public record struct PaperWriteAttemptEvent(EntityUid Paper, string? FailReason 
 // Arcane-Start
 /// <summary>A new imprint was added through the paper system.</summary>
 [ByRefEvent]
-public readonly record struct PaperStampAppliedEvent;
+public readonly record struct PaperStampAppliedEvent(EntityUid? User = null);
 // Arcane-End

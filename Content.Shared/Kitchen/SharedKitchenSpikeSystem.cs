@@ -337,6 +337,11 @@ public sealed partial class SharedKitchenSpikeSystem : EntitySystem
 
         Dirty(args.Target.Value, butcherable);
 
+        // Arcane-Start
+        var butchered = new KitchenSpikeButcheredEvent(args.User);
+        RaiseLocalEvent(target, ref butchered);
+        // Arcane-End
+
         // Gib the victim if there is nothing else to butcher.
         if (butcherable.SpawnedEntities.Count == 0)
         {
@@ -525,3 +530,8 @@ public sealed partial class SpikeUnhookDoAfterEvent : SimpleDoAfterEvent;
 /// </summary>
 [Serializable, NetSerializable]
 public sealed partial class SpikeButcherDoAfterEvent : SimpleDoAfterEvent;
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct KitchenSpikeButcheredEvent(EntityUid User);
+// Arcane-End

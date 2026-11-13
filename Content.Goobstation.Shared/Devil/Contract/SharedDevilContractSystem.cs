@@ -223,6 +223,11 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
         }
 
         _popup.PopupEntity(Loc.GetString("contract-victim-signed"), contract, signer);
+
+        // Arcane-Start
+        var signedEvent = new DevilContractSignedEvent(contract);
+        RaiseLocalEvent(signer, ref signedEvent);
+        // Arcane-End
     }
 
     private void HandleDevilSign(Entity<DevilContractComponent> contract, EntityUid signer)
@@ -319,3 +324,8 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
     }
 
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct DevilContractSignedEvent(EntityUid Contract);
+// Arcane-End

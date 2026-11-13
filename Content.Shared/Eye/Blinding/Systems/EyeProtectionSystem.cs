@@ -58,7 +58,15 @@ namespace Content.Shared.Eye.Blinding.Systems
 
             // Add permanent eye damage if they had zero protection, also somewhat scale their temporary blindness by
             // how much damage they already accumulated.
+            var previousDamage = blindable.EyeDamage; // Arcane
             _blindingSystem.AdjustEyeDamage((args.User, blindable), 1);
+            // Arcane-Start
+            if (blindable.EyeDamage > previousDamage)
+            {
+                var burned = new UnprotectedToolEyeDamageEvent(uid);
+                RaiseLocalEvent(args.User, ref burned);
+            }
+            // Arcane-End
             var statusTimeSpan = TimeSpan.FromSeconds(time * MathF.Sqrt(blindable.EyeDamage));
             _statusEffectsSystem.TryAddStatusEffectDuration(args.User, BlindnessSystem.BlindingStatusEffect, statusTimeSpan);
         }
@@ -69,4 +77,10 @@ namespace Content.Shared.Eye.Blinding.Systems
             Dirty(uid, component);
         }
     }
+
+    // Arcane-Start
+    /// <summary>Raised on the user after an unprotected tool has actually damaged their eyes.</summary>
+    [ByRefEvent]
+    public readonly record struct UnprotectedToolEyeDamageEvent(EntityUid Tool);
+    // Arcane-End
 }

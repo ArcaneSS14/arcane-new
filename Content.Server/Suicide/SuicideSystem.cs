@@ -79,6 +79,14 @@ public sealed partial class SuicideSystem : SharedSuicideSystem
         var suicideEvent = new SuicideEvent(victim);
         RaiseLocalEvent(victim, suicideEvent);
 
+        // Arcane-Start
+        if (session != null && !suicideGhostEvent.CanReturnToBody)
+        {
+            var completed = new SuicideCompletedEvent(session);
+            RaiseLocalEvent(victim, ref completed);
+        }
+        // Arcane-End
+
         // Since the player is already dead the log will not contain their username.
         if (session != null)
         {
@@ -180,3 +188,9 @@ public sealed partial class SuicideSystem : SharedSuicideSystem
         args.Handled = true;
     }
 }
+
+// Arcane-Start
+/// <summary>Confirmed permanent suicide exit, with the session captured before transferring the mind.</summary>
+[ByRefEvent]
+public readonly record struct SuicideCompletedEvent(ICommonSession Session);
+// Arcane-End

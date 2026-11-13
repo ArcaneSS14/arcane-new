@@ -90,6 +90,14 @@ public sealed partial class BlockGameArcadeSystem : EntitySystem
         component.Spectators.Clear();
     }
 
+    // Arcane-Start
+    public void NotifyGameOver(EntityUid player, int points)
+    {
+        var ev = new BlockGameOverEvent(points);
+        RaiseLocalEvent(player, ref ev);
+    }
+    // Arcane-End
+
     private void OnPlayerAction(EntityUid uid, BlockGameArcadeComponent component, BlockGameMessages.BlockGamePlayerActionMessage msg)
     {
         if (component.Game == null)
@@ -113,3 +121,9 @@ public sealed partial class BlockGameArcadeSystem : EntitySystem
         component.Game.ProcessInput(msg.PlayerAction);
     }
 }
+
+// Arcane-Start
+/// <summary>Server-computed result of an arcade cabinet game.</summary>
+[ByRefEvent]
+public readonly record struct BlockGameOverEvent(int Points);
+// Arcane-End

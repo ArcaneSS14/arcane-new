@@ -332,6 +332,11 @@ public sealed partial class SurgerySystem
 
         EnsureComp<OrganReattachedComponent>(args.Tool);
 
+        // Arcane-Start
+        var inserted = new SurgeryOrganAddedEvent(args.User, args.Tool);
+        RaiseLocalEvent(args.Body, ref inserted);
+        // Arcane-End
+
         var ev = new SurgeryStepDamageChangeEvent(args.User, args.Body, args.Part, ent);
             RaiseLocalEvent(ent, ref ev);
             args.Complete = true;

@@ -72,6 +72,11 @@ public sealed partial class RandomGiftSystem : EntitySystem
         _hands.PickupOrDrop(args.User, handsEnt);
 
         args.Handled = true;
+
+        // Arcane-Start
+        var opened = new RandomGiftOpenedEvent(handsEnt);
+        RaiseLocalEvent(args.User, ref opened);
+        // Arcane-End
     }
 
     private void OnGiftMapInit(EntityUid uid, RandomGiftComponent component, MapInitEvent args)
@@ -110,3 +115,8 @@ public sealed partial class RandomGiftSystem : EntitySystem
         }
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct RandomGiftOpenedEvent(EntityUid Contents);
+// Arcane-End
