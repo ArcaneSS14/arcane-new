@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Arcane.Shared.Bitrunning.Components;
 using Content.IntegrationTests.Tests.Interaction;
+using Content.Shared.Buckle;
 using Content.Server.Ghost;
 using Content.Server.Objectives.Systems;
 using Content.Shared.Codewords;
@@ -105,6 +106,13 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
             var dodge = new ProjectileDodgeAttemptEvent(projectile, target);
             SEntMan.EventBus.RaiseLocalEvent(target, ref dodge);
             Assert.That(dodge.Dodged, Is.True);
+
+            var chair = SEntMan.SpawnAttachedTo("Chair", Center);
+            var buckle = SEntMan.System<SharedBuckleSystem>();
+            Assert.That(buckle.TryBuckle(target, target, chair), Is.True);
+            Assert.That(DodgeHitscan(), Is.False);
+            buckle.Unbuckle(target, user: null);
+            Assert.That(DodgeHitscan(), Is.True);
 
             SEntMan.System<MobStateSystem>().ChangeMobState(target, MobState.Critical);
             Assert.That(DodgeHitscan(), Is.False);
