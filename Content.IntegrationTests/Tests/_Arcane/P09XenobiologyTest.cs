@@ -21,6 +21,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
 using Content.Shared.Lathe;
+using Content.Shared.Metabolism;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Nutrition.Components;
@@ -99,6 +100,8 @@ public sealed class P09XenobiologyTest : InteractionTest
             prey = SEntMan.SpawnAttachedTo(Human, Center.Offset(new Vector2(0.5f, 0)));
             var stomachs = SEntMan.System<BodySystem>().GetOrgans<StomachComponent>(slime);
             Assert.That(stomachs, Has.Count.EqualTo(1));
+            // Measure the latch's transfer before digestion can consume the stored blood.
+            SEntMan.GetComponent<MetabolizerComponent>(stomachs[0].Owner).Stages.Remove("Digestion");
             var solutions = SEntMan.System<SharedSolutionContainerSystem>();
             Assert.That(solutions.TryGetSolution(stomachs[0].Owner, StomachSystem.DefaultSolutionName, out var solution), Is.True);
             stomachSolution = solution!.Value.Owner;
