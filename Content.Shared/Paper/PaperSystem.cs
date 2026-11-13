@@ -15,6 +15,12 @@ using Robust.Shared.Audio.Systems;
 using static Content.Shared.Paper.PaperComponent;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+// Arcane-Start
+using System.Diagnostics.CodeAnalysis;
+using Content.Shared.ActionBlocker;
+using Content.Shared.Hands.EntitySystems;
+using Robust.Shared.Network;
+// Arcane-End
 
 namespace Content.Shared.Paper;
 
@@ -29,6 +35,11 @@ public sealed partial class PaperSystem : EntitySystem
     [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
     [Dependency] private MetaDataSystem _metaSystem = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    // Arcane-Start
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private ActionBlockerSystem _blocker = default!;
+    [Dependency] private INetManager _net = default!;
+    // Arcane-End
 
     [Dependency] private EntityQuery<PaperComponent> _paperQuery = default!;
 
@@ -178,16 +189,27 @@ public sealed partial class PaperSystem : EntitySystem
         return new StampDisplayInfo
         {
             StampedName = stamp.StampedName,
-            StampedColor = stamp.StampedColor
+            StampedColor = stamp.StampedColor, // Arcane-Edit: carry optional graphical imprint
+            StampLargeIcon = stamp.StampLargeIcon, // Arcane
         };
     }
 
     private void OnInputTextMessage(Entity<PaperComponent> entity, ref PaperInputTextMessage args)
     {
+        // Arcane-Start
+        if (!CanWrite(entity, args.Actor, out _) || args.Text.Length > entity.Comp.ContentSize)
+        {
+            SendSaveResult(entity, args, false);
+            return;
+        }
+        // Arcane-End
         var ev = new PaperWriteAttemptEvent(entity.Owner);
         RaiseLocalEvent(args.Actor, ref ev);
         if (ev.Cancelled)
+        {
+            SendSaveResult(entity, args, false); // Arcane
             return;
+        }
 
         if (args.Text.Length <= entity.Comp.ContentSize)
         {
@@ -210,7 +232,16 @@ public sealed partial class PaperSystem : EntitySystem
 
         entity.Comp.Mode = PaperAction.Read;
         UpdateUserInterface(entity);
+        SendSaveResult(entity, args, true); // Arcane
     }
+
+    // Arcane-Start
+    private void SendSaveResult(EntityUid paper, PaperInputTextMessage request, bool accepted)
+    {
+        if (_net.IsServer)
+            _uiSystem.ServerSendUiMessage(paper, PaperUiKey.Key, new PaperSaveResultMessage(request.SaveId, accepted), request.Actor);
+    }
+    // Arcane-End
 
     private void OnRandomPaperContentMapInit(Entity<RandomPaperContentComponent> ent, ref MapInitEvent args)
     {
@@ -249,6 +280,10 @@ public sealed partial class PaperSystem : EntitySystem
         if (!entity.Comp.StampedBy.Contains(stampInfo))
         {
             entity.Comp.StampedBy.Add(stampInfo);
+            // Arcane-Start
+            var ev = new PaperStampAppliedEvent();
+            RaiseLocalEvent(entity, ref ev);
+            // Arcane-End
             Dirty(entity);
             if (entity.Comp.StampState == null && TryComp<AppearanceComponent>(entity, out var appearance))
             {
@@ -286,6 +321,19 @@ public sealed partial class PaperSystem : EntitySystem
             return;
         SetContent((entity, paper), content);
     }
+
+    // Arcane-Start
+    /// <summary>Recheck the writing tool and access. Signing uses its own cancellable permission event.</summary>
+    public bool CanWrite(Entity<PaperComponent> paper, EntityUid user, [NotNullWhen(true)] out EntityUid? pen, bool signing = false)
+    {
+        pen = _hands.GetActiveItem(user);
+        return pen is { } tool && _tagSystem.HasTag(tool, WriteTag) &&
+            (!paper.Comp.EditingDisabled || signing) &&
+            (paper.Comp.StampedBy.Count == 0 || _tagSystem.HasTag(tool, WriteIgnoreStampsTag)) &&
+            _blocker.CanInteract(user, paper.Owner) && _interaction.IsAccessible(user, paper.Owner) &&
+            _interaction.InRangeUnobstructed(user, paper.Owner);
+    }
+    // Arcane-End
 
     public void SetContent(Entity<PaperComponent> entity, string content,
         EntityUid? user = null) // Trauma
@@ -326,3 +374,9 @@ public record struct PaperWriteEvent(EntityUid User, EntityUid Paper);
 /// <param name="paper">The paper that the writing will take place on.</param>
 [ByRefEvent]
 public record struct PaperWriteAttemptEvent(EntityUid Paper, string? FailReason = null, bool Cancelled = false);
+
+// Arcane-Start
+/// <summary>A new imprint was added through the paper system.</summary>
+[ByRefEvent]
+public readonly record struct PaperStampAppliedEvent;
+// Arcane-End

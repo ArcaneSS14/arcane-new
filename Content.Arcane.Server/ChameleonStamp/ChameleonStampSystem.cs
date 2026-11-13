@@ -12,8 +12,20 @@ public sealed partial class ChameleonStampSystem : SharedChameleonStampSystem
         base.Initialize();
 
         SubscribeLocalEvent<ChameleonStampComponent, ChameleonStampApplySettingsMessage>(OnApplySettings);
+        SubscribeLocalEvent<ChameleonStampComponent, MapInitEvent>(OnMapInit);
 
         UpdatePresets();
+    }
+
+    private void OnMapInit(Entity<ChameleonStampComponent> entity, ref MapInitEvent args)
+    {
+        if (TryComp<StampComponent>(entity, out var stamp) && stamp.StampLargeIcon == null &&
+            ValidatePreset(entity.Comp.SelectedStampStatePrototype, out _, out var preset) &&
+            stamp.StampState == preset.StampState)
+        {
+            stamp.StampLargeIcon = preset.StampLargeIcon;
+            Dirty(entity, stamp);
+        }
     }
 
     private void OnApplySettings(Entity<ChameleonStampComponent> entity, ref ChameleonStampApplySettingsMessage args)
@@ -56,6 +68,7 @@ public sealed partial class ChameleonStampSystem : SharedChameleonStampSystem
         // StampState
         entity.Comp.SelectedStampStatePrototype = args.SelectedStampStatePrototype;
         stamp.StampState = stampStateComponent.StampState;
+        stamp.StampLargeIcon = stampStateComponent.StampLargeIcon;
 
         // StampSprite
         entity.Comp.SelectedStampSpritePrototype = args.SelectedStampSpritePrototype;

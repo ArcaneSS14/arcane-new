@@ -10,7 +10,8 @@ using Robust.Shared.Prototypes;
 namespace Content.Client.Paper.UI;
 
 [GenerateTypedNameReferences]
-public sealed partial class StampWidget : PanelContainer
+[Virtual] // Arcane
+public partial class StampWidget : PanelContainer // Arcane-Edit: graphical imprint extension
 {
     private static readonly ProtoId<ShaderPrototype> PaperStamp = "PaperStamp";
 
@@ -23,13 +24,15 @@ public sealed partial class StampWidget : PanelContainer
         set => StampedByLabel.Orientation = value;
     }
 
-    public StampDisplayInfo StampInfo {
+    public virtual StampDisplayInfo StampInfo { // Arcane-Edit
         set {
             StampedByLabel.Text = Loc.TryGetString(value.StampedName, out var name) ? name : value.StampedName; // Trauma - use TryGetString
             StampedByLabel.FontColorOverride = value.StampedColor;
             ModulateSelfOverride = value.StampedColor;
         }
     }
+
+    protected StampLabel Label => StampedByLabel; // Arcane
 
     public StampWidget()
     {

@@ -16,7 +16,8 @@ using Robust.Shared.Input;
 namespace Content.Client.Paper.UI
 {
     [GenerateTypedNameReferences]
-    public sealed partial class PaperWindow : BaseWindow
+    [Virtual] // Arcane
+    public partial class PaperWindow : BaseWindow // Arcane-Edit: allow the paper-specific field renderer
     {
         [Dependency] private IInputManager _inputManager = default!;
         [Dependency] private IResourceCache _resCache = default!;
@@ -42,6 +43,12 @@ namespace Content.Client.Paper.UI
         private DragMode _allowedResizeModes = ~DragMode.None;
 
         public event Action<string>? OnSaved;
+
+        // Arcane-Start
+        private bool _hasDraft;
+        private bool _populating;
+        private string? _pendingSave;
+        // Arcane-End
 
         private int _MaxInputLength = -1;
         public int MaxInputLength
@@ -84,6 +91,10 @@ namespace Content.Client.Paper.UI
 
             Input.OnTextChanged += args =>
             {
+                // Arcane-Start
+                if (!_populating)
+                    _hasDraft = true;
+                // Arcane-End
                 UpdateFillState();
             };
 
@@ -244,35 +255,33 @@ namespace Content.Client.Paper.UI
         ///     Initialize the paper contents, i.e. the text typed by the
         ///     user and any stamps that have peen put on the page.
         /// </summary>
-        public void Populate(PaperComponent.PaperBoundUserInterfaceState state)
+        public virtual void Populate(PaperComponent.PaperBoundUserInterfaceState state) // Arcane-Edit
         {
             bool isEditing = state.Mode == PaperComponent.PaperAction.Write;
-            bool wasEditing = InputContainer.Visible;
             InputContainer.Visible = isEditing;
             EditButtons.Visible = isEditing;
 
-            var msg = new FormattedMessage();
-            msg.AddMarkupPermissive(state.Text);
+            var msg = FormatPaperText(state); // Arcane-Edit: owner-specific paper markup
 
             // For premade documents, we want to be able to edit them rather than
             // replace them.
-            var shouldCopyText = 0 == Input.TextLength && 0 != state.Text.Length;
-            if (!wasEditing || shouldCopyText)
+            // Arcane-Edit-Start
+            // Preserve local edits, including an empty draft, across prediction and other viewers.
+            if (!_hasDraft)
             {
-                // We can get repeated messages with state.Mode == Write if another
-                // player opens the UI for reading. In this case, don't update the
-                // text input, as this player is currently writing new text and we
-                // don't want to lose any text they already input.
+                _populating = true;
                 Input.TextRope = Rope.Leaf.Empty;
                 Input.CursorPosition = new TextEdit.CursorPos();
                 Input.InsertAtCursor(state.Text);
+                _populating = false;
             }
+            // Arcane-Edit-End
 
             for (var i = 0; i <= state.StampedBy.Count * 3 + 1; i++)
             {
                 msg.AddMarkupPermissive("\r\n");
             }
-            WrittenTextLabel.SetMessage(msg, UserFormattableTags.BaseAllowedTags, _writtenTextColor);
+            WrittenTextLabel.SetMessage(msg, AllowedMarkupTags, _writtenTextColor); // Arcane-Edit
 
             WrittenTextLabel.Visible = !isEditing && state.Text.Length > 0;
             BlankPaperIndicator.Visible = !isEditing && state.Text.Length == 0;
@@ -281,9 +290,18 @@ namespace Content.Client.Paper.UI
             StampDisplay.RemoveStamps();
             foreach(var stamper in state.StampedBy)
             {
-                StampDisplay.AddStamp(new StampWidget{ StampInfo = stamper });
+                StampDisplay.AddStamp(CreateStampWidget(stamper)); // Arcane-Edit
             }
         }
+
+        // Arcane-Start
+        protected virtual Type[] AllowedMarkupTags => UserFormattableTags.BaseAllowedTags;
+
+        protected virtual FormattedMessage FormatPaperText(PaperComponent.PaperBoundUserInterfaceState state)
+            => FormattedMessage.FromMarkupPermissive(state.Text);
+
+        protected virtual StampWidget CreateStampWidget(StampDisplayInfo info) => new() { StampInfo = info };
+        // Arcane-End
 
         /// <summary>
         ///     BaseWindow interface. Allow users to drag UI around by grabbing
@@ -323,10 +341,28 @@ namespace Content.Client.Paper.UI
 
         private void RunOnSaved()
         {
-            // Prevent further saving while text processing still in
-            SaveButton.Disabled = true;
+            _pendingSave = Rope.Collapse(Input.TextRope); // Arcane
+            // Arcane-Edit-Start
+            // Framework validation can discard the message without a reply. Keep retry available.
+            _hasDraft = true;
+            // Arcane-Edit-End
             OnSaved?.Invoke(Rope.Collapse(Input.TextRope));
         }
+
+        // Arcane-Start
+        public void ApplySaveResult(bool accepted)
+        {
+            if (_pendingSave == null)
+                return;
+
+            if (accepted && Rope.Collapse(Input.TextRope) == _pendingSave)
+                _hasDraft = false;
+            _pendingSave = null;
+            UpdateFillState();
+            if (!accepted)
+                FillStatus.Text = Loc.GetString("paper-ui-save-failed");
+        }
+        // Arcane-End
 
         private void UpdateFillState()
         {
