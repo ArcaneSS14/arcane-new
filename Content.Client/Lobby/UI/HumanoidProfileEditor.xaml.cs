@@ -300,6 +300,11 @@ namespace Content.Client.Lobby.UI
 
             _markingsModel.MarkingsChanged += (_, _) => OnMarkingChange();
             _markingsModel.MarkingsReset += OnMarkingChange;
+            // Arcane-Start
+            _markingsModel.PreviewChanged += UpdateMarkingPreview;
+            Markings.ShowEarsAboveHairOption = true;
+            Markings.EarsAboveHairChanged += OnEarsAboveHairChanged;
+            // Arcane-End
 
             #endregion Markings
 
@@ -369,7 +374,7 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.LoadPreview(Profile, JobOverride, ClothesModeButton.SelectedId == PreviewClothesAll, ClothesModeButton.SelectedId != PreviewClothesNone); // Arcane-Edit: ShowClothes.Pressed > preview mode
+            SpriteView.LoadPreview(GetMarkingPreviewProfile(), JobOverride, ClothesModeButton.SelectedId == PreviewClothesAll, ClothesModeButton.SelectedId != PreviewClothesNone); // Arcane-Edit: Profile/ShowClothes.Pressed > marking preview and clothes mode
             UpdateFlavorPreview(); // Arcane
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
@@ -432,7 +437,7 @@ namespace Content.Client.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.ReloadProfilePreview(Profile);
+            UpdateMarkingPreview(); // Arcane-Edit: SpriteView.ReloadProfilePreview(Profile) > UpdateMarkingPreview()
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

@@ -41,8 +41,10 @@ public sealed partial class WaggingSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnWaggingMapInit(Entity<WaggingComponent> ent, ref MapInitEvent args)
     {
-        _actions.AddAction(ent, ref ent.Comp.ActionEntity, ent.Comp.Action, ent);
-        DirtyField(ent.AsNullable(), nameof(WaggingComponent.ActionEntity));
+        // Arcane-Edit-Start
+        if (_network.IsServer)
+            _pendingRefresh.Add(ent);
+        // Arcane-Edit-End
     }
 
     /// <summary>
@@ -51,7 +53,10 @@ public sealed partial class WaggingSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnWaggingShutdown(Entity<WaggingComponent> ent, ref ComponentShutdown args)
     {
-        _actions.RemoveAction(ent.Owner, ent.Comp.ActionEntity);
+        // Arcane-Edit-Start
+        _pendingRefresh.Remove(ent);
+        RemoveWaggingAction(ent, dirty: false);
+        // Arcane-Edit-End
     }
 
     /// <summary>
@@ -105,8 +110,10 @@ public sealed partial class WaggingSystem : EntitySystem
         if (!applied.TryGetValue(ent.Comp.Organ, out var markingsSet))
             return false;
 
-        ent.Comp.Wagging = !ent.Comp.Wagging;
-        DirtyField(ent, nameof(WaggingComponent.Wagging));
+        // Arcane-Edit-Start
+        var targetWagging = desired ?? !ent.Comp.Wagging;
+        var changed = false;
+        // Arcane-Edit-End
 
         markingsSet = markingsSet.ShallowClone();
         foreach (var (layers, _) in markingsSet)
@@ -119,32 +126,29 @@ public sealed partial class WaggingSystem : EntitySystem
                 var currentMarkingId = layerMarkings[i].MarkingId;
                 string newMarkingId;
 
-                if (ent.Comp.Wagging)
+                // Arcane-Edit-Start: explicit Goob pairs and existing Trauma suffix pairs share one resolver.
+                if (targetWagging)
                 {
-                    newMarkingId = $"{currentMarkingId}{ent.Comp.Suffix}";
+                    if (!TryGetAnimated(currentMarkingId, ent.Comp.Suffix, out newMarkingId))
+                        continue;
                 }
                 else
                 {
-                    if (currentMarkingId.Id.EndsWith(ent.Comp.Suffix))
-                    {
-                        newMarkingId = currentMarkingId.Id[..^ent.Comp.Suffix.Length];
-                    }
-                    else
-                    {
-                        newMarkingId = currentMarkingId;
-                        Log.Warning($"Unable to revert wagging for {currentMarkingId}");
-                    }
+                    if (!TryGetStill(currentMarkingId, ent.Comp.Suffix, out newMarkingId))
+                        continue;
                 }
-
-                if (!ProtoMan.HasIndex<MarkingPrototype>(newMarkingId))
-                {
-                    Log.Warning($"{ToPrettyString(ent):ent} tried toggling wagging but {newMarkingId} marking doesn't exist");
-                    continue;
-                }
-
+                // Arcane-Edit-End
                 layerMarkings[i] = new Marking(newMarkingId, layerMarkings[i].MarkingColors);
+                changed = true; // Arcane
             }
         }
+
+        // Arcane-Start
+        if (!changed)
+            return false;
+        ent.Comp.Wagging = targetWagging;
+        DirtyField(ent, nameof(WaggingComponent.Wagging));
+        // Arcane-End
 
         _visualBody.ApplyMarkings(ent, new()
         {

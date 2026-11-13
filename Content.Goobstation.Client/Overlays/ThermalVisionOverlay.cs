@@ -17,6 +17,7 @@ public sealed partial class ThermalVisionOverlay : Overlay
     [Dependency] private IEntityManager _entity = default!;
     [Dependency] private IPlayerManager _player = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IEyeManager _eyes = default!; // Arcane
 
     private readonly TransformSystem _transform;
     private readonly SpriteSystem _sprite;
@@ -50,6 +51,13 @@ public sealed partial class ThermalVisionOverlay : Overlay
 
         _thermalShader = _proto.Index(ThermalShader).InstanceUnique();
     }
+
+    // Arcane-Start: auxiliary viewports must not use the local player's thermal vision.
+    protected override bool BeforeDraw(in OverlayDrawArgs args)
+    {
+        return args.Viewport.Eye == _eyes.CurrentEye && base.BeforeDraw(in args);
+    }
+    // Arcane-End
 
     protected override void Draw(in OverlayDrawArgs args)
     {

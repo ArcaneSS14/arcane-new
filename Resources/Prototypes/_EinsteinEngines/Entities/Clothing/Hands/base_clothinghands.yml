@@ -5,6 +5,10 @@
   parent: ClothingHandsButcherable
   id: ClothingHandsGlovesEnviroglovesBase
   components:
+  # Arcane-Start
+  - type: GlowShielding
+    reduction: 0.1
+  # Arcane-End
   - type: Armor
     modifiers:
       coefficients:

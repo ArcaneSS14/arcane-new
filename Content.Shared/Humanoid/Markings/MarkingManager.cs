@@ -50,6 +50,7 @@ public sealed partial class MarkingManager
         _categorizedMarkings = markingDict.ToFrozenDictionary(
             x => x.Key,
             x => x.Value.ToFrozenDictionary());
+        CacheWagging(); // Arcane
     }
 
     public FrozenDictionary<string, MarkingPrototype> MarkingsByLayer(HumanoidVisualLayers category)

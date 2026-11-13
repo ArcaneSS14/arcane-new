@@ -1,11 +1,13 @@
+<!-- Arcane: xmlns:humanoid for AnimatedMarkingTextureRect; XamlX requires declarations on the root. -->
 <BoxContainer xmlns="https://spacestation14.io"
+        xmlns:humanoid="clr-namespace:Content.Client.Humanoid"
         Orientation="Vertical"
         HorizontalExpand="True"
         MouseFilter="Pass">
 
     <BoxContainer Orientation="Horizontal" SeparationOverride="4">
         <PanelContainer SetSize="64 64" HorizontalAlignment="Right" MouseFilter="Ignore" StyleClasses="PanelDeep">
-            <LayeredTextureRect TextureScale="2 2" Name="MarkingTexture" />
+            <humanoid:AnimatedMarkingTextureRect TextureScale="2 2" Name="MarkingTexture" /> <!-- Arcane-Edit: LayeredTextureRect > humanoid:AnimatedMarkingTextureRect -->
         </PanelContainer>
 
         <Button Name="SelectButton" ToggleMode="True" HorizontalExpand="True" />

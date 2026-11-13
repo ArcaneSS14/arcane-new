@@ -44,6 +44,11 @@ public sealed partial class ExpendableLightComponent : SharedExpendableLightComp
     /// </summary>
     [Access(typeof(ExpendableLightSystem))]
     public EntityUid? PlayingStream;
+
+    // Arcane-Start: keep an unchanged flare behaviour running across appearance updates.
+    [Access(typeof(ExpendableLightSystem))]
+    public string? CurrentBehaviour;
+    // Arcane-End
 }
 
 public enum ExpendableLightVisualLayers : byte

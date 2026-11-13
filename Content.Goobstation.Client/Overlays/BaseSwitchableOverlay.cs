@@ -8,6 +8,7 @@ namespace Content.Goobstation.Client.Overlays;
 public sealed partial class BaseSwitchableOverlay<TComp> : Overlay where TComp : SwitchableVisionOverlayComponent
 {
     [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private IEyeManager _eyes = default!; // Arcane
 
     public override bool RequestScreenTexture => true;
     public override OverlaySpace Space => OverlaySpace.WorldSpace;
@@ -18,6 +19,8 @@ public sealed partial class BaseSwitchableOverlay<TComp> : Overlay where TComp :
 
     public bool IsActive = true;
 
+    public bool RestrictToPlayerViewport; // Arcane: opt in without changing other overlay users.
+
     public readonly ProtoId<ShaderPrototype> NightVision = "NightVision";
 
     public BaseSwitchableOverlay()
@@ -25,6 +28,13 @@ public sealed partial class BaseSwitchableOverlay<TComp> : Overlay where TComp :
         IoCManager.InjectDependencies(this);
         _shader = _proto.Index(NightVision).InstanceUnique();
     }
+
+    // Arcane-Start
+    protected override bool BeforeDraw(in OverlayDrawArgs args)
+    {
+        return (!RestrictToPlayerViewport || args.Viewport.Eye == _eyes.CurrentEye) && base.BeforeDraw(in args);
+    }
+    // Arcane-End
 
     protected override void Draw(in OverlayDrawArgs args)
     {

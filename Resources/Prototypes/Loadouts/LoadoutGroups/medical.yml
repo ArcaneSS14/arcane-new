@@ -66,6 +66,7 @@
   loadouts:
   - ChiefMedicalOfficerLabCoat
   - ChiefMedicalOfficerWintercoat
+  - ChiefMedicalOfficerLabCoatWinter # Arcane
 
 - type: loadoutGroup
   id: ChiefMedicalOfficerNeck
