@@ -286,6 +286,7 @@
     - id: ClothingHeadsetAltScience
     - id: DoorRemoteResearch
     - id: HandTeleporter
+    - id: ClothingBeltGeminiHoloProjector # Arcane - Goob Gemini
     - id: RubberStampRd
     - id: InducerScientificBattery # Arcane
       prob: 0.4
