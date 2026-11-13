@@ -1,6 +1,7 @@
 # Ghost HUD button
 thunderdome-ghost-button = Thunderdome ({$count})
 thunderdome-ghost-button-default = Thunderdome
+thunderdome-warp-bingle-pit = Bingle Pit
 
 # Loadout window
 thunderdome-loadout-title = Thunderdome Loadout

@@ -21,7 +21,7 @@
     bodyType: Static
   # Arcane-Start: include the pit in the ghost location list.
   - type: WarpPoint
-    location: bingle pit
+    location: thunderdome-warp-bingle-pit
   # Arcane-End
   - type: Fixtures
     fixtures:
