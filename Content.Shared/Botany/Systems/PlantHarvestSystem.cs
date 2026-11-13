@@ -147,7 +147,7 @@ public sealed partial class PlantHarvestSystem : EntitySystem
             _plant.RemovePlant(ent.Owner);
 
         var ev = new PlantHarvestedEvent(user, ent.Owner);
-        RaiseLocalEvent(ent.Owner, ref ev);
+        RaiseLocalEvent(ent.Owner, ref ev, broadcast: true); // Arcane
     }
 
     /// <summary>

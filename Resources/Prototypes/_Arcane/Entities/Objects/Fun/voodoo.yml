@@ -1,0 +1,43 @@
+- type: entity
+  parent: BasePlushieSmall
+  id: ArcaneVoodooAdmin
+  name: voodoo doll
+  description: A soft doll with an unsettling aura.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/Plushies/human.rsi
+    state: icon
+  - type: Flammable
+    fireSpread: true
+    alwaysCombustible: true
+    damage:
+      types:
+        Heat: 1
+  - type: Appearance
+  - type: FireVisuals
+    sprite: Effects/fire.rsi
+    normalState: fire
+  - type: Damageable
+    damageModifierSet: Wood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 90
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          Ash:
+            min: 1
+            max: 1
+      - !type:DoActsBehavior
+        acts: [ Destruction ]
+  - type: Voodoo
+
+- type: entity
+  parent: ArcaneVoodooAdmin
+  id: ArcaneVoodooBlood
+  suffix: Blood-bound
+  components:
+  - type: Voodoo
+    bloodBinding: true
