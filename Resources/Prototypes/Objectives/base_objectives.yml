@@ -93,6 +93,7 @@
     blacklist:
       components:
       - KillPersonCondition
+      - TeachALessonCondition # Arcane
   - type: SocialObjective
 
 # requires that the target survives the round

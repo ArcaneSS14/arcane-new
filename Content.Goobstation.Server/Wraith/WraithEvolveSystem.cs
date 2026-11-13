@@ -65,6 +65,16 @@ public sealed partial class WraithEvolveSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnWraithEvolveRecieved(Entity<EvolveComponent> ent, ref RadialSelectorSelectedMessage args)
     {
+        // Arcane-Start: the options and progression may have changed since opening the menu.
+        if (args.Actor != ent.Owner || !WraithRadialSelection.Contains(ent.Comp.AvailableEvolutions, args.SelectedItem))
+            return;
+
+        var attempt = new WraithEvolveAttemptEvent(ent.Comp.CorpsesRequired);
+        RaiseLocalEvent(ent, ref attempt);
+        if (attempt.Cancelled)
+            return;
+        // Arcane-End
+
         Evolve(ent, args.SelectedItem);
 
         _ui.CloseUi(ent.Owner, RadialSelectorUiKey.Key, args.Actor);

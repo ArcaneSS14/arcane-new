@@ -122,6 +122,17 @@ public sealed partial class PredictedProjectileSystem : EntitySystem
         if (comp.IgnoredEntities.Contains(target))
             return;
 
+        // Arcane-Start: keep the projectile and its shooter intact when the target sidesteps it.
+        var dodge = new ProjectileDodgeAttemptEvent(uid, target);
+        RaiseLocalEvent(target, ref dodge);
+        if (dodge.Dodged)
+        {
+            comp.IgnoredEntities.Add(target);
+            Dirty(uid, comp);
+            return;
+        }
+        // Arcane-End
+
         // it's here so this check is only done once before possible hit
         var attemptEv = new ProjectileReflectAttemptEvent(uid, comp, false, target);
         RaiseLocalEvent(target, ref attemptEv);

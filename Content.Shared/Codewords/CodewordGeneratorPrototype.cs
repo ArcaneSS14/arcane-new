@@ -28,4 +28,8 @@ public sealed partial class CodewordGeneratorPrototype : IPrototype
     /// </summary>
     [DataField]
     public int Amount = 3;
+
+    /// <summary>Give each nonempty dataset an equal chance when drawing the next word.</summary>
+    [DataField]
+    public bool PickDatasetFirst; // Arcane
 }

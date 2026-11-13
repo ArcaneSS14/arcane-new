@@ -25,4 +25,10 @@ public sealed partial class FultonComponent
     /// </summary>
     [DataField]
     public bool AttachOnInteract = true;
+
+    // Arcane-Start: retain the emag effect across prediction and stack splits.
+    /// <summary>Allows the handheld pack to attach to targets with a mind container.</summary>
+    [DataField, AutoNetworkedField]
+    public bool MindTargetOverride;
+    // Arcane-End
 }

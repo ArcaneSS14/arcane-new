@@ -191,6 +191,11 @@ public sealed partial class PolymorphSystem : SharedPolymorphSystem // Trauma - 
         return PolymorphEntity(uid, config);
     }
 
+    // Arcane-Start: consumers can identify the body a polymorph will revert to.
+    public EntityUid? GetPolymorphParent(EntityUid uid)
+        => TryComp<PolymorphedEntityComponent>(uid, out var polymorph) ? polymorph.Parent : null;
+    // Arcane-End
+
     /// <summary>
     /// Polymorphs the target entity into another.
     /// </summary>

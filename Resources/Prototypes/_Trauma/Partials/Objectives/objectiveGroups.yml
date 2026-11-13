@@ -19,6 +19,10 @@
   id: TraitorObjectiveGroupKill
   weights:
     PermaKillRandomPersonObjective: 0.5
+    # Arcane-Start: Teach a Lesson variants from Goob
+    TeachRandomPersonObjective: 1
+    TeachRandomHeadObjective: 0.25
+    # Arcane-End
 
 - type: weightedRandom
   id: TraitorObjectiveGroupState
