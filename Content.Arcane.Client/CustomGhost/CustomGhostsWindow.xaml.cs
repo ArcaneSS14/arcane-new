@@ -9,6 +9,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Configuration;
+using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
@@ -24,6 +25,7 @@ public sealed partial class CustomGhostsWindow : DefaultWindow
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IEntityManager _entMan = default!;
     [Dependency] private IEntitySystemManager _entSys = default!;
+    [Dependency] private IEntityNetworkManager _network = default!;
     private readonly SpriteSystem _sprite;
 
     private List<EntityUid> _previewEntities = new();
@@ -45,7 +47,34 @@ public sealed partial class CustomGhostsWindow : DefaultWindow
         {
             foreach (var ent in _previewEntities) { _entMan.TryQueueDeleteEntity(ent); }
         };
+        AddAccessoryPicker(GhostAccessoryCategory.Hat, ArcaneCVars.GhostHat, "goob-ui-ghost-cosmetics-hat");
+        AddAccessoryPicker(GhostAccessoryCategory.Mask, ArcaneCVars.GhostMask, "goob-ui-ghost-cosmetics-mask");
+        AddAccessoryPicker(GhostAccessoryCategory.Particles, ArcaneCVars.GhostParticles, "goob-ui-ghost-cosmetics-particles");
         BuildList();
+    }
+
+    private void AddAccessoryPicker(GhostAccessoryCategory category, CVarDef<string> preference, string label)
+    {
+        var options = _proto.EnumeratePrototypes<GhostAccessoryPrototype>().Where(item => item.Category == category)
+            .OrderBy(item => Loc.GetString(item.Name)).ToArray();
+        var picker = new OptionButton { HorizontalExpand = true };
+        var selected = _cfg.GetCVar(preference);
+        picker.AddItem(Loc.GetString("goob-ui-ghost-cosmetics-none"), 0);
+        for (var index = 0; index < options.Length; index++)
+            picker.AddItem(Loc.GetString(options[index].Name), index + 1);
+
+        picker.SelectId(Array.FindIndex(options, option => option.ID == selected) + 1);
+        picker.OnItemSelected += args =>
+        {
+            picker.SelectId(args.Id);
+            _cfg.SetCVar(preference, args.Id == 0 ? string.Empty : options[args.Id - 1].ID);
+            _cfg.SaveToFile();
+            _network.SendSystemNetworkMessage(new SetGhostAccessoriesEvent(
+                _cfg.GetCVar(ArcaneCVars.GhostHat), _cfg.GetCVar(ArcaneCVars.GhostMask), _cfg.GetCVar(ArcaneCVars.GhostParticles)));
+        };
+
+        var row = new BoxContainer { Children = { new Label { Text = Loc.GetString(label) }, picker } };
+        AccessoryOptions.AddChild(row);
     }
 
     private void BuildList()

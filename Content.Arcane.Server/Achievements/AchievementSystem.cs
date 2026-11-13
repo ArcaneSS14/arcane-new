@@ -166,7 +166,7 @@ public sealed partial class AchievementSystem : EntitySystem
 
     public bool CanProgress(ICommonSession session)
     {
-        return _enabled && _manager.IsLoaded(session);
+        return _enabled && !HasComp<NoAchievementsComponent>(session.AttachedEntity) && _manager.IsLoaded(session);
     }
 
     public void AddProgress(EntityUid player, AchievementPrototype proto, int amount = 1)

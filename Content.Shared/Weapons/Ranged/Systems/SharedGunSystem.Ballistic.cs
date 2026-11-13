@@ -410,6 +410,18 @@ public abstract partial class SharedGunSystem
         Dirty(entity);
     }
 
+    // Arcane-Start: replenish missing default cartridges for the arena without replacing loaded ammo.
+    public void RefillArenaBallisticAmmo(Entity<BallisticAmmoProviderComponent> entity)
+    {
+        if (entity.Comp.Proto == null)
+            return;
+
+        var missing = entity.Comp.Capacity - GetBallisticShots(entity.Comp);
+        if (missing > 0)
+            SetBallisticUnspawned(entity, entity.Comp.UnspawnedCount + missing);
+    }
+    // Arcane-End
+
     private void OnRefillerEmpPulsed(Entity<BallisticAmmoSelfRefillerComponent> entity, ref EmpPulseEvent args)
     {
         if (!entity.Comp.AffectedByEmp)

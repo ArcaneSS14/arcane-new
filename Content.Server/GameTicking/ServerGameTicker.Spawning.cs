@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.GameTicking.Events;
@@ -472,6 +473,7 @@ namespace Content.Server.GameTicking
             {
                 if (point.SpawnType != SpawnPointType.Observer
                    || transform.MapUid == null
+                   || HasComp<ThunderdomeMapComponent>(transform.MapUid) // Arcane
                    || TerminatingOrDeleted(transform.MapUid.Value))
                 {
                     continue;
@@ -487,7 +489,7 @@ namespace Content.Server.GameTicking
                 while (query.MoveNext(out var uid, out _))
                 {
                     // Band-aid fix cause we aren't queueing observer re-attach.
-                    if (!TerminatingOrDeleted(uid))
+                    if (!TerminatingOrDeleted(uid) && !HasComp<ThunderdomeMapComponent>(Transform(uid).MapUid)) // Arcane-Edit: keep station observers outside the arena
                         _possiblePositions.Add(new EntityCoordinates(uid, Vector2.Zero));
                 }
             }
@@ -512,7 +514,7 @@ namespace Content.Server.GameTicking
             if (Map.MapExists(DefaultMap))
             {
                 var mapUid = Map.GetMapOrInvalid(DefaultMap);
-                if (!TerminatingOrDeleted(mapUid))
+                if (!TerminatingOrDeleted(mapUid) && !HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: exclude the arena
                     return new EntityCoordinates(mapUid, Vector2.Zero);
             }
 
@@ -522,7 +524,7 @@ namespace Content.Server.GameTicking
                 var mapUid = Map.GetMapOrInvalid(map);
                 var meta = MetaData(mapUid);
 
-                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta))
+                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta) || HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: exclude the arena
                     continue;
 
                 return new EntityCoordinates(mapUid, Vector2.Zero);

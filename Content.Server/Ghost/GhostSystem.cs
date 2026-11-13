@@ -28,6 +28,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Ghost.Systems;
 using Content.Shared.GhostTypes;
+using Robust.Shared.Network; // Arcane
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
@@ -499,7 +500,7 @@ namespace Content.Server.Ghost
         }
 
         public EntityUid? SpawnGhost(Entity<MindComponent?> mind, EntityCoordinates? spawnPosition = null,
-            bool canReturn = false)
+            bool canReturn = false, NetUserId? appearanceUser = null) // Arcane-Edit: allow an unbound original mind to restore the player's appearance.
         {
             if (!Resolve(mind, ref mind.Comp))
                 return null;
@@ -520,11 +521,13 @@ namespace Content.Server.Ghost
             }
 
             // Arcane-Edit-Start: custom ghosts
-            var ghostProto = new GhostPrototypeEvent(mind.Comp.UserId, ServerGameTicker.ObserverPrototypeName);
+            var ghostProto = new GhostPrototypeEvent(appearanceUser ?? mind.Comp.UserId, ServerGameTicker.ObserverPrototypeName); // Arcane
             RaiseLocalEvent(ref ghostProto);
             var ghost = SpawnAtPosition(ghostProto.Prototype, spawnPosition.Value);
             // Arcane-Edit-End
             var ghostComponent = Comp<GhostComponent>(ghost);
+            var spawned = new GhostSpawnedEvent(ghost, appearanceUser ?? mind.Comp.UserId); // Arcane
+            RaiseLocalEvent(ref spawned); // Arcane
 
             if (!ghostProto.Custom && TryComp<GhostSpriteStateComponent>(ghost, out var state)) // Arcane-Edit: TryComp > !ghostProto.Custom && TryComp, custom sprites lack death states  // If more TryComps are added this should be turned into an event
             {

@@ -8,6 +8,7 @@
         <!-- Arcane-Start -->
         <Button Name="ReturnToRoundButton" Access="Public" Disabled="True" Visible="False"
                 ToolTip="{Loc ghost-gui-return-to-round-button-tooltip}" />
+        <Button Name="ThunderdomeButton" Access="Public" Text="{Loc thunderdome-ghost-button-default}" />
         <!-- Arcane-End -->
     </BoxContainer>
 </widgets:GhostGui>
