@@ -20,6 +20,15 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
+// Arcane-Start
+using Content.Shared.Body;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.FixedPoint;
+using Content.Shared.Interaction;
+// Arcane-End
+
 namespace Content.Goobstation.Shared.Xenobiology;
 
 // This handles any actions that slime mobs may have.
@@ -37,6 +46,14 @@ public sealed partial class SlimeLatchSystem : EntitySystem
     [Dependency] private EntityQuery<SatiationComponent> _satiationQuery = default!;
     [Dependency] private EntityQuery<SlimeComponent> _slimeQuery = default!;
     [Dependency] private EntityQuery<XenoVacuumTankComponent> _tankQuery = default!;
+
+    // Arcane-Start
+    [Dependency] private BodySystem _body = default!;
+    [Dependency] private StomachSystem _stomach = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutions = default!;
+    [Dependency] private SharedInteractionSystem _interaction = default!;
+    [Dependency] private INetManager _net = default!;
+    // Arcane-End
 
     private TimeSpan _updateDelay = TimeSpan.FromSeconds(1);
     private TimeSpan _nextUpdate;
@@ -72,12 +89,78 @@ public sealed partial class SlimeLatchSystem : EntitySystem
     {
         _damageable.ChangeDamage(ent.Owner, ent.Comp.Damage, ignoreResistances: true, targetPart: TargetBodyPart.All);
 
-        if (_satiationQuery.TryComp(source, out var satiation))
+        // Arcane-Edit-Start: only accepted blood feeds the slime
+        if (_net.IsClient || TerminatingOrDeleted(ent) || _mobState.IsDead(ent))
+            return;
+
+        var fed = FeedOnBlood(ent, source);
+        if (fed > 0 && _satiationQuery.TryComp(source, out var satiation))
+            _satiation.ModifyValue((source, satiation), SatiationSystem.Hunger, (float) fed);
+        // Arcane-Edit-End
+    }
+
+    // Arcane-Start
+    private FixedPoint2 FeedOnBlood(Entity<SlimeDamageOvertimeComponent> ent, EntityUid source)
+    {
+        if (!TryComp<BloodstreamComponent>(ent, out var bloodstream)
+            || !_solutions.ResolveSolution(ent.Owner, bloodstream.BloodSolutionName, ref bloodstream.BloodSolution, out var blood)
+            || bloodstream.BloodSolution is not { } bloodEntity
+            || blood.Volume <= 0)
+            return FixedPoint2.Zero;
+
+        var accepted = FixedPoint2.Zero;
+        foreach (var stomach in _body.GetOrgans<StomachComponent>(source))
         {
-            var addedHunger = (float) ent.Comp.Damage.GetTotal();
-            _satiation.ModifyValue((source, satiation), SatiationSystem.Hunger, addedHunger);
+            if (!_solutions.ResolveSolution(stomach.Owner, StomachSystem.DefaultSolutionName, ref stomach.Comp.Solution, out var stomachContents))
+                continue;
+
+            var amount = FixedPoint2.Min(ent.Comp.SuctionUnits - accepted, stomachContents.AvailableVolume);
+            if (amount <= 0)
+                continue;
+
+            var portion = _solutions.SplitSolutionWithout(bloodEntity, amount, ent.Comp.ToxinReagent);
+            if (portion.Volume <= 0)
+                break;
+
+            var portionVolume = portion.Volume;
+            if (!_stomach.TryTransferSolution((stomach.Owner, stomach.Comp, null), portion))
+            {
+                _solutions.ForceAddSolution(bloodEntity, portion);
+                continue;
+            }
+
+            accepted += portionVolume;
+            if (accepted >= ent.Comp.SuctionUnits)
+                break;
+        }
+
+        if (accepted > 0)
+            _solutions.TryAddReagent(bloodEntity, ent.Comp.ToxinReagent.Id, ent.Comp.ToxinUnits);
+
+        return accepted;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnSlimeTerminating(Entity<SlimeComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (ent.Comp.PendingLatchTarget is { } pending)
+            ReleaseLatchReservation(ent, pending);
+
+        if (ent.Comp.LatchedTarget is { } target)
+        {
+            ReleaseLatchReservation(ent, target);
+            if (TryComp<SlimeDamageOvertimeComponent>(target, out var damage) && damage.SourceEntityUid == ent.Owner)
+                RemCompDeferred(target, damage);
         }
     }
+
+    [SubscribeLocalEvent]
+    private void OnVictimTerminating(Entity<SlimeDamageOvertimeComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (ent.Comp.SourceEntityUid is { } source && _slimeQuery.TryComp(source, out var slime) && !TerminatingOrDeleted(source))
+            Unlatch((source, slime));
+    }
+    // Arcane-End
 
     [SubscribeLocalEvent]
     private void OnMobStateChangedSOD(Entity<SlimeDamageOvertimeComponent> ent, ref MobStateChangedEvent args)
@@ -166,6 +249,10 @@ public sealed partial class SlimeLatchSystem : EntitySystem
 
     private bool StartSlimeLatchDoAfter(Entity<SlimeComponent> ent, EntityUid target)
     {
+        // Arcane-Start
+        if (ent.Comp.PendingLatchTarget != null || HasComp<BeingLatchedComponent>(target) || HasComp<SlimeDamageOvertimeComponent>(target))
+            return false;
+        // Arcane-End
         if (_mobState.IsDead(target))
         {
             var targetDeadPopup = Loc.GetString("slime-latch-fail-target-dead", ("ent", target));
@@ -182,31 +269,56 @@ public sealed partial class SlimeLatchSystem : EntitySystem
             return false;
         }
 
-        var attemptPopup = Loc.GetString("slime-latch-attempt", ("slime", ent), ("ent", target));
-        _popup.PopupEntity(attemptPopup, ent, ent, PopupType.MediumCaution);
-
         var doAfterArgs = new DoAfterArgs(EntityManager, ent, ent.Comp.LatchDoAfterDuration, new SlimeLatchDoAfterEvent(), ent, target)
         {
             BreakOnDamage = true,
             BreakOnMove = true,
         };
 
-        EnsureComp<BeingLatchedComponent>(target);
-        _doAfter.TryStartDoAfter(doAfterArgs);
+        // Arcane-Edit-Start: support synchronous completion and undo a rejected start
+        var reservation = EnsureComp<BeingLatchedComponent>(target);
+        reservation.Slime = ent;
+        Dirty(target, reservation);
+        ent.Comp.PendingLatchTarget = target;
+        Dirty(ent);
+
+        if (!_doAfter.TryStartDoAfter(doAfterArgs))
+        {
+            ent.Comp.PendingLatchTarget = null;
+            Dirty(ent);
+            ReleaseLatchReservation(ent, target);
+            return false;
+        }
+
+        if (ent.Comp.PendingLatchTarget == null)
+            return true;
+
+        var attemptPopup = Loc.GetString("slime-latch-attempt", ("slime", ent), ("ent", target));
+        _popup.PopupEntity(attemptPopup, ent, ent, PopupType.MediumCaution);
+        // Arcane-Edit-End
         return true;
     }
 
     [SubscribeLocalEvent]
     private void OnSlimeLatchDoAfter(Entity<SlimeComponent> ent, ref SlimeLatchDoAfterEvent args)
     {
-        if (args.Target is not { } target)
+        if (args.Target is not { } target || ent.Comp.PendingLatchTarget != target) // Arcane-Edit
             return;
 
-        if (args.Handled || args.Cancelled)
+        // Arcane-Start
+        ent.Comp.PendingLatchTarget = null;
+        Dirty(ent);
+        // Arcane-End
+        if (args.Handled || args.Cancelled || !CanLatch(ent, target)) // Arcane-Edit: the target may have moved or died
         {
-            RemCompDeferred<BeingLatchedComponent>(target);
+            ReleaseLatchReservation(ent, target); // Arcane-Edit
             return;
         }
+
+        // Arcane-Start
+        if (!TryComp<BeingLatchedComponent>(target, out var reservation) || reservation.Slime != ent.Owner)
+            return;
+        // Arcane-End
 
         Latch(ent, target);
         args.Handled = true;
@@ -223,6 +335,9 @@ public sealed partial class SlimeLatchSystem : EntitySystem
     public bool CanLatch(Entity<SlimeComponent> ent, EntityUid target)
     {
         return !(IsLatched(ent) // already latched
+            || ent.Owner == target // Arcane
+            || TerminatingOrDeleted(target) // Arcane
+            || !_interaction.InRangeUnobstructed(ent.Owner, target, 1f) // Arcane
             || _mobState.IsDead(target) // target dead
             || !_actionBlocker.CanInteract(ent, target) // can't reach
             || !HasComp<MobStateComponent>(target)); // make any mob work
@@ -236,7 +351,7 @@ public sealed partial class SlimeLatchSystem : EntitySystem
         return StartSlimeLatchDoAfter(ent, target);
     }
 
-    public void Latch(Entity<SlimeComponent> ent, EntityUid target)
+    private void Latch(Entity<SlimeComponent> ent, EntityUid target) // Arcane-Edit: require a completed latch attempt
     {
         if (IsLatched(ent))
             Unlatch(ent);
@@ -265,14 +380,28 @@ public sealed partial class SlimeLatchSystem : EntitySystem
         if (ent.Comp.LatchedTarget is not { } target)
             return;
 
-        RemCompDeferred<BeingLatchedComponent>(target);
-        RemCompDeferred<SlimeDamageOvertimeComponent>(target);
+        // Arcane-Edit-Start: only this slime can clear its latch and damage effect
+        ReleaseLatchReservation(ent, target);
+        if (TryComp<SlimeDamageOvertimeComponent>(target, out var damage) && damage.SourceEntityUid == ent.Owner)
+            RemCompDeferred(target, damage);
+        // Arcane-Edit-End
 
-        _xform.SetParent(ent, _xform.GetParentUid(target)); // deparent it. probably.
+        // Arcane-Edit-Start: the entire grid can be terminating with the victim
+        if (TryComp(target, out TransformComponent? targetTransform) && !TerminatingOrDeleted(targetTransform.ParentUid))
+            _xform.SetParent(ent, targetTransform.ParentUid);
+        // Arcane-Edit-End
         ent.Comp.LatchedTarget = null;
         Dirty(ent);
         _actionBlocker.UpdateCanMove(ent.Owner);
     }
+
+    // Arcane-Start
+    private void ReleaseLatchReservation(EntityUid slime, EntityUid target)
+    {
+        if (TryComp<BeingLatchedComponent>(target, out var reservation) && reservation.Slime == slime)
+            RemCompDeferred(target, reservation);
+    }
+    // Arcane-End
 
     #endregion
 }

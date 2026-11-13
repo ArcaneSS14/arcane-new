@@ -29,9 +29,11 @@
       effects:
       - !type:NestedEffect
         proto: XenobioExtractReaction
-      - !type:SpawnEntity
-        entity: IngotSilver1
-        number: 2
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: Silver
+        amount: 2
+      # Arcane-Edit-End
     - reagents: [ Blood ]
       methods: [ Touch, Injection ]
       effects:

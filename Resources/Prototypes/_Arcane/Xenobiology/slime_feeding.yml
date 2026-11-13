@@ -1,0 +1,38 @@
+- type: entity
+  parent: BaseAction
+  id: ActionSlimeEatCorpse
+  name: Eat corpse
+  description: Tear off an edible organ or limb from a dead body.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Xenobiology/Actions/actions_slime.rsi
+    layers:
+    - state: slimeeat
+  - type: Action
+    itemIconStyle: NoItem
+    useDelay: 1
+  - type: TargetAction
+    range: 1
+  - type: EntityTargetAction
+    whitelist:
+      components: [Body]
+    canTargetSelf: false
+    event: !type:SlimeEatCorpseEvent
+
+- type: htnCompound
+  id: XenoSlimeEatCorpseCompound
+  branches:
+  - tasks:
+    - !type:HTNPrimitiveTask
+      operator: !type:PickSlimeCorpseOperator
+        targetKey: MovementTarget
+        corpseKey: CorpseTarget
+        rangeKey: IdleRange
+    - !type:HTNPrimitiveTask
+      operator: !type:MoveToOperator
+        pathfindInPlanning: false
+        targetKey: MovementTarget
+        rangeKey: MeleeRange
+    - !type:HTNPrimitiveTask
+      operator: !type:EatSlimeCorpseOperator
+        corpseKey: CorpseTarget

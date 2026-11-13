@@ -55,7 +55,7 @@ public sealed partial class SlimeGrinderSystem : EntitySystem
             grinder.ProcessingTimer = Math.Clamp(grinder.ProcessingTimer - frameTime, 0, grinder.ProcessingTimer);
 
             if (grinder.ProcessingTimer > 0)
-                return;
+                continue; // Arcane-Edit: keep updating the other grinders
 
             foreach (var yield in grinder.YieldQueue)
             {
@@ -109,7 +109,7 @@ public sealed partial class SlimeGrinderSystem : EntitySystem
 
     private void OnDoAfter(Entity<SlimeGrinderComponent> grinder, ref ReclaimerDoAfterEvent args)
     {
-        if (args.Handled || args.Cancelled || args.Args.Used is not { } toProcess)
+        if (args.Handled || args.Cancelled || args.Args.Used is not { } toProcess || !CanGrind(grinder, toProcess)) // Arcane-Edit: revalidate at completion
             return;
 
         QueueProcess(toProcess, grinder);
@@ -141,10 +141,14 @@ public sealed partial class SlimeGrinderSystem : EntitySystem
 
     private bool CanGrind(Entity<SlimeGrinderComponent> grinder, EntityUid dragged)
     {
+        // Arcane-Edit-Start
         if (!Transform(grinder).Anchored
+        || EntityManager.IsQueuedForDeletion(dragged)
         || !HasComp<SlimeComponent>(dragged)
-        || (TryComp<MobStateComponent>(dragged, out var mobState) && mobState.CurrentState != MobState.Dead))
+        || !TryComp<MobStateComponent>(dragged, out var mobState)
+        || mobState.CurrentState != MobState.Dead)
             return false;
+        // Arcane-Edit-End
 
         return !TryComp<ApcPowerReceiverComponent>(grinder, out var power) || power.Powered;
     }

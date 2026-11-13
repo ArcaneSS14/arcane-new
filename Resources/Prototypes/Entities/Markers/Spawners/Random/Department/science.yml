@@ -17,6 +17,7 @@
     - NodeScanner
     - Multitool
     - Igniter
+    - SlimeScannerXenobio # Arcane
     rareChance: 0.1
     prototypes:
     - ClothingHandsGlovesLatex
@@ -53,6 +54,7 @@
       - id: GeigerCounter
       - id: Beaker
       - id: Igniter
+      - id: SlimeScannerXenobio # Arcane
       - id: ClothingBeltUtility
       - id: PowerCellMedium
       - id: CableApcStack10
