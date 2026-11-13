@@ -1,0 +1,42 @@
+- type: marking
+  id: KitsuneTail
+  bodyPart: Tail
+  groupWhitelist: [ Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: Tail
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: TipTail
+
+- type: marking
+  id: KitsuneTripleTail
+  bodyPart: Tail
+  groupWhitelist: [ Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state:  TripleTail
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: TipTripleTail
+
+- type: marking
+  id: KitsuneNineTails
+  bodyPart: Tail
+  groupWhitelist: [ Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state:  NineTails
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: TipNineTails
+
+- type: marking
+  id: KitsuneEarsFox
+  bodyPart: HeadTop
+  underHair: true
+  groupWhitelist: [ Human, Oni, Vulpkanin, Slime ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: ears
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: ears-tips
+  - sprite: _Arcane/Mobs/Customization/Kitsune.rsi
+    state: ears-inner

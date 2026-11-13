@@ -10,6 +10,7 @@
   minScale: 0.9
   maxScale: 1.05
   naming: First
+  customName: true
   maleFirstNames: NamesTajaranFirst
   femaleFirstNames: NamesTajaranFirst
   lastNames: NamesTajaranLast

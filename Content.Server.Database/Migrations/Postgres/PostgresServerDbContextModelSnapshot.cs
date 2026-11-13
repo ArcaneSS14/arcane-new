@@ -1394,6 +1394,20 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnName("scale");
                     // Arcane-End
 
+                    // Arcane-Start: custom species name, hair gradient
+                    b.Property<string>("CustomSpeciesName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("custom_species_name");
+                    b.Property<string>("HairGradientData")
+                        .HasColumnType("text")
+                        .HasColumnName("hair_gradient_data");
+
+                    b.Property<bool>("HairGradientEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hair_gradient_enabled");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")

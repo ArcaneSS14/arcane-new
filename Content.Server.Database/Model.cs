@@ -479,6 +479,11 @@ namespace Content.Server.Database
         public float Scale { get; set; } = 1f;
         // Arcane-End
         public bool EarsAboveHair { get; set; } // Arcane
+        // Arcane-Start: custom species name, hair gradient
+        public string CustomSpeciesName { get; set; } = string.Empty;
+        public bool HairGradientEnabled { get; set; }
+        public string? HairGradientData { get; set; }
+        // Arcane-End
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

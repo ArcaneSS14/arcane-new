@@ -5,16 +5,19 @@ using Content.Arcane.Server.DiscordRoles;
 using Content.Arcane.Shared.DiscordRoles;
 using Content.Arcane.Shared.Sponsor;
 using Robust.Shared.Network;
+using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.Sponsor;
 
 /// <summary>
 /// Sponsorship from Discord roles: the highest sponsor role picks the OOC colour, and sponsor roles join a
-/// full server first. Sponsor gear is gated by role effects on the prototypes, not by a prototype list.
+/// full server first. Sponsor-only markings and species come from <see cref="SponsorPrototypeList"/>; sponsor
+/// gear is gated by role effects on the loadouts.
 /// </summary>
 public sealed partial class DiscordRoleSponsorsManager : ISharedSponsorsManager
 {
     [Dependency] private DiscordRoleManager _roles = default!;
+    [Dependency] private IPrototypeManager _prototypes = default!;
 
     private static readonly DiscordRole[] PriorityJoinRoles =
     [
@@ -34,8 +37,8 @@ public sealed partial class DiscordRoleSponsorsManager : ISharedSponsorsManager
 
     public bool TryGetServerPrototypes(NetUserId userId, [NotNullWhen(true)] out List<string>? prototypes)
     {
-        prototypes = null;
-        return false;
+        prototypes = SponsorPrototypeList.For(_prototypes, role => _roles.HasRole(userId, role));
+        return true;
     }
 
     public bool TryGetServerOocColor(NetUserId userId, [NotNullWhen(true)] out Color? color)

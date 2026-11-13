@@ -1,0 +1,49 @@
+- type: marking
+  id: PiercingRightEar
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_right_ear
+
+- type: marking
+  id: PiercingLeftEar
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_left_ear
+
+- type: marking
+  id: PiercingNose
+  bodyPart: Head
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_nose
+
+- type: marking
+  id: PiercingPubis
+  bodyPart: Chest
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_pubis
+
+- type: marking
+  id: PiercingNipples
+  bodyPart: Chest
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_nipples
+
+- type: marking
+  id: PiercingBellybutton
+  bodyPart: Chest
+  groupWhitelist: [ Human, Slime, Reptilian, Rodentia, Tajaran, Oni, Shadowkin, Vulpkanin ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/piercing.rsi
+    state: piercing_bellybutton

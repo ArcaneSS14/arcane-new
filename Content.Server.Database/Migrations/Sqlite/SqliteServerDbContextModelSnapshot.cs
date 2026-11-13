@@ -1319,6 +1319,20 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnName("scale");
                     // Arcane-End
 
+                    // Arcane-Start: custom species name, hair gradient
+                    b.Property<string>("CustomSpeciesName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("custom_species_name");
+                    b.Property<string>("HairGradientData")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("hair_gradient_data");
+
+                    b.Property<bool>("HairGradientEnabled")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("hair_gradient_enabled");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")

@@ -19,7 +19,8 @@ public sealed class DetailExaminableEuiState(
     Gender gender,
     string flavorText,
     ExtendedFlavorText extended,
-    bool showNsfw) : EuiStateBase
+    bool showNsfw,
+    string customSpeciesName = "") : EuiStateBase
 {
     public readonly NetEntity Target = target;
     public readonly string Name = name;
@@ -29,4 +30,5 @@ public sealed class DetailExaminableEuiState(
     public readonly string FlavorText = flavorText;
     public readonly ExtendedFlavorText Extended = extended;
     public readonly bool ShowNsfw = showNsfw;
+    public readonly string CustomSpeciesName = customSpeciesName;
 }

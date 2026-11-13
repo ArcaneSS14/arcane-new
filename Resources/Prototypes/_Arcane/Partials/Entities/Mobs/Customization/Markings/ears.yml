@@ -1,0 +1,23 @@
+- type: marking
+  id: LongEarsUpwards
+  underHair: true
+
+- type: marking
+  id: LongEarsWide
+  underHair: true
+
+- type: marking
+  id: HumanLongEars
+  underHair: true
+
+- type: marking
+  id: LongEarsThin
+  underHair: true
+
+- type: marking
+  id: LongEarsSmall
+  underHair: true
+
+- type: marking
+  id: LongEarsTall
+  underHair: true
