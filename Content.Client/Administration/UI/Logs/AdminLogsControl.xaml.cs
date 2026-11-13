@@ -17,6 +17,8 @@ namespace Content.Client.Administration.UI.Logs;
 [GenerateTypedNameReferences]
 public sealed partial class AdminLogsControl : Control
 {
+    public static event Action<AdminLogLabel, Control, int>? LogControlsAdded; // Arcane
+
     private readonly Comparer<AdminLogTypeButton> _adminLogTypeButtonComparer =
         Comparer<AdminLogTypeButton>.Create((a, b) =>
             string.Compare(a.Type.ToString(), b.Type.ToString(), StringComparison.Ordinal));
@@ -499,6 +501,7 @@ public sealed partial class AdminLogsControl : Control
             }
 
             LogsContainer.AddChild(label);
+            LogControlsAdded?.Invoke(label, LogsContainer, SelectedRoundId); // Arcane
             LogsContainer.AddChild(separator);
         }
 

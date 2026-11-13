@@ -457,6 +457,13 @@ public sealed partial class FaxSystem : EntitySystem
         if (sendEntity == null)
             return;
 
+        // Arcane-Start
+        var attempt = new FaxOperationAttemptEvent(uid, args.Actor, true);
+        RaiseLocalEvent(sendEntity.Value, ref attempt);
+        if (attempt.Handled)
+            return;
+        // Arcane-End
+
         if (!TryComp(sendEntity, out MetaDataComponent? metadata) ||
             !TryComp<PaperComponent>(sendEntity, out var paper))
             return;
@@ -506,6 +513,13 @@ public sealed partial class FaxSystem : EntitySystem
         var sendEntity = component.PaperSlot.Item;
         if (sendEntity == null)
             return;
+
+        // Arcane-Start
+        var attempt = new FaxOperationAttemptEvent(uid, args.Actor, false);
+        RaiseLocalEvent(sendEntity.Value, ref attempt);
+        if (attempt.Handled)
+            return;
+        // Arcane-End
 
         if (component.DestinationFaxAddress == null)
             return;

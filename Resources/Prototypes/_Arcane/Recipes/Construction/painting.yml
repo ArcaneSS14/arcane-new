@@ -1,0 +1,131 @@
+- type: construction
+  parent: BaseMaterial
+  id: TileCanvas
+  graph: TileCanvas
+  category: construction-category-tiles
+  startNode: start
+  targetNode: canvastile
+  objectType: Item
+
+
+- type: construction
+  parent: BaseMaterial
+  id: PaintCanvas
+  graph: PaintCanvasGraph
+  startNode: start
+  targetNode: canvas
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseMaterial
+  id: PaintCanvasLandscape
+  graph: PaintCanvasGraph
+  startNode: start
+  targetNode: landscape
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseMaterial
+  id: PaintCanvasSmall
+  graph: PaintCanvasGraph
+  startNode: start
+  targetNode: small
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameWood
+  graph: PaintingFrameWoodGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameIron
+  graph: PaintingFrameIronGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameBamboo
+  graph: PaintingFrameBambooGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameBones
+  graph: PaintingFrameBonesGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameBronze
+  graph: PaintingFrameBronzeGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameSilver
+  graph: PaintingFrameSilverGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameGold
+  graph: PaintingFrameGoldGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintingFrameDiamond
+  graph: PaintingFrameDiamondGraph
+  startNode: start
+  targetNode: frame
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  parent: BaseFurniture
+  id: PaintEasel
+  graph: PaintEaselGraph
+  startNode: start
+  targetNode: easel
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+  - !type:TileNotBlocked
