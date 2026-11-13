@@ -169,6 +169,7 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
                 var containers = SEntMan.System<SharedContainerSystem>();
                 Assert.That(containers.TryGetContainingContainer(ai, out var holder), Is.True);
                 Assert.That(containers.Remove(ai, holder!), Is.True);
+                Assert.That(SEntMan.GetComponent<Content.Shared.Movement.Components.InputMoverComponent>(ai).CanMove, Is.False);
             }
 
             var retirement = SEntMan.System<StationAiSystem>();
