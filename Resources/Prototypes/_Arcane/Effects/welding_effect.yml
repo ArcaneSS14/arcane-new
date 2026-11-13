@@ -1,0 +1,57 @@
+- type: entity
+  id: ArcaneWeldingEffectAnchor
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: WeldingEffect
+
+- type: entity
+  id: ArcaneWeldingLight
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: PointLight
+    radius: 1.5
+    color: Orange
+
+- type: entity
+  id: ArcaneExperimentalWeldingLight
+  parent: ArcaneWeldingLight
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: PointLight
+    color: MediumAquamarine
+
+# Art and colors from Goob-Station #5476. Each layer follows the weld seam.
+- type: particleEffect
+  id: ArcaneWeldingSmoke
+  sprite:
+    sprite: _Arcane/Effects/welding_effect.rsi
+    state: smoke
+  particleSize: 1
+  lifetime: 3600
+  lifetimeVariance: 0
+  startColor: White
+  endColor: White
+  speed: 0
+  speedVariance: 0
+  burst: true
+  maxCount: 1
+  worldSpace: false
+
+- type: particleEffect
+  id: ArcaneWeldingSparks
+  parent: ArcaneWeldingSmoke
+  sprite:
+    sprite: _Arcane/Effects/welding_effect.rsi
+    state: welding_sparks
+  shader: unshaded
+  renderLayer: 1
+
+- type: particleEffect
+  id: ArcaneExperimentalWeldingSparks
+  parent: ArcaneWeldingSparks
+  sprite:
+    sprite: _Arcane/Effects/welding_effect.rsi
+    state: exp_welding_sparks

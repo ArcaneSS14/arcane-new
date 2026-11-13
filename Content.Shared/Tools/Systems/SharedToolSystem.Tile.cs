@@ -94,7 +94,12 @@ public abstract partial class SharedToolSystem
             return false;
 
         var args = new TileToolDoAfterEvent(GetNetEntity(gridUid), tileRef.GridIndices);
-        UseTool(ent, user, ent, comp.Delay * tileDef.DeconstructTimeMultiplier, tool.Qualities, args, out _, toolComponent: tool); // Goob edit
+        // Arcane-Start
+        var contact = tileDef.DeconstructTools.Contains(WeldingQuality)
+            ? _transformSystem.WithEntityId(clickLocation, gridUid)
+            : (EntityCoordinates?) null;
+        // Arcane-End
+        UseTool(ent, user, ent, comp.Delay * tileDef.DeconstructTimeMultiplier, tool.Qualities, args, out _, toolComponent: tool, weldingContact: contact); // Arcane-Edit: add per-call welding contact
         return true;
     }
 

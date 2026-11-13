@@ -57,6 +57,11 @@
     layoutId: AirlockExternal
   - type: Paintable
     group: null
+  # Arcane-Start
+  - type: WeldingEffectPath
+    startOffset: -0.5,0
+    endOffset: 0.5,0
+  # Arcane-End
 
 - type: entity
   parent: AirlockExternal
