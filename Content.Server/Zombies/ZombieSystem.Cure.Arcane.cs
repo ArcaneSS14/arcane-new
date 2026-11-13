@@ -160,7 +160,8 @@ public sealed partial class ZombieSystem
 
         foreach (var (item, hand) in snapshot.HeldItems)
         {
-            if (!container.Contains(item))
+            // The item may still be marked unremovable until the next tick after zombification.
+            if (!container.Contains(item) || !_zombieContainers.Remove(item, container, force: true))
                 continue;
 
             if (!_hands.TryPickup(uid, item, hand, animate: false, checkActionBlocker: false))
