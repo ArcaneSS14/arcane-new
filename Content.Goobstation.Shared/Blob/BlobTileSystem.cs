@@ -55,7 +55,7 @@ public sealed partial class BlobTileSystem : EntitySystem
         if (!_observerQuery.TryComp(user, out var observer))
             return;
 
-        if (ent.Comp.Core == null || observer.Core is not { } core)
+        if (observer.Core is not { } core || ent.Comp.Core != core) // Arcane-Edit: only offer upgrades on the observer's network
             return;
 
         if (!Transform(ent).Anchored)
@@ -234,6 +234,9 @@ public sealed partial class BlobTileSystem : EntitySystem
 
     private void TryUpgrade(Entity<BlobTileComponent> target, EntityUid core, EntityUid observer)
     {
+        if (target.Comp.Core != core || TerminatingOrDeleted(target) || EntityManager.IsQueuedForDeletion(target)) // Arcane
+            return; // Arcane
+
         var coords = Transform(target).Coordinates;
         var current = ProtoMan.Index(target.Comp.Tile);
         if (current.Upgrade is not { } nextId ||
@@ -246,7 +249,7 @@ public sealed partial class BlobTileSystem : EntitySystem
             return;
         }
 
-        var cost = ProtoMan.Index(nextId).Cost;
+        var cost = _core.GetTileCost(coreComp, nextId); // Arcane-Edit: tile prototype cost > chemistry-aware tile cost
         if (!_core.TryUseAbility((core, coreComp), cost, coords))
             return;
 

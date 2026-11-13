@@ -7,12 +7,14 @@ using Content.Shared.Destructible;
 using Content.Shared.Trigger.Components.Effects;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Weapons.Melee;
+using Content.Shared.Damage.Systems; // Arcane
 
 namespace Content.Goobstation.Shared.Blob;
 
 public sealed partial class BlobFactorySystem : EntitySystem
 {
     [Dependency] private MobStateSystem _mob = default!;
+    [Dependency] private DamageableSystem _damage = default!; // Arcane
     [Dependency] private EntityQuery<BlobCoreComponent> _coreQuery = default!;
     [Dependency] private EntityQuery<BlobTileComponent> _tileQuery = default!;
 
@@ -48,6 +50,10 @@ public sealed partial class BlobFactorySystem : EntitySystem
             comp.Factory = ent;
             comp.CurrentChem = core.CurrentChem;
             Dirty(mob, comp);
+            // Arcane-Start
+            if (chem.BlobbernautDamageModifiers is { } modifiers)
+                _damage.SetDamageModifierSetId(mob, modifiers);
+            // Arcane-End
         }
         if (TryComp<MeleeWeaponComponent>(mob, out var melee))
         {
@@ -77,7 +83,7 @@ public sealed partial class BlobFactorySystem : EntitySystem
         if (oldPodCount != ent.Comp.BlobPods.Count)
             Dirty(ent);
 
-        if (ent.Comp.BlobPods.Count >= ent.Comp.SpawnLimit)
+        if (ent.Comp.BlobPods.Count >= (args.Chem.PodSpawnLimit ?? ent.Comp.SpawnLimit)) // Arcane-Edit: base limit > effective chemistry limit
             return;
 
         if (ent.Comp.Accumulator < ent.Comp.AccumulateToSpawn)

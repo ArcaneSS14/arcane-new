@@ -78,6 +78,7 @@ public abstract partial class BlobObserverSystem : EntitySystem
         if (ent.Comp.Core is not { } core ||
             !_coreQuery.TryComp(core, out var coreComp) ||
             coreComp.CurrentChem == args.Chem ||
+            !ProtoMan.HasIndex(args.Chem) || // Arcane: reject a missing chemistry before charging for it
             !_core.TryUseAbility((core, coreComp), coreComp.SwapChemCost))
             return;
 

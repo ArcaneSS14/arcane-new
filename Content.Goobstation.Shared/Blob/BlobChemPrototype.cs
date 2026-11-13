@@ -60,4 +60,24 @@ public sealed partial class BlobChemPrototype : IPrototype
     /// </summary>
     [DataField]
     public ComponentRegistry? AddedComponents;
+
+    // Arcane-Start
+    [DataField]
+    public Dictionary<ProtoId<BlobTilePrototype>, int> TileCostOverrides = new();
+
+    [DataField]
+    public int? SpaceGrowthCost;
+
+    [DataField]
+    public bool ChargeSpecialTileCosts;
+
+    [DataField]
+    public float? NodePulseSeconds;
+
+    [DataField]
+    public int? PodSpawnLimit;
+
+    [DataField]
+    public ProtoId<DamageModifierSetPrototype>? BlobbernautDamageModifiers;
+    // Arcane-End
 }
