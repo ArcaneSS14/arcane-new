@@ -8,6 +8,7 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Explosion.Components;
 using Content.Shared.Trigger.Components.Effects;
 using Content.Trauma.Common.Interaction;
 using Robust.Shared.Map;
@@ -28,6 +29,7 @@ public sealed class P15BlobRuntimeTest : InteractionTest
     private static readonly ProtoId<BlobChemPrototype> Sinewy = "SinewyTendons";
     private static readonly ProtoId<BlobChemPrototype> Corrosive = "CorrosiveSlime";
     private static readonly ProtoId<BlobChemPrototype> Cryogenic = "CryogenicPoison";
+    private static readonly ProtoId<BlobChemPrototype> Explosive = "ExplosiveLattice";
     private static readonly ProtoId<DamageModifierSetPrototype> ChainTile = "ChainCoatingBlob";
     private static readonly ProtoId<DamageModifierSetPrototype> ChainNaut = "BlobBlobbernautChainCoating";
     private static readonly ProtoId<DamageModifierSetPrototype> DefaultNaut = "BlobBlobbernaut";
@@ -98,15 +100,23 @@ public sealed class P15BlobRuntimeTest : InteractionTest
                 nodes.PulseNode((core.Owner, node), core, SProtoMan.Index(Sinewy));
 
             Assert.That(factory.BlobPods, Has.Count.EqualTo(5));
-            Assert.That(SEntMan.GetComponent<SmokeOnTriggerComponent>(factory.BlobPods[0]).Solution.Volume, Is.EqualTo(Content.Shared.FixedPoint.FixedPoint2.New(30)));
+            var smoke = SEntMan.GetComponent<SmokeOnTriggerComponent>(factory.BlobPods[0]).Solution;
+            Assert.That(smoke.GetTotalPrototypeQuantity("Ipecac"), Is.EqualTo(Content.Shared.FixedPoint.FixedPoint2.New(15)));
+            Assert.That(smoke.GetTotalPrototypeQuantity("Profanol"), Is.EqualTo(Content.Shared.FixedPoint.FixedPoint2.New(15)));
             system.ChangeChem(core.AsNullable(), Corrosive);
             Assert.That(system.GetTileCost(core.Comp, Node), Is.EqualTo(100));
             SEntMan.DeleteEntity(factory.BlobPods[^1]);
-            nodes.PulseNode((core.Owner, node), core, SProtoMan.Index(Corrosive));
+            for (var i = 0; i <= factory.AccumulateToSpawn; i++)
+                nodes.PulseNode((core.Owner, node), core, SProtoMan.Index(Corrosive));
             Assert.That(factory.BlobPods, Has.Count.EqualTo(4));
 
             system.ChangeChem(core.AsNullable(), Chain);
             Assert.That(naut.DamageModifierSetId, Is.EqualTo(ChainNaut));
+            var nativeResistance = SEntMan.GetComponent<ExplosionResistanceComponent>(core).DamageCoefficient;
+            system.ChangeChem(core.AsNullable(), Explosive);
+            Assert.That(SEntMan.GetComponent<ExplosionResistanceComponent>(core).DamageCoefficient, Is.Zero);
+            system.ChangeChem(core.AsNullable(), Chain);
+            Assert.That(SEntMan.GetComponent<ExplosionResistanceComponent>(core).DamageCoefficient, Is.EqualTo(nativeResistance));
             system.ChangeChem(core.AsNullable(), Cryogenic);
             Assert.That(naut.DamageModifierSetId, Is.EqualTo(SProtoMan.Index(Cryogenic).DamageModifiers));
         });

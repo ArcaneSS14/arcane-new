@@ -4,6 +4,7 @@
     Blunt: 0.20
     Slash: 0.20
     Piercing: 0.20
+    Ballistic: 0.20 # Trauma splits gunfire from piercing damage.
     Heat: 1.5
   ignoreArmorPierceFlags: All
 
@@ -13,6 +14,7 @@
     Blunt: 0.50
     Slash: 0.50
     Piercing: 0.20
+    Ballistic: 0.20
     Heat: 5
   ignoreArmorPierceFlags: All
 
@@ -22,5 +24,6 @@
     Blunt: 0.25
     Slash: 0.25
     Piercing: 0.25
+    Ballistic: 0.25
     Heat: 1.2
   ignoreArmorPierceFlags: All

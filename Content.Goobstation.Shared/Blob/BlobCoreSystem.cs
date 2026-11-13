@@ -181,7 +181,22 @@ public abstract partial class BlobCoreSystem : EntitySystem
 
         _damage.SetDamageModifierSetId(ent.Owner, modifierOverride ?? chem.DamageModifiers); // Arcane-Edit
         if (old?.AddedComponents is { } oldAdded)
+        {
             EntityManager.RemoveComponents(ent, oldAdded);
+            // Arcane-Start: an outgoing chemistry may have overridden a native component.
+            if (MetaData(ent).EntityPrototype is { } prototype)
+            {
+                var restore = new ComponentRegistry();
+                foreach (var name in oldAdded.Keys)
+                {
+                    if (chem.AddedComponents?.ContainsKey(name) != true &&
+                        prototype.Components.TryGetValue(name, out var original))
+                        restore.Add(name, original);
+                }
+                EntityManager.AddComponents(ent, restore, removeExisting: false);
+            }
+            // Arcane-End
+        }
         if (chem.AddedComponents is { } added)
             EntityManager.AddComponents(ent, added);
     }
