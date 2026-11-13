@@ -1,3 +1,4 @@
+using Content.Shared.ActionBlocker; // Arcane
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Standing;
@@ -18,6 +19,7 @@ public sealed partial class SleepingCarpDodgeSystem : EntitySystem
 {
     [Dependency] private MobStateSystem _mob = default!;
     [Dependency] private StandingStateSystem _standing = default!;
+    [Dependency] private ActionBlockerSystem _blocker = default!; // Arcane
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private INetManager _net = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -52,7 +54,7 @@ public sealed partial class SleepingCarpDodgeSystem : EntitySystem
 
     private bool CanDodge(EntityUid target)
     {
-        return _mob.IsAlive(target) && !_standing.IsDown(target) &&
+        return _mob.IsAlive(target) && !_standing.IsDown(target) && _blocker.CanMove(target) && // Arcane-Edit: respect movement restraints
             !HasComp<KnockedDownComponent>(target) && !HasComp<StunnedComponent>(target);
     }
 
