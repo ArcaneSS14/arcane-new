@@ -54,7 +54,7 @@
       collection: LasersDrop
 
 - type: entity
-  parent: [BaseWeaponCustomCell, BasePistolWhip]
+  parent: [BaseWeaponCustomCell, BasePistolWhip, BaseSidearmFlashlightMount] # Arcane
   id: BaseWeaponCustomCellSmall
   abstract: true
   components:

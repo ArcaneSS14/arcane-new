@@ -137,18 +137,25 @@ public abstract partial class SharedSuitSensorSystem : EntitySystem
         args.Affected = true;
         args.Disabled = true;
 
+        if (HasComp<EmpDisabledComponent>(ent)) // Arcane: a repeat pulse must not replace the original settings.
+            return;
+
+        ent.Comp.PreviousControlsLocked = ent.Comp.ControlsLocked;
         ent.Comp.PreviousMode = ent.Comp.Mode;
         SetSensor(ent.AsNullable(), SuitSensorMode.SensorOff, null);
 
-        ent.Comp.PreviousControlsLocked = ent.Comp.ControlsLocked;
         ent.Comp.ControlsLocked = true;
-        // SetSensor already calls Dirty
+        Dirty(ent); // Arcane: SetSensor can return early if the mode is already Off.
     }
 
     private void OnEmpFinished(Entity<SuitSensorComponent> ent, ref EmpDisabledRemovedEvent args)
     {
+        if (TerminatingOrDeleted(ent)) // Arcane
+            return;
+
         SetSensor(ent.AsNullable(), ent.Comp.PreviousMode, null);
         ent.Comp.ControlsLocked = ent.Comp.PreviousControlsLocked;
+        Dirty(ent); // Arcane
     }
 
     /// <summary>

@@ -1,0 +1,18 @@
+- type: statusIcon
+  id: ContrabandIconContraband
+  priority: 4
+  offset: 1
+  locationPreference: Right
+  isShaded: true
+  visibleToOwner: false
+  visibleToGhosts: false
+  icon:
+    sprite: _Arcane/Interface/Misc/contraband_icons.rsi
+    state: hud_contraband
+
+- type: statusIcon
+  parent: ContrabandIconContraband
+  id: ContrabandIconNone
+  icon:
+    sprite: _Arcane/Interface/Misc/contraband_icons.rsi
+    state: hud_none
