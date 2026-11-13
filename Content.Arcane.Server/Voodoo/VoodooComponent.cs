@@ -28,6 +28,8 @@ public sealed partial class VoodooComponent : Component
 
     [DataField]
     public bool Destroyed;
+
+    public bool Binding;
 }
 
 /// <summary>Backreferences allow body deletion to clear every linked doll.</summary>

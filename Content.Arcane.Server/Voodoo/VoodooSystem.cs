@@ -56,7 +56,7 @@ public sealed partial class VoodooSystem : EntitySystem
     {
         if (!_admins.HasAdminFlag(actor, AdminFlags.Fun) ||
             TerminatingOrDeleted(doll) || !TryComp<VoodooComponent>(doll, out var comp) || comp.BloodBinding ||
-            (target is { } body && (TerminatingOrDeleted(body) || !HasComp<BodyComponent>(body))))
+            (target is { } body && !CanBind(body)))
             return false;
 
         SetTarget((doll, comp), target);
@@ -67,7 +67,7 @@ public sealed partial class VoodooSystem : EntitySystem
 
     private void OnStartup(Entity<VoodooComponent> ent, ref ComponentStartup args)
     {
-        if (ent.Comp.Target is { } target && !TerminatingOrDeleted(target))
+        if (ent.Comp.Target is { } target && CanBind(target))
             EnsureComp<VoodooTargetComponent>(target).Dolls.Add(ent.Owner);
         else
             ent.Comp.Target = null;
@@ -89,6 +89,9 @@ public sealed partial class VoodooSystem : EntitySystem
 
     private void SetTarget(Entity<VoodooComponent> ent, EntityUid? target)
     {
+        if (ent.Comp.Target == target)
+            return;
+
         if (ent.Comp.Target is { } previous && TryComp<VoodooTargetComponent>(previous, out var old))
         {
             old.Dolls.Remove(ent.Owner);
@@ -138,7 +141,7 @@ public sealed partial class VoodooSystem : EntitySystem
             return;
         var sourceTransform = Transform(ent);
         var targetTransform = Transform(target);
-        if (sourceTransform.MapID != targetTransform.MapID)
+        if (sourceTransform.MapUid is null || sourceTransform.MapUid != targetTransform.MapUid)
             return;
         var direction = targetTransform.MapPosition.Position - sourceTransform.MapPosition.Position;
         if (direction == Vector2.Zero)
@@ -164,11 +167,28 @@ public sealed partial class VoodooSystem : EntitySystem
         }
         return found && bloodstream != null;
     }
+
+    private bool CanBind(EntityUid body) => !TerminatingOrDeleted(body) &&
+        !EntityManager.IsQueuedForDeletion(body) && HasComp<BodyComponent>(body);
+
     private void OnInteractUsing(Entity<VoodooComponent> ent, ref InteractUsingEvent args)
     {
-        if (args.Handled || !ent.Comp.BloodBinding || ent.Comp.Destroyed || TerminatingOrDeleted(args.Used))
+        if (args.Handled || !ent.Comp.BloodBinding || ent.Comp.Destroyed || ent.Comp.Binding || TerminatingOrDeleted(args.Used))
             return;
 
+        ent.Comp.Binding = true;
+        try
+        {
+            BindFromSample(ent, ref args);
+        }
+        finally
+        {
+            ent.Comp.Binding = false;
+        }
+    }
+
+    private void BindFromSample(Entity<VoodooComponent> ent, ref InteractUsingEvent args)
+    {
         // Examine all accessible solutions: multiple distinct DNA values are ambiguous.
         var candidates = new List<(Entity<SolutionComponent> Solution, ReagentQuantity Reagent)>();
         var dnas = new HashSet<string>();
