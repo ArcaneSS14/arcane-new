@@ -35,7 +35,7 @@
   - type: Item
     size: Ginormous
   - type: Clothing
-    slots: BACK
+    slots: [BACK, SUITSTORAGE] # Arcane-Edit: BACK > [BACK, SUITSTORAGE]
     sprite: Clothing/Back/Backpacks/waterbackpack.rsi
   - type: ItemSlots
     slots:

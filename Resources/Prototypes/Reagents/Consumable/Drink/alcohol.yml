@@ -251,6 +251,22 @@
   physicalDesc: reagent-physical-desc-cloudy
   flavor: coffeeliquor
   color: "#664300"
+  # Arcane-Start
+  metabolisms:
+    Digestion:
+      metabolites:
+        Ethanol: 0.12
+        Theobromine: 0.1
+        Caffeine: 0.4
+      effects:
+      - !type:Satiate
+        satiationType: Thirst
+        factor: 2
+      - !type:ModifyStatusEffect
+        effectProto: StatusEffectDrowsiness
+        time: 2
+        type: Remove
+  # Arcane-End
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/coffeeliqueurglass.rsi
     state: icon_empty

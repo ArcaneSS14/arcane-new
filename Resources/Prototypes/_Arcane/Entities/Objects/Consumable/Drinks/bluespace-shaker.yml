@@ -1,0 +1,22 @@
+- type: entity
+  parent: DrinkShaker
+  id: DrinkShakerBluespace
+  name: bluespace shaker
+  description: Mass-Mixing made easy!
+  components:
+  - type: Solution
+    solution:
+      maxVol: 1000
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Drinks/shaker_bluespace.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Consumable/Drinks/shaker_bluespace.rsi
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 125
+      Plastic: 125
+      Plasma: 37
+      Silver: 12
+  - type: StaticPrice
+    price: 65

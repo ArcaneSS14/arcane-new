@@ -1,0 +1,9 @@
+- type: entity
+  parent: StatusEffectSpeed
+  id: CaffeineStatusEffect
+  name: caffeine
+
+- type: entity
+  parent: StatusEffectSpeed
+  id: JunkFoodSlowdownStatusEffect
+  name: junk food

@@ -1,0 +1,186 @@
+- type: entity
+  parent: FoodBurgerBase
+  id: FoodBurgerMustard
+  name: mothroachburger
+  description: The last lamp it saw was the one inside the microwave.
+  components:
+  - type: Item
+    heldPrefix: plain
+  - type: FlavorProfile
+    flavors: [bun, meaty, light]
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/mothroach_burger.rsi
+    layers:
+    - state: mustard_mothroach
+  - type: Solution
+    solution:
+      # Preserve all 17u from Goob; its original 15u capacity was too small.
+      maxVol: 17
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 5
+      - ReagentId: Protein
+        Quantity: 5
+      - ReagentId: Vitamin
+        Quantity: 7
+  - type: Tag
+    tags: [Meat]
+
+- type: entity
+  parent: FoodBurgerMustard
+  id: FoodBurgerleopard
+  components:
+  - type: Sprite
+    layers:
+    - state: leopard_mothroach
+
+- type: entity
+  parent: FoodBurgerMustard
+  id: FoodBurgerlunar
+  components:
+  - type: Sprite
+    layers:
+    - state: lunar_mothroach
+
+- type: entity
+  parent: FoodBurgerMustard
+  id: FoodBurgerCecropia
+  components:
+  - type: Sprite
+    layers:
+    - state: cecropia_mothroach
+
+- type: entity
+  parent: FoodBurgerBase
+  id: FoodBurgerCold
+  name: five below burger
+  description: COLD! COLD! COLD!
+  components:
+  - type: Item
+    heldPrefix: plain
+  - type: FlavorProfile
+    flavors: [meaty, cold]
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/chilly_pepper_food.rsi
+    layers:
+    - state: burger-cold
+  - type: Solution
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 6
+      - ReagentId: FrostOil
+        Quantity: 10
+      - ReagentId: Vitamin
+        Quantity: 1
+  - type: Tag
+    tags: [Meat]
+
+- type: entity
+  parent: FoodBurgerCold
+  id: FoodBurgerHotCold
+  name: hellfire burger
+  description: The unity of opposites... in burger form!
+  components:
+  - type: Sprite
+    layers:
+    - state: burger-hotcold
+  - type: Solution
+    solution:
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 6
+      - ReagentId: FrostOil
+        Quantity: 5
+      - ReagentId: CapsaicinOil
+        Quantity: 5
+      - ReagentId: Vitamin
+        Quantity: 1
+
+- type: entity
+  parent: FoodPizzaCotton
+  id: FoodPizzaCottonHot
+  name: flamin hot cotton pizza
+  description: Flat fabric cotton dough with super spicy cotton topping. Flamin hot!
+  components:
+  - type: FlavorProfile
+    flavors: [cotton, bread, spicy]
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cotton-pizza-hot.rsi
+    layers:
+    - state: cotton-pizza-hot
+  - type: ToolRefinable
+    refineResult:
+    - id: FoodPizzaCottonHotSlice
+      amount: 8
+  - type: Solution
+    solution:
+      maxVol: 40
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 20
+      - ReagentId: Vitamin
+        Quantity: 5
+      - ReagentId: Fiber
+        Quantity: 5
+      - ReagentId: CapsaicinOil
+        Quantity: 5
+
+- type: entity
+  parent: FoodPizzaCottonSlice
+  id: FoodPizzaCottonHotSlice
+  name: slice of flamin hot cotton pizza
+  description: A slice of hot cotton pizza. Extra spicy!
+  components:
+  - type: FlavorProfile
+    flavors: [cotton, bread, spicy]
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/cotton-pizza-hot.rsi
+    layers:
+    - state: cotton-slice-hot
+  - type: Item
+    heldPrefix: cotton-slice-hot
+  - type: Solution
+    solution:
+      maxVol: 6
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 3.5
+      - ReagentId: Vitamin
+        Quantity: 0.8
+      - ReagentId: Fiber
+        Quantity: 1
+      - ReagentId: CapsaicinOil
+        Quantity: 0.5
+
+- type: entity
+  parent: FoodBowlBase
+  id: FoodSoupChiliHotCold
+  name: hellfire chili
+  description: Ever wondered what hellfire tastes like?
+  components:
+  - type: FlavorProfile
+    flavors: [spicy, cold]
+  - type: Sprite
+    sprite: _Arcane/Objects/Consumable/Food/chilly_pepper_food.rsi
+    layers:
+    - sprite: Objects/Consumable/Food/bowl.rsi
+      state: bowl
+    - state: chili-hotcold
+  - type: Solution
+    solution:
+      maxVol: 25
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 8
+      - ReagentId: CapsaicinOil
+        Quantity: 3
+      - ReagentId: FrostOil
+        Quantity: 3
+      - ReagentId: Vitamin
+        Quantity: 3
+      - ReagentId: Allicin
+        Quantity: 3
+  - type: Tag
+    tags: [ChiliBowl]

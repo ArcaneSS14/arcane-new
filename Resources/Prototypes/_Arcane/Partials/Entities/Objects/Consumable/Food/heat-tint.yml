@@ -1,0 +1,15 @@
+# Goob FoodBase corresponds to Trauma's FoodBaseTrash, below the general edible base.
+- type: entity
+  id: FoodBaseTrash
+  components:
+  - type: Appearance
+  - type: HeatTint
+    colorGradient:
+    - temperature: 200
+      color: "#6699FF"
+    - temperature: 293
+      color: "#FFFFFF"
+    - temperature: 350
+      color: "#FF6600"
+    - temperature: 600
+      color: "#FF2200"

@@ -1,0 +1,9 @@
+# Keep the current smoking solution and limit only the grinder yield, as in Goob #6927.
+- type: entity
+  id: CigaretteSyndicate
+  components:
+  - type: SolutionManager
+    solutions:
+    - SolutionCigaretteSyndicateGround
+  - type: Extractable
+    grindableSolutionName: grinded
