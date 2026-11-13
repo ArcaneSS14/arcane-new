@@ -1,0 +1,5 @@
+# Original Goob attribution claim retained pending source clarification (owner decision 2026-11-11).
+- files: ["Banjo1.ogg", "adventure_1.ogg", "adventure_2.ogg", "adventure_6.ogg", "april.ogg", "august.ogg", "black_wing_interface.ogg", "cloudskymanguy.ogg", "december.ogg", "february.ogg", "january.ogg", "july.ogg", "june.ogg", "march.ogg", "may.ogg", "monkey_riot.ogg", "november.ogg", "october.ogg", "oh_no_evil_star.ogg", "planets.ogg", "riverdancer.ogg", "second_reality.ogg", "september.ogg", "waystations.ogg"]
+  license: "CC-BY-SA-4.0"
+  copyright: "Taken from goonstation"
+  source: "https://github.com/goonstation/goonstation/tree/dc8068884676b78d2f6ab553dad672b04fb210d2/sound/radio_station/music"

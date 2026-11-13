@@ -1,0 +1,37 @@
+- type: entity
+  parent: BaseFlatpack
+  id: SlotMachineFlatpack
+  name: slot machine flatpack
+  description: A flatpack used for constructing a slot machine
+  components:
+  - type: Flatpack
+    entity: SlotMachine
+
+- type: entity
+  parent: BaseFlatpack
+  id: SlotMachineHighRollerFlatPack
+  name: high roller slot machine flatpack
+  description: A flatpack used for constructing a high roller slot machine
+  components:
+  - type: Flatpack
+    entity: SlotMachineHighRoller
+
+- type: entity
+  id: CrateSlotMachine
+  parent: CrateGenericSteel
+  name: slot machine crate
+  description: A crate with a slot machine inside, Everything you need to start your own gambling addiction!
+  components:
+  - type: StorageFill
+    contents:
+      - id: SlotMachineFlatpack
+
+- type: cargoProduct
+  id: SlotMachineCargo
+  icon:
+    sprite: _Arcane/Structures/Machines/slotmachines/slotmachine.rsi
+    state: slotmachine
+  product: CrateSlotMachine
+  cost: 1000
+  category: cargoproduct-category-name-service
+  group: market

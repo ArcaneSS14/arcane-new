@@ -47,21 +47,24 @@ public sealed partial class VinylPlayerSystem : EntitySystem
         if (!TryComp(args.Entity, out VinylComponent? vinylcomp) || _net.IsClient || vinylcomp.Song == null || !_power.IsPowered(uid))
             return;
 
-        if (_audio.PlayPredicted(vinylcomp.Song, uid, uid, AudioParams.Default.WithVolume(3f).WithMaxDistance(4.5f)) is not {} audio)
+        // Arcane-Edit-Start: resolve a collection once for the player, receivers and timer.
+        var track = _audio.ResolveSound(vinylcomp.Song);
+        if (_audio.PlayPvs(track, uid, AudioParams.Default.WithVolume(3f).WithMaxDistance(4.5f)) is not {} audio)
+        // Arcane-Edit-End
             return;
 
         comp.SoundEntity = audio.Entity;
         EnsureComp<CopyrightedAudioComponent>(audio.Entity);
 
         // Used by VinylSummonRuleSystem
-        var ev = new VinylInsertedEvent(args.Entity);
+        var ev = new VinylInsertedEvent(args.Entity, track); // Arcane-Edit: pass the selected track
         RaiseLocalEvent(uid, ref ev);
 
         if (!CheckForRadioRig(uid))
             return;
 
         var query = EntityQueryEnumerator<StationRadioReceiverComponent>();
-        var receiverEv = new StationRadioMediaPlayedEvent(vinylcomp.Song);
+        var receiverEv = new StationRadioMediaPlayedEvent(track); // Arcane-Edit: pass the selected track
         while (query.MoveNext(out var receiver, out var receiverComponent))
         {
             if (receiverComponent.SoundEntity == null)

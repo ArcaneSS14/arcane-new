@@ -1,0 +1,336 @@
+- type: entity
+  parent: BaseItem
+  id: CardStackBase
+  abstract: true
+  components:
+  - type: Item
+    size: Small
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    state: back_black
+    drawdepth: SmallObjects
+  - type: PlayingCards
+  - type: PlayingCardsStorage
+  - type: UseDelay
+    delay: 0.5
+  - type: UserInterface
+    interfaces:
+      enum.PlayingCardsUiKey.Key:
+        type: PlayingCardsBoundUserInterface
+
+- type: entity
+  parent: CardStackBase
+  id: CardBase
+  name: card
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Rotatable
+  - type: EmitSoundOnLand
+    sound:
+      collection: ArcaneCardShove
+
+- type: entity
+  parent: CardStackBase
+  id: CardHandBase
+  name: hand of cards
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: PlayingCards
+    kind: Hand
+
+- type: entity
+  parent: CardStackBase
+  id: CardDeckBase
+  name: deck of cards
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+  - type: PlayingCards
+    kind: Deck
+  - type: PlayingCardDeck
+
+- type: entity
+  parent: [ BoxCardboard, BaseBagOpenClose ]
+  id: CardBoxBase
+  name: deck box
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Small
+    shape:
+    - 0,0,1,1
+  - type: ItemCounter
+    count:
+      components: [ PlayingCardDeck ]
+    composite: true
+    layerStates: [ fullLayer, fullLayer ]
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,1,1
+    whitelist:
+      components: [ PlayingCardDeck ]
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - CardDeckBlack
+  - type: Appearance
+
+- type: entity
+  parent: CardDeckBase
+  id: CardDeckBlack
+  name: deck of cards
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    state: deck_black_full
+  - type: PlayingCardsStorage
+    backState: back_black
+    content:
+    - CardScAceOfClubsBlack
+    - CardSc2OfClubsBlack
+    - CardSc3OfClubsBlack
+    - CardSc4OfClubsBlack
+    - CardSc5OfClubsBlack
+    - CardSc6OfClubsBlack
+    - CardSc7OfClubsBlack
+    - CardSc8OfClubsBlack
+    - CardSc9OfClubsBlack
+    - CardSc10OfClubsBlack
+    - CardScJackOfClubsBlack
+    - CardScQueenOfClubsBlack
+    - CardScKingOfClubsBlack
+    - CardScAceOfDiamondsBlack
+    - CardSc2OfDiamondsBlack
+    - CardSc3OfDiamondsBlack
+    - CardSc4OfDiamondsBlack
+    - CardSc5OfDiamondsBlack
+    - CardSc6OfDiamondsBlack
+    - CardSc7OfDiamondsBlack
+    - CardSc8OfDiamondsBlack
+    - CardSc9OfDiamondsBlack
+    - CardSc10OfDiamondsBlack
+    - CardScJackOfDiamondsBlack
+    - CardScQueenOfDiamondsBlack
+    - CardScKingOfDiamondsBlack
+    - CardScAceOfHeartsBlack
+    - CardSc2OfHeartsBlack
+    - CardSc3OfHeartsBlack
+    - CardSc4OfHeartsBlack
+    - CardSc5OfHeartsBlack
+    - CardSc6OfHeartsBlack
+    - CardSc7OfHeartsBlack
+    - CardSc8OfHeartsBlack
+    - CardSc9OfHeartsBlack
+    - CardSc10OfHeartsBlack
+    - CardScJackOfHeartsBlack
+    - CardScQueenOfHeartsBlack
+    - CardScKingOfHeartsBlack
+    - CardScAceOfSpadesBlack
+    - CardSc2OfSpadesBlack
+    - CardSc3OfSpadesBlack
+    - CardSc4OfSpadesBlack
+    - CardSc5OfSpadesBlack
+    - CardSc6OfSpadesBlack
+    - CardSc7OfSpadesBlack
+    - CardSc8OfSpadesBlack
+    - CardSc9OfSpadesBlack
+    - CardSc10OfSpadesBlack
+    - CardScJackOfSpadesBlack
+    - CardScQueenOfSpadesBlack
+    - CardScKingOfSpadesBlack
+    - CardScJokerBlack
+
+- type: entity
+  parent: CardBoxBase
+  id: CardBoxBlack
+  name: black deck box
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    layers:
+    - state: black_box
+      map: [ closeLayer ]
+    - state: black_box_open
+      map: [ openLayer ]
+      visible: false
+    - state: black_box_full
+      map: [ fullLayer ]
+      visible: false
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - CardDeckBlack
+
+- type: entity
+  parent: CardDeckBase
+  id: CardDeckNanotrasen
+  name: deck of cards
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    state: deck_nanotrasen_full
+  - type: PlayingCardsStorage
+    backState: back_nanotrasen
+    content:
+    - CardScAceOfClubsNanotrasen
+    - CardSc2OfClubsNanotrasen
+    - CardSc3OfClubsNanotrasen
+    - CardSc4OfClubsNanotrasen
+    - CardSc5OfClubsNanotrasen
+    - CardSc6OfClubsNanotrasen
+    - CardSc7OfClubsNanotrasen
+    - CardSc8OfClubsNanotrasen
+    - CardSc9OfClubsNanotrasen
+    - CardSc10OfClubsNanotrasen
+    - CardScJackOfClubsNanotrasen
+    - CardScQueenOfClubsNanotrasen
+    - CardScKingOfClubsNanotrasen
+    - CardScAceOfDiamondsNanotrasen
+    - CardSc2OfDiamondsNanotrasen
+    - CardSc3OfDiamondsNanotrasen
+    - CardSc4OfDiamondsNanotrasen
+    - CardSc5OfDiamondsNanotrasen
+    - CardSc6OfDiamondsNanotrasen
+    - CardSc7OfDiamondsNanotrasen
+    - CardSc8OfDiamondsNanotrasen
+    - CardSc9OfDiamondsNanotrasen
+    - CardSc10OfDiamondsNanotrasen
+    - CardScJackOfDiamondsNanotrasen
+    - CardScQueenOfDiamondsNanotrasen
+    - CardScKingOfDiamondsNanotrasen
+    - CardScAceOfHeartsNanotrasen
+    - CardSc2OfHeartsNanotrasen
+    - CardSc3OfHeartsNanotrasen
+    - CardSc4OfHeartsNanotrasen
+    - CardSc5OfHeartsNanotrasen
+    - CardSc6OfHeartsNanotrasen
+    - CardSc7OfHeartsNanotrasen
+    - CardSc8OfHeartsNanotrasen
+    - CardSc9OfHeartsNanotrasen
+    - CardSc10OfHeartsNanotrasen
+    - CardScJackOfHeartsNanotrasen
+    - CardScQueenOfHeartsNanotrasen
+    - CardScKingOfHeartsNanotrasen
+    - CardScAceOfSpadesNanotrasen
+    - CardSc2OfSpadesNanotrasen
+    - CardSc3OfSpadesNanotrasen
+    - CardSc4OfSpadesNanotrasen
+    - CardSc5OfSpadesNanotrasen
+    - CardSc6OfSpadesNanotrasen
+    - CardSc7OfSpadesNanotrasen
+    - CardSc8OfSpadesNanotrasen
+    - CardSc9OfSpadesNanotrasen
+    - CardSc10OfSpadesNanotrasen
+    - CardScJackOfSpadesNanotrasen
+    - CardScQueenOfSpadesNanotrasen
+    - CardScKingOfSpadesNanotrasen
+    - CardScJokerNanotrasen
+
+- type: entity
+  parent: CardBoxBase
+  id: CardBoxNanotrasen
+  name: nanotrasen deck box
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    layers:
+    - state: nanotrasen_box
+      map: [ closeLayer ]
+    - state: nanotrasen_box_open
+      map: [ openLayer ]
+      visible: false
+    - state: nanotrasen_box_full
+      map: [ fullLayer ]
+      visible: false
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - CardDeckNanotrasen
+
+- type: entity
+  parent: CardDeckBase
+  id: CardDeckSyndicate
+  name: deck of cards
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    state: deck_syndicate_full
+  - type: PlayingCardsStorage
+    backState: back_syndicate
+    content:
+    - CardScAceOfClubsSyndicate
+    - CardSc2OfClubsSyndicate
+    - CardSc3OfClubsSyndicate
+    - CardSc4OfClubsSyndicate
+    - CardSc5OfClubsSyndicate
+    - CardSc6OfClubsSyndicate
+    - CardSc7OfClubsSyndicate
+    - CardSc8OfClubsSyndicate
+    - CardSc9OfClubsSyndicate
+    - CardSc10OfClubsSyndicate
+    - CardScJackOfClubsSyndicate
+    - CardScQueenOfClubsSyndicate
+    - CardScKingOfClubsSyndicate
+    - CardScAceOfDiamondsSyndicate
+    - CardSc2OfDiamondsSyndicate
+    - CardSc3OfDiamondsSyndicate
+    - CardSc4OfDiamondsSyndicate
+    - CardSc5OfDiamondsSyndicate
+    - CardSc6OfDiamondsSyndicate
+    - CardSc7OfDiamondsSyndicate
+    - CardSc8OfDiamondsSyndicate
+    - CardSc9OfDiamondsSyndicate
+    - CardSc10OfDiamondsSyndicate
+    - CardScJackOfDiamondsSyndicate
+    - CardScQueenOfDiamondsSyndicate
+    - CardScKingOfDiamondsSyndicate
+    - CardScAceOfHeartsSyndicate
+    - CardSc2OfHeartsSyndicate
+    - CardSc3OfHeartsSyndicate
+    - CardSc4OfHeartsSyndicate
+    - CardSc5OfHeartsSyndicate
+    - CardSc6OfHeartsSyndicate
+    - CardSc7OfHeartsSyndicate
+    - CardSc8OfHeartsSyndicate
+    - CardSc9OfHeartsSyndicate
+    - CardSc10OfHeartsSyndicate
+    - CardScJackOfHeartsSyndicate
+    - CardScQueenOfHeartsSyndicate
+    - CardScKingOfHeartsSyndicate
+    - CardScAceOfSpadesSyndicate
+    - CardSc2OfSpadesSyndicate
+    - CardSc3OfSpadesSyndicate
+    - CardSc4OfSpadesSyndicate
+    - CardSc5OfSpadesSyndicate
+    - CardSc6OfSpadesSyndicate
+    - CardSc7OfSpadesSyndicate
+    - CardSc8OfSpadesSyndicate
+    - CardSc9OfSpadesSyndicate
+    - CardSc10OfSpadesSyndicate
+    - CardScJackOfSpadesSyndicate
+    - CardScQueenOfSpadesSyndicate
+    - CardScKingOfSpadesSyndicate
+    - CardScJokerSyndicate
+
+- type: entity
+  parent: CardBoxBase
+  id: CardBoxSyndicate
+  name: syndicate deck box
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/cards.rsi
+    layers:
+    - state: syndicate_box
+      map: [ closeLayer ]
+    - state: syndicate_box_open
+      map: [ openLayer ]
+      visible: false
+    - state: syndicate_box_full
+      map: [ fullLayer ]
+      visible: false
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - CardDeckSyndicate

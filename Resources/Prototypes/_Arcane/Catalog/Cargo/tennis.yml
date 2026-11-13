@@ -1,0 +1,9 @@
+- type: cargoProduct
+  id: FunTennisDuffel
+  icon:
+    sprite: _Arcane/Objects/Fun/tennis_racket.rsi
+    state: tennis_racket
+  product: ClothingBackpackDuffelTennisGame
+  cost: 1000
+  category: cargoproduct-category-name-fun
+  group: market

@@ -1,0 +1,53 @@
+﻿- type: entity
+  name: tennis racket
+  parent: BaseItem
+  id: BaseTennisRacket
+  description: A robust tennis racket.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/tennis_racket.rsi
+    state: tennis_racket
+  - type: MeleeWeapon
+    animationRotation: -135
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 1
+    soundHit:
+      path: /Audio/Effects/egloves.ogg
+  - type: MeleeThrowOnHit
+    distance: 1
+    speed: 20
+  - type: TennisRacket
+  - type: Item
+    size: Normal
+    sprite: _Arcane/Objects/Fun/tennis_racket.rsi
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 250
+
+
+- type: entity
+  name: nanotrasen tennis racket
+  parent: BaseTennisRacket
+  id: NTTennisRacket
+  description: Team Nanotrasen robust tennis racket!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/nt_tennis_racket.rsi
+    state: nt_tennis_racket
+  - type: Item
+    sprite: _Arcane/Objects/Fun/nt_tennis_racket.rsi
+
+
+- type: entity
+  name: syndicate tennis racket
+  parent: BaseTennisRacket
+  id: SyndicateTennisRacket
+  description: Team Syndicate robust tennis racket!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/syndicate_tennis_racket.rsi
+    state: syndicate_tennis_racket
+  - type: Item
+    sprite: _Arcane/Objects/Fun/syndicate_tennis_racket.rsi
