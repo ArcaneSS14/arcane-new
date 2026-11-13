@@ -36,6 +36,7 @@ public sealed partial class PanicButtonSystem : EntitySystem
             return;
 
         args.Handled = true;
+        args.ApplyDelay = false;
         if (!_access.FindAccessTags(user).Contains(SecurityAccess))
         {
             _popup.PopupEntity(Loc.GetString("panic-button-no-access"), ent, user);
@@ -48,10 +49,10 @@ public sealed partial class PanicButtonSystem : EntitySystem
             return;
         }
 
+        var location = FormattedMessage.RemoveMarkupPermissive(_navigation.GetNearestBeaconString(user));
         if (!_useDelay.TryResetDelay(ent.Owner, checkDelayed: true))
             return;
 
-        var location = FormattedMessage.RemoveMarkupOrThrow(_navigation.GetNearestBeaconString(user));
         _radio.SendRadioMessage(user, Loc.GetString("panic-button-distress", ("position", location)),
             ProtoMan.Index(SecurityChannel), ent);
     }

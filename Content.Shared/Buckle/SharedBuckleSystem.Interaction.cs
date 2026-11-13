@@ -236,8 +236,8 @@ public abstract partial class SharedBuckleSystem
         if (!args.CanAccess || !args.CanInteract || !component.Buckled)
             return;
 
-        if (uid != args.User && TryComp<StrapComponent>(component.BuckledTo, out var strap) &&
-            !strap.AllowOthersToUnbuckle) // Arcane
+        if (!TryComp<StrapComponent>(component.BuckledTo, out var strap) ||
+            uid != args.User && !strap.AllowOthersToUnbuckle) // Arcane
             return;
 
         if (!CanUnbuckle((uid, component), args.User, false))

@@ -94,7 +94,7 @@
   - type: HeldSpeedModifier
 
 - type: entity
-  parent: [BaseWeaponBatterySmall, BaseSecurityContraband]
+  parent: [BaseWeaponBatterySmall, BaseSecurityContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponEarthGovLaserPistol
   name: EarthGov laser pistol
   description: An Earth Government standard issue laser pistol, used by army and police.

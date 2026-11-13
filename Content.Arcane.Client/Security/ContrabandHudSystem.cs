@@ -1,11 +1,12 @@
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.Security;
+using Content.Client.Hands.Systems;
 using Content.Client.Inventory;
 using Content.Client.Overlays;
 using Content.Goobstation.Shared.Contraband;
 using Content.Shared.Contraband;
 using Content.Shared.Examine;
-using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Hands.Components;
 using Content.Shared.Inventory;
 using Content.Shared.StatusIcon;
 using Content.Shared.StatusIcon.Components;
@@ -20,7 +21,7 @@ public sealed partial class ContrabandHudSystem : EquipmentHudSystem<ContrabandH
     [Dependency] private IConfigurationManager _configuration = default!;
     [Dependency] private ContrabandSystem _contraband = default!;
     [Dependency] private ExamineSystemShared _examine = default!;
-    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private HandsSystem _hands = default!;
     [Dependency] private InventorySystem _inventory = default!;
     [Dependency] private IPlayerManager _playerManager = default!;
     [Dependency] private SpriteSystem _sprite = default!;
@@ -45,33 +46,45 @@ public sealed partial class ContrabandHudSystem : EquipmentHudSystem<ContrabandH
             return;
 
         // This status uses the same FoV-masked overlay as the other status icons. Inspect only
-        // equipment whose sprite is already visible on this client, and items in actual hands.
+        // equipment and held items whose sprite layers are already visible on this client.
         args.StatusIcons.Add(ProtoMan.Index(HasVisibleContraband(ent) ? ContrabandIcon : ClearIcon));
     }
 
     private bool HasVisibleContraband(Entity<InventoryComponent> ent)
     {
-        foreach (var held in _hands.EnumerateHeld(ent.Owner))
+        if (!TryComp<SpriteComponent>(ent, out var sprite))
+            return false;
+
+        if (TryComp<HandsComponent>(ent, out var hands))
         {
-            if (IsContraband(held, ent))
-                return true;
+            foreach (var id in _hands.EnumerateHands((ent.Owner, hands)))
+            {
+                if (_hands.TryGetHand((ent.Owner, hands), id, out var hand) &&
+                    _hands.TryGetHeldItem((ent.Owner, hands), id, out var item, hideVirtualItems: true) &&
+                    _hands.HasVisibleHeldLayers((ent.Owner, hands, sprite), hand.Value.Location) && IsContraband(item.Value, ent))
+                    return true;
+            }
         }
 
-        if (!TryComp<InventorySlotsComponent>(ent, out var inventoryVisuals) || !TryComp<SpriteComponent>(ent, out var sprite))
+        if (!TryComp<InventorySlotsComponent>(ent, out var inventoryVisuals))
             return false;
 
         var slots = _inventory.GetSlotEnumerator(ent.AsNullable(), SlotFlags.WITHOUT_POCKET & ~SlotFlags.IDCARD);
         while (slots.NextItem(out var item, out var slot))
         {
-            if (!inventoryVisuals.VisualLayerKeys.TryGetValue(slot.Name, out var keys))
-                continue;
+            if (inventoryVisuals.VisualLayerKeys.TryGetValue(slot.Name, out var keys) &&
+                HasVisibleLayer((ent.Owner, sprite), keys) && IsContraband(item, ent))
+                return true;
+        }
+        return false;
+    }
 
-            foreach (var key in keys)
-            {
-                if (_sprite.LayerMapTryGet((ent.Owner, sprite), key, out var index, false) &&
-                    sprite[index].Visible && IsContraband(item, ent))
-                    return true;
-            }
+    private bool HasVisibleLayer(Entity<SpriteComponent> sprite, IEnumerable<string> keys)
+    {
+        foreach (var key in keys)
+        {
+            if (_sprite.LayerMapTryGet(sprite.AsNullable(), key, out var index, false) && sprite.Comp[index].Visible)
+                return true;
         }
         return false;
     }

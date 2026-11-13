@@ -329,7 +329,11 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
 
     public override void DropCarried(EntityUid carrier, EntityUid carried)
     {
-        Drop(carried);
+        // Arcane: ignore a stale reference after the target has moved to another carrier.
+        if (!TerminatingOrDeleted(carried) &&
+            _carriedQuery.TryComp(carried, out var carriedComp) && carriedComp.Carrier == carrier)
+            Drop(carried, carrier);
+
         if (TerminatingOrDeleted(carrier) ||
             !TryComp<CarryingComponent>(carrier, out var carrying) || carrying.Carried != carried) // Arcane
             return;
@@ -340,15 +344,13 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
         _movementSpeed.RefreshMovementSpeedModifiers(carrier);
     }
 
-    private void Drop(EntityUid carried)
+    private void Drop(EntityUid carried, EntityUid carrier)
     {
-        if (TerminatingOrDeleted(carried)) // Arcane: a client may not have this entity in PVS.
-            return;
-
         RemComp<BeingCarriedComponent>(carried);
         RemComp<KnockedDownComponent>(carried); // TODO SHITMED: make sure this doesnt let you make someone with no legs walk
         _actionBlocker.UpdateCanMove(carried);
-        _transform.AttachToGridOrMap(carried);
+        if (Transform(carried).ParentUid == carrier) // Arcane: preserve a new parent, such as a cryo chamber.
+            _transform.AttachToGridOrMap(carried);
         _standingState.Stand(carried);
     }
 
