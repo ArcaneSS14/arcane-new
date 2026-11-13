@@ -1,0 +1,35 @@
+- type: entity
+  parent: MobMothroach
+  id: MobMothroachMustard
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Animals/mustard_mothroach.rsi
+  - type: Clothing
+    sprite: _Arcane/Mobs/Animals/mustard_mothroach.rsi
+
+- type: entity
+  parent: MobMothroach
+  id: MobMothroachLeopard
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Animals/leopard_mothroach.rsi
+  - type: Clothing
+    sprite: _Arcane/Mobs/Animals/leopard_mothroach.rsi
+
+- type: entity
+  parent: MobMothroach
+  id: MobMothroachCecropia
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Animals/cecropia_mothroach.rsi
+  - type: Clothing
+    sprite: _Arcane/Mobs/Animals/cecropia_mothroach.rsi
+
+- type: entity
+  parent: MobMothroach
+  id: MobMothroachLunar
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Animals/lunar_mothroach.rsi
+  - type: Clothing
+    sprite: _Arcane/Mobs/Animals/lunar_mothroach.rsi

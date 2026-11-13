@@ -1,0 +1,6 @@
+- type: entity
+  id: FoodSpaceshroom
+  components:
+  - type: Produce
+    plantId: SpaceshroomPlants
+    preserveSolutionWhenNoChemicals: true

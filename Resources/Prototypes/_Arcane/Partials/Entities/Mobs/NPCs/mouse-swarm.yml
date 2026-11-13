@@ -1,0 +1,20 @@
+- type: entity
+  id: MobMouse
+  components:
+  - type: ActionGrant
+    actions:
+    - ActionMouseSwarm
+  - type: MouseSwarm
+  - type: LimbGnawer
+
+- type: entity
+  id: MobMouse1
+  components:
+  - type: MouseSwarm
+    state: mouse-1
+
+- type: entity
+  id: MobMouse2
+  components:
+  - type: MouseSwarm
+    state: mouse-2

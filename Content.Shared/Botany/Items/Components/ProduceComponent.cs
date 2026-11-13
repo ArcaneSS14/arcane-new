@@ -30,6 +30,15 @@ public sealed partial class ProduceComponent : Component
     [DataField]
     public string TargetSolution = "food";
 
+    // Arcane-Start: opt in to retaining initial contents for plants without chemical outputs.
+    /// <summary>
+    /// Keep the product's initial solution when its plant defines no chemicals.
+    /// Existing crops retain their normal replacement behavior by default.
+    /// </summary>
+    [DataField]
+    public bool PreserveSolutionWhenNoChemicals;
+    // Arcane-End
+
     /// <summary>
     /// Divider for the nutrient bonus when composting this produce.
     /// </summary>

@@ -49,6 +49,11 @@ public sealed partial class BotanySystem
                 _entityEffects.TryApplyEffect(ent.Owner, mutation.Effect);
         }
 
+        // Arcane-Start: spaceshrooms retain their initial random mixture until chemicals are defined.
+        if (chems.Chemicals.Count == 0 && ent.Comp.PreserveSolutionWhenNoChemicals)
+            return;
+        // Arcane-End
+
         _solutionContainer.EnsureSolution(ent.Owner, ent.Comp.TargetSolution, out var solution);
         solution.Comp.Solution.RemoveAllSolution();
 
