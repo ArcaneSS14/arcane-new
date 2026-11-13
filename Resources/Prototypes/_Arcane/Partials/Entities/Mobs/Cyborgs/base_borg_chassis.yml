@@ -8,3 +8,8 @@
     understands:
     - Dwarvish
     - Karshan
+  - type: TTS
+    voice: Glados
+  - type: ActionGrant
+    actions:
+    - ActionTTSVoiceChange

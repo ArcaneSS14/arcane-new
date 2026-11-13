@@ -237,7 +237,8 @@ namespace Content.Server.Preferences.Managers
                     NsfwTags = profile.NsfwTagsFlavorText,
                 })
                 .WithCustomization(CharacterCustomizationDb.Read(profile))
-                .WithErpPreference(Enum.IsDefined((ErpPreference) profile.ErpPreference) ? (ErpPreference) profile.ErpPreference : ErpPreference.No);
+                .WithErpPreference(Enum.IsDefined((ErpPreference) profile.ErpPreference) ? (ErpPreference) profile.ErpPreference : ErpPreference.No)
+                .WithTtsVoice(string.IsNullOrEmpty(profile.TtsVoice) ? HumanoidCharacterProfile.DefaultTtsVoice : profile.TtsVoice);
                 // Arcane-End
         }
 

@@ -1,0 +1,5 @@
+- type: entity
+  id: BaseStructure
+  components:
+  - type: TTS
+    voice: Fact_core

@@ -1,5 +1,6 @@
 using Content.Arcane.Server.Achievements;
 using Content.Arcane.Server.IoC;
+using Content.Arcane.Server.TTS;
 using Robust.Shared.ContentPack;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
@@ -18,6 +19,13 @@ public sealed class EntryPoint : GameServer
         base.Init();
 
         Dependencies.BuildGraph();
+    }
+
+    public override void PostInit()
+    {
+        base.PostInit();
+
+        Dependencies.Resolve<TTSManager>().Initialize();
     }
 
     public override void Shutdown()

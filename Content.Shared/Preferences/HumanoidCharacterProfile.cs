@@ -216,6 +216,7 @@ namespace Content.Shared.Preferences
             ExtendedFlavor = other.ExtendedFlavor; // Arcane
             Customization = other.Customization; // Arcane
             ErpPreference = other.ErpPreference; // Arcane
+            TtsVoice = other.TtsVoice; // Arcane
         }
 
         /// <summary>
@@ -405,6 +406,7 @@ namespace Content.Shared.Preferences
             profile.BarkVoice = (randomizeCfg & RandomizeCfg.Barks) != 0 ? RandomBark(prototypeManager, profile.Species) : baseProfile.BarkVoice;
             profile.Knowledge = new(baseProfile.Knowledge); // no random lol
             // </Trauma>
+            profile.TtsVoice = (randomizeCfg & RandomizeCfg.Barks) != 0 ? RandomTtsVoice(profile.Sex, prototypeManager, IoCManager.Resolve<IRobustRandom>()) : baseProfile.TtsVoice; // Arcane
 
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
@@ -700,6 +702,7 @@ namespace Content.Shared.Preferences
             if (!ExtendedFlavor.Equals(other.ExtendedFlavor)) return false; // Arcane
             if (!Customization.Equals(other.Customization)) return false; // Arcane
             if (ErpPreference != other.ErpPreference) return false; // Arcane
+            if (TtsVoice != other.TtsVoice) return false; // Arcane
             return Appearance.Equals(other.Appearance);
         }
 
@@ -845,6 +848,7 @@ namespace Content.Shared.Preferences
             ErpPreference = ValidatedErpPreference(age); // Arcane
             Sex = sex;
             Voice = voice;
+            TtsVoice = ValidatedTtsVoice(prototypeManager, sex); // Arcane
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
@@ -967,6 +971,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(ExtendedFlavor); // Arcane
             hashCode.Add(Customization); // Arcane
             hashCode.Add((int) ErpPreference); // Arcane
+            hashCode.Add(TtsVoice); // Arcane
             hashCode.Add(Species);
             // Arcane-Start: Hash character scale settings
             hashCode.Add(Scale);

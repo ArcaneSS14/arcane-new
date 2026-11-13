@@ -107,6 +107,7 @@ public sealed partial class HumanoidProfileEditor
 
         OnSetProfile += _ => UpdateCustomization();
         InitializeErp();
+        InitializeExtensions();
     }
 
     private Button SuggestionButton(string name, Action onPressed)

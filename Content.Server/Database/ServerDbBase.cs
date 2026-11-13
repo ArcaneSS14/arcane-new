@@ -234,6 +234,7 @@ namespace Content.Server.Database
             // Arcane-End
             CharacterCustomizationDb.Write(profile, humanoid.Customization); // Arcane
             profile.ErpPreference = (int) humanoid.ErpPreference; // Arcane
+            profile.TtsVoice = humanoid.TtsVoice; // Arcane
             profile.Sex = humanoid.Sex.ToString();
             profile.Voice = humanoid.Voice.ToString();
             profile.Gender = humanoid.Gender.ToString();

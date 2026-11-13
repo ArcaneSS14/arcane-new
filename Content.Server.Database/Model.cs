@@ -485,6 +485,7 @@ namespace Content.Server.Database
         public string? HairGradientData { get; set; }
         // Arcane-End
         public int ErpPreference { get; set; } = 1; // Arcane
+        public string TtsVoice { get; set; } = string.Empty; // Arcane
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

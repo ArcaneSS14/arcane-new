@@ -1412,6 +1412,11 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("integer")
                         .HasColumnName("erp_preference"); // Arcane
 
+                    b.Property<string>("TtsVoice")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tts_voice"); // Arcane
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")
