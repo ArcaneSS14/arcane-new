@@ -338,6 +338,30 @@ public partial class SharedGunSystem
         Appearance.SetData(ent, AmmoVisuals.AmmoMax, ent.Comp.Capacity, appearance);
     }
 
+    // Arcane-Start: replace used arena revolver cartridges with the configured default ammunition.
+    public void RefillArenaRevolverAmmo(Entity<RevolverAmmoProviderComponent> entity)
+    {
+        if (entity.Comp.FillPrototype == null)
+            return;
+
+        for (var index = 0; index < entity.Comp.AmmoSlots.Count; index++)
+        {
+            if (entity.Comp.AmmoSlots[index] is { } cartridge)
+            {
+                Containers.Remove(cartridge, entity.Comp.AmmoContainer);
+                QueueDel(cartridge);
+                entity.Comp.AmmoSlots[index] = null;
+            }
+
+            entity.Comp.Chambers[index] = true;
+        }
+
+        UpdateRevolverAppearance(entity);
+        UpdateAmmoCount(entity);
+        Dirty(entity);
+    }
+    // Arcane-End
+
     /// <summary>
     /// Trauma - Made concrete, predicted the actual spinning logic
     /// </summary>

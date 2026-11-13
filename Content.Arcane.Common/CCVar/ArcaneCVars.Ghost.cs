@@ -11,6 +11,15 @@ public sealed partial class ArcaneCVars
     public static readonly CVarDef<string> CustomGhost =
         CVarDef.Create("ghost.custom_ghost", "default", CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED);
 
+    public static readonly CVarDef<string> GhostHat =
+        CVarDef.Create("ghost.hat", "", CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED);
+
+    public static readonly CVarDef<string> GhostMask =
+        CVarDef.Create("ghost.mask", "", CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED);
+
+    public static readonly CVarDef<string> GhostParticles =
+        CVarDef.Create("ghost.particles", "", CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED);
+
     /// <summary>
     ///     Seconds a ghost has to wait after death before it can return to the round through the lobby.
     /// </summary>

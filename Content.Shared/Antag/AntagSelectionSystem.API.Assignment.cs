@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Shared.Antag.Components;
 using Content.Shared.Database;
 using Content.Shared.Ghost.Components;
@@ -87,7 +88,7 @@ public abstract partial class AntagSelectionSystem
         AntagSpecifierPrototype def)
     {
         // Cannot be antag if you're not in the game.
-        if (IsDisconnected(player))
+        if (IsDisconnected(player) || HasComp<ThunderdomeParticipantComponent>(player.AttachedEntity)) // Arcane-Edit: exclude arena avatars
             return false;
 
         if (IsAntagBanned(player, def))

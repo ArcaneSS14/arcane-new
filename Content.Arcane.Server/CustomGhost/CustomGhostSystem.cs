@@ -1,8 +1,10 @@
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Ghost;
 using Content.Arcane.Shared.CustomGhost;
+using Content.Shared.Ghost.Components;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
+using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.CustomGhost;
@@ -23,6 +25,8 @@ public sealed partial class CustomGhostSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<GhostPrototypeEvent>(OnGhostPrototype);
+        SubscribeLocalEvent<GhostSpawnedEvent>(OnGhostSpawned);
+        SubscribeNetworkEvent<SetGhostAccessoriesEvent>(OnSetAccessories);
     }
 
     private void OnGhostPrototype(ref GhostPrototypeEvent args)
@@ -38,5 +42,51 @@ public sealed partial class CustomGhostSystem : EntitySystem
 
         args.Prototype = ghost.GhostEntityPrototype;
         args.Custom = true;
+    }
+
+    private void OnGhostSpawned(ref GhostSpawnedEvent args)
+    {
+        if (args.User is not { } user || !_player.TryGetSessionById(user, out var session))
+            return;
+
+        ApplyAccessories(args.Ghost,
+            _netCfg.GetClientCVar(session.Channel, ArcaneCVars.GhostHat),
+            _netCfg.GetClientCVar(session.Channel, ArcaneCVars.GhostMask),
+            _netCfg.GetClientCVar(session.Channel, ArcaneCVars.GhostParticles));
+    }
+
+    private void OnSetAccessories(SetGhostAccessoriesEvent ev, EntitySessionEventArgs args)
+    {
+        if (args.SenderSession.AttachedEntity is { } ghost && HasComp<GhostComponent>(ghost))
+            ApplyAccessories(ghost, ev.Hat, ev.Mask, ev.Particles);
+    }
+
+    private void ApplyAccessories(EntityUid ghost, string hatId, string maskId, string particlesId)
+    {
+        var hat = ReadAccessory(hatId, GhostAccessoryCategory.Hat);
+        var mask = ReadAccessory(maskId, GhostAccessoryCategory.Mask);
+        var particles = ReadAccessory(particlesId, GhostAccessoryCategory.Particles);
+        if (hat is null && mask is null && particles is null)
+        {
+            RemComp<GhostAccessoriesComponent>(ghost);
+            return;
+        }
+
+        var accessories = EnsureComp<GhostAccessoriesComponent>(ghost);
+        if (accessories.Hat == hat && accessories.Mask == mask && accessories.Particles == particles)
+            return;
+
+        accessories.Hat = hat;
+        accessories.Mask = mask;
+        accessories.Particles = particles;
+        Dirty(ghost, accessories);
+    }
+
+    private ProtoId<GhostAccessoryPrototype>? ReadAccessory(string id, GhostAccessoryCategory category)
+    {
+        if (string.IsNullOrEmpty(id) || id.Length > 64 || !_proto.TryIndex<GhostAccessoryPrototype>(id, out var accessory) || accessory.Category != category)
+            return default(ProtoId<GhostAccessoryPrototype>?);
+
+        return new ProtoId<GhostAccessoryPrototype>(accessory.ID);
     }
 }
