@@ -81,6 +81,11 @@ public sealed partial class SlimeComponent : Component
     [DataField, AutoNetworkedField]
     public EntityUid? LatchedTarget;
 
+    // Arcane-Start
+    [AutoNetworkedField]
+    public EntityUid? PendingLatchTarget;
+    // Arcane-End
+
     /// <summary>
     /// The maximum amount of offspring produced by mitosis.
     /// </summary>

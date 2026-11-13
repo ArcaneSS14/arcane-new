@@ -22,7 +22,14 @@ public partial class XenobiologySystem
 
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
 
+        RandomizeNewSlime(slime, rand); // Arcane-Edit: use the same breeding variation for livestock crates
+    }
+
+    // Arcane-Start
+    private void RandomizeNewSlime(Entity<SlimeComponent> slime, IRobustRandom rand)
+    {
         var s = slime.Comp;
+        // Arcane-End
         // every xenobio slime copy is personalized. feel free to tweak it as you like
         // the rest of the shit such as inheritance is handled by SpawnSlime
         s.MutationChance *= rand.NextFloat(.5f, 1.5f);
@@ -122,12 +129,40 @@ public partial class XenobiologySystem
         if (!TryComp<SlimeComponent>(newEntityUid, out var newSlime))
             return null;
 
-        if (newSlime.ShouldHaveShader && newSlime.Shader != null)
-            _appearance.SetData(newEntityUid, XenoSlimeVisuals.Shader, newSlime.Shader);
-
-        _appearance.SetData(newEntityUid, XenoSlimeVisuals.Color, newSlime.SlimeColor);
-        _meta.SetEntityName(newEntityUid, newBreed.BreedName);
-
+        // Arcane-Start
+        ConfigureNewSlime((newEntityUid, newSlime), newBreed);
         return (newEntityUid, newSlime);
+    }
+
+    public bool TrySpawnSlimeInContainer(EntityUid owner, string container, EntProtoId prototype, ProtoId<BreedPrototype> breed)
+    {
+        if (!_net.IsServer
+            || !ProtoMan.TryIndex(breed, out var breedPrototype)
+            || !TrySpawnInContainer(prototype.Id, owner, container, out var uid, overrides: breedPrototype.Components))
+            return false;
+
+        if (!TryComp<SlimeComponent>(uid, out var component))
+        {
+            QueueDel(uid.Value);
+            return false;
+        }
+
+        var slime = (uid.Value, component);
+        ConfigureNewSlime(slime, breedPrototype);
+        RandomizeNewSlime(slime, SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(uid.Value)));
+        return true;
+    }
+
+    private void ConfigureNewSlime(Entity<SlimeComponent> slime, BreedPrototype breed)
+    {
+        var (uid, component) = slime;
+        // Arcane-End
+        // Arcane-Edit-Start
+        if (component.ShouldHaveShader && component.Shader != null)
+            _appearance.SetData(uid, XenoSlimeVisuals.Shader, component.Shader);
+
+        _appearance.SetData(uid, XenoSlimeVisuals.Color, component.SlimeColor);
+        _meta.SetEntityName(uid, breed.BreedName);
+        // Arcane-Edit-End
     }
 }

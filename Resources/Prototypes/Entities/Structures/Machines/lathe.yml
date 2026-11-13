@@ -512,6 +512,7 @@
   - type: Machine
     board: SecurityTechFabCircuitboard
   - type: Lathe
+    announceRecipeUnlocksLocally: false # Arcane
     idleState: icon
     runningState: icon
     unlitIdleState: unlit
@@ -557,8 +558,10 @@
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist
   - type: OreSiloClient
-  #- type: LatheAnnouncing # Trauma - not cherry picked
-  #  channels: [Security]
+  # Arcane-Edit-Start: announce new recipes on the department channel
+  - type: TechFabRecipeRadio
+    channel: Security
+  # Arcane-Edit-End
 
 - type: entity
   id: AmmoTechFab
@@ -621,6 +624,7 @@
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: Lathe
+    announceRecipeUnlocksLocally: false # Arcane
     idleState: icon
     runningState: icon
     unlitIdleState: unlit
@@ -670,8 +674,10 @@
   - type: StealTarget
     stealGroup: MedicalTechFabCircuitboard
   - type: OreSiloClient
-  #- type: LatheAnnouncing # Trauma - not cherry picked
-  #  channels: [Medical]
+  # Arcane-Edit-Start: announce new recipes on the department channel
+  - type: TechFabRecipeRadio
+    channel: Medical
+  # Arcane-Edit-End
   - type: AmbientMusicMarkerMedical
 
 - type: entity
