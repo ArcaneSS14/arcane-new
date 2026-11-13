@@ -7,6 +7,7 @@ using Content.Shared.Inventory.Events;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
 using Content.Shared.Radio.EntitySystems;
+using Content.Shared.Zombies; // Arcane
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 
@@ -52,6 +53,9 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
 
     private void OnSpeak(EntityUid uid, WearingHeadsetComponent component, EntitySpokeEvent args)
     {
+        if (HasComp<ZombieComponent>(uid)) // Arcane
+            return;
+
         // Arcane-Edit-Start: speak through whichever worn headset has the channel
         if (args.Channel == null || !_whitelist.IsWhitelistPassOrNull(args.Channel.SendWhitelist, uid)) // Goobstation - Whitelisted channels
             return;
@@ -117,6 +121,8 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
         // to have an ActiveRadioComponent
 
         var parent = Transform(uid).ParentUid;
+        if (HasComp<ZombieComponent>(parent)) // Arcane
+            return;
 
         if (IsDuplicateReceive(uid, parent, args.Channel)) // Arcane
             return;

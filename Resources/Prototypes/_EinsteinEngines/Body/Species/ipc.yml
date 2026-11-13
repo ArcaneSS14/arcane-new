@@ -219,7 +219,7 @@
     enableChargeCorruption: false
   - type: Uncloneable # it a fucking robot
   - type: MindControllable
-  - type: ZombieImmune
+  - type: SiliconZombie # Arcane
   - type: Fixtures
     fixtures:
       fix1:

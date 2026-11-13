@@ -51,7 +51,9 @@ public abstract partial class SharedCombatModeSystem : EntitySystem
         _popup.PopupEntity(Loc.GetString(msg), args.Performer, args.Performer);
     }
 
-    public void SetCanDisarm(EntityUid entity, bool canDisarm, CombatModeComponent? component = null)
+    public bool? GetCanDisarm(EntityUid entity) => CompOrNull<CombatModeComponent>(entity)?.CanDisarm; // Arcane
+
+    public void SetCanDisarm(EntityUid entity, bool? canDisarm, CombatModeComponent? component = null) // Arcane: restore an unset value too
     {
         if (!Resolve(entity, ref component))
             return;

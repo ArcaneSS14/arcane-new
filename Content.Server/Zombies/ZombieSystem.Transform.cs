@@ -10,7 +10,6 @@ using Content.Server.Body.Components;
 using Content.Server.Chat;
 using Content.Server.Chat.Managers;
 using Content.Server.Ghost;
-using Content.Server.Inventory;
 using Content.Server.Mind;
 using Content.Server.NPC;
 using Content.Server.NPC.HTN;
@@ -26,7 +25,6 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction.Components;
-using Content.Shared.Metabolism;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Pulling.Components;
@@ -38,6 +36,7 @@ using Content.Shared.Nutrition.AnimalHusbandry;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
 using Content.Shared.Prying.Components;
+using Content.Shared.Radio.Components; // Arcane
 using Content.Shared.Roles;
 using Content.Shared.Speech.EntitySystems;
 using Content.Shared.Tag;
@@ -72,7 +71,6 @@ public sealed partial class ZombieSystem
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedVisualBodySystem _visualBody = default!;
     [Dependency] private IdentitySystem _identity = default!;
-    [Dependency] private ServerInventorySystem _inventory = default!;
     [Dependency] private MindSystem _mind = default!;
     [Dependency] private MovementSpeedModifierSystem _movementSpeedModifier = default!;
     [Dependency] private NameModifierSystem _nameMod = default!;
@@ -80,7 +78,6 @@ public sealed partial class ZombieSystem
     [Dependency] private NPCSystem _npc = default!;
     [Dependency] private TagSystem _tag = default!;
     [Dependency] private ISharedPlayerManager _player = default!;
-    [Dependency] private BodySystem _body = default!;
 
     private static readonly ProtoId<TagPrototype> InvalidForGlobalSpawnSpellTag = "InvalidForGlobalSpawnSpell";
     private static readonly ProtoId<TagPrototype> CannotSuicideTag = "CannotSuicide";
@@ -116,7 +113,7 @@ public sealed partial class ZombieSystem
     public void ZombifyEntity(EntityUid target, MobStateComponent? mobState = null)
     {
         //Don't zombfiy zombies
-        if (HasComp<ZombieComponent>(target) || HasComp<ZombieImmuneComponent>(target))
+        if (TerminatingOrDeleted(target) || HasComp<ZombieComponent>(target) || HasComp<ZombieImmuneComponent>(target))
             return;
 
         if (!Resolve(target, ref mobState, logMissing: false))
@@ -140,6 +137,7 @@ public sealed partial class ZombieSystem
                 Log.Error($"Mind for session '{sess}' could not be found");
         }
 
+        CaptureZombieState(target); // Arcane: save the components this in-place conversion will alter.
         //you're a real zombie now, son.
         RaiseLocalEvent(target, new RejuvenateEvent(false, false)); // Shitmed Change
         var zombiecomp = AddComp<ZombieComponent>(target);
@@ -154,13 +152,6 @@ public sealed partial class ZombieSystem
         RemComp<LegsParalyzedComponent>(target); // Goob
         RemComp<ComplexInteractionComponent>(target);
         RemComp<SentienceTargetComponent>(target);
-
-        // remove the metabolizer from all the body's organs. they're an undead.
-        var metabolizerOrgans = _body.EnumerateOrgans<MetabolizerComponent>(target);
-        foreach(var organ in metabolizerOrgans)
-        {
-            RemComp<MetabolizerComponent>(organ);
-        }
 
         //funny voice
         var accentType = "zombie";
@@ -270,23 +261,19 @@ public sealed partial class ZombieSystem
         //The zombie gets the assigned damage weaknesses and strengths
         _damageable.SetDamageModifierSetId(target, "Zombie");
 
-        //This makes it so the zombie doesn't take bloodloss damage.
-        //NOTE: they are supposed to bleed, just not take damage
-        _bloodstream.SetBloodLossThreshold(target, 0f);
-        //Give them zombie blood
-        _bloodstream.ChangeBloodReagents(target, zombiecomp.NewBloodReagents);
-        //Stop their blood from automatically regenerating
-        _bloodstream.ChangeBloodRefreshAmount(target, 0f);
-        _bloodstream.ChangeBloodIncreaseEnabled(target, false);
+        // Arcane: IPCs can be infected but do not have blood.
+        if (stream != null)
+        {
+            _bloodstream.SetBloodLossThreshold((target, stream), 0f);
+            _bloodstream.ChangeBloodReagents((target, stream), zombiecomp.NewBloodReagents);
+            _bloodstream.ChangeBloodRefreshAmount((target, stream), 0f);
+            _bloodstream.ChangeBloodIncreaseEnabled((target, stream), false);
+        }
 
         /* Trauma - Counterpoint, zeds with insuls is really funny
         //This is specifically here to combat insuls, because frying zombies on grilles is funny as shit.
         _inventory.TryUnequip(target, "gloves", true, true);
         */
-        //Should prevent instances of zombies using comms for information they shouldnt be able to have.
-        _inventory.TryUnequip(target, "ears", true, true);
-        _inventory.TryUnequip(target, "earsright", true, true); // Arcane: the second headset too
-
         //popup
         _popup.PopupEntity(
             Loc.GetString("zombie-transform", ("target", Identity.Entity(target, EntityManager))),
@@ -342,6 +329,7 @@ public sealed partial class ZombieSystem
 
         if (TryComp<HandsComponent>(target, out var handsComp))
         {
+            PreserveZombieHeldItems(target); // Arcane
             _hands.RemoveHands(target);
             RemComp(target, handsComp);
         }
@@ -353,6 +341,16 @@ public sealed partial class ZombieSystem
         // No longer waiting to become a zombie:
         // Requires deferral because this is (probably) the event which called ZombifyEntity in the first place.
         RemCompDeferred<PendingZombieComponent>(target);
+        RemCompDeferred<ZombifyOnDeathComponent>(target); // Arcane
+
+        // Arcane-Start
+        if (HasComp<SiliconZombieComponent>(target))
+        {
+            RemComp<IntrinsicRadioTransmitterComponent>(target);
+            RemComp<IntrinsicRadioReceiverComponent>(target);
+            RemComp<ActiveRadioComponent>(target);
+        }
+        // Arcane-End
 
         //zombie gamemode stuff
         var ev = new EntityZombifiedEvent(target);
