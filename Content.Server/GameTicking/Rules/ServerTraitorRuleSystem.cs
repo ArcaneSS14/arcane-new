@@ -18,7 +18,7 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         Log.Level = LogLevel.Debug;
     }
 
-    protected override (Note[]? Code, string Briefing, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
+    protected override (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance)
     {
         var pda = _uplink.FindUplinkTarget(traitor);
 
@@ -29,25 +29,18 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink is PDA");
 
-            // If giveUplink is false the uplink code part is omitted
-            briefing = string.Format("{0}\n{1}",
-                briefing,
-                Loc.GetString("traitor-role-uplink-code-short", ("code", string.Join("-", code).Replace("sharp", "#"))));
-            return (code, briefing, false);
+            return (code, false); // Arcane
         }
 
         if (uplinked == AddUplinkResult.Implant)
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink is implant");
-            briefing += "\n" + Loc.GetString("traitor-role-uplink-implant-short");
-        }
-        else
-        {
-            Log.Error($"MakeTraitor failed on {ToPrettyString(traitor)} - No uplink could be added");
+            return (null, true); // Arcane
         }
 
 
-        return (null, briefing, uplinked == AddUplinkResult.Implant);
+        Log.Error($"MakeTraitor failed on {ToPrettyString(traitor)} - No uplink could be added");
+        return (null, false); // Arcane
     }
 
     // TODO: AntagCodewordsComponent

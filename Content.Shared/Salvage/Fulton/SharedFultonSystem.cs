@@ -101,9 +101,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
             return;
 
         // The linked beacon may be outside the client's PVS; the server must validate the actual entity.
-        if (_net.IsServer && (fulton.Beacon is not { } beacon || TerminatingOrDeleted(beacon) ||
-            !HasComp<FultonBeaconComponent>(beacon) || _foldable.IsFolded(beacon) ||
-            Container.IsEntityOrParentInContainer(beacon)))
+        if (_net.IsServer && !CanReceiveFulton(fulton.Beacon))
             return;
 
         if (!_stack.TryUse(used, 1))
@@ -251,6 +249,13 @@ public abstract partial class SharedFultonSystem : EntitySystem
             return false;
 
         return true;
+    }
+
+    // Arcane: recheck the beacon when a pack is attached and when the balloon arrives.
+    protected bool CanReceiveFulton(EntityUid? uid)
+    {
+        return uid is { } beacon && !TerminatingOrDeleted(beacon) && HasComp<FultonBeaconComponent>(beacon) &&
+            !_foldable.IsFolded(beacon) && !Container.IsEntityOrParentInContainer(beacon);
     }
 
     [Serializable, NetSerializable]

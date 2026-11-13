@@ -37,6 +37,7 @@ public abstract partial class SharedKnowledgeSystem
         SubscribeLocalEvent<KnowledgeHolderComponent, RefreshMovementSpeedModifiersEvent>(RelayMartialArt);
         SubscribeLocalEvent<KnowledgeHolderComponent, GetMeleeAttackRateEvent>(RelayActiveEvent);
         SubscribeLocalEvent<KnowledgeHolderComponent, ProjectileReflectAttemptEvent>(RelayMartialArt);
+        SubscribeLocalEvent<KnowledgeHolderComponent, ProjectileDodgeAttemptEvent>(RelayMartialArt); // Arcane
         SubscribeLocalEvent<KnowledgeHolderComponent, HitscanDodgeAttemptEvent>(RelayMartialArt); // Arcane
         SubscribeLocalEvent<KnowledgeHolderComponent, TryForceStandEvent>(RelayMartialArt);
     }

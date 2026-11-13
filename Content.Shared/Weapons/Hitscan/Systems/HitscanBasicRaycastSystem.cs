@@ -56,11 +56,32 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         //  1.) Hit the first entity that you targeted.
         //  2.) Hit the first entity that doesn't require you to aim at it specifically to be hit.
         var targetCoords = args.TargetCoordinates; // Goob
-        var result = _container.IsEntityOrParentInContainer(shooter)
-            ? rayCastResults.FirstOrNull()
-            : rayCastResults.FirstOrNull(hit => hit.HitEntity == target
-                                                || CompOrNull<RequireProjectileTargetComponent>(hit.HitEntity)?.Active != true
-                                                || (_transform.GetMapCoordinates(hit.HitEntity).Position - targetCoords).LengthSquared() > _crawlHitzoneSquared); // Goob
+        // Arcane-Edit-Start: a dodging target does not block the beam or count as a hit.
+        var shooterContained = _container.IsEntityOrParentInContainer(shooter);
+        RayCastResults? result = null;
+        HashSet<EntityUid>? dodged = null;
+        foreach (var candidate in rayCastResults)
+        {
+            var hit = candidate.HitEntity;
+            if (!shooterContained && hit != target && CompOrNull<RequireProjectileTargetComponent>(hit)?.Active == true &&
+                (_transform.GetMapCoordinates(hit).Position - targetCoords).LengthSquared() <= _crawlHitzoneSquared)
+                continue;
+
+            if (dodged?.Contains(hit) == true)
+                continue;
+
+            var dodge = new HitscanDodgeAttemptEvent(hit);
+            RaiseLocalEvent(hit, ref dodge);
+            if (dodge.Dodged)
+            {
+                (dodged ??= []).Add(hit);
+                continue;
+            }
+
+            result = candidate;
+            break;
+        }
+        // Arcane-Edit-End
 
         var distanceTried = result?.Distance ?? ent.Comp.MaxDistance;
 
@@ -85,16 +106,6 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
             Shooter = args.Shooter,
             HitEntity = result?.HitEntity,
         };
-
-        // Arcane-Start: a dodge cancels the hit without reflecting another shot.
-        if (data.HitEntity is { } hit)
-        {
-            var dodge = new HitscanDodgeAttemptEvent(hit);
-            RaiseLocalEvent(hit, ref dodge);
-            if (dodge.Dodged)
-                return;
-        }
-        // Arcane-End
 
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };
         RaiseLocalEvent(ent, ref attemptEvent);

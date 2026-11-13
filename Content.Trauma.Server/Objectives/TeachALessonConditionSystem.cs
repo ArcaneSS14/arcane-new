@@ -3,6 +3,7 @@
 using Content.Arcane.Shared.Bitrunning.Components;
 using Content.Server.Objectives.Components;
 using Content.Server.Objectives.Systems;
+using Content.Server.Polymorph.Systems;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
@@ -15,10 +16,11 @@ namespace Content.Trauma.Server.Objectives;
 /// <summary>
 /// Handles Teach a Lesson logic on if a specific entity has died at least once during the round
 /// </summary>
-public sealed class TeachALessonConditionSystem : EntitySystem
+public sealed partial class TeachALessonConditionSystem : EntitySystem
 {
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private TargetObjectiveSystem _objectives = default!;
+    [Dependency] private PolymorphSystem _polymorph = default!;
 
     public override void Initialize()
     {
@@ -58,7 +60,15 @@ public sealed class TeachALessonConditionSystem : EntitySystem
             return;
         }
 
-        var body = TryComp<AvatarConnectionComponent>(entity, out var avatar) ? avatar.OriginalBody : entity;
+        var body = entity;
+        for (var current = entity; current is { } candidate; current = _polymorph.GetPolymorphParent(candidate))
+        {
+            if (!TryComp<AvatarConnectionComponent>(candidate, out var avatar))
+                continue;
+
+            body = avatar.OriginalBody;
+            break;
+        }
         if (body is not { } uid || TerminatingOrDeleted(uid))
             return;
 

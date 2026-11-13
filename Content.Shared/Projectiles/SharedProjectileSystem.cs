@@ -298,6 +298,9 @@ public record struct ProjectileReflectAttemptEvent(EntityUid ProjUid, Projectile
     SlotFlags IInventoryRelayEvent.TargetSlots => SlotFlags.WITHOUT_POCKET;
 }
 
+[ByRefEvent]
+public record struct ProjectileDodgeAttemptEvent(EntityUid Projectile, EntityUid Target, bool Dodged = false);
+
 /// <summary>
 /// Raised when a projectile is shot
 /// </summary>

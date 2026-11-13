@@ -7,7 +7,6 @@ using Content.Shared.GameTicking.Rules.Components;
 using Content.Shared.Mind;
 using Content.Shared.NPC.Systems;
 using Content.Shared.PDA;
-using Content.Shared.Random.Helpers;
 using Content.Shared.Roles;
 using Content.Shared.Roles.Components;
 using Content.Shared.Roles.Jobs;
@@ -48,15 +47,9 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
             return false;
         }
 
-        var briefing = "";
-
-        if (rule.Comp.GiveCodewords)
-        {
-            Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - added codewords flufftext to briefing");
-            briefing = Loc.GetString("traitor-role-codewords-short", ("codewords", string.Join(", ", factionCodewords)));
-        }
-
-        var issuer = _random.Pick(ProtoMan.Index(rule.Comp.ObjectiveIssuers));
+        // Arcane: keep the localization key stable across server languages.
+        var issuers = ProtoMan.Index(rule.Comp.ObjectiveIssuers).Values;
+        var issuer = issuers.Count > 0 ? _random.Pick(issuers) : "objective-issuer-unknown";
 
         // Uplink code will go here if applicable, but we still need the variable if there aren't any
         Note[]? code = null;
@@ -77,20 +70,13 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
 
             // Choose and generate an Uplink, and return the uplink code if applicable
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request start");
-            (code, briefing, implantIssued) = RequestUplink(traitor, startingBalance, briefing); // Arcane
+            (code, implantIssued) = RequestUplink(traitor, startingBalance); // Arcane
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request completed");
-        }
-
-        string[]? codewords = null;
-        if (rule.Comp.GiveCodewords)
-        {
-            Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - set codewords from component");
-            codewords = factionCodewords;
         }
 
         if (rule.Comp.GiveBriefing)
         {
-            _antag.SendBriefing(traitor, GenerateBriefing(codewords, code, issuer, implantIssued), Color.Crimson, rule.Comp.GreetSoundNotification); // Arcane
+            _antag.SendBriefing(traitor, GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: false), Color.Crimson, rule.Comp.GreetSoundNotification); // Arcane
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Sent the Briefing");
         }
 
@@ -106,7 +92,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Add traitor briefing components");
             EnsureComp<RoleBriefingComponent>(traitorRole.Value.Owner, out var briefingComp);
-            briefingComp.Briefing = briefing;
+            briefingComp.Briefing = GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: true); // Arcane
         }
         else
         {
@@ -133,32 +119,54 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         return true;
     }
 
-    protected virtual (Note[]? Code, string Briefing, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
-    {
-        return (null, briefing, false);
-    }
+    protected virtual (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance) => default; // Arcane
 
     // TODO: figure out how to handle this? add priority to briefing event?
-    private string GenerateBriefing(string[]? codewords, Note[]? uplinkCode, string? objectiveIssuer, bool implantIssued)
+    private string GenerateBriefing(string[] codewords, Note[]? uplinkCode, string objectiveIssuer, bool implantIssued, bool characterPanel)
     {
+        // Arcane-Edit-Start: use the assigned corporation and actual uplink result in both views.
+        var prefix = $"arcane-traitor-{objectiveIssuer}";
         var sb = new StringBuilder();
-        sb.AppendLine(Loc.GetString("traitor-role-greeting", ("corporation", objectiveIssuer ?? Loc.GetString("objective-issuer-unknown"))));
-        sb.AppendLine(); // Arcane
-        if (uplinkCode != null)
-            sb.AppendLine(Loc.GetString("traitor-role-uplink-code", ("code", string.Join("-", uplinkCode).Replace("sharp", "#"))));
-        else if (implantIssued) // Arcane
-            sb.AppendLine(Loc.GetString("traitor-role-uplink-implant")); // Arcane
-        else
-            sb.AppendLine(Loc.GetString("traitor-role-no-uplink")); // Arcane-Edit: traitor-role-uplink-implant > traitor-role-no-uplink
+        sb.AppendLine(Loc.TryGetString($"{prefix}-intro", out var intro)
+            ? intro
+            : Loc.GetString("arcane-traitor-generic-intro", ("corporation", Loc.GetString(objectiveIssuer))));
+        sb.AppendLine();
 
-        // Arcane-Start: show access instructions before the codeword reminder.
-        if (codewords is { Length: > 0 })
+        if (!characterPanel && (uplinkCode != null || implantIssued) && Loc.TryGetString($"{prefix}-uplink", out var uplink))
+            sb.AppendLine(uplink);
+
+        if (uplinkCode != null)
+            sb.AppendLine(Loc.GetString(characterPanel ? "traitor-role-uplink-code-short" : "traitor-role-uplink-code",
+                ("code", string.Join("-", uplinkCode).Replace("sharp", "#"))));
+        else if (implantIssued)
+            sb.AppendLine(Loc.GetString(characterPanel ? "traitor-role-uplink-implant-short" : "traitor-role-uplink-implant"));
+        else
+            sb.AppendLine(Loc.GetString("traitor-role-no-uplink"));
+
+        if (codewords.Length > 0)
         {
             sb.AppendLine();
-            sb.AppendLine(Loc.GetString("traitor-role-codewords", ("codewords", string.Join(", ", codewords))));
+            sb.AppendLine(Loc.GetString(characterPanel ? "traitor-role-codewords-short" : "traitor-role-codewords",
+                ("codewords", string.Join(", ", codewords))));
         }
-        // Arcane-End
+
+        if (characterPanel && Loc.TryGetString($"{prefix}-allies", out var allies) && Loc.TryGetString($"{prefix}-goal", out var goal))
+        {
+            sb.AppendLine();
+            sb.AppendLine(Loc.GetString("arcane-traitor-allegiances"));
+            sb.AppendLine(allies);
+            sb.AppendLine();
+            sb.AppendLine(Loc.GetString("arcane-traitor-notes"));
+            sb.AppendLine(goal);
+        }
+        else if (!characterPanel)
+        {
+            sb.AppendLine();
+            sb.AppendLine(Loc.GetString("arcane-traitor-more-info"));
+        }
+
         return sb.ToString();
+        // Arcane-Edit-End
     }
 
     public List<(EntityUid Id, MindComponent Mind)> GetOtherTraitorMindsAliveAndConnected(MindComponent ourMind)

@@ -1,4 +1,5 @@
 using Content.Shared.Implants.Components;
+using Content.Shared.Trigger.Components.Effects; // Arcane
 using Content.Shared.Trigger.Components.Triggers;
 
 namespace Content.Shared.Trigger.Systems;
@@ -14,7 +15,7 @@ public sealed partial class TriggerOnActivateImplantSystem : TriggerOnXSystem
 
     private void OnActivateImplant(Entity<TriggerOnActivateImplantComponent> ent, ref ActivateImplantEvent args)
     {
-        Trigger.Trigger(ent.Owner, args.Performer, ent.Comp.KeyOut);
-        args.Handled = true;
+        var triggered = Trigger.Trigger(ent.Owner, args.Performer, ent.Comp.KeyOut);
+        args.Handled |= triggered || !HasComp<ScramOnTriggerComponent>(ent); // Arcane: SCRAM spends a charge only after moving.
     }
 }

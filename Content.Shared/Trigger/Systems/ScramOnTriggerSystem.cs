@@ -5,6 +5,7 @@ using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Physics;
 using Content.Shared.Trigger.Components.Effects;
 using Robust.Shared.Map;
+using Robust.Shared.Map.Components; // Arcane
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Audio.Systems;
@@ -22,6 +23,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
     [Dependency] private INetManager _net = default!;
     [Dependency] private TurfSystem _turfSystem = default!;
     [Dependency] private SharedContainerSystem _container = default!; // Arcane
+    [Dependency] private SharedMapSystem _map = default!; // Arcane
 
     protected override void OnTrigger(Entity<ScramOnTriggerComponent> ent, EntityUid target, ref TriggerEvent args)
     {
@@ -66,8 +68,13 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
             origin = container.Owner;
         }
 
-        if (!_transform.TryGetMapOrGridCoordinates(origin, out var userCoords))
+        var originXform = Transform(origin);
+        var parent = originXform.GridUid ?? originXform.MapUid;
+        if (parent is not { } parentUid)
             return null;
+
+        var userCoords = _transform.ToCoordinates(parentUid, _transform.GetMapCoordinates(originXform));
+        var grid = CompOrNull<MapGridComponent>(parentUid);
         // Arcane-End
         EntityCoordinates? targetCoords = null;
 
@@ -87,14 +94,18 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
             var distance = (radius.Y - radius.X) * MathF.Sqrt(_random.NextFloat()) * (1 - (float)i / tries) + radius.X;
 
             // We then offset the user coords from a random angle * distance
-            var tempTargetCoords = userCoords.Value.Offset(_random.NextAngle().ToVec() * distance);
+            var tempTargetCoords = userCoords.Offset(_random.NextAngle().ToVec() * distance);
 
-            if (!_turfSystem.TryGetTileRef(tempTargetCoords, out var tileRef)
-                || _turfSystem.IsSpace(tileRef.Value)
-                || _turfSystem.IsTileBlocked(tileRef.Value, (CollisionGroup)physicsComponent.CollisionMask))
+            // Arcane-Start: use the actual origin grid, even where two grids overlap.
+            TileRef? tileRef = grid != null
+                ? _map.TryGetTileRef(userCoords.EntityId, grid, tempTargetCoords, out var local) ? local : null
+                : _turfSystem.GetTileRef(tempTargetCoords);
+            if (tileRef is not { } tile || _turfSystem.IsSpace(tile) ||
+                _turfSystem.IsTileBlocked(tile, (CollisionGroup)physicsComponent.CollisionMask))
                 continue;
 
-            targetCoords = tempTargetCoords;
+            targetCoords = _transform.ToCoordinates(tile.GridUid, _transform.ToMapCoordinates(tempTargetCoords));
+            // Arcane-End
             break;
         }
 

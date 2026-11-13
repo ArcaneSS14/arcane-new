@@ -1131,25 +1131,26 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
         if (uid == otherUid || TerminatingOrDeleted(uid) || TerminatingOrDeleted(otherUid) ||
             Paused(uid) || Paused(otherUid) || xform.MapID == MapId.Nullspace || xform.MapID != otherXform.MapID ||
             xform.Anchored || otherXform.Anchored || Container.IsEntityOrParentInContainer(uid) ||
-            Container.IsEntityOrParentInContainer(otherUid))
+            Container.IsEntityOrParentInContainer(otherUid) || TransformSystem.IsParentOf(xform, otherUid) ||
+            TransformSystem.IsParentOf(otherXform, uid))
             return false;
 
-        var origin = xform.Coordinates;
-        var otherOrigin = otherXform.Coordinates;
-        if (!TransformSystem.SwapPositions((uid, xform), (otherUid, otherXform)))
-            return false;
+        var origin = TransformSystem.GetMoverCoordinates(uid, xform);
+        var otherOrigin = TransformSystem.GetMoverCoordinates(otherUid, otherXform);
+        TransformSystem.SetCoordinates(uid, otherOrigin);
+        TransformSystem.SetCoordinates(otherUid, origin);
         // Arcane-End
 
         _pulling.StopAllPulls(uid);
         _pulling.StopAllPulls(otherUid);
-        SpawnEffects(uid, xform, origin);
+        SpawnEffects(uid, origin);
         if (spawnSecondaryEffects)
-            SpawnEffects(otherUid, otherXform, otherOrigin);
+            SpawnEffects(otherUid, otherOrigin);
         Physics.WakeBody(uid);
         Physics.WakeBody(otherUid);
         return true;
 
-        void SpawnEffects(EntityUid ent, TransformComponent transform, EntityCoordinates from)
+        void SpawnEffects(EntityUid ent, EntityCoordinates from)
         {
             if (_net.IsClient)
                 return;
@@ -1163,7 +1164,7 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
                 Dirty(effect, trail);
             }
 
-            TransformSystem.SetParent(effect, Transform(effect), ent, transform);
+            TransformSystem.SetParent(effect, Transform(effect), ent, Transform(ent));
         }
     }
 

@@ -1,0 +1,5 @@
+- type: localizedDataset
+  id: ArcaneTraitorJobs
+  values:
+    prefix: arcane-traitor-job-
+    count: 35
