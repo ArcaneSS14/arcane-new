@@ -1,0 +1,138 @@
+- type: entity
+  parent: BaseNullrod
+  id: DragonsTail
+  components:
+  - type: WeaponClass
+    class: Polearm
+  - type: Item
+    size: Large
+    sprite: _Arcane/Objects/Weapons/Nullrod/dragontail.rsi
+  - type: Nullrod
+    damageOnUntrainedUse:
+      types:
+        Heat: 20
+    UntrainedUseString: arcane-nullrod-dragontail-untrained
+  - type: Sprite
+    sprite: _Arcane/Objects/Weapons/Nullrod/dragontail.rsi
+    state: icon
+  - type: MeleeWeapon
+    attackRate: 1
+    animationRotation: -135
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Holy: 5
+        Heat: 5
+        Blunt: 5
+    soundHit:
+      path: /Audio/Weapons/slash.ogg
+  - type: IgniteOnMeleeHit
+    fireStacks: 1
+  - type: Tag
+    tags:
+    - DragonsTail
+
+- type: entity
+  parent: BaseNullrod
+  id: InquisitorChainSword
+  components:
+  - type: WeaponClass
+    class: Sword
+  - type: Nullrod
+    damageOnUntrainedUse:
+      types:
+        Slash: 25
+    UntrainedUseString: arcane-nullrod-chainsword-untrained
+  - type: Sprite
+    sprite: _Arcane/Objects/Weapons/Nullrod/chainsword.rsi
+    layers:
+    - state: chainsword
+    - state: chainsword_blade
+      visible: false
+      map: [blade]
+  - type: Clothing
+    sprite: _Arcane/Objects/Weapons/Nullrod/chainsword.rsi
+    slots:
+    - Belt
+  - type: TimedPrayerToggle
+    duration: 10
+  - type: ItemToggle
+    onUse: false
+    onActivate: false
+    wieldToggle: false
+    predictable: false
+    soundActivate:
+      collection: GeneratorTug
+      params:
+        volume: 3
+    soundDeactivate:
+      path: /Audio/_Arcane/Weapons/ChainSword/chainEnd.ogg
+      params:
+        volume: 3
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Weapons/chainsaw_rev.ogg
+      params:
+        volume: 3
+  - type: ComponentToggler
+    components:
+    - type: Sharp
+    - type: DisarmMalus
+      malus: 0.6
+    - type: Execution
+      doAfterDuration: 4
+    - type: BoneSaw
+      speed: 0.65
+    - type: SurgeryTool
+      startSound:
+        path: /Audio/Weapons/chainsaw_pull.ogg
+      endSound:
+        path: /Audio/Weapons/chainsaw_rev.ogg
+    - type: Unremoveable
+    deactivateComponents:
+    - type: DisarmMalus
+      malus: 0
+  - type: Item
+    size: Large
+    sprite: _Arcane/Objects/Weapons/Nullrod/chainsword.rsi
+  - type: ItemToggleMeleeWeapon
+    activatedSoundOnHit:
+      path: /Audio/Weapons/chainsaw_rev.ogg
+      params:
+        volume: 3
+    activatedDamage:
+      types:
+        Slash: 20
+        Holy: 15
+        Structural: 20
+      woundSeverityMultipliers:
+        Slash: 2
+  - type: MeleeWeapon
+    animationRotation: -45
+    autoAttack: true
+    heavyStaminaCost: 10
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    damage:
+      types:
+        Blunt: 7
+        Holy: 5
+  - type: UseDelay
+    delay: 180
+  - type: Appearance
+  - type: ToggleableVisuals
+    spriteLayer: blade
+    inhandVisuals:
+      left:
+      - state: inhand-left-blade
+      right:
+      - state: inhand-right-blade
+  - type: Tag
+    tags:
+    - InquisitorChainSword
+
+- type: Tag
+  id: DragonsTail
+
+- type: Tag
+  id: InquisitorChainSword

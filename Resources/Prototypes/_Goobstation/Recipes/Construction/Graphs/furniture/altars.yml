@@ -92,6 +92,7 @@
       steps:
       - tag: BudgetInsuls
         name: construction-graph-tag-budget-insuls
+        store: altar_offering # Arcane
         doAfter: 3
     - to: NanotrasenAltarNode
       completed:
@@ -154,6 +155,27 @@
       - material: Silver
         amount: 1
         doAfter: 3
+
+    # Arcane-Start
+    - to: DragonAltarNode
+      completed:
+      - !type:SnapToGrid
+        southRotation: true
+      steps:
+      - tag: PlushieCarp
+        name: arcane-construction-graph-plushie-carp
+        store: altar_offering
+        doAfter: 3
+    - to: EmpireAltarNode
+      completed:
+      - !type:SnapToGrid
+        southRotation: true
+      steps:
+      - tag: Book
+        name: arcane-construction-graph-book
+        store: altar_offering
+        doAfter: 3
+    # Arcane-End
 
   #Nullrod Altars
   - node: BananiumAltarNode
@@ -233,9 +255,10 @@
     edges:
     - to: AltarConvertNode
       completed:
-      - !type:SpawnPrototype
-        prototype: ClothingHandsGlovesColorYellowBudget
-        amount: 1
+      # Arcane-Edit-Start
+      - !type:EmptyContainer
+        container: altar_offering
+      # Arcane-Edit-End
       steps:
       - tool: Prying
         doAfter: 1
@@ -323,3 +346,27 @@
       steps:
       - tool: Prying
         doAfter: 1
+
+  # Arcane-Start
+  - node: DragonAltarNode
+    entity: AltarDragon
+    edges:
+    - to: AltarConvertNode
+      completed:
+      - !type:EmptyContainer
+        container: altar_offering
+      steps:
+      - tool: Prying
+        doAfter: 1
+
+  - node: EmpireAltarNode
+    entity: AltarEmpire
+    edges:
+    - to: AltarConvertNode
+      completed:
+      - !type:EmptyContainer
+        container: altar_offering
+      steps:
+      - tool: Prying
+        doAfter: 1
+  # Arcane-End

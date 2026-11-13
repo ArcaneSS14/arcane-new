@@ -14,3 +14,16 @@ public record struct AlternatePrayEvent(EntityUid User);
 
 [Serializable, NetSerializable]
 public sealed partial class AlternatePrayDoAfterEvent : SimpleDoAfterEvent;
+
+// Arcane-Start
+/// <summary>Raised on the original nullrod before an altar replaces it.</summary>
+[ByRefEvent]
+public record struct NullrodTransformAttemptEvent(EntityUid User)
+{
+    public bool Cancelled;
+}
+
+/// <summary>Raised on the original, still-existing nullrod after its replacement is initialized.</summary>
+[ByRefEvent]
+public readonly record struct NullrodTransformedEvent(EntityUid User, EntityUid Replacement);
+// Arcane-End
