@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Linq;
+using Content.Shared.Zombies; // Arcane
 using Content.Trauma.Shared.VentCrawling;
 using Content.Trauma.Shared.VentCrawling.Components;
 using Robust.Shared.Physics.Components;
@@ -21,7 +22,22 @@ public sealed partial class VentCrawableSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<VentCrawlerHolderComponent, VentCrawlingExitEvent>(OnVentCrawlingExitEvent);
+        SubscribeLocalEvent<BeingVentCrawlerComponent, EntityZombifiedEvent>(OnZombified); // Arcane
     }
+
+    // Arcane-Start
+    private void OnZombified(Entity<BeingVentCrawlerComponent> ent, ref EntityZombifiedEvent args)
+    {
+        var holder = ent.Comp.Holder;
+        if (!TryComp<VentCrawlerHolderComponent>(holder, out var crawler) ||
+            crawler.IsExitingVentCraws ||
+            !crawler.Container.Contains(ent))
+            return;
+
+        var exit = new VentCrawlingExitEvent { holderTransform = Transform(holder) };
+        RaiseLocalEvent(holder, ref exit);
+    }
+    // Arcane-End
 
     /// <summary>
     /// Exits the vent craws for the specified VentCrawlerHolderComponent, removing it and any contained entities from the craws.

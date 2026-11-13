@@ -86,6 +86,7 @@ namespace Content.Server.Zombies
             SubscribeLocalEvent<IncurableZombieComponent, MapInitEvent>(OnPendingMapInit);
 
             SubscribeLocalEvent<ZombifyOnDeathComponent, MobStateChangedEvent>(OnDamageChanged);
+            InitializeCure(); // Arcane
         }
 
         private void OnBeforeRemoveAnomalyOnDeath(Entity<PendingZombieComponent> ent, ref BeforeRemoveAnomalyOnDeathEvent args)
@@ -122,12 +123,16 @@ namespace Content.Server.Zombies
         public override void Update(float frameTime)
         {
             base.Update(frameTime);
+            UpdateZombieCures(); // Arcane
             var curTime = _timing.CurTime;
 
             // Hurt the living infected
             var query = EntityQueryEnumerator<PendingZombieComponent, Shared.Damage.Components.DamageableComponent, MobStateComponent>();
             while (query.MoveNext(out var uid, out var comp, out var damage, out var mobState))
             {
+                if (HasComp<ZombieComponent>(uid)) // Arcane: conversion defers removal of the infection.
+                    continue;
+
                 // Process only once per second
                 if (comp.NextTick > curTime)
                     continue;
@@ -138,6 +143,7 @@ namespace Content.Server.Zombies
                 if (comp.GracePeriod > TimeSpan.Zero)
                     continue;
 
+                UpdateInfectionSymptoms(uid, comp); // Arcane
                 if (_random.Prob(comp.InfectionWarningChance))
                     _popup.PopupEntity(Loc.GetString(_random.Pick(comp.InfectionWarnings)), uid, uid);
 
@@ -200,6 +206,7 @@ namespace Content.Server.Zombies
 
         private void OnMobState(EntityUid uid, ZombieComponent component, MobStateChangedEvent args)
         {
+            QueueZombieCureOnIncapacitation(uid, args.NewMobState); // Arcane
             if (args.NewMobState == MobState.Alive)
             {
                 // Groaning when damaged

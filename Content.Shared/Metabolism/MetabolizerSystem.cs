@@ -15,6 +15,7 @@ using Content.Shared.EntityEffects.Effects.Solution;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Random.Helpers;
+using Content.Shared.Zombies; // Arcane
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -266,6 +267,9 @@ public sealed partial class MetabolizerSystem : EntitySystem
     private void TryMetabolize(Entity<MetabolizerComponent, OrganComponent?, SolutionManagerComponent?> ent)
     {
         _organQuery.Resolve(ent, ref ent.Comp2, logMissing: false);
+        if (HasComp<ZombieComponent>(ent.Comp2?.Body ?? ent.Owner)) // Arcane
+            return;
+
         _solutionQuery.Resolve(ent, ref ent.Comp3, logMissing: false);
 
         foreach (var stage in ent.Comp1.Stages)

@@ -90,6 +90,7 @@
   id: MobSlimePerson
   name: Urist McWobble
   components:
+  - type: SlimeRegrow # Arcane
   # <Trauma>
   - type: LanguageSpeaker
     speaks:

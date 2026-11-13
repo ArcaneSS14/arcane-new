@@ -10,6 +10,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Tools.Components;
 using Content.Shared.Verbs;
+using Content.Shared.Zombies; // Arcane
 using Content.Trauma.Common.VentCrawling;
 using Content.Trauma.Shared.VentCrawling;
 using Content.Trauma.Shared.VentCrawling.Components;
@@ -51,7 +52,9 @@ public sealed partial class VentCrawlerTubeSystem : EntitySystem
 
     private void AddClimbedVerb(EntityUid uid, VentCrawlerEntryComponent component, GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!TryComp<VentCrawlerComponent>(args.User, out var ventCrawlerComponent) || HasComp<BeingVentCrawlerComponent>(args.User))
+        if (!TryComp<VentCrawlerComponent>(args.User, out var ventCrawlerComponent) ||
+            HasComp<BeingVentCrawlerComponent>(args.User) ||
+            HasComp<ZombieComponent>(args.User)) // Arcane
             return;
 
         if (!Transform(uid).Anchored)
@@ -80,6 +83,9 @@ public sealed partial class VentCrawlerTubeSystem : EntitySystem
 
     private void TryEnter(EntityUid uid, EntityUid user, VentCrawlerComponent crawler)
     {
+        if (HasComp<ZombieComponent>(user)) // Arcane: recheck when a cached verb is invoked.
+            return;
+
         if (TryComp<WeldableComponent>(uid, out var weldableComponent) && weldableComponent.IsWelded)
             {
                 _popup.PopupEntity(Loc.GetString("entity-storage-component-welded-shut-message"), user);
@@ -189,7 +195,8 @@ public sealed partial class VentCrawlerTubeSystem : EntitySystem
         if (!Resolve(uid, ref entry))
             return false;
 
-        if (!TryComp<VentCrawlerComponent>(entity, out var ventCrawlerComponent))
+        if (!TryComp<VentCrawlerComponent>(entity, out var ventCrawlerComponent) ||
+            HasComp<ZombieComponent>(entity)) // Arcane: a player may turn during the do-after.
             return false;
 
         var holder = Spawn(entry.HolderPrototypeId, Transform(uid).Coordinates);
