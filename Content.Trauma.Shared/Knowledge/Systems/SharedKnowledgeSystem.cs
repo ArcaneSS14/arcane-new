@@ -485,6 +485,11 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
             RaiseLocalEvent(unit, ref ev);
             SkillPopup(Loc.GetString("knowledge-unit-forgotten-popup", ("knowledge", Name(unit))), holder);
         }
+        else if (ent.Comp.ActiveMartialArt == unit.Owner)
+        {
+            ent.Comp.ActiveMartialArt = null;
+            DirtyField(ent, ent.Comp, nameof(KnowledgeContainerComponent.ActiveMartialArt));
+        }
         // Arcane-End
 
         PredictedQueueDel(unit);

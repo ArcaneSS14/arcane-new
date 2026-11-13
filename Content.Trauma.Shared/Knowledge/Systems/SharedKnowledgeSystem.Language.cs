@@ -112,6 +112,7 @@ public abstract partial class SharedKnowledgeSystem
 
         ent.Comp.Speaks.AddRange(ev.SpokenLanguages);
         ent.Comp.Understands.AddRange(ev.UnderstoodLanguages);
+        Dirty(ent); // Arcane: the current language may still be valid while the available lists have changed.
 
         _language.EnsureValidLanguage(ent.AsNullable());
 

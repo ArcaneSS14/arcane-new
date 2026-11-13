@@ -2,8 +2,11 @@
 using System.Linq;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Power.Components;
+using Content.Server.Silicons.StationAi;
 using Content.Server.Station.Systems;
 using Content.Shared.Actions;
+using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Ghost.Components;
 using Content.Shared.Light.EntitySystems;
 using Content.Shared.Mind;
 using Content.Shared.PAI;
@@ -132,6 +135,63 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
             Assert.That(SEntMan.GetComponent<StationJobsComponent>(second).JobList["StationAi"], Is.Zero);
             Assert.That(jobs.TryGetPlayerJobs(first, user, out var assignments), Is.True);
             Assert.That(assignments!.Select(job => job.Id), Is.EqualTo(new[] { "Passenger" }));
+        });
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task StationAiRetirementChecksTheCoreAgainBeforeReleasingItsSlot(bool removedFromCore)
+    {
+        EntityUid ai = default;
+        EntityUid core = default;
+        EntityUid station = default;
+        EntityUid mindId = default;
+        await Server.WaitAssertion(() =>
+        {
+            var stations = SEntMan.System<ServerStationSystem>();
+            var jobs = SEntMan.System<ServerStationJobsSystem>();
+            var minds = SEntMan.System<SharedMindSystem>();
+            var player = ServerSession!;
+            station = SEntMan.SpawnAttachedTo("TestStation", Center);
+            stations.AddGridToStation(station, MapData.Grid);
+            Assert.That(jobs.TrySetJobSlot(station, "StationAi", 1, createSlot: true), Is.True);
+            Assert.That(jobs.TryAssignJob(station, "StationAi", player.UserId), Is.True);
+
+            core = SEntMan.SpawnAttachedTo("PlayerStationAiEmpty", Center);
+            ai = SEntMan.SpawnAttachedTo("StationAiBrain", Center);
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(core, StationAiCoreComponent.Container, ai, user: null), Is.True);
+            mindId = minds.CreateMind(player.UserId, "Retiring station AI");
+            minds.TransferTo(mindId, ai);
+            Assert.That(player.AttachedEntity, Is.EqualTo(ai));
+
+            if (removedFromCore)
+            {
+                var containers = SEntMan.System<SharedContainerSystem>();
+                Assert.That(containers.TryGetContainingContainer(ai, out var holder), Is.True);
+                Assert.That(containers.Remove(ai, holder!), Is.True);
+            }
+
+            var retirement = SEntMan.System<StationAiSystem>();
+            retirement.RetireStationAi(player, ai, core, station, mindId);
+            retirement.RetireStationAi(player, ai, core, station, mindId);
+            Assert.That(SEntMan.GetComponent<StationJobsComponent>(station).JobList["StationAi"], Is.EqualTo(removedFromCore ? 0 : 1));
+            if (removedFromCore)
+            {
+                Assert.That(player.AttachedEntity, Is.EqualTo(ai));
+                return;
+            }
+
+            Assert.That(player.AttachedEntity, Is.Not.EqualTo(ai));
+            Assert.That(SEntMan.TryGetComponent<GhostComponent>(player.AttachedEntity, out var ghost), Is.True);
+            Assert.That(ghost!.CanReturnToBody, Is.False);
+        });
+
+        await RunSeconds(0.2f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(ai), Is.EqualTo(removedFromCore));
+            Assert.That(SEntMan.EntityExists(core), Is.True);
+            SEntMan.System<SharedMindSystem>().WipeMind(mindId);
         });
     }
 
