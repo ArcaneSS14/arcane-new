@@ -12,8 +12,7 @@ using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
+using YamlDotNet.RepresentationModel;
 
 namespace Content.Goobstation.Client.CustomLawboard;
 
@@ -173,25 +172,14 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
                 throw new InvalidDataException("Lawboard file exceeds the size limit.");
 
             var contents = new string(text, 0, length);
-            using var validation = new StringReader(contents);
-            var parser = new Parser(validation);
-            var depth = 0;
-            while (parser.MoveNext())
-            {
-                if (parser.Current is AnchorAlias)
-                    throw new InvalidDataException("Aliases are not supported in lawboard files.");
-                if (parser.Current is MappingStart or SequenceStart && ++depth > 6)
-                    throw new InvalidDataException("Lawboard file contains nested data.");
-                if (parser.Current is MappingEnd or SequenceEnd)
-                    depth--;
-            }
-
             using var input = new StringReader(contents);
-            var documents = DataNodeParser.ParseYamlStream(input).Take(2).ToArray();
-            if (documents.Length != 1 || documents[0].Root is not MappingDataNode root)
+            var yaml = new YamlStream();
+            yaml.Load(input);
+            if (yaml.Documents.Count != 1 || yaml.Documents[0].RootNode is not YamlMappingNode root)
                 throw new InvalidDataException("Expected a single lawset mapping.");
 
-            var lawset = _serialization.Read<SiliconLawset>(root, notNullableOverride: true);
+            ValidateLawMapping(root);
+            var lawset = _serialization.Read<SiliconLawset>(root.ToDataNodeCast<MappingDataNode>(), notNullableOverride: true);
             SetLaws(SharedCustomLawboardSystem.SanitizeLaws(lawset.Laws), notify: false);
             ProcessLawsChanged(true);
         }
@@ -203,6 +191,39 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         finally
         {
             SetFileButtonsDisabled(false);
+        }
+    }
+
+    private static void ValidateLawMapping(YamlMappingNode root)
+    {
+        var seen = new HashSet<YamlNode>(ReferenceEqualityComparer.Instance) { root };
+        foreach (var (key, value) in root)
+        {
+            if (!seen.Add(key) || !seen.Add(value) || key is not YamlScalarNode keyName)
+                throw new InvalidDataException("Invalid lawset field.");
+
+            switch (keyName.Value)
+            {
+                case "obeysTo" when value is YamlScalarNode:
+                    break;
+                case "laws" when value is YamlSequenceNode sequence && sequence.Children.Count <= SharedCustomLawboardSystem.MaxLaws:
+                    foreach (var entry in sequence.Children)
+                    {
+                        if (!seen.Add(entry) || entry is not YamlMappingNode law)
+                            throw new InvalidDataException("Expected a flat mapping per law.");
+
+                        foreach (var (lawKey, lawValue) in law)
+                        {
+                            if (!seen.Add(lawKey) || !seen.Add(lawValue) || lawKey is not YamlScalarNode name ||
+                                name.Value is not ("lawString" or "order" or "lawIdentifierOverride" or "corrupted") ||
+                                lawValue is not YamlScalarNode)
+                                throw new InvalidDataException("Invalid law field.");
+                        }
+                    }
+                    break;
+                default:
+                    throw new InvalidDataException("Unknown lawset field.");
+            }
         }
     }
 
