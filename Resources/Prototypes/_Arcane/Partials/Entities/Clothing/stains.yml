@@ -1,0 +1,333 @@
+# Stains on clothing: blood and other reagents soak into worn clothing and show on the sprite.
+# The stain solution itself is SolutionClothingStain (_Arcane/Entities/Clothing/solutions.yml).
+
+- type: entity
+  id: ClothingBeltBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      belt:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: beltblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: beltbloodicon
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingBeltSecurityWebbing
+  components:
+  - type: Stainable
+    clothingVisuals:
+      belt:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: armorblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: armorbloodicon
+
+- type: entity
+  id: ClothingBeltMilitaryWebbing
+  components:
+  - type: Stainable
+    clothingVisuals:
+      belt:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: armorblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: armorbloodicon
+
+- type: entity
+  id: ClothingHandsBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      gloves:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: gloveblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: glovebloodicon
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingHeadBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: helmetbloodicon
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingHeadEVAHelmetBase
+  components:
+  - type: StainBlocker
+    slots: [MASK]
+
+- type: entity
+  id: ClothingHeadHardsuitBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: helmetbloodicon
+  - type: StainBlocker
+    slots: [MASK]
+
+- type: entity
+  id: ClothingHeadHatHoodWinterBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: helmetbloodicon
+
+- type: entity
+  id: ClothingMaskBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      mask:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: maskblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: maskbloodicon
+
+- type: entity
+  id: ClothingMaskBaseButcherable
+  components:
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingNeckBase
+  components:
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingOuterArmorBase
+  components:
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: armorblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: armorbloodicon
+
+- type: entity
+  id: ClothingOuterArmorCaptainCarapace
+  components:
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: armorblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: armorbloodicon
+  - type: StainBlocker
+    slots: NONE
+
+- type: entity
+  id: ClothingOuterBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: outerclothing
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: outerclothing
+  - type: StainBlocker
+    slots: [INNERCLOTHING]
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingOuterBaseLarge
+  components:
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: suitblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: suitbloodicon
+  - type: StainBlocker
+    slots: [INNERCLOTHING, FEET, GLOVES]
+
+- type: entity
+  id: ClothingOuterStorageBase
+  components:
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: coatblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: coatbloodicon
+
+- type: entity
+  id: ClothingOuterStorageFoldableBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: outerclothing
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: outerclothing
+
+- type: entity
+  id: ClothingOuterHardsuitBase
+  components:
+  - type: StainBlocker
+    slots: [INNERCLOTHING, FEET, GLOVES]
+
+- type: entity
+  id: ClothingOuterEVASuitBase
+  components:
+  - type: StainBlocker
+    slots: [INNERCLOTHING, FEET, GLOVES]
+
+- type: entity
+  id: ClothingOuterWinterCoat
+  components:
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: ClothingShoesBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      shoes:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: shoeblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: shoebloodicon
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: UnsensoredClothingUniformBase
+  components:
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      jumpsuit:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: uniformblood
+    itemVisuals:
+      left:
+      - sprite: _Arcane/Effects/Stains/jumpsuit.rsi
+        state: inhand-right
+      right:
+      - sprite: _Arcane/Effects/Stains/jumpsuit.rsi
+        state: inhand-left
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: uniformbloodicon
+  - type: SolutionManager
+    solutions:
+    - SolutionClothingStain
+
+- type: entity
+  id: UnsensoredClothingUniformSkirtBase
+  components:
+  - type: Stainable
+    clothingVisuals:
+      jumpsuit:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: uniformblood
+    itemVisuals:
+      left:
+      - sprite: _Arcane/Effects/Stains/jumpskirt.rsi
+        state: inhand-right
+      right:
+      - sprite: _Arcane/Effects/Stains/jumpskirt.rsi
+        state: inhand-left
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: uniformbloodicon
+
+- type: entity
+  id: ClothingUniformFoldableBase
+  components:
+  - type: Stainable
+    clothingVisuals:
+      jumpsuit:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: uniformblood
+    itemVisuals:
+      left:
+      - sprite: _Arcane/Effects/Stains/jumpskirt.rsi
+        state: inhand-right
+      right:
+      - sprite: _Arcane/Effects/Stains/jumpskirt.rsi
+        state: inhand-left
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: uniformbloodicon
+
+- type: entity
+  id: ClothingOuterWinterCapArmored
+  components:
+  - type: Stainable
+    clothingVisuals:
+      outerClothing:
+      - sprite: _Arcane/Effects/blood.rsi
+        state: coatblood
+    iconVisuals:
+    - sprite: _Arcane/Effects/blood.rsi
+      state: coatbloodicon
+
+- type: entity
+  id: ClothingOuterArmourInvisible
+  components:
+  # No stain solution: this one cannot get stained.
+  - type: SolutionManager
+    solutions: []
