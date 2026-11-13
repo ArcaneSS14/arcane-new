@@ -94,7 +94,7 @@ public sealed partial class PAISystem : EntitySystem
 
         args.Handled = true;
         _stationAi.SetVisionEnabled((entity.Owner, vision), !vision.Enabled);
-        _actions.SetToggled(args.Action, vision.Enabled);
+        _actions.SetToggled(args.Action.AsNullable(), vision.Enabled);
     }
 
     private void OnShutdown(Entity<PAIComponent> entity, ref ComponentShutdown args)

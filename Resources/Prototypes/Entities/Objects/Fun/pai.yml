@@ -274,6 +274,7 @@
   - type: Action
     useDelay: 0.5
     itemIconStyle: NoItem
+    temporary: true
   - type: Sprite
     sprite: Interface/Actions/actions_ai.rsi
     state: ai_core

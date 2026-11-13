@@ -166,6 +166,11 @@ public sealed partial class StationAiOverlay : Overlay
         worldHandle.UseShader(_proto.Index(StencilDrawShader).Instance());
         worldHandle.DrawTextureRect(res.StaticTexture!.Texture, worldBounds);
 
+        // Arcane-Start: station AI can identify powered machines outside camera coverage.
+        if (grid != null && _entManager.HasComponent<StationAiHeldComponent>(_player.LocalEntity))
+            DrawMachineView(in args, worldHandle, gridUid, grid);
+        // Arcane-End
+
         worldHandle.SetTransform(Matrix3x2.Identity);
         worldHandle.UseShader(null);
 

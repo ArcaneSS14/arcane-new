@@ -28,6 +28,41 @@
     voice: Borg
   - type: SiliconLawProvider
     laws: NTDefault
+  # Arcane-Start: station AI crew languages
+  - type: LanguageSpeaker
+    speaks:
+    - TauCetiBasic
+    - RobotTalk
+    - DroneTalk
+    - Bubblish
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - SiikMaas
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Schechi
+    - NewKinPidgin
+    understands:
+    - TauCetiBasic
+    - RobotTalk
+    - DroneTalk
+    - Bubblish
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - SiikMaas
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Schechi
+    - NewKinPidgin
+  # Arcane-End
 
 # Hologram projection that the AI's eye tracks.
 - type: entity

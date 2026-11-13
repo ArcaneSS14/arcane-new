@@ -34,6 +34,22 @@
       WallsKnowledge: 10
       InfrastructureKnowledge: 10
       ElectronicsKnowledge: 10
+      # Arcane-Start: crew languages available while using this chassis
+      LanguageTauCetiBasic: 100
+      LanguageRobotTalk: 100
+      LanguageBubblish: 100
+      LanguageDraconic: 100
+      LanguageSolCommon: 100
+      LanguageRootSpeak: 100
+      LanguageMoffic: 100
+      LanguageSiikMaas: 100
+      LanguageMarish: 100
+      LanguageElyran: 100
+      LanguageFreespeak: 100
+      LanguageTradeband: 100
+      LanguageSchechi: 100
+      LanguageNewKinPidgin: 100
+      # Arcane-End
   - type: TwistedConstructionTarget
     replacementProto: ConstructShell
   # </Trauma>

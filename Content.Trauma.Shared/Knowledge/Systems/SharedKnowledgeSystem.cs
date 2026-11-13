@@ -469,7 +469,6 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
     {
         if (_timing.ApplyingState || // containers and KnowledgeDict are networked, state handling doesnt need to do anything
             GetContainer(target) is not { } ent ||
-            ent.Comp.Holder is not { } holder ||
             ent.Comp.Container is not { } container ||
             GetKnowledge(ent, id) is not { } unit ||
             unit.Comp.Unremoveable && !force ||
@@ -479,12 +478,17 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
         ent.Comp.KnowledgeDict.Remove(id);
         DirtyField(ent, ent.Comp, nameof(KnowledgeContainerComponent.KnowledgeDict));
 
-        var ev = new KnowledgeRemovedEvent(ent, holder);
-        RaiseLocalEvent(unit, ref ev);
+        // Arcane-Start: a loose borg brain can lose temporary chassis knowledge.
+        if (ent.Comp.Holder is { } holder)
+        {
+            var ev = new KnowledgeRemovedEvent(ent, holder);
+            RaiseLocalEvent(unit, ref ev);
+            SkillPopup(Loc.GetString("knowledge-unit-forgotten-popup", ("knowledge", Name(unit))), holder);
+        }
+        // Arcane-End
 
         PredictedQueueDel(unit);
 
-        SkillPopup(Loc.GetString("knowledge-unit-forgotten-popup", ("knowledge", Name(unit))), holder);
         return target;
     }
 

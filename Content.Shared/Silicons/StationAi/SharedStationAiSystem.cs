@@ -25,6 +25,7 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.Repairable;
 using Content.Shared.StationAi;
+using Content.Shared.Wall; // Arcane
 using Content.Shared.Verbs;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -191,6 +192,17 @@ public abstract partial class SharedStationAiSystem : EntitySystem
             return;
         }
 
+        // Arcane-Start: powered machines remain visible to a station AI beyond camera coverage.
+        if (!ent.Comp.Enabled)
+            return;
+
+        if (IsMachineVisible(ent.Owner))
+        {
+            args.Result = BoundUserInterfaceRangeResult.Pass;
+            return;
+        }
+        // Arcane-End
+
         var targetTile = Maps.LocalToTile(targetXform.GridUid.Value, grid, targetXform.Coordinates);
 
         lock (_vision)
@@ -219,6 +231,14 @@ public abstract partial class SharedStationAiSystem : EntitySystem
             return;
         }
 
+        // Arcane-Start: only station AI uses machine vision, even when another role shares the overlay.
+        if (HasComp<StationAiHeldComponent>(ent) && targetXform.GridUid == Transform(args.User).GridUid && IsMachineVisible(target))
+        {
+            args.InRange = true;
+            return;
+        }
+        // Arcane-End
+
         // Validate it's in camera range yes this is expensive.
         // Yes it needs optimising
         if (!_broadphaseQuery.TryComp(targetXform.GridUid, out var broadphase) || !_gridQuery.TryComp(targetXform.GridUid, out var grid))
@@ -230,6 +250,15 @@ public abstract partial class SharedStationAiSystem : EntitySystem
 
         args.InRange = _vision.IsAccessible((targetXform.GridUid.Value, broadphase, grid), targetTile);
     }
+
+    // Arcane-Start: share the machine predicate between range checks and the client overlay.
+    public bool IsMachineVisible(EntityUid uid)
+    {
+        return TryComp<StationAiWhitelistComponent>(uid, out var whitelist) && whitelist.Enabled &&
+            TryComp(uid, out TransformComponent? transform) && transform.GridUid != null &&
+            (transform.Anchored || HasComp<WallMountComponent>(uid)) && PowerReceiver.IsPowered(uid);
+    }
+    // Arcane-End
 
 
     private void OnIntellicardDoAfter(Entity<StationAiHolderComponent> ent, ref IntellicardDoAfterEvent args)

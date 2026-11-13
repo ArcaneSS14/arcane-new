@@ -215,6 +215,22 @@ public sealed partial class ServerStationJobsSystem : StationJobsSystem
         return jobsComponent.PlayerJobs.Remove(userId);
     }
 
+    // Arcane-Start: release only the specified assignment on this station.
+    public bool TryReleasePlayerJob(EntityUid station, NetUserId userId, ProtoId<JobPrototype> job)
+    {
+        if (!TryComp<StationJobsComponent>(station, out var component) ||
+            !TryGetPlayerJobs(station, userId, out var jobs, component) || !jobs.Contains(job) ||
+            !TryAdjustJobSlot(station, job.Id, 1, stationJobs: component))
+            return false;
+
+        jobs.Remove(job);
+        if (jobs.Count == 0)
+            component.PlayerJobs.Remove(userId);
+
+        return true;
+    }
+    // Arcane-End
+
     /// <inheritdoc cref="TrySetJobSlot(Robust.Shared.GameObjects.EntityUid,string,int,bool,StationJobsComponent?)"/>
     /// <param name="station">Station to adjust the job slot on.</param>
     /// <param name="jobPrototype">Job prototype to adjust.</param>

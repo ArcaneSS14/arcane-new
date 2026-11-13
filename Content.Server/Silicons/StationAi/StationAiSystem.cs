@@ -89,6 +89,8 @@ public sealed partial class StationAiSystem : SharedStationAiSystem
 
         SubscribeLocalEvent<ExpandICChatRecipientsEvent>(OnExpandICChatRecipients);
         SubscribeLocalEvent<StationAiTurretComponent, AmmoShotEvent>(OnAmmoShot);
+        InitializeCameraLights(); // Arcane
+        InitializeRetirement(); // Arcane
     }
 
     private void AfterConstructionChangeEntity(Entity<StationAiCoreComponent> ent, ref AfterConstructionChangeEntityEvent args)
@@ -162,6 +164,7 @@ public sealed partial class StationAiSystem : SharedStationAiSystem
     protected override void OnAiRemove(Entity<StationAiCoreComponent> ent, ref EntRemovedFromContainerMessage args)
     {
         base.OnAiRemove(ent, ref args);
+        RemoveCameraLightObserver(args.Entity); // Arcane
 
         _alerts.ClearAlert(args.Entity, _batteryAlert);
         _alerts.ClearAlert(args.Entity, _damageAlert);

@@ -49,6 +49,14 @@ public abstract partial class SharedKnowledgeSystem
             UpdateEntityLanguages((args.Holder, speaker));
     }
 
+    // Arcane-Start: recompute language lists after applying or removing a chassis's grants.
+    private void RefreshBorgLanguages(EntityUid uid)
+    {
+        if (TryComp<LanguageSpeakerComponent>(uid, out var speaker))
+            UpdateEntityLanguages((uid, speaker));
+    }
+    // Arcane-End
+
     /// <summary>
     /// Directly sets the current spoken language.
     /// </summary>
