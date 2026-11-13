@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Arcane.Shared.Bitrunning.Components;
 using Content.Server.Objectives.Components;
+using Content.Server.Objectives.Systems;
+using Content.Shared.Ghost.Components;
 using Content.Shared.Mind;
+using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Objectives.Components;
 
 namespace Content.Trauma.Server.Objectives;
@@ -12,11 +17,15 @@ namespace Content.Trauma.Server.Objectives;
 /// </summary>
 public sealed class TeachALessonConditionSystem : EntitySystem
 {
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private TargetObjectiveSystem _objectives = default!;
+
     public override void Initialize()
     {
         base.Initialize();
 
-        SubscribeLocalEvent<TeachALessonTargetComponent, MobStateChangedEvent>(OnMobStateChanged);
+        SubscribeLocalEvent<TeachALessonBodyComponent, MobStateChangedEvent>(OnMobStateChanged);
+        SubscribeLocalEvent<TeachALessonTargetComponent, MindGotAddedEvent>(OnTargetMoved);
         SubscribeLocalEvent<TeachALessonConditionComponent, ObjectiveAfterAssignEvent>(OnAfterAssign);
         SubscribeLocalEvent<TeachALessonConditionComponent, ObjectiveGetProgressEvent>(OnGetProgress);
     }
@@ -28,33 +37,64 @@ public sealed class TeachALessonConditionSystem : EntitySystem
 
     private void OnAfterAssign(Entity<TeachALessonConditionComponent> ent, ref ObjectiveAfterAssignEvent args)
     {
-        if (!TryComp(ent.Owner, out TargetObjectiveComponent? targetObjective))
+        if (!_objectives.GetTarget(ent.Owner, out var targetMindId) || !TryComp<MindComponent>(targetMindId, out var targetMind))
             return;
-        var targetMindUid = targetObjective.Target;
-        if (targetMindUid is null)
-            return;
-        if (!TryComp(targetMindUid, out MindComponent? targetMind))
-            return;
-        var targetMobUid = targetMind.CurrentEntity;
-        if (targetMobUid is null)
-            return;
-        var targetComponent = EnsureComp<TeachALessonTargetComponent>(targetMobUid.Value);
-        targetComponent.Teachers.Add(ent);
 
+        var mind = targetMindId.Value;
+        var target = EnsureComp<TeachALessonTargetComponent>(mind);
+        target.Teachers.Add(ent);
+        WatchCharacter((mind, target), targetMind.OwnedEntity);
     }
 
-    private void OnMobStateChanged(Entity<TeachALessonTargetComponent> ent, ref MobStateChangedEvent args)
+    private void OnTargetMoved(Entity<TeachALessonTargetComponent> ent, ref MindGotAddedEvent args)
+        => WatchCharacter(ent, args.Container.Owner);
+
+    private void WatchCharacter(Entity<TeachALessonTargetComponent> target, EntityUid? entity)
     {
-       // Goob - fix teach a lesson
-        if (!TryComp<MindComponent>(ent.Owner, out var targetMind))
-            return;
-        if (args.NewMobState != MobState.Dead && targetMind.OwnedEntity != null)
-        // Goob end
-            return;
-        foreach (var teacher in ent.Comp.Teachers)
+        if (TryComp<GhostComponent>(entity, out var ghost))
         {
-            if(!TryComp(teacher, out TeachALessonConditionComponent? condition))
+            if (!ghost.CanReturnToBody)
+                Complete(target.Comp);
+            return;
+        }
+
+        var body = TryComp<AvatarConnectionComponent>(entity, out var avatar) ? avatar.OriginalBody : entity;
+        if (body is not { } uid || TerminatingOrDeleted(uid))
+            return;
+
+        if (target.Comp.Body != uid)
+        {
+            if (TryComp<TeachALessonBodyComponent>(target.Comp.Body, out var previous))
+                previous.Minds.Remove(target.Owner);
+
+            EnsureComp<TeachALessonBodyComponent>(uid).Minds.Add(target.Owner);
+            target.Comp.Body = uid;
+        }
+
+        if (_mobState.IsDead(uid))
+            Complete(target.Comp);
+    }
+
+    private void OnMobStateChanged(Entity<TeachALessonBodyComponent> ent, ref MobStateChangedEvent args)
+    {
+        if (args.NewMobState != MobState.Dead)
+            return;
+
+        foreach (var mind in ent.Comp.Minds)
+        {
+            if (TryComp<TeachALessonTargetComponent>(mind, out var target) && target.Body == ent.Owner)
+                Complete(target);
+        }
+    }
+
+    private void Complete(TeachALessonTargetComponent target)
+    {
+        target.Teachers.RemoveWhere(teacher => !HasComp<TeachALessonConditionComponent>(teacher));
+        foreach (var teacher in target.Teachers)
+        {
+            if (!TryComp<TeachALessonConditionComponent>(teacher, out var condition))
                 continue;
+
             condition.HasDied = true;
         }
     }

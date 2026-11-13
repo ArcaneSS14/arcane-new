@@ -1,12 +1,15 @@
 using System.Numerics;
 using Content.Shared.DoAfter;
+using Content.Shared.Emag.Systems; // Arcane
 using Content.Shared.Examine;
 using Content.Shared.Foldable;
 using Content.Shared.Interaction;
+using Content.Shared.Mind.Components; // Arcane
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
 using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
+using Content.Trauma.Common.Stack; // Arcane
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
@@ -48,6 +51,8 @@ public abstract partial class SharedFultonSystem : EntitySystem
         SubscribeLocalEvent<FultonComponent, AfterInteractEvent>(OnFultonInteract);
 
         SubscribeLocalEvent<FultonComponent, StackSplitEvent>(OnFultonSplit);
+        SubscribeLocalEvent<FultonComponent, GotEmaggedEvent>(OnFultonEmagged); // Arcane
+        SubscribeLocalEvent<FultonComponent, AttemptMergeStackEvent>(OnAttemptFultonMerge); // Arcane
     }
 
     private void OnFultonContainerInserted(EntityUid uid, FultonedComponent component, EntGotInsertedIntoContainerMessage args)
@@ -88,10 +93,21 @@ public abstract partial class SharedFultonSystem : EntitySystem
 
     private void OnFultonDoAfter(FultonedDoAfterEvent args)
     {
-        if (args.Cancelled || args.Target == null || !TryComp<FultonComponent>(args.Used, out var fulton))
+        // Arcane-Edit-Start: validate the target and beacon again before consuming the stack
+        if (args.Cancelled || args.Handled || args.Target is not { } target || args.Used is not { } used ||
+            TerminatingOrDeleted(target) || TerminatingOrDeleted(used) ||
+            !TryComp<FultonComponent>(used, out var fulton) || !fulton.AttachOnInteract ||
+            HasComp<FultonedComponent>(target) || !CanApplyFulton(target, fulton))
             return;
 
-        if (!_stack.TryUse(args.Used.Value, 1))
+        // The linked beacon may be outside the client's PVS; the server must validate the actual entity.
+        if (_net.IsServer && (fulton.Beacon is not { } beacon || TerminatingOrDeleted(beacon) ||
+            !HasComp<FultonBeaconComponent>(beacon) || _foldable.IsFolded(beacon) ||
+            Container.IsEntityOrParentInContainer(beacon)))
+            return;
+
+        if (!_stack.TryUse(used, 1))
+        // Arcane-Edit-End
         {
             return;
         }
@@ -184,8 +200,27 @@ public abstract partial class SharedFultonSystem : EntitySystem
         var newFulton = EnsureComp<FultonComponent>(args.NewId);
         newFulton.Beacon = component.Beacon;
         newFulton.HasBeacon = component.HasBeacon; // Trauma
+        newFulton.MindTargetOverride = component.MindTargetOverride; // Arcane
         Dirty(args.NewId, newFulton);
     }
+
+    // Arcane-Start: emagged and ordinary packs retain their behavior when split or merged.
+    private void OnFultonEmagged(Entity<FultonComponent> pack, ref GotEmaggedEvent args)
+    {
+        if (args.Handled || (args.Type & EmagType.Interaction) == 0 || !pack.Comp.AttachOnInteract || pack.Comp.MindTargetOverride)
+            return;
+
+        pack.Comp.MindTargetOverride = true;
+        Dirty(pack);
+        args.Handled = true;
+    }
+
+    private void OnAttemptFultonMerge(Entity<FultonComponent> pack, ref AttemptMergeStackEvent args)
+    {
+        if (TryComp<FultonComponent>(args.OtherStack, out var other) && pack.Comp.MindTargetOverride != other.MindTargetOverride)
+            args.Cancelled = true;
+    }
+    // Arcane-End
 
     public virtual void UpdateAppearance(EntityUid uid, FultonedComponent fultoned) // Trauma - made public
     {
@@ -197,7 +232,8 @@ public abstract partial class SharedFultonSystem : EntitySystem
         if (!CanFulton(targetUid))
             return false;
 
-        if (_whitelistSystem.IsWhitelistFailOrNull(component.Whitelist, targetUid))
+        if (_whitelistSystem.IsWhitelistFailOrNull(component.Whitelist, targetUid) &&
+            !(component.MindTargetOverride && HasComp<MindContainerComponent>(targetUid))) // Arcane
             return false;
 
         return _whitelistSystem.IsWhitelistFailOrNull(component.Blacklist, targetUid); // Trauma - check the blacklist

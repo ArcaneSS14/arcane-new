@@ -25,4 +25,8 @@ public sealed partial class FultonComponent
     /// </summary>
     [DataField]
     public bool AttachOnInteract = true;
+
+    /// <summary>Allows the handheld pack to attach to targets with a mind container.</summary>
+    [DataField, AutoNetworkedField]
+    public bool MindTargetOverride;
 }

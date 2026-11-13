@@ -92,6 +92,10 @@ public struct AttemptHitscanRaycastFiredEvent
     public bool Cancelled;
 }
 
+/// <summary>Raised on a target before hitscan reflection or damage is processed.</summary>
+[ByRefEvent]
+public record struct HitscanDodgeAttemptEvent(EntityUid Target, bool Dodged = false);
+
 /// <summary>
 /// Raised on the targeted entity of the hitscan to allow it to respond to being struck.
 /// </summary>

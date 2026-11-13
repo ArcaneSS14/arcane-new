@@ -18,7 +18,7 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         Log.Level = LogLevel.Debug;
     }
 
-    protected override (Note[]?, string) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
+    protected override (Note[]? Code, string Briefing, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
     {
         var pda = _uplink.FindUplinkTarget(traitor);
 
@@ -33,7 +33,7 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
             briefing = string.Format("{0}\n{1}",
                 briefing,
                 Loc.GetString("traitor-role-uplink-code-short", ("code", string.Join("-", code).Replace("sharp", "#"))));
-            return (code, briefing);
+            return (code, briefing, false);
         }
 
         if (uplinked == AddUplinkResult.Implant)
@@ -47,7 +47,7 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         }
 
 
-        return (null, briefing);
+        return (null, briefing, uplinked == AddUplinkResult.Implant);
     }
 
     // TODO: AntagCodewordsComponent

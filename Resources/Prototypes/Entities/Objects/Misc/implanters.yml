@@ -48,6 +48,7 @@
     - RadioImplant
     - ChameleonControllerImplant
     - VoiceMaskImplant
+    - SyndicateJaunterImplant # Arcane
     deimplantFailureDamage:
       types:
         Cellular: 50

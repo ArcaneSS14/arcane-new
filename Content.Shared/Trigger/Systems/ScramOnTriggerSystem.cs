@@ -9,6 +9,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
+using Robust.Shared.Containers; // Arcane
 
 namespace Content.Shared.Trigger.Systems;
 
@@ -20,9 +21,18 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private INetManager _net = default!;
     [Dependency] private TurfSystem _turfSystem = default!;
+    [Dependency] private SharedContainerSystem _container = default!; // Arcane
 
     protected override void OnTrigger(Entity<ScramOnTriggerComponent> ent, EntityUid target, ref TriggerEvent args)
     {
+        // Arcane-Start: only commit side effects after finding a valid destination.
+        if (_net.IsClient || TerminatingOrDeleted(target) || Paused(target))
+            return;
+
+        if (SelectRandomTileInRange(target, ent.Comp.TeleportRadius) is not { } destination)
+            return;
+        // Arcane-End
+
         // We need stop the user from being pulled so they don't just get "attached" with whoever is pulling them.
         // This can for example happen when the user is cuffed and being pulled.
         if (TryComp<PullableComponent>(target, out var pull) && _pulling.IsPulled(target, pull))
@@ -32,19 +42,11 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
         if (TryComp<PullerComponent>(target, out var puller) && TryComp<PullableComponent>(puller.Pulling, out var pullable))
             _pulling.TryStopPull(puller.Pulling.Value, pullable);
 
-        _audio.PlayPredicted(ent.Comp.TeleportSound, ent, args.User);
-
-        // Can't predict picking random grids and the target location might be out of PVS range.
-        if (_net.IsClient)
-            return;
-
-        var targetCoords = SelectRandomTileInRange(target, ent.Comp.TeleportRadius);
-
-        if (targetCoords != null)
-        {
-            _transform.SetCoordinates(target, targetCoords.Value);
-            args.Handled = true;
-        }
+        // Arcane-Start: teleport out of the container using the chosen grid coordinates.
+        _audio.PlayPvs(ent.Comp.TeleportSound, target);
+        _transform.SetCoordinates(target, destination);
+        args.Handled = true;
+        // Arcane-End
     }
     /// <summary>
     /// Method to find a random empty tile within a certain radius. Will not select off-grid tiles. Returns
@@ -53,7 +55,20 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
     /// <remarks> Trends towards the outer radius. Compensates for small grids. </remarks>
     private EntityCoordinates? SelectRandomTileInRange(EntityUid uid, Vector2 radius, int tries = 40, PhysicsComponent? physicsComponent = null)
     {
-        var userCoords = Transform(uid).Coordinates;
+        // Arcane-Start: nested container offsets are relative to the container, not the grid.
+        var origin = uid;
+        var xform = Transform(uid);
+        if (_container.IsEntityOrParentInContainer(uid, xform: xform))
+        {
+            if (!_container.TryGetOuterContainer(uid, xform, out var container))
+                return null;
+
+            origin = container.Owner;
+        }
+
+        if (!_transform.TryGetMapOrGridCoordinates(origin, out var userCoords))
+            return null;
+        // Arcane-End
         EntityCoordinates? targetCoords = null;
 
         if (!Resolve(uid, ref physicsComponent))
@@ -72,7 +87,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
             var distance = (radius.Y - radius.X) * MathF.Sqrt(_random.NextFloat()) * (1 - (float)i / tries) + radius.X;
 
             // We then offset the user coords from a random angle * distance
-            var tempTargetCoords = userCoords.Offset(_random.NextAngle().ToVec() * distance);
+            var tempTargetCoords = userCoords.Value.Offset(_random.NextAngle().ToVec() * distance);
 
             if (!_turfSystem.TryGetTileRef(tempTargetCoords, out var tileRef)
                 || _turfSystem.IsSpace(tileRef.Value)

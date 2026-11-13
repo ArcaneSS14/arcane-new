@@ -1,0 +1,13 @@
+- type: listing
+  id: UplinkRealBananiumSword
+  name: uplink-real-banana-esword-name
+  description: uplink-real-banana-esword-desc
+  productEntity: RealBananiumSword
+  cost:
+    Telecrystal: 50
+  categories:
+  - UplinkJob
+  conditions:
+  - !type:BuyerJobCondition
+    whitelist:
+    - Clown

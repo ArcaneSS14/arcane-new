@@ -1,0 +1,21 @@
+- type: entity
+  parent: BaseSubdermalImplant
+  id: SyndicateJaunterImplant
+  name: syndicate jaunter implant
+  description: This implant swaps the user with a chosen target. It recharges over time.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SubdermalImplant
+    implantAction: ActionSwapImplant
+  - type: Tag
+    tags:
+    - SubdermalImplant
+    - HideContextMenu
+
+- type: entity
+  parent: BaseImplantOnlyImplanterSyndi
+  id: JaunterImplanter
+  suffix: the swap
+  components:
+  - type: Implanter
+    implant: SyndicateJaunterImplant

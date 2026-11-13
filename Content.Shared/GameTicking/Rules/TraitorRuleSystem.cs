@@ -39,7 +39,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
     public bool MakeTraitor(EntityUid traitor, Entity<TraitorRuleComponent> rule)
     {
         Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - start");
-        var factionCodewords = Codeword.GetCodewords(rule.Comp.CodewordFactionPrototypeId);
+        var factionCodewords = rule.Comp.GiveCodewords ? Codeword.GetCodewords(rule.Comp.CodewordFactionPrototypeId) : []; // Arcane-Edit: always > only when enabled
 
         //Grab the mind if it wasn't provided
         if (!_mindSystem.TryGetMind(traitor, out var mindId, out var mind))
@@ -60,6 +60,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
 
         // Uplink code will go here if applicable, but we still need the variable if there aren't any
         Note[]? code = null;
+        var implantIssued = false; // Arcane
 
         if (rule.Comp.GiveUplink)
         {
@@ -76,9 +77,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
 
             // Choose and generate an Uplink, and return the uplink code if applicable
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request start");
-            var uplinkParams = RequestUplink(traitor, startingBalance, briefing);
-            code = uplinkParams.Item1;
-            briefing = uplinkParams.Item2;
+            (code, briefing, implantIssued) = RequestUplink(traitor, startingBalance, briefing); // Arcane
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request completed");
         }
 
@@ -91,7 +90,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
 
         if (rule.Comp.GiveBriefing)
         {
-            _antag.SendBriefing(traitor, GenerateBriefing(codewords, code, issuer), null, rule.Comp.GreetSoundNotification);
+            _antag.SendBriefing(traitor, GenerateBriefing(codewords, code, issuer, implantIssued), Color.Crimson, rule.Comp.GreetSoundNotification); // Arcane
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Sent the Briefing");
         }
 
@@ -117,8 +116,13 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         var color = TraitorCodewordColor; // Fall back to a dark red Syndicate color if a prototype is not found
 
         // The mind entity is stored in nullspace with a PVS override for the owner, so only they can see the codewords.
-        var codewordComp = EnsureComp<RoleCodewordComponent>(mindId);
-        _roleCodewordSystem.SetRoleCodewords((mindId, codewordComp), "traitor", factionCodewords.ToList(), color);
+        // Arcane-Start: honor rules with codewords disabled.
+        if (rule.Comp.GiveCodewords)
+        {
+            var codewordComp = EnsureComp<RoleCodewordComponent>(mindId);
+            _roleCodewordSystem.SetRoleCodewords((mindId, codewordComp), "traitor", factionCodewords.ToList(), color);
+        }
+        // Arcane-End
 
         // Change the faction
         Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Change faction");
@@ -129,24 +133,31 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         return true;
     }
 
-    protected virtual (Note[]?, string) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
+    protected virtual (Note[]? Code, string Briefing, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance, string briefing)
     {
-        return default;
+        return (null, briefing, false);
     }
 
     // TODO: figure out how to handle this? add priority to briefing event?
-    private string GenerateBriefing(string[]? codewords, Note[]? uplinkCode, string? objectiveIssuer = null)
+    private string GenerateBriefing(string[]? codewords, Note[]? uplinkCode, string? objectiveIssuer, bool implantIssued)
     {
         var sb = new StringBuilder();
         sb.AppendLine(Loc.GetString("traitor-role-greeting", ("corporation", objectiveIssuer ?? Loc.GetString("objective-issuer-unknown"))));
-        if (codewords != null)
-            sb.AppendLine(Loc.GetString("traitor-role-codewords", ("codewords", string.Join(", ", codewords))));
+        sb.AppendLine(); // Arcane
         if (uplinkCode != null)
             sb.AppendLine(Loc.GetString("traitor-role-uplink-code", ("code", string.Join("-", uplinkCode).Replace("sharp", "#"))));
+        else if (implantIssued) // Arcane
+            sb.AppendLine(Loc.GetString("traitor-role-uplink-implant")); // Arcane
         else
-            sb.AppendLine(Loc.GetString("traitor-role-uplink-implant"));
+            sb.AppendLine(Loc.GetString("traitor-role-no-uplink")); // Arcane-Edit: traitor-role-uplink-implant > traitor-role-no-uplink
 
-
+        // Arcane-Start: show access instructions before the codeword reminder.
+        if (codewords is { Length: > 0 })
+        {
+            sb.AppendLine();
+            sb.AppendLine(Loc.GetString("traitor-role-codewords", ("codewords", string.Join(", ", codewords))));
+        }
+        // Arcane-End
         return sb.ToString();
     }
 

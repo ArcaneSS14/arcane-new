@@ -915,7 +915,8 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
         var userXform = Transform(ev.Performer);
         var targetXform = Transform(ev.Target);
 
-        Swap(ev.Performer, userXform, ev.Target, targetXform, ev.Sound, ev.Effect);
+        if (!Swap(ev.Performer, userXform, ev.Target, targetXform, ev.Sound, ev.Effect)) // Arcane
+            return;
 
         if (swap.SecondaryTarget != null && Exists(swap.SecondaryTarget) &&
             swap.SecondaryTarget.Value != ev.Target && swap.SecondaryTarget.Value != ev.Performer)
@@ -923,8 +924,9 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
             var secondaryTarget = swap.SecondaryTarget.Value;
             var secondaryTargetXform = Transform(secondaryTarget);
 
-            if (secondaryTargetXform.MapID == userXform.MapID &&
-                TransformSystem.InRange((ev.Performer, userXform), (secondaryTarget, secondaryTargetXform), ev.Range))
+            if (secondaryTargetXform.MapID == userXform.MapID && !IsTouchSpellDenied(secondaryTarget) && // Arcane
+                TransformSystem.InRange((ev.Performer, userXform), (secondaryTarget, secondaryTargetXform), ev.Range) &&
+                (ev.ThroughWalls || _examine.InRangeUnOccluded(ev.Performer, secondaryTarget, ev.Range))) // Arcane
                 Swap(secondaryTarget, secondaryTargetXform, ev.Target, targetXform, ev.Sound, ev.Effect, false);
         }
 
@@ -1117,7 +1119,7 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
 
     #region Helpers
 
-    public void Swap(EntityUid uid,
+    public bool Swap(EntityUid uid,
         TransformComponent xform,
         EntityUid otherUid,
         TransformComponent otherXform,
@@ -1125,26 +1127,38 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
         EntProtoId swapEffect,
         bool spawnSecondaryEffects = true)
     {
+        // Arcane-Start: reject invalid positions before touching either entity.
+        if (uid == otherUid || TerminatingOrDeleted(uid) || TerminatingOrDeleted(otherUid) ||
+            Paused(uid) || Paused(otherUid) || xform.MapID == MapId.Nullspace || xform.MapID != otherXform.MapID ||
+            xform.Anchored || otherXform.Anchored || Container.IsEntityOrParentInContainer(uid) ||
+            Container.IsEntityOrParentInContainer(otherUid))
+            return false;
+
+        var origin = xform.Coordinates;
+        var otherOrigin = otherXform.Coordinates;
+        if (!TransformSystem.SwapPositions((uid, xform), (otherUid, otherXform)))
+            return false;
+        // Arcane-End
+
         _pulling.StopAllPulls(uid);
         _pulling.StopAllPulls(otherUid);
-        SpawnEffects(uid, xform);
+        SpawnEffects(uid, xform, origin);
         if (spawnSecondaryEffects)
-            SpawnEffects(otherUid, otherXform);
-        TransformSystem.SwapPositions((uid, xform), (otherUid, otherXform));
+            SpawnEffects(otherUid, otherXform, otherOrigin);
         Physics.WakeBody(uid);
         Physics.WakeBody(otherUid);
-        return;
+        return true;
 
-        void SpawnEffects(EntityUid ent, TransformComponent transform)
+        void SpawnEffects(EntityUid ent, TransformComponent transform, EntityCoordinates from)
         {
             if (_net.IsClient)
                 return;
 
-            Audio.PlayPvs(swapSound, transform.Coordinates);
-            var effect = Spawn(swapEffect, transform.Coordinates);
+            Audio.PlayPvs(swapSound, from);
+            var effect = Spawn(swapEffect, from);
             if (TryComp(effect, out TrailComponent? trail))
             {
-                trail.SpawnPosition = TransformSystem.GetWorldPosition(transform);
+                trail.SpawnPosition = TransformSystem.ToMapCoordinates(from).Position;
                 trail.RenderedEntity = ent;
                 Dirty(effect, trail);
             }

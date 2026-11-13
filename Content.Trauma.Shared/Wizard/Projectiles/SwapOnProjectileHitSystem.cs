@@ -27,14 +27,14 @@ public sealed partial class SwapOnProjectileHitSystem : EntitySystem
         if (!_whitelist.IsValid(comp.Whitelist, args.Target))
             return;
 
-        _spells.Swap(args.Shooter.Value,
+        var swapped = _spells.Swap(args.Shooter.Value,
             Transform(args.Shooter.Value),
             args.Target,
             Transform(args.Target),
             comp.Sound,
             comp.Effect);
 
-        if (comp.DeleteProjectileOnSwap)
+        if (swapped && comp.DeleteProjectileOnSwap)
             PredictedDel(uid);
     }
 }

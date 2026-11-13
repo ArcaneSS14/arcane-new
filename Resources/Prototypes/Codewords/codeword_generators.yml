@@ -5,3 +5,4 @@
   - Verbs
   - CodeWords # Trauma
   amount: 4
+  pickDatasetFirst: true # Arcane

@@ -91,6 +91,7 @@
       - BorgModuleRCD
       - BorgModuleSyndicateJammer
       - BorgModuleSyndicateDoorControl
+      - BorgModuleSyndicateChameleonProjector # Arcane
       - !Remove BorgModuleTool
       - BorgModuleAdvancedTool
 

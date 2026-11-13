@@ -65,6 +65,28 @@ public sealed partial class CodewordSystem : EntitySystem
     {
         var generator = ProtoMan.Index(generatorId);
 
+        // Arcane-Start: keep small datasets from being drowned out by large ones.
+        if (generator.PickDatasetFirst)
+        {
+            var datasets = generator.Words.Distinct()
+                .Select(dataset => ProtoMan.Index(dataset).Values.Select(id => Loc.GetString(id)).Distinct().ToList())
+                .Where(dataset => dataset.Count > 0)
+                .ToList();
+            var picked = new List<string>();
+            while (picked.Count < generator.Amount && datasets.Count > 0)
+            {
+                var word = _random.Pick(_random.Pick(datasets));
+                picked.Add(word);
+                foreach (var dataset in datasets)
+                    dataset.Remove(word);
+
+                datasets.RemoveAll(dataset => dataset.Count == 0);
+            }
+
+            return picked.ToArray();
+        }
+        // Arcane-End
+
         var codewordPool = new List<string>();
         foreach (var dataset in generator.Words
                      .Select(datasetPrototype => ProtoMan.Index(datasetPrototype)))

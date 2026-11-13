@@ -86,6 +86,16 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
             HitEntity = result?.HitEntity,
         };
 
+        // Arcane-Start: a dodge cancels the hit without reflecting another shot.
+        if (data.HitEntity is { } hit)
+        {
+            var dodge = new HitscanDodgeAttemptEvent(hit);
+            RaiseLocalEvent(hit, ref dodge);
+            if (dodge.Dodged)
+                return;
+        }
+        // Arcane-End
+
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };
         RaiseLocalEvent(ent, ref attemptEvent);
 
