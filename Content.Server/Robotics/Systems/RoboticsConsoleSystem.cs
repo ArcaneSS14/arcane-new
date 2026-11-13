@@ -9,6 +9,11 @@ using Content.Shared.Robotics.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
 using Content.Shared.DeviceNetwork.Events;
+using Content.Shared.Access.Systems;
+using Content.Shared.DeviceNetwork.Components;
+using Content.Shared.NPC.Systems;
+using Content.Shared.Silicons.Borgs.Components;
+using Content.Shared.Station.Systems;
 
 namespace Content.Server.Research.Systems;
 
@@ -18,12 +23,16 @@ namespace Content.Server.Research.Systems;
 /// </summary>
 public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 {
+    private const string StationBorgFaction = "NanoTrasen";
     [Dependency] private DeviceNetworkSystem _deviceNetwork = default!;
     [Dependency] private IAdminLogManager _adminLogger = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private LockSystem _lock = default!;
     [Dependency] private RadioSystem _radio = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
+    [Dependency] private AccessReaderSystem _access = default!;
+    [Dependency] private NpcFactionSystem _factions = default!;
+    [Dependency] private StationSystem _stations = default!;
 
     // almost never timing out more than 1 per tick so initialize with that capacity
     private List<string> _removing = new(1);
@@ -86,13 +95,7 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 
     private void OnDisable(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDisableMessage args)
     {
-        if (!ent.Comp.AllowBorgControl)
-            return;
-
-        if (_lock.IsLocked(ent.Owner))
-            return;
-
-        if (!ent.Comp.Cyborgs.TryGetValue(args.Address, out var data))
+        if (!TryGetControllableBorg(ent, args.Actor, args.Address, out var data))
             return;
 
         var payload = new RoboticsCyborgDisablePayload();
@@ -103,18 +106,11 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 
     private void OnDestroy(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDestroyMessage args)
     {
-        if (!ent.Comp.AllowBorgControl)
-            return;
-
-        if (_lock.IsLocked(ent.Owner))
-            return;
-
         var now = _timing.CurTime;
-        if (now < ent.Comp.NextDestroy)
+        if (now < ent.Comp.NextDestroy || !TryGetControllableBorg(ent, args.Actor, args.Address, out var data))
             return;
 
-        if (!ent.Comp.Cyborgs.Remove(args.Address, out var data))
-            return;
+        ent.Comp.Cyborgs.Remove(args.Address);
 
         var payload = new RoboticsCyborgDestroyPayload();
         _deviceNetwork.SendPacket(ent.Owner, args.Address, ref payload);
@@ -125,6 +121,26 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 
         ent.Comp.NextDestroy = now + ent.Comp.DestroyCooldown;
         Dirty(ent, ent.Comp);
+    }
+
+    private bool TryGetControllableBorg(Entity<RoboticsConsoleComponent> ent, EntityUid actor, string address,
+        out CyborgControlData data)
+    {
+        data = default;
+        // The transponder list is a cached broadcast. Check the live target and station at the point of action.
+        return ent.Comp.AllowBorgControl &&
+               !_lock.IsLocked(ent.Owner) &&
+               _access.IsAllowed(actor, ent) &&
+               ent.Comp.Cyborgs.TryGetValue(address, out data) &&
+               data.Timeout > _timing.CurTime &&
+               TryComp<DeviceNetworkComponent>(ent, out var device) &&
+               _deviceNetwork.FindDevice(device.DeviceNetId, address) is { } borg &&
+               !TerminatingOrDeleted(borg) &&
+               HasComp<BorgTransponderComponent>(borg) &&
+               HasComp<BorgChassisComponent>(borg) &&
+               _factions.IsMember(borg, StationBorgFaction) &&
+               _stations.GetOwningStation(ent.Owner) is { } station &&
+               _stations.GetOwningStation(borg) == station;
     }
 
     private void UpdateUserInterface(Entity<RoboticsConsoleComponent> ent)

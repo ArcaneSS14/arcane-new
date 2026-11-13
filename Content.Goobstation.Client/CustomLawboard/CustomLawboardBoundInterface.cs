@@ -2,7 +2,6 @@
 
 using Content.Goobstation.Shared.CustomLawboard;
 using Content.Shared.Silicons.Laws;
-using Content.Shared.Silicons.Laws.Components;
 using JetBrains.Annotations;
 
 namespace Content.Goobstation.Client.CustomLawboard;
@@ -28,13 +27,9 @@ public sealed class CustomLawboardBoundInterface : BoundUserInterface
 
         _window.LawsChangedEvent += (laws, popup) => OnLawsChanged(laws, popup);
 
-        _window.Entity = Owner;
-        var lawProvider = EntMan.EnsureComponent<SiliconLawProviderComponent>(Owner);
-        if (lawProvider.Lawset != null)
-        {
-            _window.LawProvider = lawProvider;
-            _window.SetLaws(lawProvider.Lawset.Laws);
-        }
+        // Arcane: opening the editor must never send an empty or stale replacement to the server.
+        if (EntMan.TryGetComponent<CustomLawboardComponent>(Owner, out var board))
+            _window.SetLaws(SharedCustomLawboardSystem.SanitizeLaws(board.Laws), notify: false);
         Update();
     }
 

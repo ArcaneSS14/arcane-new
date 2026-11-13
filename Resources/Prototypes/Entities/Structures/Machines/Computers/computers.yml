@@ -1639,7 +1639,7 @@
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
   - type: RoboticsConsole
-    allowBorgControl: false
+    allowBorgControl: true # Arcane
   - type: ActiveRadio
     channels:
     - Science

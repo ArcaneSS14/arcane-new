@@ -1,0 +1,45 @@
+- type: entity
+  parent: BaseItem
+  id: AiRemoteBrain
+  name: B.O.R.I.S. remote control board
+  description: Installs in an empty station cyborg to let the station AI operate it remotely.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: boris
+  - type: AiRemoteBrain
+
+- type: entity
+  parent: BaseAction
+  id: ActionBackToBorisCore
+  name: Return to core
+  description: Return to the station AI core from the remote cyborg.
+  components:
+  - type: Action
+    checkConsciousness: false
+    checkCanInteract: false
+    priority: -9
+    itemIconStyle: BigAction
+  - type: Sprite
+    sprite: Interface/Actions/actions_ai.rsi
+    layers:
+    - state: ai_core
+  - type: InstantAction
+    event: !type:ReturnFromBorisEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionOpenBorisDevices
+  name: Remote devices
+  description: List available B.O.R.I.S. cyborgs on your station.
+  components:
+  - type: Action
+    checkCanInteract: false
+    priority: -9
+    itemIconStyle: BigAction
+  - type: Sprite
+    sprite: Interface/Actions/actions_ai.rsi
+    layers:
+    - state: borg_control
+  - type: InstantAction
+    event: !type:OpenBorisDevicesEvent

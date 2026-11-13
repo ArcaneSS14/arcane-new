@@ -1,0 +1,168 @@
+- type: entity
+  id: BorgChassisSEC
+  parent: BaseBorgChassisNT
+  name: S.E.C. cyborg
+  description: A security enforcement cyborg, purpose-built to uphold Space Law.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Silicon/sec_chassis.rsi
+    layers:
+    - state: sec
+      map: ["enum.BorgVisualLayers.Body", "movement"]
+    - state: sec_e_r
+      map: ["enum.BorgVisualLayers.Light"]
+      shader: unshaded
+      visible: false
+    - state: sec_l
+      shader: unshaded
+      map: ["light","enum.BorgVisualLayers.LightStatus"]
+      visible: false
+  - type: BorgChassis
+    maxModules: 5
+    moduleWhitelist:
+      tags:
+      - BorgModuleGeneric
+      - BorgModuleSEC
+    hasMindState: sec_e
+    noMindState: sec_e_r
+  - type: BorgTransponder
+    sprite:
+      sprite: _Arcane/Mobs/Silicon/sec_chassis.rsi
+      state: sec
+    name: S.E.C. cyborg
+  - type: SiliconLawProvider
+    laws: SECborgLawset
+  - type: ContainerFill
+    containers:
+      borg_brain:
+      - PositronicBrain
+      borg_module:
+      - BorgModuleTool
+      - BorgModuleSECNonLethal
+      - BorgModuleSECLethal
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellHigh
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Common
+    - Science
+    - Security
+  - type: ActiveRadio
+    channels:
+    - Common
+    - Science
+    - Security
+  - type: Hailer
+    messages:
+    - sound: /Audio/_Goobstation/Hailer/bobby.ogg
+      message: Stop in the name of the law!
+    - sound: /Audio/_Goobstation/Hailer/compliance.ogg
+      message: Compliance is in your best interest!
+    - sound: /Audio/_Goobstation/Hailer/halt.ogg
+      message: Halt!
+
+- type: entity
+  id: BaseSECborgModule
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  abstract: true
+  components:
+  - type: BorgModule
+    borgFitTypes:
+    - borg-type-sec
+  - type: Tag
+    tags:
+    - BorgModuleSEC
+
+
+- type: entity
+  id: BorgModuleSECNonLethal
+  parent: BaseSECborgModule
+  name: S.E.C. non-lethal module
+  description: The standard-issue compliance module for the S.E.C. cyborg. Comes with a stun baton, a disabler and a combat knife, as well as storage slots for bolas and restraints.
+  components:
+  - type: Sprite
+    layers:
+    - state: security
+    - state: icon-tools
+  - type: ItemBorgModule
+    hands:
+    - item: StunbatonSEC
+    - item: WeaponDisablerSEC
+    - item: CombatKnife
+    - hand:
+        emptyLabel: borg-slot-BolaEnergy-empty-goob
+        emptyRepresentative: BolaEnergy
+        whitelist:
+          components:
+          - Ensnaring
+    - hand:
+        emptyLabel: borg-slot-Handcuffs-empty-goob
+        emptyRepresentative: Handcuffs
+        whitelist:
+          tags:
+          - Handcuffs
+  - type: BorgModuleIcon
+    icon: { sprite: Objects/Weapons/Melee/stunbaton.rsi, state: stunbaton_off }
+
+
+- type: entity
+  id: BorgModuleSECLethal
+  parent: BaseSECborgModule
+  name: S.E.C. lethal module
+  description: The lethal-response module for the S.E.C. cyborg. Its slots accept either a Lecter or its ammunition, to be provided by security.
+  components:
+  - type: Sprite
+    layers:
+    - state: security
+    - state: icon-syndicate
+  - type: ItemBorgModule
+    hands:
+    - hand:
+        emptyLabel: borg-slot-WeaponRifleLecter-empty-goob
+        emptyRepresentative: WeaponRifleLecter
+        whitelist:
+          tags:
+          - WeaponRifleLecter
+    - hand:
+        emptyLabel: borg-slot-magazine-rifle-empty-goob
+        emptyRepresentative: MagazineRifle
+        whitelist:
+          tags:
+          - WeaponRifleLecter
+          - MagazineRifle
+    - hand:
+        emptyLabel: borg-slot-magazine-rifle-empty-goob
+        emptyRepresentative: MagazineRifle
+        whitelist:
+          tags:
+          - MagazineRifle
+    - hand:
+        emptyLabel: borg-slot-magazine-rifle-empty-goob
+        emptyRepresentative: MagazineRifle
+        whitelist:
+          tags:
+          - MagazineRifle
+  - type: BorgModuleIcon
+    icon: { sprite: Objects/Weapons/Guns/Rifles/lecter.rsi, state: base }
+
+- type: entity
+  name: disabler
+  parent: [ WeaponDisabler ]
+  id: WeaponDisablerSEC
+  description: The standard-issue compliance weapon for the S.E.C. cyborg. Its cell recharges automatically. # Goobstation
+  components:
+  - type: BatterySelfRecharger # Goobstation - S.E.C. cyborg
+    autoRechargeRate: 100
+
+- type: entity
+  parent: Stunbaton
+  id: StunbatonSEC
+  name: S.E.C. stun baton
+  description: A security-grade stun baton with a self-recharging cell, built for prolonged compliance operations.
+  components:
+  - type: BatterySelfRecharger
+    autoRechargeRate: 50
+    autoRechargePauseTime: 5
