@@ -112,6 +112,9 @@
             "name": "armor_booster"
         },
         {
+            "name": "clamp"
+        },
+        {
             "name": "apparatus"
         },
         {
@@ -149,6 +152,9 @@
         },
         {
             "name": "stamp"
+        },
+        {
+            "name": "clamp_loader"
         },
         {
             "name": "mister"

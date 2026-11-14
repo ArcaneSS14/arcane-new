@@ -32,3 +32,71 @@
     interfaces:
       enum.StorageUiKey.Key:
         type: StorageBoundUserInterface
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleClamp
+  name: MOD hydraulic clamp module
+  description: Hydraulic actuators for picking up and setting down cargo crates.
+  components:
+  - type: Sprite
+    state: clamp
+  - type: ModModule
+    moduleType: Active
+    complexity: 3
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceClamp
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleBuiltinLoaderClamp
+  name: MOD loader hydraulic clamp module
+  description: A high-capacity hydraulic clamp for the Loader suit.
+  components:
+  - type: Sprite
+    state: clamp_loader
+  - type: ModModule
+    moduleType: Active
+    removable: false
+    activePower: 0.4
+    requiredParts: [ outerClothing ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceLoaderClamp
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseItem
+  id: ModsuitDeviceClamp
+  name: MOD hydraulic clamp
+  description: Use on a crate to lift it and on the floor to set it down.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: clamp
+  - type: Item
+    size: Huge
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+  - type: ModClamp
+  - type: ContainerContainer
+    containers:
+      mod-clamp: !type:Container
+        ents: []
+
+- type: entity
+  parent: ModsuitDeviceClamp
+  id: ModsuitDeviceLoaderClamp
+  name: MOD loader hydraulic clamp
+  components:
+  - type: Sprite
+    state: clamp_loader
+  - type: ModClamp
+    maxContents: 5
+    grabDelay: 1
+    dropDelay: 0.5

@@ -511,3 +511,12 @@
   materials:
     Steel: 500
     Plastic: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleClamp
+  result: ModsuitModuleClamp
+  materials:
+    Steel: 1000
+    Glass: 200
+    Gold: 200

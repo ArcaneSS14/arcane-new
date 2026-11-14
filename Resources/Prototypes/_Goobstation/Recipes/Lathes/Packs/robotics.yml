@@ -77,6 +77,7 @@
   - ModsuitModulePlasmaStabilizer # Arcane
   - ModsuitModuleTRay # Arcane
   - ModsuitModuleOreBag # Arcane
+  - ModsuitModuleClamp # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

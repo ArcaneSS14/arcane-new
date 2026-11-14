@@ -17,6 +17,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Destructible;
+using Content.Shared.DoAfter;
 using Content.Shared.Emp;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -573,6 +574,69 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.System<ModSuitSystem>().TryRemoveModule(suit, bag, wearer), Is.True);
             Assert.That(SEntMan.GetComponent<StorageComponent>(bag).Container.Contains(ore), Is.False);
             Assert.That(SEntMan.EntityExists(ore), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task ClampReleasesOriginalCargoWhenRetracted()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid cargo = default;
+        EntityUid device = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", position);
+            module = SEntMan.SpawnAttachedTo("ModsuitModuleClamp", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(SEntMan.System<SharedHandsSystem>().TryGetActiveItem(wearer, out var item), Is.True);
+            device = item!.Value;
+
+            var coordinates = MapData.GridCoords;
+            var targetCoordinates = coordinates.Offset(new System.Numerics.Vector2(0.9f, 0f));
+            cargo = SEntMan.SpawnAttachedTo("CrateGenericSteel", targetCoordinates);
+            var grab = new AfterInteractEvent(wearer, device, cargo, targetCoordinates, canReach: true);
+            SEntMan.EventBus.RaiseLocalEvent(device, grab);
+            Assert.That(grab.Handled, Is.True);
+            Assert.That(SEntMan.GetComponent<DoAfterComponent>(wearer).DoAfters.Values.Any(after =>
+                after.Args.Event is ModClampGrabDoAfterEvent), Is.True);
+        });
+
+        await RunSeconds(3);
+        await Server.WaitAssertion(() =>
+        {
+            var containers = SEntMan.System<SharedContainerSystem>();
+            Assert.That(containers.TryGetContainer(device, "mod-clamp", out var storage), Is.True);
+            Assert.That(storage!.Contains(cargo), Is.True);
+
+            var retract = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, retract);
+            Assert.That(retract.Handled, Is.True);
+            Assert.That(storage.Contains(cargo), Is.False);
+            Assert.That(SEntMan.EntityExists(cargo), Is.True);
+            Assert.That(containers.TryGetContainer(module, "mod-device", out var deviceSlot), Is.True);
+            Assert.That(deviceSlot!.Contains(device), Is.True);
         });
     }
 
