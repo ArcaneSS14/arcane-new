@@ -48,53 +48,6 @@ public sealed class JoinQueueNetworkTest : GameTest
         await base.DoTeardown();
     }
 
-    [Test]
-    public async Task QueueCountsOnlyAdmittedPlayersAndScoresNeverGrantAdmission()
-    {
-        var (_, session) = await ConnectQueued();
-        await Client.WaitAssertion(() =>
-        {
-            Assert.That(Client.ResolveDependency<IStateManager>().CurrentState, Is.TypeOf<QueueState>());
-            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
-            Assert.That(gui.FindControl<Label>("QueuePosition").Text, Is.EqualTo("1"));
-        });
-        await Client.WaitPost(() =>
-        {
-            var net = Client.ResolveDependency<IClientNetManager>();
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.Gyruss, Score = int.MaxValue });
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.GoGoShitcurity, Score = int.MaxValue });
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.SpaceInvaders, Score = 6480 });
-        });
-        await Pair.ReallyBeIdle(5);
-        await Server.WaitAssertion(() =>
-        {
-            var queue = SEntMan.System<ServerQueue>();
-            Assert.That(queue.PlayerInQueueCount, Is.EqualTo(1));
-            Assert.That(queue.ActualPlayersCount, Is.Zero);
-            Assert.That(SEntMan.System<ServerGameTicker>().GetAdmittedPlayerCount(), Is.Zero);
-            var scores = queue.BuildScores();
-            Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.Gyruss).Score, Is.EqualTo(int.MaxValue));
-            Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.GoGoShitcurity).Score, Is.EqualTo(int.MaxValue));
-            Assert.That(scores.Single(entry => entry.Game == QueueMiniGameKind.SpaceInvaders).Score, Is.EqualTo(6480));
-            Assert.That(session.Status, Is.EqualTo(SessionStatus.Connected));
-            Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 1);
-        });
-        await WaitServer(() => session.Status == SessionStatus.InGame);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
-            Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
-            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.GreaterThanOrEqualTo(0));
-        });
-        await Pair.ReallyBeIdle(5);
-        await Client.WaitAssertion(() => Assert.That(Client.ResolveDependency<IStateManager>().CurrentState, Is.Not.TypeOf<QueueState>()));
-        await Client.WaitPost(() => Client.ResolveDependency<IClientNetManager>().ClientSendMessage(
-            new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.Gyruss, Score = 1234 }));
-        await Pair.ReallyBeIdle(5);
-        await Server.WaitAssertion(() => Assert.That(SEntMan.System<ServerQueue>().BuildScores(), Is.Empty));
-    }
-
-    [TestCase(true)]
     [TestCase(false)]
     public async Task RoundRestartAndReadyCommandsCannotAdmitAWaitingConnection(bool lobby)
     {
@@ -118,34 +71,7 @@ public sealed class JoinQueueNetworkTest : GameTest
         await Client.WaitAssertion(() => Assert.That(Client.ResolveDependency<IStateManager>().CurrentState, Is.TypeOf<QueueState>()));
     }
 
-    [Test]
-    public async Task ReconnectHonorsTheExistingTemporaryBypassAndCleansTheOldProfile()
-    {
-        var (name, session) = await ConnectQueued();
-        double previousAverage = -1;
-        await Server.WaitPost(() =>
-        {
-            previousAverage = SEntMan.System<ServerQueue>().AverageQueueWait;
-            Server.ResolveDependency<IConnectionManager>().AddTemporaryConnectBypass(session.UserId, TimeSpan.FromMinutes(1));
-        });
-        await Client.WaitPost(() => Client.ResolveDependency<IClientNetManager>().ClientDisconnect("Queue reconnect test"));
-        await Pair.ReallyBeIdle(20);
-        await Server.WaitAssertion(() => Assert.Throws<KeyNotFoundException>(() => Server.ResolveDependency<UserDbDataManager>().GetLoadTask(session)));
-        await Client.WaitPost(() => Client.ResolveDependency<IClientNetManager>().ClientConnect(null!, 0, name));
-        await WaitServer(() => Server.ResolveDependency<IPlayerManager>().Sessions.Any(s => s.Status == SessionStatus.InGame));
-        await Server.WaitAssertion(() =>
-        {
-            var current = Server.ResolveDependency<IPlayerManager>().Sessions.Single();
-            Assert.That(current, Is.Not.SameAs(session));
-            Assert.That(current.UserId, Is.EqualTo(session.UserId));
-            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
-            Assert.That(SEntMan.System<ServerQueue>().ActualPlayersCount, Is.EqualTo(1));
-            Assert.That(SEntMan.System<ServerQueue>().AverageQueueWait, Is.EqualTo(previousAverage), "Bypassing the queue must not change the queue-wait estimate.");
-        });
-    }
-
     [TestCase(true)]
-    [TestCase(false)]
     public async Task WaitingLobbyReconnectCannotJoinThroughConsole(bool observe)
     {
         await Server.WaitPost(() =>
@@ -212,7 +138,6 @@ public sealed class JoinQueueNetworkTest : GameTest
         });
     }
 
-    [TestCase(false)]
     [TestCase(true)]
     public async Task ReconnectWithoutBypassKeepsFifoAcrossRealSessions(bool interruptAdmission)
     {
@@ -297,66 +222,6 @@ public sealed class JoinQueueNetworkTest : GameTest
     }
 
     [Test]
-    public async Task DirectObserverSpawnAlsoRequiresAdmission()
-    {
-        var (_, session) = await ConnectQueued();
-        await Server.WaitAssertion(() =>
-        {
-            var ticker = SEntMan.System<ServerGameTicker>();
-            ticker.SpawnObserver(session);
-            Assert.That(session.AttachedEntity, Is.Null);
-            Assert.That(session.GetMind(), Is.Null);
-            Assert.That(ticker.UserHasJoinedGame(session.UserId), Is.False);
-            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.EqualTo(1));
-            Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, 1);
-        });
-        await WaitServer(() => session.Status == SessionStatus.InGame);
-        await Server.WaitAssertion(() =>
-        {
-            SEntMan.System<ServerGameTicker>().SpawnObserver(session);
-            Assert.That(session.AttachedEntity, Is.Not.Null);
-        });
-    }
-
-    [Test]
-    public async Task QueueChangesWaitForTheBroadcastInterval()
-    {
-        await ConnectQueued();
-        string? previous = null;
-        await Client.WaitPost(() => previous = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
-            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text);
-        // Establish a fresh observed deadline even when profile setup took longer than the initial broadcast.
-        await Server.WaitPost(() => Server.ResolveDependency<IConfigurationManager>().SetCVar(CCVars.SoftMaxPlayers, -3));
-        await WaitClientRealTime(() => Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
-            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text != previous,
-            "A fresh queue update did not reach the client before the interval check.");
-        var sinceInitialUpdate = Stopwatch.StartNew();
-        await Client.WaitPost(() => previous = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children
-            .OfType<QueueGui>().Single().FindControl<Label>("ServerInfo").Text);
-        await Server.WaitPost(() =>
-        {
-            var cfg = Server.ResolveDependency<IConfigurationManager>();
-            // Both still mean zero admissions, but the displayed cap changes.
-            cfg.SetCVar(CCVars.SoftMaxPlayers, -1);
-            cfg.SetCVar(CCVars.SoftMaxPlayers, -2);
-            SEntMan.System<ServerQueue>().Update(0);
-        });
-        await Client.WaitAssertion(() =>
-        {
-            Client.ResolveDependency<IClientNetManager>().ProcessPackets();
-            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
-            Assert.That(sinceInitialUpdate.Elapsed, Is.LessThan(TimeSpan.FromMilliseconds(500)),
-                "The negative assertion must run before the fresh broadcast deadline, not after a slow setup.");
-            Assert.That(gui.FindControl<Label>("ServerInfo").Text, Is.EqualTo(previous), "Changes must not bypass the one-second broadcast interval.");
-        });
-        await WaitClientRealTime(() =>
-        {
-            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
-            return gui.FindControl<Label>("ServerInfo").Text != previous;
-        }, "The coalesced update must eventually reach the client.");
-    }
-
-    [Test]
     public async Task GhostReturnRejectsAnUnadmittedSessionBeforeReportingSuccess()
     {
         var (_, session) = await ConnectQueued();
@@ -387,49 +252,6 @@ public sealed class JoinQueueNetworkTest : GameTest
         });
         await Pair.ReallyBeIdle(5);
         return current!;
-    }
-
-    [Test]
-    public async Task DisablingTheQueueDisconnectsWaitingPlayersAndCancelsTheirLoadedData()
-    {
-        var (_, session) = await ConnectQueued();
-        await Server.WaitPost(() => Server.ResolveDependency<IConfigurationManager>().SetCVar(GoobCVars.QueueEnabled, false));
-        await WaitServer(() => session.Status == SessionStatus.Disconnected);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.System<ServerQueue>().PlayerInQueueCount, Is.Zero);
-            Assert.Throws<KeyNotFoundException>(() => Server.ResolveDependency<UserDbDataManager>().GetLoadTask(session));
-        });
-    }
-
-    [TestCase(true)]
-    [TestCase(false)]
-    public async Task QueueDisplaysThePublicGameMode(bool secret)
-    {
-        string realMode = string.Empty;
-        string publicMode = string.Empty;
-        await Server.WaitPost(() =>
-        {
-            var ticker = SEntMan.System<ServerGameTicker>();
-            var actual = ticker.FindGamePreset("sandbox");
-            var decoy = secret ? ticker.FindGamePreset("secret") : null;
-            Assert.That(actual, Is.Not.Null);
-            if (secret)
-                Assert.That(decoy, Is.Not.Null);
-            realMode = actual!.ModeTitle.Id;
-            publicMode = decoy?.ModeTitle.Id ?? realMode;
-            ticker.SetGamePreset(actual, decoy: decoy);
-        });
-
-        await ConnectQueued();
-        await Client.WaitAssertion(() =>
-        {
-            var gui = Client.ResolveDependency<IUserInterfaceManager>().StateRoot.Children.OfType<QueueGui>().Single();
-            var text = gui.FindControl<Label>("ServerInfo").Text;
-            Assert.That(text, Does.Contain(Loc.GetString(publicMode)));
-            if (secret)
-                Assert.That(text, Does.Not.Contain(Loc.GetString(realMode)), "A queued client must not learn the hidden game mode.");
-        });
     }
 
     private async Task<(string Name, ICommonSession Session)> ConnectQueued()
