@@ -91,6 +91,7 @@
   - ModsuitModulePepperShoulders
   - ModsuitModuleRestraintAssist
   - ModsuitModuleBulwark
+  - ModsuitModuleHolster
   position: -1,1
 
 - type: technology

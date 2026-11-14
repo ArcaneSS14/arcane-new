@@ -8,5 +8,6 @@ modsuit-module-incompatible = That module is incompatible with an installed modu
 modsuit-module-not-removable = That module is built into the MODsuit.
 modsuit-open-module-storage = Open {THE($module)}
 modsuit-module-hands-full = You need a free hand to deploy that device.
+modsuit-holster-requires-gun = The holster takes a firearm from your active hand.
 research-technology-modsuit-equipment-name = MOD Equipment
 research-technology-modsuit-equipment-desc = Additional equipment and power sources for MODsuits.

@@ -104,3 +104,21 @@
     - type: TrayScanner
       enabled: true
   - type: ModTrayScannerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleHolster
+  name: MOD holster module
+  description: Holds one firearm for quick retrieval, even while the suit is inactive.
+  components:
+  - type: Sprite
+    state: holster
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    allowFlags: Inactive
+    cooldown: 0.5
+  - type: ModHolsterModule
+  - type: ContainerContainer
+    containers:
+      mod-holster: !type:ContainerSlot

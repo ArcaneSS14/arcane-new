@@ -495,3 +495,11 @@
     Steel: 300
     Glass: 300
     Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleHolster
+  result: ModsuitModuleHolster
+  materials:
+    Steel: 500
+    Plastic: 300
