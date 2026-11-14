@@ -66,6 +66,8 @@
   - ModsuitModuleHeadProtector # Arcane
   - ModsuitModuleRadProtection # Arcane
   - ModsuitModuleEmpShieldAdvanced # Arcane
+  - ModsuitModuleReagentScanner # Arcane
+  - ModsuitModuleWaddle # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

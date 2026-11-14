@@ -328,3 +328,38 @@
     Glass: 300
     Gold: 200
     Uranium: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleThermalVisor
+  result: ModsuitModuleThermalVisor
+  materials:
+    Steel: 400
+    Glass: 400
+    Gold: 150
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleNightVisor
+  result: ModsuitModuleNightVisor
+  materials:
+    Steel: 400
+    Glass: 400
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleReagentScanner
+  result: ModsuitModuleReagentScanner
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleWaddle
+  result: ModsuitModuleWaddle
+  materials:
+    Steel: 300
+    Plastic: 300

@@ -7,6 +7,7 @@ using Content.Server.Construction;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
 using Content.Shared.Armor;
+using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
@@ -16,6 +17,7 @@ using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
+using Content.Shared.NightVision;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
@@ -402,6 +404,69 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.HasComponent<EyeProtectionComponent>(helmet), Is.False);
             Assert.That(SEntMan.HasComponent<Content.Shared.Overlays.ShowHealthBarsComponent>(helmet), Is.False);
             Assert.That(SEntMan.HasComponent<NoSlipComponent>(helmet), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task OpticsUseExistingVisionAndSolutionScanEvents()
+    {
+        EntityUid wearer = default;
+        EntityUid unit = default;
+        EntityUid night = default;
+        EntityUid scanner = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            unit = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            night = SEntMan.SpawnAttachedTo("ModsuitModuleNightVisor", position);
+            scanner = SEntMan.SpawnAttachedTo("ModsuitModuleReagentScanner", position);
+            var thermal = SEntMan.SpawnAttachedTo("ModsuitModuleThermalVisor", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+            var wires = SEntMan.System<SharedWiresSystem>();
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(unit, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, unit, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, thermal, wearer), Is.True);
+            Assert.That(suits.TryInstallModule(suit, night, wearer), Is.False);
+            Assert.That(suits.TryRemoveModule(suit, thermal, wearer), Is.True);
+            Assert.That(suits.TryInstallModule(suit, night, wearer), Is.True);
+            Assert.That(suits.TryInstallModule(suit, scanner, wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var nightAction = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(night, nightAction);
+            Assert.That(nightAction.Handled, Is.True);
+            var scanAction = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(scanner, scanAction);
+            Assert.That(scanAction.Handled, Is.True);
+
+            var light = new RefreshNightVisionEvent();
+            SEntMan.EventBus.RaiseLocalEvent(wearer, ref light);
+            Assert.That(light.Entities, Has.Count.EqualTo(1));
+            var scan = new SolutionScanEvent();
+            SEntMan.EventBus.RaiseLocalEvent(wearer, scan);
+            Assert.That(scan.CanScan, Is.True);
+
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value.AsNullable();
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            light = new RefreshNightVisionEvent();
+            SEntMan.EventBus.RaiseLocalEvent(wearer, ref light);
+            Assert.That(light.Entities, Is.Empty);
+            scan = new SolutionScanEvent();
+            SEntMan.EventBus.RaiseLocalEvent(wearer, scan);
+            Assert.That(scan.CanScan, Is.False);
         });
     }
 

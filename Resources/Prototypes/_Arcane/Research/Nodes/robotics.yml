@@ -155,4 +155,5 @@
   - ModsuitModuleThermalRegulator
   - ModsuitModuleGps
   - ModsuitModuleVisorDiagnostic
+  - ModsuitModuleReagentScanner
   position: -5,7

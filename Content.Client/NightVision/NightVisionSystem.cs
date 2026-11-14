@@ -1,10 +1,12 @@
 using Content.Client.Overlays;
 using Content.Shared.GameTicking;
+using Content.Shared.Inventory; // Arcane
 using Content.Shared.NightVision;
 using Content.Shared.Overlays;
 using Content.Shared.StatusEffectNew;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
+using Robust.Shared.Containers; // Arcane
 using Robust.Shared.Player;
 
 namespace Content.Client.NightVision;
@@ -14,6 +16,8 @@ public sealed partial class NightVisionSystem : SharedNightVisionSystem
 {
     [Dependency] private IOverlayManager _overlayMan = default!;
     [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private InventorySystem _inventory = default!; // Arcane
+    [Dependency] private SharedContainerSystem _containers = default!; // Arcane
 
     private NightVisionOverlay _overlay = default!;
 
@@ -39,8 +43,31 @@ public sealed partial class NightVisionSystem : SharedNightVisionSystem
     [SubscribeLocalEvent]
     private void OnHandleState(Entity<NightVisionComponent> ent, ref AfterAutoHandleStateEvent args)
     {
-        RefreshOverlay(ent);
+        RefreshEquipmentOverlay(ent); // Arcane
     }
+
+    // Arcane-Edit-Start: handle vision added to or removed from already-equipped items.
+    [SubscribeLocalEvent]
+    private void OnVisionComponentAdded(Entity<NightVisionComponent> ent, ref ComponentStartup args)
+    {
+        RefreshEquipmentOverlay(ent);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnVisionComponentRemoved(Entity<NightVisionComponent> ent, ref ComponentRemove args)
+    {
+        RefreshEquipmentOverlay(ent);
+    }
+
+    private void RefreshEquipmentOverlay(Entity<NightVisionComponent> ent)
+    {
+        if (ent.Comp.RelayOverlay && _inventory.TryGetContainingSlot(ent.Owner, out _)
+            && _containers.TryGetContainingContainer(ent.Owner, out var slot))
+            RefreshOverlay(slot.Owner);
+        else
+            RefreshOverlay(ent);
+    }
+    // Arcane-Edit-End
 
     [SubscribeLocalEvent]
     private void OnCompEquip(Entity<NightVisionComponent> ent, ref StatusEffectAppliedEvent args)
@@ -78,7 +105,7 @@ public sealed partial class NightVisionSystem : SharedNightVisionSystem
         var bestNoise = float.MaxValue;
         foreach (var ent in entities)
         {
-            if (!ent.Comp.Enabled)
+            if (!ent.Comp.Enabled || ent.Comp.LifeStage >= ComponentLifeStage.Removing)
                 continue;
 
             if (ent.Comp.RelayOverlay == (ent.Owner == entity))

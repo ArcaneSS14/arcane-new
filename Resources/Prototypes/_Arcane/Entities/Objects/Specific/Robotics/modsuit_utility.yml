@@ -52,3 +52,20 @@
     target: Wearer
     components:
     - type: NoSlip
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleWaddle
+  name: MOD waddle module
+  description: Honk Co. servo software gives the wearer an unmistakable waddle.
+  components:
+  - type: Sprite
+    state: waddle
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.1
+    requiredParts: [ shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: WaddleAnimation

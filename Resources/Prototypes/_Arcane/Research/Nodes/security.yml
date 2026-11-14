@@ -110,6 +110,7 @@
   - NightVision
   recipeUnlocks:
   - ClothingEyesThermalVisionGoggles
+  - ModsuitModuleThermalVisor
   position: -2,1
 
 - type: technology

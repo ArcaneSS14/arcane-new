@@ -28,6 +28,12 @@
             "name": "sechud_visor"
         },
         {
+            "name": "thermal_visor"
+        },
+        {
+            "name": "night_visor"
+        },
+        {
             "name": "jetpack"
         },
         {
@@ -73,6 +79,9 @@
             "name": "tether"
         },
         {
+            "name": "scanner"
+        },
+        {
             "name": "magnet"
         },
         {
@@ -101,6 +110,9 @@
         },
         {
             "name": "noslip"
+        },
+        {
+            "name": "waddle"
         },
         {
             "name": "chronogun"

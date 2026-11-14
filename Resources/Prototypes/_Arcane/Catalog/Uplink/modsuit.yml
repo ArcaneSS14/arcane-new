@@ -46,3 +46,17 @@
   cost:
     Telecrystal: 35
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleNightVisor
+  productEntity: ModsuitModuleNightVisor
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleThermalVisor
+  productEntity: ModsuitModuleThermalVisor
+  cost:
+    Telecrystal: 15
+  categories: [ UplinkWearables ]

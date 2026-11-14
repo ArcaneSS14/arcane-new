@@ -146,6 +146,7 @@
   - ModsuitModuleHealthAnalyzer
   - ModsuitModuleInjector
   - ModsuitModuleDefibrillator
+  - ModsuitModuleNightVisor
   position: 8,11
 
 - type: technology
