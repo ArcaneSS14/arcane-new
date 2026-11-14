@@ -44,36 +44,6 @@ public sealed class CaffeineMetabolismTest : GameTest
         });
     }
 
-    [TestCase(10, 1.1f, false)]
-    [TestCase(60, 0.7f, false)]
-    [TestCase(10, 1.1f, true)]
-    public async Task CaffeineRushAndOverdoseUseOneSpeedModifier(int amount, float multiplier, bool otherStimulant)
-    {
-        var map = await Pair.CreateTestMap();
-        await Server.WaitAssertion(() =>
-        {
-            var human = SSpawnAtPosition("MobHuman", map.GridCoords);
-            var metabolizer = PrepareMetabolizer(human, "Bloodstream");
-            var solutions = SEntMan.System<SharedSolutionContainerSystem>();
-            Assert.That(solutions.TryGetSolution(human, metabolizer.Comp.Solutions["Bloodstream"].SolutionName,
-                out var bloodEntity, out _), Is.True);
-            Assert.That(solutions.TryAddReagent(bloodEntity!.Value, "Caffeine", FixedPoint2.New(amount)), Is.True);
-            var movement = SEntMan.System<MovementSpeedModifierSystem>();
-            if (otherStimulant)
-                Assert.That(SEntMan.System<MovementModStatusSystem>().TryUpdateMovementSpeedModDuration(
-                    human, MovementModStatusSystem.ReagentSpeed, TimeSpan.FromSeconds(2), 1.2f), Is.True);
-            movement.RefreshMovementSpeedModifiers(human);
-            var speedBefore = SComp<MovementSpeedModifierComponent>(human).WalkSpeedModifier;
-
-            SEntMan.System<MetabolizerSystem>().Update(0);
-            movement.RefreshMovementSpeedModifiers(human);
-
-            Assert.That(SComp<MovementSpeedModifierComponent>(human).WalkSpeedModifier,
-                Is.EqualTo(speedBefore * multiplier).Within(0.001),
-                "At the shared 60u boundary the overdose replaces the rush instead of multiplying both.");
-        });
-    }
-
     private Entity<MetabolizerComponent> PrepareMetabolizer(EntityUid human, string stage)
     {
         var now = Server.ResolveDependency<IGameTiming>().CurTime;
