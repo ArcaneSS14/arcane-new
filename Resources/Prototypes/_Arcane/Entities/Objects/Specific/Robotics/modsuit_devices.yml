@@ -1,0 +1,190 @@
+- type: entity
+  abstract: true
+  parent: BaseModsuitModule
+  id: BaseModsuitModuleDevice
+  components:
+  - type: ContainerContainer
+    containers:
+      mod-device: !type:ContainerSlot
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleHealthAnalyzer
+  name: MOD health analyzer module
+  description: Scans patients from a device built into the suit's glove.
+  components:
+  - type: Sprite
+    state: health
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceHealthAnalyzer
+
+- type: entity
+  parent: HandheldHealthAnalyzer
+  id: ModsuitDeviceHealthAnalyzer
+  name: MOD health analyzer
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleGps
+  name: MOD GPS module
+  description: Shows the wearer's coordinates.
+  components:
+  - type: Sprite
+    state: gps
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.2
+  - type: ModDeviceModule
+    device: ModsuitDeviceGps
+
+- type: entity
+  parent: HandheldGPSBasic
+  id: ModsuitDeviceGps
+  name: MOD GPS
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleInjector
+  name: MOD wrist injector module
+  description: Draws and injects reagents through a syringe built into the suit.
+  components:
+  - type: Sprite
+    state: injector
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceInjector
+
+- type: entity
+  parent: Syringe
+  id: ModsuitDeviceInjector
+  name: MOD wrist injector
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleDefibrillator
+  name: MOD defibrillator paddles module
+  description: Resuscitation paddles powered by the suit.
+  components:
+  - type: Sprite
+    state: defibrillator
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 1.2
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceDefibrillator
+
+- type: entity
+  parent: DefibrillatorOneHandedUnpowered
+  id: ModsuitDeviceDefibrillator
+  name: MOD defibrillator paddles
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleTether
+  name: MOD emergency tether module
+  description: An emergency winch for moving in zero gravity.
+  components:
+  - type: Sprite
+    state: tether
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceTether
+
+- type: entity
+  parent: WeaponGrapplingGun
+  id: ModsuitDeviceTether
+  name: MOD emergency tether
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: [ BaseModsuitModuleDevice, BaseSyndicateContraband ]
+  id: ModsuitModuleMedbeam
+  name: MOD medical beamgun module
+  description: Heals a patient with a wrist-mounted medical beam projector.
+  components:
+  - type: Sprite
+    state: chronogun
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 2
+  - type: ModDeviceModule
+    device: ModsuitDeviceMedbeam
+
+- type: entity
+  parent: MedicalBeamGun
+  id: ModsuitDeviceMedbeam
+  name: MOD medical beamgun
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleFishingGlove
+  name: MOD fishing rod module
+  description: A fishing rod built into the suit's glove.
+  components:
+  - type: Sprite
+    state: fishing_glove
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.1
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceFishingRod
+
+- type: entity
+  parent: FishingRod
+  id: ModsuitDeviceFishingRod
+  name: MOD fishing rod
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}

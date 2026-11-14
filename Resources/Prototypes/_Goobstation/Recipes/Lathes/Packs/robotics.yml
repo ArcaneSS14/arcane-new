@@ -50,6 +50,9 @@
   - ModsuitModuleWelding # Arcane
   - ModsuitModuleThermalRegulator # Arcane
   - ModsuitModuleVisorDiagnostic # Arcane
+  - ModsuitModuleGps # Arcane
+  - ModsuitModuleTether # Arcane
+  - ModsuitModuleFishingGlove # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

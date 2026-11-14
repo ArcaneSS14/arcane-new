@@ -137,3 +137,56 @@
     Steel: 400
     Glass: 200
     Plasma: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleGps
+  result: ModsuitModuleGps
+  materials:
+    Steel: 300
+    Glass: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleHealthAnalyzer
+  result: ModsuitModuleHealthAnalyzer
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleInjector
+  result: ModsuitModuleInjector
+  materials:
+    Steel: 300
+    Glass: 300
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleDefibrillator
+  result: ModsuitModuleDefibrillator
+  materials:
+    Steel: 500
+    Glass: 300
+    Silver: 300
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleTether
+  result: ModsuitModuleTether
+  materials:
+    Steel: 600
+    Glass: 100
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleFishingGlove
+  result: ModsuitModuleFishingGlove
+  materials:
+    Steel: 300
+    Plastic: 200

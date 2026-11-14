@@ -64,10 +64,28 @@
             "name": "flashlight"
         },
         {
+            "name": "tether"
+        },
+        {
+            "name": "health"
+        },
+        {
+            "name": "gps"
+        },
+        {
             "name": "injector"
         },
         {
             "name": "welding"
+        },
+        {
+            "name": "chronogun"
+        },
+        {
+            "name": "defibrillator"
+        },
+        {
+            "name": "fishing_glove"
         }
     ]
 }

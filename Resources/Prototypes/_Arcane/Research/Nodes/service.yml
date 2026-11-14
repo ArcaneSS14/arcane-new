@@ -244,6 +244,7 @@
     amount: 500
   recipeUnlocks:
   - FishingRod
+  - ModsuitModuleFishingGlove
   position: 11,-2
 
 - type: technology

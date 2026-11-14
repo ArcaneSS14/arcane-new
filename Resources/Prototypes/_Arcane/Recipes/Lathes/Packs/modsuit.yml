@@ -7,3 +7,6 @@
   id: ModsuitMedicalEquipment
   recipes:
   - ModsuitModuleVisorMedical
+  - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleInjector
+  - ModsuitModuleDefibrillator

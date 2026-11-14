@@ -7,6 +7,7 @@ using Content.Server.Inventory;
 using Content.Shared.Actions;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Eye.Blinding.Components;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Power.EntitySystems;
@@ -80,6 +81,63 @@ public sealed class ModCoreTest : InteractionTest
           - type: ModSuit
             state: Active
         """;
+
+    [Test]
+    public async Task DeviceReturnsToItsModuleAndIsDeletedWithIt()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid device = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var unit = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            module = SEntMan.SpawnAttachedTo("ModsuitModuleGps", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(unit, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, unit, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            device = SEntMan.GetComponent<ModDeviceModuleComponent>(module).DeviceEntity!.Value;
+            var hands = SEntMan.System<SharedHandsSystem>();
+            Assert.That(hands.IsHolding(wearer, device), Is.True);
+            Assert.That(hands.TryDrop(wearer, device), Is.True);
+            Assert.That(SEntMan.GetComponent<ModModuleComponent>(module).Active, Is.False);
+        });
+
+        await RunSeconds(0.25f);
+        await Server.WaitAssertion(() =>
+        {
+            var containers = SEntMan.System<SharedContainerSystem>();
+            Assert.That(containers.TryGetContainingContainer(device, out var stored), Is.True);
+            Assert.That(stored!.Owner, Is.EqualTo(module));
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(SEntMan.System<SharedHandsSystem>().IsHolding(wearer, device), Is.True);
+            SEntMan.DeleteEntity(module);
+        });
+
+        await RunSeconds(0.25f);
+        await Server.WaitAssertion(() => Assert.That(SEntMan.EntityExists(device), Is.False));
+    }
 
     [Test]
     public async Task MedicalVisorAndWeldingModuleReleaseOnlyTheirOwnEffects()

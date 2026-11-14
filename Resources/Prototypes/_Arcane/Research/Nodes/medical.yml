@@ -143,6 +143,9 @@
   - SyringeGun
   - DefibrillatorCompact
   - ModsuitModuleVisorMedical
+  - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleInjector
+  - ModsuitModuleDefibrillator
   position: 8,11
 
 - type: technology
