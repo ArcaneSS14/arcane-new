@@ -184,7 +184,7 @@ public sealed partial class PollManager : IPostInjectInit
         var seen = _playerManager.TryGetSessionByChannel(msg.MsgChannel, out var session)
             ? await _db.GetSeenPollIdsAsync(session.UserId) : new HashSet<int>();
         // Arcane-End
-        var response = new MsgActivePollsResponse { Polls = polls, SeenPollIds = seen.ToList() }; // Arcane-Edit: include the requesting player's view history
+        var response = new MsgActivePollsResponse { Polls = polls, SeenPollIds = seen.ToList() }; // Arcane-Edit: Polls only > Polls + SeenPollIds
         PollsSent?.Invoke(msg.MsgChannel, polls); // Arcane
         _net.ServerSendMessage(response, msg.MsgChannel);
     }
