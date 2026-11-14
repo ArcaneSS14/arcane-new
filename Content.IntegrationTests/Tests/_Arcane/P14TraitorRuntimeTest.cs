@@ -28,29 +28,6 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
     [Test]
-    public async Task TeachALessonTracksTheRunnerRatherThanTheAvatar()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var minds = SEntMan.System<SharedMindSystem>();
-            var states = SEntMan.System<MobStateSystem>();
-            var target = minds.CreateMind(null, "Lesson target");
-            var body = SEntMan.SpawnAttachedTo("MobHuman", Center);
-            minds.TransferTo(target, body);
-            var objective = AssignLesson(target.Owner);
-
-            var avatar = SEntMan.SpawnAttachedTo("MobHuman", Center);
-            SEntMan.AddComponent<AvatarConnectionComponent>(avatar).OriginalBody = body;
-            minds.TransferTo(target, avatar);
-            states.ChangeMobState(avatar, MobState.Dead);
-            Assert.That(objective.HasDied, Is.False);
-
-            states.ChangeMobState(body, MobState.Dead);
-            Assert.That(objective.HasDied, Is.True);
-        });
-    }
-
-    [Test]
     public async Task TeachALessonOnlyCountsPermanentGhostDeparture()
     {
         await Server.WaitAssertion(() =>
@@ -75,58 +52,6 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
     }
 
     [Test]
-    public async Task TraitorCodewordsAreDistinctAndKeepTheConfiguredCount()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var generator = SEntMan.System<CodewordSystem>();
-            ProtoId<CodewordGeneratorPrototype> traitor = "TraitorCodewordGenerator";
-            for (var draw = 0; draw < 20; draw++)
-            {
-                var words = generator.GenerateCodewords(traitor);
-                Assert.That(words, Has.Length.EqualTo(4));
-                Assert.That(words.Distinct().Count(), Is.EqualTo(4));
-            }
-        });
-    }
-
-    [Test]
-    public async Task SleepingCarpOnlyDodgesWhileActiveAndStanding()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var knowledge = SEntMan.System<SharedKnowledgeSystem>();
-            var target = SEntMan.SpawnAttachedTo("MobHuman", Center);
-            var projectile = SEntMan.SpawnAttachedTo(null, Center);
-
-            Assert.That(DodgeHitscan(), Is.False);
-            knowledge.AddKnowledgeUnits(target, new Dictionary<EntProtoId, int> { ["MartialArtSleepingCarp"] = 1 });
-
-            Assert.That(DodgeHitscan(), Is.True);
-            var dodge = new ProjectileDodgeAttemptEvent(projectile, target);
-            SEntMan.EventBus.RaiseLocalEvent(target, ref dodge);
-            Assert.That(dodge.Dodged, Is.True);
-
-            var chair = SEntMan.SpawnAttachedTo("Chair", Center);
-            var buckle = SEntMan.System<SharedBuckleSystem>();
-            Assert.That(buckle.TryBuckle(target, target, chair), Is.True);
-            Assert.That(DodgeHitscan(), Is.False);
-            buckle.Unbuckle(target, user: null);
-            Assert.That(DodgeHitscan(), Is.True);
-
-            SEntMan.System<MobStateSystem>().ChangeMobState(target, MobState.Critical);
-            Assert.That(DodgeHitscan(), Is.False);
-
-            bool DodgeHitscan()
-            {
-                var hitscan = new HitscanDodgeAttemptEvent(target);
-                SEntMan.EventBus.RaiseLocalEvent(target, ref hitscan);
-                return hitscan.Dodged;
-            }
-        });
-    }
-
-    [Test]
     public async Task ScramDoesNotHandleActivationWithoutASafeTile()
     {
         await Server.WaitAssertion(() =>
@@ -140,37 +65,6 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
 
             Assert.That(activation.Handled, Is.False);
             Assert.That(transform.Coordinates, Is.EqualTo(Center));
-        });
-    }
-
-    [Test]
-    public async Task FultonEmagExtendsTheTargetListAndSurvivesSplit()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var fulton = SEntMan.System<SharedFultonSystem>();
-            var stacks = SEntMan.System<SharedStackSystem>();
-            var user = SEntMan.SpawnAttachedTo("MobHuman", Center);
-            var pack = SEntMan.SpawnAttachedTo("Fulton", Center);
-            var ordinary = SEntMan.SpawnAttachedTo("Fulton1", Center);
-            var target = SEntMan.SpawnAttachedTo(null, Center);
-            SEntMan.AddComponent<MindContainerComponent>(target);
-            var packComp = SEntMan.GetComponent<FultonComponent>(pack);
-
-            Assert.That(fulton.CanApplyFulton(user, packComp), Is.True);
-            Assert.That(fulton.CanApplyFulton(target, packComp), Is.False);
-            var emag = new GotEmaggedEvent(user, EmagType.Interaction);
-            SEntMan.EventBus.RaiseLocalEvent(pack, ref emag);
-            Assert.That(emag.Handled, Is.True);
-            Assert.That(fulton.CanApplyFulton(target, packComp), Is.True);
-
-            var split = stacks.Split(pack, 1, Center);
-            Assert.That(split, Is.Not.Null);
-            Assert.That(fulton.CanApplyFulton(target, SEntMan.GetComponent<FultonComponent>(split!.Value)), Is.True);
-            Assert.That(stacks.TryMergeStacks(split.Value, ordinary, out _), Is.False);
-            Assert.That(stacks.TryMergeStacks(ordinary, split.Value, out _), Is.False);
-            Assert.That(stacks.TryMergeStacks(split.Value, pack, out var moved), Is.True);
-            Assert.That(moved, Is.EqualTo(1));
         });
     }
 

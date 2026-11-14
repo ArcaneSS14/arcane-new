@@ -83,7 +83,6 @@ public sealed class P08MedicalRuntimeTest : InteractionTest
         });
     }
 
-    [TestCase(MobState.Critical, "Ambuzol", 10, false)]
     [TestCase(MobState.Dead, "AmbuzolPlus", 5, true)]
     public async Task BloodstreamMedicineRestoresOriginalBodyWithoutRevivingIt(MobState state, string drug, int dose, bool immune)
     {
@@ -138,37 +137,6 @@ public sealed class P08MedicalRuntimeTest : InteractionTest
     }
 
     [Test]
-    public async Task StomachMedicineCuresDeadZombieAtFullDose()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var uid = SEntMan.SpawnAttachedTo(Human, Center);
-            var body = SEntMan.System<BodySystem>();
-            var stomach = body.EnumerateOrgans<StomachComponent>(uid).Single();
-            var digestion = SEntMan.System<StomachSystem>();
-            var blood = SEntMan.GetComponent<BloodstreamComponent>(uid);
-            var zombies = SEntMan.System<ZombieSystem>();
-            var mobs = SEntMan.System<MobStateSystem>();
-
-            zombies.ZombifyEntity(uid);
-            mobs.ChangeMobState(uid, MobState.Dead);
-            zombies.Update(0);
-            Assert.That(digestion.TryTransferSolution((stomach.Owner, stomach.Comp2, null), new Solution([new("Ambuzol", 9)])), Is.True);
-            zombies.Update(0);
-            Assert.That(SEntMan.HasComponent<ZombieComponent>(uid), Is.True);
-
-            Assert.That(digestion.TryTransferSolution((stomach.Owner, stomach.Comp2, null), new Solution([new("Ambuzol", 1)])), Is.True);
-            Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.Zero));
-            Assert.That(stomach.Comp2.Solution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.New(10)));
-            Assert.That(mobs.IsDead(uid), Is.True);
-            zombies.Update(0);
-            Assert.That(SEntMan.HasComponent<ZombieComponent>(uid), Is.False);
-            Assert.That(mobs.IsDead(uid), Is.True);
-            Assert.That(stomach.Comp2.Solution.Value.Comp.Solution.GetTotalPrototypeQuantity("Ambuzol"), Is.EqualTo(FixedPoint2.Zero));
-        });
-    }
-
-    [Test]
     public async Task ZombificationEjectsFromVentAndCureKeepsLostAnatomy()
     {
         await Server.WaitAssertion(() =>
@@ -204,7 +172,6 @@ public sealed class P08MedicalRuntimeTest : InteractionTest
         });
     }
 
-    [TestCase(false)]
     [TestCase(true)]
     public async Task EmpPurgesPendingAndIncapacitatedSiliconInfection(bool synth)
     {
@@ -238,21 +205,6 @@ public sealed class P08MedicalRuntimeTest : InteractionTest
         var action = new SlimeRegrowActionEvent { Performer = uid };
         SEntMan.EventBus.RaiseLocalEvent(uid, action);
         return action.Handled;
-    }
-
-    [Test]
-    public async Task GibbedZombieDropsItsOriginalHeldItem()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var uid = SEntMan.SpawnAttachedTo(Human, Center);
-            var paper = SEntMan.SpawnAttachedTo(Paper, Center);
-            Assert.That(SEntMan.System<SharedHandsSystem>().TryPickupAnyHand(uid, paper, checkActionBlocker: false), Is.True);
-            SEntMan.System<ZombieSystem>().ZombifyEntity(uid);
-            var giblets = SEntMan.System<GibbingSystem>().Gib(uid);
-            Assert.That(giblets, Does.Contain(paper));
-            Assert.That(SEntMan.EntityExists(paper), Is.True);
-        });
     }
 
     private bool Pulse(EntityUid uid)

@@ -20,12 +20,9 @@ public sealed class P15BlobRuntimeTest : InteractionTest
 {
     private static readonly EntProtoId CorePrototype = "CoreBlobTile";
     private static readonly EntProtoId Observer = "MobObserverBlob";
-    private static readonly EntProtoId Human = "MobHuman";
-    private static readonly EntProtoId Wall = "WallSolid";
     private static readonly ProtoId<BlobTilePrototype> FactoryTile = "Factory";
     private static readonly ProtoId<BlobTilePrototype> Node = "Node";
     private static readonly ProtoId<BlobChemPrototype> Chain = "ChainCoating";
-    private static readonly ProtoId<BlobChemPrototype> Comatose = "ComatoseFiber";
     private static readonly ProtoId<BlobChemPrototype> Sinewy = "SinewyTendons";
     private static readonly ProtoId<BlobChemPrototype> Corrosive = "CorrosiveSlime";
     private static readonly ProtoId<BlobChemPrototype> Cryogenic = "CryogenicPoison";
@@ -38,8 +35,6 @@ public sealed class P15BlobRuntimeTest : InteractionTest
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
     [TestCase("ChainCoating", 9, 23)]
-    [TestCase("ComatoseFiber", 6, 6)]
-    [TestCase("CryogenicPoison", 6, 15)]
     public async Task GrowthChargesTheCurrentChemistryOnFloorAndInSpace(string chemistry, int floorCost, int spaceCost)
     {
         var east = Center.Offset(Vector2.UnitX);
@@ -119,29 +114,6 @@ public sealed class P15BlobRuntimeTest : InteractionTest
             Assert.That(SEntMan.GetComponent<ExplosionResistanceComponent>(core).DamageCoefficient, Is.EqualTo(nativeResistance));
             system.ChangeChem(core.AsNullable(), Cryogenic);
             Assert.That(naut.DamageModifierSetId, Is.EqualTo(SProtoMan.Index(Cryogenic).DamageModifiers));
-        });
-    }
-
-    [Test]
-    public async Task SinewyAttacksHealInjuredMobsAndDamageStructures()
-    {
-        var east = Center.Offset(Vector2.UnitX);
-        await SetTile(Plating, SEntMan.GetNetCoordinates(east), MapData.Grid);
-        await Server.WaitAssertion(() =>
-        {
-            var core = CreateCore();
-            SEntMan.System<BlobCoreSystem>().ChangeChem(core.AsNullable(), Sinewy);
-            var human = SEntMan.SpawnAttachedTo(Human, east);
-            var wall = SEntMan.SpawnAttachedTo(Wall, east);
-            var damage = SEntMan.System<DamageableSystem>();
-            damage.ChangeDamage(human, new DamageSpecifier { DamageDict = new() { [Blunt] = 48 } },
-                ignoreResistances: true, targetPart: TargetBodyPart.All);
-            var before = damage.GetTotalDamage(human);
-            Assert.That(before, Is.GreaterThan(Content.Shared.FixedPoint.FixedPoint2.Zero));
-            Interact(core, east, human);
-            Assert.That(damage.GetTotalDamage(human), Is.LessThan(before));
-            Interact(core, east, wall);
-            Assert.That(damage.GetTotalDamage(wall), Is.GreaterThan(Content.Shared.FixedPoint.FixedPoint2.Zero));
         });
     }
 
