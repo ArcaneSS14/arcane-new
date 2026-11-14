@@ -1,0 +1,90 @@
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModulePatientTransport
+  name: MOD patient transport module
+  description: Projects a hardlight bag that keeps a patient in stasis while the wearer drags it.
+  components:
+  - type: Sprite
+    state: patient_transport
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.8
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDevicePatientTransport
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleCriminalCapture
+  name: MOD criminal capture module
+  description: Projects a sealed hardlight bag that holds a suspect while dragged and leaves them exhausted when released.
+  components:
+  - type: Sprite
+    state: criminal_capture
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.8
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceCriminalCapture
+
+- type: entity
+  parent: BaseItem
+  id: ModsuitDevicePatientTransport
+  name: MOD hardlight bag projector
+  description: Use it on a patient to wrap them in a hardlight stasis bag.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: patient_transport
+  - type: Item
+    size: Normal
+  - type: PhysicalComposition
+    materialComposition: {}
+  - type: StaticPrice
+    price: 0
+  - type: ModPatientTransport
+
+- type: entity
+  parent: ModsuitDevicePatientTransport
+  id: ModsuitDeviceCriminalCapture
+  name: MOD hardlight capture projector
+  description: Use it on a suspect to seal them in a hardlight holding bag.
+  components:
+  - type: Sprite
+    state: criminal_capture
+  - type: ModPatientTransport
+    bagPrototype: ModsuitCaptureBag
+    captureDelay: 3.5
+
+- type: entity
+  parent: BodyBag
+  id: ModsuitHardlightBag
+  name: hardlight transport bag
+  description: Slows the patient's metabolism while the bag is being dragged. Dissipates when released.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    color: "#7fd8ffcc"
+  - type: ModHardlightBag
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: ModsuitHardlightBag
+  id: ModsuitCaptureBag
+  name: hardlight holding bag
+  description: Sealed while dragged. Dissipates when released.
+  components:
+  - type: Sprite
+    color: "#ff7f7fcc"
+  - type: TileFrictionModifier
+    modifier: 0.1
+  - type: HeldSpeedModifier
+  - type: ModHardlightBag
+    capture: true

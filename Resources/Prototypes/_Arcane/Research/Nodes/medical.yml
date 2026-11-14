@@ -150,6 +150,7 @@
   - ModsuitModuleQuickCarry
   - ModsuitModuleQuickCarryAdvanced
   - ModsuitModuleThreadRipper
+  - ModsuitModulePatientTransport
   position: 8,11
 
 - type: technology

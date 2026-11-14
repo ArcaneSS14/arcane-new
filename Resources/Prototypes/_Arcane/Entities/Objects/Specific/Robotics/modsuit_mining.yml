@@ -100,3 +100,121 @@
     maxContents: 5
     grabDelay: 1
     dropDelay: 0.5
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleDrill
+  name: MOD drill module
+  description: Extends a mining drill over the user's hand. It also cuts through rocks when rolling in sphere form.
+  components:
+  - type: Sprite
+    state: drill
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceDrill
+  - type: ModSphereDrill
+    damage:
+      types:
+        Structural: 50
+    whitelist:
+      components: [ MiningScannerViewable ]
+
+- type: entity
+  parent: MiningDrill
+  id: ModsuitDeviceDrill
+  name: MOD drill
+  description: A drill extending over the suit's hand.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinSphereTransform
+  name: MOD sphere transform module
+  description: Folds the suit around its wearer into a rolling sphere equipped with mining micromissiles.
+  components:
+  - type: Sprite
+    state: sphere
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 1.6
+    cooldown: 1
+    requiredParts: [ head, outerClothing, gloves, shoes ]
+  - type: ModSphereTransformModule
+  - type: ModArmorModule
+    slots: [ outerClothing ]
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.9
+
+- type: entity
+  parent: ModsuitModuleBuiltinSphereTransform
+  id: ModsuitModuleBuiltinSphereTransformCorporate
+  suffix: Corporate
+  components:
+  - type: ModSphereTransformModule
+    primaryColor: "#254022"
+    darkColor: "#152413"
+    accentColor: "#bf8133"
+
+- type: entity
+  parent: BaseBullet
+  id: BulletModMiningMissile
+  name: mining micromissile
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    noRot: false
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    rotation: 180
+    layers:
+    - state: mine_missile
+      shader: unshaded
+  - type: Projectile
+    impactEffect: BulletImpactEffectKinetic
+    soundHit:
+      path: /Audio/_Arcane/Items/Modsuit/sonic_jackhammer.ogg
+      params:
+        volume: -6
+    damage:
+      types:
+        Blunt: 3
+        Structural: 15
+  - type: ModMiningMissile
+  - type: HomingProjectile
+    homingSpeed: 540
+  - type: TimedDespawn
+    lifetime: 0.6
+  - type: PointLight
+    radius: 1.5
+    energy: 1
+    color: "#89cff0"
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSphereMissiles
+  name: Launch micromissiles
+  description: Fire a volley of mining micromissiles at the target.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+      state: mine_missile
+    useDelay: 3
+    checkCanInteract: false
+  - type: TargetAction
+    checkCanAccess: false
+    range: 8
+  - type: WorldTargetAction
+    event: !type:ModSphereMissileActionEvent

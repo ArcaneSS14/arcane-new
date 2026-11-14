@@ -1,0 +1,4 @@
+- type: shader
+  id: ModSphere
+  kind: source
+  path: "/Textures/_Arcane/Shaders/mod_sphere.swsl"

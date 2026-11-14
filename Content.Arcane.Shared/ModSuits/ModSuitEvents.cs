@@ -39,3 +39,6 @@ public record struct ModSuitAccessAttemptEvent(EntityUid User)
 {
     public bool Cancelled;
 }
+
+[ByRefEvent]
+public record struct ModSpherePressureQuery(float Pressure);

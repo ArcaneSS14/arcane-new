@@ -9,6 +9,7 @@ namespace Content.Arcane.Server.ModSuits;
 public sealed partial class ModSuitPressureSystem : EntitySystem
 {
     [Dependency] private BarotraumaSystem _barotrauma = default!;
+    [Dependency] private AtmosphereSystem _atmosphere = default!;
     [Dependency] private ModSuitSystem _suits = default!;
 
     public override void Initialize()
@@ -16,6 +17,13 @@ public sealed partial class ModSuitPressureSystem : EntitySystem
         SubscribeLocalEvent<ModArmorBoosterModuleComponent, ModModuleActivatedEvent>(OnBoosterActivated);
         SubscribeLocalEvent<ModArmorBoosterModuleComponent, ModModuleDeactivatedEvent>(OnBoosterDeactivated);
         SubscribeLocalEvent<ModPartComponent, GetPressureProtectionValuesEvent>(OnPartPressureProtection);
+        SubscribeLocalEvent<ModSphereTransformModuleComponent, ModSpherePressureQuery>(OnSpherePressure);
+    }
+
+    private void OnSpherePressure(Entity<ModSphereTransformModuleComponent> module, ref ModSpherePressureQuery args)
+    {
+        if (module.Comp.FormOwner is { } wearer)
+            args.Pressure = _atmosphere.GetTileMixture(wearer)?.Pressure ?? 0f;
     }
 
     private void OnBoosterActivated(Entity<ModArmorBoosterModuleComponent> module, ref ModModuleActivatedEvent args)

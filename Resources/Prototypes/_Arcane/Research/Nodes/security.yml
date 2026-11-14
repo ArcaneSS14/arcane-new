@@ -92,6 +92,7 @@
   - ModsuitModuleRestraintAssist
   - ModsuitModuleBulwark
   - ModsuitModuleHolster
+  - ModsuitModuleCriminalCapture
   position: -1,1
 
 - type: technology

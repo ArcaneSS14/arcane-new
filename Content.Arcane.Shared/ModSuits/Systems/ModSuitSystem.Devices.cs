@@ -68,6 +68,7 @@ public sealed partial class ModSuitSystem
             return;
 
         ReleaseClampCargo(device);
+        ReleaseTransportBag(device);
         if (TerminatingOrDeleted(module) || !_containers.TryGetContainer(module, DeviceSlotId, out var storage)
             || (!storage.Contains(device) && !_containers.Insert(device, storage)))
             QueueDel(device);

@@ -19,6 +19,19 @@
             ]
         },
         {
+            "name": "mine_missile",
+            "delays": [
+                [
+                    0.05,
+                    0.05,
+                    0.05,
+                    0.05,
+                    0.05,
+                    0.05
+                ]
+            ]
+        },
+        {
             "name": "medhud_visor"
         },
         {
@@ -38,6 +51,9 @@
         },
         {
             "name": "jetpack_advanced"
+        },
+        {
+            "name": "drill"
         },
         {
             "name": "regulator"
@@ -157,6 +173,9 @@
             "name": "clamp_loader"
         },
         {
+            "name": "sphere"
+        },
+        {
             "name": "mister"
         },
         {
@@ -167,6 +186,12 @@
         },
         {
             "name": "megaphone"
+        },
+        {
+            "name": "criminal_capture"
+        },
+        {
+            "name": "patient_transport"
         },
         {
             "name": "thread_ripper"

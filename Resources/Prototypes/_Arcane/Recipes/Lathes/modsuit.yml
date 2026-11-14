@@ -520,3 +520,31 @@
     Steel: 1000
     Glass: 200
     Gold: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleDrill
+  result: ModsuitModuleDrill
+  materials:
+    Steel: 600
+    Glass: 200
+    Silver: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModulePatientTransport
+  result: ModsuitModulePatientTransport
+  materials:
+    Steel: 500
+    Glass: 500
+    Plasma: 300
+    Silver: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleCriminalCapture
+  result: ModsuitModuleCriminalCapture
+  materials:
+    Steel: 500
+    Glass: 300
+    Silver: 100

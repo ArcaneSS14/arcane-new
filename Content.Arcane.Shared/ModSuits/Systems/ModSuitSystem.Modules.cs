@@ -195,6 +195,9 @@ public sealed partial class ModSuitSystem
             return false;
 
         var suit = (uid, control);
+        if (TryComp(user, out ModSphereFormComponent? sphere) && sphere.Module != module.Owner)
+            return false;
+
         if (!CanReachSuit(suit, user) || !CanAccessModules(suit, user)
             || (!component.AllowFlags.HasFlag(ModModuleAllowFlags.Unworn) && control.Wearer != user)
             || (!component.AllowFlags.HasFlag(ModModuleAllowFlags.Incapacitated) && !_actionBlocker.CanInteract(user, uid)))

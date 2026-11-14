@@ -13,6 +13,7 @@ using Content.Shared.Actions;
 using Content.Shared.Armor;
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Cuffs;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
@@ -28,6 +29,7 @@ using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
 using Content.Shared.Slippery;
+using Content.Shared.Speech.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Storage;
 using Content.Shared.Storage.Components;
@@ -637,6 +639,131 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.EntityExists(cargo), Is.True);
             Assert.That(containers.TryGetContainer(module, "mod-device", out var deviceSlot), Is.True);
             Assert.That(deviceSlot!.Contains(device), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task CorporateSphereRestoresWearerAndEquipmentOnPowerLoss()
+    {
+        await AddGravity();
+        EntityUid wearer = default;
+        Entity<ModSuitComponent> suit = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitCorporate", position);
+            suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var module = suit.Comp.ModulesContainer!.ContainedEntities.Single(uid =>
+                SEntMan.HasComponent<ModSphereTransformModuleComponent>(uid));
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            var form = SEntMan.GetComponent<ModSphereFormComponent>(wearer);
+            Assert.That(form.PrimaryColor, Is.EqualTo(Color.FromHex("#254022")));
+            var missileAction = SEntMan.GetComponent<ModSphereTransformModuleComponent>(module).MissileActionEntity!.Value;
+            Assert.That(SEntMan.System<SharedActionsSystem>().GetAction(missileAction)?.Comp.AttachedEntity, Is.EqualTo(wearer));
+
+            var off = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, off);
+            Assert.That(off.Handled, Is.True);
+            Assert.That(SEntMan.HasComponent<ModSphereFormComponent>(wearer), Is.False);
+        });
+
+        await RunSeconds(2);
+        await Server.WaitAssertion(() =>
+        {
+            var module = suit.Comp.ModulesContainer!.ContainedEntities.Single(uid =>
+                SEntMan.HasComponent<ModSphereTransformModuleComponent>(uid));
+            var on = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, on);
+            Assert.That(on.Handled, Is.True);
+            var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value;
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery.AsNullable(), 0);
+            Assert.That(SEntMan.HasComponent<ModSphereFormComponent>(wearer), Is.False);
+            var missileAction = SEntMan.GetComponent<ModSphereTransformModuleComponent>(module).MissileActionEntity!.Value;
+            Assert.That(SEntMan.System<SharedActionsSystem>().GetAction(missileAction)?.Comp.AttachedEntity, Is.Null);
+            Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "head", out var helmet), Is.True);
+            Assert.That(helmet, Is.EqualTo(suit.Comp.PartEntities["head"]));
+        });
+    }
+
+    [TestCase("ModsuitModulePatientTransport", false)]
+    [TestCase("ModsuitModuleCriminalCapture", true)]
+    public async Task TransportReleasesOriginalOccupantOnDeviceRetraction(string prototype, bool capture)
+    {
+        await AddGravity();
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid target = default;
+        EntityUid projector = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", position);
+            module = SEntMan.SpawnAttachedTo(prototype, position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(SEntMan.System<SharedHandsSystem>().TryGetActiveItem(wearer, out var item), Is.True);
+            projector = item!.Value;
+            var position = MapData.GridCoords.Offset(new Vector2(0.9f, 0));
+            target = SEntMan.SpawnAttachedTo("MobHuman", position);
+            Assert.That(SEntMan.System<SharedCuffableSystem>().IsCuffed(target), Is.False);
+            var use = new AfterInteractEvent(wearer, projector, target, position, canReach: true);
+            SEntMan.EventBus.RaiseLocalEvent(projector, use);
+            Assert.That(use.Handled, Is.True);
+            Assert.That(SEntMan.GetComponent<DoAfterComponent>(wearer).DoAfters.Values.Any(after =>
+                after.Args.Event is ModPatientTransportDoAfterEvent), Is.True);
+        });
+
+        await RunSeconds(5);
+        await Server.WaitAssertion(() =>
+        {
+            var device = SEntMan.GetComponent<ModPatientTransportComponent>(projector);
+            Assert.That(device.Bag, Is.Not.Null);
+            var bag = device.Bag!.Value;
+            Assert.That(SEntMan.GetComponent<EntityStorageComponent>(bag).Contents.Contains(target), Is.True);
+            Assert.That(SEntMan.HasComponent<ModTransportStasisComponent>(target), Is.EqualTo(!capture));
+            Assert.That(SEntMan.HasComponent<MumbleAccentComponent>(target), Is.EqualTo(capture));
+            if (capture)
+                Assert.That(SEntMan.System<SharedEntityStorageSystem>().TryOpenStorage(target, bag), Is.False);
+
+            var retract = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, retract);
+            Assert.That(retract.Handled, Is.True);
+            Assert.That(device.Bag, Is.Null);
+            Assert.That(SEntMan.EntityExists(target), Is.True);
+            Assert.That(SEntMan.GetComponent<EntityStorageComponent>(bag).Contents.Contains(target), Is.False);
+            Assert.That(SEntMan.HasComponent<ModTransportStasisComponent>(target), Is.False);
+            Assert.That(SEntMan.HasComponent<MumbleAccentComponent>(target), Is.False);
         });
     }
 

@@ -17,6 +17,7 @@
   components:
   - type: ModSuit # Arcane
     theme: ModThemeCorporate
+    inbuiltModules: [ ModsuitModuleBuiltinSphereTransformCorporate ] # Arcane
     parts:
       head: ClothingModsuitHelmetCorporate
       gloves: ClothingModsuitGauntletsCorporate

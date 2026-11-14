@@ -78,6 +78,9 @@
   - ModsuitModuleTRay # Arcane
   - ModsuitModuleOreBag # Arcane
   - ModsuitModuleClamp # Arcane
+  - ModsuitModuleDrill # Arcane
+  - ModsuitModulePatientTransport # Arcane
+  - ModsuitModuleCriminalCapture # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob
