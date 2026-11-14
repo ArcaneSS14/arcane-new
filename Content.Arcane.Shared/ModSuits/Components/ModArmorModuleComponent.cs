@@ -13,3 +13,6 @@ public sealed partial class ModArmorModuleComponent : Component
     [DataField]
     public List<string> Slots = [];
 }
+
+[RegisterComponent]
+public sealed partial class ModArmorBoosterModuleComponent : Component;

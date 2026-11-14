@@ -59,4 +59,19 @@ public sealed partial class ModSuitSystem
                 args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, armor.Modifiers);
         }
     }
+
+    public bool IsPartPressureProtectionSuppressed(Entity<ModPartComponent> part)
+    {
+        if (part.Comp.Suit is not { } control || GetDeployedPart(control, part.Comp.Slot) != part.Owner
+            || !TryComp(control, out ModSuitComponent? suit) || suit.ModulesContainer is not { } modules)
+            return false;
+
+        foreach (var uid in modules.ContainedEntities)
+        {
+            if (HasComp<ModArmorBoosterModuleComponent>(uid) && TryComp(uid, out ModModuleComponent? module) && module.Active)
+                return true;
+        }
+
+        return false;
+    }
 }

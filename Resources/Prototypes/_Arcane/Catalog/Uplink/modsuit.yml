@@ -60,3 +60,10 @@
   cost:
     Telecrystal: 15
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleArmorBooster
+  productEntity: ModsuitModuleArmorBooster
+  cost:
+    Telecrystal: 40
+  categories: [ UplinkWearables ]

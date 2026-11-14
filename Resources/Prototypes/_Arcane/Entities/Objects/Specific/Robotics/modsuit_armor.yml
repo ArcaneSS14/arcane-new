@@ -28,3 +28,27 @@
     modifiers:
       coefficients:
         Blunt: 0.9
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleArmorBooster
+  name: MOD armor booster module
+  description: Retractable plates improve protection and mobility at the cost of the suit's pressure protection.
+  components:
+  - type: Sprite
+    state: armor_booster
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.6
+  - type: ModArmorModule
+    slots: [ head, outerClothing, gloves, shoes ]
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.7
+        Heat: 0.85
+  - type: ModArmorBoosterModule
+  - type: ModSpeedModule
+    walkModifier: 1.1
+    sprintModifier: 1.1

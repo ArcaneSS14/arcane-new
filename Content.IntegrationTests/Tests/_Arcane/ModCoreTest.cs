@@ -3,6 +3,8 @@ using Content.Arcane.Shared.ModSuits.Components;
 using Content.Arcane.Shared.ModSuits.Systems;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Medical.Common.Body;
+using Content.Server.Atmos.Components;
+using Content.Server.Atmos.EntitySystems;
 using Content.Server.Construction;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
@@ -220,6 +222,46 @@ public sealed class ModCoreTest : InteractionTest
             SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
             Assert.That(Damage(blunt, BodyPartType.Head, 0f), Is.EqualTo(76.8f).Within(0.02f));
             Assert.That(Damage(radiation, BodyPartType.Torso, 1f), Is.EqualTo(100f));
+        });
+    }
+
+    [Test]
+    public async Task ArmorBoosterSuppressesPressureProtectionOnlyWhilePowered()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", position);
+            var booster = SEntMan.SpawnAttachedTo("ModsuitModuleArmorBooster", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, booster, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value.AsNullable();
+            var pressure = SEntMan.System<BarotraumaSystem>();
+            var barotrauma = SEntMan.GetComponent<BarotraumaComponent>(wearer);
+            Assert.That(pressure.GetFeltLowPressure(wearer, barotrauma, 0f), Is.Zero);
+            Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "head", out var helmet), Is.True);
+            Assert.That(SEntMan.HasComponent<PressureProtectionComponent>(helmet!.Value), Is.True);
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            Assert.That(pressure.GetFeltLowPressure(wearer, barotrauma, 0f), Is.GreaterThan(0f));
         });
     }
 
