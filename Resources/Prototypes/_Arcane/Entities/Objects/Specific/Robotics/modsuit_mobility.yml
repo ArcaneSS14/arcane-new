@@ -84,3 +84,68 @@
     complexity: 1
     requiredParts: [ head ]
   - type: ModMouthholeModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleAntiGravity
+  name: MOD anti-gravity module
+  description: Makes the wearer weightless in areas with gravity.
+  components:
+  - type: Sprite
+    state: antigrav
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 1.2
+    incompatible:
+      tags: [ ModsuitModuleGravity ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleGravity ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModAntiGravity
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleJumpJet
+  name: MOD ionic jump jet module
+  description: An ionic thruster that provides a short forward boost.
+  components:
+  - type: Sprite
+    state: jump_jet
+  - type: ModModule
+    moduleType: Usable
+    complexity: 3
+    usePower: 40
+    cooldown: 10
+    requiredParts: [ outerClothing ]
+  - type: ModJumpJetModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleJointTorsion
+  name: MOD joint torsion ratchet module
+  description: A generator that charges the internal cell as the wearer moves under gravity.
+  components:
+  - type: Sprite
+    state: joint_torsion
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ shoes ]
+  - type: ModJointTorsionModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModulePlasmaStabilizer
+  name: MOD plasma stabilizer module
+  description: Protects a plasmaman's exposed head from igniting while the suit has power.
+  components:
+  - type: Sprite
+    state: plasma_stabilizer
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.2
+    allowFlags: Inactive
+    requiredParts: [ head ]
+  - type: ModPlasmaStabilizerModule

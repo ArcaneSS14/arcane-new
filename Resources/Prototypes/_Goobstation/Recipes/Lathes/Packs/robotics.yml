@@ -71,6 +71,10 @@
   - ModsuitModuleBurgerDispenser # Arcane
   - ModsuitModulePaperDispenser # Arcane
   - ModsuitModuleBalloonBlower # Arcane
+  - ModsuitModuleAntiGravity # Arcane
+  - ModsuitModuleJumpJet # Arcane
+  - ModsuitModuleJointTorsion # Arcane
+  - ModsuitModulePlasmaStabilizer # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

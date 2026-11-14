@@ -396,3 +396,48 @@
   materials:
     Steel: 200
     Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleAntiGravity
+  result: ModsuitModuleAntiGravity
+  materials:
+    Steel: 600
+    Glass: 300
+    Plasma: 500
+    Uranium: 200
+    Gold: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleJumpJet
+  result: ModsuitModuleJumpJet
+  materials:
+    Steel: 1000
+    Plasma: 400
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleJointTorsion
+  result: ModsuitModuleJointTorsion
+  materials:
+    Steel: 400
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModulePlasmaStabilizer
+  result: ModsuitModulePlasmaStabilizer
+  materials:
+    Plasma: 300
+    Glass: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleShockAbsorber
+  result: ModsuitModuleShockAbsorber
+  materials:
+    Steel: 600
+    Plastic: 400
+    Silver: 100

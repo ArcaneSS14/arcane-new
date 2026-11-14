@@ -115,6 +115,9 @@
             "name": "dispenser"
         },
         {
+            "name": "plasma_stabilizer"
+        },
+        {
             "name": "bloon"
         },
         {
@@ -128,6 +131,9 @@
         },
         {
             "name": "paper_maker"
+        },
+        {
+            "name": "antigrav"
         },
         {
             "name": "stamp"
@@ -146,6 +152,23 @@
         },
         {
             "name": "defibrillator"
+        },
+        {
+            "name": "joint_torsion"
+        },
+        {
+            "name": "jump_jet"
+        },
+        {
+            "name": "no_baton",
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
         },
         {
             "name": "fishing_glove"

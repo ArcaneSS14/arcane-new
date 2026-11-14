@@ -52,3 +52,22 @@
   - type: ModSpeedModule
     walkModifier: 1.1
     sprintModifier: 1.1
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleShockAbsorber
+  name: MOD shock absorption module
+  description: Dampens stamina damage while switched on.
+  components:
+  - type: Sprite
+    state: no_baton
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ outerClothing ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: StaminaResistance
+      damageCoefficient: 0.6

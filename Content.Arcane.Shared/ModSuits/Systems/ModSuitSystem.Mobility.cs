@@ -5,6 +5,7 @@ using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Nutrition;
 using Content.Shared.Standing;
+using Content.Shared.Throwing;
 
 namespace Content.Arcane.Shared.ModSuits.Systems;
 
@@ -13,6 +14,8 @@ public sealed partial class ModSuitSystem
     [Dependency] private SharedJetpackSystem _jetpacks = default!;
     [Dependency] private StandingStateSystem _standing = default!;
     [Dependency] private SharedMagbootsSystem _magboots = default!;
+    [Dependency] private SharedGravitySystem _gravity = default!;
+    [Dependency] private ThrowingSystem _throwing = default!;
 
     private void InitializeMobilityModules()
     {
@@ -26,6 +29,11 @@ public sealed partial class ModSuitSystem
         SubscribeLocalEvent<ModSpeedModuleComponent, ModModuleDeactivatedEvent>(OnSpeedDeactivated);
         SubscribeLocalEvent<ModMagbootsModuleComponent, ModModuleActivatedEvent>(OnMagbootsActivated);
         SubscribeLocalEvent<ModMagbootsModuleComponent, ModModuleDeactivatedEvent>(OnMagbootsDeactivated);
+        SubscribeLocalEvent<ModAntiGravityComponent, ComponentStartup>(OnAntiGravityStarted);
+        SubscribeLocalEvent<ModAntiGravityComponent, ComponentShutdown>(OnAntiGravityStopped);
+        SubscribeLocalEvent<ModAntiGravityComponent, IsWeightlessEvent>(OnModIsWeightless);
+        SubscribeLocalEvent<ModJumpJetModuleComponent, ModModuleUsedEvent>(OnJumpJetUsed);
+        SubscribeLocalEvent<ModJointTorsionModuleComponent, ModModuleActivatedEvent>(OnJointTorsionActivated);
     }
 
     private void OnJetpackAttempt(Entity<ModJetpackModuleComponent> module, ref ModModuleActivateAttemptEvent args)
@@ -123,6 +131,66 @@ public sealed partial class ModSuitSystem
         {
             if (TryComp(uid, out ModModuleComponent? module) && module.Active && TryComp(uid, out ModSpeedModuleComponent? speed))
                 args.ModifySpeed(speed.WalkModifier, speed.SprintModifier);
+        }
+    }
+
+    private void OnAntiGravityStarted(Entity<ModAntiGravityComponent> wearer, ref ComponentStartup args) =>
+        _gravity.RefreshWeightless(wearer.Owner);
+
+    private void OnAntiGravityStopped(Entity<ModAntiGravityComponent> wearer, ref ComponentShutdown args)
+    {
+        if (!TerminatingOrDeleted(wearer))
+            _gravity.RefreshWeightless(wearer.Owner);
+    }
+
+    private void OnModIsWeightless(Entity<ModAntiGravityComponent> wearer, ref IsWeightlessEvent args)
+    {
+        if (wearer.Comp.LifeStage > ComponentLifeStage.Running)
+            return;
+
+        args.IsWeightless = true;
+        args.Handled = true;
+    }
+
+    private void OnJumpJetUsed(Entity<ModJumpJetModuleComponent> module, ref ModModuleUsedEvent args)
+    {
+        if (args.Handled || _containers.IsEntityInContainer(args.User))
+            return;
+
+        var direction = _transform.GetWorldRotation(args.User).ToWorldVec() * module.Comp.Distance;
+        if (!_throwing.TryThrow(args.User, direction, module.Comp.Speed, args.User, pushbackRatio: 0f,
+                recoil: false, animated: false, playSound: false, doSpin: false, predicted: false))
+            return;
+
+        _audio.PlayPvs(module.Comp.Sound, args.User);
+        args.Handled = true;
+    }
+
+    private void OnJointTorsionActivated(Entity<ModJointTorsionModuleComponent> module, ref ModModuleActivatedEvent args) =>
+        module.Comp.LastPosition = null;
+
+    private void UpdateJointTorsion()
+    {
+        var query = EntityQueryEnumerator<ModJointTorsionModuleComponent, ModModuleComponent>();
+        while (query.MoveNext(out _, out var torsion, out var module))
+        {
+            if (!module.Active || module.Suit is not { } control || !TryComp(control, out ModSuitComponent? suit)
+                || suit.Wearer is not { } wearer || TerminatingOrDeleted(wearer)
+                || _containers.IsEntityInContainer(wearer) || _gravity.IsWeightless(wearer))
+            {
+                torsion.LastPosition = null;
+                continue;
+            }
+
+            var position = _transform.GetMapCoordinates(wearer);
+            var previous = torsion.LastPosition;
+            torsion.LastPosition = position;
+            if (previous is not { } last || last.MapId != position.MapId)
+                continue;
+
+            var distance = MathF.Min((position.Position - last.Position).Length(), torsion.MaxTilesPerUpdate);
+            if (distance > 0.01f && GetBattery((control, suit)) is { } battery)
+                _battery.ChangeCharge(battery.AsNullable(), distance * torsion.ChargePerTile);
         }
     }
 }

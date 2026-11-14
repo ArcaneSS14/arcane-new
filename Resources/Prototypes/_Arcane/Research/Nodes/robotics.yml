@@ -156,4 +156,6 @@
   - ModsuitModuleGps
   - ModsuitModuleVisorDiagnostic
   - ModsuitModuleReagentScanner
+  - ModsuitModuleJointTorsion
+  - ModsuitModulePlasmaStabilizer
   position: -5,7

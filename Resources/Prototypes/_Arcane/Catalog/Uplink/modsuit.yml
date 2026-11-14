@@ -67,3 +67,10 @@
   cost:
     Telecrystal: 40
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleJumpJet
+  productEntity: ModsuitModuleJumpJet
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]

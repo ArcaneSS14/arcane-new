@@ -30,6 +30,7 @@ public sealed partial class ModSuitSystem
 
         UpdateThermalRegulators(frameTime);
         UpdateModJetpacks();
+        UpdateJointTorsion();
         var now = _timing.CurTime;
         var query = EntityQueryEnumerator<ModSuitComponent>();
         while (query.MoveNext(out var uid, out var component))
