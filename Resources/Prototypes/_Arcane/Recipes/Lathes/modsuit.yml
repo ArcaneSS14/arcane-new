@@ -441,3 +441,57 @@
     Steel: 600
     Plastic: 400
     Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleQuickCarry
+  result: ModsuitModuleQuickCarry
+  materials:
+    Steel: 500
+    Glass: 200
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleQuickCarryAdvanced
+  result: ModsuitModuleQuickCarryAdvanced
+  materials:
+    Steel: 600
+    Plastic: 300
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleThreadRipper
+  result: ModsuitModuleThreadRipper
+  materials:
+    Steel: 500
+    Glass: 200
+    Silver: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleRestraintAssist
+  result: ModsuitModuleRestraintAssist
+  materials:
+    Steel: 400
+    Plastic: 200
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleBulwark
+  result: ModsuitModuleBulwark
+  materials:
+    Steel: 1000
+    Plasma: 200
+    Silver: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleTRay
+  result: ModsuitModuleTRay
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100

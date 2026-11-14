@@ -147,6 +147,9 @@
   - ModsuitModuleInjector
   - ModsuitModuleDefibrillator
   - ModsuitModuleNightVisor
+  - ModsuitModuleQuickCarry
+  - ModsuitModuleQuickCarryAdvanced
+  - ModsuitModuleThreadRipper
   position: 8,11
 
 - type: technology

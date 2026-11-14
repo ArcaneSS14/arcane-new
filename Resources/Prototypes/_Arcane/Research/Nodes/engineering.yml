@@ -452,6 +452,7 @@
   recipeUnlocks:
   - ModsuitModuleMagboots
   - ModsuitModuleHeadProtector
+  - ModsuitModuleTRay
   - ModsuitModuleJetpackAdvanced
   - ModsuitModuleAntiGravity
   - ModsuitModuleJumpJet

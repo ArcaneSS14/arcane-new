@@ -109,6 +109,9 @@
             "name": "apparatus"
         },
         {
+            "name": "carry"
+        },
+        {
             "name": "welding"
         },
         {
@@ -116,6 +119,9 @@
         },
         {
             "name": "plasma_stabilizer"
+        },
+        {
+            "name": "tray"
         },
         {
             "name": "bloon"
@@ -151,6 +157,9 @@
             "name": "megaphone"
         },
         {
+            "name": "thread_ripper"
+        },
+        {
             "name": "defibrillator"
         },
         {
@@ -158,6 +167,9 @@
         },
         {
             "name": "jump_jet"
+        },
+        {
+            "name": "bulwark"
         },
         {
             "name": "no_baton",

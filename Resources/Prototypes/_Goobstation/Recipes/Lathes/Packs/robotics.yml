@@ -75,6 +75,7 @@
   - ModsuitModuleJumpJet # Arcane
   - ModsuitModuleJointTorsion # Arcane
   - ModsuitModulePlasmaStabilizer # Arcane
+  - ModsuitModuleTRay # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

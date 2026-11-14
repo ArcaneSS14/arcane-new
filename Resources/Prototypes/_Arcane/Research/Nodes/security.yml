@@ -89,6 +89,8 @@
   - ModsuitModuleMegaphone
   - ModsuitModuleEmpShield
   - ModsuitModulePepperShoulders
+  - ModsuitModuleRestraintAssist
+  - ModsuitModuleBulwark
   position: -1,1
 
 - type: technology

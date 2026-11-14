@@ -5,6 +5,8 @@
   - ModsuitModuleMegaphone
   - ModsuitModuleEmpShield
   - ModsuitModulePepperShoulders
+  - ModsuitModuleRestraintAssist
+  - ModsuitModuleBulwark
   - ModsuitModuleThermalVisor
   - ModsuitModuleShockAbsorber
   - ModsuitModuleNightVisor
@@ -17,3 +19,6 @@
   - ModsuitModuleInjector
   - ModsuitModuleDefibrillator
   - ModsuitModuleNightVisor
+  - ModsuitModuleQuickCarry
+  - ModsuitModuleQuickCarryAdvanced
+  - ModsuitModuleThreadRipper
