@@ -1,0 +1,8 @@
+- type: job
+  id: MedicalIntern
+  alternateTitles:
+  - MedicalInternJuniorDoctor
+  - MedicalInternResident
+  - MedicalInternJuniorMedic
+  - MedicalInternJuniorPhysician
+  - MedicalInternDoctorsAssistant

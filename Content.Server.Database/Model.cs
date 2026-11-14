@@ -430,6 +430,7 @@ namespace Content.Server.Database
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
             ModelAchievements.OnModelCreating(modelBuilder); // Arcane
             ModelDiscordRoles.OnModelCreating(modelBuilder); // Arcane
+            ModelJobAlternateTitles.OnModelCreating(modelBuilder); // Arcane
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)
@@ -486,6 +487,7 @@ namespace Content.Server.Database
         // Arcane-End
         public int ErpPreference { get; set; } = 1; // Arcane
         public string TtsVoice { get; set; } = string.Empty; // Arcane
+        public Dictionary<string, string> JobAlternateTitles { get; set; } = new(); // Arcane
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

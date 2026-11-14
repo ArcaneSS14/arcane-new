@@ -305,3 +305,8 @@
   - HeadOfPersonnelBackpack
   - HeadOfPersonnelSatchel
   - HeadOfPersonnelDuffel
+
+- type: loadoutGroup
+  id: LawyerJumpsuit
+  loadouts:
+  - LawyerJumpsuitBrown

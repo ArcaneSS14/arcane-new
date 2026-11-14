@@ -48,3 +48,9 @@
 
 - type: playTimeTracker
   id: JobGhostRoleBingle
+
+- type: playTimeTracker
+  id: JobAdjutant
+
+- type: playTimeTracker
+  id: JobIAA

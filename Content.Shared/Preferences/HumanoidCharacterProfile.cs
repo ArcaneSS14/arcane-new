@@ -217,6 +217,7 @@ namespace Content.Shared.Preferences
             Customization = other.Customization; // Arcane
             ErpPreference = other.ErpPreference; // Arcane
             TtsVoice = other.TtsVoice; // Arcane
+            JobAlternateTitles = new(other.JobAlternateTitles); // Arcane
         }
 
         /// <summary>
@@ -703,6 +704,7 @@ namespace Content.Shared.Preferences
             if (!Customization.Equals(other.Customization)) return false; // Arcane
             if (ErpPreference != other.ErpPreference) return false; // Arcane
             if (TtsVoice != other.TtsVoice) return false; // Arcane
+            if (!AltTitlesEqual(other)) return false; // Arcane
             return Appearance.Equals(other.Appearance);
         }
 
@@ -849,6 +851,7 @@ namespace Content.Shared.Preferences
             Sex = sex;
             Voice = voice;
             TtsVoice = ValidatedTtsVoice(prototypeManager, sex); // Arcane
+            JobAlternateTitles = ValidatedAltTitles(session, collection, prototypeManager, configManager); // Arcane
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;

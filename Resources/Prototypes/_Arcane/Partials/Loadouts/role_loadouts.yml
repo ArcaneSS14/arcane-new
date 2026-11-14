@@ -4,6 +4,17 @@
   id: JobCommandMaid
   groups:
   - Patron
+  - CommandMaidHead
+  - CommandMaidJumpsuit
+  - CommandMaidneck
+  - !Remove CommonBackpack
+  - CommandMaidBackpack
+  - CommandMaidGloves
+  - CommandMaidShoes
+  - CommandMaidBelt
+  - CommandMaidMask
+  - CommandMaidSocks
+  - Trinkets
 
 - type: roleLoadout
   id: JobCaptain

@@ -1417,6 +1417,13 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("tts_voice"); // Arcane
 
+                    // Arcane-Start
+                    b.Property<string>("JobAlternateTitles")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("job_alternate_titles");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")

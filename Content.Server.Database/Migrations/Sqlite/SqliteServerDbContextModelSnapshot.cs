@@ -1342,6 +1342,13 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("tts_voice"); // Arcane
 
+                    // Arcane-Start
+                    b.Property<string>("JobAlternateTitles")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("job_alternate_titles");
+                    // Arcane-End
+
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")
