@@ -230,7 +230,7 @@ public sealed partial class ModSphereTransformModuleSystem : EntitySystem
             return;
         }
 
-        if (!_modSuit.TryUseSphereCharge(suit, ent.Comp.MissilePower))
+        if (!_modSuit.TryUseModuleCharge(suit, ent.Comp.MissilePower))
         {
             _popup.PopupClient(Loc.GetString("modsuit-no-power"), user, user);
             return;

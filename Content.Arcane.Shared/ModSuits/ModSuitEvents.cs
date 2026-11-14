@@ -17,6 +17,9 @@ public readonly record struct ModModuleInstalledEvent(EntityUid Suit);
 public readonly record struct ModModuleRemovedEvent(EntityUid Suit);
 
 [ByRefEvent]
+public readonly record struct ModModuleWornEvent(EntityUid Wearer);
+
+[ByRefEvent]
 public readonly record struct ModModuleActivatedEvent(EntityUid Suit, EntityUid? Wearer);
 
 [ByRefEvent]

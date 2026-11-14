@@ -34,6 +34,7 @@ using Content.Shared.NightVision;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
+using Content.Shared.Projectiles;
 using Content.Shared.Slippery;
 using Content.Shared.Speech.Components;
 using Content.Shared.Stacks;
@@ -42,6 +43,7 @@ using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Stealth.Components;
 using Content.Shared.Weapons.Melee.Events;
+using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Wires;
 using Content.Trauma.Common.MartialArts;
 using Robust.Shared.Containers;
@@ -968,6 +970,152 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.HasComponent<StealthComponent>(wearer), Is.False);
             Assert.That(SEntMan.HasComponent<ModCloakedComponent>(wearer), Is.False);
         });
+    }
+
+    [Test]
+    public async Task ShootingAssistantReleasesGunModifiersWhenDropped()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        var control = await EquipPoweredEngineerSuit("ModsuitModuleShootingAssistant", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+
+        await Server.WaitAssertion(() =>
+        {
+            var gun = SEntMan.SpawnAttachedTo("WeaponPistolMk58", MapData.GridCoords);
+            var hands = SEntMan.System<SharedHandsSystem>();
+            Assert.That(hands.TryPickupAnyHand(wearer, gun), Is.True);
+            var stats = SEntMan.GetComponent<GunComponent>(gun);
+            var fireRate = stats.FireRateModified;
+            var projectileSpeed = stats.ProjectileSpeedModified;
+
+            var cycle = new ModShootingModeActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, cycle);
+            Assert.That(cycle.Handled, Is.True);
+            Assert.That(stats.FireRateModified, Is.EqualTo(fireRate * 1.5f).Within(0.001f));
+            cycle = new ModShootingModeActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, cycle);
+            Assert.That(stats.ProjectileSpeedModified, Is.EqualTo(projectileSpeed * 1.3f).Within(0.001f));
+
+            Assert.That(hands.TryDrop(wearer, gun), Is.True);
+            Assert.That(stats.ProjectileSpeedModified, Is.EqualTo(projectileSpeed).Within(0.001f));
+            Assert.That(stats.FireRateModified, Is.EqualTo(fireRate).Within(0.001f));
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(suits.TryToggleActivation((control, SEntMan.GetComponent<ModSuitComponent>(control)), wearer), Is.True);
+            Assert.That(SEntMan.HasComponent<ModShootingAssistantComponent>(wearer), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task ProjectileDampenerRestoresSpeedAndStopsReducingDamageWhenSwitchedOff()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid bullet = default;
+        var control = await EquipPoweredEngineerSuit("ModsuitModuleProjectileDampener", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+
+        await Server.WaitAssertion(() =>
+        {
+            var toggle = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, toggle);
+            Assert.That(toggle.Handled, Is.True);
+            bullet = SEntMan.SpawnAttachedTo("BulletPistol", MapData.GridCoords);
+            SGun.ShootProjectile(bullet, Vector2.UnitX, Vector2.Zero, null, wearer, speed: 5f);
+        });
+        await RunSeconds(0.2f);
+
+        await Server.WaitAssertion(() =>
+        {
+            var body = SEntMan.GetComponent<PhysicsComponent>(bullet);
+            var damage = SEntMan.GetComponent<ProjectileComponent>(bullet).Damage;
+            Assert.That(body.LinearVelocity.Length(), Is.EqualTo(0.2f).Within(0.001f));
+            var hit = new BeforeProjectileHitEvent(damage, wearer);
+            SEntMan.EventBus.RaiseLocalEvent(bullet, ref hit);
+            Assert.That(hit.Damage.GetTotal().Float(), Is.EqualTo(damage.GetTotal().Float() * 0.75f).Within(0.01f));
+            Assert.That(SEntMan.System<ModSuitSystem>().TryToggleActivation(
+                (control, SEntMan.GetComponent<ModSuitComponent>(control)), wearer), Is.True);
+            hit = new BeforeProjectileHitEvent(damage, wearer);
+            SEntMan.EventBus.RaiseLocalEvent(bullet, ref hit);
+            Assert.That(hit.Damage.GetTotal(), Is.EqualTo(damage.GetTotal()));
+        });
+        await RunSeconds(0.05f);
+
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.HasComponent<ModDampenedProjectileComponent>(bullet), Is.False);
+            Assert.That(SEntMan.GetComponent<PhysicsComponent>(bullet).LinearVelocity.Length(), Is.EqualTo(5f).Within(0.001f));
+        });
+    }
+
+    [Test]
+    public async Task RecyclerCollectsAndUnloadsFoamOnce()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid trash = default;
+        await EquipPoweredEngineerSuit("ModsuitModuleDonkRecycler", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+
+        await Server.WaitAssertion(() =>
+        {
+            var toggle = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, toggle);
+            Assert.That(toggle.Handled, Is.True);
+            trash = SEntMan.SpawnAttachedTo("DrinkColaCanEmpty", MapData.GridCoords);
+        });
+        await RunSeconds(0.55f);
+
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(trash), Is.False);
+            var recycler = SEntMan.GetComponent<ModRecyclerModuleComponent>(module);
+            Assert.That(recycler.Products, Is.EqualTo(1));
+            Assert.That(recycler.UnloadActionEntity, Is.Not.Null);
+
+            var unload = new ModRecyclerUnloadActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, unload);
+            Assert.That(unload.Handled, Is.True);
+            Assert.That(recycler.Products, Is.Zero);
+            var lookup = SEntMan.System<EntityLookupSystem>();
+            Assert.That(lookup.GetEntitiesInRange(MapData.GridCoords, 0.5f)
+                .Count(uid => SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID == "BulletFoam"), Is.EqualTo(1));
+        });
+    }
+
+    private async Task<EntityUid> EquipPoweredEngineerSuit(string prototype, Action<EntityUid, EntityUid> record)
+    {
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords;
+            var wearer = SEntMan.SpawnAttachedTo("MobHuman", at);
+            control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", at);
+            var module = SEntMan.SpawnAttachedTo(prototype, at);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+            record(wearer, module);
+        });
+        await RunSeconds(6);
+        return control;
     }
 
     [Test]

@@ -85,6 +85,11 @@
   - ModsuitModuleCriminalCapture # Arcane
   - ModsuitModuleHatStabilizer # Arcane
   - ModsuitModuleMagneticHarness # Arcane
+  - ModsuitModuleKinesis # Arcane
+  - ModsuitModuleRecycler # Arcane
+  - ModsuitModuleDonkRecycler # Arcane
+  - ModsuitModuleProjectileDampener # Arcane
+  - ModsuitModuleShootingAssistant # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

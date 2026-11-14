@@ -173,6 +173,9 @@
             "name": "antigrav"
         },
         {
+            "name": "kinesis"
+        },
+        {
             "name": "hat_holder"
         },
         {
@@ -227,6 +230,9 @@
             "name": "patient_transport"
         },
         {
+            "name": "projectile_dampener"
+        },
+        {
             "name": "thread_ripper"
         },
         {
@@ -234,6 +240,15 @@
         },
         {
             "name": "joint_torsion"
+        },
+        {
+            "name": "recycler"
+        },
+        {
+            "name": "donk_recycler"
+        },
+        {
+            "name": "shooting_assistant"
         },
         {
             "name": "jump_jet"

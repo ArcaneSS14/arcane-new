@@ -94,6 +94,8 @@
   - ModsuitModuleHolster
   - ModsuitModuleCriminalCapture
   - ModsuitModuleMagneticHarness
+  - ModsuitModuleProjectileDampener
+  - ModsuitModuleShootingAssistant
   position: -1,1
 
 - type: technology

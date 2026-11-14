@@ -44,7 +44,7 @@ public sealed partial class ModSuitSystem
     {
         if (_net.IsClient || damage.Origin is not { } origin || origin == damage.Target
             || damage.Damage.GetTotal() <= 0 || !TryComp(module, out ModEnergyShieldModuleComponent? shield)
-            || shield.Charges <= 0 || !TryUseSphereCharge(suit, shield.BlockPower))
+            || shield.Charges <= 0 || !TryUseModuleCharge(suit, shield.BlockPower))
             return;
 
         damage.Damage = new DamageSpecifier();

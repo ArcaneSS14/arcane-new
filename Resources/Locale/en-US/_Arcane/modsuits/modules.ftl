@@ -32,3 +32,7 @@ modsuit-theme-loader = Loader
 modsuit-hydraulic-charge = The hydraulic arms build pressure.
 modsuit-loader-magnet-invalid = Aim at a movable crate or locker.
 modsuit-candela-empty = The beacon spool is out of marker beacons.
+modsuit-recycler-empty = The recycler is empty!
+modsuit-shooting-mode-off = Shooting assistant off.
+modsuit-shooting-mode-stormtrooper = Stormtrooper mode enabled.
+modsuit-shooting-mode-sharpshooter = Sharpshooter mode enabled.

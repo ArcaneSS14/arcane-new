@@ -13,10 +13,4 @@ public sealed partial class ModSuitSystem
         SetModuleActive(suit, (id, module), false);
         return true;
     }
-
-    internal bool HasSphereCharge(Entity<ModSuitComponent> suit, float amount) =>
-        GetBattery(suit) is { } battery && _battery.GetCharge(battery.AsNullable()) >= amount;
-
-    internal bool TryUseSphereCharge(Entity<ModSuitComponent> suit, float amount) =>
-        GetBattery(suit) is { } battery && _battery.TryUseCharge(battery.AsNullable(), amount);
 }

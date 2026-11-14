@@ -150,7 +150,7 @@ public sealed partial class ModSphereRollController : VirtualController
 
             if (!_modSuit.TryGetInstalledModuleSuit(drill, out var suit) || suit.Comp.Wearer != user
                 || !TryComp(user, out ModSphereFormComponent? form) || form.Drill != drill
-                || !_modSuit.TryUseSphereCharge(suit, drillComp.PowerCost))
+                || !_modSuit.TryUseModuleCharge(suit, drillComp.PowerCost))
                 continue;
 
             _damageable.TryChangeDamage(rock, drillComp.Damage, origin: user);
@@ -311,7 +311,7 @@ public sealed partial class ModSphereRollController : VirtualController
             if (toCenter.LengthSquared() > 0.0001f && Vector2.Dot(Vector2.Normalize(toCenter), direction) < DrillCone)
                 continue;
 
-            if (speed < drillComp.MinSpeed || !_modSuit.HasSphereCharge(suit, drillComp.PowerCost))
+            if (speed < drillComp.MinSpeed || !_modSuit.HasModuleCharge(suit, drillComp.PowerCost))
                 break;
 
             ent.Comp.Hits.Add(rock);

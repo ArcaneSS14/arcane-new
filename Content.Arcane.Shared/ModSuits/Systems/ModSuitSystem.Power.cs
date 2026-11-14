@@ -70,6 +70,12 @@ public sealed partial class ModSuitSystem : EntitySystem
 
     public bool HasPower(Entity<ModSuitComponent> suit) => suit.Comp.Powered;
 
+    internal bool HasModuleCharge(Entity<ModSuitComponent> suit, float amount) =>
+        GetBattery(suit) is { } battery && _battery.GetCharge(battery.AsNullable()) >= amount;
+
+    internal bool TryUseModuleCharge(Entity<ModSuitComponent> suit, float amount) =>
+        GetBattery(suit) is { } battery && _battery.TryUseCharge(battery.AsNullable(), amount);
+
     private void OnFindBattery(Entity<ModSuitComponent> suit, ref FindBatteryEvent args) =>
         args.FoundBattery ??= GetBattery(suit);
 

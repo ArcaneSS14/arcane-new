@@ -13,7 +13,7 @@ public sealed partial class ModSuitSystem
 {
     private const string ModulesContainerId = "mod-modules";
 
-    internal bool TryGetInstalledModuleSuit(EntityUid? uid, out Entity<ModSuitComponent> suit)
+    public bool TryGetInstalledModuleSuit(EntityUid? uid, out Entity<ModSuitComponent> suit)
     {
         if (uid is { } id && TryComp(id, out ModModuleComponent? module)
             && module.Suit is { } control
@@ -144,8 +144,7 @@ public sealed partial class ModSuitSystem
         RaiseLocalEvent(module.Owner, ref installed);
         if (suit.Comp.Wearer is { } wearer)
         {
-            GrantModuleAction(module, wearer);
-            GrantDeviceSelector(module, wearer);
+            OnModuleWorn(module, wearer);
         }
         RefreshModuleAvailability(suit);
         return true;
@@ -345,10 +344,7 @@ public sealed partial class ModSuitSystem
                 continue;
 
             if (equipped)
-            {
-                GrantModuleAction((uid, module), wearer);
-                GrantDeviceSelector(uid, wearer);
-            }
+                OnModuleWorn((uid, module), wearer);
             else
             {
                 if (!module.AllowFlags.HasFlag(ModModuleAllowFlags.Unworn) && module.Type != ModModuleType.Passive)
@@ -357,6 +353,14 @@ public sealed partial class ModSuitSystem
                 CloseDeviceSelector(uid, wearer);
             }
         }
+    }
+
+    private void OnModuleWorn(Entity<ModModuleComponent> module, EntityUid wearer)
+    {
+        GrantModuleAction(module, wearer);
+        GrantDeviceSelector(module, wearer);
+        var worn = new ModModuleWornEvent(wearer);
+        RaiseLocalEvent(module.Owner, ref worn);
     }
 
     private void GrantModuleAction(Entity<ModModuleComponent> module, EntityUid wearer)

@@ -159,4 +159,6 @@
   - ModsuitModuleReagentScanner
   - ModsuitModuleJointTorsion
   - ModsuitModulePlasmaStabilizer
+  - ModsuitModuleRecycler
+  - ModsuitModuleDonkRecycler
   position: -5,7

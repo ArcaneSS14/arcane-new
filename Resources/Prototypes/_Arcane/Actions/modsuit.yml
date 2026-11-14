@@ -99,3 +99,29 @@
     itemIconStyle: BigItem
   - type: InstantAction
     event: !type:ModSelectDeviceActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModRecyclerUnload
+  name: Unload recycler
+  description: Dumps the contents of the recycler at your feet.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+    checkCanInteract: false
+  - type: InstantAction
+    event: !type:ModRecyclerUnloadActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModShootingMode
+  name: Cycle shooting mode
+  description: Switches the shooting assistant between off, stormtrooper and sharpshooter modes.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+    checkCanInteract: false
+  - type: InstantAction
+    event: !type:ModShootingModeActionEvent
