@@ -23,7 +23,9 @@ public sealed class NotoFontFamilyStack(IResourceCache resCache, string variant 
     ///     0 is the font kind.
     ///     1 is the font kind with BoldItalic replaced with Bold when it occurs.
     /// </remarks>
-    private string _fontPrimary = $"/Fonts/NotoSans{variant}/NotoSans{variant}-{{0}}.ttf";
+    private string _fontPrimary = "/Fonts/_Arcane/Exo2/Exo2-{0}.ttf"; // Arcane-Edit: NotoSans{variant} > Exo2
+
+    private string _fontFallback = $"/Fonts/NotoSans{variant}/NotoSans{variant}-{{0}}.ttf"; // Arcane: glyphs Exo2 lacks
 
     /// <summary>
     ///     The symbols font path, with string substitution markers.
@@ -68,6 +70,7 @@ public sealed class NotoFontFamilyStack(IResourceCache resCache, string variant 
         var fontList = new List<string>()
         {
             string.Format(_fontPrimary, kindStr, simpleKindStr, boldOrRegularStr),
+            string.Format(_fontFallback, kindStr, simpleKindStr, boldOrRegularStr), // Arcane
             string.Format(_fontSymbols, kindStr, simpleKindStr, boldOrRegularStr),
         };
         fontList.AddRange(_extras);
