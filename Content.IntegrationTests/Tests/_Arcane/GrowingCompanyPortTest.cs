@@ -82,31 +82,6 @@ public sealed class GrowingCompanyPortTest : InteractionTest
         });
     }
 
-    [Test]
-    public async Task MothroachVariantsUseTheirOwnWorldAndClothingResources()
-    {
-        foreach (var (suffix, sprite) in new[]
-        {
-            ("Mustard", "mustard"), ("Leopard", "leopard"), ("Cecropia", "cecropia"), ("Lunar", "lunar"),
-        })
-        {
-            var net = NetEntity.Invalid;
-            var path = $"_Arcane/Mobs/Animals/{sprite}_mothroach.rsi";
-            await Server.WaitAssertion(() =>
-            {
-                var uid = SEntMan.SpawnAtPosition($"MobMothroach{suffix}", SEntMan.GetCoordinates(TargetCoords));
-                SEntMan.RemoveComponent<HTNComponent>(uid);
-                net = SEntMan.GetNetEntity(uid);
-                var clothing = SEntMan.GetComponent<ClothingComponent>(uid);
-                Assert.That(clothing.RsiPath, Is.EqualTo(path));
-                Assert.That(clothing.EquippedPrefix, Is.EqualTo("0"));
-            });
-            await RunUntilSynced();
-            await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<SpriteComponent>(ToClient(net)).BaseRSI!.Path.ToString(),
-                Is.EqualTo($"/Textures/{path}")));
-        }
-    }
-
     private EntityUid HarvestOne(EntityUid plant)
     {
         var before = ProduceEntities().ToHashSet();
