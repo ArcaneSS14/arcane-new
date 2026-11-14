@@ -1,0 +1,4 @@
+- type: shader
+  id: ModDampenerField
+  kind: source
+  path: "/Textures/_Arcane/Shaders/mod_dampener_field.swsl"
