@@ -1,6 +1,8 @@
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Goobstation.Shared.Clothing;
 using Content.Shared.Actions;
+using Content.Shared.Clothing.Components;
+using Content.Shared.Clothing.EntitySystems;
 using Content.Shared.Instruments;
 using Content.Shared.Inventory;
 using Content.Shared.Item.ItemToggle;
@@ -15,6 +17,7 @@ public sealed partial class ModSuitSystem
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] private SharedWiresSystem _wires = default!;
     [Dependency] private ComponentTogglerSystem _componentToggler = default!;
+    [Dependency] private HideLayerClothingSystem _hideLayers = default!;
 
     private void InitializeActivation()
     {
@@ -169,7 +172,31 @@ public sealed partial class ModSuitSystem
 
         part.Comp.Sealed = sealedState;
         if (!HasComp<ItemToggleComponent>(part))
+        {
+            var wearer = part.Comp.Suit is { } control && TryComp<ModSuitComponent>(control, out var suit)
+                ? suit.Wearer
+                : null;
+            if (wearer is { } current)
+                _hideLayers.RefreshEquippedLayerVisibility(part, current, hideLayers: false);
+
+            TryComp<HideLayerClothingComponent>(part, out var before);
             _componentToggler.ToggleComponent(part, sealedState);
+            if (sealedState)
+                part.Comp.UnsealedLayers = before is { Deleted: true } ? before : null;
+            else if (part.Comp.UnsealedLayers is { } original)
+            {
+                var restored = EnsureComp<HideLayerClothingComponent>(part);
+#pragma warning disable CS0618 // Existing MOD prototypes still use the legacy slot list.
+                restored.Slots = original.Slots;
+#pragma warning restore CS0618
+                restored.Layers = original.Layers;
+                restored.HideOnToggle = original.HideOnToggle;
+                part.Comp.UnsealedLayers = null;
+            }
+
+            if (wearer is { } updated)
+                _hideLayers.RefreshEquippedLayerVisibility(part, updated, hideLayers: true);
+        }
         Dirty(part);
         _appearance.SetData(part, SealableClothingVisuals.Sealed, sealedState);
     }

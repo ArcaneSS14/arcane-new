@@ -85,14 +85,17 @@ public sealed partial class ModSuitSystem
             ? part
             : null;
 
-    public bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user)
+    public bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user) =>
+        TryDeployPart(suit, slot, user, copying: false);
+
+    private bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user, bool copying)
     {
         if (_net.IsClient || suit.Comp.State != ModSuitState.Inactive || suit.Comp.Wearer != user
             || suit.Comp.PartsContainer is not { } parts
             || !suit.Comp.PartEntities.TryGetValue(slot, out var uid) || !parts.Contains(uid)
             || !TryComp(uid, out ModPartComponent? part)
             || part.StoredClothing is not { ContainedEntity: null } storage
-            || !_actionBlocker.CanInteract(user, suit)
+            || !copying && !_actionBlocker.CanInteract(user, suit)
             || !_inventory.TryGetSlot(user, slot, out var slotDefinition)
             || _whitelist.IsWhitelistFail(slotDefinition.Whitelist, uid)
             || _whitelist.IsWhitelistPass(slotDefinition.Blacklist, uid)
@@ -105,7 +108,7 @@ public sealed partial class ModSuitSystem
         {
             if (_inventory.TryGetSlotEntity(user, slot, out var previous))
             {
-                if (!_inventory.TryUnequip(user, slot, silent: true))
+                if (!_inventory.TryUnequip(user, slot, silent: true, force: copying))
                     return false;
 
                 if (!_containers.Insert(previous.Value, storage))
@@ -278,8 +281,14 @@ public sealed partial class ModSuitSystem
         if (part.Comp.Suit is { } uid && !TerminatingOrDeleted(uid) && TryComp(uid, out ModSuitComponent? suit))
             StopActivation((uid, suit));
 
-        if (part.Comp.StoredClothing is { ContainedEntity: { } saved } storage && !TerminatingOrDeleted(saved))
-            _containers.Remove(saved, storage, force: true, destination: _transform.GetMoverCoordinates(part));
+        if (part.Comp.StoredClothing is not { ContainedEntity: { } saved } storage || TerminatingOrDeleted(saved)
+            || TryComp<ModSuitComponent>(part.Comp.Suit, out var owner) && owner.Wearer is { } wearer
+                && TerminatingOrDeleted(wearer))
+            return;
+
+        var destination = _transform.GetMoverCoordinates(part);
+        if (!TerminatingOrDeleted(destination.EntityId) && !EntityManager.IsQueuedForDeletion(destination.EntityId))
+            _containers.Remove(saved, storage, force: true, destination: destination);
     }
 
     private void OnSuitTerminating(Entity<ModSuitComponent> suit, ref EntityTerminatingEvent args)

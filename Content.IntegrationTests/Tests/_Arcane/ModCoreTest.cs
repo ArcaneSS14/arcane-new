@@ -6,6 +6,7 @@ using Content.IntegrationTests.Tests.Interaction;
 using Content.Medical.Common.Body;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
+using Content.Server.Cloning;
 using Content.Server.Construction;
 using Content.Server.Destructible.Thresholds.Behaviors;
 using Content.Server.Inventory;
@@ -24,6 +25,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Emp;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Humanoid;
 using Content.Shared.Instruments;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
@@ -1010,6 +1012,103 @@ public sealed class ModCoreTest : InteractionTest
     }
 
     [Test]
+    public async Task EquipmentCopyCreatesItsOwnModPartsAndPreservesTheUnderlyingHat()
+    {
+        EntityUid original = default;
+        var control = await EquipPoweredEngineerSuit("ModsuitModuleKinesis", (wearer, _) => original = wearer);
+        EntityUid hat = default;
+        await Server.WaitAssertion(() =>
+        {
+            var suits = SEntMan.System<ModSuitSystem>();
+            var source = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            // Retraction provides a normal opportunity to change the clothing below the MOD.
+            Assert.That(suits.TryToggleActivation(source, original), Is.True);
+        });
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var suits = SEntMan.System<ModSuitSystem>();
+            var source = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var inventory = SEntMan.System<InventorySystem>();
+            Assert.That(suits.TryRetractPart(source, "head", original), Is.True);
+            hat = SEntMan.SpawnAttachedTo("ClothingHeadHatHardhatYellow", MapData.GridCoords);
+            Assert.That(inventory.TryEquip(original, hat, "head", force: true), Is.True);
+            Assert.That(suits.TryDeployPart(source, "head", original), Is.True);
+
+            var backOnly = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords);
+            SEntMan.System<CloningSystem>().CopyEquipment(original, backOnly, SlotFlags.BACK, copyStorage: false);
+            Assert.That(inventory.TryGetSlotEntity(backOnly, "back", out _), Is.True);
+            Assert.That(inventory.TryGetSlotEntity(backOnly, "head", out _), Is.False);
+
+            var temporaryClone = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords);
+            SEntMan.System<CloningSystem>().CopyEquipment(original, temporaryClone, SlotFlags.All,
+                makeUnremoveable: true, copyStorage: false);
+            Assert.That(inventory.TryGetSlotEntity(temporaryClone, "head", out var temporaryHelmet), Is.True);
+            var temporaryHat = SEntMan.GetComponent<ModPartComponent>(temporaryHelmet!.Value).StoredClothing!.ContainedEntity;
+            Assert.That(temporaryHat, Is.Not.Null);
+            SEntMan.DeleteEntity(temporaryClone);
+            Assert.That(SEntMan.EntityExists(temporaryHat!.Value), Is.False);
+
+            var clone = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords);
+            SEntMan.System<CloningSystem>().CopyEquipment(original, clone, SlotFlags.All, copyStorage: false);
+            Assert.That(inventory.TryGetSlotEntity(clone, "back", out var clonedControl), Is.True);
+            Assert.That(clonedControl, Is.Not.EqualTo(control));
+            var copy = (clonedControl!.Value, SEntMan.GetComponent<ModSuitComponent>(clonedControl.Value));
+            Assert.That(suits.IsPartDeployed(copy, "head"), Is.True);
+            Assert.That(copy.Item2.ModulesContainer!.ContainedEntities.Any(uid => SEntMan.HasComponent<ModKinesisModuleComponent>(uid)),
+                Is.False);
+            Assert.That(suits.TryRetractPart(copy, "head", clone), Is.True);
+            Assert.That(inventory.TryGetSlotEntity(clone, "head", out var clonedHat), Is.True);
+            Assert.That(clonedHat, Is.Not.EqualTo(hat));
+            Assert.That(SEntMan.GetComponent<MetaDataComponent>(clonedHat!.Value).EntityPrototype?.ID,
+                Is.EqualTo("ClothingHeadHatHardhatYellow"));
+            Assert.That(suits.IsPartDeployed(source, "head"), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task SealedModHelmetRestoresOnlyItsOwnOcclusion()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", at);
+            control = SEntMan.SpawnAttachedTo("ClothingModsuitBrigMedPowerCell", at);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+
+            var layers = SEntMan.GetComponent<HideableHumanoidLayersComponent>(wearer).HiddenLayers;
+            SEntMan.System<SharedHideableHumanoidLayersSystem>()
+                .SetLayerOcclusion(wearer, HumanoidVisualLayers.Hair, true, SlotFlags.MASK);
+            Assert.That(layers[HumanoidVisualLayers.Hair], Is.EqualTo(SlotFlags.MASK));
+            Assert.That(layers[HumanoidVisualLayers.Snout].HasFlag(SlotFlags.HEAD), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var layers = SEntMan.GetComponent<HideableHumanoidLayersComponent>(wearer).HiddenLayers;
+            Assert.That(layers[HumanoidVisualLayers.Hair], Is.EqualTo(SlotFlags.MASK | SlotFlags.HEAD));
+            Assert.That(SEntMan.System<ModSuitSystem>().TryToggleActivation(
+                (control, SEntMan.GetComponent<ModSuitComponent>(control)), wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var layers = SEntMan.GetComponent<HideableHumanoidLayersComponent>(wearer).HiddenLayers;
+            Assert.That(layers[HumanoidVisualLayers.Hair], Is.EqualTo(SlotFlags.MASK));
+            Assert.That(layers[HumanoidVisualLayers.Snout].HasFlag(SlotFlags.HEAD), Is.True);
+        });
+    }
+
+    [Test]
     public async Task ProjectileDampenerRestoresSpeedAndStopsReducingDamageWhenSwitchedOff()
     {
         EntityUid wearer = default;
@@ -1453,6 +1552,8 @@ public sealed class ModCoreTest : InteractionTest
                 ("ClothingModsuitCorporate", "PowerCellVortex"),
                 ("ClothingModsuitMining", null),
                 ("ClothingModsuitLoader", null),
+                ("ClothingModsuitBrigMed", null),
+                ("ClothingModsuitBrigMedPowerCell", "PowerCellHigh"),
                 ("ClothingModsuitResponsoryEngineering", "PowerCellBluespaceReactor"),
             };
 
@@ -1472,6 +1573,28 @@ public sealed class ModCoreTest : InteractionTest
                 Assert.That(inventory.TryGetSlotEntity(wearer, "head", out _), Is.False);
             }
 
+            foreach (var prototype in new[] { "ClothingModsuitSyndicateFilled", "ClothingModsuitSyndicateEliteFilled" })
+            {
+                var control = SEntMan.SpawnAttachedTo(prototype, location);
+                var component = SEntMan.GetComponent<ModSuitComponent>(control);
+                var suit = (control, component);
+                Assert.That(component.PartEntities.Count, Is.EqualTo(4), prototype);
+                Assert.That(suits.GetCore(suit), Is.Not.Null, prototype);
+                Assert.That(SEntMan.GetComponent<MetaDataComponent>(suits.GetCore(suit)!.Value).EntityPrototype?.ID,
+                    Is.EqualTo("ModsuitCoreStandardMicroreactor"), prototype);
+                var modules = component.ModulesContainer!.ContainedEntities
+                    .Select(uid => SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID);
+                Assert.That(modules, Is.EquivalentTo(new[]
+                {
+                    "ModsuitModuleBuiltinFlashProtection", "ModsuitModuleBuiltinNightVision", "ModsuitModuleBuiltinInsulation",
+                    "ModsuitModuleStorageSyndicate", "ModsuitModuleFlashlight",
+                }), prototype);
+                Assert.That(inventory.TryEquip(wearer, control, "back", force: true), Is.True, prototype);
+                foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                    Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True, prototype);
+                Assert.That(inventory.TryUnequip(wearer, "back", force: true), Is.True, prototype);
+            }
+
             var shell = SEntMan.SpawnAttachedTo("ModsuitShell", location);
             var custom = SEntMan.SpawnAttachedTo("ModsuitCorePlasma", location);
             var containers = SEntMan.System<SharedContainerSystem>();
@@ -1486,6 +1609,7 @@ public sealed class ModCoreTest : InteractionTest
             {
                 ("mining", "ModsuitModuleBuiltinSphereTransform"),
                 ("loader", "ModsuitModuleBuiltinLoaderMagnet"),
+                ("brigmed", null),
             })
             {
                 var empty = SEntMan.SpawnAttachedTo("ModsuitShell", location);
@@ -1495,8 +1619,10 @@ public sealed class ModCoreTest : InteractionTest
                 Assert.That(SEntMan.System<ConstructionSystem>().ChangeNode(empty, null, node), Is.True);
                 Assert.That(containers.TryGetContainingContainer(originalCore, out var finished), Is.True);
                 var completed = SEntMan.GetComponent<ModSuitComponent>(finished!.Owner);
-                Assert.That(completed.ModulesContainer!.ContainedEntities.Any(uid =>
-                    SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID == module), Is.True);
+                Assert.That(completed.PartEntities.Count, Is.EqualTo(4), node);
+                if (module != null)
+                    Assert.That(completed.ModulesContainer!.ContainedEntities.Any(uid =>
+                        SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID == module), Is.True, node);
             }
         });
     }

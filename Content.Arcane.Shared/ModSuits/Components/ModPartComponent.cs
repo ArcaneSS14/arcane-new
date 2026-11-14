@@ -1,4 +1,5 @@
 using Content.Arcane.Shared.ModSuits.Systems;
+using Content.Shared.Clothing.Components;
 using Robust.Shared.Containers;
 
 namespace Content.Arcane.Shared.ModSuits.Components;
@@ -20,6 +21,8 @@ public sealed partial class ModPartComponent : Component
     public ComponentRegistry? SealedComponents;
 
     public readonly ComponentRegistry AddedWhileSealed = new();
+
+    public HideLayerClothingComponent? UnsealedLayers;
 
     public ContainerSlot? StoredClothing;
 }
