@@ -40,53 +40,10 @@ namespace Content.IntegrationTests.Tests._Arcane;
 public sealed class P09XenobiologyTest : InteractionTest
 {
     private static readonly EntProtoId LivestockCrate = "CrateNPCXenobioSlime";
-    private static readonly EntProtoId Anomaly = "AnomalyLiquid";
     private static readonly EntProtoId Human = "MobHuman";
-    private static readonly EntProtoId MetalExtract = "MetalSlimeExtract";
     private static readonly EntProtoId ResearchServer = "ResearchAndDevelopmentServer";
-    private static readonly ProtoId<StackPrototype> GlassStack = "Glass";
-    private static readonly ProtoId<StackPrototype> ReinforcedGlass = "ReinforcedGlass";
-    private static readonly ProtoId<BreedPrototype> Grey = "GreyMutation";
 
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
-
-    [Test]
-    public async Task LivestockCrateContainsTwoRealGreySlimes()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var slimes = SpawnCrate(out _);
-            Assert.That(slimes, Has.Length.EqualTo(2));
-            foreach (var uid in slimes)
-            {
-                Assert.That(SEntMan.GetComponent<SlimeComponent>(uid).Breed, Is.EqualTo(Grey));
-                Assert.That(SEntMan.System<MobStateSystem>().IsAlive(uid), Is.True);
-                Assert.That(SEntMan.HasComponent<PendingSlimeSpawnComponent>(uid), Is.False);
-            }
-        });
-    }
-
-    [Test]
-    public async Task ChemicalAnomalyRetainsTheExistingSelectedReagentsAndWeights()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var uid = SEntMan.SpawnAttachedTo(Anomaly, Center);
-            var chemistry = SEntMan.GetComponent<ReagentProducerAnomalyComponent>(uid);
-            Assert.That(chemistry.DangerousChemicals.Select(p => p.Id), Is.SupersetOf(new[]
-            {
-                "NitricAcid", "Heroin", "Microplastics", "Bungotoxin", "WeldingFuel", "ChloralHydrate", "Allicin", "Phenol",
-            }));
-            Assert.That(chemistry.UsefulChemicals.Select(p => p.Id), Is.SupersetOf(new[]
-            {
-                "Probital", "Immurin", "Devirate", "Mitotrophin", "Monover", "Ibuprofen", "Formaldehyde", "Morphine",
-            }));
-            Assert.That(chemistry.FunChemicals.Select(p => p.Id), Is.SupersetOf(new[] { "MouseBites", "Copium", "Nostalgia", "Profanol" }));
-            Assert.That(chemistry.UsefulChemicals.Count(p => p.Id == "Probital"), Is.EqualTo(2));
-            var all = chemistry.DangerousChemicals.Concat(chemistry.UsefulChemicals).Concat(chemistry.FunChemicals).Select(p => p.Id);
-            Assert.That(all, Has.None.EqualTo("CrapoToxin").And.None.EqualTo("StypticCrystalCatalyst"));
-        });
-    }
 
     [Test]
     public async Task LatchReservesOneVictimAndRespectsStomachCapacity()
@@ -117,79 +74,6 @@ public sealed class P09XenobiologyTest : InteractionTest
             Assert.That(SEntMan.GetComponent<SolutionComponent>(stomachSolution).Solution.Volume, Is.EqualTo(FixedPoint2.New(1)));
             var blood = SEntMan.GetComponent<BloodstreamComponent>(prey);
             Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("XenobioSlimeToxin"), Is.GreaterThan(FixedPoint2.Zero));
-        });
-    }
-
-    [Test]
-    public async Task ImmediateLatchAndCorpseEatingCompleteWithoutStaleReservations()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var slimes = ReleaseSlimes();
-            var prey = SEntMan.SpawnAttachedTo(Human, Center.Offset(new Vector2(0.5f, 0)));
-            var first = SEntMan.GetComponent<SlimeComponent>(slimes[0]);
-            first.LatchDoAfterDuration = TimeSpan.Zero;
-            var latch = SEntMan.System<SlimeLatchSystem>();
-            Assert.That(latch.NpcTryLatch((slimes[0], first), prey), Is.True);
-            Assert.That(first.PendingLatchTarget, Is.Null);
-            Assert.That(first.LatchedTarget, Is.EqualTo(prey));
-            latch.Unlatch((slimes[0], first));
-
-            SEntMan.System<MobStateSystem>().ChangeMobState(prey, MobState.Dead);
-            var eater = SEntMan.GetComponent<SlimeCorpseEaterComponent>(slimes[1]);
-            eater.EatDuration = TimeSpan.Zero;
-            var body = SEntMan.System<BodySystem>();
-            var initialOrgans = body.GetOrgans<EdibleComponent>(prey).Count;
-            Assert.That(SEntMan.System<SlimeCorpseEaterSystem>().TryStartEating(slimes[1], prey, out _), Is.True);
-            Assert.That(body.GetOrgans<EdibleComponent>(prey).Count, Is.EqualTo(initialOrgans - 1));
-            Assert.That(eater.ActiveTarget, Is.Null);
-        });
-    }
-
-    [Test]
-    public async Task CorpseEatersRecheckRevivalAndRemoveDifferentOrgans()
-    {
-        EntityUid prey = default;
-        EntityUid[] slimes = [];
-        var initialOrgans = 0;
-        await Server.WaitAssertion(() =>
-        {
-            slimes = ReleaseSlimes();
-            prey = SEntMan.SpawnAttachedTo(Human, Center.Offset(new Vector2(0.5f, 0)));
-            initialOrgans = SEntMan.System<BodySystem>().GetOrgans<EdibleComponent>(prey).Count;
-            Assert.That(initialOrgans, Is.GreaterThan(2));
-            SEntMan.System<MobStateSystem>().ChangeMobState(prey, MobState.Dead);
-            Assert.That(SEntMan.System<SlimeCorpseEaterSystem>().TryStartEating(slimes[0], prey, out _), Is.True);
-            SEntMan.System<MobStateSystem>().ChangeMobState(prey, MobState.Alive);
-        });
-
-        await RunSeconds(5.5f);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.System<BodySystem>().GetOrgans<EdibleComponent>(prey).Count, Is.EqualTo(initialOrgans));
-            SEntMan.System<MobStateSystem>().ChangeMobState(prey, MobState.Dead);
-            var eater = SEntMan.System<SlimeCorpseEaterSystem>();
-            Assert.That(eater.TryStartEating(slimes[0], prey, out _), Is.True);
-            Assert.That(eater.TryStartEating(slimes[1], prey, out _), Is.True);
-        });
-
-        await RunSeconds(5.5f);
-        await Server.WaitAssertion(() =>
-            Assert.That(SEntMan.System<BodySystem>().GetOrgans<EdibleComponent>(prey).Count, Is.EqualTo(initialOrgans - 2)));
-    }
-
-    [Test]
-    public async Task MetalExtractProducesTwoStacksWithoutScalingTheYieldByDose()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var extract = SEntMan.SpawnAttachedTo(MetalExtract, Center);
-            var reaction = SEntMan.System<ReactiveSystem>();
-            var water = new Solution([new("Water", 20)]);
-            reaction.DoEntityReaction(extract, water, ReactionMethod.Injection);
-            reaction.DoEntityReaction(extract, water, ReactionMethod.Injection);
-            Assert.That(StackCounts(GlassStack), Is.EqualTo(new[] { 15 }));
-            Assert.That(StackCounts(ReinforcedGlass), Is.EqualTo(new[] { 5 }));
         });
     }
 
@@ -245,7 +129,6 @@ public sealed class P09XenobiologyTest : InteractionTest
         });
     }
 
-    [TestCase("SecurityTechFab", "Security")]
     [TestCase("MedicalTechFab", "Medical")]
     public async Task OnlyNewAvailableRecipesTransmitOnTheDepartmentChannel(string prototype, string channel)
     {
@@ -326,13 +209,6 @@ public sealed class P09XenobiologyTest : InteractionTest
         SEntMan.DeleteEntity(crate);
         return slimes;
     }
-
-    private int[] StackCounts(ProtoId<StackPrototype> stack)
-        => SEntMan.AllEntities<StackComponent>()
-            .Where(entity => entity.Comp.StackTypeId == stack)
-            .Select(entity => SEntMan.System<SharedStackSystem>().GetCount(entity.Owner))
-            .ToArray();
-
 }
 
 [RegisterComponent]

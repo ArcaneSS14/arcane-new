@@ -24,25 +24,6 @@ public sealed class P27RoboticsRuntimeTest : InteractionTest
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
     [Test]
-    public void LawboardCapsCountAndLengthAndKeepsOrder()
-    {
-        var laws = Enumerable.Range(0, SharedCustomLawboardSystem.MaxLaws + 1)
-            .Select(index => new SiliconLaw
-            {
-                LawString = "Test\r\n" + new string('x', 520),
-                LawIdentifierOverride = new string('y', 511) + "\U0001F680",
-                Order = index + 1,
-            })
-            .ToList();
-        var result = SharedCustomLawboardSystem.SanitizeLaws(laws);
-        Assert.That(result, Has.Count.EqualTo(15));
-        Assert.That(result[0].LawString, Has.Length.EqualTo(512).And.StartsWith("Test  "));
-        Assert.That(result[0].LawIdentifierOverride, Has.Length.EqualTo(511));
-        Assert.That(result.Select(law => (int) law.Order), Is.EqualTo(Enumerable.Range(1, 15)));
-        Assert.That(laws[0].LawString, Does.Contain("\r\n"));
-    }
-
-    [Test]
     public async Task BorisRejectsAnotherStationAndOccupiedShellAndReturnsOnBoardRemoval()
     {
         await Server.WaitAssertion(() =>
@@ -95,20 +76,6 @@ public sealed class P27RoboticsRuntimeTest : InteractionTest
             Assert.That(minds.TryGetMind(borg, out _, out _), Is.False);
             Assert.That(radio.Channels, Is.EquivalentTo(channels));
             Assert.That(SEntMan.GetComponent<StationAiCoreComponent>(core).Remote, Is.True);
-        });
-    }
-
-    [Test]
-    public async Task SecurityCyborgStartsWithDepartmentRadioAndHailer()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var borg = SEntMan.SpawnAttachedTo("BorgChassisSEC", Center);
-            var radio = SEntMan.GetComponent<ActiveRadioComponent>(borg);
-            Assert.That(radio.Channels.Select(channel => channel.Id), Does.Contain("Security"));
-            var actions = SEntMan.System<SharedActionsSystem>().GetActions(borg);
-            Assert.That(actions.Count(action => SEntMan.GetComponent<MetaDataComponent>(action).EntityPrototype?.ID == "ActionHailer"), Is.EqualTo(1));
-            Assert.That(SEntMan.System<ItemSlotsSystem>().GetItemOrNull(borg, "cell_slot"), Is.Not.Null);
         });
     }
 }

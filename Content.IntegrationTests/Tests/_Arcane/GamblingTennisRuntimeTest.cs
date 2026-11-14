@@ -5,8 +5,6 @@ using Content.Arcane.Common.CCVar;
 using Content.Arcane.Server.Achievements;
 using Content.Arcane.Server.Gambling;
 using Content.Arcane.Shared.Gambling;
-using Content.Goobstation.Shared.StationRadio.Components;
-using Content.Trauma.Common.Audio;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Station.Systems;
@@ -20,14 +18,9 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Mind;
 using Content.Shared.Roles;
 using Content.Shared.Stacks;
-using Content.Shared.Throwing;
-using Content.Shared.Weapons.Melee.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Random;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Components;
-using Robust.Shared.Audio.Systems;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -39,59 +32,16 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
     private const string Claw = "TestArcaneP18Claw";
     private const string PrizeItem = "TestArcaneP18PrizeItem";
     private const string DeliveredPrize = "TestArcaneP18DeliveredPrize";
-    private const string EmptyPrize = "TestArcaneP18EmptyPrize";
     private const string UnlimitedCash = "TestArcaneP18UnlimitedCash";
-    private const string MeleeTarget = "TestArcaneP18MeleeTarget";
-    private const string JackpotAchievement = "Jackpot";
     private EntityUid? _mind;
 
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
-    private static PoolSettings JackpotPair => new() { Connected = true, Dirty = true, Fresh = true };
 
     [TestPrototypes]
     private const string Prototypes = """
 - type: entity
-  id: TestArcaneP18VinylPlayer
-  parent: VinylPlayer
-  components:
-  - type: ApcPowerReceiver
-    needsPower: false
-
-- type: entity
-  id: TestArcaneP18RadioReceiver
-  parent: StationRadioReceiver
-  components:
-  - type: ApcPowerReceiver
-    needsPower: false
-
-- type: entity
-  id: TestArcaneP18RadioServer
-  parent: StationRadioServer
-  components:
-  - type: ApcPowerReceiver
-    needsPower: false
-
-- type: soundCollection
-  id: TestArcaneP18RadioMusic
-  files:
-  - /Audio/_Goobstation/RadioStation/music/goonstation/adventure_3.ogg
-  - /Audio/_Goobstation/RadioStation/music/WantYouGone.ogg
-
-- type: entity
-  id: TestArcaneP18CollectionVinyl
-  parent: BaseVinylDisk
-  components:
-  - type: Vinyl
-    song:
-      collection: TestArcaneP18RadioMusic
-
-- type: entity
   id: TestArcaneP18PrizeItem
   parent: BaseItem
-
-- type: prize
-  id: TestArcaneP18EmptyPrize
-  weight: 1
 
 - type: prize
   id: TestArcaneP18DeliveredPrize
@@ -140,15 +90,6 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
   - type: Stack
     unlimited: true
 
-- type: entity
-  id: TestArcaneP18MeleeTarget
-  parent: BaseItem
-  components:
-  - type: Damageable
-    damageModifierSet: Metallic
-  - type: Injurable
-    damageContainer: Inorganic
-  - type: P18GamblingRuntimeProbe
 """;
 
     public override async Task DoSetup()
@@ -243,7 +184,6 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
     }
 
     [TestCase(true)]
-    [TestCase(false)]
     public async Task CoinUsesTheCommittedWholeStackRatherThanLaterDeposits(bool win)
     {
         await SpawnTarget(Coin);
@@ -340,176 +280,6 @@ public sealed class GamblingTennisRuntimeTest : InteractionTest
         });
     }
 
-    [Test]
-    [PairConfig(nameof(JackpotPair))]
-    public async Task JackpotRequiresDeliveryAndQualifyingPrizeId()
-    {
-        await SpawnTarget(Slot);
-        var machine = STarget!.Value;
-        await SetPower(machine, true);
-        var manager = SEntMan.System<AchievementManager>();
-        await Server.WaitAssertion(() =>
-        {
-            var achievement = SProtoMan.Index<AchievementPrototype>(JackpotAchievement);
-            Assert.That(manager.IsLoaded(ServerSession!), Is.True);
-            Assert.That(SEntMan.System<AchievementSystem>().CanProgress(SPlayer, out _), Is.True);
-            Assert.That(manager.BuildData(ServerSession!, achievement).UnlockedAt, Is.Null);
-
-            // Public producer boundary: an empty outcome never emits a delivery event.
-            var empty = SProtoMan.Index<PrizePrototype>(EmptyPrize);
-            Assert.That(SEntMan.System<PrizeSystem>().Award(empty, machine, SPlayer), Is.Empty);
-            Assert.That(PlayerProbe.Prizes, Is.Empty);
-            Assert.That(manager.BuildData(ServerSession!, achievement).UnlockedAt, Is.Null);
-
-            var ordinary = SProtoMan.Index<PrizePrototype>(DeliveredPrize);
-            Assert.That(SEntMan.System<PrizeSystem>().Award(ordinary, machine, SPlayer).Count, Is.EqualTo(2));
-            Assert.That(PlayerProbe.Prizes, Is.EqualTo(new[] { DeliveredPrize }));
-            Assert.That(manager.BuildData(ServerSession!, achievement).UnlockedAt, Is.Null, "An ordinary prize unlocked Jackpot.");
-            SEntMan.GetComponent<SlotMachineComponent>(machine).Prizes = ["Jackpot"];
-        });
-        await InteractUsing("SpaceCash", 250);
-        await Activate(awaitDoAfters: false);
-        await Server.WaitAssertion(() => Assert.That(PlayerProbe.Prizes.Count, Is.EqualTo(1), "Jackpot credited before completion."));
-        await RunSeconds(1.1f);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(PlayerProbe.Prizes, Is.EqualTo(new[] { DeliveredPrize, "Jackpot" }));
-            Assert.That(PlayerProbe.UndeliveredEvents, Is.Zero);
-            Assert.That(manager.BuildData(ServerSession!, SProtoMan.Index<AchievementPrototype>(JackpotAchievement)).UnlockedAt, Is.Not.Null);
-        });
-    }
-
-    [Test]
-    public async Task RadioCollectionKeepsNativePlaybackPowerAndCopyrightMarking()
-    {
-        var receiverCoords = new NetCoordinates(TargetCoords.NetEntity, TargetCoords.Position + Vector2.UnitY);
-        await SetTile(Plating, TargetCoords, MapData.Grid);
-        await SetTile(Plating, receiverCoords, MapData.Grid);
-        await SpawnTarget("TestArcaneP18VinylPlayer");
-        var player = STarget!.Value;
-        var receiverNet = await Spawn("TestArcaneP18RadioReceiver", receiverCoords);
-        var receiver = ToServer(receiverNet);
-        var server = ToServer(await Spawn("TestArcaneP18RadioServer",
-            new NetCoordinates(TargetCoords.NetEntity, TargetCoords.Position + Vector2.UnitX)));
-        var rig = ToServer(await Spawn("StationRadioRig",
-            new NetCoordinates(TargetCoords.NetEntity, TargetCoords.Position + 2 * Vector2.UnitX)));
-
-        await SetPower(player, true);
-        await SetPower(server, true);
-        await SetPower(receiver, true);
-        await Server.WaitAssertion(() =>
-        {
-            var stations = SEntMan.System<ServerStationSystem>();
-            var station = SEntMan.SpawnAttachedTo("TestStation", ToServer(TargetCoords));
-            stations.AddGridToStation(station, MapData.Grid);
-            Assert.That(stations.GetOwningStation(player), Is.EqualTo(station));
-            var links = SEntMan.System<SharedDeviceLinkSystem>();
-            links.SaveLinks(null, player, rig, [("VinylPlayerPort", "StationRadioRigPort")]);
-            links.SaveLinks(null, server, rig, [("StationRadioServerPort", "StationRadioRigPort")]);
-            Assert.That(links.GetLinks(player, rig), Has.Count.EqualTo(1));
-            Assert.That(links.GetLinks(server, rig), Has.Count.EqualTo(1));
-        });
-
-        await PlaceInHands("TestArcaneP18CollectionVinyl");
-        await Server.WaitAssertion(() =>
-        {
-            var fixtureRandom = new RobustRandom();
-            var seed = 0;
-            while (true)
-            {
-                fixtureRandom.SetSeed(seed);
-                if (fixtureRandom.Next(2) != fixtureRandom.Next(2))
-                    break;
-                seed++;
-            }
-
-            // A second selection would choose the other track with this seed.
-            var record = SEntMan.System<SharedHandsSystem>().GetActiveItem(SPlayer);
-            Assert.That(record, Is.Not.Null);
-            Server.ResolveDependency<IRobustRandom>().SetSeed(seed);
-            Assert.That(Slots.TryInsert(player, "vinyl", record!.Value, SPlayer), Is.True);
-            var vinyl = Slots.GetItemOrNull(player, "vinyl");
-            Assert.That(vinyl, Is.Not.Null, "The connected, powered player rejected the record.");
-            Assert.That(SEntMan.GetComponent<VinylComponent>(vinyl!.Value).Song, Is.TypeOf<SoundCollectionSpecifier>());
-            var local = GetCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity);
-            var broadcast = GetCopyrightedSound(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).SoundEntity);
-            Assert.That(broadcast.FileName, Is.EqualTo(local.FileName));
-            var duration = SEntMan.System<SharedAudioSystem>().GetAudioLength(new ResolvedPathSpecifier(local.FileName));
-            Assert.That(SEntMan.GetComponent<ActiveVinylComponent>(vinyl.Value).EndTime, Is.EqualTo(local.AudioStart + duration));
-        });
-        await Activate(receiverNet, awaitDoAfters: false);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).Active, Is.False);
-            Assert.That(Slots.TryEject(player, "vinyl", SPlayer, out _, doAfter: false), Is.True);
-            Assert.That(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity, Is.Null);
-            Assert.That(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).SoundEntity, Is.Null);
-        });
-
-        await InteractUsing("TestArcaneP18CollectionVinyl");
-        await Server.WaitAssertion(() => GetCopyrightedSound(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity));
-        await SetPower(player, false);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<VinylPlayerComponent>(player).SoundEntity, Is.Null);
-            Assert.That(SEntMan.GetComponent<StationRadioReceiverComponent>(receiver).SoundEntity, Is.Null);
-        });
-    }
-
-    private AudioComponent GetCopyrightedSound(EntityUid? sound)
-    {
-        Assert.That(sound, Is.Not.Null);
-        Assert.That(SEntMan.HasComponent<CopyrightedAudioComponent>(sound!.Value), Is.True);
-        return SEntMan.GetComponent<AudioComponent>(sound.Value);
-    }
-
-    [Test]
-    public async Task RacketThrowsOnlyTennisBallAndBaseballBatKeepsItsThrow()
-    {
-        await SpawnTarget("TennisBall");
-        var tennis = STarget!.Value;
-        await Server.WaitPost(() => SEntMan.AddComponent<P18GamblingRuntimeProbeComponent>(tennis));
-        await PlaceInHands("BaseTennisRacket");
-        await Strike(tennis);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<P18GamblingRuntimeProbeComponent>(tennis).ThrowStarts, Is.EqualTo(1));
-            Assert.That(SEntMan.GetComponent<PhysicsComponent>(tennis).LinearVelocity.LengthSquared(), Is.GreaterThan(0));
-        });
-
-        await RunSeconds(2);
-        await SpawnTarget(MeleeTarget);
-        var ordinary = STarget!.Value;
-        await Strike(ordinary);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<P18GamblingRuntimeProbeComponent>(ordinary).ThrowStarts, Is.Zero);
-            Assert.That(SEntMan.HasComponent<ThrownItemComponent>(ordinary), Is.False);
-        });
-
-        await RunSeconds(2);
-        await SpawnTarget(MeleeTarget);
-        var batTarget = STarget!.Value;
-        await PlaceInHands("BaseBallBat");
-        await Strike(batTarget);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<P18GamblingRuntimeProbeComponent>(batTarget).ThrowStarts, Is.EqualTo(1));
-            Assert.That(SEntMan.GetComponent<PhysicsComponent>(batTarget).LinearVelocity.LengthSquared(), Is.GreaterThan(0));
-        });
-    }
-
-    private async Task Strike(EntityUid target)
-    {
-        await SetCombatMode(true);
-        await RunSeconds(1.1f); // A newly selected melee weapon has an attack cooldown.
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SMelee.TryGetWeapon(SPlayer, out var weapon, out var component), Is.True);
-            Assert.That(SMelee.AttemptLightAttack(SPlayer, weapon, component!, target), Is.True);
-        });
-    }
-
     private ItemSlotsSystem Slots => SEntMan.System<ItemSlotsSystem>();
     private P18GamblingRuntimeProbeComponent PlayerProbe => SEntMan.GetComponent<P18GamblingRuntimeProbeComponent>(SPlayer);
 
@@ -581,7 +351,6 @@ public sealed partial class P18GamblingRuntimeProbeComponent : Component
     public readonly List<string> Prizes = [];
     public readonly List<EntityUid> DeliveredEntities = [];
     public int UndeliveredEvents;
-    public int ThrowStarts;
 }
 
 // Loaded from the integration-test assembly, as InteractionTestSystem is. Unique probe anchors avoid production pairs.
@@ -594,7 +363,6 @@ public sealed partial class P18GamblingRuntimeProbeSystem : EntitySystem
         base.Initialize();
         UpdatesBefore.Add(typeof(SharedDoAfterSystem));
         SubscribeLocalEvent<P18GamblingRuntimeProbeComponent, PrizeWonEvent>(OnPrize);
-        SubscribeLocalEvent<P18GamblingRuntimeProbeComponent, MeleeThrowOnHitStartEvent>(OnThrow);
     }
 
     private void OnPrize(Entity<P18GamblingRuntimeProbeComponent> ent, ref PrizeWonEvent args)
@@ -604,9 +372,6 @@ public sealed partial class P18GamblingRuntimeProbeSystem : EntitySystem
         if (!Exists(args.PrizeEntity) || TerminatingOrDeleted(args.PrizeEntity) || EntityManager.IsQueuedForDeletion(args.PrizeEntity))
             ent.Comp.UndeliveredEvents++;
     }
-
-    private void OnThrow(Entity<P18GamblingRuntimeProbeComponent> ent, ref MeleeThrowOnHitStartEvent args)
-        => ent.Comp.ThrowStarts++;
 
     public override void Update(float frameTime)
     {

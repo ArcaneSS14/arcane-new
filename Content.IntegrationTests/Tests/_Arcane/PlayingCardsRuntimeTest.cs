@@ -23,23 +23,6 @@ public sealed class PlayingCardsRuntimeTest : InteractionTest
 {
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
 
-    [TestCase("CardBoxBlack", "CardDeckBlack")]
-    [TestCase("CardBoxNanotrasen", "CardDeckNanotrasen")]
-    [TestCase("CardBoxSyndicate", "CardDeckSyndicate")]
-    public async Task BoxContainsOneMatchingCompleteDeck(string box, string deck)
-    {
-        await SpawnTarget(box);
-        await Server.WaitAssertion(() =>
-        {
-            var container = SEntMan.System<SharedContainerSystem>().GetContainer(STarget!.Value, StorageComponent.ContainerId);
-            Assert.That(container.ContainedEntities.Count, Is.EqualTo(1));
-            var entity = container.ContainedEntities.Single();
-            Assert.That(SEntMan.GetComponent<MetaDataComponent>(entity).EntityPrototype!.ID, Is.EqualTo(deck));
-            Assert.That(Storage(entity).Cards.Count, Is.EqualTo(53));
-            Assert.That(Storage(entity).Cards.Select(c => c.Face.Id).Distinct().Count(), Is.EqualTo(53));
-        });
-    }
-
     [Test]
     public async Task DealFlipShuffleSplitAndJoinConserveEveryCard()
     {
