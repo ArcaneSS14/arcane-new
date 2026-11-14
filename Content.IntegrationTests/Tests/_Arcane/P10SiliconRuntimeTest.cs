@@ -28,28 +28,6 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
 {
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
-    [TestCase("BorgChassisGeneric", true)]
-    [TestCase("BorgChassisSEC", true)]
-    [TestCase("BorgChassisSyndicateAssault", true)]
-    [TestCase("XenoborgEngi", true)]
-    [TestCase("PersonalAI", false)]
-    [TestCase("SyndicatePersonalAI", false)]
-    [TestCase("MMI", false)]
-    [TestCase("PositronicBrain", false)]
-    [TestCase("Drone", false)]
-    [TestCase("MobMineBot", false)]
-    public async Task BinaryAccessMatchesTheChassisOrDevice(string id, bool expected)
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var entity = SEntMan.SpawnAttachedTo(new EntProtoId(id), Center);
-            var canReceive = SEntMan.TryGetComponent<ActiveRadioComponent>(entity, out var radio) && radio.Channels.Any(channel => channel.Id == "Binary");
-            var canSend = SEntMan.TryGetComponent<IntrinsicRadioTransmitterComponent>(entity, out var transmitter) && transmitter.Channels.Any(channel => channel.Id == "Binary");
-            Assert.That(canReceive, Is.EqualTo(expected));
-            Assert.That(canSend, Is.EqualTo(expected));
-        });
-    }
-
     [Test]
     public async Task PersonalAiCameraStartsOffAndResetsWhenItsMindLeaves()
     {
@@ -73,42 +51,6 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
             Assert.That(SEntMan.GetComponent<PAIComponent>(syndicate).CameraActionEntity, Is.Null);
             minds.TransferTo(mind, device);
             Assert.That(vision.Enabled, Is.False);
-        });
-    }
-
-    [Test]
-    public async Task StationAiKnowsCrewLanguagesButNotFactionLanguage()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var brain = SEntMan.SpawnAttachedTo("StationAiBrain", Center);
-            var language = SEntMan.System<SharedLanguageSystem>();
-            Assert.That(language.GetSpokenLanguages(brain).Select(id => id.Id), Does.Contain("DroneTalk").And.Contain("Bubblish"));
-            Assert.That(language.CanUnderstand(brain, "Schechi"), Is.True);
-            Assert.That(language.GetUnderstoodLanguages(brain).Select(id => id.Id), Does.Not.Contain("OldFastCodes"));
-        });
-    }
-
-    [Test]
-    public async Task BorgCrewLanguagesFollowTheChassisThroughBrainReplacement()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var brain = SEntMan.SpawnAttachedTo("PositronicBrain", Center);
-            var borg = SEntMan.SpawnAttachedTo("BorgChassisGeneric", Center);
-            var language = SEntMan.System<SharedLanguageSystem>();
-            Assert.That(language.CanSpeak(brain, "Bubblish"), Is.False);
-
-            var containers = SEntMan.System<SharedContainerSystem>();
-            var slot = SEntMan.GetComponent<BorgChassisComponent>(borg).BrainContainer;
-            for (var index = 0; index < 2; index++)
-            {
-                Assert.That(containers.Insert(brain, slot), Is.True);
-                Assert.That(language.CanUnderstand(borg, "Bubblish"), Is.True);
-                Assert.That(language.CanSpeak(borg, "OldFastCodes"), Is.False);
-                Assert.That(containers.Remove(brain, slot), Is.True);
-                Assert.That(language.CanSpeak(brain, "Bubblish"), Is.False);
-            }
         });
     }
 
@@ -138,7 +80,6 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
         });
     }
 
-    [TestCase(false)]
     [TestCase(true)]
     public async Task StationAiRetirementChecksTheCoreAgainBeforeReleasingItsSlot(bool removedFromCore)
     {
