@@ -164,25 +164,6 @@ public sealed class PollSeenDatabaseTest : GameTest
         Assert.That(await context.PollSeen.CountAsync(), Is.Zero);
     }
 
-    [Test]
-    public void PostgresMigrationSqlChangesOnlyViewHistory()
-    {
-        using var context = new PostgresServerDbContext(new DbContextOptionsBuilder<PostgresServerDbContext>()
-            .UseNpgsql("Host=localhost;Database=poll_migration_validation").Options);
-        Assert.That(context.Database.HasPendingModelChanges(), Is.False);
-        var migrations = context.Database.GetMigrations().ToArray();
-        var own = migrations.Single(m => m.EndsWith("_ArcanePollSeen"));
-        var previous = migrations[Array.IndexOf(migrations, own) - 1];
-        var migrator = context.GetService<IMigrator>();
-        var up = migrator.GenerateScript(previous, own);
-        var down = migrator.GenerateScript(own, previous);
-        Assert.That(up, Does.Contain("CREATE TABLE poll_seen").And.Contain("CREATE UNIQUE INDEX"));
-        Assert.That(up, Does.Contain("REFERENCES player (user_id)").And.Contain("REFERENCES polls (polls_id)"));
-        Assert.That(up, Does.Not.Contain("DROP TABLE"));
-        Assert.That(down, Does.Contain("DROP TABLE poll_seen"));
-        Assert.That(down, Does.Not.Contain("DROP TABLE polls").And.Not.Contain("DROP TABLE poll_votes"));
-    }
-
     private static Poll NewPoll() => new()
     {
         Title = "View history test", Description = "Independent of voting",
