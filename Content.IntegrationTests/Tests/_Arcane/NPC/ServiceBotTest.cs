@@ -1,7 +1,11 @@
 #nullable enable
 using System.Linq;
+using System.Threading;
+using Content.Arcane.Server.NPC.HTN.PrimitiveTasks.Operators;
 using Content.Arcane.Server.Silicon.Bots;
+using Content.Server.NPC;
 using Content.Server.NPC.HTN;
+using Content.Server.NPC.HTN.PrimitiveTasks;
 using Content.Server.NPC.HTN.PrimitiveTasks.Operators;
 using Content.Server.NPC.Systems;
 using Content.Server.Power.Components;
@@ -11,6 +15,7 @@ using Content.Shared.DeviceLinking;
 using Content.Shared.Disposal.Components;
 using Content.Shared.Emag.Systems;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Interaction;
 using Content.Shared.Materials;
 using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
@@ -22,6 +27,7 @@ namespace Content.IntegrationTests.Tests._Arcane.NPC;
 
 public sealed class ServiceBotTest : GameTest
 {
+    private static readonly ProtoId<HTNCompoundPrototype> PlantServiceTask = "ServiceNearbyPlantsCompound";
 
     [Test]
     public async Task RelinkingDropsHeldItemsAndCannotDeliverToAnOldOrRemoteReceiver()
@@ -96,6 +102,83 @@ public sealed class ServiceBotTest : GameTest
             SEntMan.DeleteEntity(soil);
             Assert.That(bots.TryService(bot, soil), Is.False);
         });
+    }
+
+    [Test]
+    public async Task PlantbotTriesOtherTraysAfterAccessFailures()
+    {
+        await OverrideCVar(Side.Server, TraumaCVars.DisablePathfinding, false);
+        await PrepareFloor();
+        NPCBlackboard blackboard = null!;
+        PickNearbyServicableHydroponicsTrayOperator picker = null!;
+        PlantbotServiceOperator service = null!;
+        EntityUid first = default, second = default, fallback = default;
+        await Server.WaitAssertion(() =>
+        {
+            var bot = SpawnAt("MobPlantbot", 0.5f, 0.5f);
+            var htn = SComp<HTNComponent>(bot);
+            SEntMan.System<HTNSystem>().SetHTNEnabled((bot, htn), false);
+            blackboard = htn.Blackboard;
+
+            var compound = Server.ResolveDependency<IPrototypeManager>().Index(PlantServiceTask);
+            var steps = compound.Branches.Single().Tasks.OfType<HTNPrimitiveTask>().Select(step => step.Operator);
+            picker = steps.OfType<PickNearbyServicableHydroponicsTrayOperator>().Single();
+            service = steps.OfType<PlantbotServiceOperator>().Single();
+
+            var window = SpawnAt("WindowDirectional", 0.5f, 1.5f);
+            first = SpawnAt("hydroponicsSoil", 0.45f, 1.5f);
+            second = SpawnAt("hydroponicsSoil", 0.55f, 1.5f);
+            foreach (var tray in new[] { first, second })
+            {
+                SetWater(tray, 0);
+                Assert.That(SEntMan.System<PlantbotServiceSystem>().CanService(bot, tray), Is.True);
+                blackboard.SetValue(service.TargetKey, tray);
+                var status = service.Update(blackboard, 0);
+                Assert.That(status, Is.EqualTo(HTNOperatorStatus.Failed));
+                service.TaskShutdown(blackboard, status);
+            }
+
+            SEntMan.DeleteEntity(window);
+            fallback = SpawnAt("hydroponicsSoil", 1.5f, 0.5f);
+            SetWater(fallback, SComp<PlantTrayComponent>(fallback).MaxWaterLevel);
+            Assert.That(SEntMan.System<SharedInteractionSystem>().InRangeAndAccessible(bot, fallback), Is.True);
+        });
+
+        // Both eligible trays were rejected during execution. Neither should be chosen again yet.
+        Assert.That(await Pick(), Is.Null);
+        await Server.WaitPost(() => SetWater(fallback, 0));
+        Assert.That(await Pick(), Is.EqualTo(fallback));
+
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SComp<PlantTrayComponent>(first).WaterLevel, Is.Zero);
+            Assert.That(SComp<PlantTrayComponent>(second).WaterLevel, Is.Zero);
+            SetWater(fallback, SComp<PlantTrayComponent>(fallback).MaxWaterLevel);
+            SetWater(second, SComp<PlantTrayComponent>(second).MaxWaterLevel);
+        });
+        await RunSeconds(11f);
+        Assert.That(await Pick(), Is.EqualTo(first));
+
+        void SetWater(EntityUid entity, float amount)
+        {
+            var tray = SComp<PlantTrayComponent>(entity);
+            SEntMan.System<PlantTraySystem>().AdjustWater((entity, tray), amount - tray.WaterLevel);
+        }
+
+        async Task<EntityUid?> Pick()
+        {
+            Task<(bool Valid, Dictionary<string, object>? Effects)> plan = null!;
+            await Server.WaitPost(() =>
+            {
+                plan = picker.Plan(blackboard.ShallowClone(), CancellationToken.None);
+            });
+            for (var i = 0; i < 12 && !plan.IsCompleted; i++)
+                await RunSeconds(0.25f);
+
+            Assert.That(plan.IsCompleted, Is.True, "The planner did not finish within three simulated seconds.");
+            var result = await plan;
+            return result.Valid ? (EntityUid) result.Effects![picker.TargetKey] : null;
+        }
     }
 
     private EntityUid SpawnAt(string prototype, float x, float y)
