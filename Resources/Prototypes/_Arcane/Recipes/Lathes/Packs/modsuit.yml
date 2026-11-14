@@ -3,6 +3,7 @@
   recipes:
   - ModsuitModuleVisorSecurity
   - ModsuitModuleMegaphone
+  - ModsuitModuleEmpShield
 
 - type: latheRecipePack
   id: ModsuitMedicalEquipment

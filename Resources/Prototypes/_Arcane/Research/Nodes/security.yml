@@ -87,6 +87,7 @@
   - SpearTelescopic
   - ModsuitModuleVisorSecurity
   - ModsuitModuleMegaphone
+  - ModsuitModuleEmpShield
   position: -1,1
 
 - type: technology

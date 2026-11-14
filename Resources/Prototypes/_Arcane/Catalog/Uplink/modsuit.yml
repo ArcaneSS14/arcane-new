@@ -39,3 +39,10 @@
   cost:
     Telecrystal: 20
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleEmpPulse
+  productEntity: ModsuitModuleEmpPulse
+  cost:
+    Telecrystal: 35
+  categories: [ UplinkWearables ]

@@ -309,3 +309,22 @@
   materials:
     Steel: 600
     Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleEmpShield
+  result: ModsuitModuleEmpShield
+  materials:
+    Steel: 500
+    Glass: 200
+    Uranium: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleEmpShieldAdvanced
+  result: ModsuitModuleEmpShieldAdvanced
+  materials:
+    Steel: 800
+    Glass: 300
+    Gold: 200
+    Uranium: 100

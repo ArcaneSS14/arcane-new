@@ -11,6 +11,7 @@ using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Emp;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -217,6 +218,82 @@ public sealed class ModCoreTest : InteractionTest
             SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
             Assert.That(Damage(blunt, BodyPartType.Head, 0f), Is.EqualTo(76.8f).Within(0.02f));
             Assert.That(Damage(radiation, BodyPartType.Torso, 1f), Is.EqualTo(100f));
+        });
+    }
+
+    [Test]
+    public async Task EmpShieldScopeFollowsModuleAndSuitState()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        EntityUid advanced = default;
+        EntityUid held = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            control = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var standard = SEntMan.SpawnAttachedTo("ModsuitModuleEmpShield", position);
+            advanced = SEntMan.SpawnAttachedTo("ModsuitModuleEmpShieldAdvanced", position);
+            held = SEntMan.SpawnAttachedTo("PowerCellHigh", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(SEntMan.System<SharedHandsSystem>().TryPickupAnyHand(wearer, held), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, standard, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            var emp = SEntMan.System<SharedEmpSystem>();
+            Assert.That(emp.TryEmpEffects(battery.Owner, 100f, TimeSpan.Zero), Is.False);
+            Assert.That(emp.TryEmpEffects(held, 100f, TimeSpan.Zero), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            var charge = SEntMan.System<SharedBatterySystem>();
+            var before = charge.GetCharge(battery);
+            SEntMan.System<SharedEmpSystem>().EmpPulse(MapData.GridCoords, 1f, 100f, TimeSpan.Zero, predicted: false);
+            Assert.That(charge.GetCharge(battery), Is.EqualTo(before - 100f).Within(0.01f));
+
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, advanced, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            var emp = SEntMan.System<SharedEmpSystem>();
+            Assert.That(emp.TryEmpEffects(battery.Owner, 100f, TimeSpan.Zero), Is.False);
+            Assert.That(emp.TryEmpEffects(held, 100f, TimeSpan.Zero), Is.False);
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            Assert.That(emp.TryEmpEffects(held, 100f, TimeSpan.Zero), Is.True);
         });
     }
 

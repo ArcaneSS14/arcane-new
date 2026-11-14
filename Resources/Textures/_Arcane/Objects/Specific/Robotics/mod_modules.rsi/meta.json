@@ -85,6 +85,9 @@
             "name": "radshield"
         },
         {
+            "name": "empshield"
+        },
+        {
             "name": "injector"
         },
         {
@@ -107,6 +110,9 @@
         },
         {
             "name": "mister"
+        },
+        {
+            "name": "emp_pulse"
         },
         {
             "name": "megaphone"
