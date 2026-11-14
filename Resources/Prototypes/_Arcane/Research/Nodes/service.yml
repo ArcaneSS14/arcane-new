@@ -15,6 +15,7 @@
   - ModsuitModuleStamper
   - ModsuitModuleBikeHorn
   - ModsuitModuleWaddle
+  - ModsuitModulePaperDispenser
   - HandLabeler
   - ParcelWrap
   - CutterMachineCircuitboard
@@ -138,6 +139,7 @@
     PhysicalArcadeWinner: 5000
   recipeUnlocks:
   - BlockGameArcadeComputerCircuitboard
+  - ModsuitModuleBalloonBlower
   - SpaceVillainArcadeComputerCircuitboard
   position: 10,-4
 
@@ -156,6 +158,7 @@
     amount: 500
   recipeUnlocks:
   - ModsuitModuleMouthhole
+  - ModsuitModuleBurgerDispenser
   - ElectricGrillMachineCircuitboard
   - MicrowaveMachineCircuitboard
   - FoodBowlBig

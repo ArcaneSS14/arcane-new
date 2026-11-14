@@ -68,6 +68,9 @@
   - ModsuitModuleEmpShieldAdvanced # Arcane
   - ModsuitModuleReagentScanner # Arcane
   - ModsuitModuleWaddle # Arcane
+  - ModsuitModuleBurgerDispenser # Arcane
+  - ModsuitModulePaperDispenser # Arcane
+  - ModsuitModuleBalloonBlower # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

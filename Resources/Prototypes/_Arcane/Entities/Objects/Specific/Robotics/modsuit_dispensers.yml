@@ -1,0 +1,129 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModulePepperShoulders
+  name: MOD pepper shoulders module
+  description: Releases a cloud of capsaicin around the wearer.
+  components:
+  - type: Sprite
+    state: pepper_shoulder
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 15
+    cooldown: 15
+  - type: ModSpawnModule
+    prototypes: [ ModsuitPepperSmokeEffect ]
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleBurgerDispenser
+  name: MOD burger dispenser module
+  description: Synthesizes a plain burger in the wearer's glove at the cost of a large amount of power.
+  components:
+  - type: Sprite
+    state: dispenser
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 324
+    cooldown: 15
+    requiredParts: [ gloves ]
+  - type: ModSpawnModule
+    prototypes: [ FoodBurgerPlain ]
+    toHand: true
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModulePaperDispenser
+  name: MOD paper dispenser module
+  description: Dispenses a clean sheet of paper into the wearer's glove.
+  components:
+  - type: Sprite
+    state: paper_maker
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 2
+    cooldown: 3
+    requiredParts: [ gloves ]
+  - type: ModSpawnModule
+    prototypes: [ Paper ]
+    toHand: true
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleBalloonBlower
+  name: MOD balloon blower module
+  description: Inflates a balloon of a random color.
+  components:
+  - type: Sprite
+    state: bloon
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 5
+    cooldown: 3
+    requiredParts: [ head ]
+  - type: ModSpawnModule
+    prototypes: [ ModsuitBalloonRed, ModsuitBalloonBlue, ModsuitBalloonGreen ]
+    toHand: true
+
+- type: entity
+  parent: AdminInstantEffectBase
+  id: ModsuitPepperSmokeEffect
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SmokeOnTrigger
+    duration: 4
+    spreadAmount: 8
+    solution:
+      reagents:
+      - ReagentId: CapsaicinOil
+        Quantity: 30
+  - type: EmitSoundOnTrigger
+    sound: /Audio/Effects/smoke.ogg
+
+- type: entity
+  abstract: true
+  parent: BaseMonkeyBalloon
+  id: BaseModsuitBalloon
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          path: /Audio/_Goobstation/BalloonEffect/balloon_pop.ogg
+          params:
+            variation: 0.125
+            volume: -4
+      - !type:DoActsBehavior
+        acts: [ Destruction ]
+
+- type: entity
+  parent: BaseModsuitBalloon
+  id: ModsuitBalloonRed
+  name: red balloon
+  components:
+  - type: Sprite
+    state: red
+
+- type: entity
+  parent: BaseModsuitBalloon
+  id: ModsuitBalloonBlue
+  name: blue balloon
+  components:
+  - type: Sprite
+    state: blue
+
+- type: entity
+  parent: BaseModsuitBalloon
+  id: ModsuitBalloonGreen
+  name: green balloon
+  components:
+  - type: Sprite
+    state: green

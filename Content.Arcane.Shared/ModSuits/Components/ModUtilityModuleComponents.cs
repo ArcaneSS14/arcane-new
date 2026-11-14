@@ -15,3 +15,13 @@ public sealed partial class ModSoundModuleComponent : Component
     [DataField(required: true)]
     public SoundSpecifier Sound = default!;
 }
+
+[RegisterComponent, Access(typeof(ModSuitSystem))]
+public sealed partial class ModSpawnModuleComponent : Component
+{
+    [DataField(required: true)]
+    public List<EntProtoId> Prototypes = [];
+
+    [DataField]
+    public bool ToHand;
+}

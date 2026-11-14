@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Arcane.Shared.ModSuits;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Arcane.Shared.ModSuits.Systems;
@@ -6,6 +7,7 @@ using Content.Medical.Common.Body;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Construction;
+using Content.Server.Destructible.Thresholds.Behaviors;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
 using Content.Shared.Armor;
@@ -14,6 +16,7 @@ using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Destructible;
 using Content.Shared.Emp;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -262,6 +265,59 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.HasComponent<PressureProtectionComponent>(helmet!.Value), Is.True);
             SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
             Assert.That(pressure.GetFeltLowPressure(wearer, barotrauma, 0f), Is.GreaterThan(0f));
+        });
+    }
+
+    [Test]
+    public async Task BalloonDispenserCreatesOnlyCashlessBalloons()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        EntityUid blower = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            control = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            blower = SEntMan.SpawnAttachedTo("ModsuitModuleBalloonBlower", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, blower, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value.AsNullable();
+            var charge = SEntMan.System<SharedBatterySystem>();
+            var before = charge.GetCharge(battery);
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(blower, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(charge.GetCharge(battery), Is.EqualTo(before - 5f).Within(0.01f));
+
+            string[] variants = ["ModsuitBalloonRed", "ModsuitBalloonBlue", "ModsuitBalloonGreen"];
+            var hands = SEntMan.System<SharedHandsSystem>();
+            Assert.That(hands.TryGetActiveItem(wearer, out var item), Is.True);
+            Assert.That(SEntMan.GetComponent<MetaDataComponent>(item.Value).EntityPrototype?.ID, Is.AnyOf(variants));
+            foreach (var variant in variants)
+            {
+                var balloon = SEntMan.SpawnAttachedTo(variant, MapData.GridCoords);
+                var destruction = SEntMan.GetComponent<DestructibleComponent>(balloon);
+                Assert.That(destruction.Thresholds.SelectMany(threshold => threshold.Behaviors),
+                    Has.None.TypeOf<SpawnEntitiesBehavior>(), variant);
+            }
         });
     }
 

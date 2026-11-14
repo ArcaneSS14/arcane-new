@@ -112,6 +112,12 @@
             "name": "welding"
         },
         {
+            "name": "dispenser"
+        },
+        {
+            "name": "bloon"
+        },
+        {
             "name": "noslip"
         },
         {
@@ -121,10 +127,16 @@
             "name": "chronogun"
         },
         {
+            "name": "paper_maker"
+        },
+        {
             "name": "stamp"
         },
         {
             "name": "mister"
+        },
+        {
+            "name": "pepper_shoulder"
         },
         {
             "name": "emp_pulse"

@@ -363,3 +363,36 @@
   materials:
     Steel: 300
     Plastic: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModulePepperShoulders
+  result: ModsuitModulePepperShoulders
+  materials:
+    Steel: 400
+    Glass: 200
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleBurgerDispenser
+  result: ModsuitModuleBurgerDispenser
+  materials:
+    Steel: 400
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModulePaperDispenser
+  result: ModsuitModulePaperDispenser
+  materials:
+    Steel: 200
+    Plastic: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleBalloonBlower
+  result: ModsuitModuleBalloonBlower
+  materials:
+    Steel: 200
+    Plastic: 200
