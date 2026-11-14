@@ -2,11 +2,15 @@ using Content.Arcane.Shared.ModSuits;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Arcane.Shared.ModSuits.Systems;
 using Content.IntegrationTests.Tests.Interaction;
+using Content.Medical.Common.Body;
 using Content.Server.Construction;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
+using Content.Shared.Armor;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -144,6 +148,75 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(ingestion.HasMouthAvailable(wearer), Is.True);
             SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
             Assert.That(ingestion.HasMouthAvailable(wearer), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task ArmorModulesRespectCoveragePenetrationAndPower()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            control = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var head = SEntMan.SpawnAttachedTo("ModsuitModuleHeadProtector", position);
+            var shielding = SEntMan.SpawnAttachedTo("ModsuitModuleRadProtection", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            var wires = SEntMan.System<SharedWiresSystem>();
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, head, wearer), Is.True);
+            Assert.That(suits.TryInstallModule(suit, shielding, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            const string blunt = "Blunt";
+            const string radiation = "Radiation";
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var inventory = SEntMan.System<InventorySystem>();
+            Assert.That(inventory.TryGetSlotEntity(wearer, "head", out var helmet), Is.True);
+            var armor = SEntMan.GetComponent<ArmorComponent>(helmet!.Value);
+            armor.Modifiers = new DamageModifierSet
+            {
+                Coefficients = new() { [blunt] = 0.8f },
+                FlatReductions = new() { [blunt] = 4f },
+            };
+
+            float Damage(string type, BodyPartType part, float penetration)
+            {
+                var specifier = new DamageSpecifier
+                {
+                    ArmorPenetration = penetration,
+                    DamageDict = { [type] = 100 },
+                };
+                var ev = new DamageModifyEvent(wearer, specifier, targetPart: part);
+                SEntMan.EventBus.RaiseLocalEvent(wearer, ev);
+                return ev.Damage.DamageDict[type].Float();
+            }
+
+            Assert.That(Damage(blunt, BodyPartType.Head, 0.5f), Is.EqualTo(98f * MathF.Sqrt(0.8f * 0.9f)).Within(0.02f));
+            Assert.That(Damage(blunt, BodyPartType.Head, 1f), Is.EqualTo(100f));
+            Assert.That(Damage(blunt, BodyPartType.Torso, 0f), Is.EqualTo(100f));
+            Assert.That(Damage(radiation, BodyPartType.Torso, 1f), Is.EqualTo(20f));
+            Assert.That(armor.Modifiers.Coefficients[blunt], Is.EqualTo(0.8f));
+
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            Assert.That(Damage(blunt, BodyPartType.Head, 0f), Is.EqualTo(76.8f).Within(0.02f));
+            Assert.That(Damage(radiation, BodyPartType.Torso, 1f), Is.EqualTo(100f));
         });
     }
 

@@ -292,3 +292,20 @@
   materials:
     Steel: 300
     Plastic: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleRadProtection
+  result: ModsuitModuleRadProtection
+  materials:
+    Steel: 600
+    Glass: 200
+    Uranium: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleHeadProtector
+  result: ModsuitModuleHeadProtector
+  materials:
+    Steel: 600
+    Plastic: 200

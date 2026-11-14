@@ -1,0 +1,30 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleRadProtection
+  name: MOD radiation protection module
+  description: A module utilizing polymers and reflective shielding to protect the user against ionizing radiation.
+  components:
+  - type: Sprite
+    state: radshield
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.2
+  - type: ModArmorModule
+    modifiers:
+      coefficients:
+        Radiation: 0.2
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleHeadProtector
+  name: MOD safety-first head protection module
+  description: Dampening plates inside the helmet protect the wearer from falling debris and blunt impacts.
+  components:
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ head ]
+  - type: ModArmorModule
+    slots: [ head ]
+    modifiers:
+      coefficients:
+        Blunt: 0.9

@@ -82,6 +82,9 @@
             "name": "gps"
         },
         {
+            "name": "radshield"
+        },
+        {
             "name": "injector"
         },
         {

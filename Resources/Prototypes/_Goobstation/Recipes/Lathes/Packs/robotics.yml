@@ -63,6 +63,8 @@
   - ModsuitModuleJetpack # Arcane
   - ModsuitModuleJetpackAdvanced # Arcane
   - ModsuitModuleBikeHorn # Arcane
+  - ModsuitModuleHeadProtector # Arcane
+  - ModsuitModuleRadProtection # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

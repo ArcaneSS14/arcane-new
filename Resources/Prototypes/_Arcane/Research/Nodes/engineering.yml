@@ -84,6 +84,7 @@
   - MegaCellHyper
   - ModsuitCoreStandardMicroreactor
   - ModsuitModuleResinMister
+  - ModsuitModuleRadProtection
   - ModsuitModuleMagbootsAdvanced
   - SuperCapacitorStockPart
   - PhasicScanningModuleStockPart
@@ -449,6 +450,7 @@
   - ExperimentalTools
   recipeUnlocks:
   - ModsuitModuleMagboots
+  - ModsuitModuleHeadProtector
   - ModsuitModuleJetpackAdvanced
   - ClothingShoesBootsMag
   - ClothingShoesBootsMagSci
