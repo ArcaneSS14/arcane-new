@@ -1,0 +1,41 @@
+- type: listing
+  id: UplinkModsuitModuleMedbeam
+  productEntity: ModsuitModuleMedbeam
+  cost:
+    Telecrystal: 120
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleNoSlip
+  productEntity: ModsuitModuleNoSlip
+  cost:
+    Telecrystal: 15
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleJetpack
+  productEntity: ModsuitModuleJetpack
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleJetpackAdvanced
+  productEntity: ModsuitModuleJetpackAdvanced
+  cost:
+    Telecrystal: 15
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleMagboots
+  productEntity: ModsuitModuleMagboots
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleMagbootsAdvanced
+  productEntity: ModsuitModuleMagbootsAdvanced
+  cost:
+    Telecrystal: 20
+  categories: [ UplinkWearables ]

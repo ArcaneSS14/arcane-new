@@ -275,3 +275,20 @@
     Plasma: 500
     Gold: 200
     Silver: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleMegaphone
+  result: ModsuitModuleMegaphone
+  materials:
+    Steel: 300
+    Glass: 200
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleBikeHorn
+  result: ModsuitModuleBikeHorn
+  materials:
+    Steel: 300
+    Plastic: 300

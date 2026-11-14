@@ -85,10 +85,16 @@
             "name": "injector"
         },
         {
+            "name": "bikehorn"
+        },
+        {
             "name": "apparatus"
         },
         {
             "name": "welding"
+        },
+        {
+            "name": "noslip"
         },
         {
             "name": "chronogun"
@@ -98,6 +104,9 @@
         },
         {
             "name": "mister"
+        },
+        {
+            "name": "megaphone"
         },
         {
             "name": "defibrillator"
