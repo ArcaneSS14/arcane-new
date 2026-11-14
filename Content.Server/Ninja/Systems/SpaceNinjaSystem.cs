@@ -100,7 +100,7 @@ public sealed partial class SpaceNinjaSystem : SharedSpaceNinjaSystem
     {
         if (TryComp<SpaceNinjaComponent>(user, out var ninja)
             && ninja.Suit != null
-            && _powerCell.TryGetBatteryFromSlot(ninja.Suit.Value, out var battery))
+            && _powerCell.TryGetBatteryFromSlotOrEntity(ninja.Suit.Value, out var battery)) // Arcane-Edit: allow the suit to resolve its MOD core through FindBatteryEvent.
         {
             batteryUid = battery.Value.Owner;
             batteryComp = battery.Value.Comp;

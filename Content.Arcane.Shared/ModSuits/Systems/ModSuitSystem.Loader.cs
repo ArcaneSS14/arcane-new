@@ -1,5 +1,4 @@
 using Content.Arcane.Shared.ModSuits.Components;
-using Content.Shared.Item.ItemToggle;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Storage;
 using Content.Shared.Throwing;
@@ -14,7 +13,6 @@ namespace Content.Arcane.Shared.ModSuits.Systems;
 public sealed partial class ModSuitSystem
 {
     [Dependency] private EntityLookupSystem _loaderLookup = default!;
-    [Dependency] private ItemToggleSystem _beaconToggle = default!;
     private const float LoaderCargoOffset = 1f;
     private const float LoaderAttachRange = 1.5f;
 
@@ -176,7 +174,7 @@ public sealed partial class ModSuitSystem
 
             candela.LastBeacon = at;
             candela.WarnedEmpty = false;
-            _beaconToggle.TryActivate(beacon, predicted: false, showPopup: false);
+            _itemToggle.TryActivate(beacon, predicted: false, showPopup: false);
             _audio.PlayPvs(candela.Sound, beacon);
         }
     }

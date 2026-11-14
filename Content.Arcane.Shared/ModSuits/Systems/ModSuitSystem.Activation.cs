@@ -131,6 +131,31 @@ public sealed partial class ModSuitSystem
         return true;
     }
 
+    /// <summary>Deploys and seals starting equipment before its wearer enters play.</summary>
+    public bool TryPrepareStartingSuit(Entity<ModSuitComponent> suit, EntityUid wearer)
+    {
+        if (_net.IsClient || suit.Comp.Wearer != wearer || !suit.Comp.Powered
+            || suit.Comp.State != ModSuitState.Inactive || suit.Comp.DeploymentSteps.Count != 0
+            || !CanAccessModules(suit, wearer) || suit.Comp.Parts.Count == 0
+            || (HasComp<WiresPanelComponent>(suit) && _wires.IsPanelOpen(suit.Owner)))
+            return false;
+
+        foreach (var slot in suit.Comp.Parts.Keys)
+        {
+            if (IsPartDeployed(suit, slot) || TryDeployPart(suit, slot, wearer))
+                continue;
+
+            RetractAllParts(suit, wearer);
+            return false;
+        }
+
+        foreach (var part in suit.Comp.PartEntities.Values)
+            SetPartSealed((part, Comp<ModPartComponent>(part)), true);
+
+        SetState(suit, ModSuitState.Active);
+        return true;
+    }
+
     private void StopActivation(Entity<ModSuitComponent> suit)
     {
         if (suit.Comp.State == ModSuitState.Inactive || TerminatingOrDeleted(suit))

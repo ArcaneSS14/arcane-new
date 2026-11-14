@@ -45,3 +45,6 @@ public record struct ModSuitAccessAttemptEvent(EntityUid User)
 
 [ByRefEvent]
 public record struct ModSpherePressureQuery(float Pressure);
+
+[ByRefEvent]
+public readonly record struct ModSuitBatteryChangedEvent(EntityUid Wearer, EntityUid? Battery);
