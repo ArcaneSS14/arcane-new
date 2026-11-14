@@ -92,6 +92,11 @@ public sealed class PaperPortTest : InteractionTest
         await ClickSave();
         await Pair.RunUntilSynced();
         await AssertContent(draft);
+
+        const string revised = "Updated after saving";
+        await Server.WaitPost(() => SEntMan.System<PaperSystem>().SetContent(STarget!.Value, revised));
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() => Assert.That(Rope.Collapse(window.Input.TextRope), Is.EqualTo(revised)));
         await CloseBui(PaperComponent.PaperUiKey.Key);
 
         async Task ClickSave()
