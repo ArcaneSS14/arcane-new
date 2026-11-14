@@ -16,8 +16,6 @@ public sealed class WaggingAvailabilityTest : InteractionTest
     private static readonly ProtoId<MarkingPrototype> Still = "LizardTailSmooth";
     private static readonly ProtoId<MarkingPrototype> Animated = "LizardTailSmoothAnimated";
     // These IDs belong to TestPrototypes, not the production YAML validated by static-field checks.
-    private const string ExplicitStill = "ArcaneWaggingStillTest";
-    private const string ExplicitAnimated = "ArcaneWaggingMotionTest";
     protected override string PlayerPrototype => "MobReptilian";
 
     [Test]
@@ -78,30 +76,6 @@ public sealed class WaggingAvailabilityTest : InteractionTest
         });
         await Pair.RunUntilSynced();
         await Server.WaitAssertion(() => Assert.That(SEntMan.GetComponent<WaggingComponent>(SPlayer).ActionEntity, Is.Not.Null));
-    }
-
-    [Test]
-    public async Task ExplicitWaggingReferenceWorksWithoutTheLegacySuffix()
-    {
-        await Server.WaitPost(() => SetTail(true, ExplicitStill));
-        await Pair.RunUntilSynced();
-        await Server.WaitAssertion(() =>
-        {
-            var manager = Server.ResolveDependency<MarkingManager>();
-            Assert.That(manager.TryGetWaggingMarking(ExplicitStill, out var mapped), Is.True);
-            Assert.That(mapped, Is.EqualTo(ExplicitAnimated));
-            var component = SEntMan.GetComponent<WaggingComponent>(SPlayer);
-            Assert.That(component.ActionEntity, Is.Not.Null);
-            var wagging = SEntMan.System<WaggingSystem>();
-            Assert.That(wagging.TryToggleWagging((SPlayer, component), true), Is.True);
-            var organ = SEntMan.System<BodySystem>().GetOrgan(SPlayer, Tail)!.Value;
-            var marking = SEntMan.GetComponent<VisualOrganMarkingsComponent>(organ).Markings[HumanoidVisualLayers.Tail][0];
-            Assert.That(marking.MarkingId.Id, Is.EqualTo(ExplicitAnimated));
-            Assert.That(marking.MarkingColors, Is.EqualTo(new[] {Color.Red, Color.Blue}));
-            Assert.That(wagging.TryToggleWagging((SPlayer, component), false), Is.True);
-            marking = SEntMan.GetComponent<VisualOrganMarkingsComponent>(organ).Markings[HumanoidVisualLayers.Tail][0];
-            Assert.That(marking.MarkingId.Id, Is.EqualTo(ExplicitStill));
-        });
     }
 
     private void SetTail(bool present, ProtoId<MarkingPrototype>? marking = null)

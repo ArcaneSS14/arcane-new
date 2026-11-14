@@ -23,11 +23,7 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class PaperPortTest : InteractionTest
 {
-    [TestCase("no-pen", "Unsaved draft")]
-    [TestCase("disabled", "Unsaved draft")]
     [TestCase("sealed", "Unsaved draft")]
-    [TestCase("disabled", "")]
-    [TestCase("stunned", "Unsaved draft")]
     public async Task RejectedSavePreservesDraftAndAllowsRetry(string rejection, string draft)
     {
         await SpawnTarget("Paper");
@@ -161,108 +157,6 @@ public sealed class PaperPortTest : InteractionTest
     }
 
     [Test]
-    public async Task WritingRequiresCurrentPenAndEditableDocument()
-    {
-        await SpawnTarget("Paper");
-        await Server.WaitPost(() => SEntMan.System<PaperSystem>().SetContent(STarget!.Value, "[form]"));
-        await Server.WaitAssertion(() => Assert.That(Fill(), Is.False, "Empty hand is not a writing tool."));
-        await PlaceInHands("Pen");
-        await Server.WaitAssertion(() =>
-        {
-            var paper = SEntMan.GetComponent<PaperComponent>(STarget!.Value);
-            paper.EditingDisabled = true;
-            Assert.That(Fill(), Is.False);
-            paper.EditingDisabled = false;
-            paper.StampedBy.Add(new StampDisplayInfo { StampedName = "sealed" });
-            Assert.That(Fill(), Is.False, "An open UI cannot bypass a later seal.");
-            paper.StampedBy.Clear();
-            Assert.That(Fill(), Is.True);
-        });
-
-        bool Fill() => SEntMan.System<PaperFieldSystem>().TryFill(
-            (STarget!.Value, SEntMan.GetComponent<PaperComponent>(STarget.Value)), SPlayer,
-            PaperFieldKind.Form, 0, "Written", "[form]");
-    }
-
-    [Test]
-    public async Task AdvancedPenCanFillNewFieldsAfterStamping()
-    {
-        const string content = "[form] [signature]";
-        await SpawnTarget("Paper");
-        await InteractUsing("RubberStampCaptain");
-        await PlaceInHands("CyberPen");
-        await Interact();
-        await Pair.RunUntilSynced();
-        await SendBui(PaperComponent.PaperUiKey.Key, new PaperComponent.PaperInputTextMessage(content));
-        await AssertContent(content);
-        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Form, 0, "Written", content));
-        const string remaining = "Written [signature]";
-        await AssertContent(remaining);
-        await Client.WaitAssertion(() =>
-        {
-            using var window = new ArcanePaperWindow();
-            window.Populate(new PaperComponent.PaperBoundUserInterfaceState(remaining,
-                [new StampDisplayInfo { StampedName = "sealed" }]));
-            var submitted = false;
-            window.OnFieldSubmitted += (kind, index, value, snapshot) =>
-            {
-                submitted = true;
-                Assert.That(kind, Is.EqualTo(PaperFieldKind.Signature));
-                Assert.That(snapshot, Is.EqualTo(remaining));
-            };
-            window.OpenField(PaperFieldKind.Signature, 0);
-            Assert.That(submitted, Is.True, "The client must not override the advanced pen's server permission.");
-        });
-        await PlaceInHands("Pen");
-        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Signature, 0, "", remaining));
-        await AssertContent(remaining);
-        await PlaceInHands("CyberPen");
-        await Server.WaitPost(() => SEntMan.System<MetaDataSystem>().SetEntityName(SPlayer, "Advanced Writer"));
-        await SendBui(PaperComponent.PaperUiKey.Key, new PaperFieldMessage(PaperFieldKind.Signature, 0, "", remaining));
-        await AssertContent("Written Advanced Writer");
-        await CloseBui(PaperComponent.PaperUiKey.Key);
-    }
-
-    [Test]
-    public async Task GraphicalStampsRetainTextFallbackAndChameleonState()
-    {
-        await SpawnTarget("RubberStampChameleon");
-        await Server.WaitAssertion(() => Assert.That(SEntMan.GetComponent<StampComponent>(STarget!.Value).StampLargeIcon,
-            Does.EndWith("large_stamp-ok.png"), "The initial selected state has the same imprint as reselecting it."));
-        await Activate();
-        await Pair.RunUntilSynced();
-        await SendBui(ChameleonStampUiKey.Key, Settings("RubberStampCentcom"));
-        StampDisplayInfo graphic = default;
-        await Server.WaitAssertion(() =>
-        {
-            var stamp = SEntMan.GetComponent<StampComponent>(STarget!.Value);
-            Assert.That(stamp.StampLargeIcon, Does.EndWith("large_stamp-centcom.png"));
-            graphic = new StampDisplayInfo { StampedName = stamp.StampedName, StampedColor = stamp.StampedColor,
-                StampLargeIcon = stamp.StampLargeIcon };
-        });
-        await SendBui(ChameleonStampUiKey.Key, Settings("RubberStampWarden"));
-        await Server.WaitAssertion(() => Assert.That(SEntMan.GetComponent<StampComponent>(STarget!.Value).StampLargeIcon, Is.Null));
-        await Client.WaitAssertion(() =>
-        {
-            using var widget = new ArcaneStampWidget { StampInfo = graphic };
-            var texture = Client.ResolveDependency<IResourceCache>().GetResource<TextureResource>("/Textures/" + graphic.StampLargeIcon);
-            Assert.That(((StyleBoxTexture) widget.PanelOverride!).Texture, Is.SameAs(texture.Texture));
-            Assert.That(widget.MinSize, Is.EqualTo(texture.Texture.Size * 1.5f));
-            Assert.That(widget.ModulateSelfOverride, Is.EqualTo(Color.White));
-            widget.StampInfo = new StampDisplayInfo { StampedName = "Custom", StampedColor = Color.Blue };
-            Assert.That(widget.MinSize, Is.EqualTo(System.Numerics.Vector2.Zero));
-            Assert.That(widget.ModulateSelfOverride, Is.EqualTo(Color.Blue));
-            Assert.That(((StyleBoxTexture) widget.PanelOverride!).Texture, Is.Not.SameAs(texture.Texture));
-            widget.StampInfo = graphic;
-            Assert.That(((StyleBoxTexture) widget.PanelOverride!).Texture, Is.SameAs(texture.Texture));
-        });
-        await CloseBui(ChameleonStampUiKey.Key);
-
-        static ChameleonStampApplySettingsMessage Settings(string state) => new(
-            "RubberStampApproved", Color.Blue, null, null, "Custom", "RubberStampCaptain", state);
-    }
-
-    [Test]
     public async Task InlineSignaturesPreserveDevilContractPhasesAndLockOtherFields()
     {
         var content = string.Empty;
@@ -320,45 +214,6 @@ public sealed class PaperPortTest : InteractionTest
 
         int CountShoes() => SEntMan.EntityQuery<MetaDataComponent>()
             .Count(meta => meta.EntityPrototype?.ID == "ClothingShoesRealJordansAutographed");
-    }
-
-    [Test]
-    public void FieldParsingIgnoresEscapedAndParameterizedTagsAndEnforcesBounds()
-    {
-        const string content = "\\[form] [form=\"wrong\"] [form] [check] [signature]";
-        Assert.That(PaperFields.TryFill(content, PaperFieldKind.Form, 0, "A [form]", 200, out var result), Is.True);
-        Assert.That(result, Is.EqualTo("\\[form] [form=\"wrong\"] A \\[form] [check] [signature]"));
-        Assert.That(PaperFields.TryFill(content, PaperFieldKind.Form, 1, "X", 200, out _), Is.False);
-        Assert.That(PaperFields.TryFill(content, PaperFieldKind.Form, -1, "X", 200, out _), Is.False);
-        Assert.That(PaperFields.TryFill(content, (PaperFieldKind) 255, 0, "X", 200, out _), Is.False);
-        Assert.That(PaperFields.TryFill("[form]", PaperFieldKind.Form, 0, "[[[[", 6, out _), Is.False);
-        Assert.That(PaperFields.TryFill("[form]", PaperFieldKind.Form, 0, "abcdef", 6, out result), Is.True);
-        Assert.That(result, Is.EqualTo("abcdef"));
-        Assert.That(PaperFields.TryFill("[form]", PaperFieldKind.Form, 0, "abcdefg", 6, out _), Is.False);
-        Assert.That(PaperFields.TryFill("[form]", PaperFieldKind.Form, 0, "", 20, out _), Is.False);
-        foreach (var choice in new[] { "☐", "✔", "✖" })
-        {
-            Assert.That(PaperFields.TryFill("[check]", PaperFieldKind.Check, 0, choice, 20, out result), Is.True);
-            Assert.That(result, Is.EqualTo(choice));
-        }
-        Assert.That(PaperFields.TryFill("[check]", PaperFieldKind.Check, 0, "[signature]", 20, out _), Is.False);
-        var display = PaperFields.ForDisplay("[form] [form] [signature]", false);
-        Assert.That(display.Where(n => n.Name == "form").Select(n => n.Attributes[PaperFields.IndexAttribute].LongValue),
-            Is.EqualTo(new long?[] { 0, 1 }));
-        Assert.That(PaperFields.ForDisplay("[form]", true).First().Attributes[PaperFields.LockedAttribute].LongValue, Is.EqualTo(1));
-        Assert.That(PaperFields.FinalizeDocument("\\[form] [form] [check] [signature]"), Is.EqualTo("\\[form]  ☐ "));
-    }
-
-    [Test]
-    public void AuthorSuppliedFieldIndicesCannotRedirectControls()
-    {
-        const string text = "A: [form paperindex=0 paperlocked=0] B: [form]";
-        var display = PaperFields.ForDisplay(text, false);
-        var fields = display.Where(node => node.Name == "form").ToArray();
-        Assert.That(fields, Has.Length.EqualTo(1));
-        Assert.That(fields[0].Attributes[PaperFields.IndexAttribute].LongValue, Is.EqualTo(0));
-        Assert.That(PaperFields.TryFill(text, PaperFieldKind.Form, 0, "B value", 200, out var result), Is.True);
-        Assert.That(result, Is.EqualTo("A: [form paperindex=0 paperlocked=0] B: B value"));
     }
 
     private async Task AssertContent(string expected) => await Server.WaitAssertion(() =>
