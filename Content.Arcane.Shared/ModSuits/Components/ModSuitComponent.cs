@@ -74,6 +74,12 @@ public sealed partial class ModSuitComponent : Component
 
     [AutoNetworkedField]
     public bool Powered;
+
+    /// <summary>
+    /// A temporary equipment copy that has no accessible core, parts or modules.
+    /// </summary>
+    [AutoNetworkedField]
+    public bool Projected;
 }
 
 [Serializable, NetSerializable]

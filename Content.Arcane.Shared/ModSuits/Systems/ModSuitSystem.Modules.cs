@@ -188,7 +188,7 @@ public sealed partial class ModSuitSystem
 
     private bool CanAccessModules(Entity<ModSuitComponent> suit, EntityUid user)
     {
-        if (suit.Comp.ModulesContainer is not { } modules)
+        if (suit.Comp.Projected || suit.Comp.ModulesContainer is not { } modules)
             return false;
 
         var attempt = new ModSuitAccessAttemptEvent(user);

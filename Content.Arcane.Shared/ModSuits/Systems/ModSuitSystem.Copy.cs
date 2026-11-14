@@ -22,7 +22,25 @@ public sealed partial class ModSuitSystem
         CopyDeployment(source, args.Copy, args.EligibleItems, args.EquippedCopies);
     }
 
-    private void CopyDeployment(Entity<ModSuitComponent> source, EntityUid target, IReadOnlySet<EntityUid> eligibleItems,
+    public void PrepareProjectedSuit(Entity<ModSuitComponent> suit)
+    {
+        if (_net.IsClient || suit.Comp.Projected || suit.Comp.Wearer != null)
+            return;
+
+        suit.Comp.Projected = true;
+        Dirty(suit);
+        if (suit.Comp.ModulesContainer is { } modules)
+            _containers.CleanContainer(modules);
+
+        if (_itemSlots.TryGetSlot(suit.Owner, suit.Comp.CoreSlotId, out var core))
+        {
+            if (core.ContainerSlot is { } slot)
+                _containers.CleanContainer(slot);
+            _itemSlots.RemoveItemSlot(suit.Owner, core);
+        }
+    }
+
+    public void CopyDeployment(Entity<ModSuitComponent> source, EntityUid target, IReadOnlySet<EntityUid> eligibleItems,
         IReadOnlySet<EntityUid> equippedCopies)
     {
         if (_net.IsClient || !TryComp(target, out ModSuitComponent? control) || control.Wearer is not { } wearer
@@ -36,10 +54,17 @@ public sealed partial class ModSuitSystem
                 || _inventory.TryGetSlotEntity(wearer, slot, out var occupant) && !equippedCopies.Contains(occupant.Value))
                 continue;
 
-            TryDeployPart(suit, slot, wearer, copying: true);
+            if (!TryDeployPart(suit, slot, wearer, copying: true) || !control.Projected
+                || !TryComp<ModPartComponent>(sourcePart, out var original) || !original.Sealed
+                || !control.PartEntities.TryGetValue(slot, out var newPart)
+                || !TryComp<ModPartComponent>(newPart, out var copiedPart))
+                continue;
+
+            SetPartSealed((newPart, copiedPart), true);
         }
 
-        if (source.Comp.State != ModSuitState.Active || !control.Powered || !AllPartsDeployed(suit))
+        if (source.Comp.State != ModSuitState.Active || !AllPartsDeployed(suit)
+            || !control.Powered && !control.Projected)
             return;
 
         foreach (var part in control.PartEntities.Values)

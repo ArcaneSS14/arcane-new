@@ -1012,6 +1012,55 @@ public sealed class ModCoreTest : InteractionTest
     }
 
     [Test]
+    public async Task ProjectedModSuitKeepsSealedPartsWithoutProvidingAnyHardware()
+    {
+        EntityUid wearer = default;
+        var control = await EquipPoweredEngineerSuit("ModsuitModuleKinesis", (user, _) => wearer = user);
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords;
+            var clone = SEntMan.SpawnAttachedTo("MobHuman", at);
+            var copy = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", at);
+            var suits = SEntMan.System<ModSuitSystem>();
+            var source = SEntMan.GetComponent<ModSuitComponent>(control);
+            var projection = SEntMan.GetComponent<ModSuitComponent>(copy);
+            Entity<ModSuitComponent> projectedSuit = (copy, projection);
+            var core = suits.GetCore(projectedSuit);
+            var battery = suits.GetBattery(projectedSuit);
+            var originals = source.PartEntities.Values.ToHashSet();
+            var nativeModules = projection.ModulesContainer!.ContainedEntities.ToArray();
+            Assert.That(originals.Count, Is.EqualTo(4));
+            Assert.That(core, Is.Not.Null);
+            Assert.That(battery, Is.Not.Null);
+            suits.PrepareProjectedSuit(projectedSuit);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(clone, copy, "back", force: true), Is.True);
+            suits.CopyDeployment((control, source), copy, originals, new HashSet<EntityUid>());
+
+            Assert.That(projection.State, Is.EqualTo(ModSuitState.Active));
+            Assert.That(suits.GetCore(projectedSuit), Is.Null);
+            Assert.That(SEntMan.EntityExists(core!.Value), Is.False);
+            Assert.That(SEntMan.EntityExists(battery!.Value.Owner), Is.False);
+            Assert.That(projection.ModulesContainer!.ContainedEntities, Is.Empty);
+            Assert.That(nativeModules.Any(SEntMan.EntityExists), Is.False);
+            Assert.That(suits.GetBattery((control, source)), Is.Not.Null);
+            Assert.That(suits.TryToggleActivation(projectedSuit, clone), Is.False);
+            Assert.That(suits.TryToggleAllParts(projectedSuit, clone), Is.False);
+            Assert.That(TryOpenPanel(), Is.False);
+            foreach (var (slot, part) in projection.PartEntities)
+            {
+                Assert.That(originals, Does.Not.Contain(part));
+                Assert.That(suits.IsPartDeployed(projectedSuit, slot), Is.True);
+                Assert.That(SEntMan.GetComponent<ModPartComponent>(part).Sealed, Is.True);
+                Assert.That(SEntMan.System<InventorySystem>().TryUnequip(clone, slot), Is.False);
+            }
+            Assert.That(source.Wearer, Is.EqualTo(wearer));
+
+            bool TryOpenPanel() => SEntMan.System<SharedWiresSystem>()
+                .TogglePanel(copy, SEntMan.GetComponent<WiresPanelComponent>(copy), true);
+        });
+    }
+
+    [Test]
     public async Task EquipmentCopyCreatesItsOwnModPartsAndPreservesTheUnderlyingHat()
     {
         EntityUid original = default;

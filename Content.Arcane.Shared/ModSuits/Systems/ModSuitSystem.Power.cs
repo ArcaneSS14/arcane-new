@@ -177,7 +177,7 @@ public sealed partial class ModSuitSystem : EntitySystem
 
     private void OnRefreshSuitSpeed(Entity<ModSuitComponent> suit, ref InventoryRelayedEvent<RefreshMovementSpeedModifiersEvent> args)
     {
-        if (suit.Comp.State == ModSuitState.Active && !suit.Comp.Powered)
+        if (suit.Comp.State == ModSuitState.Active && !suit.Comp.Powered && !suit.Comp.Projected)
             args.Args.ModifySpeed(suit.Comp.UnpoweredSpeedModifier);
 
         ApplyModuleSpeedModifiers(suit, args.Args);

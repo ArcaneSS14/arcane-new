@@ -214,7 +214,7 @@ public sealed partial class ModSuitSystem
 
     private void OnSuitActions(Entity<ModSuitComponent> suit, ref GetItemActionsEvent args)
     {
-        if (_net.IsClient || args.SlotFlags is not { } slot || (slot & SlotFlags.BACK) == 0)
+        if (_net.IsClient || suit.Comp.Projected || args.SlotFlags is not { } slot || (slot & SlotFlags.BACK) == 0)
             return;
 
         if (args.IsEquipping)
@@ -298,7 +298,7 @@ public sealed partial class ModSuitSystem
 
     private void OnPanelAttempt(Entity<ModSuitComponent> suit, ref AttemptChangePanelEvent args)
     {
-        if (!args.Open && suit.Comp.State != ModSuitState.Inactive)
+        if (suit.Comp.Projected || !args.Open && suit.Comp.State != ModSuitState.Inactive)
             args.Cancelled = true;
     }
 }

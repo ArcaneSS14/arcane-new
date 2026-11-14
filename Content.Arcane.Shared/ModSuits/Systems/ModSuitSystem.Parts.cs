@@ -91,6 +91,7 @@ public sealed partial class ModSuitSystem
     private bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user, bool copying)
     {
         if (_net.IsClient || suit.Comp.State != ModSuitState.Inactive || suit.Comp.Wearer != user
+            || suit.Comp.Projected && !copying
             || suit.Comp.PartsContainer is not { } parts
             || !suit.Comp.PartEntities.TryGetValue(slot, out var uid) || !parts.Contains(uid)
             || !TryComp(uid, out ModPartComponent? part)
@@ -132,7 +133,7 @@ public sealed partial class ModSuitSystem
     }
 
     public bool TryRetractPart(Entity<ModSuitComponent> suit, string slot, EntityUid user) =>
-        !_net.IsClient && suit.Comp.State == ModSuitState.Inactive && suit.Comp.Wearer == user
+        !_net.IsClient && !suit.Comp.Projected && suit.Comp.State == ModSuitState.Inactive && suit.Comp.Wearer == user
         && _actionBlocker.CanInteract(user, suit)
         && RetractPart(suit, slot, user);
 
