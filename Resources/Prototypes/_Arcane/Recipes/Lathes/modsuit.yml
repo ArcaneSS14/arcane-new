@@ -190,3 +190,39 @@
   materials:
     Steel: 300
     Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleMister
+  result: ModsuitModuleMister
+  materials:
+    Steel: 500
+    Glass: 200
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleJanitorMister
+  result: ModsuitModuleJanitorMister
+  materials:
+    Steel: 500
+    Glass: 200
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleResinMister
+  result: ModsuitModuleResinMister
+  materials:
+    Steel: 600
+    Glass: 300
+    Plastic: 300
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleStamper
+  result: ModsuitModuleStamper
+  materials:
+    Steel: 200
+    Plastic: 100

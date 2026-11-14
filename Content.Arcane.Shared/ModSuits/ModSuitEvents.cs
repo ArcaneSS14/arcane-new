@@ -8,6 +8,8 @@ public sealed partial class ModSuitDeployActionEvent : InstantActionEvent;
 
 public sealed partial class ModModuleActionEvent : InstantActionEvent;
 
+public sealed partial class ModSelectDeviceActionEvent : InstantActionEvent;
+
 [ByRefEvent]
 public readonly record struct ModModuleInstalledEvent(EntityUid Suit);
 

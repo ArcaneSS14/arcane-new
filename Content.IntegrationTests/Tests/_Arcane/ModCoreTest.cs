@@ -5,6 +5,7 @@ using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Construction;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
+using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -81,6 +82,29 @@ public sealed class ModCoreTest : InteractionTest
           - type: ModSuit
             state: Active
         """;
+
+    [TestCase("ModsuitDeviceMister")]
+    [TestCase("ModsuitDeviceJanitorMister")]
+    public async Task ModSprayersRegenerateTheirOwnReservoir(string prototype)
+    {
+        EntityUid device = default;
+        await Server.WaitAssertion(() =>
+        {
+            device = SEntMan.SpawnAttachedTo(prototype, MapData.GridCoords);
+            var chemistry = SEntMan.System<SharedSolutionContainerSystem>();
+            Assert.That(chemistry.TryGetSolution(device, "spray", out var reservoir, out var solution), Is.True);
+            Assert.That(solution!.Volume.Float(), Is.EqualTo(100f));
+            chemistry.SplitSolution(reservoir!.Value, 10);
+        });
+
+        await RunSeconds(1.2f);
+        await Server.WaitAssertion(() =>
+        {
+            var chemistry = SEntMan.System<SharedSolutionContainerSystem>();
+            Assert.That(chemistry.TryGetSolution(device, "spray", out _, out var solution), Is.True);
+            Assert.That(solution!.Volume.Float(), Is.EqualTo(95f));
+        });
+    }
 
     [Test]
     public async Task DeviceReturnsToItsModuleAndIsDeletedWithIt()

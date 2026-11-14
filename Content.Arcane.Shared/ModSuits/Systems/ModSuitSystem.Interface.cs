@@ -82,7 +82,10 @@ public sealed partial class ModSuitSystem
         if (module.Comp.Pinned)
             GrantModuleAction(module, wearer);
         else
-            _actions.RemoveProvidedActions(wearer, module);
+        {
+            if (module.Comp.ActionEntity is { } action)
+                _actions.RemoveProvidedAction(wearer, module, action);
+        }
     }
 
     private void OnInterfaceRemoveModule(Entity<ModSuitComponent> suit, ref ModSuitModuleRemoveMessage args)

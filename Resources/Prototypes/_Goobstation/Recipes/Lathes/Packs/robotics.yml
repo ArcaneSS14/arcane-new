@@ -53,6 +53,10 @@
   - ModsuitModuleGps # Arcane
   - ModsuitModuleTether # Arcane
   - ModsuitModuleFishingGlove # Arcane
+  - ModsuitModuleMister # Arcane
+  - ModsuitModuleJanitorMister # Arcane
+  - ModsuitModuleResinMister # Arcane
+  - ModsuitModuleStamper # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

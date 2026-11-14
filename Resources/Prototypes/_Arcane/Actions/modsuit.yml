@@ -39,3 +39,15 @@
     itemIconStyle: BigItem
   - type: InstantAction
     event: !type:ModModuleActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSelectDevice
+  name: Select MOD device
+  description: Choose which device the module will deploy.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModSelectDeviceActionEvent

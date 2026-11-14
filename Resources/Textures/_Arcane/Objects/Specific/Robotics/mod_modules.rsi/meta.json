@@ -82,10 +82,19 @@
             "name": "chronogun"
         },
         {
+            "name": "stamp"
+        },
+        {
+            "name": "mister"
+        },
+        {
             "name": "defibrillator"
         },
         {
             "name": "fishing_glove"
+        },
+        {
+            "name": "cleaner"
         }
     ]
 }

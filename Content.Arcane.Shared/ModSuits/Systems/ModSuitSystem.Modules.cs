@@ -127,7 +127,10 @@ public sealed partial class ModSuitSystem
         var installed = new ModModuleInstalledEvent(suit);
         RaiseLocalEvent(module.Owner, ref installed);
         if (suit.Comp.Wearer is { } wearer)
+        {
             GrantModuleAction(module, wearer);
+            GrantDeviceSelector(module, wearer);
+        }
         RefreshModuleAvailability(suit);
         return true;
     }
@@ -321,12 +324,16 @@ public sealed partial class ModSuitSystem
                 continue;
 
             if (equipped)
+            {
                 GrantModuleAction((uid, module), wearer);
+                GrantDeviceSelector(uid, wearer);
+            }
             else
             {
                 if (!module.AllowFlags.HasFlag(ModModuleAllowFlags.Unworn) && module.Type != ModModuleType.Passive)
                     SetModuleActive(suit, (uid, module), false);
                 _actions.RemoveProvidedActions(wearer, uid);
+                CloseDeviceSelector(uid, wearer);
             }
         }
     }
@@ -352,7 +359,10 @@ public sealed partial class ModSuitSystem
         module.Comp.Suit = null;
         SetModuleActive(suit, module, false);
         if (suit.Comp.Wearer is { } wearer)
+        {
             _actions.RemoveProvidedActions(wearer, module);
+            CloseDeviceSelector(module, wearer);
+        }
         Dirty(module);
         var removed = new ModModuleRemovedEvent(suit);
         RaiseLocalEvent(module.Owner, ref removed);

@@ -1,5 +1,7 @@
+using System.Linq;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Shared.Hands;
+using Content.Trauma.Common.RadialSelector;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
@@ -19,6 +21,8 @@ public sealed partial class ModSuitSystem
         SubscribeLocalEvent<ModDeviceItemComponent, ContainerGettingInsertedAttemptEvent>(OnDeviceInsertionAttempt);
         SubscribeLocalEvent<ModDeviceItemComponent, GotUnequippedHandEvent>(OnDeviceReleased);
         SubscribeLocalEvent<ModDeviceItemComponent, EntityTerminatingEvent>(OnDeviceTerminating);
+        SubscribeLocalEvent<ModDeviceSelectorComponent, ModSelectDeviceActionEvent>(OnSelectDevice);
+        SubscribeLocalEvent<ModDeviceSelectorComponent, RadialSelectorSelectedMessage>(OnDeviceSelected);
     }
 
     private void OnDeviceActivationAttempt(Entity<ModDeviceModuleComponent> module, ref ModModuleActivateAttemptEvent args)
@@ -118,5 +122,66 @@ public sealed partial class ModSuitSystem
         if (TryComp(device, out ModModuleComponent? module) && module.Active && module.Suit is { } uid
             && TryComp(uid, out ModSuitComponent? suit))
             SetModuleActive((uid, suit), (device.Owner, module), false);
+    }
+
+    private void GrantDeviceSelector(EntityUid module, EntityUid wearer)
+    {
+        if (TryComp(module, out ModDeviceSelectorComponent? selector)
+            && _actions.AddAction(wearer, ref selector.ActionEntity, selector.Action, module))
+            _actions.SetEntityIcon(selector.ActionEntity.Value, module);
+    }
+
+    private void CloseDeviceSelector(EntityUid module, EntityUid wearer)
+    {
+        if (HasComp<ModDeviceSelectorComponent>(module))
+            _ui.CloseUi(module, RadialSelectorUiKey.Key, wearer);
+    }
+
+    private bool CanSelectDevice(EntityUid module, EntityUid user, out Entity<ModSuitComponent> suit)
+    {
+        suit = default;
+        if (_net.IsClient || !TryComp(module, out ModModuleComponent? installed) || installed.Suit is not { } uid
+            || !TryComp(uid, out ModSuitComponent? comp) || comp.Wearer != user || comp.ModulesContainer?.Contains(module) != true)
+            return false;
+
+        suit = (uid, comp);
+        return _actionBlocker.CanInteract(user, uid) && CanAccessModules(suit, user);
+    }
+
+    private void OnSelectDevice(Entity<ModDeviceSelectorComponent> module, ref ModSelectDeviceActionEvent args)
+    {
+        if (args.Handled || !CanSelectDevice(module, args.Performer, out _))
+            return;
+
+        _ui.SetUiState(module.Owner, RadialSelectorUiKey.Key, new RadialSelectorState(module.Comp.Entries));
+        args.Handled = _ui.TryOpenUi(module.Owner, RadialSelectorUiKey.Key, args.Performer);
+    }
+
+    private void OnDeviceSelected(Entity<ModDeviceSelectorComponent> module, ref RadialSelectorSelectedMessage args)
+    {
+        if (!CanSelectDevice(module, args.Actor, out var suit) || !TryComp(module, out ModDeviceModuleComponent? device)
+            || !TryComp(module, out ModModuleComponent? installed))
+            return;
+
+        var selected = args.SelectedItem;
+        if (!module.Comp.Entries.Any(entry => entry.Prototype == selected) || !_prototypes.HasIndex<EntityPrototype>(selected))
+            return;
+
+        _ui.CloseUi(module.Owner, RadialSelectorUiKey.Key, args.Actor);
+        if (device.Device.Id == selected)
+            return;
+
+        var active = installed.Active;
+        if (active)
+            SetModuleActive(suit, (module.Owner, installed), false);
+
+        var previous = device.DeviceEntity;
+        device.DeviceEntity = null;
+        if (previous is { } old && !TerminatingOrDeleted(old))
+            Del(old);
+        device.Device = selected;
+
+        if (active && IsModuleAvailable(suit, (module.Owner, installed)))
+            SetModuleActive(suit, (module.Owner, installed), true);
     }
 }

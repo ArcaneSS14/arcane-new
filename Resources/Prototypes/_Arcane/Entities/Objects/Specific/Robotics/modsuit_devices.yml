@@ -188,3 +188,49 @@
     price: 0
   - type: PhysicalComposition
     materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleStamper
+  name: MOD stamper module
+  description: A wrist-mounted stamp with approved and denied settings.
+  components:
+  - type: Sprite
+    state: stamp
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.1
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceStampApproved
+  - type: ModDeviceSelector
+    entries:
+    - prototype: ModsuitDeviceStampApproved
+    - prototype: ModsuitDeviceStampDenied
+  - type: UserInterface
+    interfaces:
+      enum.RadialSelectorUiKey.Key:
+        type: RadialSelectorMenuBUI
+
+- type: entity
+  parent: RubberStampApproved
+  id: ModsuitDeviceStampApproved
+  name: MOD stamper (approved)
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: RubberStampDenied
+  id: ModsuitDeviceStampDenied
+  name: MOD stamper (denied)
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
