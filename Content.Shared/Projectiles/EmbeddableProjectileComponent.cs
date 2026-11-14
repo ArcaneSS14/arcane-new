@@ -1,4 +1,5 @@
 using System.Numerics;
+using Content.Shared.Whitelist; // Arcane
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 
@@ -34,6 +35,11 @@ public sealed partial class EmbeddableProjectileComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool EmbedOnThrow = true;
+
+    // Arcane-Edit-Start: restrict selected thrown projectiles to eligible targets.
+    [DataField, AutoNetworkedField]
+    public EntityWhitelist? ThrowEmbedWhitelist;
+    // Arcane-Edit-End
 
     /// <summary>
     /// How far into the entity should we offset (0 is wherever we collided).

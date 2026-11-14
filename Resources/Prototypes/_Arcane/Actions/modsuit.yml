@@ -74,6 +74,18 @@
   description: Uses the hydraulic arms to propel the wearer.
 
 - type: entity
+  parent: ActionModPowerKick
+  id: ActionModNinjaEnergyNet
+  name: Fire energy net
+  description: Launches a breakable hardlight net at the target.
+  components:
+  - type: TargetAction
+    checkCanAccess: false
+    range: 9
+  - type: WorldTargetAction
+    event: !type:ModNinjaNetActionEvent
+
+- type: entity
   parent: BaseAction
   id: ActionModLoaderMagnet
   name: Hydraulic magnet

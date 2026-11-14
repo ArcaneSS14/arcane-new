@@ -15,7 +15,9 @@
     - state: icon
   - type: Clothing
     sprite: Clothing/Back/Satchels/ninja.rsi
-  - !Remove type: SealableClothingVisuals
+  - type: SealableClothingVisuals
+    clothingVisuals:
+      back: []
   - type: ClothingSpeedModifier
     walkModifier: 1
     sprintModifier: 1
@@ -24,6 +26,11 @@
     storageInsertSound: null
   - type: ModSuit
     theme: ModThemeNinja
+    inbuiltModules:
+    - ModsuitModuleNinjaStarDispenser
+    - ModsuitModuleNinjaRecall
+    - ModsuitModuleNinjaStimulant
+    - ModsuitModuleNinjaEnergyNet
     parts:
       head: ClothingModsuitHelmetNinja
       outerClothing: ClothingModsuitChestplateNinja
@@ -35,6 +42,7 @@
       - ModsuitCoreNinja
   - type: NinjaSuit
     empAction: null
+    recallKatanaAction: null
   - type: EmpResistance
     strengthMultiplier: 0
   - type: ToggleClothing
@@ -49,11 +57,6 @@
       minVisibility: 0.1
       lastVisibility: 0.1
       shimmerFrequency: 0.05
-  - type: ItemCreator
-    action: ActionCreateThrowingStar
-    charge: 14.4
-    spawnedPrototype: ThrowingStarNinja
-    noPowerPopup: ninja-no-power
 
 - type: entity
   parent: ModsuitCoreStandard

@@ -54,8 +54,9 @@ public abstract partial class SharedNinjaSuitSystem : EntitySystem
     private void OnMapInit(Entity<NinjaSuitComponent> ent, ref MapInitEvent args)
     {
         var (uid, comp) = ent;
-        _actionContainer.EnsureAction(uid, ref comp.RecallKatanaActionEntity, comp.RecallKatanaAction);
-        // Arcane-Edit-Start: the MOD has its EMP action on a separate module.
+        // Arcane-Edit-Start: the MOD provides these actions through modules.
+        if (comp.RecallKatanaAction is { } recall)
+            _actionContainer.EnsureAction(uid, ref comp.RecallKatanaActionEntity, recall);
         if (comp.EmpAction is { } emp)
             _actionContainer.EnsureAction(uid, ref comp.EmpActionEntity, emp);
         // Arcane-Edit-End
@@ -71,8 +72,9 @@ public abstract partial class SharedNinjaSuitSystem : EntitySystem
             return;
 
         var comp = ent.Comp;
-        args.AddAction(ref comp.RecallKatanaActionEntity, comp.RecallKatanaAction);
-        // Arcane-Edit-Start: the MOD has its EMP action on a separate module.
+        // Arcane-Edit-Start: the MOD provides these actions through modules.
+        if (comp.RecallKatanaAction is { } recall)
+            args.AddAction(ref comp.RecallKatanaActionEntity, recall);
         if (comp.EmpAction is { } emp)
             args.AddAction(ref comp.EmpActionEntity, emp);
         // Arcane-Edit-End

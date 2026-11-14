@@ -29,7 +29,7 @@ public sealed partial class NinjaSuitComponent : Component
     /// The action id for recalling a bound energy katana
     /// </summary>
     [DataField]
-    public EntProtoId RecallKatanaAction = "ActionRecallKatana";
+    public EntProtoId? RecallKatanaAction = "ActionRecallKatana"; // Arcane-Edit: optional for suits with a separate recall module.
 
     [DataField, AutoNetworkedField]
     public EntityUid? RecallKatanaActionEntity;

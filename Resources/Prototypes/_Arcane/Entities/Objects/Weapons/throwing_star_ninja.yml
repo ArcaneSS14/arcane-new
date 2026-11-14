@@ -1,0 +1,29 @@
+- type: entity
+  parent: ThrowingStar
+  id: ThrowingStarNinjaEnergy
+  name: energy throwing star
+  description: A Spider Clan shuriken that disrupts electronics on impact and pulses while embedded.
+  categories: [HideSpawnMenu]
+  components:
+  - !Remove type: HolidayVisuals
+  - !Remove type: GenericVisualizer
+  - !Remove type: StaminaDamageOnCollide
+  - !Remove type: StaminaDamageOnEmbed
+  - type: Sprite
+    layers:
+    - state: icon
+      color: "#8cddff"
+      shader: unshaded
+  - type: NinjaEnergyStar
+  - type: TimedDespawn
+    lifetime: 30
+  - type: EmbeddableProjectile
+    deleteOnRemove: true
+    throwEmbedWhitelist:
+      components: [MobState]
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 4
+        Piercing: 8
+      armorPenetration: 0.75
