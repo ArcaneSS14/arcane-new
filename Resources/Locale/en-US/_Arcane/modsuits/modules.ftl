@@ -18,3 +18,4 @@ modsuit-sphere-buckled = Unbuckle before transforming into a sphere.
 modsuit-sphere-ensnared = Free yourself before transforming into a sphere.
 modsuit-sphere-missile-pressure = The atmospheric pressure is too high for the micromissiles.
 modsuit-transport-already-linked = Release the current hardlight bag first.
+modsuit-hat-slot = Hat mount

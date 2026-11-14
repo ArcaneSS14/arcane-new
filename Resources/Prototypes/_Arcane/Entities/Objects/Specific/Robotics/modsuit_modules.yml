@@ -251,6 +251,64 @@
 
 - type: entity
   parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinInstrument
+  name: integrated MOD instrument module
+  description: Opens the helmet's built-in synthesizer.
+  components:
+  - type: Sprite
+    state: bikehorn
+  - type: ModModule
+    moduleType: Usable
+    requiredParts: [ head ]
+  - type: ModInstrumentModule
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinGrip
+  name: reinforced grip
+  description: Powered servos in the gauntlets strengthen the wearer's grabs.
+  components:
+  - type: Sprite
+    state: clamp
+  - type: ModModule
+    requiredParts: [ gloves ]
+  - type: ModGrantComponentsModule
+    slot: gloves
+    components:
+    - type: ModGrip
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleHatStabilizer
+  name: MOD hat stabilizer module
+  description: Holds a hat on the MOD helmet, even when the suit is unsealed.
+  components:
+  - type: Sprite
+    state: hat_holder
+  - type: ModModule
+    allowFlags: Inactive
+    requiredParts: [ head ]
+  - type: ModHatStabilizerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleMagneticHarness
+  name: MOD magnetic harness module
+  description: Recalls dropped firearms that were previously worn in the suit storage or back slot.
+  components:
+  - type: Sprite
+    state: mag_harness
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.2
+    requiredParts: [ outerClothing ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModMagneticHarness
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
   id: ModsuitModuleBuiltinSecHud
   name: integrated security visor
   description: A built-in visor for tracking crew jobs, mindshields and criminal records.

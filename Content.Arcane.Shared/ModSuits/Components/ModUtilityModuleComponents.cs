@@ -25,3 +25,6 @@ public sealed partial class ModSpawnModuleComponent : Component
     [DataField]
     public bool ToHand;
 }
+
+[RegisterComponent, Access(typeof(ModSuitSystem))]
+public sealed partial class ModInstrumentModuleComponent : Component;

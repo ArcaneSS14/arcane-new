@@ -167,6 +167,9 @@
             "name": "antigrav"
         },
         {
+            "name": "hat_holder"
+        },
+        {
             "name": "stamp"
         },
         {
@@ -180,6 +183,9 @@
         },
         {
             "name": "pepper_shoulder"
+        },
+        {
+            "name": "mag_harness"
         },
         {
             "name": "emp_pulse"

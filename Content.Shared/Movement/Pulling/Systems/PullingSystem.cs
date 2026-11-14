@@ -1,6 +1,7 @@
 // <Trauma>
 using Content.Trauma.Common.Heretic;
 using Content.Trauma.Common.MartialArts;
+using Content.Arcane.Common.ModSuits; // Arcane
 using Content.Shared.Weapons.Melee;
 // </Trauma>
 using Content.Shared.ActionBlocker;
@@ -337,7 +338,10 @@ public sealed partial class PullingSystem : EntitySystem
 
         var ev = new GetGrabMovespeedEvent(speed);
         RaiseLocalEvent(uid, ref ev);
-        args.ModifySpeed(ev.Speed);
+        var grabModifiers = new ModifyGrabEvent(); // Arcane
+        if (component.GrabStage != GrabStage.No)
+            RaiseLocalEvent(uid, ref grabModifiers);
+        args.ModifySpeed(ev.Speed * grabModifiers.SpeedMultiplier);
         // </Trauma>
 
         if (TryComp<HeldSpeedModifierComponent>(component.Pulling, out var heldMoveSpeed) && component.Pulling.HasValue)

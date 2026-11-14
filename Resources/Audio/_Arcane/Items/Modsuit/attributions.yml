@@ -1,4 +1,4 @@
-- files: ["ballin.ogg", "ballout.ogg", "sonic_jackhammer.ogg"]
+- files: ["ballin.ogg", "ballout.ogg", "sonic_jackhammer.ogg", "gravhit.ogg"]
   license: "CC-BY-SA-3.0"
   copyright: "Taken from tgstation at commit 5ee81d6, converted to mono"
   source: "https://github.com/tgstation/tgstation/tree/5ee81d6/sound"

@@ -1,6 +1,7 @@
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Goobstation.Shared.Clothing;
 using Content.Shared.Actions;
+using Content.Shared.Instruments;
 using Content.Shared.Inventory;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
@@ -143,6 +144,9 @@ public sealed partial class ModSuitSystem
     {
         if (part.Comp.Sealed == sealedState)
             return;
+
+        if (!sealedState && part.Comp.Slot == "head" && HasModInstrument(part))
+            _ui.CloseUi(part.Owner, InstrumentUiKey.Key);
 
         if (sealedState && part.Comp.SealedComponents is { } registry)
         {

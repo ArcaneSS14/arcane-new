@@ -74,3 +74,10 @@
   cost:
     Telecrystal: 10
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleMagneticHarness
+  productEntity: ModsuitModuleMagneticHarness
+  cost:
+    Telecrystal: 5
+  categories: [ UplinkWearables ]

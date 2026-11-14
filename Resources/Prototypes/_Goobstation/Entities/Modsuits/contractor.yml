@@ -11,6 +11,7 @@
       sprite: _Goobstation/Clothing/OuterClothing/Modsuits/contractor.rsi
     - type: ModSuit # Arcane
       theme: ModThemeContractor
+      inbuiltModules: [ ModsuitModuleBuiltinInstrument, ModsuitModuleBuiltinGrip ]
       parts:
         head: ClothingModsuitHelmetContractor
         gloves: ClothingModsuitGauntletsContractor

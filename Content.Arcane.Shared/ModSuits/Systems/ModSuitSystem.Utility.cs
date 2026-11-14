@@ -1,5 +1,10 @@
+using Content.Arcane.Common.ModSuits;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Goobstation.Shared.Loudspeaker.Components;
+using Content.Shared.Instruments;
+using Content.Shared.Inventory;
+using Content.Shared.Inventory.VirtualItem;
+using Content.Shared.UserInterface;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 
@@ -9,6 +14,8 @@ public sealed partial class ModSuitSystem
 {
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private IRobustRandom _utilityRandom = default!;
+    [Dependency] private ActivatableUISystem _activatableUi = default!;
+    [Dependency] private SharedInstrumentSystem _instruments = default!;
 
     private void InitializeUtilityModules()
     {
@@ -17,6 +24,40 @@ public sealed partial class ModSuitSystem
         SubscribeLocalEvent<ModLoudspeakerModuleComponent, EntityTerminatingEvent>(OnLoudspeakerTerminating);
         SubscribeLocalEvent<ModSoundModuleComponent, ModModuleUsedEvent>(OnSoundModuleUsed);
         SubscribeLocalEvent<ModSpawnModuleComponent, ModModuleUsedEvent>(OnSpawnModuleUsed);
+        SubscribeLocalEvent<ModInstrumentModuleComponent, ModModuleUsedEvent>(OnInstrumentModuleUsed);
+        SubscribeLocalEvent<InventoryComponent, ModifyGrabEvent>(OnModifyModGrab);
+    }
+
+    private void OnInstrumentModuleUsed(Entity<ModInstrumentModuleComponent> module, ref ModModuleUsedEvent args)
+    {
+        if (args.Handled || GetDeployedPart(args.Suit, "head") is not { } helmet
+            || !HasModInstrument(helmet)
+            || !TryComp(helmet, out ActivatableUIComponent? instrumentUi))
+            return;
+
+        args.Handled = _activatableUi.InteractUI(args.User, helmet, instrumentUi, InstrumentUiKey.Key);
+    }
+
+    private bool HasModInstrument(EntityUid helmet)
+    {
+        SharedInstrumentComponent? instrument = null;
+        return _instruments.ResolveInstrument(helmet, ref instrument);
+    }
+
+    private void OnModifyModGrab(Entity<InventoryComponent> wearer, ref ModifyGrabEvent args)
+    {
+        if (_hands.TryGetActiveItem(wearer.Owner, out var held)
+            && !HasComp<VirtualItemComponent>(held))
+            return;
+
+        if (!_inventory.TryGetSlotEntity(wearer, "gloves", out var gloves, wearer.Comp)
+            || !HasComp<ModGripComponent>(gloves))
+            return;
+
+        args.UpgradeSoft = true;
+        args.EscapeMultiplier *= 0.8f;
+        args.EscapeOffset -= 0.1f;
+        args.SpeedMultiplier *= 2f;
     }
 
     private void OnLoudspeakerActivated(Entity<ModLoudspeakerModuleComponent> module, ref ModModuleActivatedEvent args)

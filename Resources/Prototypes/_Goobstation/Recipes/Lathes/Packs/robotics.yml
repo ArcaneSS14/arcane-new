@@ -81,6 +81,8 @@
   - ModsuitModuleDrill # Arcane
   - ModsuitModulePatientTransport # Arcane
   - ModsuitModuleCriminalCapture # Arcane
+  - ModsuitModuleHatStabilizer # Arcane
+  - ModsuitModuleMagneticHarness # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

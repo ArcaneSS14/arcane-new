@@ -22,8 +22,11 @@ using Content.Shared.DoAfter;
 using Content.Shared.Emp;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Instruments;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
+using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.NightVision;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Power.EntitySystems;
@@ -35,6 +38,7 @@ using Content.Shared.Storage;
 using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Wires;
+using Content.Trauma.Common.MartialArts;
 using Robust.Shared.Containers;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
@@ -764,6 +768,162 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.GetComponent<EntityStorageComponent>(bag).Contents.Contains(target), Is.False);
             Assert.That(SEntMan.HasComponent<ModTransportStasisComponent>(target), Is.False);
             Assert.That(SEntMan.HasComponent<MumbleAccentComponent>(target), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task HatStabilizerReturnsTheSameHatWhenRemoved()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            var unit = SEntMan.SpawnAttachedTo("ClothingModsuitStandard", position);
+            var wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var module = SEntMan.SpawnAttachedTo("ModsuitModuleHatStabilizer", position);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var inventory = SEntMan.System<InventorySystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var slots = SEntMan.System<ItemSlotsSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+            Assert.That(inventory.TryEquip(wearer, unit, "back", force: true), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            var helmet = suit.Item2.PartEntities["head"];
+            var hat = SEntMan.SpawnAttachedTo("ClothingHeadHatBeret", position);
+            Assert.That(slots.TryInsert(helmet, ModHatHolderComponent.SlotId, hat, wearer), Is.True);
+            Assert.That(slots.GetItemOrNull(helmet, ModHatHolderComponent.SlotId), Is.EqualTo(hat));
+            Assert.That(suits.TryRemoveModule(suit, module, wearer), Is.True);
+            Assert.That(SEntMan.EntityExists(hat), Is.True);
+            Assert.That(SEntMan.System<SharedContainerSystem>().IsEntityInContainer(hat), Is.False);
+            Assert.That(slots.TryGetSlot(helmet, ModHatHolderComponent.SlotId, out _), Is.False);
+        });
+    }
+
+    [TestCase("ClothingModsuitContractor")]
+    [TestCase("ClothingModsuitCorporate")]
+    public async Task BuiltinInstrumentIsOnlyAvailableWithTheSealedHelmet(string prototype)
+    {
+        EntityUid wearer = default;
+        Entity<ModSuitComponent> suit = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            var control = SEntMan.SpawnAttachedTo(prototype, position);
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            var suits = SEntMan.System<ModSuitSystem>();
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(SEntMan.HasComponent<Content.Server.Instruments.InstrumentComponent>(suit.Comp.PartEntities["head"]), Is.False);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var helmet = suit.Comp.PartEntities["head"];
+            Assert.That(SEntMan.HasComponent<Content.Server.Instruments.InstrumentComponent>(helmet), Is.True);
+            var module = suit.Comp.ModulesContainer!.ContainedEntities.Single(uid =>
+                SEntMan.HasComponent<ModInstrumentModuleComponent>(uid));
+            Assert.That(SEntMan.System<SharedUserInterfaceSystem>().HasUi(helmet, InstrumentUiKey.Key), Is.True);
+            Assert.That(SEntMan.System<ModSuitSystem>().TryToggleActivation(suit, wearer), Is.True);
+            Assert.That(SEntMan.EntityExists(module), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var helmet = suit.Comp.PartEntities["head"];
+            Assert.That(SEntMan.HasComponent<Content.Server.Instruments.InstrumentComponent>(helmet), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task GripModifiesEscapeWhileItsGauntletsArePowered()
+    {
+        EntityUid wearer = default;
+        Entity<ModSuitComponent> suit = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitContractor", position);
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            var suits = SEntMan.System<ModSuitSystem>();
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var gloves = suit.Comp.PartEntities["gloves"];
+            Assert.That(SEntMan.HasComponent<ModGripComponent>(gloves), Is.True);
+            var target = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords.Offset(new Vector2(0.8f, 0)));
+            var puller = SEntMan.GetComponent<PullerComponent>(wearer);
+            var pullable = SEntMan.GetComponent<PullableComponent>(target);
+            var pulling = SEntMan.System<PullingSystem>();
+            Assert.That(pulling.TryStartPull(wearer, target, grabStageOverride: GrabStage.Hard), Is.True);
+            Assert.That(pullable.GrabEscapeChance, Is.EqualTo(puller.EscapeChances[GrabStage.Hard] * 0.8f - 0.1f).Within(0.0001f));
+            Assert.That(pulling.TryStopPull(target, pullable, wearer, ignoreGrab: true), Is.True);
+            Assert.That(SEntMan.System<ModSuitSystem>().TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() => Assert.That(
+            SEntMan.HasComponent<ModGripComponent>(suit.Comp.PartEntities["gloves"]), Is.False));
+    }
+
+    [Test]
+    public async Task MagneticHarnessReturnsTheOriginalEquippedGun()
+    {
+        await AddGravity();
+        EntityUid wearer = default;
+        EntityUid gun = default;
+        Entity<ModSuitComponent> suit = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", position);
+            var module = SEntMan.SpawnAttachedTo("ModsuitModuleMagneticHarness", position);
+            suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var inventory = SEntMan.System<InventorySystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(inventory.TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.HasComponent<ModMagneticHarnessComponent>(wearer), Is.True);
+            var inventory = SEntMan.System<InventorySystem>();
+            var position = MapData.GridCoords;
+            gun = SEntMan.SpawnAttachedTo("WeaponShotgunKammerer", position);
+            Assert.That(inventory.TryEquip(wearer, gun, "suitstorage", force: true), Is.True);
+            Assert.That(SEntMan.GetComponent<ModMagnetizedGunComponent>(gun).Wearer, Is.EqualTo(wearer));
+            Assert.That(inventory.TryUnequip(wearer, "suitstorage", force: true), Is.True);
+            SEntMan.System<SharedTransformSystem>().SetCoordinates(gun, position.Offset(new Vector2(1f, 0)));
+        });
+
+        await RunSeconds(4);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "suitstorage", out var returned), Is.True);
+            Assert.That(returned, Is.EqualTo(gun));
         });
     }
 

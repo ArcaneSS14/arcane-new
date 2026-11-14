@@ -17,7 +17,7 @@
   components:
   - type: ModSuit # Arcane
     theme: ModThemeCorporate
-    inbuiltModules: [ ModsuitModuleBuiltinSphereTransformCorporate ] # Arcane
+    inbuiltModules: [ ModsuitModuleBuiltinSphereTransformCorporate, ModsuitModuleBuiltinInstrument, ModsuitModuleBuiltinGrip ] # Arcane
     parts:
       head: ClothingModsuitHelmetCorporate
       gloves: ClothingModsuitGauntletsCorporate
@@ -37,6 +37,34 @@
   name: Corporate modsuit helmet
   description: A state-of-the-art helmet designed by NanoTrasen for the Corporate modsuit. It includes a built-in HUD.
   categories: [HideSpawnMenu]
+  components: # Arcane
+  - type: ActivatableUI
+    inHandsOnly: false
+    requireActiveHand: false
+    singleUser: true
+    verbText: verb-instrument-openui
+    key: enum.InstrumentUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.InstrumentUiKey.Key:
+        type: InstrumentBoundUserInterface
+  - type: ModPart
+    sealedComponents:
+    - type: Instrument
+      program: 62
+    - type: SwappableInstrument
+      instrumentList:
+        "Synth": {62: 0}
+        "Friend": {2: 0}
+        "Overdriven": {29: 0}
+        "Bass": {33: 0}
+        "Rock": {29: 0}
+        "Acoustic": {24: 0}
+        "Flute": {73: 0}
+        "Sax": {66: 0}
+  - type: ContainerContainer
+    containers:
+      mod-part-stored: !type:ContainerSlot
 
 - type: entity
   parent: [ ClothingModsuitChestplateApocryphal, BaseModsuitPieceCorporate ]
