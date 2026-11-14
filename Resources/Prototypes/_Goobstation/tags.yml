@@ -402,6 +402,9 @@
   id: ModsuitPlatingLoader # Arcane
 
 - type: Tag
+  id: ModsuitPlatingBrigMed # Arcane
+
+- type: Tag
   id: MonkStaff
 
 - type: Tag

@@ -36,3 +36,6 @@ modsuit-recycler-empty = The recycler is empty!
 modsuit-shooting-mode-off = Shooting assistant off.
 modsuit-shooting-mode-stormtrooper = Stormtrooper mode enabled.
 modsuit-shooting-mode-sharpshooter = Sharpshooter mode enabled.
+modsuit-theme-brigmed = Trauma
+modsuit-theme-syndicate = Syndicate
+modsuit-theme-elite = Elite Syndicate

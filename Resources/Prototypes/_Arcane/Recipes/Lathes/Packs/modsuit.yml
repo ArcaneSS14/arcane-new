@@ -11,6 +11,11 @@
   - ModsuitModuleThermalVisor
   - ModsuitModuleShockAbsorber
   - ModsuitModuleNightVisor
+  - ModsuitModuleCriminalCapture
+  - ModsuitModuleMagneticHarness
+  - ModsuitModuleProjectileDampener
+  - ModsuitModuleShootingAssistant
+  - ModsuitPlatingBrigMed
 
 - type: latheRecipePack
   id: ModsuitMedicalEquipment

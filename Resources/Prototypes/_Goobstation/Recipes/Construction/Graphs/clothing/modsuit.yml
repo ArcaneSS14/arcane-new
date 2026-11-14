@@ -133,6 +133,18 @@
         - tool: Anchoring
           doAfter: 1
 
+    - to: brigmed # Arcane
+      steps:
+        - tag: ModsuitPlatingBrigMed
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
+
   - node: standard
     entity: ClothingModsuitStandard
 
@@ -141,6 +153,9 @@
 
   - node: loader # Arcane
     entity: ClothingModsuitLoader
+
+  - node: brigmed # Arcane
+    entity: ClothingModsuitBrigMed
 
   - node: security
     entity: ClothingModsuitSecurity

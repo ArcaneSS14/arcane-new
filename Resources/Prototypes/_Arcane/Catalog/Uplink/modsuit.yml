@@ -130,3 +130,69 @@
   cost:
     Telecrystal: 10
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleEmpShield
+  productEntity: ModsuitModuleEmpShield
+  cost:
+    Telecrystal: 5
+  categories:
+  - UplinkWearables
+
+- type: listing
+  id: UplinkModsuitModuleEmpShieldAdvanced
+  productEntity: ModsuitModuleEmpShieldAdvanced
+  cost:
+    Telecrystal: 15
+  categories:
+  - UplinkWearables
+
+- type: listing
+  id: UplinkModsuitModuleHolster
+  productEntity: ModsuitModuleHolster
+  cost:
+    Telecrystal: 5
+  categories:
+  - UplinkWearables
+
+- type: listing
+  id: UplinkModsuitModuleWelding
+  productEntity: ModsuitModuleWelding
+  cost:
+    Telecrystal: 5
+  categories:
+  - UplinkWearables
+
+- type: listing
+  id: UplinkModsuitModuleHealthAnalyzer
+  productEntity: ModsuitModuleHealthAnalyzer
+  cost:
+    Telecrystal: 5
+  categories:
+  - UplinkWearables
+
+- type: listing
+  id: UplinkModsuitSyndicate
+  productEntity: ClothingModsuitSyndicateFilled
+  cost:
+    Telecrystal: 60
+  categories:
+  - UplinkWearables
+  conditions:
+  - !type:StoreWhitelistCondition
+    blacklist:
+      tags:
+      - ContractorUplink
+
+- type: listing
+  id: UplinkModsuitSyndicateElite
+  productEntity: ClothingModsuitSyndicateEliteFilled
+  cost:
+    Telecrystal: 90
+  categories:
+  - UplinkWearables
+  conditions:
+  - !type:StoreWhitelistCondition
+    whitelist:
+      tags:
+      - NukeOpsUplink

@@ -63,6 +63,17 @@
 
 - type: latheRecipe
   parent: BaseModsuitModuleRecipe
+  id: ModsuitPlatingBrigMed
+  result: ModsuitPlatingBrigMed
+  materials:
+    Steel: 300
+    Silver: 100
+    Plasteel: 50
+    Glass: 50
+    Plasma: 50
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
   id: ModsuitCoreStandardMicroreactor
   result: ModsuitCoreStandardMicroreactor
   completetime: 10
