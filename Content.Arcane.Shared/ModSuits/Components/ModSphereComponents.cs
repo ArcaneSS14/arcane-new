@@ -183,7 +183,7 @@ public sealed partial class ModSphereFormComponent : Component
     public bool Thrusting;
 
     [DataField, AutoNetworkedField]
-    public List<EntityUid> Hits = new();
+    public List<NetEntity> Hits = new();
 
     [DataField, AutoNetworkedField]
     public TimeSpan LastImpact;

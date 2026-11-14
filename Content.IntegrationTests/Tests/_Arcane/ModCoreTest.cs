@@ -49,6 +49,7 @@ using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Wires;
 using Content.Trauma.Common.MartialArts;
 using Robust.Shared.Containers;
+using Robust.Shared.Map;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
@@ -656,6 +657,74 @@ public sealed class ModCoreTest : InteractionTest
     }
 
     [Test]
+    public async Task DrillReturnsToModuleAndCutsRockInMiningSphere()
+    {
+        await AddGravity();
+        await SetTile(Plating, grid: MapData.Grid);
+        EntityUid wearer = default;
+        EntityUid drill = default;
+        EntityUid rock = default;
+        Entity<ModSuitComponent> suit = default;
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", at);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitMining", at);
+            drill = SEntMan.SpawnAttachedTo("ModsuitModuleDrill", at);
+            suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var slots = SEntMan.System<ItemSlotsSystem>();
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", at);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(slots.TryEject(control, "mod-core", null, out _), Is.True);
+            Assert.That(slots.TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(suits.TryInstallModule(suit, drill, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True, slot);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var deploy = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(drill, deploy);
+            Assert.That(deploy.Handled, Is.True);
+            var device = SEntMan.GetComponent<ModDeviceModuleComponent>(drill).DeviceEntity!.Value;
+            var hands = SEntMan.System<SharedHandsSystem>();
+            Assert.That(hands.TryGetActiveItem(wearer, out var held) && held == device, Is.True);
+            var retract = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(drill, retract);
+            Assert.That(retract.Handled, Is.True);
+            Assert.That(hands.TryGetActiveItem(wearer, out _), Is.False);
+            Assert.That(SEntMan.System<SharedContainerSystem>().TryGetContainingContainer(device, out var storage), Is.True);
+            Assert.That(storage!.Owner, Is.EqualTo(drill));
+
+            var sphere = suit.Comp.ModulesContainer!.ContainedEntities.Single(SEntMan.HasComponent<ModSphereTransformModuleComponent>);
+            var roll = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(sphere, roll);
+            Assert.That(roll.Handled, Is.True);
+            Assert.That(SEntMan.GetComponent<ModSphereFormComponent>(wearer).Drill, Is.EqualTo(drill));
+
+            var at = MapData.GridCoords.Offset(new Vector2(0.65f, 0.5f));
+            Transform.SetCoordinates(wearer, at);
+            rock = SEntMan.SpawnAttachedTo("AsteroidRockCoal", MapData.GridCoords.Offset(new Vector2(1.5f, 0.5f)));
+            SEntMan.System<SharedPhysicsSystem>().SetLinearVelocity(wearer, new Vector2(7f, 0f));
+        });
+
+        await RunTicksSync(3);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(rock), Is.False);
+            Assert.That(SEntMan.EntityQuery<MetaDataComponent>().Any(meta => meta.EntityPrototype?.ID == "Coal1Unprocessed"), Is.True);
+        });
+    }
+
+    [Test]
     public async Task CorporateSphereRestoresWearerAndEquipmentOnPowerLoss()
     {
         await AddGravity();
@@ -686,6 +755,22 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(form.PrimaryColor, Is.EqualTo(Color.FromHex("#254022")));
             var missileAction = SEntMan.GetComponent<ModSphereTransformModuleComponent>(module).MissileActionEntity!.Value;
             Assert.That(SEntMan.System<SharedActionsSystem>().GetAction(missileAction)?.Comp.AttachedEntity, Is.EqualTo(wearer));
+
+            var missile = new ModSphereMissileActionEvent
+            {
+                Performer = wearer,
+                Target = MapData.GridCoords.Offset(new Vector2(4f, 0f)),
+            };
+            SEntMan.EventBus.RaiseLocalEvent(module, missile);
+            Assert.That(missile.Handled, Is.True);
+        });
+
+        await RunTicksSync(2);
+        await Server.WaitAssertion(() =>
+        {
+            var module = SEntMan.GetComponent<ModSphereFormComponent>(wearer).Module!.Value;
+            var projectiles = SEntMan.EntityQuery<ProjectileComponent, ModMiningMissileComponent>();
+            Assert.That(projectiles.Any(pair => pair.Item1.Shooter == wearer && pair.Item1.Weapon == module), Is.True);
 
             var off = new ModModuleActionEvent { Performer = wearer };
             SEntMan.EventBus.RaiseLocalEvent(module, off);
@@ -1008,6 +1093,95 @@ public sealed class ModCoreTest : InteractionTest
             var suits = SEntMan.System<ModSuitSystem>();
             Assert.That(suits.TryToggleActivation((control, SEntMan.GetComponent<ModSuitComponent>(control)), wearer), Is.True);
             Assert.That(SEntMan.HasComponent<ModShootingAssistantComponent>(wearer), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task KinesisReleasesHeldItemWhenSuitLosesPower()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid target = default;
+        NetEntity targetNet = default;
+        NetCoordinates cursor = default;
+        BodyStatus previousStatus = default;
+        var control = await EquipPoweredEngineerSuit("ModsuitModuleKinesis", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+        var originalAttachment = ServerSession!.AttachedEntity;
+        try
+        {
+            await Server.WaitAssertion(() =>
+            {
+                var at = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+                Transform.SetCoordinates(wearer, at);
+                target = SEntMan.SpawnAttachedTo("Crowbar", at.Offset(new Vector2(0.8f, 0f)));
+                targetNet = SEntMan.GetNetEntity(target);
+                cursor = SEntMan.GetNetCoordinates(at.Offset(new Vector2(2f, 0f)));
+                previousStatus = SEntMan.GetComponent<PhysicsComponent>(target).BodyStatus;
+                var toggle = new ModModuleActionEvent { Performer = wearer };
+                SEntMan.EventBus.RaiseLocalEvent(module, toggle);
+                Assert.That(toggle.Handled, Is.True);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, wearer);
+            });
+
+            await RunTicksSync(5);
+            await Client.WaitPost(() => CEntMan.EntityNetManager!.SendSystemNetworkMessage(new ModKinesisGrabEvent
+            {
+                Target = targetNet,
+                Cursor = cursor,
+            }));
+            await RunTicksSync(8);
+
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.GetComponent<ModKinesisModuleComponent>(module).Held, Is.EqualTo(target));
+                Assert.That(SEntMan.GetComponent<PhysicsComponent>(target).LinearVelocity.X, Is.GreaterThan(0f));
+                var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+                var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value;
+                SEntMan.System<SharedBatterySystem>().SetCharge(battery.AsNullable(), 0f);
+                Assert.That(SEntMan.HasComponent<ModKinesisHeldComponent>(target), Is.False);
+                Assert.That(SEntMan.GetComponent<PhysicsComponent>(target).BodyStatus, Is.EqualTo(previousStatus));
+            });
+        }
+        finally
+        {
+            await Server.WaitPost(() => Server.PlayerMan.SetAttachedEntity(ServerSession, originalAttachment));
+        }
+    }
+
+    [Test]
+    public async Task PowerKickChargesAndHitsTarget()
+    {
+        await AddGravity();
+        EntityUid wearer = default;
+        EntityUid module = default;
+        EntityUid target = default;
+        await EquipPoweredEngineerSuit("ModsuitModulePowerKick", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            Transform.SetCoordinates(wearer, at);
+            var destination = at.Offset(Vector2.UnitX);
+            target = SEntMan.SpawnAttachedTo("WallSolid", destination);
+            var action = new ModPowerKickActionEvent { Performer = wearer, Target = destination, Entity = target };
+            SEntMan.EventBus.RaiseLocalEvent(module, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(SEntMan.HasComponent<ModPowerKickingComponent>(wearer), Is.False);
+        });
+
+        await RunSeconds(2);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.System<DamageableSystem>().GetTotalDamage(target) > 0, Is.True);
+            Assert.That(SEntMan.HasComponent<ModPowerKickingComponent>(wearer), Is.False);
         });
     }
 

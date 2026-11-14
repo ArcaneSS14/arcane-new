@@ -130,7 +130,7 @@ public sealed partial class ModSphereRollController : VirtualController
     [SubscribeLocalEvent]
     private void OnPreventCollide(Entity<ModSphereFormComponent> ent, ref PreventCollideEvent args)
     {
-        if (ent.Comp.Hits.Contains(args.OtherEntity))
+        if (TryGetNetEntity(args.OtherEntity, out var other) && ent.Comp.Hits.Contains(other.Value))
             args.Cancelled = true;
     }
 
@@ -229,9 +229,9 @@ public sealed partial class ModSphereRollController : VirtualController
 
         var position = TransformSystem.GetWorldPosition(xform);
         var removed = ent.Comp.Hits.RemoveAll(hit =>
-            TerminatingOrDeleted(hit)
-            || Transform(hit).MapID != xform.MapID
-            || (TransformSystem.GetWorldPosition(hit) - position).LengthSquared() > HitForgetRange * HitForgetRange);
+            !TryGetEntity(hit, out var uid) || TerminatingOrDeleted(uid)
+            || Transform(uid.Value).MapID != xform.MapID
+            || (TransformSystem.GetWorldPosition(uid.Value) - position).LengthSquared() > HitForgetRange * HitForgetRange);
 
         return removed > 0;
     }
@@ -253,7 +253,8 @@ public sealed partial class ModSphereRollController : VirtualController
         foreach (var mob in _mobs)
         {
             if (mob.Owner == ent.Owner
-                || ent.Comp.Hits.Contains(mob)
+                || !TryGetNetEntity(mob.Owner, out var mobId)
+                || ent.Comp.Hits.Contains(mobId.Value)
                 || !_mobState.IsAlive(mob, mob.Comp)
                 || _standing.IsDown(mob.Owner))
                 continue;
@@ -263,7 +264,7 @@ public sealed partial class ModSphereRollController : VirtualController
             if (distance > range || distance > 0.01f && Vector2.Dot(toMob / distance, direction) < KnockdownCone)
                 continue;
 
-            ent.Comp.Hits.Add(mob);
+            ent.Comp.Hits.Add(mobId.Value);
             hit = true;
             _stun.TryKnockdown(mob.Owner, module.KnockdownTime, drop: false);
             _audio.PlayPredicted(module.KnockdownSound, mob, ent);
@@ -297,7 +298,8 @@ public sealed partial class ModSphereRollController : VirtualController
         _lookup.GetEntitiesInRange(xform.MapID, position, reach + 0.5f, _statics, LookupFlags.Static);
         foreach (var rock in _statics)
         {
-            if (ent.Comp.Hits.Contains(rock) || !_whitelist.IsWhitelistPass(drillComp.Whitelist, rock))
+            if (!TryGetNetEntity(rock.Owner, out var rockId) || ent.Comp.Hits.Contains(rockId.Value)
+                || !_whitelist.IsWhitelistPass(drillComp.Whitelist, rock))
                 continue;
 
             var bounds = _lookup.GetWorldAABB(rock);
@@ -312,7 +314,7 @@ public sealed partial class ModSphereRollController : VirtualController
             if (speed < drillComp.MinSpeed || !_modSuit.HasModuleCharge(suit, drillComp.PowerCost))
                 break;
 
-            ent.Comp.Hits.Add(rock);
+            ent.Comp.Hits.Add(rockId.Value);
             drilled = true;
             speed -= drillComp.SpeedCost;
             velocity = speed <= 0f ? Vector2.Zero : Vector2.Normalize(velocity) * speed;
