@@ -38,6 +38,7 @@
   - ModsuitGauntlets
   - ModsuitShell
   - ModsuitPlatingExternal
+  - ModsuitPlatingMining # Arcane
   - ModsuitCoreStandard # Arcane
   - ModsuitCoreStandardMicroreactor # Arcane
   - ModsuitCorePlasma # Arcane
@@ -79,6 +80,7 @@
   - ModsuitModuleOreBag # Arcane
   - ModsuitModuleClamp # Arcane
   - ModsuitModuleDrill # Arcane
+  - ModsuitModuleCandelaSpool # Arcane
   - ModsuitModulePatientTransport # Arcane
   - ModsuitModuleCriminalCapture # Arcane
   - ModsuitModuleHatStabilizer # Arcane

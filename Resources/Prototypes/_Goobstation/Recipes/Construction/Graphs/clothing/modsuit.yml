@@ -109,9 +109,38 @@
 
         - tool: Anchoring
           doAfter: 1
+    - to: mining # Arcane
+      steps:
+        - tag: ModsuitPlatingMining
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
+
+    - to: loader # Arcane
+      steps:
+        - tag: ModsuitPlatingLoader
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
 
   - node: standard
     entity: ClothingModsuitStandard
+
+  - node: mining # Arcane
+    entity: ClothingModsuitMining
+
+  - node: loader # Arcane
+    entity: ClothingModsuitLoader
 
   - node: security
     entity: ClothingModsuitSecurity

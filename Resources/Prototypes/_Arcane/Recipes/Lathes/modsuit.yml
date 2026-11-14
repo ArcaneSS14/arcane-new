@@ -564,3 +564,23 @@
     Steel: 800
     Silver: 200
     Gold: 100
+
+- type: latheRecipe
+  id: ModsuitPlatingMining
+  result: ModsuitPlatingMining
+  categories:
+  - Modsuit
+  completetime: 5
+  materials:
+    Steel: 300
+    Plasma: 100
+    Glass: 50
+    Silver: 50
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleCandelaSpool
+  result: ModsuitModuleCandelaSpool
+  materials:
+    Steel: 400
+    Glass: 100

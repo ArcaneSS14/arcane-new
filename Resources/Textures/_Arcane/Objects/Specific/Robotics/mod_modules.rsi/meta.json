@@ -182,6 +182,15 @@
             "name": "clamp_loader"
         },
         {
+            "name": "launch_loader"
+        },
+        {
+            "name": "magnet_loader"
+        },
+        {
+            "name": "ash_accretion"
+        },
+        {
             "name": "sphere"
         },
         {
@@ -261,6 +270,9 @@
         },
         {
             "name": "cleaner"
+        },
+        {
+            "name": "candela_spool"
         }
     ]
 }

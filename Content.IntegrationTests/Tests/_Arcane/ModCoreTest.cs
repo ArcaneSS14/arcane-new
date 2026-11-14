@@ -1303,6 +1303,8 @@ public sealed class ModCoreTest : InteractionTest
                 ("ClothingModsuitSuspiciousPowerCell", "PowerCellHigh"),
                 ("ClothingModsuitContractor", "PowerCellVortex"),
                 ("ClothingModsuitCorporate", "PowerCellVortex"),
+                ("ClothingModsuitMining", null),
+                ("ClothingModsuitLoader", null),
                 ("ClothingModsuitResponsoryEngineering", "PowerCellBluespaceReactor"),
             };
 
@@ -1331,6 +1333,23 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(containers.TryGetContainingContainer(custom, out var installed), Is.True);
             Assert.That(installed!.Owner, Is.Not.EqualTo(shell));
             Assert.That(slots.GetItemOrNull(installed.Owner, "mod-core"), Is.EqualTo(custom));
+
+            foreach (var (node, module) in new[]
+            {
+                ("mining", "ModsuitModuleBuiltinSphereTransform"),
+                ("loader", "ModsuitModuleBuiltinLoaderMagnet"),
+            })
+            {
+                var empty = SEntMan.SpawnAttachedTo("ModsuitShell", location);
+                var originalCore = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", location);
+                Assert.That(containers.TryGetContainer(empty, "mod-core", out var coreSlot), Is.True);
+                Assert.That(containers.Insert(originalCore, coreSlot!), Is.True);
+                Assert.That(SEntMan.System<ConstructionSystem>().ChangeNode(empty, null, node), Is.True);
+                Assert.That(containers.TryGetContainingContainer(originalCore, out var finished), Is.True);
+                var completed = SEntMan.GetComponent<ModSuitComponent>(finished!.Owner);
+                Assert.That(completed.ModulesContainer!.ContainedEntities.Any(uid =>
+                    SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID == module), Is.True);
+            }
         });
     }
 

@@ -115,7 +115,7 @@ public sealed partial class ModSuitSystem
             return;
 
         _audio.PlayPvs(module.Comp.ChargeSound, args.User);
-        _popup.PopupEntity(Loc.GetString("modsuit-power-kick-charge"), args.User, args.User);
+        _popup.PopupEntity(Loc.GetString(module.Comp.ChargePopup), args.User, args.User);
         args.Handled = true;
     }
 
@@ -152,13 +152,24 @@ public sealed partial class ModSuitSystem
         }
 
         args.Handled = true;
+        _audio.PlayPvs(module.Comp.LaunchSound, user);
     }
 
-    private bool CanFinishPowerKick(EntityUid module, EntityUid user) =>
-        TryGetInstalledModuleSuit(module, out var suit) && suit.Comp.Wearer == user
-        && GetDeployedPart(suit, "shoes") != null && suit.Comp.Powered
-        && suit.Comp.State == ModSuitState.Active && !_gravity.IsWeightless(user)
-        && _actionBlocker.CanInteract(user, suit) && !_containers.IsEntityInContainer(user);
+    private bool CanFinishPowerKick(EntityUid module, EntityUid user)
+    {
+        if (!TryGetInstalledModuleSuit(module, out var suit) || suit.Comp.Wearer != user
+            || !suit.Comp.Powered || suit.Comp.State != ModSuitState.Active || _gravity.IsWeightless(user)
+            || !_actionBlocker.CanInteract(user, suit) || _containers.IsEntityInContainer(user))
+            return false;
+
+        foreach (var slot in Comp<ModModuleComponent>(module).RequiredParts)
+        {
+            if (!IsPartDeployed(suit, slot))
+                return false;
+        }
+
+        return true;
+    }
 
     private void OnPowerKickHit(Entity<ModPowerKickingComponent> wearer, ref ThrowDoHitEvent args)
     {
