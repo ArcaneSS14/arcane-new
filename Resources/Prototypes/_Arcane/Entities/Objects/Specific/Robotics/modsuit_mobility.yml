@@ -1,0 +1,86 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleJetpack
+  name: MOD ion jetpack module
+  description: Electric thrusters that use the suit's charge for flight in space.
+  components:
+  - type: Sprite
+    state: jetpack
+  - type: Appearance
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 3
+    activePower: 20
+    requiredParts: [ outerClothing ]
+    incompatible:
+      tags: [ ModsuitModuleJetpack ]
+  - type: Jetpack
+  - type: ModJetpackModule
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleJetpack ]
+
+- type: entity
+  parent: ModsuitModuleJetpack
+  id: ModsuitModuleJetpackAdvanced
+  name: MOD advanced ion jetpack module
+  description: More efficient thrusters that improve acceleration and control in space.
+  components:
+  - type: Sprite
+    state: jetpack_advanced
+  - type: ModModule
+    activePower: 10
+  - type: Jetpack
+    acceleration: 1.6
+    weightlessModifier: 1.6
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleMagboots
+  name: MOD magnetic stability module
+  description: Powers magnets in the suit's boots, providing traction at the cost of movement speed.
+  components:
+  - type: Sprite
+    state: magnet
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ shoes ]
+    incompatible:
+      tags: [ ModsuitModuleGravity ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleGravity ]
+  - type: ModMagbootsModule
+  - type: ModGrantComponentsModule
+    slot: shoes
+    components:
+    - type: NoSlip
+  - type: ModSpeedModule
+    walkModifier: 0.85
+    sprintModifier: 0.85
+
+- type: entity
+  parent: ModsuitModuleMagboots
+  id: ModsuitModuleMagbootsAdvanced
+  name: MOD advanced magnetic stability module
+  description: Powers magnets in the suit's boots without slowing the wearer.
+  components:
+  - type: ModModule
+    complexity: 3
+    activePower: 0.6
+  - type: ModSpeedModule
+    walkModifier: 1
+    sprintModifier: 1
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleMouthhole
+  name: MOD eating apparatus module
+  description: Lets the wearer eat and drink while keeping the helmet sealed.
+  components:
+  - type: Sprite
+    state: apparatus
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ head ]
+  - type: ModMouthholeModule

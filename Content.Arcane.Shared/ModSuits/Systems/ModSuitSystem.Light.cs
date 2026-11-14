@@ -17,19 +17,13 @@ public sealed partial class ModSuitSystem
 
     private void OnLightActivationAttempt(Entity<ModLightModuleComponent> module, ref ModModuleActivateAttemptEvent args)
     {
-        if (GetLightMount(args.Suit, module.Comp.Slot) == null)
+        if (GetDeployedPart(args.Suit, module.Comp.Slot) == null)
             args.Cancelled = true;
     }
 
-    private EntityUid? GetLightMount(EntityUid suit, string slot) =>
-        TryComp(suit, out ModSuitComponent? control) && control.PartEntities.TryGetValue(slot, out var part)
-        && !TerminatingOrDeleted(part) && IsPartDeployed((suit, control), slot)
-            ? part
-            : null;
-
     private void OnLightActivated(Entity<ModLightModuleComponent> module, ref ModModuleActivatedEvent args)
     {
-        if (module.Comp.Light != null || GetLightMount(args.Suit, module.Comp.Slot) is not { } mount)
+        if (module.Comp.Light != null || GetDeployedPart(args.Suit, module.Comp.Slot) is not { } mount)
             return;
 
         // The module and the helmet's own flashlight can operate independently.

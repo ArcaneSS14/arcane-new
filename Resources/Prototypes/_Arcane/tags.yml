@@ -75,3 +75,9 @@
 
 - type: Tag
   id: ModsuitModuleVisor
+
+- type: Tag
+  id: ModsuitModuleJetpack
+
+- type: Tag
+  id: ModsuitModuleGravity

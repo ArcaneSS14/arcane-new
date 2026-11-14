@@ -28,6 +28,12 @@
             "name": "sechud_visor"
         },
         {
+            "name": "jetpack"
+        },
+        {
+            "name": "jetpack_advanced"
+        },
+        {
             "name": "regulator"
         },
         {
@@ -67,6 +73,9 @@
             "name": "tether"
         },
         {
+            "name": "magnet"
+        },
+        {
             "name": "health"
         },
         {
@@ -74,6 +83,9 @@
         },
         {
             "name": "injector"
+        },
+        {
+            "name": "apparatus"
         },
         {
             "name": "welding"

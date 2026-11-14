@@ -226,3 +226,52 @@
   materials:
     Steel: 200
     Plastic: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleMouthhole
+  result: ModsuitModuleMouthhole
+  materials:
+    Steel: 300
+    Glass: 100
+    Plastic: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleMagboots
+  result: ModsuitModuleMagboots
+  materials:
+    Steel: 600
+    Glass: 100
+    Silver: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleMagbootsAdvanced
+  result: ModsuitModuleMagbootsAdvanced
+  materials:
+    Steel: 1000
+    Silver: 300
+    Gold: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleJetpack
+  result: ModsuitModuleJetpack
+  completetime: 10
+  materials:
+    Steel: 1000
+    Glass: 100
+    Plasma: 500
+    Silver: 300
+    Gold: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleJetpackAdvanced
+  result: ModsuitModuleJetpackAdvanced
+  materials:
+    Steel: 1000
+    Plasma: 500
+    Gold: 200
+    Silver: 200

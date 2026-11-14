@@ -51,7 +51,7 @@ public sealed partial class IngestionSystem
 
     private void OnIngestionBlockerAttempt(Entity<IngestionBlockerComponent> entity, ref IngestionAttemptEvent args)
     {
-        if (!args.Cancelled && entity.Comp.Enabled)
+        if (!args.Cancelled && IsIngestionBlocked(entity)) // Arcane
             args.Cancelled = true;
     }
 
@@ -60,12 +60,24 @@ public sealed partial class IngestionSystem
     /// </summary>
     private void OnIngestionBlockerAttempt(Entity<IngestionBlockerComponent> entity, ref InventoryRelayedEvent<IngestionAttemptEvent> args)
     {
-        if (args.Args.Cancelled || !entity.Comp.Enabled)
+        if (args.Args.Cancelled || !IsIngestionBlocked(entity)) // Arcane
             return;
 
         args.Args.Cancelled = true;
         args.Args.Blocker = entity;
     }
+
+    // Arcane-Start: Equipment can permit oral intake without affecting respiratory protection.
+    private bool IsIngestionBlocked(Entity<IngestionBlockerComponent> blocker)
+    {
+        if (!blocker.Comp.Enabled)
+            return false;
+
+        var attempt = new BypassIngestionBlockerEvent();
+        RaiseLocalEvent(blocker, ref attempt);
+        return !attempt.Bypass;
+    }
+    // Arcane-End
 
     private void OnEdible(Entity<EdibleComponent> entity, ref EdibleEvent args)
     {

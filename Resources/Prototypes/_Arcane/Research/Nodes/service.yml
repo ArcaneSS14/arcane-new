@@ -153,6 +153,7 @@
   - type: General
     amount: 500
   recipeUnlocks:
+  - ModsuitModuleMouthhole
   - ElectricGrillMachineCircuitboard
   - MicrowaveMachineCircuitboard
   - FoodBowlBig

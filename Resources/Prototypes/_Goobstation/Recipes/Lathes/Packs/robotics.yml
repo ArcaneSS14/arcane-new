@@ -57,6 +57,11 @@
   - ModsuitModuleJanitorMister # Arcane
   - ModsuitModuleResinMister # Arcane
   - ModsuitModuleStamper # Arcane
+  - ModsuitModuleMouthhole # Arcane
+  - ModsuitModuleMagboots # Arcane
+  - ModsuitModuleMagbootsAdvanced # Arcane
+  - ModsuitModuleJetpack # Arcane
+  - ModsuitModuleJetpackAdvanced # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

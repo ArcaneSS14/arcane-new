@@ -249,10 +249,12 @@ public sealed partial class ModSuitSystem
 
     private bool IsModuleAvailable(Entity<ModSuitComponent> suit, Entity<ModModuleComponent> module)
     {
-        if (suit.Comp.State != ModSuitState.Active && !module.Comp.AllowFlags.HasFlag(ModModuleAllowFlags.Inactive))
+        var worksInactive = module.Comp.AllowFlags.HasFlag(ModModuleAllowFlags.Inactive);
+        if (suit.Comp.State != ModSuitState.Active && !worksInactive)
             return false;
 
-        return suit.Comp.Powered || module.Comp.IdlePower <= 0f && module.Comp.ActivePower <= 0f && module.Comp.UsePower <= 0f;
+        return suit.Comp.Powered || worksInactive && module.Comp.IdlePower <= 0f
+            && module.Comp.ActivePower <= 0f && module.Comp.UsePower <= 0f;
     }
 
     private void RefreshModuleAvailability(Entity<ModSuitComponent> suit)

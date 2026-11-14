@@ -84,6 +84,7 @@
   - MegaCellHyper
   - ModsuitCoreStandardMicroreactor
   - ModsuitModuleResinMister
+  - ModsuitModuleMagbootsAdvanced
   - SuperCapacitorStockPart
   - PhasicScanningModuleStockPart
   - PicoServoStockPart
@@ -345,6 +346,7 @@
   - EnergyManipulation
   - AppliedBluespace
   recipeUnlocks:
+  - ModsuitModuleJetpack
   - ShuttleConsoleCircuitboard
   - ShuttleGunKineticCircuitboard
   - ThrusterMachineCircuitboard
@@ -446,6 +448,8 @@
   technologyPrerequisites:
   - ExperimentalTools
   recipeUnlocks:
+  - ModsuitModuleMagboots
+  - ModsuitModuleJetpackAdvanced
   - ClothingShoesBootsMag
   - ClothingShoesBootsMagSci
   - ClothingShoesBootsMoon

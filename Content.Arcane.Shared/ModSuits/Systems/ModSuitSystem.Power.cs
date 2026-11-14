@@ -43,6 +43,7 @@ public sealed partial class ModSuitSystem : EntitySystem
         InitializeInterface();
         InitializeEquipmentModules();
         InitializeDeviceModules();
+        InitializeMobilityModules();
     }
 
     public EntityUid? GetCore(Entity<ModSuitComponent> suit) => _itemSlots.GetItemOrNull(suit.Owner, suit.Comp.CoreSlotId);
@@ -159,6 +160,8 @@ public sealed partial class ModSuitSystem : EntitySystem
     {
         if (suit.Comp.State == ModSuitState.Active && !suit.Comp.Powered)
             args.Args.ModifySpeed(suit.Comp.UnpoweredSpeedModifier);
+
+        ApplyModuleSpeedModifiers(suit, args.Args);
     }
 
     private void RefreshWearerPower(Entity<ModSuitComponent> suit)

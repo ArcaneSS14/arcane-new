@@ -79,6 +79,12 @@ public sealed partial class ModSuitSystem
         && _inventory.TryGetSlotEntity(wearer, slot, out var equipped)
         && equipped == part;
 
+    private EntityUid? GetDeployedPart(EntityUid suit, string slot) =>
+        TryComp(suit, out ModSuitComponent? control) && control.PartEntities.TryGetValue(slot, out var part)
+        && !TerminatingOrDeleted(part) && IsPartDeployed((suit, control), slot)
+            ? part
+            : null;
+
     public bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user)
     {
         if (_net.IsClient || suit.Comp.State != ModSuitState.Inactive || suit.Comp.Wearer != user

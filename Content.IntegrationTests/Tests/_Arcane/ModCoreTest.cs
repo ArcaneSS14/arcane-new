@@ -11,6 +11,7 @@ using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
+using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.PowerCell;
 using Content.Shared.Slippery;
@@ -53,6 +54,7 @@ public sealed class ModCoreTest : InteractionTest
           - type: ModPart
             sealedComponents:
             - type: NoSlip
+            - type: IngestionBlocker
           - type: PointLight
             enabled: true
             radius: 2
@@ -103,6 +105,45 @@ public sealed class ModCoreTest : InteractionTest
             var chemistry = SEntMan.System<SharedSolutionContainerSystem>();
             Assert.That(chemistry.TryGetSolution(device, "spray", out _, out var solution), Is.True);
             Assert.That(solution!.Volume.Float(), Is.EqualTo(95f));
+        });
+    }
+
+    [Test]
+    public async Task MouthholeAllowsIngestionUntilItsSuitRunsOutOfPower()
+    {
+        EntityUid wearer = default;
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            control = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            var module = SEntMan.SpawnAttachedTo("ModsuitModuleMouthhole", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            var wires = SEntMan.System<SharedWiresSystem>();
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var ingestion = SEntMan.System<IngestionSystem>();
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            Assert.That(ingestion.HasMouthAvailable(wearer), Is.True);
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            Assert.That(ingestion.HasMouthAvailable(wearer), Is.False);
         });
     }
 
