@@ -1109,6 +1109,32 @@ public sealed class ModCoreTest : InteractionTest
     }
 
     [Test]
+    public async Task EnergyShieldBlocksOneHitUntilItRecharges()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        await EquipPoweredEngineerSuit("ModsuitModuleEnergyShield", (user, installed) =>
+        {
+            wearer = user;
+            module = installed;
+        });
+
+        await Server.WaitAssertion(() =>
+        {
+            var attacker = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords);
+            var damage = SEntMan.System<DamageableSystem>();
+            var hit = new DamageSpecifier { DamageDict = { ["Blunt"] = 20 } };
+            var shield = SEntMan.GetComponent<ModEnergyShieldModuleComponent>(module);
+            Assert.That(shield.Charges, Is.EqualTo(1));
+            damage.TryChangeDamage(wearer, hit, out var blocked, origin: attacker);
+            Assert.That(blocked?.GetTotal().Float() ?? 0f, Is.Zero);
+            Assert.That(shield.Charges, Is.Zero);
+            Assert.That(damage.TryChangeDamage(wearer, hit, out var next, origin: attacker), Is.True);
+            Assert.That(next!.GetTotal().Float(), Is.Positive);
+        });
+    }
+
+    [Test]
     public async Task ProjectileDampenerRestoresSpeedAndStopsReducingDamageWhenSwitchedOff()
     {
         EntityUid wearer = default;
