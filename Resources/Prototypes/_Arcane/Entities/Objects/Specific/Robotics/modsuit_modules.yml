@@ -30,6 +30,10 @@
   - type: Tag
     tags: [ ModsuitModule, ModsuitModuleStorage ]
   - type: ModStorageModule
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
   - type: Storage
     clickInsert: false
     openOnActivate: false
