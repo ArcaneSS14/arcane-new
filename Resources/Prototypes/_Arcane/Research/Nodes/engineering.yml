@@ -82,6 +82,7 @@
   recipeUnlocks:
   - PowerCellHyper
   - MegaCellHyper
+  - ModsuitCoreStandardMicroreactor
   - SuperCapacitorStockPart
   - PhasicScanningModuleStockPart
   - PicoServoStockPart

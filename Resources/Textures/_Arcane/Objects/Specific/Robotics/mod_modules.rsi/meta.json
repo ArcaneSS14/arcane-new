@@ -28,6 +28,9 @@
             "name": "storage_syndi"
         },
         {
+            "name": "storage_case"
+        },
+        {
             "name": "storage_bluespace",
             "delays": [
                 [
@@ -41,6 +44,9 @@
                     0.1
                 ]
             ]
+        },
+        {
+            "name": "storage_holding"
         },
         {
             "name": "flashlight"

@@ -115,3 +115,31 @@
     activePower: 0.4
     requiredParts: [ head ]
   - type: ModLightModule
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageCase
+  name: MOD case storage module
+  description: A slimline set of compartments for a compressed MODsuit.
+  components:
+  - type: Sprite
+    state: storage_case
+  - type: Storage
+    grid:
+    - 0,0,3,1
+    maxItemSize: Small
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageHolding
+  name: MOD storage module of holding
+  description: A prototype compartment that uses anomalous bluespace to store large amounts of matter.
+  components:
+  - type: Sprite
+    state: storage_holding
+  - type: ModModule
+    complexity: 4
+  - type: Storage
+    grid:
+    - 0,0,14,5
+    maxItemSize: Huge

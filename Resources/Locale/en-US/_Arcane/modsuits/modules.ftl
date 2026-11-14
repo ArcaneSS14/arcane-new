@@ -7,3 +7,5 @@ modsuit-module-duplicate = A module of this type is already installed.
 modsuit-module-incompatible = That module is incompatible with an installed module.
 modsuit-module-not-removable = That module is built into the MODsuit.
 modsuit-open-module-storage = Open {THE($module)}
+research-technology-modsuit-equipment-name = MOD Equipment
+research-technology-modsuit-equipment-desc = Additional equipment and power sources for MODsuits.

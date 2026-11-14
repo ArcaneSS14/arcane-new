@@ -39,7 +39,13 @@
   - ModsuitShell
   - ModsuitPlatingExternal
   - ModsuitCoreStandard # Arcane
+  - ModsuitCoreStandardMicroreactor # Arcane
+  - ModsuitCorePlasma # Arcane
   - ModsuitModuleStorageCompact # Arcane
+  - ModsuitModuleStorageCase # Arcane
+  - ModsuitModuleStorageLarge # Arcane
+  - ModsuitModuleStorageBluespace # Arcane
+  - ModsuitModuleStorageHolding # Arcane
   - ModsuitModuleFlashlight # Arcane
 
 - type: latheRecipePack
