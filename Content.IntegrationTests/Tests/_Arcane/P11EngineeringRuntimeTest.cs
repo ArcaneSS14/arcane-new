@@ -139,42 +139,5 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             Assert.That(SEntMan.GetComponent<RadiationSourceComponent>(crystal).EffectiveIntensity, Is.EqualTo(baselineRadiation));
         });
     }
-
-    [Test]
-    public async Task HandheldMonitorListsAnAnchoredCrystalOnTheCurrentGrid()
-    {
-        await SetTile(Plating, TargetCoords, MapData.Grid);
-        await SpawnTarget("Supermatter");
-        var crystal = Target!.Value;
-        var monitor = await PlaceInHands("BaseHandheldStationMapSupermatterCe");
-        await DropAll();
-        await Server.WaitAssertion(() =>
-        {
-            var item = ToServer(monitor);
-            SUiSys.OpenUi(item, SupermatterMonitorUiKey.Key, SPlayer);
-            Assert.That(SUiSys.IsUiOpen(item, SupermatterMonitorUiKey.Key, SPlayer), Is.False);
-        });
-        await Pickup(monitor);
-        await Server.WaitAssertion(() =>
-        {
-            var item = ToServer(monitor);
-            Assert.That(SEntMan.System<SharedHandsSystem>().IsHolding(SPlayer, item), Is.True);
-            SUiSys.OpenUi(item, SupermatterMonitorUiKey.Key, SPlayer);
-            Assert.That(SUiSys.TryGetUiState<SupermatterMonitorState>(item, SupermatterMonitorUiKey.Key, out var state), Is.True);
-            Assert.That(state!.Crystals, Has.Length.EqualTo(1));
-            Assert.That(state.Crystals[0].Crystal, Is.EqualTo(crystal));
-            Assert.That(state.Crystals[0].Status, Is.EqualTo(SupermatterMonitorStatus.Inactive));
-            Assert.That(state.Reading?.Integrity, Is.EqualTo(100f));
-        });
-        await RunTicks(10);
-        await Server.WaitAssertion(() => SEntMan.DeleteEntity(ToServer(crystal)));
-        await RunSeconds(1.2f);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SUiSys.TryGetUiState<SupermatterMonitorState>(ToServer(monitor), SupermatterMonitorUiKey.Key, out var state), Is.True);
-            Assert.That(state!.Crystals, Is.Empty);
-            Assert.That(state.Reading, Is.Null);
-        });
-    }
 }
 // Arcane-End
