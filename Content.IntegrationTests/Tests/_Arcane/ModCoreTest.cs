@@ -29,9 +29,13 @@ using Content.Shared.PowerCell;
 using Content.Shared.Slippery;
 using Content.Shared.Stacks;
 using Content.Shared.Storage;
+using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Wires;
 using Robust.Shared.Containers;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics.Systems;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -502,6 +506,73 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.HasComponent<EyeProtectionComponent>(helmet), Is.False);
             Assert.That(SEntMan.HasComponent<Content.Shared.Overlays.ShowHealthBarsComponent>(helmet), Is.False);
             Assert.That(SEntMan.HasComponent<NoSlipComponent>(helmet), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task OreBagCollectsOnlyWhileActiveAndSpillsWhenRemoved()
+    {
+        EntityUid wearer = default;
+        EntityUid unit = default;
+        EntityUid ore = default;
+        EntityUid bag = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            unit = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", position);
+            ore = SEntMan.SpawnAttachedTo("SteelOre1", position);
+            bag = SEntMan.SpawnAttachedTo("ModsuitModuleOreBag", position);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, unit, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, bag, wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var storage = SEntMan.GetComponent<StorageComponent>(bag);
+            Assert.That(storage.Container.Contains(ore), Is.False);
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(bag, action);
+            Assert.That(action.Handled, Is.True);
+            SEntMan.System<SharedPhysicsSystem>().SetBodyStatus(ore, SEntMan.GetComponent<PhysicsComponent>(ore), BodyStatus.OnGround);
+            Assert.That(SEntMan.HasComponent<MagnetPickupComponent>(bag), Is.True);
+            var lookup = SEntMan.System<EntityLookupSystem>();
+            Assert.That(lookup.GetEntitiesInRange(bag, 1f, LookupFlags.Dynamic | LookupFlags.Sundries), Does.Contain(ore));
+            var storageSystem = SEntMan.System<SharedStorageSystem>();
+            Assert.That(storageSystem.CanInsert(bag, ore, out var reason), Is.True, reason);
+            SEntMan.System<MagnetPickupSystem>().Update(0);
+            Assert.That(storage.Container.Contains(ore), Is.True);
+        });
+
+        await RunSeconds(1.2f);
+        await Server.WaitAssertion(() =>
+        {
+            var storage = SEntMan.GetComponent<StorageComponent>(bag);
+            Assert.That(storage.Container.Contains(ore), Is.True);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            Assert.That(SEntMan.System<ModSuitSystem>().TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+            Assert.That(SEntMan.System<SharedWiresSystem>().TogglePanel(unit, panel, true), Is.True);
+            Assert.That(SEntMan.System<ModSuitSystem>().TryRemoveModule(suit, bag, wearer), Is.True);
+            Assert.That(SEntMan.GetComponent<StorageComponent>(bag).Container.Contains(ore), Is.False);
+            Assert.That(SEntMan.EntityExists(ore), Is.True);
         });
     }
 

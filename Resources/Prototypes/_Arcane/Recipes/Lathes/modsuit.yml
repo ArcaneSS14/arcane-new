@@ -503,3 +503,11 @@
   materials:
     Steel: 500
     Plastic: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleOreBag
+  result: ModsuitModuleOreBag
+  materials:
+    Steel: 500
+    Plastic: 300

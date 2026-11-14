@@ -1,0 +1,34 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleOreBag
+  name: MOD ore bag module
+  description: Magnetic compartments collect nearby ore and artifact fragments while active.
+  components:
+  - type: Sprite
+    state: ore
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ gloves ]
+  - type: ModStorageModule
+  - type: ModOreBagModule
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,9,5
+    quickInsert: true
+    areaInsert: true
+    clickInsert: false
+    openOnActivate: false
+    showVerb: false
+    whitelist:
+      tags: [ ArtifactFragment, Ore ]
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface

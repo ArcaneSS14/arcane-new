@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Shared.Storage;
+using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Verbs;
 using Robust.Shared.Containers;
@@ -21,6 +22,8 @@ public sealed partial class ModSuitSystem
         SubscribeLocalEvent<ModStorageModuleComponent, ModModuleRemovedEvent>(OnStorageRemoved);
         SubscribeLocalEvent<ModStorageModuleComponent, EntityTerminatingEvent>(OnStorageModuleTerminating);
         SubscribeLocalEvent<ModStorageModuleComponent, ContainerIsInsertingAttemptEvent>(OnStorageItemAttempt);
+        SubscribeLocalEvent<ModOreBagModuleComponent, ModModuleActivatedEvent>(OnOreBagActivated);
+        SubscribeLocalEvent<ModOreBagModuleComponent, ModModuleDeactivatedEvent>(OnOreBagDeactivated);
     }
 
     private void OnStorageVerb(Entity<ModSuitComponent> suit, ref GetVerbsEvent<AlternativeVerb> args)
@@ -81,6 +84,18 @@ public sealed partial class ModSuitSystem
     {
         if (!_net.IsClient)
             _ui.CloseUi(module.Owner, StorageComponent.StorageUiKey.Key);
+    }
+
+    private void OnOreBagActivated(Entity<ModOreBagModuleComponent> module, ref ModModuleActivatedEvent args)
+    {
+        var magnet = EnsureComp<MagnetPickupComponent>(module);
+        magnet.NextScan = _timing.CurTime;
+        Dirty(module, magnet);
+    }
+
+    private void OnOreBagDeactivated(Entity<ModOreBagModuleComponent> module, ref ModModuleDeactivatedEvent args)
+    {
+        RemComp<MagnetPickupComponent>(module);
     }
 
     private void OnStorageRemoved(Entity<ModStorageModuleComponent> module, ref ModModuleRemovedEvent args) =>
