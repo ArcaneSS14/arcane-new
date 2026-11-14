@@ -148,7 +148,7 @@ public sealed partial class ModSphereRollController : VirtualController
             if (TerminatingOrDeleted(rock) || !_drillQuery.TryComp(drill, out var drillComp))
                 continue;
 
-            if (!_modSuit.TryGetSphereModuleSuit(drill, out var suit) || suit.Comp.Wearer != user
+            if (!_modSuit.TryGetInstalledModuleSuit(drill, out var suit) || suit.Comp.Wearer != user
                 || !TryComp(user, out ModSphereFormComponent? form) || form.Drill != drill
                 || !_modSuit.TryUseSphereCharge(suit, drillComp.PowerCost))
                 continue;
@@ -286,7 +286,7 @@ public sealed partial class ModSphereRollController : VirtualController
     {
         if (ent.Comp.Drill is not { } drill
             || !_drillQuery.TryComp(drill, out var drillComp)
-            || !_modSuit.TryGetSphereModuleSuit(drill, out var suit))
+            || !_modSuit.TryGetInstalledModuleSuit(drill, out var suit))
             return false;
 
         var speed = velocity.Length();

@@ -218,7 +218,7 @@ public sealed partial class ModSphereTransformModuleSystem : EntitySystem
 
         var user = args.Performer;
         if (!TryComp<ModSphereFormComponent>(user, out var form) || form.Module != ent.Owner
-            || !_modSuit.TryGetSphereModuleSuit(ent, out var suit) || suit.Comp.Wearer != user)
+            || !_modSuit.TryGetInstalledModuleSuit(ent, out var suit) || suit.Comp.Wearer != user)
             return;
 
         var pressure = new ModSpherePressureQuery();
@@ -334,7 +334,7 @@ public sealed partial class ModSphereTransformModuleSystem : EntitySystem
     private void OnInteractionAttempt(Entity<ModSphereFormComponent> ent, ref InteractionAttemptEvent args)
     {
         if (args.Target is { } target
-            && (!_modSuit.TryGetSphereModuleSuit(ent.Comp.Module, out var suit) || target != suit.Owner))
+            && (!_modSuit.TryGetInstalledModuleSuit(ent.Comp.Module, out var suit) || target != suit.Owner))
             args.Cancelled = true;
     }
 
@@ -410,7 +410,7 @@ public sealed partial class ModSphereTransformModuleSystem : EntitySystem
         var forms = EntityQueryEnumerator<ModSphereFormComponent>();
         while (forms.MoveNext(out var uid, out var form))
         {
-            if (!_modSuit.TryGetSphereModuleSuit(form.Module, out var suit)
+            if (!_modSuit.TryGetInstalledModuleSuit(form.Module, out var suit)
                 || suit.Comp.Wearer != uid
                 || !TryComp(form.Module, out ModModuleComponent? module)
                 || !AllSpherePartsDeployed(suit, module)

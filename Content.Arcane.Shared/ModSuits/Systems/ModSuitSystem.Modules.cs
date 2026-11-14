@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Arcane.Shared.ModSuits.Components;
+using Content.Shared.Actions;
 using Content.Shared.Hands.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
@@ -11,6 +12,21 @@ namespace Content.Arcane.Shared.ModSuits.Systems;
 public sealed partial class ModSuitSystem
 {
     private const string ModulesContainerId = "mod-modules";
+
+    internal bool TryGetInstalledModuleSuit(EntityUid? uid, out Entity<ModSuitComponent> suit)
+    {
+        if (uid is { } id && TryComp(id, out ModModuleComponent? module)
+            && module.Suit is { } control
+            && TryComp(control, out ModSuitComponent? component)
+            && component.ModulesContainer?.Contains(id) == true)
+        {
+            suit = (control, component);
+            return true;
+        }
+
+        suit = default;
+        return false;
+    }
 
     [Dependency] private SharedInteractionSystem _interaction = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
@@ -187,7 +203,7 @@ public sealed partial class ModSuitSystem
         return true;
     }
 
-    private bool TryUseModule(Entity<ModModuleComponent> module, EntityUid user)
+    private bool TryUseModule(Entity<ModModuleComponent> module, EntityUid user, BaseActionEvent? action = null)
     {
         var component = module.Comp;
         if (_net.IsClient || component.Type == ModModuleType.Passive || component.Suit is not { } uid
@@ -218,7 +234,7 @@ public sealed partial class ModSuitSystem
 
         if (component.Type == ModModuleType.Usable)
         {
-            var used = new ModModuleUsedEvent(uid, user);
+            var used = new ModModuleUsedEvent(uid, user, action);
             RaiseLocalEvent(module.Owner, ref used);
             if (!used.Handled)
                 return false;

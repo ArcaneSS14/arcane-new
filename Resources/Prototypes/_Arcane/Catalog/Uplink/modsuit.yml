@@ -81,3 +81,31 @@
   cost:
     Telecrystal: 5
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleCloak
+  productEntity: ModsuitModuleCloak
+  cost:
+    Telecrystal: 40
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleAdrenalineBoost
+  productEntity: ModsuitModuleAdrenalineBoost
+  cost:
+    Telecrystal: 35
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleInfiltrator
+  productEntity: ModsuitModuleInfiltrator
+  cost:
+    Telecrystal: 15
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModulePowerKick
+  productEntity: ModsuitModulePowerKick
+  cost:
+    Telecrystal: 30
+  categories: [ UplinkWearables ]

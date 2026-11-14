@@ -37,6 +37,8 @@ using Content.Shared.Stacks;
 using Content.Shared.Storage;
 using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Stealth.Components;
+using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Wires;
 using Content.Trauma.Common.MartialArts;
 using Robust.Shared.Containers;
@@ -924,6 +926,44 @@ public sealed class ModCoreTest : InteractionTest
         {
             Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "suitstorage", out var returned), Is.True);
             Assert.That(returned, Is.EqualTo(gun));
+        });
+    }
+
+    [Test]
+    public async Task AttackingDisablesOnlyTheModCloak()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", at);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", at);
+            module = SEntMan.SpawnAttachedTo("ModsuitModuleCloak", at);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var toggle = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(module, toggle);
+            Assert.That(toggle.Handled, Is.True);
+            Assert.That(SEntMan.HasComponent<StealthComponent>(wearer), Is.True);
+            var hit = new MeleeAttackEvent(wearer);
+            SEntMan.EventBus.RaiseLocalEvent(wearer, ref hit);
+            Assert.That(SEntMan.HasComponent<StealthComponent>(wearer), Is.False);
+            Assert.That(SEntMan.HasComponent<ModCloakedComponent>(wearer), Is.False);
         });
     }
 

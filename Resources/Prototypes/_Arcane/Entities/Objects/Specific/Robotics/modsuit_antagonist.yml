@@ -1,0 +1,84 @@
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleCloak
+  name: MOD prototype cloaking module
+  description: Bends light around a stationary wearer. Attacking, shooting or taking a hit breaks the cloak.
+  components:
+  - type: Sprite
+    state: cloak_traitor
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 1.6
+    cooldown: 5
+  - type: ModCloakModule
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: Stealth
+      enabledOnDeath: false
+      enabledOnCrit: false
+      revealOnAttack: false
+      revealOnDamage: false
+    - type: StealthOnMove
+      passiveVisibilityRate: -0.4
+      movementVisibilityRate: 0.7
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleAdrenalineBoost
+  name: MOD adrenaline boost module
+  description: An emergency injector that releases stimulants and helps the wearer recover from a stun.
+  components:
+  - type: Sprite
+    state: adrenaline_boost
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    usePower: 90
+    cooldown: 120
+    allowFlags: Incapacitated
+    action: ActionModAdrenalineBoost
+  - type: ModAdrenalineModule
+    solution:
+      reagents:
+      - ReagentId: Stimulants
+        Quantity: 10
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleInfiltrator
+  name: MOD infiltration core programs module
+  description: Silences the wearer's footsteps and masks their name in speech.
+  components:
+  - type: Sprite
+    state: infiltrator
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ head, shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: FootstepModifier
+    - type: VoiceOverride
+      nameOverride: modsuit-infiltrator-voice
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModulePowerKick
+  name: MOD power kick module
+  description: Charges the boot servos for a short burst towards the target.
+  components:
+  - type: Sprite
+    state: power_kick
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    usePower: 45
+    cooldown: 5
+    action: ActionModPowerKick
+    requiredParts: [ shoes ]
+  - type: ModPowerKickModule
+    damage:
+      types:
+        Blunt: 20

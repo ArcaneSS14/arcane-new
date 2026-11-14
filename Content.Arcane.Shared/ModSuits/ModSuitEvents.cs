@@ -23,7 +23,7 @@ public readonly record struct ModModuleActivatedEvent(EntityUid Suit, EntityUid?
 public readonly record struct ModModuleDeactivatedEvent(EntityUid Suit, EntityUid? Wearer);
 
 [ByRefEvent]
-public record struct ModModuleUsedEvent(EntityUid Suit, EntityUid User)
+public record struct ModModuleUsedEvent(EntityUid Suit, EntityUid User, BaseActionEvent? Action = null)
 {
     public bool Handled;
 }

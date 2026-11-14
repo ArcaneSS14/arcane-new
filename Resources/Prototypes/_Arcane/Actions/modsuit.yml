@@ -41,6 +41,33 @@
     event: !type:ModModuleActionEvent
 
 - type: entity
+  parent: ActionModModule
+  id: ActionModAdrenalineBoost
+  name: Use MOD adrenaline boost
+  description: Injects stimulants and helps you stand up.
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: false
+
+- type: entity
+  parent: BaseAction
+  id: ActionModPowerKick
+  name: Power kick
+  description: Launches the wearer towards a target with a powered kick.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: TargetAction
+    checkCanAccess: false
+    range: 7
+  - type: EntityTargetAction
+    canTargetSelf: false
+  - type: WorldTargetAction
+    event: !type:ModPowerKickActionEvent
+
+- type: entity
   parent: BaseAction
   id: ActionModSelectDevice
   name: Select MOD device

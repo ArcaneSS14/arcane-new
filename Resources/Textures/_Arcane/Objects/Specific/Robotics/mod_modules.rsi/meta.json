@@ -119,6 +119,9 @@
             "name": "empshield"
         },
         {
+            "name": "infiltrator"
+        },
+        {
             "name": "injector"
         },
         {
@@ -185,7 +188,13 @@
             "name": "pepper_shoulder"
         },
         {
+            "name": "power_kick"
+        },
+        {
             "name": "mag_harness"
+        },
+        {
+            "name": "adrenaline_boost"
         },
         {
             "name": "emp_pulse"
@@ -227,6 +236,19 @@
         },
         {
             "name": "fishing_glove"
+        },
+        {
+            "name": "cloak_traitor",
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
         },
         {
             "name": "cleaner"

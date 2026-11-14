@@ -19,3 +19,7 @@ modsuit-sphere-ensnared = Free yourself before transforming into a sphere.
 modsuit-sphere-missile-pressure = The atmospheric pressure is too high for the micromissiles.
 modsuit-transport-already-linked = Release the current hardlight bag first.
 modsuit-hat-slot = Hat mount
+modsuit-cloak-broken = The MOD cloak breaks.
+modsuit-cloak-already-active = Another cloaking effect is already active.
+modsuit-infiltrator-voice = Unknown
+modsuit-power-kick-charge = The boot servos wind up.
