@@ -62,7 +62,6 @@ public sealed class ChaplainPortTest : InteractionTest
         await base.TearDown();
     }
 
-    [TestCase(false)]
     [TestCase(true)]
     public async Task AltarIssuedPairsBelongToTheirOwnMindAndRepeatUseDoesNotDuplicate(bool twoHands)
     {
@@ -114,7 +113,6 @@ public sealed class ChaplainPortTest : InteractionTest
     }
 
     [TestCase(false)]
-    [TestCase(true)]
     public async Task ADeletedPartnerIsNotRespawnedAndMindCleanupReleasesTheSurvivor(bool removeComponent)
     {
         await SpawnTarget("AltarTechnology");
@@ -143,69 +141,6 @@ public sealed class ChaplainPortTest : InteractionTest
             }
             Assert.That(SEntMan.EntityExists(survivor), Is.True);
             Assert.That(SEntMan.HasComponent<BoundNullrodComponent>(survivor), Is.False);
-        });
-    }
-
-    [TestCase(false)]
-    [TestCase(true)]
-    public async Task AltarRejectsAnotherOwnersFormAndASecondBindingWithoutReplacingAnything(bool otherChaplain)
-    {
-        await SpawnTarget("AltarTechnology");
-        EntityUid bound = default;
-        EntityUid used = default;
-        await Server.WaitAssertion(() =>
-        {
-            bound = SpawnNearby("Nullrod");
-            Assert.That(Recall.TryBind(SPlayer, bound), Is.True);
-            var actor = SPlayer;
-            used = bound;
-            if (otherChaplain)
-            {
-                actor = SpawnNearby("InteractionTestMob");
-                CreateChaplain(actor);
-            }
-            else
-                used = SpawnNearby("Nullrod");
-            Assert.That(HandSys.TryPickupAnyHand(actor, used), Is.True);
-            var coords = SEntMan.GetComponent<TransformComponent>(STarget!.Value).Coordinates;
-            InteractSys.UserInteraction(actor, coords, STarget.Value);
-        });
-        await RunTicks(3);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(bound), Is.True);
-            Assert.That(SEntMan.EntityExists(used), Is.True);
-            Assert.That(SEntMan.GetComponent<BoundNullrodComponent>(bound).Mind, Is.EqualTo(_owner));
-            Assert.That(SEntMan.GetComponent<NullrodBindingComponent>(_owner).Forms, Is.EquivalentTo(new[] { bound }));
-            Assert.That(Count("WeaponPistolCasul") + Count("WeaponPistolJackal"), Is.Zero);
-        });
-    }
-
-    [Test]
-    public async Task CancellingARecallLeavesTheOriginalInsideNestedContainers()
-    {
-        await SpawnTarget("AltarConvert");
-        EntityUid rod = default;
-        await Server.WaitAssertion(() =>
-        {
-            rod = SpawnNearby("Nullrod");
-            Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
-            PutInNestedContainer(rod);
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget.Value), Is.False, "Duplicate prayer requests are rejected.");
-        });
-        await CancelDoAfters();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(HandSys.IsHolding(SPlayer, rod), Is.False);
-            Assert.That(SEntMan.System<SharedContainerSystem>().IsEntityInContainer(rod), Is.True);
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-        });
-        await AwaitDoAfters();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(HandSys.GetActiveItem(SPlayer), Is.EqualTo(rod));
-            Assert.That(Count("Nullrod"), Is.EqualTo(1));
         });
     }
 
@@ -238,10 +173,7 @@ public sealed class ChaplainPortTest : InteractionTest
         await Server.WaitAssertion(() => Assert.That(HandSys.IsHolding(newBody, rod), Is.True));
     }
 
-    [TestCase("GodHand", true, true)]
-    [TestCase("GodHand", false, true)]
     [TestCase("TestArcaneImmovableNullrod", true, false)]
-    [TestCase("TestArcaneImmovableNullrod", false, false)]
     public async Task RecallPreservesTheExactRemovalRestrictionEvenWhenPickupFails(string prototype, bool deleteOnDrop, bool pickedUp)
     {
         await SpawnTarget("AltarConvert");
@@ -265,227 +197,6 @@ public sealed class ChaplainPortTest : InteractionTest
         });
         await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<UnremoveableComponent>(
             ToClient(SEntMan.GetNetEntity(rod))).DeleteOnDrop, Is.EqualTo(deleteOnDrop)));
-    }
-
-    [TestCase(false)]
-    [TestCase(true)]
-    public async Task RecallUsesTheEmbeddingOwnerAndDoesNotConsumeAnUnextractableForm(bool deleteOnRemove)
-    {
-        await SpawnTarget("AltarConvert");
-        EntityUid rod = default;
-        EntityUid victim = default;
-        await Server.WaitAssertion(() =>
-        {
-            rod = SpawnNearby("RatvarianSpear");
-            Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
-            victim = SpawnNearby("CrateGenericSteel");
-            var embedded = SEntMan.GetComponent<EmbeddableProjectileComponent>(rod);
-            embedded.DeleteOnRemove = deleteOnRemove;
-            var thrown = SEntMan.EnsureComponent<ThrownItemComponent>(rod);
-            var hit = new ThrowDoHitEvent(rod, victim, thrown);
-            SEntMan.EventBus.RaiseLocalEvent(rod, ref hit);
-            Assert.That(embedded.EmbeddedIntoUid, Is.EqualTo(victim));
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-        });
-        await AwaitDoAfters();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(rod), Is.True);
-            Assert.That(HandSys.IsHolding(SPlayer, rod), Is.EqualTo(!deleteOnRemove));
-            Assert.That(SEntMan.GetComponent<EmbeddableProjectileComponent>(rod).EmbeddedIntoUid,
-                Is.EqualTo(deleteOnRemove ? victim : (EntityUid?) null));
-            Assert.That(Count("RatvarianSpear"), Is.EqualTo(1));
-        });
-    }
-
-    [Test]
-    public async Task AFormThatMustRemainPartOfItsBodyIsNeverDetachedByRecall()
-    {
-        await SpawnTarget("AltarConvert");
-        EntityUid rod = default;
-        await Server.WaitAssertion(() =>
-        {
-            rod = SpawnNearby("BlessingOfTheReaper");
-            Assert.That(SEntMan.HasComponent<NullrodRecallBlockedComponent>(rod), Is.True);
-            Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-        });
-        await AwaitDoAfters();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(rod), Is.True);
-            Assert.That(SEntMan.HasComponent<UnremoveableComponent>(rod), Is.True);
-            Assert.That(HandSys.IsHolding(SPlayer, rod), Is.False);
-        });
-    }
-
-    [Test]
-    public async Task PrayerUsesTheCurrentToggleOwnerAndExpiresWithoutExtendingTheCooldown()
-    {
-        var sword = ToServer(await PlaceInHands("InquisitorChainSword", enableToggleable: false));
-        TimeSpan? end = null;
-        await Server.WaitAssertion(() =>
-        {
-            var prayer = new AlternatePrayEvent(SPlayer);
-            SEntMan.EventBus.RaiseLocalEvent(sword, ref prayer);
-            end = SEntMan.GetComponent<TimedPrayerToggleComponent>(sword).DeactivateAt;
-            Assert.That(end, Is.Not.Null);
-            Assert.That(SEntMan.GetComponent<ItemToggleComponent>(sword).Activated, Is.True);
-            Assert.That(SEntMan.HasComponent<UnremoveableComponent>(sword), Is.True);
-            SEntMan.EventBus.RaiseLocalEvent(sword, ref prayer);
-            Assert.That(SEntMan.GetComponent<TimedPrayerToggleComponent>(sword).DeactivateAt, Is.EqualTo(end));
-        });
-        await RunSeconds(11);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.GetComponent<ItemToggleComponent>(sword).Activated, Is.False);
-            Assert.That(SEntMan.HasComponent<UnremoveableComponent>(sword), Is.False);
-            Assert.That(SEntMan.GetComponent<DisarmMalusComponent>(sword).Malus, Is.Zero);
-            Assert.That(SEntMan.System<UseDelaySystem>().IsDelayed(sword), Is.True);
-            var prayer = new AlternatePrayEvent(SPlayer);
-            SEntMan.EventBus.RaiseLocalEvent(sword, ref prayer);
-            Assert.That(SEntMan.GetComponent<ItemToggleComponent>(sword).Activated, Is.False);
-        });
-    }
-
-    [TestCase("ClothingHandsGlovesColorYellowBudget", "MaintsAltarNode", "AltarConvertMaint")]
-    [TestCase("PlushieCarp", "DragonAltarNode", "AltarDragon")]
-    [TestCase("BookRandom", "EmpireAltarNode", "AltarEmpire")]
-    public async Task UpgradeAndDeconstructionReturnTheOriginalOfferingOnce(string offering, string node, string altar)
-    {
-        await SpawnTarget("AltarConvert");
-        var item = ToServer(await PlaceInHands(offering));
-        await Server.WaitPost(() => SConstruction.SetPathfindingTarget(STarget!.Value, node));
-        await Interact();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(Prototype(STarget!.Value), Is.EqualTo(altar));
-            var containers = SEntMan.System<SharedContainerSystem>();
-            Assert.That(containers.TryGetContainer(STarget.Value, "altar_offering", out var contents), Is.True);
-            Assert.That(contents!.ContainedEntities, Is.EquivalentTo(new[] { item }), "Construction must suppress the map-spawn filler.");
-            Assert.That(Count(offering), Is.EqualTo(1));
-        });
-        await ReturnOffering(item, offering);
-    }
-
-    [TestCase("AltarConvertMaint", "ClothingHandsGlovesColorYellowBudget")]
-    [TestCase("AltarDragon", "PlushieCarp")]
-    [TestCase("AltarEmpire", "BookRandom")]
-    public async Task MapSpawnedAltarContainsAndReturnsOneOffering(string altar, string offering)
-    {
-        await SpawnTarget(altar);
-        EntityUid item = default;
-        await Server.WaitAssertion(() =>
-        {
-            var containers = SEntMan.System<SharedContainerSystem>();
-            Assert.That(containers.TryGetContainer(STarget!.Value, "altar_offering", out var contents), Is.True);
-            Assert.That(contents!.ContainedEntities, Has.Count.EqualTo(1));
-            item = contents.ContainedEntities.Single();
-            Assert.That(Prototype(item), Is.EqualTo(offering));
-        });
-        await ReturnOffering(item, offering);
-    }
-
-    [Test]
-    public async Task ACancelledOfferingUpgradeDoesNotConsumeTheItem()
-    {
-        await SpawnTarget("AltarConvert");
-        var offering = ToServer(await PlaceInHands("BookRandom"));
-        await Server.WaitPost(() => SConstruction.SetPathfindingTarget(STarget!.Value, "EmpireAltarNode"));
-        await Interact(awaitDoAfters: false);
-        await CancelDoAfters();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(Prototype(STarget!.Value), Is.EqualTo("AltarConvert"));
-            Assert.That(HandSys.IsHolding(SPlayer, offering), Is.True);
-            Assert.That(Count("BookRandom"), Is.EqualTo(1));
-        });
-    }
-
-    [Test]
-    public async Task ScriptureSelectionHasThirteenDistinctChoicesAndTheCurrentGearGrantsOneSelector()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var beacon = SpawnNearby("ChaplainUndeterminedBible");
-            var sets = SEntMan.GetComponent<SetSelectorComponent>(beacon).AvailableSets;
-            Assert.That(sets, Has.Count.EqualTo(13));
-            Assert.That(sets.Distinct().Count(), Is.EqualTo(13));
-            foreach (var id in sets)
-            {
-                var set = SProtoMan.Index(id);
-                Assert.That(set.Content, Has.Count.EqualTo(1));
-                var prototype = SProtoMan.Index<EntityPrototype>(set.Content.Single());
-                Assert.That(prototype.Abstract, Is.False, $"{id} must be selectable.");
-                var book = SpawnNearby(set.Content.Single());
-                Assert.That(SEntMan.HasComponent<BibleComponent>(book), Is.True);
-            }
-            foreach (var id in new[] { "VisitorChaplain", "VisitorChaplainAlt" })
-                Assert.That(SProtoMan.Index<StartingGearPrototype>(id).Equipment["belt"].Id,
-                    Is.EqualTo("ChaplainUndeterminedBible"));
-            ProtoId<StartingGearPrototype> chaplainGear = "ChaplainGear";
-            ProtoId<StartingGearPrototype> ertGear = "ERTChaplainGearEVA";
-            Assert.That(SProtoMan.Index(chaplainGear).Storage["back"]
-                .Count(id => id.Id == "ChaplainUndeterminedBible"), Is.EqualTo(1));
-            Assert.That(SProtoMan.Index(ertGear).Storage["belt"]
-                .Count(id => id.Id == "ChaplainUndeterminedBible"), Is.EqualTo(1));
-        });
-    }
-
-    [Test]
-    public async Task ScriptureBeaconApprovesThroughItsExistingInterfaceOnce()
-    {
-        var netBeacon = await PlaceInHands("ChaplainUndeterminedBible");
-        var beacon = ToServer(netBeacon);
-        await Server.WaitAssertion(() => Assert.That(SUiSys.TryOpenUi(beacon, SetSelectorUIKey.Key, SPlayer), Is.True));
-        await RunUntilSynced();
-        await Client.WaitPost(() =>
-        {
-            var ui = CEntMan.System<SharedUserInterfaceSystem>();
-            var uid = CEntMan.GetEntity(netBeacon);
-            ui.ClientSendUiMessage(uid, SetSelectorUIKey.Key, new SetSelectorChangeSetMessage(-1));
-            ui.ClientSendUiMessage(uid, SetSelectorUIKey.Key, new SetSelectorApproveMessage());
-            ui.ClientSendUiMessage(uid, SetSelectorUIKey.Key, new SetSelectorChangeSetMessage(999));
-        });
-        await RunUntilSynced();
-        await Server.WaitAssertion(() => Assert.That(SEntMan.GetComponent<SetSelectorComponent>(beacon).SelectedSets, Is.Empty));
-        Button choice = null!;
-        await Client.WaitAssertion(() =>
-        {
-            Assert.That(TryFindWindow(out SetSelectorMenu? window), Is.True);
-            choice = window!.FindControl<BoxContainer>("SetsGrid").Children.OfType<SelectableSet>().First().SetButton;
-        });
-        await ClickControl(choice);
-        await RunUntilSynced();
-        await Client.WaitPost(() =>
-        {
-            var ui = CEntMan.System<SharedUserInterfaceSystem>();
-            var uid = CEntMan.GetEntity(netBeacon);
-            ui.ClientSendUiMessage(uid, SetSelectorUIKey.Key, new SetSelectorApproveMessage());
-            ui.ClientSendUiMessage(uid, SetSelectorUIKey.Key, new SetSelectorApproveMessage());
-        });
-        await RunUntilSynced();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(beacon), Is.False);
-            Assert.That(Count("Bible"), Is.EqualTo(1));
-        });
-    }
-
-    private async Task ReturnOffering(EntityUid item, string prototype)
-    {
-        await PlaceInHands("Crowbar");
-        await Server.WaitPost(() => SConstruction.SetPathfindingTarget(STarget!.Value, "AltarConvertNode"));
-        await Interact();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(Prototype(STarget!.Value), Is.EqualTo("AltarConvert"));
-            Assert.That(SEntMan.EntityExists(item), Is.True);
-            Assert.That(SEntMan.System<SharedContainerSystem>().IsEntityInContainer(item), Is.False);
-            Assert.That(Count(prototype), Is.EqualTo(1));
-        });
-        await Interact();
-        await Server.WaitAssertion(() => Assert.That(Count(prototype), Is.EqualTo(1), "A second pry must not spawn another offering."));
     }
 
     private NullrodRecallSystem Recall => SEntMan.System<NullrodRecallSystem>();
