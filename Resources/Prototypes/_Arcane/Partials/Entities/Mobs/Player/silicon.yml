@@ -17,6 +17,7 @@
   - type: ActionGrant
     actions:
     - ActionTTSVoiceChange
+    - ActionOpenRadioChannels
 
 - type: entity
   id: AiHeldIntellicard
@@ -24,3 +25,4 @@
   - type: ActionGrant
     actions:
     - ActionTTSVoiceChange
+    - ActionOpenRadioChannels

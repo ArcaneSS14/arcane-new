@@ -2,3 +2,9 @@
 
 [audio]
 lobby_music_collection = "ArcaneLobbyMusic"
+
+[vote]
+# The round preset is picked by AutoVotingSystem; the map vote starts on every round restart.
+preset_enabled = false
+timermap = 120
+timerpreset = 120

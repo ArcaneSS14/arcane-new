@@ -101,3 +101,16 @@ custom-ghost-discocat-desc = The best kind of cat.
 custom-ghost-disappointment-name = ...
 custom-ghost-disappointment-desc = Please don't.
 
+
+custom-ghost-vecortysghost-name = Vecortys
+custom-ghost-vecortysghost-desc = Hush, hush.
+custom-ghost-sshvedghost-name = SShved
+custom-ghost-sshvedghost-desc = Creator of the server.
+custom-ghost-arcanegodfaceghost-name = GodFace
+custom-ghost-arcanegodfaceghost-desc = Creator of the server.
+custom-ghost-bulbo44kkeyghost-name = Bulbo44kkey
+custom-ghost-bulbo44kkeyghost-desc = A cool cutie who can draw.
+custom-ghost-gasperhornedghost-name = Gasper_Horned
+custom-ghost-gasperhornedghost-desc = An incredible artist and an incredible goblin.
+custom-ghost-sqerdustghost-name = SqerDust
+custom-ghost-sqerdustghost-desc = Martini ambassador, bald globe, hype train.
