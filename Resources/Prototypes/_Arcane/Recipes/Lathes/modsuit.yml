@@ -1,0 +1,32 @@
+- type: latheRecipe
+  abstract: true
+  id: BaseModsuitModuleRecipe
+  categories:
+  - Modsuit
+  completetime: 5
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitCoreStandard
+  result: ModsuitCoreStandard
+  materials:
+    Steel: 300
+    Glass: 200
+    Plasma: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleStorageCompact
+  result: ModsuitModuleStorageCompact
+  materials:
+    Steel: 500
+    Glass: 100
+    Plastic: 300
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleFlashlight
+  result: ModsuitModuleFlashlight
+  materials:
+    Steel: 300
+    Glass: 200

@@ -38,6 +38,9 @@
   - ModsuitGauntlets
   - ModsuitShell
   - ModsuitPlatingExternal
+  - ModsuitCoreStandard # Arcane
+  - ModsuitModuleStorageCompact # Arcane
+  - ModsuitModuleFlashlight # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

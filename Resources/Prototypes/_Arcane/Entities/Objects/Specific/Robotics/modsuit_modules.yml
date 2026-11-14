@@ -1,0 +1,117 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseModsuitModule
+  name: MOD module
+  description: A module for a modular suit.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: module
+  - type: Item
+    size: Normal
+  - type: ModModule
+  - type: Tag
+    tags: [ ModsuitModule ]
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+      Glass: 50
+
+- type: entity
+  abstract: true
+  parent: BaseModsuitModule
+  id: BaseModsuitModuleStorage
+  components:
+  - type: ModModule
+    allowFlags: Inactive
+    incompatible:
+      tags: [ ModsuitModuleStorage ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleStorage ]
+  - type: ModStorageModule
+  - type: Storage
+    clickInsert: false
+    openOnActivate: false
+    showVerb: false
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageCompact
+  name: MOD compact storage module
+  description: A set of compartments and pockets integrated into the suit.
+  components:
+  - type: Sprite
+    state: storage
+  - type: ModModule
+    complexity: 1
+  - type: Storage
+    grid:
+    - 0,0,5,3
+    maxItemSize: Normal
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageLarge
+  name: MOD storage module
+  description: Compartments that spread the weight of their contents across the suit.
+  components:
+  - type: Sprite
+    state: storage_large
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,1,3
+    - 3,0,6,3
+    - 8,0,9,3
+    maxItemSize: Huge
+
+- type: entity
+  parent: [ BaseModsuitModuleStorage, BaseSyndicateContraband ]
+  id: ModsuitModuleStorageSyndicate
+  name: MOD syndicate storage module
+  description: A Cybersun module with compartments that compress their contents.
+  components:
+  - type: Sprite
+    state: storage_syndi
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,9,3
+    maxItemSize: Huge
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageBluespace
+  name: MOD bluespace storage module
+  description: A NanoTrasen module with miniature bluespace pockets.
+  components:
+  - type: Sprite
+    state: storage_bluespace
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,11,5
+    maxItemSize: Huge
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleFlashlight
+  name: MOD flashlight module
+  description: A pair of configurable lights mounted on the suit helmet.
+  components:
+  - type: Sprite
+    state: flashlight
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.4
+    requiredParts: [ head ]
+  - type: ModLightModule

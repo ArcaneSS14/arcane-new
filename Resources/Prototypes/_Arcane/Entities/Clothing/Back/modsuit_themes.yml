@@ -1,0 +1,43 @@
+- type: modTheme
+  id: ModThemeStandard
+
+- type: modTheme
+  id: ModThemeSecurity
+
+- type: modTheme
+  id: ModThemeSafeguard
+
+- type: modTheme
+  id: ModThemeMedical
+
+- type: modTheme
+  id: ModThemeEngineering
+
+- type: modTheme
+  id: ModThemeAtmospheric
+
+- type: modTheme
+  id: ModThemeResearch
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeMagnate
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeContractor
+
+- type: modTheme
+  id: ModThemeSuspicious
+
+- type: modTheme
+  id: ModThemeApocryphal
+  complexityMax: 25
+
+- type: modTheme
+  id: ModThemeCorporate
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeResponsory
+  complexityMax: 20

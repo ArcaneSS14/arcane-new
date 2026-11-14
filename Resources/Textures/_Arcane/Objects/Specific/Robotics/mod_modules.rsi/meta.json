@@ -1,0 +1,49 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Taken from tgstation at https://github.com/tgstation/tgstation/blob/e18f017ddb9d002a15322cc57a4de783a45b5494/icons/obj/clothing/modsuit/mod_modules.dmi",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "module",
+            "delays": [
+                [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                ]
+            ]
+        },
+        {
+            "name": "storage"
+        },
+        {
+            "name": "storage_large"
+        },
+        {
+            "name": "storage_syndi"
+        },
+        {
+            "name": "storage_bluespace",
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
+        },
+        {
+            "name": "flashlight"
+        }
+    ]
+}

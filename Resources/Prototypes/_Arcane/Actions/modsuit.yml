@@ -1,0 +1,41 @@
+- type: entity
+  parent: BaseAction
+  id: ActionModSuitActivate
+  name: Toggle MOD activation
+  description: Seal or unseal your MODsuit. All parts must be deployed first.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: true
+    checkConsciousness: true
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: InstantAction
+    event: !type:ModSuitActivateActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSuitDeploy
+  name: Deploy MOD parts
+  description: Deploy or retract every part of your MODsuit.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: true
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModSuitDeployActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModModule
+  name: Use MOD module
+  description: Use or toggle this MODsuit module.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModModuleActionEvent

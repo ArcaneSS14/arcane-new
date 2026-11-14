@@ -1,5 +1,6 @@
 using Content.Shared.Explosion;
 using Content.Shared.Inventory;
+using Content.Shared.Inventory.Events; // Arcane
 
 namespace Content.Server.Inventory
 {
@@ -28,6 +29,10 @@ namespace Content.Server.Inventory
             if (!Resolve(source.Owner, ref source.Comp, false) || !Resolve(target.Owner, ref target.Comp, false)) // Trauma - don't log missing
                 return;
 
+            // Arcane-Start: Retract linked equipment before capturing the transferable items.
+            var starting = new InventoryTransferStartingEvent(target);
+            RaiseLocalEvent(source, ref starting);
+            // Arcane-End
             var enumerator = new InventorySlotEnumerator(source.Comp);
             // Goob edit start
             List<(EntityUid, SlotDefinition)> items = new();
@@ -37,8 +42,13 @@ namespace Content.Server.Inventory
             }
             foreach (var (item, slot) in items)
             {
-                TryUnequip(source, slot.Name, true, force, inventory: source.Comp, triggerHandContact: true);
-                TryEquip(target, item, slot.Name , true, force, inventory: target.Comp, triggerHandContact: true);
+                // Arcane-Edit-Start: Equipment callbacks can change later inventory slots.
+                if (!TryGetSlotEntity(source, slot.Name, out var current, source.Comp) || current != item
+                    || !TryUnequip(source, slot.Name, true, force, inventory: source.Comp, triggerHandContact: true))
+                    continue;
+
+                TryEquip(target, item, slot.Name, true, force, inventory: target.Comp, triggerHandContact: true);
+                // Arcane-Edit-End
             }
             // Goob edit end
         }

@@ -1,0 +1,10 @@
+- type: entity
+  id: ModSuitModuleLight
+  name: MODsuit module light
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: PointLight
+    enabled: true
+    radius: 5
+    energy: 3
+    netsync: true

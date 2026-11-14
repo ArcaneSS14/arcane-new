@@ -128,4 +128,7 @@
   - ModsuitGauntlets
   - ModsuitShell
   - ModsuitPlatingExternal
+  - ModsuitCoreStandard
+  - ModsuitModuleStorageCompact
+  - ModsuitModuleFlashlight
   position: -5,6

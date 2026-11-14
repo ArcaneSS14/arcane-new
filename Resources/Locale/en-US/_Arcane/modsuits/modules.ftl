@@ -1,0 +1,9 @@
+modsuit-deactivate-first = Deactivate the MODsuit first.
+modsuit-open-panel-first = Open the MODsuit's maintenance panel first.
+modsuit-module-not-allowed = This MODsuit cannot use that module.
+modsuit-module-too-complex = That module exceeds the MODsuit's complexity limit.
+modsuit-module-missing-part = This MODsuit lacks a required part.
+modsuit-module-duplicate = A module of this type is already installed.
+modsuit-module-incompatible = That module is incompatible with an installed module.
+modsuit-module-not-removable = That module is built into the MODsuit.
+modsuit-open-module-storage = Open {THE($module)}

@@ -10,7 +10,7 @@
       steps:
       - tag: ModsuitCore
         name: construction-graph-tag-mod-core
-        store: core-container
+        store: mod-core # Arcane
         completed:
         - !type:PlaySound
           sound: /Audio/Items/screwdriver2.ogg
@@ -24,7 +24,7 @@
       - tool: Prying
         completed:
           - !type:EmptyContainer
-            container: core-container
+            container: mod-core # Arcane
     - to: shell-core-secured
       steps:
       - tool: Screwing
