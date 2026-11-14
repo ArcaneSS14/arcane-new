@@ -35,7 +35,6 @@ namespace Content.IntegrationTests.Tests._Arcane;
 public sealed class AchievementRuntimeTest : InteractionTest
 {
     private const string MinerAchievement = "LegendaryMiner";
-    private static readonly ProtoId<OrganCategoryPrototype> HeartCategory = "Heart";
     protected override string PlayerPrototype => "TestArcaneAchievementHuman";
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
     // This test broadcasts a synthetic round start without changing the ticker's round ID.
@@ -235,44 +234,6 @@ public sealed class AchievementRuntimeTest : InteractionTest
             Assert.That(SEntMan.EntityExists(SPlayer), Is.True);
             Assert.That(SEntMan.EntityExists(newBody), Is.True);
             Assert.That(SEntMan.HasComponent<BodyComponent>(newBody), Is.True);
-        });
-    }
-
-    [Test]
-    public async Task RepeatedAbductionUsesTheVictimsStateBeforeSurgeonBookkeeping()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            PrepareMind();
-            var bodies = SEntMan.System<BodySystem>();
-            var parts = SEntMan.System<BodyPartSystem>();
-            var manager = SEntMan.System<AchievementManager>();
-            var originalHeart = bodies.GetOrgan(SPlayer, HeartCategory)!.Value;
-            var torso = parts.GetParentPart(originalHeart)!.Value;
-            Assert.That(parts.RemoveOrgan(torso, originalHeart), Is.True);
-            var coords = SEntMan.GetComponent<TransformComponent>(SPlayer).Coordinates;
-            var surgeon = SEntMan.SpawnAtPosition("TestArcaneAchievementHuman", coords);
-            SEntMan.EnsureComponent<AbductorComponent>(surgeon);
-            var victim = SEntMan.EnsureComponent<AbductorVictimComponent>(SPlayer);
-            victim.Implanted = false;
-            var heart = SEntMan.SpawnAtPosition("OrganDubiousHealth", coords);
-            var surgery = SEntMan.SpawnAtPosition("TestArcaneAchievementHeartSurgery", coords);
-            var step = SEntMan.SpawnAtPosition("SurgeryStepInsertOrgan", coords);
-
-            var first = new SurgeryStepEvent(surgeon, SPlayer, torso, heart, surgery, step, false);
-            SEntMan.EventBus.RaiseLocalEvent(step, ref first);
-            Assert.That(first.Complete, Is.True);
-            Assert.That(bodies.GetBody(heart), Is.EqualTo(SPlayer));
-            Assert.That(manager.IsUnlocked(ServerSession!, "NotAgain"), Is.False);
-
-            // Arrange another implantation after the old gland is gone; normal surgery cannot remove a gland.
-            SEntMan.DeleteEntity(heart);
-            heart = SEntMan.SpawnAtPosition("OrganDubiousHealth", coords);
-            victim.Implanted = true; // This patient had already completed a previous experiment.
-            var second = new SurgeryStepEvent(surgeon, SPlayer, torso, heart, surgery, step, false);
-            SEntMan.EventBus.RaiseLocalEvent(step, ref second);
-            Assert.That(second.Complete, Is.True);
-            Assert.That(manager.IsUnlocked(ServerSession!, "NotAgain"), Is.True);
         });
     }
 

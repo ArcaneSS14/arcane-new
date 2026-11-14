@@ -8,9 +8,8 @@ using Npgsql;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
-public sealed class EarPreferenceDatabaseTest : GameTest
+public sealed class EarPreferenceDatabaseTest
 {
-    public override PoolSettings PoolSettings => new() { Connected = false, Dirty = true };
 
     [Test]
     public async Task SqliteUpgradeAndDowngradePreserveExistingCharacter()
