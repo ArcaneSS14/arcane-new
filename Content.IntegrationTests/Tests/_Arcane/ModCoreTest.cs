@@ -13,6 +13,8 @@ using Content.Shared.Actions;
 using Content.Shared.Armor;
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Clothing.Components;
+using Content.Shared.Clothing.EntitySystems;
 using Content.Shared.Cuffs;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
@@ -25,6 +27,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Instruments;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
+using Content.Shared.Item;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.NightVision;
@@ -964,6 +967,42 @@ public sealed class ModCoreTest : InteractionTest
             SEntMan.EventBus.RaiseLocalEvent(wearer, ref hit);
             Assert.That(SEntMan.HasComponent<StealthComponent>(wearer), Is.False);
             Assert.That(SEntMan.HasComponent<ModCloakedComponent>(wearer), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task DetachingArmorUtilitiesRestoresTheOriginalControlUnit()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords;
+            var wearer = SEntMan.SpawnAttachedTo("MobHuman", at);
+            var control = SEntMan.SpawnAttachedTo("ClothingModsuitEngineerPowerCell", at);
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var originalName = SEntMan.GetComponent<MetaDataComponent>(control).EntityName;
+            var originalSize = SEntMan.GetComponent<ItemComponent>(control).Size;
+            var wires = SEntMan.System<SharedWiresSystem>();
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(control, SEntMan.GetComponent<WiresPanelComponent>(control), true), Is.True);
+
+            var compression = SEntMan.SpawnAttachedTo("ModsuitModulePlateCompression", at);
+            Assert.That(suits.TryInstallModule(suit, compression, wearer), Is.True);
+            Assert.That(SEntMan.GetComponent<ItemComponent>(control).Size, Is.EqualTo(new ProtoId<ItemSizePrototype>("Normal")));
+            var storage = SEntMan.SpawnAttachedTo("ModsuitModuleStorageCompact", at);
+            Assert.That(suits.TryInstallModule(suit, storage, wearer), Is.False);
+            Assert.That(suits.TryRemoveModule(suit, compression, wearer), Is.True);
+            Assert.That(SEntMan.GetComponent<ItemComponent>(control).Size, Is.EqualTo(originalSize));
+
+            var module = SEntMan.SpawnAttachedTo("ModsuitModuleChameleon", at);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(SEntMan.HasComponent<ChameleonClothingComponent>(control), Is.True);
+            SEntMan.System<SharedChameleonClothingSystem>().SetSelectedPrototype(control,
+                "ClothingBackpack", forceUpdate: true, validate: false);
+            Assert.That(SEntMan.GetComponent<MetaDataComponent>(control).EntityName, Is.Not.EqualTo(originalName));
+            Assert.That(suits.TryRemoveModule(suit, module, wearer), Is.True);
+            Assert.That(SEntMan.HasComponent<ChameleonClothingComponent>(control), Is.False);
+            Assert.That(SEntMan.GetComponent<MetaDataComponent>(control).EntityName, Is.EqualTo(originalName));
         });
     }
 

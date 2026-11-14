@@ -23,3 +23,5 @@ modsuit-cloak-broken = The MOD cloak breaks.
 modsuit-cloak-already-active = Another cloaking effect is already active.
 modsuit-infiltrator-voice = Unknown
 modsuit-power-kick-charge = The boot servos wind up.
+modsuit-energy-shield-block = The MOD energy shield absorbs the attack.
+modsuit-energy-shield-examine = Shield charges: { $charges } / { $max }.

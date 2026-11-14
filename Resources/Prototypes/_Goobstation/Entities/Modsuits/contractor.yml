@@ -11,12 +11,15 @@
       sprite: _Goobstation/Clothing/OuterClothing/Modsuits/contractor.rsi
     - type: ModSuit # Arcane
       theme: ModThemeContractor
-      inbuiltModules: [ ModsuitModuleBuiltinInstrument, ModsuitModuleBuiltinGrip ]
+      inbuiltModules: [ ModsuitModuleBuiltinInstrument, ModsuitModuleBuiltinGrip, ModsuitModuleBuiltinChameleon ]
       parts:
         head: ClothingModsuitHelmetContractor
         gloves: ClothingModsuitGauntletsContractor
         outerClothing: ClothingModsuitChestplateContractor
         shoes: ClothingModsuitBootsContractor
+    - type: ChameleonClothing # Arcane
+      slot: [ back ]
+      default: ClothingModsuitContractor
     - type: ContainerFill # Arcane: keep the current Vortex cell inside a MOD core
       containers:
         mod-core:

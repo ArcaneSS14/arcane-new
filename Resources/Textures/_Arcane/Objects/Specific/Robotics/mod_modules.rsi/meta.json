@@ -131,6 +131,9 @@
             "name": "armor_booster"
         },
         {
+            "name": "energy_shield"
+        },
+        {
             "name": "clamp"
         },
         {
@@ -192,6 +195,12 @@
         },
         {
             "name": "mag_harness"
+        },
+        {
+            "name": "chameleon"
+        },
+        {
+            "name": "plate_compression"
         },
         {
             "name": "adrenaline_boost"

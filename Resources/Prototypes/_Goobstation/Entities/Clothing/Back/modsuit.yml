@@ -44,6 +44,8 @@
         type: StorageBoundUserInterface
       enum.ModSuitUiKey.Key: # Arcane
         type: ModSuitBoundUserInterface
+      enum.ChameleonUiKey.Key: # Arcane
+        type: ChameleonBoundUserInterface
   - type: UseDelay
     delay: 0.5
   - type: ExplosionResistance

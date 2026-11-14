@@ -109,3 +109,24 @@
   cost:
     Telecrystal: 30
   categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleEnergyShield
+  productEntity: ModsuitModuleEnergyShield
+  cost:
+    Telecrystal: 40
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModulePlateCompression
+  productEntity: ModsuitModulePlateCompression
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]
+
+- type: listing
+  id: UplinkModsuitModuleChameleon
+  productEntity: ModsuitModuleChameleon
+  cost:
+    Telecrystal: 10
+  categories: [ UplinkWearables ]

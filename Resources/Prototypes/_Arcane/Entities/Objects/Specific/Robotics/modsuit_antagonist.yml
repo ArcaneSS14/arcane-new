@@ -82,3 +82,65 @@
     damage:
       types:
         Blunt: 20
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleEnergyShield
+  name: MOD energy shield module
+  description: Uses suit power to block an incoming attack and recharges between hits.
+  components:
+  - type: Sprite
+    state: energy_shield
+  - type: ModModule
+    complexity: 3
+    idlePower: 0.8
+  - type: ModEnergyShieldModule
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModulePlateCompression
+  name: MOD plate compression module
+  description: Compacts the control unit so it fits in a bag. Takes up the space used by storage modules.
+  components:
+  - type: Sprite
+    state: plate_compression
+  - type: ModModule
+    complexity: 2
+    allowFlags: Inactive
+    incompatible:
+      tags: [ ModsuitModuleStorage ]
+  - type: ModPlateCompressionModule
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleStorage ]
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleChameleon
+  name: MOD chameleon module
+  description: Disguises the control unit as another backpack.
+  components:
+  - type: Sprite
+    state: chameleon
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    allowFlags: [ Inactive, Unworn ]
+    incompatible:
+      components: [ ModChameleonModule ]
+  - type: ModChameleonModule
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinChameleon
+  name: integrated chameleon projector
+  description: Opens the control unit's disguise picker.
+  components:
+  - type: Sprite
+    state: chameleon
+  - type: ModModule
+    moduleType: Usable
+    allowFlags: Inactive
+    incompatible:
+      components: [ ModChameleonModule ]
+  - type: ModChameleonModule
+    builtIn: true

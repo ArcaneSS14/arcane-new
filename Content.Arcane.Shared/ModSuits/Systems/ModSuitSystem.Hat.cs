@@ -11,7 +11,7 @@ namespace Content.Arcane.Shared.ModSuits.Systems;
 
 public sealed partial class ModSuitSystem
 {
-    [Dependency] private SharedItemSystem _hatItem = default!;
+    [Dependency] private SharedItemSystem _modItem = default!;
 
     private void InitializeHat()
     {
@@ -58,7 +58,7 @@ public sealed partial class ModSuitSystem
         EjectHat(helmet, slot);
         _itemSlots.RemoveItemSlot(helmet, slot);
         RemComp<ModHatHolderComponent>(helmet);
-        _hatItem.VisualsChanged(helmet);
+        _modItem.VisualsChanged(helmet);
     }
 
     private void OnHatInsertAttempt(Entity<ModHatHolderComponent> helmet, ref ItemSlotInsertAttemptEvent args)
@@ -72,13 +72,13 @@ public sealed partial class ModSuitSystem
     private void OnHatInserted(Entity<ModHatHolderComponent> helmet, ref EntInsertedIntoContainerMessage args)
     {
         if (args.Container.ID == ModHatHolderComponent.SlotId)
-            _hatItem.VisualsChanged(helmet);
+            _modItem.VisualsChanged(helmet);
     }
 
     private void OnHatRemoved(Entity<ModHatHolderComponent> helmet, ref EntRemovedFromContainerMessage args)
     {
         if (args.Container.ID == ModHatHolderComponent.SlotId)
-            _hatItem.VisualsChanged(helmet);
+            _modItem.VisualsChanged(helmet);
     }
 
     private void OnHatHelmetTerminating(Entity<ModHatHolderComponent> helmet, ref EntityTerminatingEvent args)

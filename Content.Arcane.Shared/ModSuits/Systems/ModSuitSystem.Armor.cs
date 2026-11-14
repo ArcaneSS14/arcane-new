@@ -54,8 +54,11 @@ public sealed partial class ModSuitSystem
 
         foreach (var uid in modules.ContainedEntities)
         {
-            if (TryComp(uid, out ModArmorModuleComponent? armor) && armor.Slots.Count == 0
-                && TryComp(uid, out ModModuleComponent? module) && module.Active)
+            if (!TryComp(uid, out ModModuleComponent? module) || !module.Active)
+                continue;
+
+            TryBlockWithShield(suit, uid, args.Args);
+            if (TryComp(uid, out ModArmorModuleComponent? armor) && armor.Slots.Count == 0)
                 args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, armor.Modifiers);
         }
     }
