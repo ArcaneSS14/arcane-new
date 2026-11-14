@@ -142,6 +142,7 @@
   - HandheldCrewMonitor
   - SyringeGun
   - DefibrillatorCompact
+  - ModsuitModuleVisorMedical
   position: 8,11
 
 - type: technology

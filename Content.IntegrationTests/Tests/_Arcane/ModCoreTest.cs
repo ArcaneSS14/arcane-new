@@ -6,6 +6,7 @@ using Content.Server.Construction;
 using Content.Server.Inventory;
 using Content.Shared.Actions;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Power.EntitySystems;
@@ -79,6 +80,57 @@ public sealed class ModCoreTest : InteractionTest
           - type: ModSuit
             state: Active
         """;
+
+    [Test]
+    public async Task MedicalVisorAndWeldingModuleReleaseOnlyTheirOwnEffects()
+    {
+        EntityUid wearer = default;
+        EntityUid unit = default;
+        EntityUid medical = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", position);
+            unit = SEntMan.SpawnAttachedTo("TestModControlUnit", position);
+            medical = SEntMan.SpawnAttachedTo("ModsuitModuleVisorMedical", position);
+            var security = SEntMan.SpawnAttachedTo("ModsuitModuleVisorSecurity", position);
+            var welding = SEntMan.SpawnAttachedTo("ModsuitModuleWelding", position);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", position);
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+            var wires = SEntMan.System<SharedWiresSystem>();
+
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(unit, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, unit, "back", force: true), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, medical, wearer), Is.True);
+            Assert.That(suits.TryInstallModule(suit, security, wearer), Is.False);
+            Assert.That(suits.TryInstallModule(suit, welding, wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "head", out var head), Is.True);
+            var helmet = head!.Value;
+            Assert.That(SEntMan.HasComponent<EyeProtectionComponent>(helmet), Is.True);
+            var action = new ModModuleActionEvent { Performer = wearer };
+            SEntMan.EventBus.RaiseLocalEvent(medical, action);
+            Assert.That(action.Handled, Is.True);
+            Assert.That(SEntMan.HasComponent<Content.Shared.Overlays.ShowHealthBarsComponent>(helmet), Is.True);
+            var battery = suits.GetBattery(suit)!.Value.AsNullable();
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery, 0);
+            Assert.That(SEntMan.HasComponent<EyeProtectionComponent>(helmet), Is.False);
+            Assert.That(SEntMan.HasComponent<Content.Shared.Overlays.ShowHealthBarsComponent>(helmet), Is.False);
+            Assert.That(SEntMan.HasComponent<NoSlipComponent>(helmet), Is.True);
+        });
+    }
 
     [Test]
     public async Task SealAddsAndRemovesOnlyItsOwnEffect()

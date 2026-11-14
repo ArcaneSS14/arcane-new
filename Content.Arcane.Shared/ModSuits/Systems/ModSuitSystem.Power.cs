@@ -41,6 +41,7 @@ public sealed partial class ModSuitSystem : EntitySystem
         InitializeLights();
         InitializeStorage();
         InitializeInterface();
+        InitializeEquipmentModules();
     }
 
     public EntityUid? GetCore(Entity<ModSuitComponent> suit) => _itemSlots.GetItemOrNull(suit.Owner, suit.Comp.CoreSlotId);

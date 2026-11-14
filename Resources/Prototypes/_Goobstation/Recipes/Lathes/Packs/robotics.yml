@@ -47,6 +47,9 @@
   - ModsuitModuleStorageBluespace # Arcane
   - ModsuitModuleStorageHolding # Arcane
   - ModsuitModuleFlashlight # Arcane
+  - ModsuitModuleWelding # Arcane
+  - ModsuitModuleThermalRegulator # Arcane
+  - ModsuitModuleVisorDiagnostic # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob

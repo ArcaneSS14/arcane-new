@@ -1,0 +1,9 @@
+- type: latheRecipePack
+  id: ModsuitSecurityEquipment
+  recipes:
+  - ModsuitModuleVisorSecurity
+
+- type: latheRecipePack
+  id: ModsuitMedicalEquipment
+  recipes:
+  - ModsuitModuleVisorMedical

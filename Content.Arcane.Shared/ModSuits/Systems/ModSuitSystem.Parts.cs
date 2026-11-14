@@ -189,6 +189,7 @@ public sealed partial class ModSuitSystem
             return;
 
         suit.Comp.Wearer = args.Wearer;
+        RefreshEquipmentGrants(suit);
         UpdateModuleWearer(suit, args.Wearer, equipped: true);
         RefreshWearerPower(suit);
         Dirty(suit);
@@ -206,6 +207,7 @@ public sealed partial class ModSuitSystem
         UpdateModuleWearer(suit, args.Wearer, equipped: false);
         ClearPowerAlert(suit, args.Wearer);
         suit.Comp.Wearer = null;
+        RefreshEquipmentGrants(suit);
         Dirty(suit);
     }
 

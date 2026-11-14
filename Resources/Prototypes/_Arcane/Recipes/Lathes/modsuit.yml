@@ -92,3 +92,48 @@
   materials:
     Steel: 300
     Glass: 200
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleVisorMedical
+  result: ModsuitModuleVisorMedical
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleVisorDiagnostic
+  result: ModsuitModuleVisorDiagnostic
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleVisorSecurity
+  result: ModsuitModuleVisorSecurity
+  materials:
+    Steel: 300
+    Glass: 300
+    Silver: 100
+    Gold: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleWelding
+  result: ModsuitModuleWelding
+  materials:
+    Steel: 300
+    Glass: 400
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleThermalRegulator
+  result: ModsuitModuleThermalRegulator
+  materials:
+    Steel: 400
+    Glass: 200
+    Plasma: 200

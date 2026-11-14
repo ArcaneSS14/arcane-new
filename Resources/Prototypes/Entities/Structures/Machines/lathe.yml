@@ -518,6 +518,7 @@
     unlitRunningState: unlit-building
     dynamicPacks: # Arcane-Edit: staticPacks > dynamicPacks
     - SecurityEquipmentStatic
+    - ModsuitSecurityEquipment # Arcane
     - SecurityPracticeStatic
     - SecurityAmmoStatic
     - SecurityWeaponsStatic
@@ -643,6 +644,7 @@
     - MedicalStatic
     - RollerBedsStatic
     - MedicalClothingStatic
+    - ModsuitMedicalEquipment # Arcane
     - EmptyMedkitsStatic
     - SurgeryStatic
     # Arcane-Start

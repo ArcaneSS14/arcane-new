@@ -19,6 +19,18 @@
             ]
         },
         {
+            "name": "medhud_visor"
+        },
+        {
+            "name": "diaghud_visor"
+        },
+        {
+            "name": "sechud_visor"
+        },
+        {
+            "name": "regulator"
+        },
+        {
             "name": "storage"
         },
         {
@@ -50,6 +62,12 @@
         },
         {
             "name": "flashlight"
+        },
+        {
+            "name": "injector"
+        },
+        {
+            "name": "welding"
         }
     ]
 }

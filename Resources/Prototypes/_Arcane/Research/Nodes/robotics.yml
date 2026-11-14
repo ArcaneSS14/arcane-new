@@ -151,4 +151,7 @@
   recipeUnlocks:
   - ModsuitCorePlasma
   - ModsuitModuleStorageLarge
+  - ModsuitModuleWelding
+  - ModsuitModuleThermalRegulator
+  - ModsuitModuleVisorDiagnostic
   position: -5,7
