@@ -253,10 +253,11 @@
   description: Fire a volley of mining micromissiles at the target.
   categories: [ HideSpawnMenu ]
   components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: mine_missile
   - type: Action
-    icon:
-      sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
-      state: mine_missile
+    itemIconStyle: BigAction
     useDelay: 3
     checkCanInteract: false
   - type: TargetAction
