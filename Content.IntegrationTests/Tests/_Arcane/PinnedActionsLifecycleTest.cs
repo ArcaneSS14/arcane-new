@@ -1,7 +1,9 @@
 #nullable enable
+using System.Linq;
 using Content.Arcane.Client.Actions;
 using Content.Client.UserInterface.Systems.Actions.Widgets;
 using Content.IntegrationTests.Tests.Interaction;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Mind;
 using Content.Shared.Players;
 using Robust.Client.UserInterface;
@@ -28,14 +30,27 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
             minds.TransferTo(mind, SPlayer);
         });
         await PlaceInHands("FlashlightLantern");
+        await Server.WaitAssertion(() =>
+        {
+            var secondLight = SEntMan.SpawnAttachedTo("FlashlightLantern", Xform(SPlayer).Coordinates);
+            Assert.That(SEntMan.System<SharedHandsSystem>().TryPickupAnyHand(SPlayer, secondLight, checkActionBlocker: false), Is.True);
+        });
         await Pair.RunUntilSynced();
         await Client.WaitPost(() => CEntMan.System<PinnedActionsSystem>().SetPinned("ActionToggleLight", true, PinnedSlot));
         await Pair.ReallyBeIdle(2);
         await Pair.RunUntilSynced();
         await Client.WaitAssertion(() =>
         {
-            var bar = Client.ResolveDependency<IUserInterfaceManager>().GetActiveUIWidgetOrNull<ActionsBar>()!;
+            var manager = Client.ResolveDependency<IUserInterfaceManager>();
+            var bar = manager.GetActiveUIWidgetOrNull<ActionsBar>()!;
+            var customization = manager.GetUIController<ActionBarUIController>();
             Assert.That(bar.ActionsContainer[PinnedSlot].Action, Is.Not.Null);
+            var toggleLights = bar.ActionsContainer.GetButtons()
+                .Where(button => button.Action is { } action && customization.GetPrototype(action.Owner)?.Id == "ActionToggleLight")
+                .Select(button => button.Action!.Value.Owner)
+                .ToArray();
+            Assert.That(toggleLights.Distinct(), Has.Exactly(2).Items);
+            Assert.That(toggleLights.Count(customization.IsPinned), Is.EqualTo(1));
             _hotkey = bar.ActionsContainer[PinnedSlot].Label.Text;
         });
         await Server.WaitAssertion(() =>
