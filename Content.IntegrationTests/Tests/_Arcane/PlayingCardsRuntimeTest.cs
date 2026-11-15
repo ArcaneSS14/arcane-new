@@ -31,6 +31,11 @@ public sealed class PlayingCardsRuntimeTest : InteractionTest
         string[] original = [];
         await Server.WaitAssertion(() =>
         {
+            var box = SEntMan.SpawnAttachedTo("CardBoxBlack", Xform(deck).Coordinates);
+            var boxItems = SEntMan.GetComponent<StorageComponent>(box).Container.ContainedEntities;
+            Assert.That(boxItems.Select(item => SEntMan.GetComponent<MetaDataComponent>(item).EntityPrototype?.ID),
+                Is.EquivalentTo(new[] { "CardDeckBlack", "PaperPokerRules" }));
+            SEntMan.DeleteEntity(box);
             original = AllFaces();
             Assert.That(original.Length, Is.EqualTo(53));
         });
