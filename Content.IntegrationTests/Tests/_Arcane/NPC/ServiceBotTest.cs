@@ -27,8 +27,6 @@ namespace Content.IntegrationTests.Tests._Arcane.NPC;
 
 public sealed class ServiceBotTest : GameTest
 {
-    private static readonly ProtoId<HTNCompoundPrototype> PlantServiceTask = "ServiceNearbyPlantsCompound";
-
     [Test]
     public async Task RelinkingDropsHeldItemsAndCannotDeliverToAnOldOrRemoteReceiver()
     {
@@ -120,10 +118,16 @@ public sealed class ServiceBotTest : GameTest
             SEntMan.System<HTNSystem>().SetHTNEnabled((bot, htn), false);
             blackboard = htn.Blackboard;
 
-            var compound = Server.ResolveDependency<IPrototypeManager>().Index(PlantServiceTask);
-            var steps = compound.Branches.Single().Tasks.OfType<HTNPrimitiveTask>().Select(step => step.Operator);
-            picker = steps.OfType<PickNearbyServicableHydroponicsTrayOperator>().Single();
-            service = steps.OfType<PlantbotServiceOperator>().Single();
+            var prototypes = Server.ResolveDependency<IPrototypeManager>();
+            var root = prototypes.Index(htn.RootTask.Task);
+            var operators = root.Branches
+                .SelectMany(branch => branch.Tasks.OfType<HTNCompoundTask>())
+                .SelectMany(task => prototypes.Index(task.Task).Branches)
+                .SelectMany(branch => branch.Tasks.OfType<HTNPrimitiveTask>())
+                .Select(task => task.Operator)
+                .ToArray();
+            picker = operators.OfType<PickNearbyServicableHydroponicsTrayOperator>().Single();
+            service = operators.OfType<PlantbotServiceOperator>().Single();
 
             var window = SpawnAt("WindowDirectional", 0.5f, 1.5f);
             first = SpawnAt("hydroponicsSoil", 0.45f, 1.5f);
