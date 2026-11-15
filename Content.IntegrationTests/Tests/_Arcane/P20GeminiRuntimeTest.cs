@@ -2,6 +2,8 @@ using Content.Arcane.Server.CloneProjector;
 using Content.Arcane.Shared.CloneProjector;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Ghost.Roles.Components;
+using Content.Shared.Access.Components;
+using Content.Shared.Access.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.Chemistry.EntitySystems;
@@ -34,6 +36,7 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             var host = SEntMan.SpawnAttachedTo("MobHuman", position);
             var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
             var backpack = SEntMan.SpawnAttachedTo("ClothingBackpack", position);
+            var idCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
             original = SEntMan.SpawnAttachedTo("Crowbar", position);
             var inventory = SEntMan.System<InventorySystem>();
             var containers = SEntMan.System<SharedContainerSystem>();
@@ -43,6 +46,8 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
 
             Assert.That(inventory.TryEquip(host, backpack, "back", silent: true, force: true), Is.True);
+            Assert.That(inventory.TryEquip(host, idCard, "id", silent: true, force: true), Is.True);
+            Assert.That(SEntMan.System<SharedIdCardSystem>().TryChangeJobTitle(idCard, "Custom Gemini title"), Is.True);
             Assert.That(containers.Insert(original, SEntMan.GetComponent<StorageComponent>(backpack).Container), Is.True);
             Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
             Assert.That(data.ActionEntity, Is.Not.Null);
@@ -51,6 +56,9 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(actions.PerformAction(host, actionEntity), Is.True);
             Assert.That(data.CloneUid, Is.Not.Null);
             clone = data.CloneUid!.Value;
+            Assert.That(inventory.TryGetSlotEntity(clone, "id", out var clonedId), Is.True);
+            Assert.That(clonedId, Is.Not.EqualTo(idCard));
+            Assert.That(SEntMan.GetComponent<IdCardComponent>(clonedId!.Value).LocalizedJobTitle, Is.EqualTo("Custom Gemini title"));
             Assert.That(inventory.TryGetSlotEntity(clone, "back", out var equipped), Is.True);
             copy = equipped!.Value;
             Assert.That(copy, Is.Not.EqualTo(backpack));
