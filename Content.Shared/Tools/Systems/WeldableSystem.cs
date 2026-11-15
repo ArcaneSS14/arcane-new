@@ -3,6 +3,7 @@ using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Tools.Components;
+using Robust.Shared.Map; // Arcane
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using LayerChangeOnWeldComponent = Content.Shared.Tools.Components.LayerChangeOnWeldComponent;
@@ -43,7 +44,7 @@ public sealed partial class WeldableSystem : EntitySystem
         if (args.Handled)
             return;
 
-        args.Handled = TryWeld(uid, args.Used, args.User, component);
+        args.Handled = TryWeld(uid, args.Used, args.User, component, args.ClickLocation); // Arcane-Edit
     }
 
     private bool CanWeld(EntityUid uid, EntityUid tool, EntityUid user, WeldableComponent? component = null)
@@ -60,7 +61,7 @@ public sealed partial class WeldableSystem : EntitySystem
         return true;
     }
 
-    private bool TryWeld(EntityUid uid, EntityUid tool, EntityUid user, WeldableComponent? component = null)
+    private bool TryWeld(EntityUid uid, EntityUid tool, EntityUid user, WeldableComponent? component, EntityCoordinates click) // Arcane-Edit
     {
         if (!_query.Resolve(uid, ref component))
             return false;
@@ -68,7 +69,10 @@ public sealed partial class WeldableSystem : EntitySystem
         if (!CanWeld(uid, tool, user, component))
             return false;
 
-        if (!_toolSystem.UseTool(tool, user, uid, component.Time.Seconds, component.WeldingQuality, new WeldFinishedEvent(), component.Fuel))
+        // Arcane-Start
+        if (!_toolSystem.UseTool(tool, user, uid, TimeSpan.FromSeconds(component.Time.Seconds),
+            [component.WeldingQuality], new WeldFinishedEvent(), out _, component.Fuel, weldingContact: click))
+        // Arcane-End
             return false;
 
         // Log attempt
