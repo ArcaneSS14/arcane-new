@@ -28,12 +28,13 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
     [Test]
-    public async Task TeachALessonOnlyCountsPermanentGhostDeparture()
+    public async Task TeachALessonCountsCurrentBodyDeathOrPermanentGhostDeparture()
     {
         await Server.WaitAssertion(() =>
         {
             var minds = SEntMan.System<SharedMindSystem>();
             var ghostSystem = SEntMan.System<GhostSystem>();
+            var mobs = SEntMan.System<MobStateSystem>();
             var target = minds.CreateMind(null, "Lesson target");
             var body = SEntMan.SpawnAttachedTo("MobHuman", Center);
             minds.TransferTo(target, body);
@@ -46,8 +47,17 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
             minds.TransferTo(target, newBody);
             Assert.That(objective.HasDied, Is.False);
 
-            Assert.That(ghostSystem.SpawnGhost(target.AsNullable(), Center, canReturn: false), Is.Not.Null);
+            mobs.ChangeMobState(body, MobState.Dead);
+            Assert.That(objective.HasDied, Is.False);
+            mobs.ChangeMobState(newBody, MobState.Dead);
             Assert.That(objective.HasDied, Is.True);
+
+            var departingTarget = minds.CreateMind(null, "Departing lesson target");
+            minds.TransferTo(departingTarget, SEntMan.SpawnAttachedTo("MobHuman", Center));
+            var departureObjective = AssignLesson(departingTarget.Owner);
+            Assert.That(departureObjective.HasDied, Is.False);
+            Assert.That(ghostSystem.SpawnGhost(departingTarget.AsNullable(), Center, canReturn: false), Is.Not.Null);
+            Assert.That(departureObjective.HasDied, Is.True);
         });
     }
 
