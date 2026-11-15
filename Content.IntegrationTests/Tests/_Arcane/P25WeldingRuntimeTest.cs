@@ -152,6 +152,8 @@ public sealed class P25WeldingRuntimeTest : InteractionTest
         var resumedAnchor = EntityUid.Invalid;
         var initialAudio = EntityUid.Invalid;
         var resumedAudio = EntityUid.Invalid;
+        var replacementAnchor = EntityUid.Invalid;
+        var replacementAudio = EntityUid.Invalid;
         var completionAudio = EntityUid.Invalid;
 
         await Server.WaitAssertion(() =>
@@ -196,14 +198,25 @@ public sealed class P25WeldingRuntimeTest : InteractionTest
             Assert.That(resumedAnchor, Is.Not.EqualTo(initialAnchor));
             resumedAudio = FindWorkAudio(resumedAnchor);
             Assert.That(resumedAudio, Is.Not.EqualTo(EntityUid.Invalid));
+            SEntMan.DeleteEntity(resumedAnchor);
+        });
+
+        await RunSeconds(0.2f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(resumedAudio), Is.False);
+            replacementAnchor = FindAnchor(shutter);
+            Assert.That(replacementAnchor, Is.Not.EqualTo(EntityUid.Invalid));
+            replacementAudio = FindWorkAudio(replacementAnchor);
+            Assert.That(replacementAudio, Is.Not.EqualTo(EntityUid.Invalid));
             doAfter.Cancel(action);
         });
 
         await RunSeconds(0.2f);
         await Server.WaitAssertion(() =>
         {
-            Assert.That(SEntMan.EntityExists(resumedAnchor), Is.False);
-            Assert.That(SEntMan.EntityExists(resumedAudio), Is.False);
+            Assert.That(SEntMan.EntityExists(replacementAnchor), Is.False);
+            Assert.That(SEntMan.EntityExists(replacementAudio), Is.False);
             Assert.That(SEntMan.System<WeldableSystem>().IsWelded(shutter), Is.True);
             Assert.That(tools.UseTool(tool, SPlayer, shutter, TimeSpan.FromSeconds(0.5),
                 [Welding], new WeldFinishedEvent(), out action), Is.True);
