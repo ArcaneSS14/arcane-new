@@ -110,6 +110,15 @@ public sealed partial class SlimeComponent : Component
     [DataField, AutoNetworkedField]
     public float MitosisHunger = 125f;
 
+    // Arcane-Start
+    /// <summary>Maximum number of other slimes allowed near this one at mitosis.</summary>
+    [DataField, AutoNetworkedField]
+    public int MitosisDensityLimit = 20;
+
+    [DataField, AutoNetworkedField]
+    public float MitosisDensityRange = 10f;
+    // Arcane-End
+
     /// <summary>
     /// How long in between each mitosis/breeding check?
     /// </summary>
