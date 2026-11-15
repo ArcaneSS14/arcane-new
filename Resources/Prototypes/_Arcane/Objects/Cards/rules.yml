@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# The poker insert follows ArcaneSS14/arcane #604 by Зюзя.
+
+- type: entity
+  parent: Paper
+  id: PaperPokerRules
+  name: poker rules
+  description: A folded guide to Texas Hold'em from a deck box.
+  components:
+  - type: Paper
+    content: paper-poker-rules

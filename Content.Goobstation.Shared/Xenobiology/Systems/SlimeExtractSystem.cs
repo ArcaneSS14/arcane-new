@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Goobstation.Common.Chemistry;
 using Content.Goobstation.Shared.Xenobiology.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Examine;
+// Arcane-Start
+using Content.Shared.EntityEffects;
+using Robust.Shared.Timing;
+// Arcane-End
 
 namespace Content.Goobstation.Shared.Xenobiology.Systems;
 
@@ -12,25 +15,47 @@ namespace Content.Goobstation.Shared.Xenobiology.Systems;
 public sealed partial class SlimeExtractSystem : EntitySystem
 {
     [Dependency] private SharedSolutionContainerSystem _solution = default!;
+    // Arcane-Start
+    [Dependency] private SharedEntityEffectsSystem _effects = default!;
+    [Dependency] private INetManager _net = default!;
+    // Arcane-End
 
     public override void Initialize()
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SlimeExtractComponent, BeforeSolutionReactEvent>(BeforeSolutionReact);
+        SubscribeLocalEvent<SlimeExtractComponent, ReactiveEffectsApplyingEvent>(OnApplyingEffects); // Arcane-Edit
         SubscribeLocalEvent<SlimeExtractComponent, ExaminedEvent>(OnExamined);
     }
 
-    private void BeforeSolutionReact(Entity<SlimeExtractComponent> ent, ref BeforeSolutionReactEvent args)
+    // Arcane-Edit-Start: old Arcane #386/#533, reserve the extract before scheduling the reaction.
+    private void OnApplyingEffects(Entity<SlimeExtractComponent> ent, ref ReactiveEffectsApplyingEvent args)
     {
-        // clean up the reagents inside when performing an effect
+        if (args.Handled)
+            return;
+
+        args.Handled = true;
+        if (!_net.IsServer || ent.Comp.Used)
+            return;
+
+        ent.Comp.Used = true;
+        Dirty(ent);
         if (_solution.TryGetRefillableSolution(ent.Owner, out var soln, out _))
             _solution.RemoveAllSolution((ent.Owner, soln));
+
+        var effects = args.Effects;
+        var scale = args.Scale;
+        Timer.Spawn(ent.Comp.ReactionDelay, () =>
+        {
+            if (!TerminatingOrDeleted(ent) && TryComp<SlimeExtractComponent>(ent, out var current) && current == ent.Comp)
+                _effects.ApplyEffects(ent, effects, scale);
+        });
     }
+    // Arcane-Edit-End
 
     private void OnExamined(Entity<SlimeExtractComponent> ent, ref ExaminedEvent args)
     {
-        if (!HasComp<ReactiveComponent>(ent))
+        if (ent.Comp.Used || !HasComp<ReactiveComponent>(ent)) // Arcane-Edit: also check whether the reaction was scheduled
             args.PushMarkup(Loc.GetString("xeno-extract-reaction-unreactive"));
     }
 }
