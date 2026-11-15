@@ -52,6 +52,10 @@ public sealed partial class AudioTab : Control
             ArcaneCVars.RadioBarkVolume,
             SliderVolumeRadioBarks,
             scale: 2f);
+        Control.AddOptionPercentSlider(
+            ArcaneCVars.StationRadioVolume,
+            SliderVolumeStationRadio,
+            scale: 1f);
         // Arcane-End
 
         Control.AddOptionPercentSlider(

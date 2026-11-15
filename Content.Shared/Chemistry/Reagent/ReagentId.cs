@@ -99,21 +99,25 @@ public partial struct ReagentId : IEquatable<ReagentId>
 
     public override int GetHashCode()
     {
-        // We need to make sure we take the hash code of Data by value in order
-        // for hashed key lookups to work properly
-        var hash = 17;
-        unchecked
+        // Arcane-Start: equal metadata has the same count and members, in any order.
+        if (Data is not { Count: > 0 } data)
+            return HashCode.Combine(Prototype, Data?.Count ?? -1);
+
+        if (data.Count == 1)
+            return HashCode.Combine(Prototype, data[0].GetHashCode());
+
+        // Extrema are independent of both order and duplicate multiplicities.
+        var lowest = int.MaxValue;
+        var highest = int.MinValue;
+        foreach (var entry in data)
         {
-            if (Data?.Count != 0)
-            {
-                foreach (var data in Data ?? [])
-                {
-                    hash = hash * 23 + data.GetHashCode();
-                }
-            }
+            var hash = entry.GetHashCode();
+            lowest = Math.Min(lowest, hash);
+            highest = Math.Max(highest, hash);
         }
 
-        return HashCode.Combine(Prototype, hash);
+        return HashCode.Combine(Prototype, data.Count, lowest, highest);
+        // Arcane-End
     }
 
     public string ToString(FixedPoint2 quantity)
