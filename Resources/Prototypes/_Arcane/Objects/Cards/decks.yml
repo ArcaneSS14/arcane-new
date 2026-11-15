@@ -68,13 +68,14 @@
   - type: Storage
     maxItemSize: Normal
     grid:
-    - 0,0,1,1
+    - 0,0,2,1
     whitelist:
-      components: [ PlayingCardDeck ]
+      components: [ PlayingCardDeck, Paper ]
   - type: ContainerFill
     containers:
       storagebase:
       - CardDeckBlack
+      - PaperPokerRules
   - type: Appearance
 
 - type: entity
@@ -162,6 +163,7 @@
     containers:
       storagebase:
       - CardDeckBlack
+      - PaperPokerRules
 
 - type: entity
   parent: CardDeckBase
@@ -248,6 +250,7 @@
     containers:
       storagebase:
       - CardDeckNanotrasen
+      - PaperPokerRules
 
 - type: entity
   parent: CardDeckBase
@@ -334,3 +337,4 @@
     containers:
       storagebase:
       - CardDeckSyndicate
+      - PaperPokerRules
