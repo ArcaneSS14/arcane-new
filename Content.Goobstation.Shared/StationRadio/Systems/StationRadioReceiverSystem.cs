@@ -23,6 +23,7 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
         SubscribeLocalEvent<StationRadioReceiverComponent, StationRadioMediaStoppedEvent>(OnMediaStopped);
         SubscribeLocalEvent<StationRadioReceiverComponent, ActivateInWorldEvent>(OnRadioToggle);
         SubscribeLocalEvent<StationRadioReceiverComponent, PowerChangedEvent>(OnPowerChanged);
+        SubscribeLocalEvent<StationRadioReceiverComponent, ComponentShutdown>(OnShutdown); // Arcane
     }
 
     private void OnPowerChanged(EntityUid uid, StationRadioReceiverComponent comp, PowerChangedEvent args)
@@ -43,8 +44,10 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
         if (_net.IsClient || _audio.PlayPvs(args.MediaPlayed, uid, comp.DefaultParams) is not {} audio) // Arcane-Edit: play the already selected track
             return;
 
+        _audio.Stop(comp.SoundEntity); // Arcane: replace the previous stream
         comp.SoundEntity = audio.Entity;
         EnsureComp<CopyrightedAudioComponent>(audio.Entity);
+        EnsureComp<StationRadioPlaybackComponent>(audio.Entity); // Arcane
 
         UpdateAudible((uid, comp));
     }
@@ -54,6 +57,9 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
         comp.SoundEntity = _audio.Stop(comp.SoundEntity);
     }
 
+    private void OnShutdown(EntityUid uid, StationRadioReceiverComponent comp, ComponentShutdown args) // Arcane
+        => _audio.Stop(comp.SoundEntity); // Arcane
+
     private void UpdateAudible(Entity<StationRadioReceiverComponent> ent)
     {
         SetAudible(ent.Comp, ent.Comp.Active && _power.IsPowered(ent.Owner));
@@ -61,7 +67,17 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
 
     private void SetAudible(StationRadioReceiverComponent comp, bool audible)
     {
-        if (comp.SoundEntity is {} sound && !TerminatingOrDeleted(sound))
-            _audio.SetVolume(sound, audible ? comp.DefaultParams.Volume : float.NegativeInfinity);
+        // Arcane-Edit-Start
+        if (_net.IsClient || comp.SoundEntity is not { } sound || TerminatingOrDeleted(sound))
+            return;
+
+        var volume = audible ? comp.DefaultParams.Volume : float.NegativeInfinity;
+        _audio.SetVolume(sound, volume);
+        if (TryComp<StationRadioPlaybackComponent>(sound, out var playback) && !playback.BaseVolume.Equals(volume))
+        {
+            playback.BaseVolume = volume;
+            Dirty(sound, playback);
+        }
+        // Arcane-Edit-End
     }
 }
