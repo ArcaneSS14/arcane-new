@@ -68,7 +68,7 @@
   sprite:
     sprite: _Starfall/Particles/generic.rsi
     state: dot
-  lifetime: 0.41
+  lifetime: 0.4
   lifetimeVariance: 0.10
   speed: 3.4
   speedVariance: 1.25
