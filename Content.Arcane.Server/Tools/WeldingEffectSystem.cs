@@ -63,7 +63,12 @@ public sealed partial class WeldingEffectSystem : EntitySystem
                 Hide(weld);
             else if (weld.Anchor is not { } anchor)
                 Show(weld, action);
-            else if (TryComp(anchor, out WeldingEffectComponent? state) && state.StartTime != action.StartTime)
+            else if (!TryComp(anchor, out WeldingEffectComponent? state))
+            {
+                Hide(weld);
+                Show(weld, action);
+            }
+            else if (state.StartTime != action.StartTime)
             {
                 // Automatic repairs reuse the action ID and start a new interval.
                 state.StartTime = action.StartTime;
