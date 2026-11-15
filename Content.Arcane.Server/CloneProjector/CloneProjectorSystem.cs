@@ -2,6 +2,7 @@ using Content.Arcane.Shared.CloneProjector;
 using Content.Goobstation.Shared.Holograms;
 using Content.Medical.Shared.Wounds;
 using Content.Server.Ghost.Roles.Components;
+using Content.Shared.Access.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Body;
 using Content.Shared.Damage.Components;
@@ -43,6 +44,7 @@ public sealed partial class CloneProjectorSystem : EntitySystem
     [Dependency] private SharedContainerSystem _containers = default!;
     [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private InventorySystem _inventory = default!;
+    [Dependency] private SharedIdCardSystem _idCards = default!;
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private SharedRoleSystem _roles = default!;
     [Dependency] private MobStateSystem _mobState = default!;
@@ -241,6 +243,12 @@ public sealed partial class CloneProjectorSystem : EntitySystem
         var name = Identity.Name(host, EntityManager);
         _metadata.SetEntityName(clone, $"{name} {Loc.GetString(ent.Comp.NameSuffix)}");
         CopyEquipment(ent, host, (clone, projection));
+        // Old Arcane #315: preserve only the title on a projected card.
+        if (_idCards.TryFindIdCard(host, out var originalCard)
+            && originalCard.Comp.LocalizedJobTitle is { } title
+            && _idCards.TryFindIdCard(clone, out var copiedCard)
+            && projection.Equipment.Contains(copiedCard.Owner))
+            _idCards.TryChangeJobTitle(copiedCard, title, copiedCard.Comp);
 
         var oldClone = ent.Comp.CloneUid;
         ent.Comp.CloneUid = clone;

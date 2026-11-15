@@ -1,8 +1,6 @@
 using System.Linq;
 using Content.Arcane.Shared.CloneProjector;
 using Content.Server.Construction.Components;
-using Content.Shared.Access.Components;
-using Content.Shared.Access.Systems;
 using Content.Shared.Actions.Components;
 using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Components;
@@ -28,7 +26,6 @@ public sealed partial class CloneProjectorSystem
     [Dependency] private SharedBuckleSystem _buckle = default!;
     [Dependency] private SharedJointSystem _joints = default!;
     [Dependency] private SharedMechSystem _mechs = default!;
-    [Dependency] private SharedIdCardSystem _idCards = default!;
     [Dependency] private SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
 
@@ -51,12 +48,6 @@ public sealed partial class CloneProjectorSystem
             }
 
             TrackCopy(copy, clone.Comp.Equipment);
-
-            // Old Arcane #315: preserve only the title on the projected card.
-            if (TryComp<IdCardComponent>(item, out var originalCard)
-                && originalCard.LocalizedJobTitle is { } title
-                && TryComp<IdCardComponent>(copy, out var copiedCard))
-                _idCards.TryChangeJobTitle(copy, title, copiedCard);
         }
     }
 
