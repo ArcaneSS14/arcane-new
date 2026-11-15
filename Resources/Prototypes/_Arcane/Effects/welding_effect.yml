@@ -4,6 +4,13 @@
   save: false
   components:
   - type: WeldingEffect
+    workSound:
+      path: /Audio/_Arcane/Effects/Welding/welding_work.ogg
+      params:
+        loop: true
+        volume: -6.5
+        variation: 0.02
+        maxDistance: 6
 
 - type: entity
   id: ArcaneWeldingLight
@@ -11,8 +18,20 @@
   save: false
   components:
   - type: PointLight
-    radius: 1.5
+    radius: 1.55
+    energy: 2.35
     color: Orange
+  - type: LightBehaviour
+    behaviours:
+    - !type:BriefDimBehaviour
+      property: Energy
+      minDuration: 0.42
+      maxDuration: 0.78
+      dimDuration: 0.067
+      startValue: 2.35
+      endValue: 0.35
+      enabled: true
+      isLooped: true
 
 - type: entity
   id: ArcaneExperimentalWeldingLight
@@ -23,35 +42,61 @@
   - type: PointLight
     color: MediumAquamarine
 
-# Art and colors from Goob-Station #5476. Each layer follows the weld seam.
 - type: particleEffect
   id: ArcaneWeldingSmoke
   sprite:
-    sprite: _Arcane/Effects/welding_effect.rsi
-    state: smoke
-  particleSize: 1
-  lifetime: 3600
-  lifetimeVariance: 0
-  startColor: White
-  endColor: White
-  speed: 0
-  speedVariance: 0
-  burst: true
-  maxCount: 1
-  worldSpace: false
+    sprite: _Starfall/Particles/generic.rsi
+    state: soft_dot_big
+  particleSize: 0.52
+  sizeVariance: 0.12
+  sizeOverLifetime:
+  - { time: 0, value: 0.45 }
+  - { time: 1, value: 1.4 }
+  lifetime: 0.8
+  lifetimeVariance: 0.15
+  startColor: "#786E6250"
+  endColor: "#4B484700"
+  speed: 0.42
+  speedVariance: 0.16
+  spreadAngle: 85
+  emissionRate: 5
+  maxCount: 5
 
 - type: particleEffect
   id: ArcaneWeldingSparks
-  parent: ArcaneWeldingSmoke
+  parent: SfWeldingSparks
   sprite:
-    sprite: _Arcane/Effects/welding_effect.rsi
-    state: welding_sparks
-  shader: unshaded
+    sprite: _Starfall/Particles/generic.rsi
+    state: dot
+  lifetime: 0.41
+  lifetimeVariance: 0.10
+  speed: 3.4
+  speedVariance: 1.25
+  particleSize: 2.1
+  sizeVariance: 0.54
+  stretchFactor: 0.40
+  emissionRate: 19
+  maxCount: 12
+  spreadAngle: 310
+  emitAngle: 8
+  drag: 3.9
+  gravity: 0
+  constantForce: "0,-8.3"
+  colorOverLifetime:
+  - { time: 0, color: "#FFFFFFFF" }
+  - { time: 0.74, color: "#FFFFFFFF" }
+  - { time: 0.90, color: "#FFF2CCFF" }
+  - { time: 1, color: "#FFA85800" }
+  shape:
+    type: CircleFill
+    radius: 0.12
   renderLayer: 1
 
 - type: particleEffect
   id: ArcaneExperimentalWeldingSparks
   parent: ArcaneWeldingSparks
-  sprite:
-    sprite: _Arcane/Effects/welding_effect.rsi
-    state: exp_welding_sparks
+  colorOverLifetime:
+  - { time: 0.0, color: "#FFFFFFFF" }
+  - { time: 0.74, color: "#E2FFF5FF" }
+  - { time: 0.90, color: "#A8FFDFFF" }
+  - { time: 1.0, color: "#18A98300" }
