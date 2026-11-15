@@ -116,7 +116,10 @@ public sealed partial class RepairableSystem : EntitySystem
         }
 
         // Run the repairing doafter
-        args.Handled = _toolSystem.UseTool(args.Used, args.User, ent.Owner, delay, ent.Comp.QualityNeeded, new RepairDoAfterEvent(), ent.Comp.FuelCost);
+        // Arcane-Start
+        args.Handled = _toolSystem.UseTool(args.Used, args.User, ent.Owner, TimeSpan.FromSeconds(delay),
+            [ent.Comp.QualityNeeded], new RepairDoAfterEvent(), out _, ent.Comp.FuelCost, weldingContact: args.ClickLocation);
+        // Arcane-End
     }
 }
 
