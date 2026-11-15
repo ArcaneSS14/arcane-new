@@ -1,9 +1,14 @@
+using Robust.Shared.Audio;
+
 namespace Content.Arcane.Shared.Tools;
 
 /// <summary>Replicated presentation for one active welding action.</summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class WeldingEffectComponent : Component
 {
+    [DataField]
+    public SoundSpecifier? WorkSound;
+
     [AutoNetworkedField]
     public TimeSpan StartTime;
 

@@ -55,19 +55,29 @@ public sealed partial class WeldingEffectVisualSystem : EntitySystem
 
             var progress = (float) Math.Clamp(elapsed / state.Duration, 0, 1);
             var offset = Vector2.Lerp(state.StartOffset, state.EndOffset, progress);
-            var contact = new EntityCoordinates(anchor, offset);
-            var world = _transform.ToMapCoordinates(contact);
 
             if (visual.Light is not { } light || TerminatingOrDeleted(light))
             {
                 Hide(visual);
+                var contact = new EntityCoordinates(anchor, offset);
                 visual.Light = SpawnAttachedTo(state.Experimental ? ExperimentalLight : Light, contact);
-                visual.Smoke = _particles.SpawnEffect(Smoke, world);
-                visual.Sparks = _particles.SpawnEffect(state.Experimental ? ExperimentalSparks : Sparks, world);
+                visual.LightOffset = offset;
+                var origin = _transform.ToMapCoordinates(contact);
+                visual.Smoke = _particles.SpawnEffect(Smoke, origin);
+                visual.Sparks = _particles.SpawnEffect(state.Experimental ? ExperimentalSparks : Sparks, origin);
+                continue;
             }
-            else
-                _transform.SetLocalPositionNoLerp(light, offset);
 
+            if (visual.LightOffset != offset)
+            {
+                _transform.SetLocalPositionNoLerp(light, offset);
+                visual.LightOffset = offset;
+            }
+
+            if (visual.Smoke == null && visual.Sparks == null)
+                continue;
+
+            var world = _transform.ToMapCoordinates(new EntityCoordinates(anchor, offset));
             if (visual.Smoke != null)
                 visual.Smoke.MapCoords = world;
             if (visual.Sparks != null)
@@ -105,6 +115,7 @@ public sealed partial class WeldingEffectVisualSystem : EntitySystem
         public ActiveEmitter? Smoke;
         public ActiveEmitter? Sparks;
         public EntityUid? Light;
+        public Vector2 LightOffset;
     }
 }
 // Arcane-End
