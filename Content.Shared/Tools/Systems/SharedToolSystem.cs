@@ -143,7 +143,7 @@ public abstract partial class SharedToolSystem : EntitySystem
     /// the event that this tool-use cancelled an existing DoAfter</param>
     /// <param name="fuel">Amount of fuel that should be taken from the tool.</param>
     /// <param name="toolComponent">The tool component.</param>
-    /// <param name="weldingContact">The clicked grid coordinate for tile welding.</param> <!-- Arcane -->
+    /// <param name="weldingContact">The clicked point for the welding effect.</param> <!-- Arcane -->
     /// <returns>Returns true if any interaction takes place.</returns>
     public bool UseTool(
         EntityUid tool,
@@ -193,20 +193,34 @@ public abstract partial class SharedToolSystem : EntitySystem
         if (_net.IsServer && started && id is { } action && _doAfterSystem.IsRunning(action) &&
             toolQualitiesNeeded.Contains(WeldingQuality))
         {
-            if (weldingContact is { } contact)
-                RaiseWeldingStarted(action, tool, contact);
-            else if (target is { } entity && entity != tool)
+            if (target is { } entity && entity != tool)
             {
                 var doorWeld = doAfterEv is WeldFinishedEvent;
                 var reverse = doorWeld && TryComp<WeldableComponent>(entity, out var weldable) && weldable.IsWelded;
-                RaiseWeldingStarted(action, tool, new EntityCoordinates(entity, Vector2.Zero), doorWeld, reverse);
+                RaiseWeldingStarted(action, tool, GetWeldingContact(entity, weldingContact), doorWeld, reverse);
             }
+            else if (weldingContact is { } tileContact)
+                RaiseWeldingStarted(action, tool, tileContact);
         }
         // Arcane-End
         return true;
     }
 
     // Arcane-Start
+    private EntityCoordinates GetWeldingContact(EntityUid target, EntityCoordinates? click)
+    {
+        if (click is not { } point || !_transformSystem.IsValid(point) ||
+            !TryComp(point.EntityId, out TransformComponent? clickedTransform) ||
+            !TryComp(target, out TransformComponent? targetTransform) || clickedTransform.MapID != targetTransform.MapID)
+            return new EntityCoordinates(target, Vector2.Zero);
+
+        var local = _transformSystem.WithEntityId(point, target);
+        if (!_transformSystem.IsValid(local))
+            return new EntityCoordinates(target, Vector2.Zero);
+        // A client-supplied cursor point can only move the effect within the target's tile footprint.
+        return new EntityCoordinates(target, Vector2.Clamp(local.Position, new Vector2(-0.5f), new Vector2(0.5f)));
+    }
+
     private void RaiseWeldingStarted(DoAfterId action, EntityUid tool, EntityCoordinates contact,
         bool doorWeld = false, bool reverse = false)
     {
