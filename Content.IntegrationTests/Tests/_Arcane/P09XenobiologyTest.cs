@@ -22,6 +22,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
 using Content.Shared.Lathe;
+using Content.Shared.Localizations;
 using Content.Shared.Metabolism;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
@@ -211,6 +212,33 @@ public sealed class P09XenobiologyTest : InteractionTest
             var sync = new TechnologyDatabaseSynchronizedEvent();
             SEntMan.EventBus.RaiseLocalEvent(fab, ref sync);
             Assert.That(probe!.Channels, Is.EqualTo(new[] { channel }));
+
+            var alreadyAvailable = lathe.GetAvailableRecipes(fab, component).ToHashSet();
+            var batch = dynamicRecipes
+                .Where(id => !alreadyAvailable.Contains(id) && SProtoMan.Index(id).RequiredAlerts == null)
+                .DistinctBy(id => lathe.GetRecipeName(SProtoMan.Index(id)))
+                .Take(6)
+                .ToList();
+            Assert.That(batch, Has.Count.EqualTo(6));
+            foreach (var id in batch)
+                research.AddLatheRecipe(researchServer, id.Id);
+
+            // Single-recipe unlocks seed the research state; the grouped event verifies the batch announcement.
+            probe.Channels.Clear();
+            probe.Messages.Clear();
+            var announceBatch = new TechnologyDatabaseModifiedEvent(batch.Select(id => id.Id).ToList());
+            SEntMan.EventBus.RaiseLocalEvent(fab, ref announceBatch);
+
+            var listed = lathe.GetAvailableRecipes(fab, component)
+                .Where(batch.Contains)
+                .Take(5)
+                .Select(id => lathe.GetRecipeName(SProtoMan.Index(id)))
+                .ToList();
+            Assert.That(listed, Has.Count.EqualTo(5));
+            var expected = Loc.GetString("techfab-radio-new-recipes",
+                ("recipes", ContentLocalizationManager.FormatList(listed)), ("remaining", 1));
+            Assert.That(probe.Channels, Is.EqualTo(new[] { channel }));
+            Assert.That(probe.Messages, Is.EqualTo(new[] { expected }));
         });
     }
 
@@ -244,6 +272,7 @@ public sealed partial class P09RadioProbeComponent : Component
 {
     public EntityUid ExpectedSource;
     public readonly List<string> Channels = new();
+    public readonly List<string> Messages = new();
 }
 
 public sealed partial class P09RadioProbeSystem : EntitySystem
@@ -256,8 +285,11 @@ public sealed partial class P09RadioProbeSystem : EntitySystem
 
     private void OnRadio(Entity<P09RadioProbeComponent> ent, ref RadioReceiveEvent args)
     {
-        if (args.RadioSource == ent.Comp.ExpectedSource)
-            ent.Comp.Channels.Add(args.Channel.ID);
+        if (args.RadioSource != ent.Comp.ExpectedSource)
+            return;
+
+        ent.Comp.Channels.Add(args.Channel.ID);
+        ent.Comp.Messages.Add(args.OriginalChatMsg.Message);
     }
 }
 // Arcane-End
