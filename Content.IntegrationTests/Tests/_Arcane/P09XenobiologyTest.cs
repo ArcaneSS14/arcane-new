@@ -17,6 +17,7 @@ using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
@@ -44,6 +45,33 @@ public sealed class P09XenobiologyTest : InteractionTest
     private static readonly EntProtoId ResearchServer = "ResearchAndDevelopmentServer";
 
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+
+    [Test]
+    public async Task ExtractSchedulesOneReactionDespiteRepeatedInjection()
+    {
+        EntityUid extract = default;
+        await Server.WaitAssertion(() =>
+        {
+            extract = SEntMan.SpawnAttachedTo("GreySlimeExtract", Center);
+            var reactive = SEntMan.System<ReactiveSystem>();
+            var injection = new ReagentQuantity(new ReagentId("Water", null), FixedPoint2.New(1));
+            reactive.ReactionEntity(extract, ReactionMethod.Injection, injection);
+            reactive.ReactionEntity(extract, ReactionMethod.Injection, injection);
+            Assert.That(SEntMan.GetComponent<SlimeExtractComponent>(extract).Used, Is.True);
+            Assert.That(GetEpinephrine(extract), Is.EqualTo(FixedPoint2.Zero));
+        });
+
+        await RunSeconds(5.2f);
+        await Server.WaitAssertion(() =>
+            Assert.That(GetEpinephrine(extract), Is.EqualTo(FixedPoint2.New(15))));
+    }
+
+    private FixedPoint2 GetEpinephrine(EntityUid extract)
+    {
+        var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+        Assert.That(solutions.TryGetSolution(extract, "extract", out var solution), Is.True);
+        return solution!.Value.Comp.Solution.GetTotalPrototypeQuantity("Epinephrine");
+    }
 
     [Test]
     public async Task LatchReservesOneVictimAndRespectsStomachCapacity()
