@@ -104,6 +104,10 @@
   id: FoodBowlFancy
   description: A fancy bowl, used for SPECIAL soups and salads.
   components:
+  # Arcane-Start
+  - type: MicrowaveIngredientSubstitute
+    ingredient: FoodBowlBig
+  # Arcane-End
   - type: Sprite
     sprite: Objects/Consumable/Food/bowl.rsi
     layers:
