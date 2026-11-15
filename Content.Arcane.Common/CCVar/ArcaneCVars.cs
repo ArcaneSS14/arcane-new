@@ -57,6 +57,10 @@ public sealed partial class ArcaneCVars
     public static readonly CVarDef<float> RadioBarkVolume =
         CVarDef.Create("audio.radio_bark_volume", 0.5f, CVar.CLIENTONLY | CVar.ARCHIVE);
 
+    /// <summary>Listener volume for music played by station radio receivers.</summary>
+    public static readonly CVarDef<float> StationRadioVolume =
+        CVarDef.Create("audio.station_radio_volume", 1f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
     #region Client customization
 
     public static readonly CVarDef<bool> ChatRunechat =

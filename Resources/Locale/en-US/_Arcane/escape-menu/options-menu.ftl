@@ -6,3 +6,4 @@ ui-options-function-posing-offset-down = Move down (posing)
 ui-options-function-posing-rotate-negative = Rotate counterclockwise (posing)
 ui-options-function-posing-rotate-positive = Rotate clockwise (posing)
 ui-options-radio-bark-volume = Radio bark volume:
+ui-options-station-radio-volume = Station radio music volume:
