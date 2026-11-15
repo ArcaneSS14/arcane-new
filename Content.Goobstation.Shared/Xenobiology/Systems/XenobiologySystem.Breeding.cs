@@ -12,6 +12,7 @@ namespace Content.Goobstation.Shared.Xenobiology.Systems;
 public partial class XenobiologySystem
 {
     private List<Entity<SlimeComponent>> _splitting = new();
+    [Dependency] private EntityLookupSystem _breedingLookup = default!; // Arcane
 
     [SubscribeLocalEvent]
     private void OnPendingSlimeMapInit(Entity<PendingSlimeSpawnComponent> ent, ref MapInitEvent args)
@@ -87,9 +88,10 @@ public partial class XenobiologySystem
     private void DoMitosis(Entity<SlimeComponent> ent)
     {
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        var offspringCount = rand.Next(1, ent.Comp.MaxOffspring + 1);
-        if (_net.IsServer) // no local entity for PlayPredicted and i dont trust this israelgpt slop anyway
-            _audio.PlayPvs(ent.Comp.MitosisSound, ent);
+        // Arcane-Edit-Start: old Arcane #386/#533, one density lookup per attempted split.
+        var offspringCount = Math.Min(rand.Next(1, ent.Comp.MaxOffspring + 1), GetMitosisCapacity(ent));
+        var spawned = false;
+        // Arcane-Edit-End
 
         for (var i = 0; i < offspringCount; i++)
         {
@@ -100,6 +102,7 @@ public partial class XenobiologySystem
 
             if (SpawnSlime(ent, ent.Comp.DefaultSlimeProto, selectedBreed) is { } sl)
             {
+                spawned = true; // Arcane
                 // carries over generations. type shit.
                 sl.Comp.Tamer = ent.Comp.Tamer;
                 sl.Comp.MutationChance = ent.Comp.MutationChance;
@@ -109,9 +112,35 @@ public partial class XenobiologySystem
             }
         }
 
+        // Arcane-Start
+        if (!spawned)
+            return;
+
+        if (_net.IsServer)
+            _audio.PlayPvs(ent.Comp.MitosisSound, ent);
+        // Arcane-End
+
         _container.EmptyContainer(ent.Comp.Stomach);
         PredictedQueueDel(ent);
     }
+
+    // Arcane-Start
+    private int GetMitosisCapacity(Entity<SlimeComponent> ent)
+    {
+        var remaining = ent.Comp.MitosisDensityLimit;
+        var range = ent.Comp.MitosisDensityRange;
+        if (remaining <= 0 || range <= 0)
+            return int.MaxValue;
+
+        foreach (var (uid, _) in _breedingLookup.GetEntitiesInRange<SlimeComponent>(Transform(ent).Coordinates, range))
+        {
+            if (uid != ent.Owner && --remaining <= 0)
+                return 0;
+        }
+
+        return remaining;
+    }
+    // Arcane-End
 
     /// <summary>
     ///     Spawns a slime with a given mutation

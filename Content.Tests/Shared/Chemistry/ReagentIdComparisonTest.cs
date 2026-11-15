@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Content.Shared.Chemistry.Reagent;
 using NUnit.Framework;
@@ -36,6 +37,27 @@ public sealed class ReagentIdComparisonTest
             Assert.That(Id("Blood", "a", "b").Equals(Id("Blood", "a", "a")), Is.False);
             Assert.That(Id("Blood", "a", "a", "b").Equals(Id("Blood", "a", "b", "b")), Is.True,
                 "Existing equality compares total count and membership, not duplicate multiplicities.");
+        });
+    }
+
+    [Test]
+    public void HashedLookupPreservesMetadataMembership()
+    {
+        var mixed = Id("Blood", "a", "b");
+        var repeated = Id("Blood", "a", "a", "b");
+        var values = new Dictionary<ReagentId, int>
+        {
+            [mixed] = 1,
+            [repeated] = 2,
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(values.TryGetValue(Id("Blood", "b", "a"), out var reversed), Is.True);
+            Assert.That(reversed, Is.EqualTo(1));
+            Assert.That(values.TryGetValue(Id("Blood", "a", "b", "b"), out var replacedDuplicate), Is.True);
+            Assert.That(replacedDuplicate, Is.EqualTo(2));
+            Assert.That(values.ContainsKey(Id("Blood", "a", "c")), Is.False);
         });
     }
 
