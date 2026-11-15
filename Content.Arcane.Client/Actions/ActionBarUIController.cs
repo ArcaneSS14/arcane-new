@@ -97,8 +97,7 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
             : null;
     }
 
-    public bool IsPinned(EntityUid action) => _pins.IsPinned(action)
-        || GetPrototype(action) is { } prototype && _savedPins?.IsPinned(prototype) == true;
+    public bool IsPinned(EntityUid action) => _pins.IsPinned(action);
 
     public bool IsUnavailable(EntityUid action)
     {
@@ -139,16 +138,6 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
             }
         }
 
-        foreach (var slot in slots)
-        {
-            if (slot is not { } action || _pins.IsPinned(action)
-                || !EntityManager.TryGetComponent<ActionComponent>(action, out var component)
-                || GetPrototype(action) is not { } prototype || !_savedPins.IsPinned(prototype))
-                continue;
-
-            _pins.Pin(action, prototype, component.Container);
-        }
-
         DeleteOrphanedPlaceholders(slots);
         var represented = new HashSet<EntProtoId>();
         foreach (var slot in slots)
@@ -184,7 +173,6 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
                     if (GetPrototype(action) != prototype)
                         continue;
                     chosen = action.Owner;
-                    _pins.Pin(action, prototype, action.Comp.Container);
                     break;
                 }
             }
@@ -197,9 +185,16 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
                 chosen = placeholder;
             }
 
+            if (EntityManager.TryGetComponent<ActionComponent>(chosen.Value, out var chosenAction)
+                && !_pins.IsUnavailable(chosen.Value))
+                _pins.Pin(chosen.Value, prototype, chosenAction.Container);
+
             for (var i = 0; i < slots.Count; i++)
             {
-                if (i != position && slots[i] == chosen)
+                if (i == position || slots[i] is not { } action)
+                    continue;
+
+                if (action == chosen || (GetPrototype(action) == prototype && _pins.Unpin(action)))
                     slots[i] = null;
             }
             while (slots.Count <= position)
@@ -253,7 +248,7 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
         if (GetPrototype(action) is not { } prototype || _savedPins == null)
             return;
 
-        _savedPins.SetPinned(prototype, !_savedPins.IsPinned(prototype), position);
+        _savedPins.SetPinned(prototype, !_pins.IsPinned(action), position);
         _actions.RefreshSlots();
     }
 
@@ -274,21 +269,22 @@ public sealed partial class ActionBarUIController : UIController, IActionBarCust
             {
                 var replaced = destination < slots.Count ? slots[destination] : null;
                 var replacedPrototype = replaced is { } uid ? GetPrototype(uid) : null;
-                if (movedPrototype is { } moving && _savedPins.IsPinned(moving)
-                    || replacedPrototype is { } replacing && _savedPins.IsPinned(replacing))
+                var movedPin = _pins.IsPinned(moved);
+                var replacedPin = replaced is { } replacedAction && _pins.IsPinned(replacedAction);
+                if (movedPin || replacedPin)
                 {
                     while (slots.Count <= destination)
                         slots.Add(null);
                     slots[source] = replaced;
                     slots[destination] = moved;
-                    if (movedPrototype is { } from && _savedPins.IsPinned(from))
+                    if (movedPin && movedPrototype is { } from)
                         _savedPins.SetPinned(from, true, destination, notify: false);
-                    if (replacedPrototype is { } to && _savedPins.IsPinned(to))
+                    if (replacedPin && replacedPrototype is { } to)
                         _savedPins.SetPinned(to, true, source, notify: false);
                     return true;
                 }
             }
-            else if (target is not ActionButton && movedPrototype is { } removed && _savedPins.IsPinned(removed))
+            else if (target is not ActionButton && movedPrototype is { } removed && _pins.IsPinned(moved))
             {
                 _savedPins.SetPinned(removed, false, notify: false);
                 slots[source] = null;

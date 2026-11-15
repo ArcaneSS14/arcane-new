@@ -2,6 +2,8 @@
 
 The action pin protocol and slot bookkeeping are adapted from [old Arcane #410](https://github.com/ArcaneSS14/arcane/pull/410), by ReWAFFlution. The movable bar, detached slot layout and drag handle are adapted from [old Arcane #424](https://github.com/ArcaneSS14/arcane/pull/424), by mxgnvrx. Both were read at old Arcane revision `404b7564e40e3c6f7913c124af7a9bbd956c0a40`.
 
+The one-instance pin and returning action fix follows [old Arcane #596](https://github.com/ArcaneSS14/arcane/pull/596) by ReWAFFlution at `251bfcc966db2d5d99563fcc7590007ac560e081`, retaining Arcane's persisted slot positions.
+
 The drag lock follows [Goob #6330](https://github.com/Goob-Station/Goob-Station/pull/6330), credited to Durk in its changelog. The clothing speech font follows [Goob #6464](https://github.com/Goob-Station/Goob-Station/pull/6464), by Elpersonn. The SSD duration follows [Goob #6441](https://github.com/Goob-Station/Goob-Station/pull/6441), by MartynDew, with a separate network disconnect clock to remove its dependency on forced sleep. Goob was read at `45e8d6b1cb1d3464762c8a50ce2f7f5ddf6e59c1`.
 
 Original and adapted code is licensed under the GNU Affero General Public License, version 3 or later (AGPL-3.0-or-later). The repository's AGPL license applies. Existing file notices are retained. This attribution covers the related implementation in Content.Arcane.Client, Content.Arcane.Common, Content.Arcane.Shared and Content.Arcane.Server, together with the marked integration changes in inherited files.
