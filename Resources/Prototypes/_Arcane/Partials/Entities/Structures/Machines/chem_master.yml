@@ -1,0 +1,13 @@
+- type: entity
+  id: ChemMaster
+  components:
+  - type: ChemMaster
+    pillDosageLimit: 50
+  - type: ChemMasterBeakerCapacity
+  - type: DumpableSolution
+    unlimited: false
+  - type: SolutionContainerVisuals
+    solutionName: buffer
+    maxFillLevels: 10
+    fillBaseName: mixer_fill-
+    changeColor: true

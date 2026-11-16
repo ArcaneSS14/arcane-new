@@ -1,0 +1,6 @@
+- type: reaction
+  id: HeartbreakerToxin
+  reactants:
+    Dexalin:
+      amount: 1
+    DexalinPlus: !Remove
