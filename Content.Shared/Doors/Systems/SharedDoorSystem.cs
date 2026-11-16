@@ -238,16 +238,15 @@ public abstract partial class SharedDoorSystem : EntitySystem
     /// </summary>
     private void OnAfterPry(EntityUid uid, DoorComponent door, ref PriedEvent args)
     {
-        TryComp<AirlockComponent>(uid, out var airlock); // Arcane
         if (door.State == DoorState.Closed)
         {
             _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} open");
-            StartOpening(uid, door, args.User, true, airlock?.ForceOpenSound); // Arcane-Edit: Use the configured pry sound.
+            StartOpening(uid, door, args.User, true, CompOrNull<AirlockComponent>(uid)?.ForceOpenSound); // Arcane-Edit: Use the configured pry sound.
         }
         else if (door.State == DoorState.Open)
         {
             _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} closed");
-            StartClosing(uid, door, args.User, true, airlock?.ForceCloseSound); // Arcane-Edit: Use the configured pry sound.
+            StartClosing(uid, door, args.User, true, CompOrNull<AirlockComponent>(uid)?.ForceCloseSound); // Arcane-Edit: Use the configured pry sound.
         }
     }
 
