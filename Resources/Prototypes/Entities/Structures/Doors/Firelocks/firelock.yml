@@ -108,9 +108,9 @@
       types:
         Blunt: 15
     openSound:
-      path: /Audio/_Arcane/Machines/airlock/firedoor_openclose.ogg # Arcane-Edit: airlock_open > firedoor_openclose
+      path: /Audio/_Arcane/Machines/airlock/firedoor_openclose.ogg # Arcane-Edit
     closeSound:
-      path: /Audio/_Arcane/Machines/airlock/firedoor_openclose.ogg # Arcane-Edit: airlock_close > firedoor_openclose
+      path: /Audio/_Arcane/Machines/airlock/firedoor_openclose.ogg # Arcane-Edit
     denySound:
       path: /Audio/Machines/airlock_deny.ogg
     openingAnimationTime: 0.6

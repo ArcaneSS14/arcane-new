@@ -124,8 +124,7 @@ public sealed partial class AirlockSystem : SharedAirlockSystem
                 showEmergency && isDoorIdle && !showBolted);
         }
 
-        // Arcane-Edit-Start
-        /*
+        /* // Arcane-Edit-Start
         if (comp.OpenUnlitVisible)
         {
             switch (state)
@@ -138,7 +137,6 @@ public sealed partial class AirlockSystem : SharedAirlockSystem
                     break;
             }
         }
-        */
-        // Arcane-Edit-End
+        */ // Arcane-Edit-End
     }
 }
