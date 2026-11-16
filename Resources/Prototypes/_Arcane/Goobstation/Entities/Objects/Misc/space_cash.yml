@@ -1,0 +1,13 @@
+- type: stack
+  id: FakeCredit
+  name: stack-credit
+  icon: { sprite: /Textures/Objects/Economy/cash.rsi, state: cash }
+  spawn: SpaceCashCounterfeit
+
+- type: material
+  id: FakeCredit
+  name: materials-arcane-speso
+  unit: materials-unit-bill
+  stackEntity: SpaceCashCounterfeit
+  icon: { sprite: /Textures/Objects/Economy/cash.rsi, state: cash }
+  price: 1

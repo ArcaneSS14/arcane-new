@@ -1,0 +1,6 @@
+- type: entity
+  id: ContainmentFieldGenerator
+  components:
+  - type: PointLight
+    radius: 16
+    softness: 8

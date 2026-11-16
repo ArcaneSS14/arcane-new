@@ -2,3 +2,18 @@
   id: UplinkCombatMedkitPills
   cost:
     Telecrystal: 15
+
+- type: listing
+  id: UplinkGrenadeFrag
+  cost:
+    Telecrystal: 9
+
+- type: listing
+  id: UplinkGrenadeBlast
+  cost:
+    Telecrystal: 9
+
+- type: listing
+  id: UplinkKravMagaImplanter
+  cost:
+    Telecrystal: 35

@@ -1,0 +1,7 @@
+- type: listing
+  id: UplinkScramImplanter
+  conditions: !Clear
+  - !type:StoreWhitelistCondition
+    blacklist:
+      tags:
+      - NukeOpsUplink

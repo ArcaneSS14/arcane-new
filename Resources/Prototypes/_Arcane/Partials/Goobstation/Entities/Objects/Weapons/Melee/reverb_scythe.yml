@@ -1,0 +1,8 @@
+- type: entity
+  id: ReverbScythe
+  components:
+  - type: Clothing
+    sprite: _Goobstation/Objects/Weapons/Melee/breverb.rsi
+    slots:
+    - back
+

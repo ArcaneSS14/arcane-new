@@ -1,0 +1,9 @@
+- type: entity
+  id: SpaceCash
+  components:
+  - type: StealTarget
+    stealGroup: AuthenticSpaceCash
+
+- type: entity
+  id: SpaceCashCounterfeit
+  parent: !Clear [HiddenFakeSpaceCash, BaseMajorContraband]

@@ -7,6 +7,7 @@
     - Feroxi
 
 # Basic
+
 - type: loadout
   id: EmergencyWaterVapor
   effects:
@@ -17,6 +18,7 @@
     - BoxSurvivalSlotsWaterVapor
 
 # Clown
+
 - type: loadout
   id: EmergencyWaterVaporClown
   effects:
@@ -27,6 +29,7 @@
     - BoxHugSlotsWaterVapor
 
 # Mime
+
 - type: loadout
   id: EmergencyWaterVaporMime
   effects:
@@ -37,6 +40,7 @@
     - BoxMimeSlotsWaterVapor
 
 # Engineering / Extended
+
 - type: loadout
   id: EmergencyWaterVaporExtended
   effects:
@@ -47,6 +51,7 @@
     - BoxSurvivalSlotsEngineeringWaterVapor
 
 # Medical
+
 - type: loadout
   id: EmergencyWaterVaporMedical
   effects:
@@ -57,6 +62,7 @@
     - BoxSurvivalSlotsMedicalWaterVapor
 
 # Security
+
 - type: loadout
   id: EmergencyWaterVaporSecurity
   effects:
@@ -67,6 +73,7 @@
     - BoxSurvivalSlotsSecurityWaterVapor
 
 # Syndicate
+
 - type: loadout
   id: EmergencyWaterVaporSyndicate
   effects:
@@ -77,6 +84,7 @@
     - BoxSurvivalSlotsWaterVapor
 
 # Full EVA Tank, Any Species
+
 - type: loadout
   id: LoadoutSpeciesEVAWaterVapor
   effects:
@@ -86,6 +94,7 @@
     suitstorage: WaterVaporTankFilled
 
 # Species-appropriate Double Emergency Tank in Pocket 1
+
 - type: loadout
   id: LoadoutSpeciesPocketDoubleWaterVapor
   effects:
@@ -93,3 +102,19 @@
     proto: WaterBreather
   equipment:
     pocket1: DoubleEmergencyWaterVaporTankFilled
+
+- type: loadoutEffectGroup
+  id: EffectSpeciesSynth
+  effects:
+  - !type:SpeciesLoadoutEffect
+    species:
+    - Synth
+
+- type: loadout
+  id: EmergencySynth
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: EffectSpeciesSynth
+  storage:
+    back:
+    - BoxSurvivalSlotsSynth

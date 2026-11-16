@@ -1,0 +1,4 @@
+- type: vendingMachineInventory
+  id: DiscountDansInventory
+  startingInventory:
+    FoodSnackCoalCrunch: 3

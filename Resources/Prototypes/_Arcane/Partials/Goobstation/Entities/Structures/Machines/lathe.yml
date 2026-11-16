@@ -1,0 +1,13 @@
+- type: entity
+  id: ServiceTechFab
+  components:
+  - type: Lathe
+    dynamicPacks:
+    - PaintingTools
+
+- type: entity
+  id: EngineeringTechFab
+  components:
+  - type: Lathe
+    dynamicPacks:
+    - PaintingTools

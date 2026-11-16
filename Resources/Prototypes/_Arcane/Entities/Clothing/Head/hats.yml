@@ -331,10 +331,14 @@
   description: A robust beret with the medical insignia emblazoned on it. Uses reinforced fabric to offer sufficient protection.
   categories: [ HideSpawnMenu ]
   components:
+  - type: Armor
+    priceMultiplier: 0
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_security_medic.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Head/Hats/beret_security_medic.rsi
+  - type: StaticPrice
+    price: 5
   - type: Tag
     tags:
       - HamsterWearable
@@ -346,6 +350,8 @@
   description: A beret for different tasks.
   categories: [ HideSpawnMenu ]
   components:
+  - type: StaticPrice
+    price: 5
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_ce.rsi
   - type: Clothing
@@ -385,6 +391,8 @@
   name: pink clown hat
   description: Pink clown hat.
   components:
+  - type: StaticPrice
+    price: 5
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Sponsor/clown.rsi
   - type: Clothing

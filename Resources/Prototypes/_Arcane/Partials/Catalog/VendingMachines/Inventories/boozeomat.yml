@@ -1,0 +1,4 @@
+- type: vendingMachineInventory
+  id: BoozeOMatInventory
+  contrabandInventory:
+    DrinkAphrodisiacBottleFull: 1

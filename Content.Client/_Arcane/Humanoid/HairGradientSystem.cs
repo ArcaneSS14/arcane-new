@@ -46,6 +46,19 @@ public sealed partial class HairGradientSystem : EntitySystem
         Apply(target, tracked, layerId, rsi);
     }
 
+    /// <summary>
+    /// Puts the gradient shader back on every hair layer of <paramref name="target"/>, after something else replaced
+    /// the layer shaders.
+    /// </summary>
+    public void Reapply(EntityUid target)
+    {
+        if (!_tracked.TryGetValue(target, out var tracked))
+            return;
+
+        foreach (var (layerId, rsi) in tracked.Layers)
+            Apply(target, tracked, layerId, rsi);
+    }
+
     public override void FrameUpdate(float frameTime)
     {
         base.FrameUpdate(frameTime);

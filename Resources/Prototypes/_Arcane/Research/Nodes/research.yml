@@ -98,6 +98,7 @@
   - ClothingBackpackHarmpack
   - WeaponParticleDecelerator
   - VehicleHoverchairSci
+  - SprayPainterInfinite
   position: 0,6
 
 - type: technology

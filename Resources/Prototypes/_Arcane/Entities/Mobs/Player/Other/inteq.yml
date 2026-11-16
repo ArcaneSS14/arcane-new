@@ -4,14 +4,18 @@
   abstract: true
   randomizeName: false
   speciesBlacklist:
-  - Monkey
-  - Kobold
-  - Abductor
-  - IPC
+  - Chitinid
   - Diona
-  - Vox
-  - Gingerbread
+  - Felinid
+  - Harpy
+  - HumanoidXeno
+  - Hydrakin
+  - Oni
   - Plasmaman
+  - Resomi
+  - Rodentia
+  - Vox
+  - Yowie
   components:
   - type: AntagImmune
   - type: GhostRole
@@ -90,6 +94,7 @@
     prototypes: [ InteQVanguardMedicGear ]
 
 # Spawners
+
 - type: entity
   id: RandomHumanoidSpawnerInteQVanguardLeader
   name: InteQ vanguard leader spawner

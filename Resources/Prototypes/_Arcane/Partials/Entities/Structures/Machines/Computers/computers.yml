@@ -1,0 +1,10 @@
+- type: entity
+  id: CentcommComputerComms
+  components:
+  - type: AlertLevelGateConsole
+    centComm: true
+
+- type: entity
+  id: ComputerComms
+  components:
+  - type: AlertLevelGateConsole
