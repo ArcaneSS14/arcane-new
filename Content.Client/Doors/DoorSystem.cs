@@ -136,6 +136,16 @@ public sealed partial class DoorSystem : SharedDoorSystem
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
                     return;
 
+                // Arcane-Edit-Start
+                /*
+                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
+                {
+                    _animationSystem.Stop(entity, null, DoorComponent.CloseKey);
+                    _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.OpenKey);
+                }
+                */
+                // Arcane-Edit-End
+
                 foreach (var (layer, layerState) in entity.Comp.OpenSpriteStates)
                 {
                     // Allow animations to play while it's open (e.g., pinion);
@@ -149,6 +159,16 @@ public sealed partial class DoorSystem : SharedDoorSystem
                 _animationSystem.Stop(entity, null, DoorComponent.OpenKey); // Arcane-Edit
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
                     return;
+
+                // Arcane-Edit-Start
+                /*
+                if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
+                {
+                    _animationSystem.Stop(entity, null, DoorComponent.OpenKey);
+                    _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.CloseKey);
+                }
+                */
+                // Arcane-Edit-End
 
                 foreach (var (layer, layerState) in entity.Comp.ClosedSpriteStates)
                 {
