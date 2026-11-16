@@ -107,6 +107,12 @@
     time: 3
   - type: Airlock
     openUnlitVisible: true
+    # Arcane-Start
+    forceOpenSound:
+      path: /Audio/_Arcane/Machines/airlock/airlock_open_force.ogg
+    forceCloseSound:
+      path: /Audio/_Arcane/Machines/airlock/airlock_close_force.ogg
+    # Arcane-End
   - type: NavMapDoor
   - type: DoorBolt
   - type: Appearance

@@ -2,3 +2,13 @@
   license: "CC-BY-SA-3.0"
   copyright: "Orion-Station-14 contributors, crew monitoring alert from PR #65. No per-file license given, licensed under the repository's media default."
   source: "https://github.com/AtaraxiaSpaceFoundation/Orion-Station-14/pull/65"
+
+- files: ["airlock/airlock_open_force.ogg", "airlock/airlock_close_force.ogg"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Somebody, for Baystation12"
+  source: "https://github.com/Baystation12/Baystation12/commit/41c3cfd386b11aee101b3f89ab7fefe77a57a1ba"
+
+- files: ["airlock/firedoor_openclose.ogg"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Somebody, for Baystation12. Shortened by UmbiMax for Orion."
+  source: "https://github.com/AtaraxiaSpaceFoundation/Orion-Station-14/commit/107b5c90cf"

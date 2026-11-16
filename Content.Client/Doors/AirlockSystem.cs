@@ -27,6 +27,7 @@ public sealed partial class AirlockSystem : SharedAirlockSystem
 
         if (comp.OpenUnlitVisible) // Otherwise there are flashes of the fallback sprite between clicking on the door and the door closing animation starting.
         {
+            // DoorSystem applies these states after the animation so a network update cannot cut the light layer short. Arcane
             door.OpenSpriteStates.Add((DoorVisualLayers.BaseUnlit, comp.OpenSpriteState));
             door.ClosedSpriteStates.Add((DoorVisualLayers.BaseUnlit, comp.ClosedSpriteState));
         }
@@ -122,19 +123,6 @@ public sealed partial class AirlockSystem : SharedAirlockSystem
             var isDoorIdle = state != DoorState.Open && state != DoorState.Opening && state != DoorState.Closing;
             _sprite.LayerSetVisible((uid, args.Sprite), DoorVisualLayers.BaseEmergencyAccess,
                 showEmergency && isDoorIdle && !showBolted);
-        }
-
-        if (comp.OpenUnlitVisible)
-        {
-            switch (state)
-            {
-                case DoorState.Open:
-                    _sprite.LayerSetRsiState((uid, args.Sprite), DoorVisualLayers.BaseUnlit, comp.OpenSpriteState);
-                    break;
-                case DoorState.Closed:
-                    _sprite.LayerSetRsiState((uid, args.Sprite), DoorVisualLayers.BaseUnlit, comp.ClosedSpriteState);
-                    break;
-            }
         }
     }
 }
