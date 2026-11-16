@@ -1,8 +1,8 @@
-using System.Numerics; // Arcane
 using Content.Shared.Atmos.EntitySystems;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using System.Numerics; // Arcane
 using static Content.Shared.Atmos.EntitySystems.SharedGasTileOverlaySystem;
 
 namespace Content.Shared.Atmos

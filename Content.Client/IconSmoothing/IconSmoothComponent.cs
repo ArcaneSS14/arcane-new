@@ -1,3 +1,9 @@
+// Arcane-Edit-Start
+// using JetBrains.Annotations;
+// using Robust.Client.Graphics;
+// using Robust.Shared.Prototypes;
+// Arcane-Edit-End
+
 namespace Content.Client.IconSmoothing;
 
 // Arcane-Edit-Start

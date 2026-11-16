@@ -18,10 +18,13 @@ public sealed partial class ClientRandomIconSmoothSystem : SharedRandomIconSmoot
     private void OnAppearanceChange(Entity<RandomIconSmoothComponent> ent, ref AppearanceChangeEvent args)
     {
         // Arcane-Edit-Start
+        // if (!TryComp<IconSmoothComponent>(ent, out var smooth))
+        //     return;
+        // Arcane-Edit-End
+
         if (!_appearance.TryGetData<string>(ent, RandomIconSmoothState.State, out var state, args.Component))
             return;
 
-        _iconSmooth.SetStateBase(ent.Owner, ent.Comp.Index, state);
-        // Arcane-Edit-End
+        _iconSmooth.SetStateBase(ent.Owner, ent.Comp.Index, state); // Arcane-Edit
     }
 }

@@ -1,7 +1,6 @@
 using Content.Client.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
-using Content.Shared.Atmos.EntitySystems; // Arcane
 using Content.Shared.Species;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -13,6 +12,7 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using System.Numerics;
+using Content.Shared.Atmos.EntitySystems; // Arcane
 
 namespace Content.Client.Atmos.Overlays;
 
@@ -151,8 +151,8 @@ public sealed partial class GasTileFireOverlay : Overlay
                     // Arcane-Start
                     if (!SharedGasTileOverlaySystem.ChunkIntersects(chunk, localBounds))
                         continue;
-
                     // Arcane-End
+
                     var enumerator = new GasChunkMaskEnumerator(chunk, chunk.FireTiles); // Arcane-Edit: GasChunkEnumerator(chunk) > GasChunkMaskEnumerator(chunk, chunk.FireTiles)
 
                     while (enumerator.MoveNext(out var gas))

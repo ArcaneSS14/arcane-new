@@ -5,14 +5,19 @@ using JetBrains.Annotations;
 using Robust.Client.GameObjects;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Map.Enumerators;
-
+// Arcane-Edit-Start
+// using System.Numerics;
+// using Content.Shared.IconSmoothing;
+// using Robust.Shared.Map;
+// using static Robust.Client.GameObjects.SpriteComponent;
+// Arcane-Edit-End
 // Arcane-Start
 using System.Diagnostics.CodeAnalysis;
 using Robust.Shared.Collections;
 using Robust.Shared.Utility;
 // Arcane-End
 
-namespace Content.Client.IconSmoothing; // Arcane-Edit: namespace Content.Client.IconSmoothing > namespace Content.Client.IconSmoothing;
+namespace Content.Client.IconSmoothing;
 
 // Arcane-Edit-Start
 /// <summary>

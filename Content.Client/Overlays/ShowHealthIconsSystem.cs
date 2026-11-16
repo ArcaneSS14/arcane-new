@@ -61,10 +61,8 @@ public sealed partial class ShowHealthIconsSystem : EquipmentHudSystem<ShowHealt
         AddHealthIcons(entity, args.StatusIcons); // Arcane-Edit: DecideHealthIcons > AddHealthIcons
     }
 
-    // Arcane-Edit-Start: This runs every frame for every visible mob, so write straight into the existing list.
-    private void AddHealthIcons(Entity<InjurableComponent> entity, List<StatusIconData> result)
+    private void AddHealthIcons(Entity<InjurableComponent> entity, List<StatusIconData> result) // Arcane-Edit: DecideHealthIcons > AddHealthIcons
     {
-    // Arcane-Edit-End
         var injurableComp = entity.Comp;
 
         if (injurableComp.DamageContainer == null ||
@@ -85,6 +83,8 @@ public sealed partial class ShowHealthIconsSystem : EquipmentHudSystem<ShowHealt
                     result.Add(icon);
             }
         }
+
+        // return result; // Arcane-Edit
     }
 
     // Goobstation

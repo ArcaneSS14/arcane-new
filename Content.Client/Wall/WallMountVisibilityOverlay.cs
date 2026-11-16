@@ -148,7 +148,7 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
     /// </summary>
     private void ProcessVisibleEntities(in OverlayDrawArgs args, IEye eye, Matrix3x2 matrix, float fadeStep, ViewportFadeState viewportState)
     {
-        // Arcane-Edit-Start: walls don't move, so wall-mounts don't all need a ray every frame
+        // Arcane-Start
         viewportState.Frame++;
         var currentEye = (eye.Position, eye.Rotation);
         var moved = currentEye != viewportState.LastEye;
@@ -161,10 +161,10 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
 
         _mounts.Clear();
         _tree.QueryAabb(_mounts, args.MapId, args.WorldBounds);
+        // Arcane-End
 
-        foreach (var (uid, wallmount, xform) in _mounts)
+        foreach (var (uid, wallmount, xform) in _mounts) // Arcane-Edit
         {
-            // Arcane-Edit-End
             if (!_spriteQuery.TryGetComponent(uid, out var sprite))
                 continue;
 
@@ -174,12 +174,12 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
 
             viewportState.SeenThisFrame.Add(uid);
 
-            // Arcane-Edit-Start
-            var targetAlpha = viewportState.FadeStates.TryGetValue(uid, out var tracked)
+            var targetAlpha = viewportState.FadeStates.TryGetValue(uid, out var tracked) // Arcane-Edit
+                              // Arcane-Start
                               && unchecked((uint) uid.Id + viewportState.Frame) % checkInterval != 0
-                ? tracked.TargetAlpha
-                : ComputeTargetAlpha(wallmount, xform, eye, matrix);
-            // Arcane-Edit-End
+                              ? tracked.TargetAlpha
+                              : ComputeTargetAlpha(wallmount, xform, eye, matrix);
+                              // Arcane-End
             UpdateFadeState(uid, originalAlpha, targetAlpha, fadeStep, viewportState);
         }
     }
@@ -187,12 +187,32 @@ public sealed partial class WallMountVisibilityOverlay : Overlay
     /// <summary>
     /// Returns 1 if the entity is within its facing arc relative to the eye, 0 otherwise.
     /// </summary>
-    // Arcane-Edit-Start
     private float ComputeTargetAlpha(WallMountComponent wallmount, TransformComponent xform, IEye eye, Matrix3x2 matrix)
     {
-        return _visibility.GetVisibilityAlpha(wallmount, xform, eye, matrix);
+        // Arcane-Edit-Start
+        // if (!wallmount.DirectionalVisibility || wallmount.Arc >= Math.Tau)
+        //     return 1f;
+
+        // if (xform.GridUid is not { } gridUid || !_gridQuery.TryGetComponent(gridUid, out var grid))
+        //     return 1f;
+
+        // var tile = _map.TileIndicesFor(gridUid, grid, xform.Coordinates);
+        // if (!_visibility.IsTileBlocked((gridUid, grid), tile))
+        //     return 1f;
+
+        // var (pos, rot) = _xform.GetWorldPositionRotation(xform);
+        // var facingAngle = rot + eye.Rotation + wallmount.Direction;
+
+        // var entityScreenPos = Vector2.Transform(pos, matrix);
+        // var eyeScreenPos = Vector2.Transform(eye.Position.Position, matrix);
+        // var toEntity = entityScreenPos - eyeScreenPos;
+        // var eyeToEntityAngle = (toEntity with { X = -toEntity.X }).ToWorldAngle();
+
+        // var angleDiff = Angle.ShortestDistance(eyeToEntityAngle, facingAngle);
+        // return Math.Abs(angleDiff) < wallmount.Arc / 2 ? 1f : 0f;
+        // Arcane-Edit-End
+        return _visibility.GetVisibilityAlpha(wallmount, xform, eye, matrix); // Arcane
     }
-    // Arcane-Edit-End
 
     /// <summary>
     /// Applies the current fade state to all entities seen this frame.
