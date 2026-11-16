@@ -16,7 +16,7 @@
         },
         // Client configurations
         {
-            "name": "Client",
+            "name": "Client (No Build)", // Arcane-Edit
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Content.Client/Content.Client.dll",
@@ -76,7 +76,7 @@
         },
         // Server configurations
         {
-            "name": "Server",
+            "name": "Server (No Build)", // Arcane-Edit
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Content.Server/Content.Server.dll",
@@ -150,11 +150,23 @@
         {
             "name": "Server/Client",
             "configurations": [
-                "Server",
-                "Client"
+                // Arcane-Edit-Start
+                "Server (No Build)",
+                "Client (No Build)"
+                // Arcane-Edit-End
             ],
             "preLaunchTask": "build"
         },
+        // Arcane-Start
+        {
+            "name": "Server/Client - No Build",
+            "configurations": [
+                "Server (No Build)",
+                "Client (No Build)"
+            ],
+            "stopAll": true
+        },
+        // Arcane-End
         {
             "name": "Server/Client - Tools",
             "configurations": [
