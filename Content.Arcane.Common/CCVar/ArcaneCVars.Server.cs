@@ -21,4 +21,10 @@ public sealed partial class ArcaneCVars
     /// </summary>
     public static readonly CVarDef<int> NpcSleepRange =
         CVarDef.Create("npc.sleep_range", 40, CVar.SERVERONLY);
+
+    /// <summary>
+    /// How many infinity dorms one player can have at once.
+    /// </summary>
+    public static readonly CVarDef<int> MaxUserInfinityDorms =
+        CVarDef.Create("infinity_dorms.max_per_user", 2, CVar.SERVER | CVar.REPLICATED);
 }
