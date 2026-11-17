@@ -3,6 +3,10 @@
                 HorizontalAlignment="Center"
                 MouseFilter="Ignore">
     <BoxContainer Orientation="Vertical" SeparationOverride="4" Margin="16 12" MouseFilter="Ignore">
+        <Label Text="{Loc 'achievements-toast-new'}"
+               Align="Center"
+               HorizontalAlignment="Center"
+               MouseFilter="Ignore" />
         <TextureRect Name="Icon"
                      SetSize="64 64"
                      Stretch="KeepAspectCentered"

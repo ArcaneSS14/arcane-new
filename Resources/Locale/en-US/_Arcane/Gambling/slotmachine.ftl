@@ -5,13 +5,14 @@ slotmachine-no-money = Not enough money!
 
 slotmachine-win-minor = You've won 10 spesos
 slotmachine-win-small = You've won 100 spesos!
+slotmachine-stake-returned = You got your stake back.
 slotmachine-win-medium = Congrats!, You've won 500 spesos!
 slotmachine-win-large = Congratulations! You've won 5000 spesos!
 
 slotmachine-win-jackpot = CONGRATULATIONS, YOU'VE HIT THE JACKPOT!!
 slotmachine-win-godpot = ERROR INTERGER OVERFLOW, DISPENSING "GODPOT"
 
-slotmachine-win-qm-minor = Congratulations, you've won 100,000 spesos
+slotmachine-win-qm-minor = You got your 100,000 spesos back.
 slotmachine-win-qm-jackpot = CONGRATULATIONS, YOU'VE WON 1,000,000 SPESOS, JACKPOT!!
 slotmachine-win-qm-throngler = If security tries to take this from you, remind them that they are mortal.
 
