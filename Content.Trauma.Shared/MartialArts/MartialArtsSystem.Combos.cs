@@ -168,4 +168,10 @@ public partial class MartialArtsSystem
             _knowledge.AddExperience(ent.Owner, performer, 1); // Arcane-Edit: limit opponent level + 10 > no limit
         }
     }
+    // Arcane-Edit-Start
+    // private int GetMartialArtLevel(EntityUid uid)
+    //     => _knowledge.GetActiveMartialArt(uid) is { } unit
+    //         ? _knowledge.GetLevel(unit)
+    //         : 0;
+    // Arcane-Edit-End
 }

@@ -43,7 +43,7 @@ public sealed partial class KnowledgeTab : Control
         _sprite = _system.GetEntitySystem<SpriteSystem>();
     }
 
-    // Arcane-Edit-Start: rebuild everything once > update existing controls while the tab is visible
+    // Arcane-Start: rebuild everything once > update existing controls while the tab is visible
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
@@ -63,6 +63,7 @@ public sealed partial class KnowledgeTab : Control
         else
             SetKnowledge(null);
     }
+    // Arcane-End
 
     /// <summary>
     /// Updates the specificied knowledge tab with the player's current knowledge.
@@ -72,6 +73,7 @@ public sealed partial class KnowledgeTab : Control
     {
         TabContainer.SetTabTitle(this, Loc.GetString("trauma-knowledge-title"));
 
+        // Arcane-Edit-Start
         SetKnowledge(_knowledge.GrabAllKnowledge(player));
     }
 

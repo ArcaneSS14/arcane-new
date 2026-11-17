@@ -760,12 +760,10 @@ public sealed partial class SurgerySystem
         if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
             speed *= surgerySpeedMod.SpeedModifier;
 
-        // Arcane-Start: self-surgery penalty
+        // Arcane-Start
         if (user == target && TryComp<SurgeryTargetComponent>(target, out var surgeryTarget))
             speed *= surgeryTarget.SelfSurgerySpeedModifier;
-        // Arcane-End
 
-        // Arcane-Start: surgery skill
         var skillEv = new GetSurgeryTimeMultiplierEvent(1f);
         RaiseLocalEvent(user, ref skillEv);
         speed /= skillEv.Multiplier;
