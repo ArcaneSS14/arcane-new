@@ -11,6 +11,12 @@
     - id: SpaceCash100
 
 - type: entityTable
+  id: SlotMachineStakeBack
+  table: !type:AllSelector
+    children:
+    - id: SpaceCash250
+
+- type: entityTable
   id: SlotMachineMediumWin
   table: !type:AllSelector
     children:
