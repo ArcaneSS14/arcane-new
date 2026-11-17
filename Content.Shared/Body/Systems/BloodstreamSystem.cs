@@ -689,16 +689,15 @@ public sealed partial class BloodstreamSystem : EntitySystem
             currentVolume += bloodSolution.RemoveReagent(reagent.Reagent, quantity: bloodSolution.Volume, ignoreReagentData: true);
         }
 
-        // Arcane: reference solutions loaded from prototypes may not set MaxVolume.
-        // Keep the species' normal blood amount when changing its composition.
+        // Scale the solution to the volume of the blood.
         var newReagentsSolution = reagents.Clone();
-        newReagentsSolution.ScaleTo(ent.Comp.BloodReferenceSolution.Volume);
+        newReagentsSolution.ScaleTo(ent.Comp.BloodReferenceSolution.Volume); // Arcane-Edit: MaxVolume > Volume
 
         // Set the scaled solution as the new blood reference.
         ent.Comp.BloodReferenceSolution = newReagentsSolution;
         DirtyField(ent, ent.Comp, nameof(BloodstreamComponent.BloodReferenceSolution));
 
-        if (currentVolume == FixedPoint2.Zero || newReagentsSolution.Volume == FixedPoint2.Zero)
+        if (currentVolume == FixedPoint2.Zero || newReagentsSolution.Volume == FixedPoint2.Zero) // Arcane-Edit: require blood in both solutions
             return;
 
         var solution = ent.Comp.BloodReferenceSolution.Clone();

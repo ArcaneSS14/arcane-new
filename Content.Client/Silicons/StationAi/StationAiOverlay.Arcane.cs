@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Silicons.StationAi;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -42,3 +43,4 @@ public sealed partial class StationAiOverlay
         }
     }
 }
+// Arcane-End

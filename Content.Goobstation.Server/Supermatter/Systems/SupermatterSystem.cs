@@ -377,9 +377,11 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         // Special cases
         if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
         {
-            message = Loc.GetString("supermatter-delam-cancel", ("integrity", integrity));
+            // Arcane-Edit-Start
             sm.DelamAnnounced = false;
-            global = true;
+            SupermatterAnnouncement(uid, Loc.GetString("supermatter-delam-cancel", ("integrity", integrity)), global: true);
+            return;
+            // Arcane-Edit-End
         }
         if (sm.Delamming && !sm.DelamAnnounced)
         {
@@ -507,8 +509,12 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         }
         if (sm.Damage < sm.DelaminationPoint && sm.Delamming)
         {
-            sm.Delamming = false;
+            // Arcane-Edit-Start
             HandleAnnouncements(uid, sm);
+            sm.Delamming = false;
+            sm.DelamTimerAccumulator = 0f;
+            return;
+            // Arcane-Edit-End
         }
 
         sm.DelamTimerAccumulator++;

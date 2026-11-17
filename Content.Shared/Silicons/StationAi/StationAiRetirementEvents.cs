@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Actions;
 using Content.Shared.Eui;
 using Robust.Shared.Serialization;
@@ -8,3 +9,4 @@ public sealed partial class StationAiRetireEvent : InstantActionEvent;
 
 [Serializable, NetSerializable]
 public sealed class ConfirmStationAiRetireMessage : EuiMessageBase;
+// Arcane-End
