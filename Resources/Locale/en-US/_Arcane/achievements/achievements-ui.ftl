@@ -7,6 +7,7 @@ achievements-window-rarity = {$percent}% of players
 achievements-window-unlocked-on = Unlocked {$date}
 achievements-window-progress = {$progress} / {$target}
 achievements-button = Achievements
+achievements-toast-new = New achievement
 achievements-window-tab-all = All
 achievements-window-tab-category = {$name} ({$unlocked}/{$total})
 
