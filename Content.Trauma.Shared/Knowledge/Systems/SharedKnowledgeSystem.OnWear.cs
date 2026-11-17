@@ -73,6 +73,7 @@ public abstract partial class SharedKnowledgeSystem
     {
         RemoveKnowledgeModifiers(args.Brain, ent);
         RefreshBorgLanguages(args.Brain);
+        RefreshBorgLanguages(ent.Owner);
     }
     // Arcane-Edit-End
 
