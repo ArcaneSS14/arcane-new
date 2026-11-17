@@ -137,6 +137,26 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
             Assert.That(sm.ArcaneSurgeActive, Is.False);
             Assert.That(sm.EffectiveGasEfficiency, Is.EqualTo(sm.GasEfficiency));
             Assert.That(SEntMan.GetComponent<RadiationSourceComponent>(crystal).EffectiveIntensity, Is.EqualTo(baselineRadiation));
+
+            var system = SEntMan.System<SupermatterSystem>();
+            sm.Delamming = true;
+            sm.DelamAnnounced = true;
+            sm.DelamTimerAccumulator = sm.DelamTimer - 1f;
+            sm.Damage = 0f;
+            sm.Power = 0f;
+            system.Cycle(crystal, sm);
+
+            Assert.That(SEntMan.EntityExists(crystal), Is.True);
+            Assert.That(sm.Delamming, Is.False);
+            Assert.That(sm.DelamAnnounced, Is.False);
+            Assert.That(sm.DelamTimerAccumulator, Is.Zero);
+
+            sm.Damage = sm.DelaminationPoint * 2f;
+            system.Cycle(crystal, sm);
+
+            Assert.That(sm.Delamming, Is.True);
+            Assert.That(sm.DelamAnnounced, Is.True);
+            Assert.That(sm.DelamTimerAccumulator, Is.EqualTo(1f));
         });
     }
 }

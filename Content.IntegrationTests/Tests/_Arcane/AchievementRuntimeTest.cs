@@ -20,10 +20,14 @@ using Content.Shared.ActionBlocker;
 using Content.Shared.Body;
 using Content.Shared.Damage.Components;
 using Content.Shared.GameTicking.Events;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Components;
 using Content.Shared.Mind;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
 using Content.Shared.Verbs;
 using Robust.Shared.Configuration;
@@ -234,6 +238,27 @@ public sealed class AchievementRuntimeTest : InteractionTest
             Assert.That(SEntMan.EntityExists(SPlayer), Is.True);
             Assert.That(SEntMan.EntityExists(newBody), Is.True);
             Assert.That(SEntMan.HasComponent<BodyComponent>(newBody), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task PartyHardChecksTheHeldItemBeforeSoftCritDropsIt()
+    {
+        var glowstick = await PlaceInHands("GlowstickRed", enableToggleable: false);
+        await Server.WaitAssertion(() =>
+        {
+            PrepareMind();
+            var status = SEntMan.System<StatusEffectsSystem>();
+            var hands = SEntMan.System<SharedHandsSystem>();
+            var manager = SEntMan.System<AchievementManager>();
+            Assert.That(status.TryAddStatusEffectDuration(SPlayer, "StatusEffectDrunk", TimeSpan.FromSeconds(10)), Is.True);
+            Assert.That(hands.GetActiveItem(SPlayer), Is.EqualTo(SEntMan.GetEntity(glowstick)));
+            Assert.That(manager.IsUnlocked(ServerSession!, "PartyHard"), Is.False);
+
+            SEntMan.System<MobStateSystem>().ChangeMobState(SPlayer, MobState.SoftCrit);
+
+            Assert.That(hands.GetActiveItem(SPlayer), Is.Null);
+            Assert.That(manager.IsUnlocked(ServerSession!, "PartyHard"), Is.True);
         });
     }
 
