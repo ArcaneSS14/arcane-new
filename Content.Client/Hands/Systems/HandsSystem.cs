@@ -273,6 +273,7 @@ namespace Content.Client.Hands.Systems
             }
         }
 
+        // Arcane-Start
         /// <summary>
         ///     Checks whether the hand contributes a visible sprite layer.
         /// </summary>
@@ -289,6 +290,7 @@ namespace Content.Client.Hands.Systems
             }
             return false;
         }
+        // Arcane-End
 
         /// <summary>
         ///     Update the players sprite with new in-hand visuals.

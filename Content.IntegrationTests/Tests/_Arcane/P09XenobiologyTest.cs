@@ -48,6 +48,18 @@ public sealed class P09XenobiologyTest : InteractionTest
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
     [Test]
+    public async Task LiquidAnomalyHasOneProbitalEntry()
+    {
+        await SpawnTarget("AnomalyLiquid");
+        var anomaly = STarget!.Value;
+        await Server.WaitAssertion(() =>
+        {
+            var producer = SEntMan.GetComponent<ReagentProducerAnomalyComponent>(anomaly);
+            Assert.That(producer.UsefulChemicals.Count(reagent => reagent == "Probital"), Is.EqualTo(1));
+        });
+    }
+
+    [Test]
     public async Task ExtractSchedulesOneReactionDespiteRepeatedInjection()
     {
         EntityUid extract = default;
