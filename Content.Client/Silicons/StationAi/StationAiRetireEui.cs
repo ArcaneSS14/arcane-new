@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Client.Eui;
 using Content.Shared.Eui;
 using Content.Shared.Silicons.StationAi;
@@ -31,3 +32,4 @@ public sealed class StationAiRetireEui : BaseEui
 
     public override void Closed() => _window.Close();
 }
+// Arcane-End

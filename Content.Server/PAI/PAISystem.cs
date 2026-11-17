@@ -9,9 +9,11 @@ using Content.Shared.Popups;
 using Content.Shared.Instruments;
 using Robust.Shared.Random;
 using System.Text;
-using Content.Shared.Actions; // Arcane
-using Content.Shared.Silicons.StationAi; // Arcane
-using Content.Shared.StationAi; // Arcane
+// Arcane-Start
+using Content.Shared.Actions;
+using Content.Shared.Silicons.StationAi;
+using Content.Shared.StationAi;
+// Arcane-End
 
 namespace Content.Server.PAI;
 
@@ -22,8 +24,10 @@ public sealed partial class PAISystem : EntitySystem
     [Dependency] private MetaDataSystem _metaData = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private ToggleableGhostRoleSystem _toggleableGhostRole = default!;
-    [Dependency] private SharedActionsSystem _actions = default!; // Arcane
-    [Dependency] private SharedStationAiSystem _stationAi = default!; // Arcane
+    // Arcane-Start
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private SharedStationAiSystem _stationAi = default!;
+    // Arcane-End
 
     /// <summary>
     /// Possible symbols that can be part of a scrambled pai's name.
@@ -38,8 +42,10 @@ public sealed partial class PAISystem : EntitySystem
         SubscribeLocalEvent<PAIComponent, MindAddedMessage>(OnMindAdded);
         SubscribeLocalEvent<PAIComponent, MindRemovedMessage>(OnMindRemoved);
         SubscribeLocalEvent<PAIComponent, BeingMicrowavedEvent>(OnMicrowaved);
-        SubscribeLocalEvent<PAIComponent, ComponentShutdown>(OnShutdown); // Arcane
-        SubscribeLocalEvent<PAIComponent, TogglePAICameraEvent>(OnToggleCamera); // Arcane
+        // Arcane-Start
+        SubscribeLocalEvent<PAIComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<PAIComponent, TogglePAICameraEvent>(OnToggleCamera);
+        // Arcane-End
     }
 
     private void OnUseInHand(EntityUid uid, PAIComponent component, UseInHandEvent args)

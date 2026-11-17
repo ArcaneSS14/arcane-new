@@ -1,6 +1,5 @@
 using System.Linq;
 using Content.Server.Administration.Logs;
-using Content.Server.Holopad; // Arcane
 using Content.Server.Pointing.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
@@ -26,6 +25,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
+using Content.Server.Holopad; // Arcane
 
 namespace Content.Server.Pointing.EntitySystems
 {
@@ -312,7 +312,7 @@ namespace Content.Server.Pointing.EntitySystems
 
             _pointers[session] = _gameTiming.CurTime;
 
-            SendMessage(player, origin, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage); // Arcane
+            SendMessage(player, origin, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage); // Arcane-Edit: pass the projection origin
 
             return true;
         }

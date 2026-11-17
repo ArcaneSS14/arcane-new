@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Actions;
 using Content.Shared.GameTicking;
 using Content.Shared.Light.EntitySystems;
@@ -103,3 +104,4 @@ public sealed partial class StationAiSystem
         (_litCameras, _requestedCameras) = (_requestedCameras, _litCameras);
     }
 }
+// Arcane-End
