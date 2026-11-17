@@ -213,7 +213,7 @@
         state: blobbernaut
       - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
         state: nautdamage
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: AnimatedEmotes
     flexState: blobbernaut_flex
     flexDefaultState: blobbernaut

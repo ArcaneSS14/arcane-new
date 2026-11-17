@@ -16,7 +16,7 @@
     layers:
     - sprite: _Trauma/BloodCult/Effects/tiles_spawn.rsi
       state: floorglow
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     drawdepth: FloorObjects
   - type: PointLight
     color: "#FF0000"
@@ -35,7 +35,7 @@
     layers:
     - sprite: _Trauma/BloodCult/Effects/cult_in_out.rsi
       state: cult_in
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     drawdepth: Effects
   - type: PointLight
     color: "#FF0000"
@@ -50,7 +50,7 @@
     layers:
     - sprite: _Trauma/BloodCult/Effects/cult_in_out.rsi
       state: cult_out
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
 
 - type: entity
   id: PuddleDrainBeamEntity

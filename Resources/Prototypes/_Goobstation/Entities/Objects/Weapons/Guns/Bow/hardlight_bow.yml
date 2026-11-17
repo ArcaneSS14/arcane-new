@@ -14,7 +14,7 @@
     - state: unwielded-arrow
       color: "#FFFFFF"
       visible: false
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "bowstring" ]
   - type: Item
     heldPrefix: folded
@@ -94,27 +94,27 @@
     inhandVisuals:
       left:
       - state: inhand-left-bowstring
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         map: [ "left" ]
       - state: wielded-inhand-left-bowstring
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
         map: [ "wielded-left" ]
       right:
       - state: inhand-right-bowstring
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         map: [ "right" ]
       - state: wielded-inhand-right-bowstring
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
         map: [ "wielded-right" ]
     clothingVisuals:
       back:
       - state: bowstring-equipped-BACKPACK
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
       suitstorage:
       - state: bowstring-equipped-BACKPACK
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: GenericVisualizer
     visuals:
       enum.WieldableVisuals.Wielded:

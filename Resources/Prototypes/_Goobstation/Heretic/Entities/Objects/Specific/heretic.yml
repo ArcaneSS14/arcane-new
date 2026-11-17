@@ -308,7 +308,7 @@
     sprite: _Goobstation/Heretic/items.rsi
     layers:
     - state: bullet
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Projectile
     impactEffect: BulletImpactEffectKinetic
     ignoreResistances: true

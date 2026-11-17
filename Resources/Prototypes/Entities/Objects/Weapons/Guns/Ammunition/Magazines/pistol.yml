@@ -121,7 +121,7 @@
         map: ["enum.GunVisualLayers.Base"]
       - state: mag-unshaded-1
         map: ["enum.GunVisualLayers.MagUnshaded"]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: MagazineVisuals
     magState: mag
     steps: 6

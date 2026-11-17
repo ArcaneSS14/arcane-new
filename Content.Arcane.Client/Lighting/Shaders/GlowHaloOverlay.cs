@@ -28,7 +28,7 @@ namespace Content.Arcane.Client.Lighting.Shaders;
 /// </summary>
 public sealed partial class GlowHaloOverlay : Overlay
 {
-    private static readonly ProtoId<ShaderPrototype> UnshadedGlowShader = "UnshadedGlow";
+    private static readonly ProtoId<ShaderPrototype> UnshadedShader = SpriteSystem.UnshadedId;
     private static readonly ProtoId<ShaderPrototype> LightGlowShader = "LightGlow";
     private static readonly ProtoId<ShaderPrototype> LightGlowCoreShader = "LightGlowCore";
     private static readonly ProtoId<ShaderPrototype> UnshadedHaloShader = "UnshadedGlowHalo";
@@ -199,7 +199,7 @@ public sealed partial class GlowHaloOverlay : Overlay
 
         foreach (var entry in _scanned)
         {
-            if (HasLayer(entry.Comp1, UnshadedGlowShader) && !HasLayer(entry.Comp1, LightGlowShader))
+            if (HasLayer(entry.Comp1, UnshadedShader) && !HasLayer(entry.Comp1, LightGlowShader))
                 glow.Sprites.Add(entry);
         }
     }
@@ -257,8 +257,8 @@ public sealed partial class GlowHaloOverlay : Overlay
             if (!layer.Visible || layer.Blank || layer.CopyToShaderParameters != null)
                 continue;
 
-            // Sprites using UnshadedGlow draw themselves, so below Strong they have nothing to draw here.
-            if (layer.ShaderPrototype is not { } proto || proto != LightGlowShader && (!_strong || proto != UnshadedGlowShader))
+            // Plain unshaded layers draw themselves, so below Strong they have nothing to draw here.
+            if (layer.ShaderPrototype is not { } proto || proto != LightGlowShader && (!_strong || proto != UnshadedShader))
                 continue;
 
             var state = layer.ActualState;

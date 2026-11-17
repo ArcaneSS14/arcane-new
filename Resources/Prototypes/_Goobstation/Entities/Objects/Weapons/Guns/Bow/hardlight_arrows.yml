@@ -7,7 +7,7 @@
   - type: Sprite
     sprite: _Goobstation/Objects/Weapons/Guns/Bow/arrow.rsi
     state: icon
-    shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+    shader: unshaded
   - type: Physics
     bodyType: Dynamic
     linearDamping: 0

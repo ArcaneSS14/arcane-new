@@ -10,10 +10,10 @@
     layers:
     - state: security
     - state: idle-security
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "barrier" ]
     - state: direction
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -112,10 +112,10 @@
     layers:
     - state: regular
     - state: idle
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "barrier" ]
     - state: direction
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: GenericVisualizer
     visuals:
       enum.TurnstileVisualLayers.Base:

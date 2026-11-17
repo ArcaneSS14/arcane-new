@@ -15,7 +15,7 @@
       map: ["enum.FaxMachineVisuals.VisualState"]
     - state: idle
       visible: false
-      shader: UnshadedGlow
+      shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     # Arcane-Edit-End
   - type: Icon

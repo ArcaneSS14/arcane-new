@@ -91,7 +91,7 @@
       state: fusion_core
     - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
       state: o2
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Item
     size: Normal
   - type: Tag

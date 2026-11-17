@@ -13,9 +13,9 @@
         map: ["christmas"]
         visible: false
       - state: fireplace_fire4
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
       - state: fireplace_glow
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: Appearance
   - type: HolidayVisuals
     holidays:

@@ -8,7 +8,7 @@
   - type: Sprite
     drawdepth: Effects
     layers:
-    - shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+    - shader: unshaded
       map: ["enum.EffectLayers.Unshaded"]
   - type: EffectVisuals
   - type: Tag

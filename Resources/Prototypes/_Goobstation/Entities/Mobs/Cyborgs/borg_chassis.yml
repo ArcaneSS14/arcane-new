@@ -23,10 +23,10 @@
     - state: synd_sec
     - state: synd_sec_e
       map: [ "enum.BorgVisualLayers.Light" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: synd_sec_l
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "light" ]
       visible: false
   - type: BorgChassis
@@ -65,10 +65,10 @@
     - state: huborg
     - state: huborg_e_r
       map: ["enum.BorgVisualLayers.Light"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: huborg_l
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["light"]
       visible: false
   - type: BorgChassis

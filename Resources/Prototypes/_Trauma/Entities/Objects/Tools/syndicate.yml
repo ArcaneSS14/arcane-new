@@ -11,7 +11,7 @@
     - state: icon
     - state: mode-link
       map: ["enum.NetworkConfiguratorLayers.ModeLight"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: signaller
       sprite: Objects/Devices/signaller.rsi
       visible: false

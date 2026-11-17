@@ -12,6 +12,6 @@
     noRot: true
     layers:
     - state: hellhand
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: TimedDespawn
     lifetime: 1

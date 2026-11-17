@@ -11,7 +11,7 @@
     - state: telecom-nopower
     - state: telecom-stripe
     - state: telecom-on
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
       map: ["telecom-on"]
     - state: variant-nokey

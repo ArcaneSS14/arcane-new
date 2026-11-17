@@ -11,11 +11,11 @@
     layers:
     - state: frame
     - state: on
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
       visible: false
     - state: portal
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["portal"]
       visible: false
   - type: GenericVisualizer

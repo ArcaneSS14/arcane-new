@@ -29,7 +29,7 @@
     sprite: _Trauma/Vampires/vampire_effects.rsi
     layers:
     - state: demonic_grasp
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Reflective
     reflective: Magic
   - type: Physics

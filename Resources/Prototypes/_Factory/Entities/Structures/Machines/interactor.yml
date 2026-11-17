@@ -14,7 +14,7 @@
     - state: empty
       map: [ enum.InteractorLayers.Hand ]
     - state: empty-powered
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
       map: [ enum.InteractorLayers.Powered ]
   - type: Appearance

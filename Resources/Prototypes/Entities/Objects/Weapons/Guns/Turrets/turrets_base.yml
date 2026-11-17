@@ -124,7 +124,7 @@
       renderingStrategy: NoRotation
     - state: base
     - state: lethal
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Gun
     projectileSpeed: 15
     fireRate: 1.5

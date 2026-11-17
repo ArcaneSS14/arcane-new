@@ -70,7 +70,7 @@
       map: [ "base" ]
     - state: datadisk_label
     - state: datadisk_t2_marks
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "t2_marks" ]
       visible: false
     - state: datadisk_t2_border
@@ -78,7 +78,7 @@
       visible: false
     - state: datadisk_t3_marks
       map: [ "t3_marks" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: datadisk_t3_border
       map: [ "t3_border" ]

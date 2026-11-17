@@ -13,7 +13,7 @@
     noRot: true
     layers:
     - state: redspace_lifeline
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: EmitSoundOnSpawn
     sound:
       path: /Audio/_Goobstation/Weapons/ChronoLegionnaire/stasisgun_reload.ogg
@@ -36,7 +36,7 @@
     noRot: true
     layers:
     - state: redspace_lifeline
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: SpawnOnDespawn
     prototype: Telecrystal1
   - type: EmitSoundOnSpawn

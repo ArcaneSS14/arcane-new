@@ -11,10 +11,10 @@
     offset: 0, 1
     layers:
     - state: unshaded_bg
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: base
     - state: unshaded_fg
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     drawdepth: Mobs
   - type: AmbientSound
     volume: -5

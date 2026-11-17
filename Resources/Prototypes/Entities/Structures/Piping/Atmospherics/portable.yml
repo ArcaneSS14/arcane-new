@@ -28,11 +28,11 @@
     - state: icon
       map: ["enum.PortableScrubberVisualLayers.IsRunning"]
     - state: unlit
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
       visible: false
     - state: draining
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
       map: ["enum.PortableScrubberVisualLayers.IsDraining"]
   - type: PortableScrubber

@@ -14,7 +14,7 @@
     - state: basic
     - state: mode
       color: orange
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "Firemode" ]
   - type: Item
     sprite: _Goobstation/Wizard/Objects/Weapons/Wands/wand.rsi
@@ -72,10 +72,10 @@
     inhandVisuals:
       left:
       - state: mode-inhand-left
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
       right:
       - state: mode-inhand-right
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: ItemToggle
     activated: true
     onActivate: false

@@ -90,7 +90,7 @@
     # </Trauma>
     # Arcane-Start
     - state: grinder_on
-      shader: UnshadedGlow
+      shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
       visible: false
     # Arcane-End

@@ -20,13 +20,13 @@
       visible: false
     - state: on-unshaded
       map: ["onLight"]
-      shader: UnshadedGlow
+      shader: unshaded
       visible: false
     - state: off
       map: ["off"]
     - state: off-unshaded
       map: ["offLight"]
-      shader: UnshadedGlow
+      shader: unshaded
     # Arcane-Edit-End
   - type: Appearance
   - type: GenericVisualizer
@@ -99,7 +99,7 @@
     - state: base
     - state: button
     - state: button-unshaded
-      shader: UnshadedGlow
+      shader: unshaded
     # Arcane-Edit-End
   - type: UseDelay
     delay: 0.5 # prevent light-toggling auto-clickers.
@@ -150,7 +150,7 @@
     - state: base
     - state: on
     - state: on-unshaded
-      shader: UnshadedGlow
+      shader: unshaded
     # Arcane-Edit-End
     # CorvaxGoob-ButtonsVisuals-End
   - type: Rotatable
@@ -224,7 +224,7 @@
     - state: base
     - state: locked
       map: ["enum.LockVisualLayers.Lock"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
 
 - type: entity
   parent: LockableButton

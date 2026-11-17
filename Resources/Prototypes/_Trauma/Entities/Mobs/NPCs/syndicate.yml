@@ -194,7 +194,7 @@
       state: alive
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: mouth
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Access
     tags:
     - NuclearOperative
@@ -281,7 +281,7 @@
     - state: viscerator
       map: ["movement"]
     - state: viscerator_l
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["light"]
       visible: true
   - type: SpriteMovement

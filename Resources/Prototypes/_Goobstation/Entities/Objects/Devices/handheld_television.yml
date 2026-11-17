@@ -11,7 +11,7 @@
       layers:
         - state: tablet
         - state: television
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: ActivatableUI
       inHandsOnly: true
       singleUser: true

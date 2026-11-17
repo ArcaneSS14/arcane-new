@@ -10,7 +10,7 @@
     layers:
     - state: seedextractor-off
     - state: seedextractor-unlit
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
   - type: Physics
     bodyType: Static

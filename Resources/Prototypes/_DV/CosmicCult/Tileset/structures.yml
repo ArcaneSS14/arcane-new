@@ -97,7 +97,7 @@
     layers:
       - state: base
       - state: glow
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: PointLight
     color: "#42a4ae" # 5000K color temp
     energy: 2
@@ -133,7 +133,7 @@
     layers:
     - state: cosmic
     - state: cosmic_light
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Icon
     sprite: _DV/CosmicCult/Tileset/altar.rsi
     state: cosmic

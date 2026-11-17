@@ -8,7 +8,7 @@
     drawdepth: Effects
     layers:
     - state: "lightning_1"
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Physics
   - type: Electrified
     requirePower: false
@@ -53,7 +53,7 @@
       layers:
         - state: "lightning_3"
           color: plum
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: PointLight
       enabled: true
       color: plum
@@ -79,7 +79,7 @@
       drawdepth: Effects
       layers:
         - state: "blue_lightning"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: Electrified
       requirePower: false
       shockDamage: 40
@@ -98,7 +98,7 @@
     drawdepth: Effects
     layers:
     - state: "lightning_1"
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Electrified
     shockDamage: 0
   - type: Lightning
@@ -125,7 +125,7 @@
       drawdepth: Effects
       layers:
         - state: "yellow_lightning"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: Electrified
       requirePower: false
       shockDamage: 50
@@ -151,7 +151,7 @@
       drawdepth: Effects
       layers:
         - state: "red_lightning"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: Electrified
       requirePower: false
       shockDamage: 60

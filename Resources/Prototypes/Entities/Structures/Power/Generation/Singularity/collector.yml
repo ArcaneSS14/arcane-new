@@ -40,12 +40,10 @@
           True: { state: ca-tank, visible: true }
       enum.RadiationCollectorVisuals.PressureState:
         pressureLight:
-          # Arcane-Edit-Start: unshaded > UnshadedGlow
-          0: { state: ca-o0, shader: "UnshadedGlow" }
-          1: { state: ca-o1, shader: "UnshadedGlow" }
-          2: { state: ca-o2, shader: "UnshadedGlow" }
-          3: { state: ca-o3, shader: "UnshadedGlow" }
-          # Arcane-Edit-End
+          0: { state: ca-o0, shader: "unshaded" }
+          1: { state: ca-o1, shader: "unshaded" }
+          2: { state: ca-o2, shader: "unshaded" }
+          3: { state: ca-o3, shader: "unshaded" }
   - type: AnimationPlayer
   - type: NodeContainer
     examinable: true

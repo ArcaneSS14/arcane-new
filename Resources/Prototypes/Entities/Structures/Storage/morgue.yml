@@ -19,7 +19,7 @@
     - state: morgue_nomob_light
       visible: false
       map: ["enum.MorgueVisualLayers.Light"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Clickable
   - type: InteractionOutline
   - type: Physics
@@ -93,11 +93,11 @@
     - state: crema_contents_light
       visible: false
       map: ["enum.CrematoriumVisualLayers.LightContent"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: crema_active_light
       visible: false
       map: ["enum.CrematoriumVisualLayers.LightBurning"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Clickable
   - type: InteractionOutline
   - type: Physics

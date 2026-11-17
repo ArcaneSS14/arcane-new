@@ -239,7 +239,7 @@
         - state: injector
           map: [ "enum.SubfloorLayers.FirstLayer" ]
         - state: injector-unshaded
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
           map: [ "enum.LightLayers.Unshaded" ]
           color: "#990000"
     - type: AtmosPipeLayers
@@ -347,7 +347,7 @@
           map: ["enum.PowerDeviceVisualLayers.Powered"]
           visible: false
         - state: freezer-Unshaded
-          shader: UnshadedGlow
+          shader: unshaded
           map: ["freezing"]
           visible: false
         # Arcane-Edit-End
@@ -432,7 +432,7 @@
           map: ["enum.PowerDeviceVisualLayers.Powered"]
           visible: false
         - state: heater-Unshaded
-          shader: UnshadedGlow
+          shader: unshaded
           map: ["heating"]
           visible: false
         - state: heaterPanelOpen

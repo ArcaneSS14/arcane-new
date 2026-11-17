@@ -11,7 +11,7 @@
     sprite: _Goobstation/Heretic/projectiles.rsi
     layers:
     - state: eldritch_projectile
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Reflective
     reflective: Magic
   - type: Projectile
@@ -42,7 +42,7 @@
     sprite: _Goobstation/Heretic/projectiles.rsi
     layers:
     - state: star_ball
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Physics
     bodyType: Dynamic
     linearDamping: 0

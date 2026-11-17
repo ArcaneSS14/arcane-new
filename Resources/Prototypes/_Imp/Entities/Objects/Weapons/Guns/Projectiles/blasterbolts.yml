@@ -8,7 +8,7 @@
     sprite: _Impstation/Objects/Weapons/Guns/Projectiles/energybolts.rsi
     layers:
     - state: mediumsynd
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: FlyBySound
     sound:
       collection: EnergyMiss
@@ -35,7 +35,7 @@
     sprite: _Impstation/Objects/Weapons/Guns/Projectiles/energybolts.rsi
     layers:
     - state: lightsynd
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Projectile
     damage:
       types:

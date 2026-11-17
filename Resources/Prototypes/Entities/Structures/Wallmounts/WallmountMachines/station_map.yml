@@ -40,7 +40,7 @@
     layers:
     - state: base # Arcane-Edit: station_map0 > base
     - state: unshaded
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "enum.PowerDeviceVisualLayers.Powered" ]
   - type: Icon
     # Arcane-Edit-Start: Structures/Machines/station_map.rsi, station_map0 > Arcane resprite

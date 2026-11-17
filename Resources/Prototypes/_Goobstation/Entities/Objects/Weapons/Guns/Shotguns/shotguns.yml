@@ -121,12 +121,12 @@
       map: ["enum.GunVisualLayers.Base"]
     - state: base-unshaded
       map: ["enum.GunVisualLayers.BaseUnshaded"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
     - state: mag-unshaded-0
       map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Item
     size: Huge
     sprite: _Goobstation/Objects/Weapons/Guns/Shotguns/magshot.rsi # Arcane

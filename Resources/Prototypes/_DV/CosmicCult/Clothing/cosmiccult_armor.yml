@@ -51,7 +51,7 @@
     clothingVisuals:
       outerClothing:
       - state: equipped-OUTERCLOTHING-light
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
   - type: Appearance
   - type: HandheldLight
     addPrefix: false

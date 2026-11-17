@@ -10,7 +10,7 @@
     layers:
     - state: icon
     - state: flame
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: mag-5
       map: ["enum.GunVisualLayers.Mag"]
     - state: reloading

@@ -58,10 +58,10 @@
       map: [ base ]
     - state: locked
       map: [ "enum.LockVisualLayers.Lock" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: unlocked
       map: [ light ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Lock
   - type: LockVisuals
   - type: GenericVisualizer

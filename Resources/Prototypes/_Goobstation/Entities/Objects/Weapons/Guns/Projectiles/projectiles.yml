@@ -15,7 +15,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/bullet_cutter.rsi
     layers:
     - state: icon
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: GatheringProjectile
     amount: 40
   - type: Projectile
@@ -91,7 +91,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
     layers:
     - state: bullet
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
 
 - type: entity
   parent: BasicHitscan
@@ -258,7 +258,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/projectiles_tg.rsi
     layers:
     - state: ice
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
 
 - type: entity
   id: BulletTemperatureHot
@@ -281,7 +281,7 @@
     sprite: _Trauma/Objects/Weapons/Guns/Projectiles/laser.rsi
     layers:
     - state: hellfire
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
 
 - type: entity
   name: disabler bolt
@@ -301,7 +301,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Projectiles/energy_bolt.rsi
     layers:
     - state: bolt_blue_heavy
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Physics
   - type: Fixtures
     fixtures:
@@ -393,7 +393,7 @@
     sprite: Objects/Weapons/Guns/Projectiles/magic.rsi
     layers:
     - state: magicm_yellow
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: GatheringProjectile
   - type: DamageMarkerOnCollide
     whitelist:

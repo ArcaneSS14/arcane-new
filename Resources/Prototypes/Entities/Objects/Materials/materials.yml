@@ -291,7 +291,7 @@
       state: bearpelt
     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
       state: bearpelt_glow
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Item
     sprite: Clothing/Head/Misc/hides.rsi
     heldPrefix: bear

@@ -10,7 +10,7 @@
     layers:
     - sprite: Mobs/Aliens/paradox_clone.rsi
       state: paradox
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: RotationVisuals
     horizontalRotation: 90
   - type: Pullable

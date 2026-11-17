@@ -32,7 +32,7 @@
     - state: base
     - state: filled
       map: ["containerLayer"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: piston
       map: ["pistonlayer"]

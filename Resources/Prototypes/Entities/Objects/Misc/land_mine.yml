@@ -30,7 +30,7 @@
     layers:
     - state: landmine
     - state: landmine-unshaded
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "enum.ToggleableVisuals.Layer" ]
   - type: Appearance
   - type: GenericVisualizer

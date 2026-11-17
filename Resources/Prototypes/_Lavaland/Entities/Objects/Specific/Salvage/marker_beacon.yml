@@ -15,7 +15,7 @@
     - state: unshaded
       color: "#FFFFFF"
       visible: false
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: [ "light" ]
   - type: Anchorable
     delay: 0.2

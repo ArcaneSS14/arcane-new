@@ -14,7 +14,7 @@
     - state: arm-long
       map: [ "enum.RoboticArmLayers.Arm" ]
     - state: powered
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
       map: [ "enum.RoboticArmLayers.Powered" ]
   - type: Appearance

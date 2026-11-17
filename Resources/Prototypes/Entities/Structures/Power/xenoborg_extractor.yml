@@ -21,7 +21,7 @@
     - state: running
       map: ["running"]
     - state: light
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       map: ["light"]
   - type: Appearance
   - type: GenericVisualizer

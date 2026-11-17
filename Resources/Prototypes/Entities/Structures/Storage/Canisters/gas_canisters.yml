@@ -19,7 +19,7 @@
       map: [ "enum.PaperLabelVisuals.Layer" ]
     - state: integrity-unshaded-0
       map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: mask-grey
       map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -37,18 +37,14 @@
           True: { state: can-open, visible: true }
       enum.LockVisuals.Locked:
         locked:
-          # Arcane-Edit-Start: unshaded > UnshadedGlow
-          False: { state: unlocked, shader: "UnshadedGlow" }
-          True: { state: locked, shader: "UnshadedGlow" }
-          # Arcane-Edit-End
+          False: { state: unlocked, shader: "unshaded" }
+          True: { state: locked, shader: "unshaded" }
       enum.GasCanisterVisuals.PressureState:
         pressureLight:
-          # Arcane-Edit-Start: unshaded > UnshadedGlow
-          0: { state: can-o0, shader: "UnshadedGlow" }
-          1: { state: can-o1, shader: "UnshadedGlow" }
-          2: { state: can-o2, shader: "UnshadedGlow" }
-          3: { state: can-o3, shader: "UnshadedGlow" }
-          # Arcane-Edit-End
+          0: { state: can-o0, shader: "unshaded" }
+          1: { state: can-o1, shader: "unshaded" }
+          2: { state: can-o2, shader: "unshaded" }
+          3: { state: can-o3, shader: "unshaded" }
       enum.PaperLabelVisuals.HasLabel:
         enum.PaperLabelVisuals.Layer:
           True: { visible: true }
@@ -162,7 +158,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-yellow
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -208,7 +204,7 @@
       map: [ "enum.PaperLabelVisuals.Layer" ]
     - state: integrity-unshaded-0
       map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: mask-grey
       map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -246,7 +242,7 @@
       map: [ "enum.PaperLabelVisuals.Layer" ]
     - state: integrity-unshaded-0
       map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: mask-blue
       map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -298,7 +294,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-red
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -350,7 +346,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-black
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -404,7 +400,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-orange
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -443,7 +439,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-green
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -482,7 +478,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-water_vapor
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -519,7 +515,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-greenys
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -558,7 +554,7 @@
         map: [ "enum.PaperLabelVisuals.Layer" ]
       - state: integrity-unshaded-0
         map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         visible: false
       - state: mask-redws
         map: [ "enum.MaxPressureVisualLayers.Base" ]
@@ -597,7 +593,7 @@
       map: [ "enum.PaperLabelVisuals.Layer" ]
     - state: integrity-unshaded-0
       map: [ "enum.MaxPressureVisualLayers.BaseUnshaded" ]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: mask-frezon
       map: [ "enum.MaxPressureVisualLayers.Base" ]

@@ -56,7 +56,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+      shader: "unshaded"
   - type: Fixtures
     fixtures:
       fix1:
@@ -89,7 +89,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+      shader: "unshaded"
     - state: open
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
       visible: false
@@ -178,7 +178,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+      shader: "unshaded"
     - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
       shader: "FlickerHologram"
       color: "#ffffffaa"
@@ -280,7 +280,7 @@
       state: "empty"
     - map: ["enum.PowerChargerVisualLayers.Light"]
       state: "light-off"
-      shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+      shader: "unshaded"
       # WWDP Edit begin
     - map: ["enum.PowerChargerVisualLayers.ItemDisplay"]
       shader: "FlickerHologram"
@@ -326,10 +326,10 @@
         map: ["base"]
       - state: borgcharger0
         map: ["enum.PowerDeviceVisualLayers.Powered"]
-        shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+        shader: "unshaded"
       - state: borgcharger1
         map: ["charged"]
-        shader: "UnshadedGlow" # Arcane-Edit: unshaded > UnshadedGlow
+        shader: "unshaded"
         visible: false
       - state: borgdecon1
         map: ["enum.WiresVisualLayers.MaintenancePanel"]

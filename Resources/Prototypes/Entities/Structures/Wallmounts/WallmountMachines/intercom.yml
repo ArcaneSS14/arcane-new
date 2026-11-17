@@ -60,14 +60,14 @@
     - state: base
     - state: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: broadcasting
       map: ["enum.RadioDeviceVisualLayers.Broadcasting"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: speaker
       map: ["enum.RadioDeviceVisualLayers.Speaker"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
@@ -174,14 +174,14 @@
     - state: base
     - state: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: broadcasting
       map: ["enum.RadioDeviceVisualLayers.Broadcasting"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: speaker
       map: ["enum.RadioDeviceVisualLayers.Speaker"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
@@ -199,14 +199,14 @@
     - state: base
     - state: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
     - state: broadcasting
       map: ["enum.RadioDeviceVisualLayers.Broadcasting"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: speaker
       map: ["enum.RadioDeviceVisualLayers.Speaker"]
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
       visible: false
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]

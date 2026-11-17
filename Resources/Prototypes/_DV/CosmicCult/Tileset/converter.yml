@@ -29,10 +29,10 @@
         map: ["base"]
       - state: spawn-unshaded
         map: ["overlay"]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
       - state: spawn-animated
         map: ["animated"]
-        shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+        shader: unshaded
         offset: 0,0.75
     offset: 0,0.4
     drawdepth: Mobs

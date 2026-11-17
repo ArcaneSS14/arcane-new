@@ -38,7 +38,7 @@
         - state: icon-on
           color: "#FFFFFF"
           visible: false
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
           map: [ "shield" ]
     - type: Item
       sprite: _Goobstation/Objects/Shields/blueshieldshield.rsi
@@ -50,10 +50,10 @@
       inhandVisuals:
         left:
           - state: inhand-left-on
-            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+            shader: unshaded
         right:
           - state: inhand-right-on
-            shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+            shader: unshaded
     - type: PointLight
       netsync: false
       enabled: false

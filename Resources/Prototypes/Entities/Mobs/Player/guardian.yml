@@ -70,7 +70,7 @@
         - state: tech_flare
           map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
           color: "#40a7d7"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
       noRot: true
     - type: Clickable
     - type: InteractionOutline
@@ -158,7 +158,7 @@
         - state: tech_flare
           map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
           color: "#40a7d7"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: HTN
       rootTask:
         task: SimpleHumanoidHostileCompound
@@ -203,7 +203,7 @@
         - state: magic_flare
           map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
           color: "#40a7d7"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
 
 - type: entity
   name: HoloClown
@@ -254,7 +254,7 @@
         - state: holoclown_flare
           map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
           color: "#8adaff"
-          shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+          shader: unshaded
     - type: Tag
       tags:
         - CannotSuicide

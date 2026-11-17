@@ -31,6 +31,6 @@
     sprite: _Trauma/Objects/Misc/thunder-cloud.rsi
     layers:
     - state: thundercloud
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Electrified
     requirePower: false

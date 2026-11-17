@@ -12,7 +12,7 @@
     noRot: true
     layers:
     - state: pentagram
-      shader: UnshadedGlow # Arcane-Edit: unshaded > UnshadedGlow
+      shader: unshaded
   - type: Transform
     anchored: False
   - type: TimedDespawn

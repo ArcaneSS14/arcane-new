@@ -30,15 +30,7 @@
     glow_brightness: 25
     draw_sprite: 1
 
-- type: shader
-  id: UnshadedGlow
-  kind: source
-  path: "/Textures/_Arcane/Shaders/glow_sprite.swsl"
-  params:
-    glow_brightness: 1
-    draw_sprite: 1
-
-# Drawn by GlowHaloOverlay around the layers using the shader of the same name without the suffix.
+# Drawn by GlowHaloOverlay around LightGlow lamp layers.
 - type: shader
   id: LightGlowHalo
   kind: source
@@ -48,6 +40,8 @@
     outline_width: 4.0
     outline_alpha: 1
 
+# Drawn by GlowHaloOverlay around every plain unshaded layer. The engine draws those layers itself, it handles
+# the unshaded shader by name, so prototypes keep using it unchanged.
 - type: shader
   id: UnshadedGlowHalo
   kind: source
