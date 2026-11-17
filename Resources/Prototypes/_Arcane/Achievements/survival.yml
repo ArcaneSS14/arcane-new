@@ -115,6 +115,7 @@
   hidden: true
   condition: !type:MobStateEnteredCondition
     mobState: Critical
+    alternateMobState: SoftCrit
     requirements:
     - !type:StatusEffectCondition
       effect: StatusEffectDrunk
