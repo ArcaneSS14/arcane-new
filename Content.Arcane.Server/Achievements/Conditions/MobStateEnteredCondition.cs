@@ -1,8 +1,8 @@
-using Content.Server.Hands.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Standing;
+using Content.Trauma.Shared.Hands;
 
 namespace Content.Arcane.Server.Achievements.Conditions;
 
@@ -10,6 +10,9 @@ public sealed partial class MobStateEnteredCondition : AchievementCondition
 {
     [DataField]
     public MobState MobState = MobState.Dead;
+
+    [DataField]
+    public MobState? AlternateMobState;
 }
 
 public sealed partial class MobStateEnteredConditionSystem : AchievementConditionSystem<MobStateEnteredCondition>
@@ -20,7 +23,7 @@ public sealed partial class MobStateEnteredConditionSystem : AchievementConditio
     {
         base.Initialize();
 
-        SubscribeLocalEvent<MobStateComponent, DropHandItemsEvent>(OnDropHandItems, before: [typeof(HandsSystem)]);
+        SubscribeLocalEvent<MobStateComponent, DropHandItemsEvent>(OnDropHandItems, before: [typeof(PredictedHandsSystem)]);
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
         SubscribeLocalEvent<MobStateComponent, ComponentRemove>(OnMobRemoved);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
@@ -29,7 +32,7 @@ public sealed partial class MobStateEnteredConditionSystem : AchievementConditio
     private void OnDropHandItems(Entity<MobStateComponent> ent, ref DropHandItemsEvent args)
     {
         var state = ent.Comp.CurrentState;
-        if (state is not (MobState.Critical or MobState.Dead)
+        if (state is not (MobState.SoftCrit or MobState.Critical or MobState.Dead)
             || _handled.TryGetValue(ent, out var handled) && handled == state)
             return;
 
@@ -37,7 +40,7 @@ public sealed partial class MobStateEnteredConditionSystem : AchievementConditio
 
         foreach (var (proto, condition) in Entries)
         {
-            if (condition.MobState == state)
+            if (condition.MobState == state || condition.AlternateMobState == state)
                 Achievements.AddProgress(ent, proto);
         }
     }
