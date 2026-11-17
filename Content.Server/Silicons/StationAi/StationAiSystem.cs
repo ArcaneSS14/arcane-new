@@ -89,8 +89,10 @@ public sealed partial class StationAiSystem : SharedStationAiSystem
 
         SubscribeLocalEvent<ExpandICChatRecipientsEvent>(OnExpandICChatRecipients);
         SubscribeLocalEvent<StationAiTurretComponent, AmmoShotEvent>(OnAmmoShot);
-        InitializeCameraLights(); // Arcane
-        InitializeRetirement(); // Arcane
+        // Arcane-Start
+        InitializeCameraLights();
+        InitializeRetirement();
+        // Arcane-End
     }
 
     private void AfterConstructionChangeEntity(Entity<StationAiCoreComponent> ent, ref AfterConstructionChangeEntityEvent args)

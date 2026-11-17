@@ -9,11 +9,13 @@ using Content.Shared.Robotics.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
 using Content.Shared.DeviceNetwork.Events;
+// Arcane-Start
 using Content.Shared.Access.Systems;
 using Content.Shared.DeviceNetwork.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Station.Systems;
+// Arcane-End
 
 namespace Content.Server.Research.Systems;
 
@@ -23,16 +25,18 @@ namespace Content.Server.Research.Systems;
 /// </summary>
 public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 {
-    private const string StationBorgFaction = "NanoTrasen";
+    private const string StationBorgFaction = "NanoTrasen"; // Arcane
     [Dependency] private DeviceNetworkSystem _deviceNetwork = default!;
     [Dependency] private IAdminLogManager _adminLogger = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private LockSystem _lock = default!;
     [Dependency] private RadioSystem _radio = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
+    // Arcane-Start
     [Dependency] private AccessReaderSystem _access = default!;
     [Dependency] private NpcFactionSystem _factions = default!;
     [Dependency] private StationSystem _stations = default!;
+    // Arcane-End
 
     // almost never timing out more than 1 per tick so initialize with that capacity
     private List<string> _removing = new(1);
@@ -95,7 +99,7 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 
     private void OnDisable(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDisableMessage args)
     {
-        if (!TryGetControllableBorg(ent, args.Actor, args.Address, out var data))
+        if (!TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: validate the live chassis and access
             return;
 
         var payload = new RoboticsCyborgDisablePayload();
@@ -107,10 +111,10 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
     private void OnDestroy(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDestroyMessage args)
     {
         var now = _timing.CurTime;
-        if (now < ent.Comp.NextDestroy || !TryGetControllableBorg(ent, args.Actor, args.Address, out var data))
+        if (now < ent.Comp.NextDestroy || !TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: validate the live chassis and access
             return;
 
-        ent.Comp.Cyborgs.Remove(args.Address);
+        ent.Comp.Cyborgs.Remove(args.Address); // Arcane-Edit: remove only after validation
 
         var payload = new RoboticsCyborgDestroyPayload();
         _deviceNetwork.SendPacket(ent.Owner, args.Address, ref payload);
@@ -123,6 +127,7 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
         Dirty(ent, ent.Comp);
     }
 
+    // Arcane-Start
     private bool TryGetControllableBorg(Entity<RoboticsConsoleComponent> ent, EntityUid actor, string address,
         out CyborgControlData data)
     {
@@ -142,6 +147,7 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
                _stations.GetOwningStation(ent.Owner) is { } station &&
                _stations.GetOwningStation(borg) == station;
     }
+    // Arcane-End
 
     private void UpdateUserInterface(Entity<RoboticsConsoleComponent> ent)
     {

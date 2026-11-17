@@ -1,30 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using System.IO;
 using System.Linq;
 using Content.Client.UserInterface.Controls;
 using Content.Shared.FixedPoint;
 using Content.Shared.Silicons.Laws;
 using Content.Goobstation.Shared.CustomLawboard;
+using Robust.Shared.Timing;
+// Arcane-Start
+using System.IO;
 using Robust.Client.UserInterface;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
-using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using YamlDotNet.RepresentationModel;
+// Arcane-End
 
 namespace Content.Goobstation.Client.CustomLawboard;
 
 [GenerateTypedNameReferences]
 public sealed partial class LawboardSiliconLawUi : FancyWindow
 {
+    // Arcane-Start
     [Dependency] private IFileDialogManager _fileDialog = default!;
     [Dependency] private ISerializationManager _serialization = default!;
     [Dependency] private ILogManager _logManager = default!;
 
     private const int MaxLawFileBytes = 128 * 1024;
     private static readonly FileDialogFilters LawFileFilters = new(new FileDialogFilters.Group("yml", "yaml"));
+    // Arcane-End
     private List<SiliconLaw> _laws = new();
 
     public event Action<List<SiliconLaw>, bool>? LawsChangedEvent;
@@ -36,8 +40,10 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         NewLawButton.OnPressed += _ => AddNewLaw();
         Save.OnPressed += _ => SaveLaws();
 
-        Import.OnPressed += _ => ImportLaws(); // Arcane
+        // Arcane-Edit-Start
+        Import.OnPressed += _ => ImportLaws();
         Export.OnPressed += _ => ExportLaws();
+        // Arcane-Edit-End
     }
 
     private void AddNewLaw()
@@ -61,7 +67,7 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         LawsChangedEvent?.Invoke(_laws, popup); // The popup is just for flavor. There's probably a better way to do this
     }
 
-    public void SetLaws(List<SiliconLaw> sLaws, bool notify = true)
+    public void SetLaws(List<SiliconLaw> sLaws, bool notify = true) // Arcane-Edit: allow loading the editor without sending laws
     {
         _laws = sLaws;
         LawContainer.RemoveAllChildren();
@@ -80,8 +86,10 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
 
         NewLawButton.Disabled = sLaws.Count >= SharedCustomLawboardSystem.MaxLaws;
 
+        // Arcane-Edit-Start
         if (notify)
             ProcessLawsChanged();
+        // Arcane-Edit-End
     }
 
     public void DeleteLaw(SiliconLaw law)
@@ -150,6 +158,7 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         return _laws;
     }
 
+    // Arcane-Start
     private async void ImportLaws()
     {
         SetFileButtonsDisabled(true);
@@ -269,4 +278,5 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         FileStatus.Text = Loc.GetString(message);
         FileStatus.Visible = true;
     }
+    // Arcane-End
 }
