@@ -20,7 +20,6 @@
         Slash: 3.33
         Piercing: 3.34
     addedComponents:
-    - type: Pacified
     - type: GhostTakeoverAvailable
     - type: AntagImmune
     - type: MovementIgnoreGravity
@@ -129,6 +128,8 @@
   - type: StealTarget
     stealGroup: ClothingBeltGeminiHoloProjector
   - type: CloneProjector
+    addedComponents:
+    - type: Pacified
     clonedItemBlacklist:
       components:
       - CloneProjector
