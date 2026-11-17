@@ -9,6 +9,7 @@ using Content.Server.NPC.HTN.PrimitiveTasks;
 using Content.Server.NPC.HTN.PrimitiveTasks.Operators;
 using Content.Server.NPC.Systems;
 using Content.Server.Power.Components;
+using Content.Server.Power.EntitySystems; // Arcane
 using Content.Shared.Botany.Components;
 using Content.Shared.Botany.Systems;
 using Content.Shared.DeviceLinking;
@@ -62,6 +63,48 @@ public sealed class ServiceBotTest : GameTest
                 "Changing links must not re-enable an independently disabled HTN.");
         });
     }
+
+    // Arcane-Start
+    [Test]
+    public async Task FillbotSkipsTwoObstructedItemsAndPicksUpAnAccessibleOne()
+    {
+        await PrepareFloor();
+        EntityUid bot = default;
+        EntityUid sink = default;
+        await Server.WaitPost(() =>
+        {
+            bot = SpawnAt("MobFillBot", 0.5f, 0.5f);
+            var htn = SComp<HTNComponent>(bot);
+            SEntMan.System<HTNSystem>().SetHTNEnabled((bot, htn), false);
+            sink = SpawnAt("Autolathe", 4.5f, 0.5f);
+            SEntMan.System<PowerReceiverSystem>().SetNeedsPower(sink, false);
+            Link(bot, sink);
+        });
+        await RunSeconds(0.35f);
+        await Server.WaitAssertion(() =>
+        {
+
+            SpawnAt("WindowDirectional", 0.5f, 1.5f);
+            var first = SpawnAt("SheetSteel1", 0.45f, 1.5f);
+            var second = SpawnAt("SheetSteel1", 0.55f, 1.5f);
+            var bots = SEntMan.System<FillbotSystem>();
+            var interaction = SEntMan.System<SharedInteractionSystem>();
+            foreach (var blocked in new[] { first, second })
+            {
+                Assert.That(bots.CanCollect(bot, blocked, sink), Is.True);
+                Assert.That(interaction.InRangeAndAccessible(bot, blocked), Is.False);
+                Assert.That(bots.TryPickup(bot, blocked, sink), Is.False);
+            }
+            Assert.That(bots.CanCollect(bot, first, sink), Is.False);
+            Assert.That(bots.CanCollect(bot, second, sink), Is.False);
+
+            var fallback = SpawnAt("SheetSteel1", 1.25f, 0.5f);
+            Assert.That(interaction.InRangeAndAccessible(bot, fallback), Is.True);
+            Assert.That(bots.CanCollect(bot, fallback, sink), Is.True);
+            Assert.That(bots.TryPickup(bot, fallback, sink), Is.True);
+        });
+    }
+    // Arcane-End
 
     [Test]
     public async Task PlantbotWatersWeedsAndUsesPersistentEmagState()

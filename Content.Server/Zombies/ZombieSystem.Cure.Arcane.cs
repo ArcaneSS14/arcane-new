@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Server.Atmos.Components;
 using Content.Server.Body.Components;
 using Content.Server.Chat;
@@ -376,3 +377,4 @@ public sealed partial class ZombieRecoveryComponent : Component
     public float? BloodLossThreshold;
     public bool BloodIncreaseEnabled;
 }
+// Arcane-End

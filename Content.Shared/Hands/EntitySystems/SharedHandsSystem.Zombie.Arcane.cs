@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Body;
 using Content.Shared.Hands.Components;
 
@@ -27,3 +28,4 @@ public abstract partial class SharedHandsSystem
         TrySetActiveHand((uid, hands), activeHand);
     }
 }
+// Arcane-End

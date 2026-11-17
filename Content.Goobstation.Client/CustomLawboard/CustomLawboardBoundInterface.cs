@@ -27,9 +27,10 @@ public sealed class CustomLawboardBoundInterface : BoundUserInterface
 
         _window.LawsChangedEvent += (laws, popup) => OnLawsChanged(laws, popup);
 
-        // Arcane: opening the editor must never send an empty or stale replacement to the server.
+        // Arcane-Edit-Start: opening the editor must never send an empty or stale replacement to the server.
         if (EntMan.TryGetComponent<CustomLawboardComponent>(Owner, out var board))
             _window.SetLaws(SharedCustomLawboardSystem.SanitizeLaws(board.Laws), notify: false);
+        // Arcane-Edit-End
         Update();
     }
 
