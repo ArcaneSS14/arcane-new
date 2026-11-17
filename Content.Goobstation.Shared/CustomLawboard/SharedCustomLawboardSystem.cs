@@ -21,9 +21,10 @@ public abstract partial class SharedCustomLawboardSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CustomLawboardComponent, CustomLawboardChangeLawsMessage>(OnChangeLaws);
-        SubscribeLocalEvent<CustomLawboardComponent, MapInitEvent>(OnLawboardMapInit);
+        SubscribeLocalEvent<CustomLawboardComponent, MapInitEvent>(OnLawboardMapInit); // Arcane
     }
 
+    // Arcane-Start
     private void OnLawboardMapInit(Entity<CustomLawboardComponent> ent, ref MapInitEvent args)
     {
         if (ent.Comp.Laws.Count == 0 &&
@@ -31,27 +32,33 @@ public abstract partial class SharedCustomLawboardSystem : EntitySystem
             provider.Lawset is { } lawset)
             ent.Comp.Laws = SanitizeLaws(lawset.Laws);
     }
+    // Arcane-End
 
-    public static List<SiliconLaw> SanitizeLaws(IReadOnlyList<SiliconLaw> laws) // Arcane
+    // Arcane-Edit-Start
+    public static List<SiliconLaw> SanitizeLaws(IReadOnlyList<SiliconLaw> laws)
     {
         var count = Math.Min(laws.Count, MaxLaws);
         var sanitizedLaws = new List<SiliconLaw>(count);
         for (var i = 0; i < count; i++)
+    // Arcane-Edit-End
         {
+            // Arcane-Edit-Start
             var law = laws[i];
             if (law == null)
                 continue;
+            // Arcane-Edit-End
 
             sanitizedLaws.Add(new SiliconLaw()
             {
-                LawString = SanitizeText(law.LawString ?? string.Empty),
+                LawString = SanitizeText(law.LawString ?? string.Empty), // Arcane-Edit: sanitize and limit law text
                 Order = law.Order,
-                LawIdentifierOverride = law.LawIdentifierOverride is { } label ? SanitizeText(label) : null,
+                LawIdentifierOverride = law.LawIdentifierOverride is { } label ? SanitizeText(label) : null, // Arcane-Edit: sanitize and limit law label
             });
         }
         return sanitizedLaws;
     }
 
+    // Arcane-Start
     private static string SanitizeText(string text)
     {
         if (text.Length > MaxLawLength)
@@ -62,16 +69,19 @@ public abstract partial class SharedCustomLawboardSystem : EntitySystem
 
         return text.Replace('\r', ' ').Replace('\n', ' ');
     }
+    // Arcane-End
 
     private void OnChangeLaws(EntityUid uid, CustomLawboardComponent customLawboard, CustomLawboardChangeLawsMessage args)
     {
         var provider = EnsureComp<SiliconLawProviderComponent>(uid);
         var sanitizedLaws = SanitizeLaws(args.Laws);
+        // Arcane-Edit-Start
         var lawset = new SiliconLawset
         {
             Laws = sanitizedLaws,
             ObeysTo = provider.Lawset?.ObeysTo ?? string.Empty,
         };
+        // Arcane-Edit-End
 
         customLawboard.Laws = sanitizedLaws;
         provider.Lawset = lawset;
