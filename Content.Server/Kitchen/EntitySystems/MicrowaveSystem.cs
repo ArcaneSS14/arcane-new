@@ -203,42 +203,62 @@ namespace Content.Server.Kitchen.EntitySystems
             }
         }
 
-        private void SubtractReagents(MicrowaveComponent component, FoodRecipePrototype recipe, int portions) // Arcane-Edit
+        // Arcane-Edit-Start
+        private bool TrySubtractReagents(MicrowaveComponent component, FoodRecipePrototype recipe, int portions)
         {
-            // TODO Turn recipe.IngredientsReagents into a ReagentQuantity[]
+            if (recipe.IngredientsReagents.Count == 0)
+                return true;
 
-            var totalReagentsToRemove = recipe.IngredientsReagents.ToDictionary(pair => pair.Key, pair => pair.Value * portions); // Arcane-Edit
+            var available = new Dictionary<string, FixedPoint2>();
+            foreach (var item in component.Storage.ContainedEntities)
+                CountReagents(item, available);
 
-            // this is spaghetti ngl
+            var remaining = recipe.IngredientsReagents.ToDictionary(pair => pair.Key, pair => pair.Value * portions);
+            foreach (var (reagent, amount) in remaining)
+            {
+                if (available.GetValueOrDefault(reagent) < amount)
+                    return false;
+            }
+
             foreach (var item in component.Storage.ContainedEntities)
             {
-                // use the same reagents as when we selected the recipe
-                if (!_solutionContainer.TryGetDrainableSolution(item, out var solutionEntity, out var solution))
+                if (!_solutionContainer.TryGetDrainableSolution(item, out var entity, out var solution))
                     continue;
 
                 foreach (var (reagent, _) in recipe.IngredientsReagents)
                 {
-                    // removed everything
-                    if (!totalReagentsToRemove.ContainsKey(reagent))
+                    if (!remaining.TryGetValue(reagent, out var needed))
                         continue;
 
-                    var quant = solution.GetTotalPrototypeQuantity(reagent);
+                    var amount = FixedPoint2.Min(needed, solution.GetTotalPrototypeQuantity(reagent));
+                    if (amount <= FixedPoint2.Zero)
+                        continue;
 
-                    if (quant >= totalReagentsToRemove[reagent])
-                    {
-                        quant = totalReagentsToRemove[reagent];
-                        totalReagentsToRemove.Remove(reagent);
-                    }
+                    needed -= _solutionContainer.RemoveReagent(entity.Value, reagent, amount);
+                    if (needed <= FixedPoint2.Zero)
+                        remaining.Remove(reagent);
                     else
-                    {
-                        totalReagentsToRemove[reagent] -= quant;
-                    }
-
-                    _solutionContainer.RemoveReagent(solutionEntity.Value, reagent, quant);
+                        remaining[reagent] = needed;
                 }
+
+                if (remaining.Count == 0)
+                    return true;
             }
 
+            return false;
         }
+        // Arcane-Edit-End
+
+        // Arcane-Start
+        private void CountReagents(EntityUid item, Dictionary<string, FixedPoint2> reagents)
+        {
+            if (!_solutionContainer.TryGetDrainableSolution(item, out var _, out var solution))
+                return;
+
+            foreach (var (reagent, quantity) in solution.Contents)
+                reagents[reagent.Prototype] = reagents.GetValueOrDefault(reagent.Prototype) + quantity;
+        }
+        // Arcane-End
 
         // Arcane-Edit-Start
         private readonly record struct MicrowaveSolid(EntityUid Item, EntProtoId Id, int Count, EntProtoId? Substitute);
@@ -311,10 +331,10 @@ namespace Content.Server.Kitchen.EntitySystems
             }
 
             var allocation = new int[solids.Count];
-            if (!TryAllocateSolids(recipe, solids, portions, allocation))
+            if (!TryAllocateSolids(recipe, solids, portions, allocation) ||
+                !TrySubtractReagents(component, recipe, portions))
                 return false;
 
-            SubtractReagents(component, recipe, portions);
             for (var i = 0; i < solids.Count; i++)
             {
                 var amount = allocation[i];
@@ -645,14 +665,7 @@ namespace Content.Server.Kitchen.EntitySystems
 
                 // only use reagents we have access to
                 // you have to break the eggs before we can use them!
-                if (!_solutionContainer.TryGetDrainableSolution(item, out var _, out var solution))
-                    continue;
-
-                foreach (var (reagent, quantity) in solution.Contents)
-                {
-                    if (!reagentDict.TryAdd(reagent.Prototype, quantity))
-                        reagentDict[reagent.Prototype] += quantity;
-                }
+                CountReagents(item, reagentDict); // Arcane-Edit: share counting with completion validation
             }
 
             // Check recipes
@@ -714,10 +727,10 @@ namespace Content.Server.Kitchen.EntitySystems
             foreach (var (reagent, amount) in recipe.IngredientsReagents)
             {
                 var quantity = reagents.GetValueOrDefault(reagent);
-                if (quantity < amount)
+                if (amount <= FixedPoint2.Zero || quantity < amount)
                     return (recipe, 0);
 
-                portions = Math.Min(portions, quantity.Int() / amount.Int());
+                portions = Math.Min(portions, quantity.Value / amount.Value);
             }
 
             // A candidate total may count the same solid under two IDs.
