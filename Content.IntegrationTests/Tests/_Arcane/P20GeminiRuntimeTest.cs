@@ -8,6 +8,7 @@ using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.CombatMode.Pacification;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Emp;
@@ -16,6 +17,7 @@ using Content.Shared.Mech.Components;
 using Content.Shared.Mech.EntitySystems;
 using Content.Shared.Mind;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.PDA;
 using Content.Shared.Roles;
 using Content.Shared.Storage;
 using Robust.Shared.Containers;
@@ -38,6 +40,7 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
             var backpack = SEntMan.SpawnAttachedTo("ClothingBackpack", position);
             var idCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
+            var heldIdCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
             original = SEntMan.SpawnAttachedTo("Crowbar", position);
             var inventory = SEntMan.System<InventorySystem>();
             var containers = SEntMan.System<SharedContainerSystem>();
@@ -48,7 +51,11 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
 
             Assert.That(inventory.TryEquip(host, backpack, "back", silent: true, force: true), Is.True);
             Assert.That(inventory.TryEquip(host, idCard, "id", silent: true, force: true), Is.True);
-            Assert.That(SEntMan.System<SharedIdCardSystem>().TryChangeJobTitle(idCard, "Custom Gemini title"), Is.True);
+            var idCards = SEntMan.System<SharedIdCardSystem>();
+            Assert.That(idCards.TryChangeJobTitle(idCard, "Custom Gemini title"), Is.True);
+            Assert.That(idCards.TryChangeJobTitle(heldIdCard, "Other job"), Is.True);
+            Assert.That(HandSys.TryPickup(host, heldIdCard), Is.True);
+            Assert.That(HandSys.GetActiveItem(host), Is.EqualTo(heldIdCard));
             Assert.That(containers.Insert(original, SEntMan.GetComponent<StorageComponent>(backpack).Container), Is.True);
             Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
             Assert.That(data.ActionEntity, Is.Not.Null);
@@ -175,25 +182,44 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
     // Arcane-End
 
     [Test]
-    public async Task GeminiDoesNotCreateTankContentsAndRecallsOnDeath()
+    public async Task GeminiProjectsATitleInAPdaWithoutCopyingContentsAndRecallsOnDeath()
     {
+        EntityUid originalCard = default;
+        EntityUid projectedCard = default;
         await Server.WaitAssertion(() =>
         {
             var position = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
             var host = SEntMan.SpawnAttachedTo("MobHuman", position);
             var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
             var tank = SEntMan.SpawnAttachedTo("ClothingBackpackFirefighterTank", position);
+            var pda = SEntMan.SpawnAttachedTo("PassengerPDA", position);
             var inventory = SEntMan.System<InventorySystem>();
+            var idCards = SEntMan.System<SharedIdCardSystem>();
             var actions = SEntMan.System<SharedActionsSystem>();
             var solutions = SEntMan.System<SharedSolutionContainerSystem>();
             var damage = SEntMan.System<DamageableSystem>();
             var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
             Assert.That(inventory.TryEquip(host, tank, "back", silent: true, force: true), Is.True);
+            Assert.That(inventory.TryEquip(host, pda, "id", silent: true, force: true), Is.True);
+            Assert.That(idCards.TryGetIdCard(pda, out var idCard), Is.True);
+            originalCard = idCard;
+            Assert.That(idCards.TryChangeJobTitle(idCard, "Custom PDA title", idCard.Comp), Is.True);
+
             Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
             var action = data.ActionEntity!.Value;
             var actionEntity = (action, SEntMan.GetComponent<ActionComponent>(action));
             Assert.That(actions.PerformAction(host, actionEntity), Is.True);
             var clone = data.CloneUid!.Value;
+            Assert.That(inventory.TryGetSlotEntity(clone, "id", out var copiedPda), Is.True);
+            Assert.That(idCards.TryGetIdCard(copiedPda!.Value, out var copiedCard), Is.True);
+            projectedCard = copiedCard;
+            Assert.That(projectedCard, Is.Not.EqualTo(originalCard));
+            Assert.That(copiedCard.Comp.LocalizedJobTitle, Is.EqualTo("Custom PDA title"));
+            Assert.That(SEntMan.HasComponent<AccessComponent>(projectedCard), Is.False);
+            var copiedPdaData = SEntMan.GetComponent<PdaComponent>(copiedPda.Value);
+            Assert.That(copiedPdaData.PenSlot.HasItem, Is.False);
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryEject(copiedPda.Value, copiedPdaData.IdSlot, clone, out _), Is.False);
+
             Assert.That(inventory.TryGetSlotEntity(clone, "back", out var copiedTank), Is.True);
             Assert.That(solutions.TryGetSolution(tank, "tank", out _, out var original), Is.True);
             Assert.That(solutions.TryGetSolution(copiedTank!.Value, "tank", out _, out var copy), Is.True);
@@ -209,6 +235,15 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             damage.TryChangeDamage(clone, hit, ignoreResistances: true, canMiss: false);
             Assert.That(damage.GetTotalDamage(clone), Is.EqualTo(integrity));
             Assert.That(actions.PerformAction(host, actionEntity), Is.False);
+            Assert.That(copiedPdaData.ContainedId, Is.EqualTo(projectedCard));
+            Assert.That(SEntMan.GetComponent<PdaComponent>(pda).ContainedId, Is.EqualTo(originalCard));
+            Assert.That(inventory.TryUnequip(host, "belt", silent: true, force: true), Is.True);
+        });
+        await RunTicksSync(1);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(projectedCard), Is.False);
+            Assert.That(SEntMan.EntityExists(originalCard), Is.True);
         });
     }
 }

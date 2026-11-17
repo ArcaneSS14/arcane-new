@@ -243,12 +243,6 @@ public sealed partial class CloneProjectorSystem : EntitySystem
         var name = Identity.Name(host, EntityManager);
         _metadata.SetEntityName(clone, $"{name} {Loc.GetString(ent.Comp.NameSuffix)}");
         CopyEquipment(ent, host, (clone, projection));
-        // Old Arcane #315: preserve only the title on a projected card.
-        if (_idCards.TryFindIdCard(host, out var originalCard)
-            && originalCard.Comp.LocalizedJobTitle is { } title
-            && _idCards.TryFindIdCard(clone, out var copiedCard)
-            && projection.Equipment.Contains(copiedCard.Owner))
-            _idCards.TryChangeJobTitle(copiedCard, title, copiedCard.Comp);
 
         var oldClone = ent.Comp.CloneUid;
         ent.Comp.CloneUid = clone;

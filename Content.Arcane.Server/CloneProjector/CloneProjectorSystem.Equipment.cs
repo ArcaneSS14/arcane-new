@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Arcane.Shared.CloneProjector;
 using Content.Server.Construction.Components;
+using Content.Shared.Access.Components;
 using Content.Shared.Actions.Components;
 using Content.Shared.Buckle;
 using Content.Shared.Chemistry.Components;
@@ -13,15 +14,20 @@ using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item;
 using Content.Shared.Mech.Components;
 using Content.Shared.Mech.EntitySystems;
+using Content.Shared.PDA;
 using Content.Trauma.Common.Carrying;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.CloneProjector;
 
 public sealed partial class CloneProjectorSystem
 {
+    private const string IdSlot = "id";
+    private static readonly EntProtoId ProjectedPdaCard = "PassengerIDCard";
+
     [Dependency] private CommonCarryingSystem _carrying = default!;
     [Dependency] private SharedBuckleSystem _buckle = default!;
     [Dependency] private SharedJointSystem _joints = default!;
@@ -48,7 +54,37 @@ public sealed partial class CloneProjectorSystem
             }
 
             TrackCopy(copy, clone.Comp.Equipment);
+            if (slot.Name == IdSlot)
+                CopyJobTitle(item, copy, clone.Comp.Equipment);
         }
+    }
+
+    private void CopyJobTitle(EntityUid original, EntityUid copy, HashSet<EntityUid> copies)
+    {
+        // Old Arcane #315: preserve the job title from the equipment being projected.
+        if (!_idCards.TryGetIdCard(original, out var originalCard)
+            || originalCard.Comp.LocalizedJobTitle is not { Length: > 0 } title)
+            return;
+
+        if (_idCards.TryGetIdCard(copy, out var copiedCard))
+        {
+            _idCards.TryChangeJobTitle(copiedCard, title, copiedCard.Comp);
+            return;
+        }
+
+        if (!TryComp(copy, out PdaComponent? pda) || pda.IdSlot.ContainerSlot is not { } slot)
+            return;
+
+        var card = Spawn(ProjectedPdaCard, Transform(copy).Coordinates);
+        RemComp<AccessComponent>(card);
+        _idCards.TryChangeJobTitle(card, title);
+        if (!_containers.Insert(card, slot))
+        {
+            Del(card);
+            return;
+        }
+
+        TrackCopy(card, copies);
     }
 
     private void TrackCopy(EntityUid copy, HashSet<EntityUid> copies)
