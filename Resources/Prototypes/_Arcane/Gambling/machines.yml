@@ -124,6 +124,7 @@
     - Lose
     - MinorWin
     - SmallWin
+    - SlotMachineBreakEven
     - MediumWin
     - LargeWin
     - Jackpot
@@ -163,7 +164,7 @@
   - type: SlotMachine
     spinCost: 100000
     prizes:
-    - Lose
+    - QmLose
     - QmThrongler
     - QmJackpot
     - QmMinor
