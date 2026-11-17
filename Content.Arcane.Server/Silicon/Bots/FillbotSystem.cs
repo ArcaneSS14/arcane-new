@@ -46,6 +46,13 @@ public sealed partial class FillbotSystem : EntitySystem
         SubscribeLocalEvent<FillbotComponent, NewLinkEvent>(OnLinked);
         SubscribeLocalEvent<FillbotComponent, PortDisconnectedEvent>(OnUnlinked);
         SubscribeLocalEvent<FillbotComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<FillbotComponent, EntityUnpausedEvent>(OnUnpaused);
+    }
+
+    private void OnUnpaused(Entity<FillbotComponent> ent, ref EntityUnpausedEvent args)
+    {
+        foreach (var (target, retryAfter) in ent.Comp.BlockedItems)
+            ent.Comp.BlockedItems[target] = retryAfter + args.PausedTime;
     }
 
     private void OnShutdown(Entity<FillbotComponent> ent, ref ComponentShutdown args)
@@ -92,9 +99,7 @@ public sealed partial class FillbotSystem : EntitySystem
             return;
 
         _hands.TryDrop(ent.Owner);
-        ent.Comp.FailedItem = null;
-        ent.Comp.FailedReceiver = null;
-        ent.Comp.RetryAfter = TimeSpan.Zero;
+        ent.Comp.BlockedItems.Clear();
 
         if (TryComp<HTNComponent>(ent, out var htn) && htn.Enabled)
         {
@@ -144,7 +149,7 @@ public sealed partial class FillbotSystem : EntitySystem
 
     public bool IsBlocked(EntityUid owner, EntityUid item, EntityUid sink)
         => TryComp<FillbotComponent>(owner, out var bot) &&
-           bot.FailedItem == item && bot.FailedReceiver == sink && _timing.CurTime < bot.RetryAfter;
+           bot.BlockedItems.TryGetValue((item, sink), out var retryAfter) && _timing.CurTime < retryAfter;
 
     public bool CanLoad(EntityUid item, EntityUid sink)
     {
@@ -177,10 +182,14 @@ public sealed partial class FillbotSystem : EntitySystem
     public bool TryPickup(EntityUid owner, EntityUid item, EntityUid expectedSink)
     {
         if (!TryGetSink(owner, out var sink) || sink != expectedSink ||
-            !CanCollect(owner, item, sink) || !_interaction.InRangeAndAccessible(owner, item))
+            !CanCollect(owner, item, sink))
             return false;
 
-        return _hands.TryPickupAnyHand(owner, item);
+        if (_interaction.InRangeAndAccessible(owner, item) && _hands.TryPickupAnyHand(owner, item))
+            return true;
+
+        BlockAfterFailure(owner, item, sink);
+        return false;
     }
 
     public bool TryDeliver(EntityUid owner, EntityUid item, EntityUid expectedSink)
@@ -199,13 +208,26 @@ public sealed partial class FillbotSystem : EntitySystem
 
     public void DropAfterFailure(EntityUid owner, EntityUid item, EntityUid sink)
     {
-        if (!IsUsable(owner) || !TryComp<FillbotComponent>(owner, out var bot))
+        if (!BlockAfterFailure(owner, item, sink))
             return;
 
-        bot.FailedItem = item;
-        bot.FailedReceiver = sink;
-        bot.RetryAfter = _timing.CurTime + bot.FailureRetryDelay;
         if (_hands.GetActiveItem(owner) == item)
             _hands.TryDrop(owner);
+    }
+
+    private bool BlockAfterFailure(EntityUid owner, EntityUid item, EntityUid sink)
+    {
+        if (!IsUsable(owner) || !TryComp<FillbotComponent>(owner, out var bot))
+            return false;
+
+        var now = _timing.CurTime;
+        foreach (var (target, retryAfter) in bot.BlockedItems)
+        {
+            if (retryAfter <= now)
+                bot.BlockedItems.Remove(target);
+        }
+
+        bot.BlockedItems[(item, sink)] = now + bot.FailureRetryDelay;
+        return true;
     }
 }
