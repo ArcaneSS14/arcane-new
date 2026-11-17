@@ -1,12 +1,12 @@
 - type: prize
   id: Lose
-  weight: 0.8
+  weight: 0.25
   winSound: !type:SoundPathSpecifier
     path: /Audio/Machines/buzz-two.ogg
 
 - type: prize
   id: MinorWin
-  weight: 0.6
+  weight: 0.15
   winSound: !type:SoundPathSpecifier
     path: /Audio/Effects/Cargo/ping.ogg
   prizeTable: !type:NestedSelector
@@ -15,7 +15,7 @@
 
 - type: prize
   id: SmallWin
-  weight: 0.2
+  weight: 0.099
   winSound: !type:SoundPathSpecifier
     path: /Audio/Effects/Cargo/ping.ogg
   prizeTable: !type:NestedSelector
@@ -23,8 +23,17 @@
   winMessage: slotmachine-win-small
 
 - type: prize
+  id: SlotMachineBreakEven
+  weight: 0.4688
+  winSound: !type:SoundPathSpecifier
+    path: /Audio/Effects/Cargo/ping.ogg
+  prizeTable: !type:NestedSelector
+    tableId: SlotMachineStakeBack
+  winMessage: slotmachine-stake-returned
+
+- type: prize
   id: MediumWin
-  weight: 0.1
+  weight: 0.03
   winSound: !type:SoundPathSpecifier
     path: /Audio/Effects/Arcade/win.ogg
   prizeTable: !type:NestedSelector
@@ -33,7 +42,7 @@
 
 - type: prize
   id: LargeWin
-  weight: 0.01
+  weight: 0.001
   winSound: !type:SoundPathSpecifier
     path: /Audio/_Arcane/Machines/SlotMachine/slotmachine_bigwin.ogg
   prizeTable: !type:NestedSelector
@@ -42,7 +51,7 @@
 
 - type: prize
   id: Jackpot
-  weight: 0.005
+  weight: 0.0002
   winSound: !type:SoundPathSpecifier
     path: /Audio/_Arcane/Machines/SlotMachine/slotmachine_jackpotwin.ogg
   prizeTable: !type:NestedSelector
@@ -59,8 +68,14 @@
   winMessage: slotmachine-win-godpot
 
 - type: prize
+  id: QmLose
+  weight: 0.499
+  winSound: !type:SoundPathSpecifier
+    path: /Audio/Machines/buzz-two.ogg
+
+- type: prize
   id: QmMinor
-  weight: 0.5
+  weight: 0.489
   winSound: !type:SoundPathSpecifier
     path: /Audio/_Arcane/Machines/SlotMachine/slotmachine_bigwin.ogg
   prizeTable: !type:NestedSelector
@@ -69,7 +84,7 @@
 
 - type: prize
   id: QmJackpot
-  weight: 0.1
+  weight: 0.011
   winSound: !type:SoundPathSpecifier
     path: /Audio/_Arcane/Machines/SlotMachine/slotmachine_jackpotwin.ogg
   prizeTable: !type:NestedSelector
@@ -78,7 +93,7 @@
 
 - type: prize
   id: QmThrongler
-  weight: 0.005
+  weight: 0.001
   winSound: !type:SoundPathSpecifier
     path: /Audio/_Arcane/Machines/SlotMachine/slotmachine_godpot.ogg
   prizeTable: !type:NestedSelector

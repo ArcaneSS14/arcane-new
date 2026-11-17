@@ -1,5 +1,6 @@
 using Content.Client.Actions;
 using Content.Client.Actions.UI;
+using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Systems.Actions.Controls;
 using Content.Shared.Input;
 using Robust.Client.GameObjects;
@@ -30,6 +31,9 @@ public sealed class PinnedActionButton : ActionButton
         _customization = customization;
         _prototypes = IoCManager.Resolve<IPrototypeManager>();
         _input = IoCManager.Resolve<IInputManager>();
+        Label.HorizontalAlignment = HAlignment.Stretch;
+        Label.ClipText = true;
+        Label.AddStyleClass(StyleClass.FontSmall);
         _pin = new PanelContainer
         {
             MouseFilter = MouseFilterMode.Ignore,
@@ -54,14 +58,14 @@ public sealed class PinnedActionButton : ActionButton
         TooltipSupplier = control =>
         {
             var content = originalTooltip?.Invoke(control);
-            if (_slot is not { } slot || !_customization.IsPinned(slot))
-                return content;
-            if (content is ActionAlertTooltip tooltip)
-            {
+            var pinned = _slot is { } slot && _customization.IsPinned(slot);
+            if (content == null && pinned && _slot is { } placeholder)
+                content = PinTooltip(placeholder);
+            else if (content is ActionAlertTooltip tooltip && pinned)
                 tooltip.AddFooter(PinStatus());
-                return tooltip;
-            }
-            return PinTooltip(slot);
+            if (content is ActionAlertTooltip actionTooltip && Label.Text is { } key && !string.IsNullOrWhiteSpace(key))
+                actionTooltip.AddFooter(FormattedMessage.EscapeText(key));
+            return content;
         };
     }
 
