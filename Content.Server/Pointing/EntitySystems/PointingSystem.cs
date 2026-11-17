@@ -106,6 +106,13 @@ namespace Content.Server.Pointing.EntitySystems
                 // Someone pointing at YOU is slightly more important
                 var popupType = viewerEntity == pointed ? PopupType.Medium : PopupType.Small;
 
+                // Arcane-Start: the operator's camera may not have the hologram in its state yet.
+                if (viewerEntity == source && origin != source)
+                {
+                    _popup.PopupCursor(message, viewer, popupType);
+                    continue;
+                }
+                // Arcane-End
                 RaiseNetworkEvent(new PopupEntityEvent(message, popupType, _gameTiming.CurTick, netSource), viewerEntity); // TODO: Make this use the popup system API
             }
 
