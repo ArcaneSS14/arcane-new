@@ -18,7 +18,7 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         Log.Level = LogLevel.Debug;
     }
 
-    protected override (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance)
+    protected override (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance) // Arcane-Edit: return uplink data for the shared briefing
     {
         var pda = _uplink.FindUplinkTarget(traitor);
 
@@ -29,18 +29,20 @@ public sealed partial class ServerTraitorRuleSystem : TraitorRuleSystem
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink is PDA");
 
-            return (code, false); // Arcane
+            return (code, false); // Arcane-Edit: return the PDA code
         }
 
         if (uplinked == AddUplinkResult.Implant)
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink is implant");
-            return (null, true); // Arcane
+            return (null, true); // Arcane-Edit: report fallback implant delivery
         }
 
 
+        // Arcane-Edit-Start
         Log.Error($"MakeTraitor failed on {ToPrettyString(traitor)} - No uplink could be added");
-        return (null, false); // Arcane
+        return (null, false);
+        // Arcane-Edit-End
     }
 
     // TODO: AntagCodewordsComponent
