@@ -21,6 +21,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
+using Content.Trauma.Common.Language.Components; // Arcane
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -80,8 +81,10 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
         });
     }
 
-    [TestCase(true)]
-    public async Task StationAiRetirementChecksTheCoreAgainBeforeReleasingItsSlot(bool removedFromCore)
+    // Arcane-Edit-Start
+    [Test]
+    public async Task StationAiRetirementChecksTheCoreAgainBeforeReleasingItsSlot()
+    // Arcane-Edit-End
     {
         EntityUid ai = default;
         EntityUid core = default;
@@ -105,24 +108,21 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
             minds.TransferTo(mindId, ai);
             Assert.That(player.AttachedEntity, Is.EqualTo(ai));
 
-            if (removedFromCore)
-            {
-                var containers = SEntMan.System<SharedContainerSystem>();
-                Assert.That(containers.TryGetContainingContainer(ai, out var holder), Is.True);
-                Assert.That(containers.Remove(ai, holder!), Is.True);
-                Assert.That(SEntMan.GetComponent<Content.Shared.Movement.Components.InputMoverComponent>(ai).CanMove, Is.False);
-            }
-
+            // Arcane-Edit-Start
+            var containers = SEntMan.System<SharedContainerSystem>();
+            Assert.That(containers.TryGetContainingContainer(ai, out var holder), Is.True);
+            Assert.That(containers.Remove(ai, holder!), Is.True);
+            Assert.That(SEntMan.GetComponent<Content.Shared.Movement.Components.InputMoverComponent>(ai).CanMove, Is.False);
             var retirement = SEntMan.System<StationAiSystem>();
             retirement.RetireStationAi(player, ai, core, station, mindId);
-            retirement.RetireStationAi(player, ai, core, station, mindId);
-            Assert.That(SEntMan.GetComponent<StationJobsComponent>(station).JobList["StationAi"], Is.EqualTo(removedFromCore ? 0 : 1));
-            if (removedFromCore)
-            {
-                Assert.That(player.AttachedEntity, Is.EqualTo(ai));
-                return;
-            }
+            Assert.That(SEntMan.GetComponent<StationJobsComponent>(station).JobList["StationAi"], Is.Zero);
+            Assert.That(player.AttachedEntity, Is.EqualTo(ai));
 
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(core, StationAiCoreComponent.Container, ai, user: null), Is.True);
+            retirement.RetireStationAi(player, ai, core, station, mindId);
+            retirement.RetireStationAi(player, ai, core, station, mindId);
+            Assert.That(SEntMan.GetComponent<StationJobsComponent>(station).JobList["StationAi"], Is.EqualTo(1));
+            // Arcane-Edit-End
             Assert.That(player.AttachedEntity, Is.Not.EqualTo(ai));
             Assert.That(SEntMan.TryGetComponent<GhostComponent>(player.AttachedEntity, out var ghost), Is.True);
             Assert.That(ghost!.CanReturnToBody, Is.False);
@@ -131,11 +131,36 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
         await RunSeconds(0.2f);
         await Server.WaitAssertion(() =>
         {
-            Assert.That(SEntMan.EntityExists(ai), Is.EqualTo(removedFromCore));
+            Assert.That(SEntMan.EntityExists(ai), Is.False); // Arcane-Edit
             Assert.That(SEntMan.EntityExists(core), Is.True);
             SEntMan.System<SharedMindSystem>().WipeMind(mindId);
         });
     }
+
+    // Arcane-Start
+    [Test]
+    public async Task EmptyBorgRestoresItsDefaultLanguages()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var chassis = SEntMan.SpawnAttachedTo("BorgChassisSelectable", Center);
+            var brain = SEntMan.SpawnAttachedTo("PositronicBrain", Center);
+            var holder = SEntMan.GetComponent<BorgChassisComponent>(chassis).BrainContainer;
+            var speaker = SEntMan.GetComponent<LanguageSpeakerComponent>(chassis);
+            var defaultSpoken = Enumerable.ToArray(speaker.Speaks);
+            var defaultUnderstood = Enumerable.ToArray(speaker.Understands);
+            var containers = SEntMan.System<SharedContainerSystem>();
+
+            Assert.That(containers.Insert(brain, holder), Is.True);
+            Assert.That(speaker.Speaks.Any(language => language.Id == "Draconic"), Is.True);
+            Assert.That(containers.Remove(brain, holder), Is.True);
+            Assert.That(speaker.Speaks, Is.EqualTo(defaultSpoken));
+            Assert.That(speaker.Understands, Is.EqualTo(defaultUnderstood));
+            Assert.That(containers.Insert(brain, holder), Is.True);
+            Assert.That(speaker.Speaks.Any(language => language.Id == "Draconic"), Is.True);
+        });
+    }
+    // Arcane-End
 
     [Test]
     public async Task AutomaticCameraIlluminationPreservesManualLightAndPower()
