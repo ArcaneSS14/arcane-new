@@ -62,7 +62,7 @@ public sealed class ChaplainPortTest : InteractionTest
         await base.TearDown();
     }
 
-    [TestCase(true)]
+    [TestCase(false)] // Arcane-Edit
     public async Task AltarIssuedPairsBelongToTheirOwnMindAndRepeatUseDoesNotDuplicate(bool twoHands)
     {
         await SpawnTarget("AltarTechnology");
@@ -76,23 +76,32 @@ public sealed class ChaplainPortTest : InteractionTest
         await Interact();
         EntityUid[] ownForms = [];
         EntityUid otherMind = default;
+        EntityUid other = default; // Arcane
         await Server.WaitAssertion(() =>
         {
             ownForms = SEntMan.GetComponent<NullrodBindingComponent>(_owner).Forms.ToArray();
             Assert.That(ownForms, Has.Length.EqualTo(2));
             Assert.That(ownForms.Select(Prototype), Is.EquivalentTo(new[] { "WeaponPistolCasul", "WeaponPistolJackal" }));
-            var other = SpawnNearby("InteractionTestMob");
+            other = SpawnNearby("InteractionTestMob"); // Arcane-Edit
             otherMind = CreateChaplain(other);
             var extra = SpawnNearby("Nullrod");
             Assert.That(HandSys.TryPickupAnyHand(other, extra), Is.True);
             var coords = SEntMan.GetComponent<TransformComponent>(STarget!.Value).Coordinates;
-            InteractSys.UserInteraction(other, coords, STarget.Value);
-            InteractSys.UserInteraction(other, coords, STarget.Value);
+            InteractSys.UserInteraction(other, coords, STarget.Value); // Arcane-Edit
         });
         await RunTicks(5);
         await Server.WaitAssertion(() =>
         {
             Assert.That(SEntMan.GetComponent<NullrodBindingComponent>(otherMind).Forms, Has.Count.EqualTo(2));
+            // Arcane-Start
+            var originalForms = SEntMan.GetComponent<NullrodBindingComponent>(otherMind).Forms.ToArray();
+            var repeated = SpawnNearby("Nullrod");
+            Assert.That(HandSys.TryPickupAnyHand(other, repeated), Is.True);
+            InteractSys.UserInteraction(other, SEntMan.GetComponent<TransformComponent>(STarget!.Value).Coordinates, STarget.Value);
+            Assert.That(SEntMan.IsQueuedForDeletion(repeated), Is.False);
+            Assert.That(SEntMan.EntityExists(repeated), Is.True);
+            Assert.That(SEntMan.GetComponent<NullrodBindingComponent>(otherMind).Forms, Is.EquivalentTo(originalForms));
+            // Arcane-End
             Assert.That(Count("WeaponPistolCasul") + Count("WeaponPistolJackal"), Is.EqualTo(4));
             Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
         });
@@ -102,6 +111,10 @@ public sealed class ChaplainPortTest : InteractionTest
             var held = HandSys.EnumerateHeld(SPlayer).ToArray();
             Assert.That(held, Has.Length.EqualTo(twoHands ? 2 : 1));
             Assert.That(held, Is.SubsetOf(ownForms));
+            // Arcane-Start
+            foreach (var form in ownForms)
+                Assert.That(SEntMan.GetComponent<BoundNullrodComponent>(form).Mind, Is.EqualTo(_owner));
+            // Arcane-End
             foreach (var form in SEntMan.GetComponent<NullrodBindingComponent>(otherMind).Forms)
             {
                 Assert.That(HandSys.IsHolding(SPlayer, form), Is.False);
@@ -110,6 +123,18 @@ public sealed class ChaplainPortTest : InteractionTest
             Assert.That(Recall.TryBind(SPlayer, SpawnNearby("Nullrod")), Is.False);
             Assert.That(Recall.TryStartRecall(SPlayer, STarget.Value), Is.False, "Full hands cannot start another recall.");
         });
+        // Arcane-Start
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(HandSys.TryDrop((SPlayer, Hands)), Is.True);
+            if (!twoHands)
+                HandSys.AddHand((SPlayer, Hands), "hand_left", HandLocation.Left);
+            Assert.That(HandSys.EnumerateHeld(SPlayer), Is.Empty);
+            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
+        });
+        await AwaitDoAfters();
+        await Server.WaitAssertion(() => Assert.That(HandSys.EnumerateHeld(SPlayer), Is.EquivalentTo(ownForms)));
+        // Arcane-End
     }
 
     [TestCase(false)]
@@ -132,6 +157,13 @@ public sealed class ChaplainPortTest : InteractionTest
         {
             Assert.That(HandSys.IsHolding(SPlayer, survivor), Is.True);
             Assert.That(Count("WeaponPistolCasul") + Count("WeaponPistolJackal"), Is.EqualTo(1));
+            // Arcane-Start
+            SEntMan.RemoveComponent<NullrodBindingComponent>(_owner);
+            Assert.That(SEntMan.EntityExists(_owner), Is.True);
+            Assert.That(SEntMan.EntityExists(survivor), Is.True);
+            Assert.That(SEntMan.HasComponent<BoundNullrodComponent>(survivor), Is.False);
+            Assert.That(Recall.TryBind(SPlayer, survivor), Is.True);
+            // Arcane-End
             if (removeComponent)
                 SEntMan.RemoveComponent<NullrodBindingComponent>(_owner);
             else
@@ -150,6 +182,7 @@ public sealed class ChaplainPortTest : InteractionTest
         await SpawnTarget("AltarConvert");
         EntityUid rod = default;
         EntityUid newBody = default;
+        EntityUid newRod = default; // Arcane
         await Server.WaitAssertion(() =>
         {
             rod = SpawnNearby("Nullrod");
@@ -160,6 +193,10 @@ public sealed class ChaplainPortTest : InteractionTest
             SEntMan.EnsureComponent<BibleUserComponent>(newBody);
             SEntMan.System<SharedMindSystem>().TransferTo(_owner, newBody, createGhost: false);
             CreateChaplain(SPlayer);
+            // Arcane-Start
+            newRod = SpawnNearby("Nullrod");
+            Assert.That(Recall.TryBind(SPlayer, newRod), Is.True);
+            // Arcane-End
             Assert.That(Recall.TryBind(SPlayer, rod), Is.False);
         });
         await RunSeconds(6);
@@ -167,37 +204,68 @@ public sealed class ChaplainPortTest : InteractionTest
         {
             Assert.That(HandSys.IsHolding(SPlayer, rod), Is.False);
             Assert.That(HandSys.IsHolding(newBody, rod), Is.False);
+            Assert.That(HandSys.IsHolding(SPlayer, newRod), Is.False); // Arcane
             Assert.That(Recall.TryStartRecall(newBody, STarget!.Value), Is.True);
         });
         await RunSeconds(6);
         await Server.WaitAssertion(() => Assert.That(HandSys.IsHolding(newBody, rod), Is.True));
     }
 
-    [TestCase("TestArcaneImmovableNullrod", true, false)]
+    [TestCase("TestArcaneImmovableNullrod", false, false)] // Arcane-Edit
     public async Task RecallPreservesTheExactRemovalRestrictionEvenWhenPickupFails(string prototype, bool deleteOnDrop, bool pickedUp)
     {
         await SpawnTarget("AltarConvert");
-        EntityUid rod = default;
-        await Server.WaitAssertion(() =>
-        {
-            rod = SpawnNearby(prototype);
-            var restriction = SEntMan.GetComponent<UnremoveableComponent>(rod);
-            restriction.DeleteOnDrop = deleteOnDrop;
-            SEntMan.Dirty(rod, restriction);
-            Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
-            Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
-        });
-        await AwaitDoAfters();
-        await RunUntilSynced();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(rod), Is.True);
-            Assert.That(HandSys.IsHolding(SPlayer, rod), Is.EqualTo(pickedUp));
-            Assert.That(SEntMan.GetComponent<UnremoveableComponent>(rod).DeleteOnDrop, Is.EqualTo(deleteOnDrop));
-        });
-        await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<UnremoveableComponent>(
-            ToClient(SEntMan.GetNetEntity(rod))).DeleteOnDrop, Is.EqualTo(deleteOnDrop)));
+        // Arcane-Edit-Start
+        await VerifyRestrictionAfterDeniedPickup(prototype, deleteOnDrop, pickedUp);
+        await VerifyRestrictionAfterDeniedPickup(prototype, !deleteOnDrop, pickedUp);
+        // Arcane-Edit-End
     }
+
+    // Arcane-Start
+    private async Task VerifyRestrictionAfterDeniedPickup(string prototype, bool deleteOnDrop, bool pickedUp)
+    {
+        EntityUid rod = default;
+        var removed = 0;
+        void OnRemoved(RemovedComponentEventArgs args)
+        {
+            if (args.BaseArgs.Owner == rod && args.BaseArgs.Component is UnremoveableComponent)
+                removed++;
+        }
+        await Server.WaitPost(() => SEntMan.ComponentRemoved += OnRemoved);
+        try
+        {
+            await Server.WaitAssertion(() =>
+            {
+                rod = SpawnNearby(prototype);
+                var restriction = SEntMan.GetComponent<UnremoveableComponent>(rod);
+                restriction.DeleteOnDrop = deleteOnDrop;
+                SEntMan.Dirty(rod, restriction);
+                Assert.That(Recall.TryBind(SPlayer, rod), Is.True);
+                Assert.That(Recall.TryStartRecall(SPlayer, STarget!.Value), Is.True);
+            });
+            await AwaitDoAfters();
+            await RunUntilSynced();
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(removed, Is.EqualTo(1), "The prayer must actually remove the pickup restriction before restoring it.");
+                Assert.That(SEntMan.EntityExists(rod), Is.True);
+                Assert.That(HandSys.IsHolding(SPlayer, rod), Is.EqualTo(pickedUp));
+                Assert.That(SEntMan.GetComponent<UnremoveableComponent>(rod).DeleteOnDrop, Is.EqualTo(deleteOnDrop));
+            });
+            await Client.WaitAssertion(() => Assert.That(CEntMan.GetComponent<UnremoveableComponent>(
+                ToClient(SEntMan.GetNetEntity(rod))).DeleteOnDrop, Is.EqualTo(deleteOnDrop)));
+        }
+        finally
+        {
+            await Server.WaitPost(() => SEntMan.ComponentRemoved -= OnRemoved);
+        }
+        await Server.WaitPost(() =>
+        {
+            SEntMan.RemoveComponent<NullrodBindingComponent>(_owner);
+            SEntMan.DeleteEntity(rod);
+        });
+    }
+    // Arcane-End
 
     private NullrodRecallSystem Recall => SEntMan.System<NullrodRecallSystem>();
     private EntityUid SpawnNearby(string prototype) => SEntMan.SpawnEntity(prototype, SEntMan.GetCoordinates(PlayerCoords));
