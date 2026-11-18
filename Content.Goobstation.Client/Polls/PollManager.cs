@@ -37,10 +37,24 @@ public sealed partial class PollManager
         poll.SeenCount = count;
         SeenCountChanged?.Invoke(id, count);
     }
+
+    private PollData PreserveSeenCount(PollData poll)
+    {
+        if (_activePolls.TryGetValue(poll.PollId, out var previous) && previous.StartTime == poll.StartTime)
+            poll.SeenCount = Math.Max(poll.SeenCount, previous.SeenCount);
+        return poll;
+    }
+
+    private void OnDisconnect(object? sender, NetDisconnectedArgs args)
+    {
+        _activePolls.Clear();
+        _playerVotes.Clear();
+    }
     // Arcane-End
 
     public void Initialize()
     {
+        _net.Disconnect += OnDisconnect; // Arcane
         _net.RegisterNetMessage<MsgRequestActivePolls>();
         _net.RegisterNetMessage<MsgActivePollsResponse>(HandleActivePollsResponse);
         _net.RegisterNetMessage<MsgRequestPollDetails>();
@@ -119,6 +133,10 @@ public sealed partial class PollManager
 
     private void HandleActivePollsResponse(MsgActivePollsResponse msg)
     {
+        // Arcane-Start
+        foreach (var poll in msg.Polls)
+            PreserveSeenCount(poll);
+        // Arcane-End
         _activePolls.Clear();
 
         foreach (var poll in msg.Polls)
@@ -132,7 +150,7 @@ public sealed partial class PollManager
     {
         if (msg.Poll != null)
         {
-            _activePolls[msg.Poll.PollId] = msg.Poll;
+            _activePolls[msg.Poll.PollId] = PreserveSeenCount(msg.Poll); // Arcane-Edit
             _playerVotes[msg.Poll.PollId] = msg.PlayerVotes;
 
             OnPollDetailsReceived?.Invoke(msg.Poll, msg.PlayerVotes);
@@ -142,14 +160,14 @@ public sealed partial class PollManager
     private void HandlePollVoteResponse(MsgPollVoteResponse msg)
     {
         if (msg.Success && msg.UpdatedPoll != null)
-            _activePolls[msg.UpdatedPoll.PollId] = msg.UpdatedPoll;
+            _activePolls[msg.UpdatedPoll.PollId] = PreserveSeenCount(msg.UpdatedPoll); // Arcane-Edit
 
         OnVoteResponse?.Invoke(msg.Success, msg.ErrorMessage);
     }
 
     private void HandlePollUpdated(MsgPollUpdated msg)
     {
-        _activePolls[msg.Poll.PollId] = msg.Poll;
+        _activePolls[msg.Poll.PollId] = PreserveSeenCount(msg.Poll); // Arcane-Edit
         OnPollUpdated?.Invoke(msg.Poll);
     }
 
