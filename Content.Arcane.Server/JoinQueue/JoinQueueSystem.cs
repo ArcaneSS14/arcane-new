@@ -50,6 +50,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
     private TimeSpan _nextScoreBroadcast;
     private TimeSpan _nextPrune;
     private bool _scoresDirty;
+    private bool _scoresPending;
     private bool _queueDirty;
     private bool _enabled;
     private bool _shutdown;
@@ -96,6 +97,7 @@ public sealed partial class JoinQueueSystem : EntitySystem
             if (_queue.Prune(now))
                 _queueDirty = true;
             _nextPrune = now + ScoreInterval;
+            FlushPendingScores(now);
         }
         if (now < _nextScoreBroadcast || now < _nextInfo && !_scoresDirty && !_queueDirty)
             return;
@@ -351,13 +353,48 @@ public sealed partial class JoinQueueSystem : EntitySystem
         if (!_scores.TryGetValue(entry.User, out var scores))
             _scores[entry.User] = scores = new();
         var now = _timing.RealTime;
-        if (scores.TryGetValue(message.Game, out var previous) && now - previous.UpdatedAt < ScoreInterval)
+        var score = Math.Clamp(message.Score, 0, maximum);
+        if (!scores.TryGetValue(message.Game, out var state))
+        {
+            scores[message.Game] = new ScoreState { Score = score, PendingScore = score, UpdatedAt = now };
+            _scoreNames[entry.User] = session.Name;
+            _scoresDirty |= score > 0;
             return;
-        var score = Math.Max(previous.Score, Math.Clamp(message.Score, 0, maximum));
-        scores[message.Game] = new ScoreState(score, now);
-        _scoreNames[entry.User] = session.Name;
-        if (score != previous.Score)
+        }
+        if (score <= state.PendingScore)
+            return;
+
+        state.PendingScore = score;
+        if (now - state.UpdatedAt < ScoreInterval)
+        {
+            _scoresPending = true;
+            return;
+        }
+        state.Score = score;
+        state.UpdatedAt = now;
+        _scoresDirty = true;
+    }
+
+    private void FlushPendingScores(TimeSpan now)
+    {
+        if (!_scoresPending)
+            return;
+
+        _scoresPending = false;
+        foreach (var scores in _scores.Values)
+        foreach (var state in scores.Values)
+        {
+            if (state.PendingScore <= state.Score)
+                continue;
+            if (now - state.UpdatedAt < ScoreInterval)
+            {
+                _scoresPending = true;
+                continue;
+            }
+            state.Score = state.PendingScore;
+            state.UpdatedAt = now;
             _scoresDirty = true;
+        }
     }
 
     internal List<QueueMiniGameLeaderboardEntry> BuildScores()
@@ -388,6 +425,11 @@ public sealed partial class JoinQueueSystem : EntitySystem
         _ => 0,
     };
 
-    private readonly record struct ScoreState(int Score, TimeSpan UpdatedAt);
+    private sealed class ScoreState
+    {
+        public int Score;
+        public int PendingScore;
+        public TimeSpan UpdatedAt;
+    }
     private readonly record struct WaitRecord(string Name, float Seconds);
 }
