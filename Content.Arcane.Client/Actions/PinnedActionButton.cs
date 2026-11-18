@@ -25,6 +25,8 @@ public sealed class PinnedActionButton : ActionButton
     private EntityUid? _slot;
     private bool _unavailable;
 
+    public override bool CanDrag => _slot != null;
+
     public PinnedActionButton(IEntityManager entities, ActionBarUIController customization) : base(entities)
     {
         _entities = entities;

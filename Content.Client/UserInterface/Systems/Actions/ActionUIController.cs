@@ -659,7 +659,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void DragAction()
     {
-        if (_menuDragHelper.Dragged is not {Action: {} action} dragged)
+        if (_menuDragHelper.Dragged is not { } dragged) // Arcane-Edit
         {
             _menuDragHelper.EndDrag();
             return;
@@ -671,6 +671,11 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (Customization?.HandleDrop(dragged, currentlyHovered, UIManager.MousePositionScaled.Position, _actions) == true)
         {
             OnActionsUpdated();
+            _menuDragHelper.EndDrag();
+            return;
+        }
+        if (dragged.Action is not { } action)
+        {
             _menuDragHelper.EndDrag();
             return;
         }
@@ -759,7 +764,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
     private void HandleActionPressed(GUIBoundKeyEventArgs args, ActionButton button)
     {
         args.Handle();
-        if (button.Action != null)
+        if (button.CanDrag) // Arcane-Edit
         {
             // Arcane-Edit-Start
             if (Customization?.CanDrag != false)
