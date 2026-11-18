@@ -32,6 +32,10 @@ public sealed partial class PaintToolComponent : Component
 
     [ViewVariables]
     public int PixelDebt;
+
+    /// <summary>Prepaid reagent rounding credit, scaled by PixelsPerUnit.</summary>
+    [ViewVariables]
+    public int PaintCredit;
 }
 
 [Serializable, NetSerializable]
