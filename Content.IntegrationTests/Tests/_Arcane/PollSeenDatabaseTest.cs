@@ -1,7 +1,7 @@
 #nullable enable
 using System.Linq;
 using System.Net;
-using Content.IntegrationTests.Fixtures;
+using Content.Shared.CCVar; // Arcane-Edit
 using Content.Server.Database;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +9,57 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
 using Robust.Shared.Network;
+// Arcane-Start
+using System.Reflection;
+using Robust.Shared.Configuration;
+using Robust.Shared.IoC;
+using Robust.Shared.Log;
+using Robust.Shared.Serialization.Manager;
+using Robust.UnitTesting;
+// Arcane-End
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
-public sealed class PollSeenDatabaseTest : GameTest
+public sealed class PollSeenDatabaseTest : RobustUnitTest // Arcane-Edit
 {
-    public override PoolSettings PoolSettings => new() { Connected = false, Dirty = true };
+    protected override Assembly[] GetContentAssemblies() => [typeof(CCVars).Assembly]; // Arcane-Edit
 
     [Test]
     public async Task DuplicateAndUnavailableViewsStaySeparateFromVotes()
     {
-        var db = Server.ResolveDependency<IServerDbManager>();
+        // Arcane-Edit-Start
+        var dependencies = IoCManager.Instance!;
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<SqliteServerDbContext>().UseSqlite(connection).Options;
+        var db = new ServerDbSqlite(() => options, inMemory: true, dependencies.Resolve<IConfigurationManager>(),
+            synchronous: false, dependencies.Resolve<ILogManager>().GetSawmill("db.ops"),
+            dependencies.Resolve<ISerializationManager>(), snapshot: false);
+        try
+        {
+            await VerifyDuplicateAndUnavailableViews(db);
+        }
+        finally
+        {
+            db.Shutdown();
+        }
+    }
+
+    private static async Task VerifyDuplicateAndUnavailableViews(ServerDbBase db)
+    {
+        // Arcane-Edit-End
         var user = new NetUserId(Guid.NewGuid());
-        await db.UpdatePlayerRecordAsync(user, "Poll viewer", IPAddress.Loopback, null);
+        await db.UpdatePlayerRecord(user, "Poll viewer", IPAddress.Loopback, null); // Arcane-Edit
         var poll = NewPoll();
         var id = await db.CreatePollAsync(poll);
         var results = await Task.WhenAll(db.MarkPollSeenAsync(id, user), db.MarkPollSeenAsync(id, user));
         Assert.That(results.Count(added => added), Is.EqualTo(1));
         Assert.That(await db.GetPollSeenCountAsync(id), Is.EqualTo(1));
+        // Arcane-Start
+        var counts = await db.GetPollSeenCountsAsync([id, int.MaxValue]);
+        Assert.That(counts.GetValueOrDefault(id), Is.EqualTo(1));
+        Assert.That(counts.GetValueOrDefault(int.MaxValue), Is.Zero);
+        // Arcane-End
         Assert.That(await db.GetPlayerVotesAsync(id, user), Is.Empty);
         Assert.That(await db.GetSeenPollIdsAsync(user), Does.Contain(id));
         Assert.That(await db.MarkPollSeenAsync(int.MaxValue, user), Is.False);
