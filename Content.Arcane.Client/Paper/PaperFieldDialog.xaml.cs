@@ -10,6 +10,12 @@ public sealed partial class PaperFieldDialog : DefaultWindow
 {
     public event Action<string>? OnSubmitted;
 
+    public string Value
+    {
+        get => ValueInput.Text;
+        set => ValueInput.SetText(value, invokeEvent: true);
+    }
+
     public PaperFieldDialog(PaperFieldKind kind, int limit)
     {
         RobustXamlLoader.Load(this);
@@ -38,7 +44,6 @@ public sealed partial class PaperFieldDialog : DefaultWindow
         if (string.IsNullOrEmpty(value) || LimitWarning.Visible)
             return;
         OnSubmitted?.Invoke(value);
-        Close();
     }
 
     protected override void ExitedTree()

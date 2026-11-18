@@ -17,38 +17,51 @@ public sealed partial class AnimatedMarkingTextureRect : LayeredTextureRect
     [Dependency] private IGameTiming _timing = default!;
 
     private List<IRsiStateLike> _states = [];
-    public bool Animate { get; set; }
+    private bool _animate;
+    public bool Animate
+    {
+        get => _animate;
+        set
+        {
+            if (_animate == value)
+                return;
+            _animate = value;
+            if (!value)
+                ResetFrames();
+        }
+    }
 
     public AnimatedMarkingTextureRect() => IoCManager.InjectDependencies(this);
 
     public void SetStates(List<IRsiStateLike> states)
     {
         _states = states;
-        Textures = states.Select(state => state.GetFrame(GetDirection(state), 0)).ToList();
+        ResetFrames();
     }
+
+    private void ResetFrames() => Textures = _states.Select(state => state.GetFrame(GetDirection(state), 0)).ToList();
 
     protected override void FrameUpdate(FrameEventArgs args)
     {
         base.FrameUpdate(args);
-        if (!VisibleInTree)
+        if (!VisibleInTree || !Animate)
             return;
 
         for (var i = 0; i < _states.Count; i++)
         {
             var state = _states[i];
+            if (!state.IsAnimated)
+                continue;
             var frame = 0;
-            if (Animate && state.IsAnimated)
-            {
-                var total = 0f;
-                for (var j = 0; j < state.AnimationFrameCount; j++)
-                    total += state.GetDelay(j);
+            var total = 0f;
+            for (var j = 0; j < state.AnimationFrameCount; j++)
+                total += state.GetDelay(j);
 
-                if (total > 0f)
-                {
-                    var time = (float) (_timing.RealTime.TotalSeconds % total);
-                    while (frame < state.AnimationFrameCount - 1 && (time -= state.GetDelay(frame)) >= 0f)
-                        frame++;
-                }
+            if (total > 0f)
+            {
+                var time = (float) (_timing.RealTime.TotalSeconds % total);
+                while (frame < state.AnimationFrameCount - 1 && (time -= state.GetDelay(frame)) >= 0f)
+                    frame++;
             }
 
             // All frames of an RSI state have the same size, so a frame change needs no new layout measurement.
