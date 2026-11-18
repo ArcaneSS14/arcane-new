@@ -47,5 +47,14 @@ public abstract partial class ServerDbBase
         await using var db = await GetDb(cancel);
         return await db.DbContext.PollSeen.CountAsync(s => s.PollId == pollId, cancel);
     }
+
+    public async Task<Dictionary<int, int>> GetPollSeenCountsAsync(int[] pollIds, CancellationToken cancel = default)
+    {
+        await using var db = await GetDb(cancel);
+        return await db.DbContext.PollSeen.Where(s => pollIds.Contains(s.PollId))
+            .GroupBy(s => s.PollId)
+            .Select(group => new { PollId = group.Key, Count = group.Count() })
+            .ToDictionaryAsync(group => group.PollId, group => group.Count, cancel);
+    }
 }
 // Arcane-End
