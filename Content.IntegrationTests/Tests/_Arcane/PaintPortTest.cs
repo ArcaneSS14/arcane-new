@@ -22,11 +22,74 @@ using Robust.Shared.Maths;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
+// Arcane-Start
+using Content.Shared.Charges.Components;
+using Content.Shared.Charges.Systems;
+using Content.Shared.Chemistry.EntitySystems;
+// Arcane-End
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class PaintPortTest : InteractionTest
 {
+    private static readonly ProtoId<ReagentPrototype> PaintReagent = "Water"; // Arcane
+
+    // Arcane-Start
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task StrokeCannotExceedAvailablePaintOrCharges(bool solution)
+    {
+        await SpawnTarget("PaintCanvasSmall");
+        var tool = ToServer(await PlaceInHands(solution ? "Beaker" : "Paintbrush"));
+        await Server.WaitAssertion(() =>
+        {
+            var paint = SEntMan.System<PaintSurfaceSystem>();
+            var surface = SEntMan.GetComponent<PaintSurfaceComponent>(STarget!.Value);
+            paint.SetImage((STarget.Value, surface), new PaintImage(surface.Size.X, surface.Size.Y, Color.Black));
+            var settings = SEntMan.EnsureComponent<PaintToolComponent>(tool);
+            if (solution)
+            {
+                settings.ColorMode = PaintColorMode.Solution;
+                settings.Solution = "beaker";
+                settings.PixelsPerUnit = 128;
+                var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+                Assert.That(solutions.TryGetSolution(tool, "beaker", out _, out var contents), Is.True);
+                contents!.AddReagent(PaintReagent, FixedPoint2.FromHundredths(1));
+            }
+            else
+            {
+                settings.PixelsPerCharge = 1;
+                SEntMan.EnsureComponent<LimitedChargesComponent>(tool);
+                SEntMan.System<SharedChargesSystem>().SetCharges(tool, 1);
+            }
+        });
+        await Interact();
+        await Pair.RunUntilSynced();
+        await SendBui(PaintUiKey.Key, new PaintStrokeMessage(1, Color.Red, 1, PaintBrushStyle.Round,
+            PaintShape.Freehand, false, 1, [new Vector2i(1, 1), new Vector2i(3, 1)]));
+        await Server.WaitAssertion(() =>
+        {
+            var image = SEntMan.GetComponent<PaintSurfaceComponent>(STarget!.Value).Image!;
+            Assert.That(image.Pixels.All(pixel => pixel == 0), Is.True, "An unaffordable stroke is atomic.");
+            Assert.That(image.Palette, Has.Count.EqualTo(1), "Rejected strokes must not consume palette entries.");
+        });
+        await SendBui(PaintUiKey.Key, Stroke(2, 2, 1, 1));
+        await SendBui(PaintUiKey.Key, Stroke(3, 3, 3, 1));
+        await Server.WaitAssertion(() =>
+        {
+            var image = SEntMan.GetComponent<PaintSurfaceComponent>(STarget!.Value).Image!;
+            Assert.That(image.Pixels.Count(pixel => pixel != 0), Is.EqualTo(1));
+            if (solution)
+            {
+                Assert.That(SEntMan.System<SharedSolutionContainerSystem>().TryGetSolution(tool, "beaker", out _, out var contents), Is.True);
+                Assert.That(contents!.Volume, Is.EqualTo(FixedPoint2.Zero));
+            }
+            else
+                Assert.That(SEntMan.System<SharedChargesSystem>().GetCurrentCharges(tool), Is.Zero);
+        });
+        await CloseBui(PaintUiKey.Key);
+    }
+    // Arcane-End
 
     [Test]
     public async Task StrokeFloodCannotBypassTheServerMessageBudget()

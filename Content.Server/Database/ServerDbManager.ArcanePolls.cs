@@ -24,5 +24,11 @@ public sealed partial class ServerDbManager
         DbReadOpsMetric.Inc();
         return RunDbCommand(() => _db.GetPollSeenCountAsync(pollId, cancel));
     }
+
+    public Task<Dictionary<int, int>> GetPollSeenCountsAsync(int[] pollIds, CancellationToken cancel = default)
+    {
+        DbReadOpsMetric.Inc();
+        return RunDbCommand(() => _db.GetPollSeenCountsAsync(pollIds, cancel));
+    }
 }
 // Arcane-End

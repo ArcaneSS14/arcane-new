@@ -16,6 +16,7 @@ public sealed class ArcanePaperWindow : PaperWindow
 
     private PaperComponent.PaperBoundUserInterfaceState? _state;
     private PaperFieldDialog? _dialog;
+    private readonly Dictionary<(PaperFieldKind Kind, int Index), string> _fieldDrafts = new();
     public event Action<PaperFieldKind, int, string, string>? OnFieldSubmitted;
 
     public ArcanePaperWindow()
@@ -35,7 +36,10 @@ public sealed class ArcanePaperWindow : PaperWindow
     public override void Populate(PaperComponent.PaperBoundUserInterfaceState state)
     {
         if (_state?.Text != state.Text)
+        {
             CloseDialog();
+            _fieldDrafts.Clear();
+        }
         _state = state;
         base.Populate(state);
     }
@@ -52,6 +56,8 @@ public sealed class ArcanePaperWindow : PaperWindow
         }
 
         var dialog = new PaperFieldDialog(kind, MaxInputLength);
+        if (_fieldDrafts.TryGetValue((kind, index), out var draft))
+            dialog.Value = draft;
         _dialog = dialog;
         dialog.OnSubmitted += value =>
         {
@@ -59,6 +65,8 @@ public sealed class ArcanePaperWindow : PaperWindow
         };
         dialog.OnClose += () =>
         {
+            if (_state?.Text == state.Text && kind == PaperFieldKind.Form)
+                _fieldDrafts[(kind, index)] = dialog.Value;
             if (_dialog == dialog)
                 _dialog = null;
         };
@@ -70,6 +78,7 @@ public sealed class ArcanePaperWindow : PaperWindow
     protected override void ExitedTree()
     {
         CloseDialog();
+        _fieldDrafts.Clear();
         _state = null;
         OnFieldSubmitted = null;
         base.ExitedTree();
