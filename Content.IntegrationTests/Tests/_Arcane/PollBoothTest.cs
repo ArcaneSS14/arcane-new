@@ -139,6 +139,22 @@ public sealed class PollBoothTest : InteractionTest
         try
         {
             await Pair.ReallyBeIdle(5);
+            // Arcane-Start
+            await Server.WaitPost(() => SEntMan.EntityNetManager.SendSystemNetworkMessage(
+                new PollSeenCountChangedEvent(poll!.PollId, 2)));
+            await Pair.ReallyBeIdle(5);
+            await Server.WaitPost(() => Server.ResolveDependency<IServerNetManager>().ServerSendToAll(
+                new MsgPollDetailsResponse { Poll = poll!, PlayerVotes = [] }));
+            await Pair.ReallyBeIdle(5);
+            await Client.WaitAssertion(() =>
+            {
+                Assert.That(Client.ResolveDependency<ClientPollManager>().ActivePolls[poll!.PollId].SeenCount, Is.EqualTo(2));
+                var card = window.FindControl<Control>("PollsList").Children.OfType<PollControl>()
+                    .Single(control => control.PollId == poll.PollId);
+                Assert.That(Descendants(card).OfType<Label>().Select(label => label.Text),
+                    Does.Contain(Loc.GetString("arcane-poll-control-seen-by", ("count", 2))));
+            });
+            // Arcane-End
             await Server.WaitPost(() =>
             {
                 poll!.Options[0].VoteCount = 3;
