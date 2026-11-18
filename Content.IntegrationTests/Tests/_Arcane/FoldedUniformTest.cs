@@ -17,6 +17,29 @@ public sealed class FoldedUniformTest : InteractionTest
 {
     protected override string PlayerPrototype => "MobHuman";
 
+    // Arcane-Start
+    [Test]
+    public async Task PlasmaLightPartialsPreserveShieldingAndRemoveLegacyCellSlots()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            var body = SEntMan.SpawnAttachedTo("MobPlasmaman", position);
+            Assert.That(SEntMan.HasComponent<Content.Arcane.Shared.Light.BodyGlowComponent>(body), Is.True);
+            foreach (var prototype in new[] { "ClothingHeadEnvirohelm", "ClothingHeadEnvirohelmEmpty" })
+            {
+                var helmet = SEntMan.SpawnAttachedTo(prototype, position);
+                Assert.That(SEntMan.HasComponent<Content.Shared.PowerCell.Components.PowerCellSlotComponent>(helmet), Is.False, prototype);
+                Assert.That(SEntMan.HasComponent<Content.Shared.Containers.ItemSlots.ItemSlotsComponent>(helmet), Is.False, prototype);
+                Assert.That(SEntMan.HasComponent<Content.Shared.Power.Components.BatteryComponent>(helmet), Is.True, prototype);
+                Assert.That(SEntMan.GetComponent<Content.Arcane.Shared.Light.GlowShieldingComponent>(helmet).Reduction, Is.EqualTo(0.3f));
+                Assert.That(SEntMan.HasComponent<Content.Arcane.Shared.Light.WearerLightColorComponent>(helmet), Is.True);
+                Assert.That(SEntMan.GetComponent<Content.Shared.Light.Components.HandheldLightComponent>(helmet).Wattage, Is.Zero);
+            }
+        });
+    }
+    // Arcane-End
+
     // The approved complete-variant subset, independently checked against source RSI metadata.
     private static readonly string[] Supported =
     [

@@ -55,6 +55,7 @@ public class ActionButton : Control, IEntityControl // Arcane-Edit: sealed > ext
     private readonly SpriteView _bigItemSpriteView;
 
     public Entity<ActionComponent>? Action { get; private set; }
+    public virtual bool CanDrag => Action != null; // Arcane
     public bool Locked { get; set; }
 
     public event Action<GUIBoundKeyEventArgs, ActionButton>? ActionPressed;
