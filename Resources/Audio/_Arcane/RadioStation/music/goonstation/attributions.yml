@@ -1,12 +1,12 @@
 # Source attribution and license checked separately from the remaining imports.
 - files: ["black_wing_interface.ogg", "cloudskymanguy.ogg", "oh_no_evil_star.ogg", "planets.ogg", "riverdancer.ogg", "waystations.ogg"]
-  license: "CC-BY-NC-SA-3.0-US"
-  copyright: "Chronoquest (MechaDaleEarnhardt). Re-encoded by Goob Station. License: https://creativecommons.org/licenses/by-nc-sa/3.0/us/"
+  license: "Custom"
+  copyright: "Chronoquest (MechaDaleEarnhardt). Re-encoded by Goob Station. License: CC-BY-NC-SA-3.0-US (https://creativecommons.org/licenses/by-nc-sa/3.0/us/)"
   source: "https://github.com/goonstation/goonstation/pull/2664"
 
 - files: ["monkey_riot.ogg"]
-  license: "CC-BY-NC-SA-3.0-US"
-  copyright: "WyrdDoe. Re-encoded by Goob Station. License: https://creativecommons.org/licenses/by-nc-sa/3.0/us/"
+  license: "Custom"
+  copyright: "WyrdDoe. Re-encoded by Goob Station. License: CC-BY-NC-SA-3.0-US (https://creativecommons.org/licenses/by-nc-sa/3.0/us/)"
   source: "https://github.com/goonstation/goonstation/pull/22611"
 
 # Unverified Goob declaration retained pending source clarification (owner decision 2026-11-11).
