@@ -1,5 +1,5 @@
 - type: entity
-  id: PanicButton
+  id: SecurityPanicButton
   name: distress signaller
   description: Press the red button to request immediate backup on the security channel.
   parent: [BaseItem, BaseSecurityContraband]

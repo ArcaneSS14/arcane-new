@@ -238,6 +238,8 @@ public sealed class AchievementRuntimeTest : InteractionTest
             Assert.That(SEntMan.EntityExists(SPlayer), Is.True);
             Assert.That(SEntMan.EntityExists(newBody), Is.True);
             Assert.That(SEntMan.HasComponent<BodyComponent>(newBody), Is.True);
+            Assert.That(SEntMan.System<MobStateSystem>().IsDead(newBody), Is.True,
+                "The explicit suicide command must not leave a healthy body alive after detaching its mind.");
         });
     }
 

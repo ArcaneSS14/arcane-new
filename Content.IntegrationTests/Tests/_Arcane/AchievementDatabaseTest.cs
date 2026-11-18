@@ -3,33 +3,38 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using Content.Server.Database;
+using Content.Shared.CCVar;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Robust.Shared.Configuration;
+using Robust.Shared.IoC;
 using Robust.Shared.Log;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization.Manager;
+using Robust.UnitTesting;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
-public sealed class AchievementDatabaseTest : GameTest
+public sealed class AchievementDatabaseTest : RobustUnitTest
 {
-    public override PoolSettings PoolSettings => new() { Connected = false, Dirty = true };
+    protected override Assembly[] GetContentAssemblies() => [typeof(CCVars).Assembly];
 
     [Test]
     public async Task SqliteConcurrentAndAmbiguousCommitBatchesAreAppliedOnce()
     {
+        var dependencies = IoCManager.Instance!;
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync();
         var fault = new CommitAcknowledgementFailure();
         var options = new DbContextOptionsBuilder<SqliteServerDbContext>().UseSqlite(connection).AddInterceptors(fault).Options;
-        var cfg = Server.ResolveDependency<IConfigurationManager>();
-        var log = Server.ResolveDependency<ILogManager>().GetSawmill("db.ops");
-        var db = new ServerDbSqlite(() => options, true, cfg, true, log,
-            Server.ResolveDependency<ISerializationManager>(), false);
+        var cfg = dependencies.Resolve<IConfigurationManager>();
+        var log = dependencies.Resolve<ILogManager>().GetSawmill("db.ops");
+        var db = new ServerDbSqlite(() => options, inMemory: true, cfg, synchronous: false, log,
+            dependencies.Resolve<ISerializationManager>(), snapshot: false);
         try
         {
             await Verify(db, () => new SqliteServerDbContext(options), fault);
@@ -46,9 +51,10 @@ public sealed class AchievementDatabaseTest : GameTest
         var connection = AchievementMigrationTest.FreshPostgres("ARCANE_ACHIEVEMENTS_POSTGRES");
         var fault = new CommitAcknowledgementFailure();
         var options = new DbContextOptionsBuilder<PostgresServerDbContext>().UseNpgsql(connection).AddInterceptors(fault).Options;
-        var log = Server.ResolveDependency<ILogManager>();
-        var db = new ServerDbPostgres(options, connection, Server.ResolveDependency<IConfigurationManager>(),
-            log.GetSawmill("db.ops"), log.GetSawmill("db.notify"), Server.ResolveDependency<ISerializationManager>());
+        var dependencies = IoCManager.Instance!;
+        var log = dependencies.Resolve<ILogManager>();
+        var db = new ServerDbPostgres(options, connection, dependencies.Resolve<IConfigurationManager>(),
+            log.GetSawmill("db.ops"), log.GetSawmill("db.notify"), dependencies.Resolve<ISerializationManager>());
         try
         {
             await Verify(db, () => new PostgresServerDbContext(options), fault);
