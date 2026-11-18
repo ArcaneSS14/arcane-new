@@ -90,6 +90,7 @@ public sealed class PinnedActionsLifecycleTest : InteractionTest
         Assert.That(bar, Is.Not.Null);
         var pinned = bar!.ActionsContainer[PinnedSlot];
         Assert.That(pinned.Action, Is.Null);
+        Assert.That(pinned.CanDrag, Is.True); // Arcane
         Assert.That(pinned.Modulate, Is.EqualTo(Color.Gray));
         Assert.That(pinned.Label.Visible, Is.True);
         Assert.That(pinned.Label.Text, Is.EqualTo(_hotkey));
