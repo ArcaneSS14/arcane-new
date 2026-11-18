@@ -24,6 +24,10 @@ using Content.Shared.Stacks;
 using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
+// Arcane-Start
+using Content.Shared.Suicide;
+using Content.Shared.Damage.Components;
+// Arcane-End
 
 namespace Content.Server.Materials;
 
@@ -45,6 +49,7 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
     [Dependency] private IAdminLogManager _adminLogger = default!;
     [Dependency] private SharedDestructibleSystem _destructible = default!;
     [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private SharedSuicideSystem _suicide = default!; // Arcane
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -89,6 +94,10 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
             true);
 
         DamageRecyclerVictim(entity, victim, entity.Comp); // Arcane-Edit: gibbing > ordinary recycler limb damage
+        // Arcane-Start
+        if (TryComp<DamageableComponent>(victim, out var damageable))
+            _suicide.ApplyLethalDamage((victim, damageable), "Blunt");
+        // Arcane-End
         _appearance.SetData(entity.Owner, RecyclerVisuals.Bloody, true);
         args.Handled = true;
     }
