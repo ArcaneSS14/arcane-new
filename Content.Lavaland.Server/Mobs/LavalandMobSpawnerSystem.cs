@@ -13,6 +13,7 @@ public sealed partial class LavalandMobSpawnerSystem : EntitySystem
 
     private const float CheckInterval = 0.25f;
     private readonly HashSet<Entity<ActorComponent>> _nearbyActors = new();
+    private readonly HashSet<MapId> _activeMaps = new(); // Arcane
     private float _timeUntilCheck = CheckInterval;
 
     public override void Update(float frameTime)
@@ -22,9 +23,24 @@ public sealed partial class LavalandMobSpawnerSystem : EntitySystem
             return;
 
         _timeUntilCheck = CheckInterval;
+        // Arcane-Start
+        _activeMaps.Clear();
+        var actors = EntityQueryEnumerator<ActorComponent, TransformComponent>();
+        while (actors.MoveNext(out var actor, out _, out var actorTransform))
+        {
+            if (_mobState.IsAlive(actor))
+                _activeMaps.Add(actorTransform.MapID);
+        }
+        if (_activeMaps.Count == 0)
+            return;
+        // Arcane-End
         var query = EntityQueryEnumerator<LavalandMobSpawnerComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var marker, out var transform))
         {
+            // Arcane-Start
+            if (!_activeMaps.Contains(transform.MapID))
+                continue;
+            // Arcane-End
             if (TryGetNearbyPlayer(transform.Coordinates, marker.ActivationRange, out var player))
                 _trigger.Trigger(uid, player, predicted: false);
         }

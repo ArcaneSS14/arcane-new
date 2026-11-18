@@ -38,10 +38,6 @@
   - type: TemperatureProtection
     coefficient: 0.2
   - type: IngestionBlocker
-  # Arcane-Start
-  - type: GlowShielding
-    reduction: 0.3
-  # Arcane-End
   - type: Tag
     tags:
     - WhitelistChameleon
@@ -60,10 +56,6 @@
       - state: on-equipped-HELMET
         shader: unshaded
   - type: ItemTogglePointLight
-    # Arcane-Start
-    toggleableVisualsColorModulatesLights: true
-  - type: WearerLightColor
-    # Arcane-End
   - type: PointLight
     enabled: false
     color: "#ffa1ff"
@@ -75,7 +67,6 @@
   - type: Appearance
   - type: HandheldLight
     addPrefix: true
-    wattage: 0 # Arcane: no replaceable power cell is required.
     blinkingBehaviourId: blinking
     radiatingBehaviourId: radiating
   - type: LightBehaviour
@@ -95,13 +86,16 @@
         startValue: 0.1
         endValue: 2.0
         isLooped: true
-  # Arcane-Edit-Start: reuse the current power owner with a fixed internal supply.
-  - type: Battery
-    maxCharge: 600
-    startingCharge: 600
-  - type: EmpResistance
-    strengthMultiplier: 0
-  # Arcane-Edit-End
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellMedium
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot {}
   - type: GuideHelp # While the playerbase is getting introduced to Plasmamen, add their guidebook here
     guides: [ Plasmaman ]
 
