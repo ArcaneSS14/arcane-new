@@ -68,9 +68,15 @@ public sealed partial class PollManager : IPostInjectInit
         var polls = await _db.GetAllPollsAsync();
         var pollData = new List<PollData>();
 
+        // Arcane-Start
+        if (polls.Count == 0)
+            return pollData;
+        var seenCounts = await _db.GetPollSeenCountsAsync(polls.Select(poll => poll.Id).ToArray());
+        // Arcane-End
+
         foreach (var poll in polls)
         {
-            var data = await ConvertToPollData(poll);
+            var data = await ConvertToPollData(poll, seenCounts.GetValueOrDefault(poll.Id)); // Arcane-Edit
             if (data != null)
                 pollData.Add(data);
         }
@@ -139,7 +145,7 @@ public sealed partial class PollManager : IPostInjectInit
         _net.ServerSendToAll(closeMsg);
     }
 
-    private async Task<PollData?> ConvertToPollData(Poll poll)
+    private async Task<PollData?> ConvertToPollData(Poll poll, int? seenCount = null) // Arcane-Edit
     {
         var results = await _db.GetPollResultsAsync(poll.Id);
 
@@ -160,7 +166,7 @@ public sealed partial class PollManager : IPostInjectInit
             Active = poll.Active,
             AllowMultipleChoices = poll.AllowMultipleChoices,
             CreatedByName = creatorName,
-            SeenCount = await _db.GetPollSeenCountAsync(poll.Id), // Arcane
+            SeenCount = seenCount ?? await _db.GetPollSeenCountAsync(poll.Id), // Arcane-Edit
             Options = [.. poll.Options.OrderBy(o => o.DisplayOrder).Select(o => new PollOptionData
             {
                 OptionId = o.Id,

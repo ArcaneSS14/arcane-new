@@ -1,0 +1,9 @@
+- type: entity
+  id: MobPlasmaman
+  components:
+  - type: PointLight
+    enabled: true
+    radius: 3
+    energy: 1.5
+    netsync: true
+  - type: BodyGlow

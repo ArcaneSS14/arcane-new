@@ -4,6 +4,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Charges.Components;
 using Content.Shared.Charges.Systems;
 using Content.Shared.Crayon;
+using Content.Shared.FixedPoint;
 using Content.Shared.GameTicking;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
@@ -120,7 +121,8 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
             || args.Erase && !tool.Comp.CanErase)
             return;
 
-        if (HasComp<LimitedChargesComponent>(tool) && _charges.IsEmpty(tool.Owner) || !HasPaint(tool))
+        var pixelBudget = GetPixelBudget(tool);
+        if (HasComp<LimitedChargesComponent>(tool) && _charges.IsEmpty(tool.Owner) || !HasPaint(tool) || pixelBudget <= 0)
         {
             _popup.PopupEntity(Loc.GetString("paint-tool-empty", ("tool", tool.Owner)), user, user);
             return;
@@ -137,14 +139,32 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
             args.Sequence,
             color,
             args.Erase,
-            step.Changes);
+            step.Changes,
+            pixelBudget);
 
         if (changed == 0)
             return;
 
+        CommitUndoStep(key, step);
         _unlogged[key] = _unlogged.GetValueOrDefault(key) + changed;
         UseCharges(tool, user, changed);
         UsePaint(tool, changed);
+    }
+
+    private int GetPixelBudget(Entity<PaintToolComponent> tool)
+    {
+        long budget = int.MaxValue;
+        if (tool.Comp.PixelsPerCharge > 0 && HasComp<LimitedChargesComponent>(tool))
+            budget = (long) _charges.GetCurrentCharges(tool.Owner) * tool.Comp.PixelsPerCharge - tool.Comp.PixelDebt;
+        if (tool.Comp.ColorMode == PaintColorMode.Solution && tool.Comp.PixelsPerUnit > 0)
+        {
+            if (tool.Comp.Solution is not { } name || !Solutions.TryGetSolution(tool.Owner, name, out _, out var solution))
+                return 0;
+            var paintBudget = ((long) solution.Volume.Value * tool.Comp.PixelsPerUnit + tool.Comp.PaintCredit)
+                              / FixedPoint2.New(1).Value;
+            budget = Math.Min(budget, paintBudget);
+        }
+        return (int) Math.Clamp(budget, 0, int.MaxValue);
     }
 
     private void UsePaint(Entity<PaintToolComponent> tool, int pixels)
@@ -155,30 +175,32 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
             || !Solutions.TryGetSolution(tool.Owner, solutionName, out var solution, out _))
             return;
 
-        tool.Comp.PixelDebt += pixels;
-        var units = tool.Comp.PixelDebt / tool.Comp.PixelsPerUnit;
-        tool.Comp.PixelDebt %= tool.Comp.PixelsPerUnit;
+        var debt = (long) pixels * FixedPoint2.New(1).Value - tool.Comp.PaintCredit;
+        // Round payment up, retaining prepaid fractions so transferring paint cannot reuse an unpaid stroke.
+        var hundredths = (Math.Max(0, debt) + tool.Comp.PixelsPerUnit - 1) / tool.Comp.PixelsPerUnit;
+        var units = FixedPoint2.FromHundredths((int) hundredths);
+        tool.Comp.PaintCredit = (int) (hundredths * tool.Comp.PixelsPerUnit - debt);
         if (units > 0)
             Solutions.SplitSolution(solution.Value, units);
     }
 
     private UndoStep GetUndoStep((EntityUid Surface, EntityUid User) key, int strokeId)
     {
-        if (!_undo.TryGetValue(key, out var steps))
-        {
-            steps = new List<UndoStep>();
-            _undo[key] = steps;
-        }
-
-        if (steps.Count > 0 && steps[^1].StrokeId == strokeId)
+        if (_undo.TryGetValue(key, out var steps) && steps.Count > 0 && steps[^1].StrokeId == strokeId)
             return steps[^1];
 
-        var step = new UndoStep(strokeId);
+        return new UndoStep(strokeId);
+    }
+
+    private void CommitUndoStep((EntityUid Surface, EntityUid User) key, UndoStep step)
+    {
+        if (!_undo.TryGetValue(key, out var steps))
+            _undo[key] = steps = new List<UndoStep>();
+        if (steps.Count > 0 && ReferenceEquals(steps[^1], step))
+            return;
         steps.Add(step);
         if (steps.Count > MaxUndoSteps)
             steps.RemoveAt(0);
-
-        return step;
     }
 
     private void OnUndo(Entity<PaintSurfaceComponent> ent, ref PaintUndoMessage args)
@@ -270,8 +292,7 @@ public sealed partial class PaintSurfaceSystem : SharedPaintSurfaceSystem
         if (cost <= 0)
             return;
 
-        var available = _charges.GetCurrentCharges(tool.Owner);
-        _charges.TryUseCharges(tool.Owner, Math.Min(cost, available));
+        _charges.TryUseCharges(tool.Owner, cost);
 
         if (!_charges.IsEmpty(tool.Owner) || !TryComp<CrayonComponent>(tool, out var crayon) || !crayon.DeleteEmpty)
             return;
