@@ -99,24 +99,80 @@ public sealed class PaperPortTest : InteractionTest
         await Client.WaitAssertion(() => Assert.That(Rope.Collapse(window.Input.TextRope), Is.EqualTo(revised)));
         await CloseBui(PaperComponent.PaperUiKey.Key);
 
-        async Task ClickSave()
-        {
-            GUIBoundKeyEventArgs down = null!;
-            GUIBoundKeyEventArgs up = null!;
-            await Client.WaitPost(() =>
-            {
-                var point = new ScreenCoordinates(save.GlobalPixelPosition + save.PixelSize / 2, save.Window?.Id ?? default);
-                var relative = point.Position / save.UIScale - save.GlobalPosition;
-                var pixels = point.Position - save.GlobalPixelPosition;
-                down = new(EngineKeyFunctions.UIClick, BoundKeyState.Down, point, default, relative, pixels);
-                up = new(EngineKeyFunctions.UIClick, BoundKeyState.Up, point, default, relative, pixels);
-            });
-            await Client.DoGuiEvent(save, down);
-            await Pair.ReallyBeIdle(1);
-            await Client.DoGuiEvent(save, up);
-            await Pair.ReallyBeIdle(1);
-        }
+        Task ClickSave() => ClickButton(save); // Arcane-Edit
     }
+
+    // Arcane-Start
+    [Test]
+    public async Task RejectedFieldSubmissionKeepsItsDraftUntilTheDocumentChanges()
+    {
+        const string original = "[form] [form]";
+        await SpawnTarget("Paper");
+        await PlaceInHands("Pen");
+        await Server.WaitPost(() => SEntMan.System<PaperSystem>().SetContent(STarget!.Value, original));
+        await Activate();
+        await Pair.RunUntilSynced();
+        ArcanePaperWindow window = null!;
+        PaperFieldDialog dialog = null!;
+        await Client.WaitAssertion(() =>
+        {
+            Assert.That(TryFindWindow(out ArcanePaperWindow? found), Is.True);
+            window = found!;
+            window.OpenField(PaperFieldKind.Form, 0);
+            Assert.That(TryFindWindow(out PaperFieldDialog? field), Is.True);
+            dialog = field!;
+            dialog.Value = "Retained field draft";
+        });
+        await Drop();
+        await ClickButton(dialog.FindControl<Button>("SaveButton"));
+        await Pair.RunUntilSynced();
+        await AssertContent(original);
+        await Client.WaitAssertion(() =>
+        {
+            Assert.That(dialog.Parent, Is.Not.Null, "Rejection must leave the editor open.");
+            Assert.That(dialog.Value, Is.EqualTo("Retained field draft"));
+            dialog.Close();
+            window.OpenField(PaperFieldKind.Form, 1);
+            Assert.That(TryFindWindow(out PaperFieldDialog? other), Is.True);
+            Assert.That(other!.Value, Is.Empty, "Drafts must not cross field indices.");
+            window.OpenField(PaperFieldKind.Form, 0);
+            Assert.That(TryFindWindow(out PaperFieldDialog? reopened), Is.True);
+            dialog = reopened!;
+            Assert.That(dialog.Value, Is.EqualTo("Retained field draft"));
+        });
+        await PlaceInHands("Pen");
+        await ClickButton(dialog.FindControl<Button>("SaveButton"));
+        await Pair.RunUntilSynced();
+        await AssertContent("Retained field draft [form]");
+        await Server.WaitPost(() => SEntMan.System<PaperSystem>().SetContent(STarget!.Value, "New document [form]"));
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() =>
+        {
+            window.OpenField(PaperFieldKind.Form, 0);
+            Assert.That(TryFindWindow(out PaperFieldDialog? fresh), Is.True);
+            Assert.That(fresh!.Value, Is.Empty);
+        });
+        await CloseBui(PaperComponent.PaperUiKey.Key);
+    }
+
+    private async Task ClickButton(Button button)
+    {
+        GUIBoundKeyEventArgs down = null!;
+        GUIBoundKeyEventArgs up = null!;
+        await Client.WaitPost(() =>
+        {
+            var point = new ScreenCoordinates(button.GlobalPixelPosition + button.PixelSize / 2, button.Window?.Id ?? default);
+            var relative = point.Position / button.UIScale - button.GlobalPosition;
+            var pixels = point.Position - button.GlobalPixelPosition;
+            down = new(EngineKeyFunctions.UIClick, BoundKeyState.Down, point, default, relative, pixels);
+            up = new(EngineKeyFunctions.UIClick, BoundKeyState.Up, point, default, relative, pixels);
+        });
+        await Client.DoGuiEvent(button, down);
+        await Pair.ReallyBeIdle(1);
+        await Client.DoGuiEvent(button, up);
+        await Pair.ReallyBeIdle(1);
+    }
+    // Arcane-End
 
     [Test]
     public async Task FieldsUseCurrentDocumentAndServerSignature()

@@ -1,0 +1,37 @@
+- type: entity
+  id: ClothingHandsGlovesEnviroglovesBase
+  components:
+  - type: GlowShielding
+    reduction: 0.1
+
+- type: entity
+  id: UnsensoredClothingUniformEnvirosuitBase
+  components:
+  - type: GlowShielding
+    reduction: 0.6
+
+- type: entity
+  id: ClothingHeadEnvirohelmBase
+  components:
+  - type: GlowShielding
+    reduction: 0.3
+  - type: ItemTogglePointLight
+    toggleableVisualsColorModulatesLights: true
+  - type: WearerLightColor
+  - type: HandheldLight
+    wattage: 0
+  - type: Battery
+    maxCharge: 600
+    startingCharge: 600
+  - type: EmpResistance
+    strengthMultiplier: 0
+  - !Remove type: PowerCellSlot
+  - !Remove type: ItemSlots
+  - !Remove type: ContainerContainer
+
+- type: entity
+  id: ClothingHeadEnvirohelmEmpty
+  suffix: Legacy
+  categories: [HideSpawnMenu]
+  components:
+  - !Remove type: ItemSlots
