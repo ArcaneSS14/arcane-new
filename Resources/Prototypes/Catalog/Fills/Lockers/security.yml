@@ -73,7 +73,7 @@
   id: FillLockerSecurity
   table: !type:AllSelector
     children:
-    - id: PanicButton # Arcane
+    - id: SecurityPanicButton # Arcane-Edit: PanicButton > SecurityPanicButton
     - !type:NestedSelector # Trauma
       tableId: FillLockerSecurityTrauma
     - id: FlashlightSeclite
