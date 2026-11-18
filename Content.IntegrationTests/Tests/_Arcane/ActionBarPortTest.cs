@@ -26,6 +26,34 @@ public sealed class ActionBarPortTest : InteractionTest
 {
     protected override string PlayerPrototype => "MobHuman";
 
+    // Arcane-Start
+    [Test]
+    public async Task EmptyBarRetainsAnInsertionCellWithFreePlacementDisabled()
+    {
+        await PlaceInHands("FlashlightLantern");
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() =>
+        {
+            var config = Client.ResolveDependency<IConfigurationManager>();
+            var previous = config.GetCVar(ActionBarCVars.FreePlacement);
+            config.SetCVar(ActionBarCVars.FreePlacement, false);
+            try
+            {
+                var ui = Client.ResolveDependency<IUserInterfaceManager>();
+                var container = new ArcaneActionButtonContainer(ui.GetUIController<ActionBarUIController>(), CEntMan);
+                container.SetActionData(CEntMan.System<Content.Client.Actions.ActionsSystem>(), Array.Empty<EntityUid?>());
+                Assert.That(container.ChildCount, Is.EqualTo(1));
+                Assert.That(container[0].Action, Is.Null);
+                Assert.That(container[0].CanDrag, Is.False);
+            }
+            finally
+            {
+                config.SetCVar(ActionBarCVars.FreePlacement, previous);
+            }
+        });
+    }
+    // Arcane-End
+
     [Test]
     public async Task ServerCapsPinsAndReturnsItsAuthoritativeSet()
     {

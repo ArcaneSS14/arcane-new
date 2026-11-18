@@ -25,7 +25,8 @@ public sealed class ArcaneActionButtonContainer : ActionButtonContainer
 
     protected override ActionButton CreateButton(IEntityManager entities) => new PinnedActionButton(entities, _customization);
 
-    protected override int GetButtonCount(ActionsSystem system, EntityUid?[] actions) => actions.Length == 0 ? 0 : actions.Length + 1;
+    protected override int GetButtonCount(ActionsSystem system, EntityUid?[] actions)
+        => actions.Length == 0 ? base.GetButtonCount(system, actions) : actions.Length + 1;
 
     private const float DefaultSeparation = 4f;
 
