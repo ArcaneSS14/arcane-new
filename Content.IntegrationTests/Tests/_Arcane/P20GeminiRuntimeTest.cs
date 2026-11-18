@@ -39,7 +39,7 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             var host = SEntMan.SpawnAttachedTo("MobHuman", position);
             var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
             var backpack = SEntMan.SpawnAttachedTo("ClothingBackpack", position);
-            var idCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
+            var idCard = SEntMan.SpawnAttachedTo("CaptainIDCard", position); // Arcane-Edit
             var heldIdCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
             original = SEntMan.SpawnAttachedTo("Crowbar", position);
             var inventory = SEntMan.System<InventorySystem>();
@@ -53,6 +53,11 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(inventory.TryEquip(host, idCard, "id", silent: true, force: true), Is.True);
             var idCards = SEntMan.System<SharedIdCardSystem>();
             Assert.That(idCards.TryChangeJobTitle(idCard, "Custom Gemini title"), Is.True);
+            // Arcane-Start
+            var originalAccess = SEntMan.GetComponent<AccessComponent>(idCard);
+            Assert.That(SEntMan.System<SharedAccessSystem>().TrySetTags(idCard, ["Engineering"], originalAccess), Is.True);
+            SEntMan.System<SharedAccessSystem>().SetAccessEnabled(idCard, false, originalAccess);
+            // Arcane-End
             Assert.That(idCards.TryChangeJobTitle(heldIdCard, "Other job"), Is.True);
             Assert.That(HandSys.TryPickup(host, heldIdCard), Is.True);
             Assert.That(HandSys.GetActiveItem(host), Is.EqualTo(heldIdCard));
@@ -67,6 +72,13 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(inventory.TryGetSlotEntity(clone, "id", out var clonedId), Is.True);
             Assert.That(clonedId, Is.Not.EqualTo(idCard));
             Assert.That(SEntMan.GetComponent<IdCardComponent>(clonedId!.Value).LocalizedJobTitle, Is.EqualTo("Custom Gemini title"));
+            // Arcane-Start
+            Assert.That(SEntMan.HasComponent<AccessComponent>(clonedId.Value), Is.False,
+                "A direct projected card must not regain the prototype's Captain access.");
+            Assert.That(originalAccess.Enabled, Is.False);
+            Assert.That(originalAccess.Tags, Has.Count.EqualTo(1));
+            Assert.That(originalAccess.Tags.Contains("Engineering"), Is.True);
+            // Arcane-End
             Assert.That(inventory.TryGetSlotEntity(clone, "back", out var equipped), Is.True);
             copy = equipped!.Value;
             Assert.That(copy, Is.Not.EqualTo(backpack));
@@ -117,6 +129,12 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(SEntMan.GetComponent<GeminiProjectionComponent>(clone).Deployed, Is.False);
             Assert.That(actions.PerformAction(host, actionEntity), Is.False);
 
+            // Arcane-Start
+            Assert.That(SEntMan.System<Content.Server.Ghost.GhostSystem>().OnGhostAttempt(mind.Owner, canReturnGlobal: true), Is.True,
+                "A recalled projection must retain the voluntary ghost path during its cooldown.");
+            Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.False);
+            // Arcane-End
             Assert.That(inventory.TryUnequip(host, "belt", silent: true, force: true), Is.True);
             Assert.That(data.CloneUid, Is.Null);
             Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));

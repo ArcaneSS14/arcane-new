@@ -76,19 +76,19 @@ public sealed partial class CloneProjectorSystem
             return;
 
         var card = Spawn(ProjectedPdaCard, Transform(copy).Coordinates);
-        RemComp<AccessComponent>(card);
+        TrackCopy(card, copies);
         _idCards.TryChangeJobTitle(card, title);
         if (!_containers.Insert(card, slot))
         {
+            copies.Remove(card);
             Del(card);
             return;
         }
-
-        TrackCopy(card, copies);
     }
 
     private void TrackCopy(EntityUid copy, HashSet<EntityUid> copies)
     {
+        RemComp<AccessComponent>(copy);
         if (!HasComp<AttachedClothingComponent>(copy))
             EnsureComp<UnremoveableComponent>(copy);
         RemComp<DestructibleComponent>(copy);
