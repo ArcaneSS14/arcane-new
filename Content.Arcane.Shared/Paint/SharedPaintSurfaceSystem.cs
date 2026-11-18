@@ -216,9 +216,10 @@ public abstract partial class SharedPaintSurfaceSystem : EntitySystem
         int seed,
         Color color,
         bool erase,
-        Dictionary<int, (byte Old, byte New)>? changes = null)
+        Dictionary<int, (byte Old, byte New)>? changes = null,
+        int maxPixels = int.MaxValue)
     {
-        if (ent.Comp.Image is not { } image)
+        if (maxPixels <= 0 || ent.Comp.Image is not { } image)
             return 0;
 
         _strokePixels.Clear();
@@ -231,9 +232,23 @@ public abstract partial class SharedPaintSurfaceSystem : EntitySystem
         if (!erase)
         {
             entry = image.FindOrAddColor(color, out paletteChanged);
-            if (paletteChanged)
-                ent.Comp.PaletteModified = Timing.CurTick;
         }
+
+        if (maxPixels != int.MaxValue)
+        {
+            var required = 0;
+            foreach (var pixel in _strokePixels)
+            {
+                if (image.Pixels[pixel] != entry && ++required > maxPixels)
+                {
+                    if (paletteChanged)
+                        image.Palette.RemoveAt(image.Palette.Count - 1);
+                    return 0;
+                }
+            }
+        }
+        if (paletteChanged)
+            ent.Comp.PaletteModified = Timing.CurTick;
 
         var changed = 0;
         foreach (var pixel in _strokePixels)
