@@ -12,6 +12,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared;
 using Robust.Shared.Prototypes;
+
 using Robust.Client.UserInterface.Controls; // Arcane
 
 namespace Content.Client.Options.UI.Tabs;
