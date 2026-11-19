@@ -180,6 +180,8 @@ public sealed class AchievementRuntimeTest : InteractionTest
         EntityUid ghost = default;
         EntityUid human = default;
         Verb verb = null!;
+        TimeSpan previousInteraction = default;
+        TimeSpan successfulInteraction = default;
         await Server.WaitAssertion(() =>
         {
             var mind = PrepareMind();
@@ -190,18 +192,31 @@ public sealed class AchievementRuntimeTest : InteractionTest
             verb = verbs.Single(v => v.Text == Loc.GetString("ghost-hug-verb"));
             Assert.That(verb.DoContactInteraction, Is.False);
             Assert.That(hugs.CanHug(ghost, SPlayer), Is.True);
+            previousInteraction = SEntMan.GetComponent<InteractionPopupComponent>(SPlayer).LastInteractTime;
+        });
+        await RunTicksSync(1);
+        await Server.WaitAssertion(() =>
+        {
+            var hugs = SEntMan.System<GhostHugSystem>();
             SEntMan.System<SharedVerbSystem>().ExecuteVerb(verb, ghost, SPlayer);
+            successfulInteraction = SEntMan.GetComponent<InteractionPopupComponent>(SPlayer).LastInteractTime;
+            Assert.That(successfulInteraction, Is.GreaterThan(previousInteraction));
+            Assert.That(successfulInteraction, Is.EqualTo(Server.Timing.CurTime));
             Assert.That(SEntMan.HasComponent<KnockedDownComponent>(SPlayer), Is.False);
             Assert.That(SEntMan.HasComponent<StunnedComponent>(SPlayer), Is.False);
             Assert.That(SEntMan.System<ActionBlockerSystem>().CanInteract(ghost, SPlayer), Is.False);
             human = SEntMan.SpawnAtPosition("TestArcaneAchievementHuman", SEntMan.GetComponent<TransformComponent>(SPlayer).Coordinates);
             Assert.That(hugs.TryHug(human, SPlayer), Is.False);
-
-            var before = SEntMan.GetComponent<InteractionPopupComponent>(SPlayer).LastInteractTime;
+        });
+        await RunTicksSync(1);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(Server.Timing.CurTime, Is.GreaterThan(successfulInteraction));
             var coordinates = SEntMan.GetComponent<TransformComponent>(ghost).Coordinates;
             SEntMan.System<SharedTransformSystem>().SetCoordinates(ghost, coordinates.Offset(new Vector2(4, 0)));
+            Assert.That(SEntMan.System<GhostHugSystem>().CanHug(ghost, SPlayer), Is.False);
             verb.Act!();
-            Assert.That(SEntMan.GetComponent<InteractionPopupComponent>(SPlayer).LastInteractTime, Is.EqualTo(before));
+            Assert.That(SEntMan.GetComponent<InteractionPopupComponent>(SPlayer).LastInteractTime, Is.EqualTo(successfulInteraction));
 
             // The ordinary physical hug still retains Trauma's trait behavior.
             var popup = SEntMan.GetComponent<InteractionPopupComponent>(SPlayer);
