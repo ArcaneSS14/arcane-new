@@ -1,6 +1,7 @@
 using Content.Shared.Implants.Components;
-using Content.Shared.Trigger.Components.Effects; // Arcane
 using Content.Shared.Trigger.Components.Triggers;
+
+using Content.Shared.Trigger.Components.Effects; // Arcane
 
 namespace Content.Shared.Trigger.Systems;
 

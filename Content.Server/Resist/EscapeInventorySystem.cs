@@ -8,8 +8,9 @@ using Content.Shared.Inventory;
 using Content.Shared.Movement.Events;
 using Content.Shared.Resist;
 using Content.Shared.Storage;
-using Content.Trauma.Common.Carrying; // Arcane
 using Robust.Shared.Containers;
+
+using Content.Trauma.Common.Carrying; // Arcane
 
 namespace Content.Server.Resist;
 

@@ -1,7 +1,8 @@
 using Content.Shared.Hands.Components;
-using Content.Shared.Inventory; // Arcane
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Timing;
+
+using Content.Shared.Inventory; // Arcane
 
 namespace Content.Shared.Hands.EntitySystems;
 
@@ -27,7 +28,7 @@ public sealed partial class ExtraHandsEquipmentSystem : EntitySystem
         if (!TryComp<HandsComponent>(args.EquipTarget, out var handsComp))
             return;
 
-        AddEquipmentHands((args.EquipTarget, handsComp), ent); // Arcane
+        AddEquipmentHands((args.EquipTarget, handsComp), ent); // Arcane-Edit
     }
 
     // Arcane-Start: Rebuild only hands from equipment that is still worn.
@@ -80,7 +81,7 @@ public sealed partial class ExtraHandsEquipmentSystem : EntitySystem
         foreach (var handName in ent.Comp.Hands.Keys)
         {
             // add the NetEntity id to the container name to prevent multiple items with this component from conflicting
-            var handId = GetEquipmentHandId(ent.Owner, handName); // Arcane
+            var handId = GetEquipmentHandId(ent.Owner, handName); // Arcane-Edit
             _hands.RemoveHand((args.EquipTarget, handsComp), handId);
         }
     }
