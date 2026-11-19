@@ -81,7 +81,7 @@ public sealed partial class FoldableSystem : EntitySystem
     /// </summary>
     public void SetFolded(EntityUid uid, FoldableComponent component, bool folded, EntityUid? user = null)
     {
-        // Arcane-Start: disabled descendants must also reject direct state changes.
+        // Arcane-Start: Disabled descendants must also reject direct state changes.
         if (!component.Enabled)
             return;
         // Arcane-End
@@ -119,7 +119,7 @@ public sealed partial class FoldableSystem : EntitySystem
         if (!Resolve(uid, ref fold))
             return false;
 
-        // Arcane-Start: keep prototype components intact while disabling inherited folding.
+        // Arcane-Start: Keep prototype components intact while disabling inherited folding.
         if (!fold.Enabled)
             return false;
         // Arcane-End
@@ -156,7 +156,7 @@ public sealed partial class FoldableSystem : EntitySystem
 
     private void AddFoldVerb(EntityUid uid, FoldableComponent component, GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!component.Enabled || !args.CanAccess || !args.CanInteract || args.Hands == null) // Arcane-Edit: omit disabled folding verbs.
+        if (!component.Enabled || !args.CanAccess || !args.CanInteract || args.Hands == null) // Arcane-Edit: Omit disabled folding verbs.
             return;
 
         AlternativeVerb verb = new()
