@@ -20,6 +20,7 @@ using Content.Trauma.Server.Objectives;
 using Content.Trauma.Shared.Knowledge.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.Ghost.Components;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -58,6 +59,21 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
             Assert.That(departureObjective.HasDied, Is.False);
             Assert.That(ghostSystem.SpawnGhost(departingTarget.AsNullable(), Center, canReturn: false), Is.Not.Null);
             Assert.That(departureObjective.HasDied, Is.True);
+
+            var offlineTarget = minds.CreateMind(null, "Offline lesson target");
+            var offlineBody = SEntMan.SpawnAttachedTo("MobHuman", Center);
+            minds.TransferTo(offlineTarget, offlineBody);
+            var offlineObjective = AssignLesson(offlineTarget.Owner);
+            var visitingGhost = ghostSystem.SpawnGhost(offlineTarget.AsNullable(), Center, canReturn: true);
+            Assert.That(visitingGhost, Is.Not.Null);
+            Assert.That(offlineTarget.Comp.VisitingEntity, Is.EqualTo(visitingGhost));
+            Assert.That(offlineTarget.Comp.OwnedEntity, Is.EqualTo(offlineBody));
+            Assert.That(offlineObjective.HasDied, Is.False);
+
+            SEntMan.DeleteEntity(offlineBody);
+            Assert.That(offlineTarget.Comp.OwnedEntity, Is.EqualTo(visitingGhost));
+            Assert.That(SEntMan.GetComponent<GhostComponent>(visitingGhost!.Value).CanReturnToBody, Is.False);
+            Assert.That(offlineObjective.HasDied, Is.True);
         });
     }
 
