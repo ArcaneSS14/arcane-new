@@ -12,9 +12,7 @@ public abstract partial class SharedDestructibleSystem : EntitySystem
     /// </summary>
     public bool DestroyEntity(EntityUid owner) => DestroyEntity(owner, null); // Arcane-Edit: inline implementation > compatible overload
 
-    // Arcane-Start
-    public bool DestroyEntity(EntityUid owner, EntityUid? cause)
-    // Arcane-End
+    public bool DestroyEntity(EntityUid owner, EntityUid? cause) // Arcane
     {
         if (!CanDestroy(owner))
             return false;

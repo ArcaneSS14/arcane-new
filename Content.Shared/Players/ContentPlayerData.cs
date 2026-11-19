@@ -2,6 +2,7 @@ using Content.Shared.Administration;
 using Content.Shared.GameTicking;
 using Content.Shared.Mind;
 using Robust.Shared.Network;
+
 using Robust.Shared.Prototypes; // Arcane
 
 namespace Content.Shared.Players;

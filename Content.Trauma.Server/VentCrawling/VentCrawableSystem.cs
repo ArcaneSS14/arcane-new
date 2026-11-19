@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Linq;
-using Content.Shared.Zombies; // Arcane
 using Content.Trauma.Shared.VentCrawling;
 using Content.Trauma.Shared.VentCrawling.Components;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Containers;
 using Content.Trauma.Common.VentCrawling;
+
+using Content.Shared.Zombies; // Arcane
 
 namespace Content.Trauma.Server.VentCrawling;
 

@@ -13,8 +13,10 @@ public sealed partial class CauseZombieInfectionEntityEffectsSystem : EntityEffe
     // MobState because you have to die to become a zombie...
     protected override void Effect(Entity<MobStateComponent> entity, ref EntityEffectEvent<CauseZombieInfection> args)
     {
+        // Arcane-Edit-Start: Silicon is susceptible to bites, not Romerol.
         if (HasComp<ZombieImmuneComponent>(entity) || HasComp<IncurableZombieComponent>(entity) ||
-            HasComp<SiliconZombieComponent>(entity)) // Arcane: Silicon is susceptible to bites, not Romerol.
+            HasComp<SiliconZombieComponent>(entity))
+        // Arcane-Edit-End
             return;
 
         EnsureComp<ZombifyOnDeathComponent>(entity);
@@ -31,7 +33,7 @@ public sealed partial class CureZombieInfectionEntityEffectsSystem : EntityEffec
     // MobState because you have to die to become a zombie...
     protected override void Effect(Entity<MobStateComponent> entity, ref EntityEffectEvent<CureZombieInfection> args)
     {
-        if (HasComp<IncurableZombieComponent>(entity) || HasComp<SiliconZombieComponent>(entity)) // Arcane
+        if (HasComp<IncurableZombieComponent>(entity) || HasComp<SiliconZombieComponent>(entity)) // Arcane-Edit
             return;
 
         RemComp<ZombifyOnDeathComponent>(entity);

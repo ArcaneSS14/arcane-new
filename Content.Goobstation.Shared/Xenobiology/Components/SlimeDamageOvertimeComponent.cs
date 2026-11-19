@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared.Damage;
+
 // Arcane-Start
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;

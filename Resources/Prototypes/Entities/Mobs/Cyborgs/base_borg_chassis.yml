@@ -147,12 +147,12 @@
     channels:
     - Common
     - Science
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: ActiveRadio
     channels:
     - Common
     - Science
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: ZombieImmune
   - type: Repairable
     allowSelfRepair: true # Trauma
@@ -441,11 +441,11 @@
   - type: IntrinsicRadioTransmitter
     channels:
     - Syndicate
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: ActiveRadio
     channels:
     - Syndicate
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: ShowSyndicateIcons
   - type: MovementAlwaysTouching
   - type: Speech
@@ -550,12 +550,12 @@
   - type: IntrinsicRadioTransmitter # can only use binary and xenoborg channel
     channels:
     - Xenoborg
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: ActiveRadio # but can hear the mothership channel
     channels:
     - Mothership
     - Xenoborg
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
   - type: BorgChassis
     # <Trauma>
     brainWhitelist:

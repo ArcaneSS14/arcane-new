@@ -234,8 +234,10 @@ public sealed partial class BlobTileSystem : EntitySystem
 
     private void TryUpgrade(Entity<BlobTileComponent> target, EntityUid core, EntityUid observer)
     {
-        if (target.Comp.Core != core || TerminatingOrDeleted(target) || EntityManager.IsQueuedForDeletion(target)) // Arcane
-            return; // Arcane
+        // Arcane-Start
+        if (target.Comp.Core != core || TerminatingOrDeleted(target) || EntityManager.IsQueuedForDeletion(target))
+            return;
+        // Arcane-End
 
         var coords = Transform(target).Coordinates;
         var current = ProtoMan.Index(target.Comp.Tile);

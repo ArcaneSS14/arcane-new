@@ -31,7 +31,7 @@
 - type: startingGear
   id: WardenGear
   equipment:
-    eyes: ClothingEyesGlassesSecurityContraDetect # Arcane
+    eyes: ClothingEyesGlassesSecurityContraDetect # Arcane-Edit: ClothingEyesGlassesSecurity > ClothingEyesGlassesSecurityContraDetect
     id: WardenPDA
     ears: ClothingHeadsetSecurity
     pocket1: WeaponPistolMk58

@@ -25,7 +25,6 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.Repairable;
 using Content.Shared.StationAi;
-using Content.Shared.Wall; // Arcane
 using Content.Shared.Verbs;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -37,6 +36,8 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+
+using Content.Shared.Wall; // Arcane
 
 namespace Content.Shared.Silicons.StationAi;
 
