@@ -18,7 +18,7 @@ public sealed partial class PlantsTest : GameTest
         var failed = new List<string>();
         var plantName = CEntMan.ComponentFactory.CompName<PlantComponent>();
         var spriteName = CEntMan.ComponentFactory.CompName<SpriteComponent>();
-        foreach (var id in GameDataScrounger.EntitiesWithComponent(plantName))
+        foreach (var id in GameDataScrounger.EntitiesWithComponent(CProtoMan, plantName)) // Arcane-Edit
         {
             var proto = CProtoMan.Index<EntityPrototype>(id);
             if (!proto.TryComp<SpriteComponent>(spriteName, out var sprite))
