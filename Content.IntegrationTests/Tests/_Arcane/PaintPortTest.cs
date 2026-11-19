@@ -6,6 +6,7 @@ using Content.Arcane.Shared.Paint;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.DoAfter;
 using Content.Shared.Fax;
 using Content.Shared.Fax.Components;
 using Content.Shared.Paper;
@@ -143,28 +144,24 @@ public sealed class PaintPortTest : InteractionTest
         await CloseBui(PaintUiKey.Key);
     }
 
-    [TestCase("delete-source")]
-    public async Task PhotocopierRejectsInvalidInputsAndCancelsDeletedInputs(string scenario)
+    [Test]
+    public async Task PhotocopierCancelsDeletedSourceWithoutLosingTheBlankCanvas()
     {
         await SpawnTarget("Photocopier");
         EntityUid original = default;
         EntityUid target = default;
-        var deletion = scenario.StartsWith("delete-", StringComparison.Ordinal);
+        DoAfterId? copying = null;
         await Server.WaitAssertion(() =>
         {
             var machine = STarget!.Value;
             var coords = SEntMan.GetComponent<TransformComponent>(machine).Coordinates;
             original = SEntMan.SpawnAtPosition("PaintCanvasSmall", coords);
-            target = SEntMan.SpawnAtPosition(scenario == "size" ? "PaintCanvas" : "PaintCanvasSmall", coords);
+            target = SEntMan.SpawnAtPosition("PaintCanvasSmall", coords);
             var paint = SEntMan.System<PaintSurfaceSystem>();
-            foreach (var canvas in scenario == "two-painted" ? new[] { original, target } :
-                     scenario == "two-blank" ? Array.Empty<EntityUid>() : new[] { original })
-            {
-                var surface = SEntMan.GetComponent<PaintSurfaceComponent>(canvas);
-                var image = new PaintImage(33, 33, Color.White);
-                image.Pixels[0] = image.FindOrAddColor(Color.Red, out _);
-                Assert.That(paint.SetImage((canvas, surface), image), Is.True);
-            }
+            var surface = SEntMan.GetComponent<PaintSurfaceComponent>(original);
+            var image = new PaintImage(33, 33, Color.White);
+            image.Pixels[0] = image.FindOrAddColor(Color.Red, out _);
+            Assert.That(paint.SetImage((original, surface), image), Is.True);
 
             var slots = SEntMan.System<ItemSlotsSystem>();
             Assert.That(slots.TryInsert(machine, "canvas_a", original, null), Is.True);
@@ -176,25 +173,29 @@ public sealed class PaintPortTest : InteractionTest
         {
             var machine = STarget!.Value;
             Assert.That(SEntMan.System<PhotocopierSystem>().TryStart(
-                (machine, SEntMan.GetComponent<PhotocopierComponent>(machine)), SPlayer), Is.EqualTo(deletion));
-            if (deletion)
-                SEntMan.QueueDeleteEntity(scenario == "delete-source" ? original : target);
+                (machine, SEntMan.GetComponent<PhotocopierComponent>(machine)), SPlayer), Is.True);
+            Assert.That(SEntMan.GetComponent<PhotocopierComponent>(machine).State, Is.EqualTo(PhotocopierState.Scanning));
+            copying = SEntMan.GetComponent<PhotocopierComponent>(machine).DoAfter;
+            Assert.That(copying, Is.Not.Null);
+            Assert.That(SEntMan.System<SharedDoAfterSystem>().IsRunning(copying), Is.True);
+            SEntMan.QueueDeleteEntity(original);
         });
-        await RunTicks(360);
+        await RunTicks(2);
         await Server.WaitAssertion(() =>
         {
             var machine = STarget!.Value;
             Assert.That(SEntMan.GetComponent<PhotocopierComponent>(machine).State, Is.EqualTo(PhotocopierState.Idle));
+            Assert.That(SEntMan.System<SharedDoAfterSystem>().IsRunning(copying), Is.False);
             var slots = SEntMan.System<ItemSlotsSystem>();
             Assert.That(slots.TryGetSlot(machine, "canvas_a", out var a), Is.True);
             Assert.That(slots.TryGetSlot(machine, "canvas_b", out var b), Is.True);
             Assert.That(a!.Locked || b!.Locked, Is.False);
-            if (SEntMan.TryGetComponent<PaintSurfaceComponent>(target, out var surface))
-            {
-                Assert.That(surface.Finished, Is.False);
-                Assert.That(surface.Image!.Pixels.Any(p => p != 0), Is.EqualTo(scenario == "two-painted"));
-                Assert.That(slots.GetItemOrNull(machine, "canvas_b"), Is.EqualTo(target));
-            }
+            Assert.That(SEntMan.EntityExists(original), Is.False);
+            Assert.That(slots.GetItemOrNull(machine, "canvas_a"), Is.Null);
+            var surface = SEntMan.GetComponent<PaintSurfaceComponent>(target);
+            Assert.That(surface.Finished, Is.False);
+            Assert.That(surface.Image!.Pixels.All(p => p == 0), Is.True);
+            Assert.That(slots.GetItemOrNull(machine, "canvas_b"), Is.EqualTo(target));
         });
     }
 
