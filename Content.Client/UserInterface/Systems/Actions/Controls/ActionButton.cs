@@ -312,7 +312,7 @@ public class ActionButton : Control, IEntityControl // Arcane-Edit: sealed > ext
 
     public virtual void UpdateData(EntityUid? actionId, ActionsSystem system) // Arcane-Edit
     {
-        Action = system.GetAction(actionId, logError: false); // Arcane-Edit: unavailable slots may outlive their actions
+        Action = system.GetAction(actionId, logError: false); // Arcane-Edit: Unavailable slots may outlive their actions
 
         Label.Visible = Action != null;
         UpdateIcons();
