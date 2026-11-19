@@ -533,4 +533,6 @@ public enum LogType
     /// Trauma - ChemiCompiler related logs.
     /// </summary>
     ChemiCompiler = 20005,
+
+    Paint = 10006, // Arcane
 }

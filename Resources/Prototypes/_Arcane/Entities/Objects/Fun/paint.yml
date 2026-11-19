@@ -1,0 +1,230 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BasePaintCanvas
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/canvas.rsi
+    layers:
+    - state: canvas_24x24
+      map: [ "backing" ]
+    - map: [ "paint" ]
+    - map: [ "frame" ]
+      visible: false
+  - type: Item
+    size: Normal
+  - type: PaintSurface
+    background: "#ffffff"
+  - type: PaintCanvasVisuals
+  - type: ActivatableUI
+    key: enum.PaintUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.PaintUiKey.Key:
+        type: PaintBoundUserInterface
+  - type: FaxableObject
+  - type: StaticPrice
+    price: 20
+
+- type: entity
+  parent: BasePaintCanvas
+  id: PaintCanvas
+  components:
+  - type: PaintSurface
+    size: 64, 64
+  - type: PaintCanvasVisuals
+    sizeKey: 24x24
+    backingState: canvas_24x24
+    paintScale: 0.375, 0.375
+    easelOffset: 0, 0.09375
+  - type: Construction
+    graph: PaintCanvasGraph
+    node: canvas
+
+- type: entity
+  parent: BasePaintCanvas
+  id: PaintCanvasLandscape
+  components:
+  - type: Sprite
+    layers:
+    - state: canvas_23x19
+      map: [ "backing" ]
+    - map: [ "paint" ]
+    - map: [ "frame" ]
+      visible: false
+  - type: PaintSurface
+    size: 69, 57
+  - type: PaintCanvasVisuals
+    sizeKey: 23x19
+    backingState: canvas_23x19
+    paintScale: 0.33333334, 0.33333334
+    paintOffset: 0.015625, 0.015625
+    easelOffset: 0, 0.0234375
+  - type: Construction
+    graph: PaintCanvasGraph
+    node: landscape
+
+- type: entity
+  parent: BasePaintCanvas
+  id: PaintCanvasSmall
+  components:
+  - type: Sprite
+    layers:
+    - state: canvas_11x11
+      map: [ "backing" ]
+    - map: [ "paint" ]
+    - map: [ "frame" ]
+      visible: false
+  - type: Item
+    size: Small
+  - type: PaintSurface
+    size: 33, 33
+  - type: PaintCanvasVisuals
+    sizeKey: 11x11
+    backingState: canvas_11x11
+    paintScale: 0.33333334, 0.33333334
+    paintOffset: 0.015625, -0.015625
+    easelOffset: 0, -0.046875
+  - type: StaticPrice
+    price: 10
+  - type: Construction
+    graph: PaintCanvasGraph
+    node: small
+
+- type: entity
+  parent: BaseItem
+  id: Paintbrush
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/palette.rsi
+    state: icon
+  - type: Item
+    size: Small
+    sprite: _Arcane/Objects/Fun/palette.rsi
+  - type: PaintTool
+    colorMode: Picker
+    maxBrushSize: 12
+    canErase: true
+  - type: StaticPrice
+    price: 30
+
+- type: entity
+  parent: BaseItem
+  id: PaintCan
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Fun/paint_bucket.rsi
+    layers:
+    - state: paint_empty
+    - state: paint_fill1
+      map: [ "enum.SolutionContainerLayers.Fill" ]
+      visible: false
+  - type: Item
+    size: Normal
+    sprite: _Arcane/Objects/Fun/paint_bucket.rsi
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+  - type: RefillableSolution
+    solution: paint
+  - type: DrainableSolution
+    solution: paint
+  - type: ExaminableSolution
+    solution: paint
+  - type: Appearance
+  - type: SolutionContainerVisuals
+    maxFillLevels: 1
+    fillBaseName: paint_fill
+    solutionName: paint
+  - type: PaintTool
+    colorMode: Solution
+    solution: paint
+    minBrushSize: 2
+    maxBrushSize: 6
+  - type: StaticPrice
+    price: 10
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanRed
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintRed
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanYellow
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintYellow
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanGreen
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintGreen
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanBlue
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintBlue
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanViolet
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintViolet
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanBlack
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintBlack
+          Quantity: 30
+
+- type: entity
+  parent: PaintCan
+  id: PaintCanWhite
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      paint:
+        maxVol: 30
+        reagents:
+        - ReagentId: PaintWhite
+          Quantity: 30
