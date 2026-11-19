@@ -27,6 +27,10 @@ public sealed class P19ThunderdomeRuntimeTest : InteractionTest
             Assert.That(ghosts.SpawnGhost(original.AsNullable(), position, canReturn: true), Is.Not.Null);
 
             Assert.That(arena.TryGetArena(out var rule), Is.True);
+            var arenaMap = rule.Comp.Map;
+            Assert.That(arena.TryGetArena(out var existing), Is.True);
+            Assert.That(existing.Owner, Is.EqualTo(rule.Owner));
+            Assert.That(existing.Comp.Map, Is.EqualTo(arenaMap));
             var arenaSpawn = arena.PickSpawn(rule);
             Assert.That(arenaSpawn, Is.Not.Null);
             var normalSpawn = SEntMan.System<ServerGameTicker>().GetObserverSpawnPoint();
