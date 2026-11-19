@@ -4,11 +4,16 @@
   source: "https://www.youtube.com/watch?v=LBjAw8VC1Ok"
 
 - files: ["slotmachine_spin.ogg"]
-  license: "CC-BY-NC-SA-3.0"
-  copyright: "Taken from Sara Tinnick on youtube"
+  license: "CC-BY-NC-3.0"
+  copyright: "Credited to Sara Tinnick in Goob Station. Converted to OGG by Goob Station."
   source: "https://www.youtube.com/watch?v=0afvjj9bwbc"
 
 - files: ["slotmachine_godpot.ogg"]
-  license: "CC-BY-NC-SA-3.0"
-  copyright: "Taken from goonstation"
-  source: "https://github.com/goonstation/goonstation/commit/4059e4be90832b02b1228b1bee3db342094e4f1e"
+  license: "CC-BY-NC-3.0"
+  copyright: "Original recording author not identified. Goon Station sound/voice/heavenly3.ogg, re-encoded by Goob Station."
+  source: "https://github.com/goonstation/goonstation/blob/dc8068884676b78d2f6ab553dad672b04fb210d2/sound/voice/heavenly3.ogg"
+
+- files: ["slotmachine_jackpotwin.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Original recording author not identified. Imported unchanged from Goob Station, PR #4929."
+  source: "https://github.com/Goob-Station/Goob-Station/pull/4929"
