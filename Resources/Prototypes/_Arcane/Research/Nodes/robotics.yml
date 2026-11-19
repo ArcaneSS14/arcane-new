@@ -26,7 +26,27 @@
   - BorgModuleArtistry
   - BorgModuleInflatable
   - TorsoIPC
+  - AiRemoteBrain
   position: -4,4
+
+- type: technology
+  id: SecurityCyborg
+  name: research-technology-sec-cyborg-name
+  description: research-technology-sec-cyborg-desc
+  icon:
+    sprite: _Arcane/Mobs/Silicon/sec_chassis.rsi
+    state: sec
+  discipline: Robotics
+  tier: 3
+  pointCosts:
+  - type: General
+    amount: 20000
+  technologyPrerequisites:
+  - ArtificialIntelligence
+  - RiotSuppression
+  recipeUnlocks:
+  - SecEndoskeleton
+  position: -4,6
 
 - type: technology
   id: ExplorationDrone

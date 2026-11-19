@@ -35,8 +35,12 @@
     actions:
     - ActionJumpToCore
     - ActionAIViewLaws
+    - ActionOpenBorisDevices # Arcane
   - type: UserInterface
     interfaces:
+      enum.BorisUiKey.Devices: # Arcane
+        type: BorisBoundUserInterface
+        requireInputValidation: false
       enum.RadarConsoleUiKey.Key:
         type: RadarConsoleBoundUserInterface
       enum.CrewMonitoringUIKey.Key:

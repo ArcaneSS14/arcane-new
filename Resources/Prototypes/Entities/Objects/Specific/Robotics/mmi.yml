@@ -25,6 +25,7 @@
         components:
         - Brain
   - type: BorgBrain
+  - type: IntellicardableMind # Arcane
   - type: BlockMovement
   - type: Examiner
   - type: IntrinsicRadioReceiver

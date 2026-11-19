@@ -21,30 +21,67 @@ public abstract partial class SharedCustomLawboardSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CustomLawboardComponent, CustomLawboardChangeLawsMessage>(OnChangeLaws);
+        SubscribeLocalEvent<CustomLawboardComponent, MapInitEvent>(OnLawboardMapInit); // Arcane
     }
 
-    public List<SiliconLaw> SanitizeLaws(List<SiliconLaw> listToSanitize)
+    // Arcane-Start
+    private void OnLawboardMapInit(Entity<CustomLawboardComponent> ent, ref MapInitEvent args)
     {
-        var sanitizedLaws = new List<SiliconLaw>();
-        foreach (SiliconLaw law in listToSanitize)
+        if (ent.Comp.Laws.Count == 0 &&
+            TryComp<SiliconLawProviderComponent>(ent, out var provider) &&
+            provider.Lawset is { } lawset)
+            ent.Comp.Laws = SanitizeLaws(lawset.Laws);
+    }
+    // Arcane-End
+
+    // Arcane-Edit-Start
+    public static List<SiliconLaw> SanitizeLaws(IReadOnlyList<SiliconLaw> laws)
+    {
+        var count = Math.Min(laws.Count, MaxLaws);
+        var sanitizedLaws = new List<SiliconLaw>(count);
+        for (var i = 0; i < count; i++)
+    // Arcane-Edit-End
         {
-            var sanitizedLaw = law.LawString.Replace("\n", " "); // Remove newlines cause they mess chat up when the law is stated
+            // Arcane-Edit-Start
+            var law = laws[i];
+            if (law == null)
+                continue;
+            // Arcane-Edit-End
+
             sanitizedLaws.Add(new SiliconLaw()
             {
-                LawString = sanitizedLaw,
+                LawString = SanitizeText(law.LawString ?? string.Empty), // Arcane-Edit: Sanitize and limit law text
                 Order = law.Order,
-                LawIdentifierOverride = law.LawIdentifierOverride
+                LawIdentifierOverride = law.LawIdentifierOverride is { } label ? SanitizeText(label) : null, // Arcane-Edit: Sanitize and limit law label
             });
         }
         return sanitizedLaws;
     }
 
+    // Arcane-Start
+    private static string SanitizeText(string text)
+    {
+        if (text.Length > MaxLawLength)
+        {
+            var length = char.IsHighSurrogate(text[MaxLawLength - 1]) ? MaxLawLength - 1 : MaxLawLength;
+            text = text[..length];
+        }
+
+        return text.Replace('\r', ' ').Replace('\n', ' ');
+    }
+    // Arcane-End
+
     private void OnChangeLaws(EntityUid uid, CustomLawboardComponent customLawboard, CustomLawboardChangeLawsMessage args)
     {
         var provider = EnsureComp<SiliconLawProviderComponent>(uid);
-        var lawset = new SiliconLawset();
         var sanitizedLaws = SanitizeLaws(args.Laws);
-        lawset.Laws = sanitizedLaws; // Sanitizing is done so you can't make newlines in a law.
+        // Arcane-Edit-Start
+        var lawset = new SiliconLawset
+        {
+            Laws = sanitizedLaws,
+            ObeysTo = provider.Lawset?.ObeysTo ?? string.Empty,
+        };
+        // Arcane-Edit-End
 
         customLawboard.Laws = sanitizedLaws;
         provider.Lawset = lawset;

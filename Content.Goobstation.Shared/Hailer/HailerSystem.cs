@@ -8,11 +8,14 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
+using Content.Shared.Silicons.Borgs.Components; // Arcane
+
 namespace Content.Goobstation.Shared.Hailer;
 
 public sealed partial class HailerSystem : EntitySystem
 {
     [Dependency] private ActionContainerSystem _actionContainer = default!;
+    [Dependency] private SharedActionsSystem _actions = default!; // Arcane
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedChatSystem _chat = default!;
     [Dependency] private IGameTiming _timing = default!;
@@ -20,7 +23,12 @@ public sealed partial class HailerSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnMapInitEvent(Entity<HailerComponent> ent, ref MapInitEvent args)
     {
-        _actionContainer.EnsureAction(ent.Owner, ref ent.Comp.ActionEntity, ent.Comp.Action);
+        // Arcane-Edit-Start
+        if (HasComp<BorgChassisComponent>(ent))
+            _actions.AddAction(ent.Owner, ref ent.Comp.ActionEntity, ent.Comp.Action);
+        else
+            _actionContainer.EnsureAction(ent.Owner, ref ent.Comp.ActionEntity, ent.Comp.Action);
+        // Arcane-Edit-End
         Dirty(ent);
     }
 
@@ -45,7 +53,11 @@ public sealed partial class HailerSystem : EntitySystem
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent), GetNetEntity(user));
         var pick = rand.Pick(ent.Comp.Messages);
         _audio.PlayPredicted(pick.Sound, ent, user);
-        var name = Identity.Name(user, EntityManager) + " (SecMask)";
+        // Arcane-Edit-Start
+        var name = Identity.Name(user, EntityManager);
+        if (!HasComp<BorgChassisComponent>(ent))
+            name += " (SecMask)";
+        // Arcane-Edit-End
         _chat.TrySendInGameICMessage(user, pick.Message, InGameICChatType.Speak, ChatTransmitRange.GhostRangeLimit, nameOverride: name, checkRadioPrefix: false);
     }
 }
