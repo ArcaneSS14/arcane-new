@@ -11,6 +11,8 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 
+using Content.Arcane.Common.Thunderdome; // Arcane
+
 namespace Content.Shared.Antag;
 
 public abstract partial class AntagSelectionSystem
@@ -87,7 +89,7 @@ public abstract partial class AntagSelectionSystem
         AntagSpecifierPrototype def)
     {
         // Cannot be antag if you're not in the game.
-        if (IsDisconnected(player))
+        if (IsDisconnected(player) || HasComp<ThunderdomeParticipantComponent>(player.AttachedEntity)) // Arcane-Edit: Exclude arena avatars
             return false;
 
         if (IsAntagBanned(player, def))

@@ -14,7 +14,12 @@ using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
-using Robust.Shared.Enums; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Mobs.Systems;
+using Robust.Shared.Enums;
+// Arcane-End
 
 namespace Content.Server.GameTicking.Rules;
 
@@ -27,6 +32,7 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IPlayerManager _playerManager = default!;
     [Dependency] private ServerStationSystem _station = default!;
+    [Dependency] private MobStateSystem _mobState = default!; // Arcane
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -54,8 +60,24 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
                 if (!_playerManager.TryGetSessionById(player, out var session) || session.Status != SessionStatus.InGame) // Arcane-Edit: session lookup > admitted session lookup
                     continue;
 
-                if (session.GetMind() is { } mind && TryComp<MindComponent>(mind, out var mindComp) && mindComp.OwnedEntity.HasValue)
-                    QueueDel(mindComp.OwnedEntity.Value);
+                // Arcane-Start: Preserve queued respawn while the player is using a temporary arena body.
+                if (HasComp<ThunderdomeParticipantComponent>(session.AttachedEntity))
+                    continue;
+                // Arcane-End
+
+                // Arcane-Edit-Start: A revived round body supersedes an outstanding death respawn.
+                if (session.GetMind() is { } mind && TryComp<MindComponent>(mind, out var mindComp) && mindComp.OwnedEntity is { } body)
+                {
+                    if (!HasComp<GhostComponent>(body) && TryComp<Content.Shared.Mobs.Components.MobStateComponent>(body, out var state) &&
+                        !_mobState.IsDead(body, state))
+                    {
+                        tracker.RespawnQueue.Remove(player);
+                        continue;
+                    }
+
+                    QueueDel(body);
+                }
+                // Arcane-Edit-End
 
                 GameTicker.MakeJoinGame(session, station, silent: true);
                 tracker.RespawnQueue.Remove(player);
@@ -65,7 +87,7 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
 
     private void OnSuicide(SuicideEvent ev)
     {
-        if (!TryComp<ActorComponent>(ev.Victim, out var actor))
+        if (HasComp<ThunderdomeParticipantComponent>(ev.Victim) || !TryComp<ActorComponent>(ev.Victim, out var actor)) // Arcane-Edit: Ignore arena suicides
            return;
 
         var query = EntityQueryEnumerator<RespawnTrackerComponent>();
@@ -78,7 +100,7 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
 
     private void OnMobStateChanged(MobStateChangedEvent args)
     {
-        if (args.NewMobState != MobState.Dead)
+        if (args.NewMobState != MobState.Dead || HasComp<ThunderdomeParticipantComponent>(args.Target)) // Arcane-Edit: Exclude arena deaths
             return;
 
         if (!TryComp<ActorComponent>(args.Target, out var actor))

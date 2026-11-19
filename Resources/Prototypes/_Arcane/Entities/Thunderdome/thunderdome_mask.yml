@@ -1,0 +1,31 @@
+- type: entity
+  parent: ClothingMaskBase
+  id: ClothingMaskGasThunderdome
+  name: Thunderdome gas mask
+  description: Are you ready to rumble?
+  categories: [ HideSpawnMenu, DoNotMap ]
+  components:
+  - type: Item
+    size: Tiny
+  - type: Sprite
+    sprite: Clothing/Mask/gassecurity.rsi
+  - type: Clothing
+    sprite: Clothing/Mask/gassecurity.rsi
+  - type: Armor
+    coverage:
+    - Head
+    modifiers:
+      coefficients:
+        Blunt: 0.82
+        Slash: 0.82
+        Piercing: 0.82
+        Heat: 0.9
+  - type: Tag
+    tags: []
+  - type: Hailer
+    messages:
+    - sound: /Audio/_Goobstation/Hailer/dredd.ogg
+      message: I AM THE LAW!!
+  - type: IngestionBlocker
+    blockSmokeIngestion: true
+    enabled: false
