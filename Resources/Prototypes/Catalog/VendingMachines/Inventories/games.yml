@@ -17,8 +17,10 @@
     MysteryFigureBox: 2
     BooksBag: 3
     Magic9Ball: 2
-    PokerChipsBox: 1 # Arcane
-    CardBoxBlack: 3 # Arcane
+    # Arcane-Start
+    PokerChipsBox: 1
+    CardBoxBlack: 3
+    # Arcane-End
   contrabandInventory:
     Basketball: 1
     FoodSnackBoritos: 3

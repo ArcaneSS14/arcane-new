@@ -48,8 +48,10 @@ public sealed partial class TendrilSystem : EntitySystem
 
             comp.UpdateAccumulator = 0;
 
-            if (comp.Spawns.Count == 0) // Arcane
-                continue; // Arcane
+            // Arcane-Start
+            if (comp.Spawns.Count == 0)
+                continue;
+            // Arcane-End
 
             if (comp.Mobs.Count >= comp.MaxSpawns)
                 continue;
