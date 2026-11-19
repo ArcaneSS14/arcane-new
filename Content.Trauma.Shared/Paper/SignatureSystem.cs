@@ -58,14 +58,10 @@ public sealed partial class SignatureSystem : EntitySystem
     /// </summary>
     public bool TrySignPaper(Entity<PaperComponent> paper, EntityUid signer, EntityUid pen)
     {
-        var attemptEv = new SignAttemptEvent(signer);
-        RaiseLocalEvent(paper, ref attemptEv);
-        if (attemptEv.Cancelled)
+        // Arcane-Edit-Start
+        if (!TryGetSignatureName(paper, signer, out var signatureName))
             return false;
-
-        var signatureEv = new GetSignatureEvent(paper);
-        RaiseLocalEvent(signer, ref signatureEv);
-        var signatureName = signatureEv.Signature ?? GetDefaultSignature(signer);
+        // Arcane-Edit-End
 
         var stampInfo = new StampDisplayInfo()
         {
@@ -79,8 +75,31 @@ public sealed partial class SignatureSystem : EntitySystem
             return false;
         }
 
+        // Arcane-Edit-Start
         _audio.PlayPredicted(paper.Comp.Sound, signer, signer);
+        NotifySigned(paper, signer);
+        return true;
+    }
 
+    /// <summary>Use the same cancellable signing rules and identity for an inline signature.</summary>
+    public bool TryGetSignatureName(Entity<PaperComponent> paper, EntityUid signer, out string name)
+    {
+        name = string.Empty;
+        var attempt = new SignAttemptEvent(signer);
+        RaiseLocalEvent(paper, ref attempt);
+        if (attempt.Cancelled)
+            return false;
+
+        var signature = new GetSignatureEvent(paper);
+        RaiseLocalEvent(signer, ref signature);
+        name = signature.Signature ?? GetDefaultSignature(signer);
+        return true;
+    }
+
+    /// <summary>Notify contract consumers only after a signature has actually been written.</summary>
+    public void NotifySigned(Entity<PaperComponent> paper, EntityUid signer)
+    {
+        // Arcane-Edit-End
         _paper.UpdateUserInterface(paper);
 
         // devil has its own popup so let it cancel it
@@ -94,7 +113,6 @@ public sealed partial class SignatureSystem : EntitySystem
             _popup.PopupEntity(you, others, signer, signer);
         }
 
-        return true;
     }
 
     private string GetDefaultSignature(EntityUid uid)

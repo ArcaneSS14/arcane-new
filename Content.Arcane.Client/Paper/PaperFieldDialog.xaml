@@ -1,0 +1,18 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               x:Class="Content.Arcane.Client.Paper.PaperFieldDialog"
+               Title="{Loc 'paper-field-dialog-title'}" MinWidth="300">
+    <BoxContainer Orientation="Vertical" SeparationOverride="8" Margin="8">
+        <LineEdit Name="ValueInput" />
+        <Label Name="LimitWarning" Text="{Loc 'paper-field-too-long'}" Visible="False" />
+        <BoxContainer Name="CheckChoices" Visible="False" SeparationOverride="8">
+            <Button Name="BlankButton" Text="☐" HorizontalExpand="True" />
+            <Button Name="CheckButton" Text="✔" HorizontalExpand="True" />
+            <Button Name="CrossButton" Text="✖" HorizontalExpand="True" />
+        </BoxContainer>
+        <BoxContainer SeparationOverride="8">
+            <Button Name="SaveButton" Text="{Loc 'paper-field-save'}" HorizontalExpand="True" />
+            <Button Name="CancelButton" Text="{Loc 'paper-field-cancel'}" HorizontalExpand="True" />
+        </BoxContainer>
+    </BoxContainer>
+</DefaultWindow>

@@ -1,0 +1,48 @@
+# Keep each existing paper family's other interfaces and presentation settings.
+- type: entity
+  id: Paper
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
+
+- type: entity
+  id: BookBase
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
+
+- type: entity
+  id: Envelope
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
+
+- type: entity
+  id: HoloparasiteInfo
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
+
+- type: entity
+  id: BaseDevilContract
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
+
+- type: entity
+  id: NanoRepStationReport
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.PaperUiKey.Key:
+        type: ArcanePaperBoundUserInterface
