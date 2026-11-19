@@ -654,7 +654,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         }
 
         if (updateSlots)
-            OnActionsUpdated(); // Arcane-Edit: keep pinned positions after ordinary slot edits
+            OnActionsUpdated(); // Arcane-Edit: Keep pinned positions after ordinary slot edits
     }
 
     private void DragAction()
@@ -690,7 +690,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             SetAction(dragged, swapAction, false);
 
         if (_actionsSystem != null)
-            OnActionsUpdated(); // Arcane-Edit: reconcile pins after ordinary drag/drop
+            OnActionsUpdated(); // Arcane-Edit: Reconcile pins after ordinary drag/drop
 
         _menuDragHelper.EndDrag();
     }
@@ -1032,7 +1032,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             return;
 
         LoadDefaultActions();
-        // Arcane-Edit-Start: reconcile pins when a new body links its actions
+        // Arcane-Edit-Start: Reconcile pins when a new body links its actions
         OnActionsUpdated();
         // Arcane-Edit-End
     }

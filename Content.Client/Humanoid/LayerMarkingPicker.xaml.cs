@@ -91,7 +91,7 @@ public sealed partial class LayerMarkingPicker : BoxContainer
                 continue;
             // Arcane-End
 
-            // Arcane-Start: deduplicate an animation only when its still row is available to this player.
+            // Arcane-Start: Deduplicate an animation only when its still row is available to this player.
             if (_markingManager.TryGetStillMarking(marking.ID, out var still)
                 && _allMarkings.TryGetValue(still, out var stillPrototype)
                 && (!stillPrototype.SponsorOnly || _sponsorMarkings.Contains(still)))
