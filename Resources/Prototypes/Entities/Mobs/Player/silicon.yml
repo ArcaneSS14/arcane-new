@@ -34,8 +34,10 @@
   - type: ActionGrant
     actions:
     - ActionJumpToCore
-    - ActionStationAiCameraLights # Arcane
-    - ActionStationAiRetire # Arcane
+    # Arcane-Start
+    - ActionStationAiCameraLights
+    - ActionStationAiRetire
+    # Arcane-End
     - ActionAIViewLaws
     - ActionOpenBorisDevices # Arcane
   - type: UserInterface

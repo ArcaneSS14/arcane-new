@@ -36,7 +36,6 @@ using Content.Shared.Nutrition.AnimalHusbandry;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
 using Content.Shared.Prying.Components;
-using Content.Shared.Radio.Components; // Arcane
 using Content.Shared.Roles;
 using Content.Shared.Speech.EntitySystems;
 using Content.Shared.Tag;
@@ -48,6 +47,8 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+
+using Content.Shared.Radio.Components; // Arcane
 
 namespace Content.Server.Zombies;
 

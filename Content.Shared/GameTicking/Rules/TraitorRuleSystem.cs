@@ -47,9 +47,10 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
             return false;
         }
 
-        // Arcane: Keep the localization key stable across server languages.
+        // Arcane-Edit-Start: Keep the localization key stable across server languages.
         var issuers = ProtoMan.Index(rule.Comp.ObjectiveIssuers).Values;
         var issuer = issuers.Count > 0 ? _random.Pick(issuers) : "objective-issuer-unknown";
+        // Arcane-Edit-End
 
         // Uplink code will go here if applicable, but we still need the variable if there aren't any
         Note[]? code = null;
@@ -70,13 +71,13 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
 
             // Choose and generate an Uplink, and return the uplink code if applicable
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request start");
-            (code, implantIssued) = RequestUplink(traitor, startingBalance); // Arcane
+            (code, implantIssued) = RequestUplink(traitor, startingBalance); // Arcane-Edit
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Uplink request completed");
         }
 
         if (rule.Comp.GiveBriefing)
         {
-            _antag.SendBriefing(traitor, GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: false), Color.Crimson, rule.Comp.GreetSoundNotification); // Arcane
+            _antag.SendBriefing(traitor, GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: false), Color.Crimson, rule.Comp.GreetSoundNotification); // Arcane-Edit
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Sent the Briefing");
         }
 
@@ -92,7 +93,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         {
             Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Add traitor briefing components");
             EnsureComp<RoleBriefingComponent>(traitorRole.Value.Owner, out var briefingComp);
-            briefingComp.Briefing = GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: true); // Arcane
+            briefingComp.Briefing = GenerateBriefing(factionCodewords, code, issuer, implantIssued, characterPanel: true); // Arcane-Edit
         }
         else
         {
@@ -102,13 +103,13 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         var color = TraitorCodewordColor; // Fall back to a dark red Syndicate color if a prototype is not found
 
         // The mind entity is stored in nullspace with a PVS override for the owner, so only they can see the codewords.
-        // Arcane-Start: Honor rules with codewords disabled.
+        // Arcane-Edit-Start: Honor rules with codewords disabled.
         if (rule.Comp.GiveCodewords)
         {
             var codewordComp = EnsureComp<RoleCodewordComponent>(mindId);
             _roleCodewordSystem.SetRoleCodewords((mindId, codewordComp), "traitor", factionCodewords.ToList(), color);
         }
-        // Arcane-End
+        // Arcane-Edit-End
 
         // Change the faction
         Log.Debug($"MakeTraitor {ToPrettyString(traitor)} - Change faction");
@@ -119,10 +120,10 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         return true;
     }
 
-    protected virtual (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance) => default; // Arcane
+    protected virtual (Note[]? Code, bool ImplantIssued) RequestUplink(EntityUid traitor, FixedPoint2 startingBalance) => default; // Arcane-Edit
 
     // TODO: figure out how to handle this? add priority to briefing event?
-    private string GenerateBriefing(string[] codewords, Note[]? uplinkCode, string objectiveIssuer, bool implantIssued, bool characterPanel)
+    private string GenerateBriefing(string[] codewords, Note[]? uplinkCode, string objectiveIssuer, bool implantIssued, bool characterPanel) // Arcane-Edit
     {
         // Arcane-Edit-Start: Use the assigned corporation and actual uplink result in both views.
         var prefix = $"arcane-traitor-{objectiveIssuer}";

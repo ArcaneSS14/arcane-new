@@ -53,8 +53,10 @@ public sealed partial class SummonVoidCreatureSystem : EntitySystem
     private void OnSummonVoidCreatureSelected(Entity<ChooseVoidCreatureComponent> ent, ref RadialSelectorSelectedMessage args)
     {
         if (args.SelectedItem is not { } proto
-            || args.Actor != ent.Owner // Arcane
-            || !WraithRadialSelection.Contains(ent.Comp.AvailableSummons, proto) // Arcane
+            // Arcane-Start
+            || args.Actor != ent.Owner
+            || !WraithRadialSelection.Contains(ent.Comp.AvailableSummons, proto)
+            // Arcane-End
             || !ProtoMan.Resolve(proto, out var summon)
             || !summon.HasComp(_minionName)
             || !_mind.TryGetMind(ent.Owner, out var mindUid, out var mind))

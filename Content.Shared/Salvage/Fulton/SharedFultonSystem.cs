@@ -1,21 +1,24 @@
 using System.Numerics;
 using Content.Shared.DoAfter;
-using Content.Shared.Emag.Systems; // Arcane
 using Content.Shared.Examine;
 using Content.Shared.Foldable;
 using Content.Shared.Interaction;
-using Content.Shared.Mind.Components; // Arcane
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
 using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
-using Content.Trauma.Common.Stack; // Arcane
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
+
+// Arcane-Start
+using Content.Shared.Emag.Systems;
+using Content.Shared.Mind.Components;
+using Content.Trauma.Common.Stack;
+// Arcane-End
 
 namespace Content.Shared.Salvage.Fulton;
 
@@ -51,8 +54,10 @@ public abstract partial class SharedFultonSystem : EntitySystem
         SubscribeLocalEvent<FultonComponent, AfterInteractEvent>(OnFultonInteract);
 
         SubscribeLocalEvent<FultonComponent, StackSplitEvent>(OnFultonSplit);
-        SubscribeLocalEvent<FultonComponent, GotEmaggedEvent>(OnFultonEmagged); // Arcane
-        SubscribeLocalEvent<FultonComponent, AttemptMergeStackEvent>(OnAttemptFultonMerge); // Arcane
+        // Arcane-Start
+        SubscribeLocalEvent<FultonComponent, GotEmaggedEvent>(OnFultonEmagged);
+        SubscribeLocalEvent<FultonComponent, AttemptMergeStackEvent>(OnAttemptFultonMerge);
+        // Arcane-End
     }
 
     private void OnFultonContainerInserted(EntityUid uid, FultonedComponent component, EntGotInsertedIntoContainerMessage args)
