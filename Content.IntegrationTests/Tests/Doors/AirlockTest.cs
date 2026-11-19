@@ -138,8 +138,8 @@ namespace Content.IntegrationTests.Tests.Doors
 
             await server.WaitAssertion(() =>
             {
-                airlocks[0] = (entities.SpawnEntity("Airlock", new MapCoordinates(Vector2.Zero, map.MapId)), true);
-                airlocks[1] = (entities.SpawnEntity("AirlockGlass", new MapCoordinates(new Vector2(3, 0), map.MapId)), false);
+                airlocks[0] = (entities.Spawn("Airlock", new MapCoordinates(Vector2.Zero, map.MapId)), true);
+                airlocks[1] = (entities.Spawn("AirlockGlass", new MapCoordinates(new Vector2(3, 0), map.MapId)), false);
                 Check(DoorState.Closed, true, false);
                 foreach (var (uid, _) in airlocks)
                     doors.StartOpening(uid);
