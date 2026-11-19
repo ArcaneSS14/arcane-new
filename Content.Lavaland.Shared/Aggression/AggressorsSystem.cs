@@ -163,7 +163,7 @@ public sealed partial class AggressorsSystem : EntitySystem
 
     private void RemoveAggressorFrom(Entity<AggressiveComponent> ent, Entity<AggressorComponent?> aggressor)
     {
-        if (!Resolve(aggressor, ref aggressor.Comp, false)) // Arcane-Edit: ignore a target already removed
+        if (!Resolve(aggressor, ref aggressor.Comp, false)) // Arcane-Edit: Ignore a target already removed
             return;
 
         aggressor.Comp.Aggressives.Remove(ent);
@@ -188,13 +188,13 @@ public sealed partial class AggressorsSystem : EntitySystem
         if (!Resolve(aggressor, ref aggressor.Comp))
             return;
 
-        foreach (var aggressive in aggressor.Comp.Aggressives.ToArray()) // Arcane-Edit: removing a relation mutates the set
+        foreach (var aggressive in aggressor.Comp.Aggressives.ToArray()) // Arcane-Edit: Removing a relation mutates the set
         {
             if (TryComp<AggressiveComponent>(aggressive, out var aggressors))
                 RemoveAggressor((aggressive, aggressors), aggressor);
         }
 
-        RemComp<AggressorComponent>(aggressor.Owner); // Arcane-Edit: the last relation can already remove this component
+        RemComp<AggressorComponent>(aggressor.Owner); // Arcane-Edit: The last relation can already remove this component
     }
 
     #endregion

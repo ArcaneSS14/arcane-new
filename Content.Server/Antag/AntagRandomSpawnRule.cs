@@ -38,7 +38,7 @@ public sealed partial class AntagRandomSpawnSystem : GameRuleSystem<AntagRandomS
         if (ent.Comp.Coords != null)
             args.Coordinates.Add(_transform.ToMapCoordinates(ent.Comp.Coords.Value));
         // <Trauma> if nothing was pre-selected, try again now to avoid nullspace.
-        // Arcane-Edit-Start: exhaust eligible tiles on the selected grid if the random retry misses.
+        // Arcane-Edit-Start: Exhaust eligible tiles on the selected grid if the random retry misses.
         else if (_station.TryFindRandomTile(out _, out _, out var targetGrid, out var coords) ||
                  targetGrid is { } selectedGrid && _station.TryFindFallbackSpawnTile(selectedGrid, out coords))
         // Arcane-Edit-End
