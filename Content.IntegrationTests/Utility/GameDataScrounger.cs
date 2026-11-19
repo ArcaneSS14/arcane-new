@@ -54,6 +54,7 @@ public static partial class GameDataScrounger
     /// </summary>
     private static Dictionary<string, List<string>>? _prototypeIndex = null;
 
+    /* // Arcane-Edit-Start: Component selection uses the resolved runtime catalog.
     /// <summary>
     ///     Component type to prototype ID index.
     /// </summary>
@@ -71,6 +72,7 @@ public static partial class GameDataScrounger
         public required List<string> Parents;
         public required bool Abstract;
     }
+    */ // Arcane-Edit-End
 
     /// <summary>
     ///     Lock used to synchronize access to the prototype index.
@@ -105,6 +107,7 @@ public static partial class GameDataScrounger
         }
     }
 
+    /* // Arcane-Edit-Start: Select components after the game loader has applied partials and inheritance.
     /// <summary>
     ///     Returns all entities with the given component.
     /// </summary>
@@ -142,6 +145,23 @@ public static partial class GameDataScrounger
             }
         }
     }
+    */ // Arcane-Edit-End
+
+    // Arcane-Start
+    /// <summary>
+    ///     Selects concrete entities from the initialized catalog, including partials and generated variants.
+    /// </summary>
+    public static string[] EntitiesWithComponent(IPrototypeManager prototypes, string componentId)
+    {
+        var entities = prototypes.EnumeratePrototypes<EntityPrototype>()
+            .Where(p => !p.Abstract && p.Components.ContainsKey(componentId))
+            .Select(p => p.ID)
+            .OrderBy(id => id, StringComparer.Ordinal)
+            .ToArray();
+        Assert.That(entities, Is.Not.Empty, $"No concrete prototypes have {componentId}.");
+        return entities;
+    }
+    // Arcane-End
 
     /// <summary>
     ///     Ensures that the internal indices are initialized and not null.
@@ -149,18 +169,22 @@ public static partial class GameDataScrounger
     ///     <see cref="NoScrounging"/> is set.
     /// </summary>
     [MemberNotNull(nameof(_prototypeIndex))]
+    /* // Arcane-Edit-Start
     [MemberNotNull(nameof(_entitiesWithComponentIndex))]
     [MemberNotNull(nameof(_entitiesMetaIndex))]
+    */ // Arcane-Edit-End
     private static void Scrounge()
     {
-        if (_prototypeIndex is not null && _entitiesWithComponentIndex is not null && _entitiesMetaIndex is not null)
+        if (_prototypeIndex is not null) // Arcane-Edit
             return;
 
         // Initialize regardless of if we actually fill them out.
         // As we promise they will not be null, and various methods rely on this even if they're mpty.
         _prototypeIndex = new();
+        /* // Arcane-Edit-Start
         _entitiesWithComponentIndex = new();
         _entitiesMetaIndex = new();
+        */ // Arcane-Edit-End
 
         if (NoScrounging)
             return;
@@ -200,7 +224,7 @@ public static partial class GameDataScrounger
             }
         }
 
-        PushInheritanceAndIndex();
+        // PushInheritanceAndIndex(); // Arcane-Edit
     }
 
     private static readonly YamlScalarNode IdNode = new("id");
@@ -251,6 +275,7 @@ public static partial class GameDataScrounger
                 if (!@abstract)
                     yield return (((YamlScalarNode)type).Value!, ((YamlScalarNode)id).Value!);
 
+                /* // Arcane-Edit-Start: Raw YAML no longer determines component test coverage.
                 // If we're an entity prototype..
                 if (type is not YamlScalarNode { Value: "entity" })
                     continue;
@@ -293,10 +318,12 @@ public static partial class GameDataScrounger
                 };
 
                 _entitiesMetaIndex![id.AsString()] = entity;
+                */ // Arcane-Edit-End
             }
         }
     }
 
+    /* // Arcane-Edit-Start: Runtime prototypes already contain resolved inheritance.
     /// <summary>
     ///     Iterates through <see cref="_entitiesMetaIndex"/>, filling out <see cref="_entitiesWithComponentIndex"/>
     ///     as it works and ensuring all inheritance-provided components are found.
@@ -347,6 +374,7 @@ public static partial class GameDataScrounger
             entity.Components.UnionWith(parentMeta.Components);
         }
     }
+    */ // Arcane-Edit-End
 
     // Did you know there's no way to find the resources folder in the real filesystem
     // from content? Makes sense, but ough. So this is unfortunately copy-pasted from engine.
