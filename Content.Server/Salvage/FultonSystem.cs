@@ -32,9 +32,8 @@ public sealed partial class FultonSystem : SharedFultonSystem
 
     private void Fulton(EntityUid uid, FultonedComponent component)
     {
-        if (!Deleted(component.Beacon) &&
+        if (CanReceiveFulton(component.Beacon) && // Arcane
             TryComp(component.Beacon, out TransformComponent? beaconXform) &&
-            !Container.IsEntityOrParentInContainer(component.Beacon.Value, xform: beaconXform) &&
             CanFulton(uid))
         {
             var xform = Transform(uid);
