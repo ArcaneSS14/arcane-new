@@ -8,13 +8,13 @@ namespace Content.IntegrationTests.Tests.Damageable;
 
 public sealed class StaminaComponentTest : GameTest
 {
-    private static string[] _entitiesWithStamina = GameDataScrounger.EntitiesWithComponent("Stamina");
+    // private static string[] _entitiesWithStamina = GameDataScrounger.EntitiesWithComponent("Stamina"); // Arcane-Edit
 
     [Test]
     [TestOf(typeof(StaminaComponent))]
-    [TestCaseSource(nameof(_entitiesWithStamina))]
+    // [TestCaseSource(nameof(_entitiesWithStamina))] // Arcane-Edit
     [Description("Ensures every entity with Stamina has a valid stamina configuration.")]
-    public async Task ValidateStamina(string protoKey)
+    public async Task ValidateStamina() // Arcane-Edit
     {
         var pair = Pair;
         var server = pair.Server;
@@ -22,7 +22,8 @@ public sealed class StaminaComponentTest : GameTest
 
         await server.WaitAssertion(() =>
         {
-            using (Assert.EnterMultipleScope())
+            using var assertions = Assert.EnterMultipleScope(); // Arcane-Edit
+            foreach (var protoKey in GameDataScrounger.EntitiesWithComponent(protoMan, "Stamina")) // Arcane
             {
                 var proto = protoMan.Index(protoKey);
                 var comp = (StaminaComponent)proto.Components["Stamina"].Component;
