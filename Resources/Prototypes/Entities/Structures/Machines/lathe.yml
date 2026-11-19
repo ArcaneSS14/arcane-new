@@ -782,6 +782,7 @@
   name: ore processor
   description: It produces sheets and ingots using ores.
   components:
+    - type: AlmanacOreCounter # Arcane
     # <Trauma>
     - type: MiningPoints
     - type: MiningPointsLathe

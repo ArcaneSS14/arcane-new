@@ -951,6 +951,7 @@
   id: XenoArtifactHostileFaunaSpawn
   description: Create hostile fauna
   components:
+  - type: AlmanacBladeArtifactSpawner # Arcane
   - type: XenoArtifactNode
     maxDurability: 4
     maxDurabilityCanDecreaseBy:
