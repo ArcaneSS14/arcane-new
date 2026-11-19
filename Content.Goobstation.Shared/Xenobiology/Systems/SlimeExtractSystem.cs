@@ -41,8 +41,8 @@ public sealed partial class SlimeExtractSystem : EntitySystem
 
         ent.Comp.Used = true;
         Dirty(ent);
-        if (_solution.TryGetRefillableSolution(ent.Owner, out var soln, out _))
-            _solution.RemoveAllSolution((ent.Owner, soln));
+        if (_solution.TryGetInjectableSolution(ent.Owner, out var soln, out _))
+            _solution.RemoveAllSolution(soln.Value);
 
         var effects = args.Effects;
         var scale = args.Scale;
