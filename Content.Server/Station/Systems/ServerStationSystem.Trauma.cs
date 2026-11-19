@@ -25,13 +25,11 @@ public sealed partial class ServerStationSystem
 
             tile = new Vector2i(randomX, randomY);
 
-            if (!Map.TryGetTile(grid.Comp, tile, out var selectedTile) || selectedTile.IsEmpty ||
-                _turf.IsSpace(selectedTile))
+            // Arcane-Edit-Start: Share tile eligibility with the antagonist spawn fallback.
+            if (!Map.TryGetTile(grid.Comp, tile, out var selectedTile) ||
+                !IsValidSpawnTile(grid, tile, selectedTile))
                 continue;
-
-            if (_atmos.IsTileSpace(grid.Owner, Transform(grid.Owner).MapUid, tile)
-                || _atmos.IsTileAirBlockedCached(grid.Owner, tile))
-                continue;
+            // Arcane-Edit-End
 
             targetCoords = Map.GridTileToLocal(grid.Owner, grid.Comp, tile);
             return true;
@@ -39,4 +37,33 @@ public sealed partial class ServerStationSystem
 
         return false;
     }
+
+    // Arcane-Start: Exhaust valid station tiles only after antagonist spawn sampling fails.
+    internal bool TryFindFallbackSpawnTile(Entity<MapGridComponent> grid, out EntityCoordinates coordinates)
+    {
+        var candidates = Map.GetAllTiles(grid, grid.Comp);
+        var count = 0;
+        var chosen = default(Vector2i);
+        while (candidates.MoveNext(out var candidate))
+        {
+            var tile = candidate.Value;
+            if (!IsValidSpawnTile(grid, tile.GridIndices, tile.Tile))
+                continue;
+
+            count++;
+            if (Random.Next(count) == 0)
+                chosen = tile.GridIndices;
+        }
+
+        coordinates = count > 0
+            ? Map.GridTileToLocal(grid.Owner, grid.Comp, chosen)
+            : EntityCoordinates.Invalid;
+        return count > 0;
+    }
+
+    private bool IsValidSpawnTile(Entity<MapGridComponent> grid, Vector2i indices, Tile tile)
+        => !tile.IsEmpty && !_turf.IsSpace(tile) &&
+           !_atmos.IsTileSpace(grid.Owner, Transform(grid.Owner).MapUid, indices) &&
+           !_atmos.IsTileAirBlockedCached(grid.Owner, indices);
+    // Arcane-End
 }

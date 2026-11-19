@@ -6,7 +6,7 @@ on:
   merge_group:
   pull_request:
     types: [ opened, reopened, synchronize, ready_for_review ]
-    branches: [ master, staging, stable, 'port/**' ] # Arcane-Edit: Run Debug checks for stacked port PRs.
+    branches: [ master, staging, stable, 'port/**', 'goob/**' ] # Arcane-Edit: Run Debug checks for stacked port PRs.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
@@ -102,11 +102,21 @@ jobs:
 
     # never seen it fail once IDC about archiving it
 
-  # Run every test that doesnt have a [Category] set
+  # Arcane-Edit: Run the integration tests other than MapTests and GameRuleTests.
   test-main:
     needs: build
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    # Arcane-Start: Bound per-runner resource usage while keeping both sets required.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - suite: base
+          filter: 'FullyQualifiedName!~Content.IntegrationTests.Tests._Arcane.'
+        - suite: arcane
+          filter: 'FullyQualifiedName~Content.IntegrationTests.Tests._Arcane.'
+    # Arcane-End
     steps:
     - *checkout
     - *submodule
@@ -115,16 +125,22 @@ jobs:
     - *download_build
 
     - name: Run main Content.IntegrationTests
+      # Arcane-Start
+      env:
+        MAIN_TEST_FILTER: ${{ matrix.filter }}
+      # Arcane-End
+      # Arcane-Edit-Start: Send the complete filter through VSTest.
       run: |
-        DOTNET_gcServer=1 dotnet test bin/Content.IntegrationTests/Content.IntegrationTests.dll -- \
-          NUnit.Where="cat != MapTests && cat != GameRuleTests" \
+        DOTNET_gcServer=1 dotnet test bin/Content.IntegrationTests/Content.IntegrationTests.dll \
+          --filter "TestCategory!=MapTests&TestCategory!=GameRuleTests&$MAIN_TEST_FILTER" -- \
           NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+      # Arcane-Edit-End
 
     - name: Archive NUnit3 test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: nunit3-results-main-${{ github.run_attempt }}
+        name: nunit3-results-main-${{ matrix.suite }}-${{ github.run_attempt }} # Arcane-Edit: Include the suite name.
         path: test_results/*
         retention-days: 7
         compression-level: 9

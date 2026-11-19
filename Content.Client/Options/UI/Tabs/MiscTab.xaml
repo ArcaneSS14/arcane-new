@@ -4,7 +4,7 @@
               xmlns:ui="clr-namespace:Content.Client.Options.UI">
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
-            <BoxContainer Orientation="Vertical" Margin="8 8 8 8" VerticalExpand="True">
+            <BoxContainer Name="OptionsList" Orientation="Vertical" Margin="8 8 8 8" VerticalExpand="True"> <!-- Arcane-Edit: name the options extension point -->
                 <Label Text="{Loc 'ui-options-general-ui-style'}"
                        StyleClasses="LabelKeyText"/>
                 <ui:OptionDropDown Name="DropDownHudTheme" Title="{Loc 'ui-options-hud-theme'}" />
