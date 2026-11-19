@@ -26,7 +26,7 @@ namespace Content.IntegrationTests.Tests.Construction
         [Description("Tests that a given entity specifies a valid node for construction, and optionally a valid one for deconstruction.")]
         public async Task ConstructionComponentValid()
         {
-            var constructablePrototypes = GameDataScrounger.EntitiesWithComponent("Construction");
+            var constructablePrototypes = GameDataScrounger.EntitiesWithComponent(SProtoMan, "Construction"); // Arcane-Edit
 
             using (Assert.EnterMultipleScope())
             {
