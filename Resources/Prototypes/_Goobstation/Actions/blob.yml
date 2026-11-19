@@ -15,7 +15,7 @@
 - type: entity
   parent: BaseBlobAction
   id: ActionCreateBlobFactory
-  # Arcane-Edit-Start: special tile costs and spore limits depend on chemistry
+  # Arcane-Edit-Start: Special tile costs and spore limits depend on chemistry
   name: Place Factory Blob
   description: Turns a normal blob near a core or node into a factory that produces spores and can create a blobbernaut.
   # Arcane-Edit-End
@@ -33,7 +33,7 @@
 - type: entity
   parent: BaseBlobAction
   id: ActionCreateBlobResource
-  name: Place Resource Blob # Arcane-Edit: the price depends on the selected chemistry
+  name: Place Resource Blob # Arcane-Edit: The price depends on the selected chemistry
   description: Turns selected normal blob into a resource blob which will generates resources if placed next to a core or a node.
   components:
   - type: Sprite
@@ -49,7 +49,7 @@
 - type: entity
   parent: BaseBlobAction
   id: ActionCreateBlobNode
-  name: Place Node Blob # Arcane-Edit: the price depends on the selected chemistry
+  name: Place Node Blob # Arcane-Edit: The price depends on the selected chemistry
   description: Turns selected normal blob into a node blob. A node blob will activate effects of factory and resource blobs, heal other blobs and slowly expand, destroying walls and creating normal blobs.
   components:
   - type: Sprite

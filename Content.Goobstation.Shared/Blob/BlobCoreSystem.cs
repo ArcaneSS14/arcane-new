@@ -167,11 +167,11 @@ public abstract partial class BlobCoreSystem : EntitySystem
                 Dirty(mob, melee);
             }
 
-            ChangeBlobEntChem(mob, chem, old, chem.BlobbernautDamageModifiers); // Arcane-Edit: separate mob and tile modifiers
+            ChangeBlobEntChem(mob, chem, old, chem.BlobbernautDamageModifiers); // Arcane-Edit: Separate mob and tile modifiers
         }
     }
 
-    // Arcane-Edit-Start: allow the blobbernaut's own modifiers
+    // Arcane-Edit-Start: Allow the blobbernaut's own modifiers
     private void ChangeBlobEntChem(Entity<BlobTileComponent?> ent, BlobChemPrototype chem, BlobChemPrototype? old,
         ProtoId<DamageModifierSetPrototype>? modifierOverride = null)
     // Arcane-Edit-End
@@ -183,7 +183,7 @@ public abstract partial class BlobCoreSystem : EntitySystem
         if (old?.AddedComponents is { } oldAdded)
         {
             EntityManager.RemoveComponents(ent, oldAdded);
-            // Arcane-Start: an outgoing chemistry may have overridden a native component.
+            // Arcane-Start: An outgoing chemistry may have overridden a native component.
             if (MetaData(ent).EntityPrototype is { } prototype)
             {
                 var restore = new ComponentRegistry();

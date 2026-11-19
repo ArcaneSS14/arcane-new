@@ -665,7 +665,7 @@ namespace Content.Server.Kitchen.EntitySystems
 
                 // only use reagents we have access to
                 // you have to break the eggs before we can use them!
-                CountReagents(item, reagentDict); // Arcane-Edit: share counting with completion validation
+                CountReagents(item, reagentDict); // Arcane-Edit: Share counting with completion validation
             }
 
             // Check recipes

@@ -144,7 +144,7 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
     [SubscribeLocalEvent]
     private void OnParentChanged(Entity<CarryingComponent> ent, ref EntParentChangedMessage args)
     {
-        // Arcane-Start: the server supplies the resulting relationship.
+        // Arcane-Start: The server supplies the resulting relationship.
         if (_timing.ApplyingState)
             return;
         // Arcane-End
@@ -246,7 +246,7 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
         DropCarried(ent.Comp.Carrier, ent);
     }
 
-    // Arcane-Start: the do-after also raises this event when it is cancelled.
+    // Arcane-Start: The do-after also raises this event when it is cancelled.
     private void OnEscapeDrop(Entity<BeingCarriedComponent> ent, ref EscapeInventoryEvent args)
     {
         if (!args.Cancelled && args.Args.Target == ent.Comp.Carrier)
@@ -338,7 +338,7 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
 
     public override void DropCarried(EntityUid carrier, EntityUid carried)
     {
-        // Arcane-Edit-Start: ignore a stale reference after the target has moved to another carrier.
+        // Arcane-Edit-Start: Ignore a stale reference after the target has moved to another carrier.
         if (!TerminatingOrDeleted(carried) &&
             _carriedQuery.TryComp(carried, out var carriedComp) && carriedComp.Carrier == carrier)
             Drop(carried, carrier);
@@ -354,12 +354,12 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
         _movementSpeed.RefreshMovementSpeedModifiers(carrier);
     }
 
-    private void Drop(EntityUid carried, EntityUid carrier) // Arcane-Edit: pass the previous carrier
+    private void Drop(EntityUid carried, EntityUid carrier) // Arcane-Edit: Pass the previous carrier
     {
         RemComp<BeingCarriedComponent>(carried);
         RemComp<KnockedDownComponent>(carried); // TODO SHITMED: make sure this doesnt let you make someone with no legs walk
         _actionBlocker.UpdateCanMove(carried);
-        // Arcane-Edit-Start: preserve a new parent, such as a cryo chamber.
+        // Arcane-Edit-Start: Preserve a new parent, such as a cryo chamber.
         if (Transform(carried).ParentUid == carrier)
             _transform.AttachToGridOrMap(carried);
         // Arcane-Edit-End
