@@ -63,7 +63,8 @@ public sealed partial class TeachALessonConditionSystem : EntitySystem // Arcane
     {
         if (TryComp<GhostComponent>(entity, out var ghost))
         {
-            if (!ghost.CanReturnToBody)
+            if (!ghost.CanReturnToBody ||
+                target.Comp.Body is { } watchedBody && TerminatingOrDeleted(watchedBody))
                 Complete(target.Comp);
             return;
         }
