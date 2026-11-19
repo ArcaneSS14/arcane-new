@@ -335,9 +335,11 @@ public sealed partial class SlimeLatchSystem : EntitySystem
     public bool CanLatch(Entity<SlimeComponent> ent, EntityUid target)
     {
         return !(IsLatched(ent) // already latched
-            || ent.Owner == target // Arcane
-            || TerminatingOrDeleted(target) // Arcane
-            || !_interaction.InRangeUnobstructed(ent.Owner, target, 1f) // Arcane
+            // Arcane-Start
+            || ent.Owner == target
+            || TerminatingOrDeleted(target)
+            || !_interaction.InRangeUnobstructed(ent.Owner, target, 1f)
+            // Arcane-End
             || _mobState.IsDead(target) // target dead
             || !_actionBlocker.CanInteract(ent, target) // can't reach
             || !HasComp<MobStateComponent>(target)); // make any mob work
