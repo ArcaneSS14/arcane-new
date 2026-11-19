@@ -12,6 +12,7 @@ using Content.Shared.Ghost.Components;
 using Content.Shared.Mind;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
+using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
@@ -72,6 +73,10 @@ public sealed partial class GhostReturnToRoundSystem : EntitySystem
 
     public bool TryReturnToRound(EntityUid ghost, ICommonSession session)
     {
+        // Respawn rejects unadmitted sessions. Reject before remembering names or announcing success, too.
+        if (session.Status != SessionStatus.InGame)
+            return false;
+
         if (!TryComp<GhostRespawnComponent>(ghost, out var respawn) || !HasComp<GhostComponent>(ghost))
             return false;
 

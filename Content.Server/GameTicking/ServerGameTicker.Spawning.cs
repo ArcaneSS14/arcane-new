@@ -24,7 +24,9 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.GameTicking; // Arcane
+using Content.Arcane.Common.GameTicking;
+
+using Robust.Shared.Enums; // Arcane
 
 namespace Content.Server.GameTicking
 {
@@ -136,6 +138,10 @@ namespace Content.Server.GameTicking
             bool lateJoin = true,
             bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             var character = GetPlayerProfile(player);
 
             var jobBans = _banManager.GetJobBans(player.UserId);
@@ -161,6 +167,10 @@ namespace Content.Server.GameTicking
             bool lateJoin = true,
             bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             // Can't spawn players with a dummy ticker!
             if (DummyTicker)
                 return;
@@ -374,6 +384,10 @@ namespace Content.Server.GameTicking
 
         public void Respawn(ICommonSession player)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             Mind.WipeMind(player);
             Admin.Add(LogType.Respawn, LogImpact.Medium, $"Player {player} was respawned.");
 
@@ -386,6 +400,10 @@ namespace Content.Server.GameTicking
         /// <inheritdoc/>
         public override void MakeJoinGame(ICommonSession player, EntityUid station, string? jobId = null, bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (!_playerGameStatuses.ContainsKey(player.UserId))
                 return;
 
@@ -400,6 +418,10 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void JoinAsObserver(ICommonSession player)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             // Can't spawn players with a dummy ticker!
             if (DummyTicker)
                 return;
@@ -414,6 +436,10 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void SpawnObserver(ICommonSession player)
         {
+            // Arcane-Start: Direct admin callers must also wait for queue admission.
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (DummyTicker)
                 return;
 
