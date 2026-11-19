@@ -30,7 +30,9 @@ public sealed class PaintImageImportTest
         }
 
         // A hostname must also be checked after DNS resolution, before opening a socket.
-        Assert.ThrowsAsync<HttpRequestException>(() => PaintImageDownloader.Download(new Uri("http://localhost/")));
+        var denied = Assert.ThrowsAsync<HttpRequestException>(() =>
+            PaintImageDownloader.Download(new Uri("http://localhost/")));
+        Assert.That(denied!.GetBaseException().Message, Is.EqualTo("The image host resolves to a non-public address."));
         Assert.That(PaintImageDownloader.IsAllowedUri(new Uri("https://example.com/image.png")), Is.True);
 
         using var data = new MemoryStream();
