@@ -1,8 +1,9 @@
 using Content.Shared.Access;
 using Content.Shared.Access.Systems;
-using Content.Shared.Silicons.Borgs; // Arcane
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
+
+using Content.Shared.Silicons.Borgs; // Arcane
 
 namespace Content.Shared.Turrets;
 

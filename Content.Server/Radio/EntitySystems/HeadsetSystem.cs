@@ -7,9 +7,10 @@ using Content.Shared.Inventory.Events;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
 using Content.Shared.Radio.EntitySystems;
-using Content.Shared.Zombies; // Arcane
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+
+using Content.Shared.Zombies; // Arcane
 
 namespace Content.Server.Radio.EntitySystems;
 

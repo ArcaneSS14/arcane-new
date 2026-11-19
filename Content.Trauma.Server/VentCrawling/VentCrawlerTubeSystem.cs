@@ -10,13 +10,14 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Tools.Components;
 using Content.Shared.Verbs;
-using Content.Shared.Zombies; // Arcane
 using Content.Trauma.Common.VentCrawling;
 using Content.Trauma.Shared.VentCrawling;
 using Content.Trauma.Shared.VentCrawling.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+
+using Content.Shared.Zombies; // Arcane
 
 namespace Content.Trauma.Server.VentCrawling;
 

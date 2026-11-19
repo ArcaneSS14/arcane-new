@@ -57,8 +57,10 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
         comp.SoundEntity = _audio.Stop(comp.SoundEntity);
     }
 
-    private void OnShutdown(EntityUid uid, StationRadioReceiverComponent comp, ComponentShutdown args) // Arcane
-        => _audio.Stop(comp.SoundEntity); // Arcane
+    // Arcane-Start
+    private void OnShutdown(EntityUid uid, StationRadioReceiverComponent comp, ComponentShutdown args)
+        => _audio.Stop(comp.SoundEntity);
+    // Arcane-End
 
     private void UpdateAudible(Entity<StationRadioReceiverComponent> ent)
     {

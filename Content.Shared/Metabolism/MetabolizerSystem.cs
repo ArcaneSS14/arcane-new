@@ -15,9 +15,10 @@ using Content.Shared.EntityEffects.Effects.Solution;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Random.Helpers;
-using Content.Shared.Zombies; // Arcane
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+
+using Content.Shared.Zombies; // Arcane
 
 namespace Content.Shared.Metabolism;
 
