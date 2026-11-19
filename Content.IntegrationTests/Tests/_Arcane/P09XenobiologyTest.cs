@@ -26,6 +26,7 @@ using Content.Shared.Radio;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
+using Content.Shared.Nutrition.EntitySystems;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -44,10 +45,14 @@ public sealed class P09XenobiologyTest : InteractionTest
         {
             extract = SEntMan.SpawnAttachedTo("GreySlimeExtract", Center);
             var reactive = SEntMan.System<ReactiveSystem>();
+            var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+            Assert.That(solutions.TryGetInjectableSolution(extract, out var solution, out var contents), Is.True);
+            Assert.That(solutions.TryAddReagent(solution!.Value, "Water", FixedPoint2.New(1)), Is.True);
             var injection = new ReagentQuantity(new ReagentId("Water", null), FixedPoint2.New(1));
             reactive.ReactionEntity(extract, ReactionMethod.Injection, injection);
             reactive.ReactionEntity(extract, ReactionMethod.Injection, injection);
             Assert.That(SEntMan.GetComponent<SlimeExtractComponent>(extract).Used, Is.True);
+            Assert.That(contents!.Volume, Is.EqualTo(FixedPoint2.Zero));
             Assert.That(GetEpinephrine(extract), Is.EqualTo(FixedPoint2.Zero));
         });
 
@@ -68,10 +73,16 @@ public sealed class P09XenobiologyTest : InteractionTest
     {
         EntityUid prey = default;
         EntityUid stomachSolution = default;
+        EntityUid feedingSlime = default;
+        EntityUid controlSlime = default;
+        float initialDifference = 0;
         await Server.WaitAssertion(() =>
         {
             var slimes = ReleaseSlimes();
             var slime = slimes[0];
+            feedingSlime = slime;
+            controlSlime = slimes[1];
+            initialDifference = Hunger(feedingSlime) - Hunger(controlSlime);
             prey = SEntMan.SpawnAttachedTo(Human, Center.Offset(new Vector2(0.5f, 0)));
             var stomachs = SEntMan.System<BodySystem>().GetOrgans<StomachComponent>(slime);
             Assert.That(stomachs, Has.Count.EqualTo(1));
@@ -92,7 +103,17 @@ public sealed class P09XenobiologyTest : InteractionTest
             Assert.That(SEntMan.GetComponent<SolutionComponent>(stomachSolution).Solution.Volume, Is.EqualTo(FixedPoint2.New(1)));
             var blood = SEntMan.GetComponent<BloodstreamComponent>(prey);
             Assert.That(blood.BloodSolution!.Value.Comp.Solution.GetTotalPrototypeQuantity("XenobioSlimeToxin"), Is.GreaterThan(FixedPoint2.Zero));
+            // Both slimes lose hunger over the same simulated time; only the feeding slime gains the accepted 1u.
+            Assert.That(Hunger(feedingSlime) - Hunger(controlSlime) - initialDifference, Is.EqualTo(1).Within(0.001));
         });
+    }
+
+    private float Hunger(EntityUid slime)
+    {
+        var component = SEntMan.GetComponent<SatiationComponent>(slime);
+        var hunger = SEntMan.System<SatiationSystem>().GetValueOrNull((slime, component), SatiationSystem.Hunger);
+        Assert.That(hunger, Is.Not.Null);
+        return hunger!.Value;
     }
 
     [Test]
