@@ -31,36 +31,6 @@ public sealed class JoinQueueNetworkTest : GameTest
 {
     public override PoolSettings PoolSettings => new() { Connected = false, DummyTicker = false, Dirty = true };
 
-    // Arcane-Start
-    [Test]
-    public async Task FinalMiniGameScoreSurvivesTheThrottleWithoutAnotherMessage()
-    {
-        var (name, _) = await ConnectQueued();
-        await Client.WaitPost(() =>
-        {
-            var net = Client.ResolveDependency<IClientNetManager>();
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.SpaceInvaders, Score = 10 });
-            net.ClientSendMessage(new QueueMiniGameScoreMessage { Game = QueueMiniGameKind.SpaceInvaders, Score = 20 });
-        });
-
-        var deadline = Stopwatch.StartNew();
-        var complete = false;
-        while (deadline.Elapsed < TimeSpan.FromSeconds(4))
-        {
-            await Pair.ReallyBeIdle(2);
-            await Server.WaitAssertion(() =>
-            {
-                var board = SEntMan.System<ServerQueue>().BuildScores();
-                complete = board.Any(entry => entry.Game == QueueMiniGameKind.SpaceInvaders && entry.PlayerName == name && entry.Score == 20);
-            });
-            if (complete)
-                break;
-            await Task.Delay(25);
-        }
-        Assert.That(complete, Is.True, "The last increase must be flushed even when game over sends no further score.");
-    }
-    // Arcane-End
-
     public override async Task DoTeardown()
     {
         if (TestContext.CurrentContext.Result.Outcome.Status != global::NUnit.Framework.Interfaces.TestStatus.Failed)

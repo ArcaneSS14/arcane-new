@@ -75,11 +75,11 @@ public sealed partial class VinylSummonRuleSystem : EntitySystem
     private void OnVinylInserted(Entity<VinylPlayerComponent> ent, ref VinylInsertedEvent args)
     {
         var vinyl = args.Vinyl;
-        if (CompOrNull<VinylComponent>(vinyl)?.Song is null) // Arcane-Edit: selection is carried by the event
+        if (CompOrNull<VinylComponent>(vinyl)?.Song is null) // Arcane-Edit: Selection is carried by the event
             return;
 
         // Get the audio length
-        // Arcane-Edit-Start: the timer uses the same selection as the player and receivers.
+        // Arcane-Edit-Start: The timer uses the same selection as the player and receivers.
         var audioLength = _audio.GetAudioLength(args.Track);
         // Arcane-Edit-End
         var endTime = _timing.CurTime + audioLength;
