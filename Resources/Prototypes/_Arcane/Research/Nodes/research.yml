@@ -89,6 +89,7 @@
     ScanningPointsBluespaceCrystal: 5000
   recipeUnlocks:
   - MaterialSiloMachineCircuitboard
+  - DrinkShakerBluespace
   - OreBagOfHolding
   - BluespaceBeaker
   - SyringeBluespace
