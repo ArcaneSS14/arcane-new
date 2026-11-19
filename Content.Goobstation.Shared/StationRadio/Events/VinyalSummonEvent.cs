@@ -8,7 +8,7 @@ namespace Content.Goobstation.Shared.StationRadio.Events;
 /// Raised on a vinyl player when a vinyl is inserted and starts playing.
 /// </summary>
 [ByRefEvent]
-public record struct VinylInsertedEvent(EntityUid Vinyl, ResolvedSoundSpecifier Track); // Arcane-Edit: add selected track
+public record struct VinylInsertedEvent(EntityUid Vinyl, ResolvedSoundSpecifier Track); // Arcane-Edit: Add selected track
 
 /// <summary>
 /// Raised on a vinyl player when a vinyl is removed.

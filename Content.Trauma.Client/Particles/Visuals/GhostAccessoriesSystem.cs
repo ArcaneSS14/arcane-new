@@ -1,4 +1,4 @@
-// Arcane-Start: use the particle renderer owned by Trauma.Client.
+// Arcane-Start: Use the particle renderer owned by Trauma.Client.
 using Content.Arcane.Shared.CustomGhost;
 
 namespace Content.Trauma.Client.Particles.Visuals;

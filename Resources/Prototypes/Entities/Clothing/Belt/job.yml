@@ -157,7 +157,7 @@
       - LightReplacer
       - CleanerGrenade
   - type: ItemMapper
-    sprite: &BeltOverlay Clothing/Belt/belt_overlay.rsi # Arcane-Edit: moved anchor
+    sprite: &BeltOverlay Clothing/Belt/belt_overlay.rsi # Arcane-Edit: Moved anchor
     mapLayers:
       bottle:
         whitelist:

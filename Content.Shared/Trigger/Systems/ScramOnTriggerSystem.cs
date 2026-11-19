@@ -27,7 +27,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
 
     protected override void OnTrigger(Entity<ScramOnTriggerComponent> ent, EntityUid target, ref TriggerEvent args)
     {
-        // Arcane-Start: only commit side effects after finding a valid destination.
+        // Arcane-Start: Only commit side effects after finding a valid destination.
         if (_net.IsClient || TerminatingOrDeleted(target) || Paused(target))
             return;
 
@@ -44,7 +44,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
         if (TryComp<PullerComponent>(target, out var puller) && TryComp<PullableComponent>(puller.Pulling, out var pullable))
             _pulling.TryStopPull(puller.Pulling.Value, pullable);
 
-        // Arcane-Start: teleport out of the container using the chosen grid coordinates.
+        // Arcane-Start: Teleport out of the container using the chosen grid coordinates.
         _audio.PlayPvs(ent.Comp.TeleportSound, target);
         _transform.SetCoordinates(target, destination);
         args.Handled = true;
@@ -57,7 +57,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
     /// <remarks> Trends towards the outer radius. Compensates for small grids. </remarks>
     private EntityCoordinates? SelectRandomTileInRange(EntityUid uid, Vector2 radius, int tries = 40, PhysicsComponent? physicsComponent = null)
     {
-        // Arcane-Start: nested container offsets are relative to the container, not the grid.
+        // Arcane-Start: Nested container offsets are relative to the container, not the grid.
         var origin = uid;
         var xform = Transform(uid);
         if (_container.IsEntityOrParentInContainer(uid, xform: xform))
@@ -96,7 +96,7 @@ public sealed partial class ScramOnTriggerSystem : XOnTriggerSystem<ScramOnTrigg
             // We then offset the user coords from a random angle * distance
             var tempTargetCoords = userCoords.Offset(_random.NextAngle().ToVec() * distance);
 
-            // Arcane-Start: use the actual origin grid, even where two grids overlap.
+            // Arcane-Start: Use the actual origin grid, even where two grids overlap.
             TileRef? tileRef = grid != null
                 ? _map.TryGetTileRef(userCoords.EntityId, grid, tempTargetCoords, out var local) ? local : null
                 : _turfSystem.GetTileRef(tempTargetCoords);

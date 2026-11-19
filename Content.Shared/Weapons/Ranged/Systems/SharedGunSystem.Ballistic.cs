@@ -410,7 +410,7 @@ public abstract partial class SharedGunSystem
         Dirty(entity);
     }
 
-    // Arcane-Start: replenish missing default cartridges for the arena without replacing loaded ammo.
+    // Arcane-Start: Replenish missing default cartridges for the arena without replacing loaded ammo.
     public void RefillArenaBallisticAmmo(Entity<BallisticAmmoProviderComponent> entity)
     {
         if (entity.Comp.Proto == null)

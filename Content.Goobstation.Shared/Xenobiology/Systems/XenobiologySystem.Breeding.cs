@@ -23,7 +23,7 @@ public partial class XenobiologySystem
 
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
 
-        RandomizeNewSlime(slime, rand); // Arcane-Edit: use the same breeding variation for livestock crates
+        RandomizeNewSlime(slime, rand); // Arcane-Edit: Use the same breeding variation for livestock crates
     }
 
     // Arcane-Start
@@ -88,7 +88,7 @@ public partial class XenobiologySystem
     private void DoMitosis(Entity<SlimeComponent> ent)
     {
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        // Arcane-Edit-Start: old Arcane #386/#533, one density lookup per attempted split.
+        // Arcane-Edit-Start: Old Arcane #386/#533, one density lookup per attempted split.
         var offspringCount = Math.Min(rand.Next(1, ent.Comp.MaxOffspring + 1), GetMitosisCapacity(ent));
         var spawned = false;
         // Arcane-Edit-End

@@ -57,12 +57,12 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
                 if (!_playerManager.TryGetSessionById(player, out var session) || session.Status != SessionStatus.InGame) // Arcane-Edit: session lookup > admitted session lookup
                     continue;
 
-                // Arcane-Start: preserve queued respawn while the player is using a temporary arena body.
+                // Arcane-Start: Preserve queued respawn while the player is using a temporary arena body.
                 if (HasComp<ThunderdomeParticipantComponent>(session.AttachedEntity))
                     continue;
                 // Arcane-End
 
-                // Arcane-Edit-Start: a revived round body supersedes an outstanding death respawn.
+                // Arcane-Edit-Start: A revived round body supersedes an outstanding death respawn.
                 if (session.GetMind() is { } mind && TryComp<MindComponent>(mind, out var mindComp) && mindComp.OwnedEntity is { } body)
                 {
                     if (!HasComp<GhostComponent>(body) && TryComp<Content.Shared.Mobs.Components.MobStateComponent>(body, out var state) &&
@@ -84,7 +84,7 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
 
     private void OnSuicide(SuicideEvent ev)
     {
-        if (HasComp<ThunderdomeParticipantComponent>(ev.Victim) || !TryComp<ActorComponent>(ev.Victim, out var actor)) // Arcane-Edit: ignore arena suicides
+        if (HasComp<ThunderdomeParticipantComponent>(ev.Victim) || !TryComp<ActorComponent>(ev.Victim, out var actor)) // Arcane-Edit: Ignore arena suicides
            return;
 
         var query = EntityQueryEnumerator<RespawnTrackerComponent>();
@@ -97,7 +97,7 @@ public sealed partial class RespawnRuleSystem : GameRuleSystem<RespawnDeadRuleCo
 
     private void OnMobStateChanged(MobStateChangedEvent args)
     {
-        if (args.NewMobState != MobState.Dead || HasComp<ThunderdomeParticipantComponent>(args.Target)) // Arcane-Edit: exclude arena deaths
+        if (args.NewMobState != MobState.Dead || HasComp<ThunderdomeParticipantComponent>(args.Target)) // Arcane-Edit: Exclude arena deaths
             return;
 
         if (!TryComp<ActorComponent>(args.Target, out var actor))

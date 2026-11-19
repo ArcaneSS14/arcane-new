@@ -436,7 +436,7 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void SpawnObserver(ICommonSession player)
         {
-            // Arcane-Start: direct admin callers must also wait for queue admission.
+            // Arcane-Start: Direct admin callers must also wait for queue admission.
             if (player.Status != SessionStatus.InGame)
                 return;
             // Arcane-End
@@ -489,7 +489,7 @@ namespace Content.Server.GameTicking
                 while (query.MoveNext(out var uid, out _))
                 {
                     // Band-aid fix cause we aren't queueing observer re-attach.
-                    if (!TerminatingOrDeleted(uid) && !HasComp<ThunderdomeMapComponent>(Transform(uid).MapUid)) // Arcane-Edit: keep station observers outside the arena
+                    if (!TerminatingOrDeleted(uid) && !HasComp<ThunderdomeMapComponent>(Transform(uid).MapUid)) // Arcane-Edit: Keep station observers outside the arena
                         _possiblePositions.Add(new EntityCoordinates(uid, Vector2.Zero));
                 }
             }
@@ -514,7 +514,7 @@ namespace Content.Server.GameTicking
             if (Map.MapExists(DefaultMap))
             {
                 var mapUid = Map.GetMapOrInvalid(DefaultMap);
-                if (!TerminatingOrDeleted(mapUid) && !HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: exclude the arena
+                if (!TerminatingOrDeleted(mapUid) && !HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: Exclude the arena
                     return new EntityCoordinates(mapUid, Vector2.Zero);
             }
 
@@ -524,7 +524,7 @@ namespace Content.Server.GameTicking
                 var mapUid = Map.GetMapOrInvalid(map);
                 var meta = MetaData(mapUid);
 
-                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta) || HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: exclude the arena
+                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta) || HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: Exclude the arena
                     continue;
 
                 return new EntityCoordinates(mapUid, Vector2.Zero);

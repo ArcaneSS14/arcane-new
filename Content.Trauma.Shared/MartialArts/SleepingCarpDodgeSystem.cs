@@ -54,7 +54,7 @@ public sealed partial class SleepingCarpDodgeSystem : EntitySystem
 
     private bool CanDodge(EntityUid target)
     {
-        return _mob.IsAlive(target) && !_standing.IsDown(target) && _blocker.CanMove(target) && // Arcane-Edit: respect movement restraints
+        return _mob.IsAlive(target) && !_standing.IsDown(target) && _blocker.CanMove(target) && // Arcane-Edit: Respect movement restraints
             !HasComp<KnockedDownComponent>(target) && !HasComp<StunnedComponent>(target);
     }
 

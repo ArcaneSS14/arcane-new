@@ -405,7 +405,7 @@ public abstract partial class SharedBiomeSystem : EntitySystem
     {
         var noiseCopy = new FastNoiseLite();
         _serManager.CopyTo(seedNoise, ref noiseCopy, notNullableOverride: true);
-        noiseCopy.SetSeed(effectiveSeed); // Arcane-Edit: the cache key already includes the layer seed
+        noiseCopy.SetSeed(effectiveSeed); // Arcane-Edit: The cache key already includes the layer seed
         // Ensure re-calculate is run.
         noiseCopy.SetFractalOctaves(noiseCopy.GetFractalOctaves());
         return noiseCopy;

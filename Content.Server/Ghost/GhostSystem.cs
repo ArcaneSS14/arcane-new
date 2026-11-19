@@ -500,7 +500,7 @@ namespace Content.Server.Ghost
         }
 
         public EntityUid? SpawnGhost(Entity<MindComponent?> mind, EntityCoordinates? spawnPosition = null,
-            bool canReturn = false, NetUserId? appearanceUser = null) // Arcane-Edit: allow an unbound original mind to restore the player's appearance.
+            bool canReturn = false, NetUserId? appearanceUser = null) // Arcane-Edit: Allow an unbound original mind to restore the player's appearance.
         {
             if (!Resolve(mind, ref mind.Comp))
                 return null;

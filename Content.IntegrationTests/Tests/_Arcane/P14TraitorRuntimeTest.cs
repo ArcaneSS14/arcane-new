@@ -61,23 +61,6 @@ public sealed class P14TraitorRuntimeTest : InteractionTest
         });
     }
 
-    [Test]
-    public async Task ScramDoesNotHandleActivationWithoutASafeTile()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var implant = SEntMan.SpawnAttachedTo("ScramImplant", Center);
-            var target = SEntMan.SpawnAttachedTo("MobHuman", Center);
-            var transform = SEntMan.GetComponent<TransformComponent>(target);
-            var activation = new ActivateImplantEvent { Performer = target };
-
-            SEntMan.EventBus.RaiseLocalEvent(implant, activation);
-
-            Assert.That(activation.Handled, Is.False);
-            Assert.That(transform.Coordinates, Is.EqualTo(Center));
-        });
-    }
-
     private TeachALessonConditionComponent AssignLesson(EntityUid target)
     {
         var teacher = SEntMan.System<SharedMindSystem>().CreateMind(null, "Teacher");

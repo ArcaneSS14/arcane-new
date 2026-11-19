@@ -697,7 +697,7 @@ public sealed partial class BloodstreamSystem : EntitySystem
         ent.Comp.BloodReferenceSolution = newReagentsSolution;
         DirtyField(ent, ent.Comp, nameof(BloodstreamComponent.BloodReferenceSolution));
 
-        if (currentVolume == FixedPoint2.Zero || newReagentsSolution.Volume == FixedPoint2.Zero) // Arcane-Edit: require blood in both solutions
+        if (currentVolume == FixedPoint2.Zero || newReagentsSolution.Volume == FixedPoint2.Zero) // Arcane-Edit: Require blood in both solutions
             return;
 
         var solution = ent.Comp.BloodReferenceSolution.Clone();

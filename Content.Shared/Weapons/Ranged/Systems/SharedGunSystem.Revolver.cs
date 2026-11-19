@@ -338,7 +338,7 @@ public partial class SharedGunSystem
         Appearance.SetData(ent, AmmoVisuals.AmmoMax, ent.Comp.Capacity, appearance);
     }
 
-    // Arcane-Start: replace used arena revolver cartridges with the configured default ammunition.
+    // Arcane-Start: Replace used arena revolver cartridges with the configured default ammunition.
     public void RefillArenaRevolverAmmo(Entity<RevolverAmmoProviderComponent> entity)
     {
         if (entity.Comp.FillPrototype == null)

@@ -53,7 +53,7 @@ public abstract partial class SharedCombatModeSystem : EntitySystem
 
     public bool? GetCanDisarm(EntityUid entity) => CompOrNull<CombatModeComponent>(entity)?.CanDisarm; // Arcane
 
-    public void SetCanDisarm(EntityUid entity, bool? canDisarm, CombatModeComponent? component = null) // Arcane: restore an unset value too
+    public void SetCanDisarm(EntityUid entity, bool? canDisarm, CombatModeComponent? component = null) // Arcane: Restore an unset value too
     {
         if (!Resolve(entity, ref component))
             return;

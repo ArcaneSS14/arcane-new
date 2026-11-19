@@ -87,7 +87,7 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: IntrinsicRadioReceiver
-  # Arcane-Start: station AI retains Binary in an Intellicard
+  # Arcane-Start: Station AI retains Binary in an Intellicard
   - type: IntrinsicRadioTransmitter
     channels:
     - Binary

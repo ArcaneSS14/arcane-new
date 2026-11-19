@@ -65,7 +65,7 @@ public sealed partial class WraithEvolveSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnWraithEvolveRecieved(Entity<EvolveComponent> ent, ref RadialSelectorSelectedMessage args)
     {
-        // Arcane-Start: the options and progression may have changed since opening the menu.
+        // Arcane-Start: The options and progression may have changed since opening the menu.
         if (args.Actor != ent.Owner || !WraithRadialSelection.Contains(ent.Comp.AvailableEvolutions, args.SelectedItem))
             return;
 

@@ -67,7 +67,7 @@ public sealed partial class LawboardSiliconLawUi : FancyWindow
         LawsChangedEvent?.Invoke(_laws, popup); // The popup is just for flavor. There's probably a better way to do this
     }
 
-    public void SetLaws(List<SiliconLaw> sLaws, bool notify = true) // Arcane-Edit: allow loading the editor without sending laws
+    public void SetLaws(List<SiliconLaw> sLaws, bool notify = true) // Arcane-Edit: Allow loading the editor without sending laws
     {
         _laws = sLaws;
         LawContainer.RemoveAllChildren();
