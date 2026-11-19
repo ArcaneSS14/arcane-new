@@ -1,0 +1,8 @@
+- type: entity
+  id: BaseAirlockIndestructible
+  components:
+  - type: Door
+    openTimeOne: 0.2
+    openTimeTwo: 0.4
+    closeTimeOne: 0.3
+    closeTimeTwo: 0.3

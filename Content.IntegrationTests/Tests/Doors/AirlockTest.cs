@@ -7,6 +7,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Maths;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.IntegrationTests.Tests.Doors
 {
@@ -106,6 +107,69 @@ namespace Content.IntegrationTests.Tests.Doors
                 });
             });
         }
+
+        // Arcane-Start
+        [Test]
+        public async Task AirlockLightAndCollisionTimingTest()
+        {
+            var server = Pair.Server;
+            var entities = server.ResolveDependency<IEntityManager>();
+            var doors = entities.System<DoorSystem>();
+            var timing = server.ResolveDependency<IGameTiming>();
+            var map = await Pair.CreateTestMap();
+            var airlocks = new (EntityUid Uid, bool BlocksLight)[2];
+
+            void Check(DoorState state, bool collidable, bool partial)
+            {
+                foreach (var (uid, blocksLight) in airlocks)
+                {
+                    var door = entities.GetComponent<DoorComponent>(uid);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(door.State, Is.EqualTo(state));
+                        Assert.That(door.Partial, Is.EqualTo(partial));
+                        Assert.That(entities.GetComponent<PhysicsComponent>(uid).CanCollide, Is.EqualTo(collidable));
+                        Assert.That(entities.GetComponent<OccluderComponent>(uid).Enabled, Is.EqualTo(blocksLight && collidable));
+                    });
+                }
+            }
+
+            Task Advance(double seconds) => server.WaitRunTicks((int) Math.Ceiling(seconds / timing.TickPeriod.TotalSeconds));
+
+            await server.WaitAssertion(() =>
+            {
+                airlocks[0] = (entities.SpawnEntity("Airlock", new MapCoordinates(Vector2.Zero, map.MapId)), true);
+                airlocks[1] = (entities.SpawnEntity("AirlockGlass", new MapCoordinates(new Vector2(3, 0), map.MapId)), false);
+                Check(DoorState.Closed, true, false);
+                foreach (var (uid, _) in airlocks)
+                    doors.StartOpening(uid);
+            });
+
+            await Advance(0.15);
+            await server.WaitAssertion(() => Check(DoorState.Opening, true, false));
+            await Advance(0.1);
+            await server.WaitAssertion(() => Check(DoorState.Opening, false, true));
+            await Advance(0.4);
+            await server.WaitAssertion(() =>
+            {
+                Check(DoorState.Open, false, false);
+                foreach (var (uid, _) in airlocks)
+                    doors.StartClosing(uid);
+            });
+
+            await Advance(0.2);
+            await server.WaitAssertion(() => Check(DoorState.Closing, false, false));
+            await Advance(0.15);
+            await server.WaitAssertion(() => Check(DoorState.Closing, true, true));
+            await Advance(0.3);
+            await server.WaitAssertion(() =>
+            {
+                Check(DoorState.Closed, true, false);
+                foreach (var (uid, _) in airlocks)
+                    entities.DeleteEntity(uid);
+            });
+        }
+        // Arcane-End
 
         [Test]
         public async Task AirlockBlockTest()
