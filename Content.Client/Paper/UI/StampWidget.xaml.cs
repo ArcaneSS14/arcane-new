@@ -11,7 +11,7 @@ namespace Content.Client.Paper.UI;
 
 [GenerateTypedNameReferences]
 [Virtual] // Arcane
-public partial class StampWidget : PanelContainer // Arcane-Edit: graphical imprint extension
+public partial class StampWidget : PanelContainer // Arcane-Edit: Graphical imprint extension
 {
     private static readonly ProtoId<ShaderPrototype> PaperStamp = "PaperStamp";
 

@@ -126,7 +126,7 @@ public sealed partial class WaggingSystem : EntitySystem
                 var currentMarkingId = layerMarkings[i].MarkingId;
                 string newMarkingId;
 
-                // Arcane-Edit-Start: explicit Goob pairs and existing Trauma suffix pairs share one resolver.
+                // Arcane-Edit-Start: Explicit Goob pairs and existing Trauma suffix pairs share one resolver.
                 if (targetWagging)
                 {
                     if (!TryGetAnimated(currentMarkingId, ent.Comp.Suffix, out newMarkingId))

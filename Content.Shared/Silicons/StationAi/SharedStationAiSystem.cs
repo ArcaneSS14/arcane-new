@@ -192,7 +192,7 @@ public abstract partial class SharedStationAiSystem : EntitySystem
             return;
         }
 
-        // Arcane-Start: powered machines remain visible to a station AI beyond camera coverage.
+        // Arcane-Start: Powered machines remain visible to a station AI beyond camera coverage.
         if (!ent.Comp.Enabled)
             return;
 
@@ -231,7 +231,7 @@ public abstract partial class SharedStationAiSystem : EntitySystem
             return;
         }
 
-        // Arcane-Start: only station AI uses machine vision, even when another role shares the overlay.
+        // Arcane-Start: Only station AI uses machine vision, even when another role shares the overlay.
         if (HasComp<StationAiHeldComponent>(ent) && targetXform.GridUid == Transform(args.User).GridUid && IsMachineVisible(target))
         {
             args.InRange = true;
@@ -251,7 +251,7 @@ public abstract partial class SharedStationAiSystem : EntitySystem
         args.InRange = _vision.IsAccessible((targetXform.GridUid.Value, broadphase, grid), targetTile);
     }
 
-    // Arcane-Start: share the machine predicate between range checks and the client overlay.
+    // Arcane-Start: Share the machine predicate between range checks and the client overlay.
     public bool IsMachineVisible(EntityUid uid)
     {
         return TryComp<StationAiWhitelistComponent>(uid, out var whitelist) && whitelist.Enabled &&

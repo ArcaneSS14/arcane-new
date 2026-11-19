@@ -7,7 +7,7 @@ namespace Content.Shared.Silicons.Borgs;
 
 public abstract partial class SharedBorgSystem
 {
-    // Arcane: turret targeting needs the chassis state, not an item's unrelated toggle.
+    // Arcane: Turret targeting needs the chassis state, not an item's unrelated toggle.
     public bool IsInactiveBorg(EntityUid uid) => TryComp<BorgChassisComponent>(uid, out var chassis) && !chassis.Active;
 
     /// <summary>

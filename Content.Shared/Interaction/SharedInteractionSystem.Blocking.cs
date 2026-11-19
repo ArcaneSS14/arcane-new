@@ -42,7 +42,7 @@ public partial class SharedInteractionSystem
     private void OnMoveAttempt(EntityUid uid, BlockMovementComponent component, UpdateCanMoveEvent args)
     {
         // If we're relaying then don't cancel.
-        if (TryComp<RelayInputMoverComponent>(uid, out var relay) && relay.LifeStage < ComponentLifeStage.Stopping) // Arcane-Edit: shutdown recalculates movement before removing the relay
+        if (TryComp<RelayInputMoverComponent>(uid, out var relay) && relay.LifeStage < ComponentLifeStage.Stopping) // Arcane-Edit: Shutdown recalculates movement before removing the relay
             return;
 
         args.Cancel(); // no more scurrying around

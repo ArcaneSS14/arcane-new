@@ -63,7 +63,7 @@ public sealed partial class PAISystem : EntitySystem
 
     private void OnMindAdded(EntityUid uid, PAIComponent component, MindAddedMessage args)
     {
-        // Arcane-Start: optional camera action
+        // Arcane-Start: Optional camera action
         if (component.CameraAction is { } action)
             _actions.AddAction(uid, ref component.CameraActionEntity, action.Id);
         // Arcane-End
@@ -89,7 +89,7 @@ public sealed partial class PAISystem : EntitySystem
         PAITurningOff(uid);
     }
 
-    // Arcane-Start: opt-in camera for station AI
+    // Arcane-Start: Opt-in camera for station AI
     private void OnToggleCamera(Entity<PAIComponent> entity, ref TogglePAICameraEvent args)
     {
         if (args.Handled || args.Performer != entity.Owner || entity.Comp.CameraAction is null ||

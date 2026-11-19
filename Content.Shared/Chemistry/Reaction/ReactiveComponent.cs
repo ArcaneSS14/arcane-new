@@ -26,7 +26,7 @@ public sealed partial class ReactiveComponent : Component
     [DataField]
     public float? ScaleOverride;
 
-    [DataField] public bool RaiseEffectsApplyingEvent; // Arcane: opt in to intercept matched effects
+    [DataField] public bool RaiseEffectsApplyingEvent; // Arcane: Opt in to intercept matched effects
 }
 
 [DataDefinition]

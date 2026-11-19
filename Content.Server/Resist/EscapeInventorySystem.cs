@@ -36,7 +36,7 @@ public sealed partial class EscapeInventorySystem : EntitySystem
         if (!args.HasDirectionalMovement)
             return;
 
-        // Arcane: a carried mob is parented to its carrier, outside an inventory container.
+        // Arcane: A carried mob is parented to its carrier, outside an inventory container.
         if (_carrying.GetCarrier(uid) is { } carrier)
         {
             if (_actionBlockerSystem.CanInteract(uid, carrier))
@@ -100,7 +100,7 @@ public sealed partial class EscapeInventorySystem : EntitySystem
         if (args.Handled || args.Cancelled)
             return;
 
-        // Arcane: the carrying system handles completion and cleans up both ends.
+        // Arcane: The carrying system handles completion and cleans up both ends.
         if (_carrying.GetCarrier(uid) != null || args.Args.Target is not { } original ||
             !_containerSystem.TryGetContainingContainer((uid, null, null), out var current) || current.Owner != original)
             return;

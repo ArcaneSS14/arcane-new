@@ -99,7 +99,7 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
 
     private void OnDisable(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDisableMessage args)
     {
-        if (!TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: validate the live chassis and access
+        if (!TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: Validate the live chassis and access
             return;
 
         var payload = new RoboticsCyborgDisablePayload();
@@ -111,10 +111,10 @@ public sealed partial class RoboticsConsoleSystem : SharedRoboticsConsoleSystem
     private void OnDestroy(Entity<RoboticsConsoleComponent> ent, ref RoboticsConsoleDestroyMessage args)
     {
         var now = _timing.CurTime;
-        if (now < ent.Comp.NextDestroy || !TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: validate the live chassis and access
+        if (now < ent.Comp.NextDestroy || !TryGetControllableBorg(ent, args.Actor, args.Address, out var data)) // Arcane-Edit: Validate the live chassis and access
             return;
 
-        ent.Comp.Cyborgs.Remove(args.Address); // Arcane-Edit: remove only after validation
+        ent.Comp.Cyborgs.Remove(args.Address); // Arcane-Edit: Remove only after validation
 
         var payload = new RoboticsCyborgDestroyPayload();
         _deviceNetwork.SendPacket(ent.Owner, args.Address, ref payload);

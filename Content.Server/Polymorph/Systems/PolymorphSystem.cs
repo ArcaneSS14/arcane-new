@@ -173,7 +173,7 @@ public sealed partial class PolymorphSystem : SharedPolymorphSystem // Trauma - 
         if (ent.Comp.Reverted)
             return;
 
-        if (ent.Comp.Configuration.RevertOnDelete && Revert(ent.AsNullable()) != null) // Arcane-Edit: keep the original body after successful reversion
+        if (ent.Comp.Configuration.RevertOnDelete && Revert(ent.AsNullable()) != null) // Arcane-Edit: Keep the original body after successful reversion
             return; // Arcane
 
         // Remove our original entity too
@@ -423,7 +423,7 @@ public sealed partial class PolymorphSystem : SharedPolymorphSystem // Trauma - 
         if (!Resolve(ent, ref component, false)) // Trauma - add false so it doesn't error for non polymorphed entities
             return null;
 
-        if (component.Reverted || Deleted(uid)) // Arcane-Edit: reversion queues deletion and can be requested again during the same tick
+        if (component.Reverted || Deleted(uid)) // Arcane-Edit: Reversion queues deletion and can be requested again during the same tick
             return null;
 
         if (component.Parent is not { } parent)
@@ -465,7 +465,7 @@ public sealed partial class PolymorphSystem : SharedPolymorphSystem // Trauma - 
             _inventory.TransferEntityInventories(uid, parent);
             foreach (var held in _hands.EnumerateHeld(uid))
             {
-                // Arcane-Edit-Start: reversion also runs for incapacitated bodies
+                // Arcane-Edit-Start: Reversion also runs for incapacitated bodies
                 if (_hands.TryDrop(uid, held, checkActionBlocker: false))
                     _hands.TryPickupAnyHand(parent, held, checkActionBlocker: false);
                 // Arcane-Edit-End

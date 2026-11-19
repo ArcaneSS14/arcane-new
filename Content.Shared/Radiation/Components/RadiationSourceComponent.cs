@@ -18,7 +18,7 @@ public sealed partial class RadiationSourceComponent : Component
     [DataField("intensity")]
     public float Intensity = 1;
 
-    // Arcane-Start: temporary effects do not change saved radiation intensity.
+    // Arcane-Start: Temporary effects do not change saved radiation intensity.
     public float? TransientIntensity;
     public float EffectiveIntensity => TransientIntensity ?? Intensity;
     // Arcane-End

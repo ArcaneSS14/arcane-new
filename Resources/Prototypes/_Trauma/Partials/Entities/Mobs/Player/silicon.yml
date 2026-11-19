@@ -28,7 +28,7 @@
     voice: Borg
   - type: SiliconLawProvider
     laws: NTDefault
-  # Arcane-Start: station AI crew languages
+  # Arcane-Start: Station AI crew languages
   - type: LanguageSpeaker
     speaks:
     - TauCetiBasic

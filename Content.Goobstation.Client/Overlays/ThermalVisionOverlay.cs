@@ -52,7 +52,7 @@ public sealed partial class ThermalVisionOverlay : Overlay
         _thermalShader = _proto.Index(ThermalShader).InstanceUnique();
     }
 
-    // Arcane-Start: auxiliary viewports must not use the local player's thermal vision.
+    // Arcane-Start: Auxiliary viewports must not use the local player's thermal vision.
     protected override bool BeforeDraw(in OverlayDrawArgs args)
     {
         return args.Viewport.Eye == _eyes.CurrentEye && base.BeforeDraw(in args);

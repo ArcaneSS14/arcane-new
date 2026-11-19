@@ -16,7 +16,7 @@
       fractalType: FBm
       octaves: 2
       lacunarity: 2
-  # Arcane-Start: add pale forest within the existing Lavaland noise bands
+  # Arcane-Start: Add pale forest within the existing Lavaland noise bands
   - !type:BiomeMetaLayer
     template: PaleForest
     threshold: -0.33

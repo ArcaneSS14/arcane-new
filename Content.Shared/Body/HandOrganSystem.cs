@@ -21,7 +21,7 @@ public sealed partial class HandOrganSystem : EntitySystem
         GiveStartingItem(ent, args.Target); // Trauma
     }
 
-    // Arcane-Start: restore existing anatomy without granting the organ's starting item again.
+    // Arcane-Start: Restore existing anatomy without granting the organ's starting item again.
     public void RestoreBodyHands(EntityUid body)
     {
         foreach (var organ in _body.EnumerateOrgans<HandOrganComponent>(body))
