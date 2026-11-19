@@ -83,7 +83,7 @@ public sealed partial class VentCrawlerTubeSystem : EntitySystem
 
     private void TryEnter(EntityUid uid, EntityUid user, VentCrawlerComponent crawler)
     {
-        if (HasComp<ZombieComponent>(user)) // Arcane: recheck when a cached verb is invoked.
+        if (HasComp<ZombieComponent>(user)) // Arcane: Recheck when a cached verb is invoked.
             return;
 
         if (TryComp<WeldableComponent>(uid, out var weldableComponent) && weldableComponent.IsWelded)
@@ -196,7 +196,7 @@ public sealed partial class VentCrawlerTubeSystem : EntitySystem
             return false;
 
         if (!TryComp<VentCrawlerComponent>(entity, out var ventCrawlerComponent) ||
-            HasComp<ZombieComponent>(entity)) // Arcane: a player may turn during the do-after.
+            HasComp<ZombieComponent>(entity)) // Arcane: A player may turn during the do-after.
             return false;
 
         var holder = Spawn(entry.HolderPrototypeId, Transform(uid).Coordinates);
