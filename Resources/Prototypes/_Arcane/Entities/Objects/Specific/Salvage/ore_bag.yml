@@ -1,0 +1,11 @@
+- type: entity
+  parent: OreBag
+  id: OreBagMagnetic
+  name: high-capacity ore bag
+  description: A high-capacity ore bag that magnetises nearby ores when switched on.
+  components:
+  - type: MagnetPickup
+    range: 1.5
+  - type: Storage
+    grid:
+    - 0,0,9,7

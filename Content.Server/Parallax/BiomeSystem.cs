@@ -96,6 +96,8 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         if (!obj.ByType.TryGetValue(typeof(BiomeTemplatePrototype), out var reloads))
             return;
 
+        ClearNoiseCache(); // Arcane
+
         var query = AllEntityQuery<BiomeComponent>();
 
         while (query.MoveNext(out var uid, out var biome))

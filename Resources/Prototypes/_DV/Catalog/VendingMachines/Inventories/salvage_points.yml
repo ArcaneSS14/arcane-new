@@ -118,3 +118,7 @@
     cost: 4000 #Mostly for flexing
   # TODO: luxury elite bar capsule for 10k
   # TODO: mining drone stuff
+  # Arcane-Start
+  - id: OreBagMagnetic
+    cost: 800
+  # Arcane-End
