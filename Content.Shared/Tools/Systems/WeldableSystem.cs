@@ -86,7 +86,7 @@ public sealed partial class WeldableSystem : EntitySystem
         if (!CanWeld(uid, args.Used.Value, args.User, component))
             return;
 
-        SetWeldedState(uid, !component.IsWelded, component);
+        SetWeldedState(uid, !component.IsWelded, component, args.User); // Arcane-Edit: component) > component, args.User)
 
         // Log success
         _adminLogger.Add(LogType.Action, LogImpact.Low, $"{ToPrettyString(args.User):user} {(!component.IsWelded ? "un" : "")}welded {ToPrettyString(uid):target}");
@@ -118,7 +118,7 @@ public sealed partial class WeldableSystem : EntitySystem
             _appearance.SetData(uid, WeldableVisuals.IsWelded, component.IsWelded);
     }
 
-    public void SetWeldedState(EntityUid uid, bool state, WeldableComponent? component = null)
+    public void SetWeldedState(EntityUid uid, bool state, WeldableComponent? component = null, EntityUid? user = null) // Arcane-Edit: component = null) > component = null, EntityUid? user = null)
     {
         if (!_query.Resolve(uid, ref component))
             return;
@@ -127,7 +127,7 @@ public sealed partial class WeldableSystem : EntitySystem
             return;
 
         component.IsWelded = state;
-        var ev = new WeldableChangedEvent(component.IsWelded);
+        var ev = new WeldableChangedEvent(component.IsWelded, user); // Arcane-Edit: new WeldableChangedEvent(component.IsWelded) > new WeldableChangedEvent(component.IsWelded, user)
 
         RaiseLocalEvent(uid, ref ev);
         UpdateAppearance(uid, component);

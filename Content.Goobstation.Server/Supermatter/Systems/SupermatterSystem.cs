@@ -495,6 +495,8 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (sm.DelamTimer > sm.DelamTimerAccumulator)
             return;
 
+        RaiseLocalEvent(new Content.Goobstation.Shared.Supermatter.Events.SupermatterDelaminatedEvent(uid)); // Arcane
+
         switch (_delamType)
         {
             case DelamType.Explosion:
@@ -616,6 +618,10 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (isProjectile)
             Consume(ent, target);
 
+        // Arcane-Start
+        var consumed = new SupermatterEntityConsumedEvent(ent.Owner);
+        RaiseLocalEvent(target, ref consumed);
+        // Arcane-End
         QueueDel(target);
     }
 
@@ -702,3 +708,8 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
 
     #endregion
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct SupermatterEntityConsumedEvent(EntityUid Supermatter);
+// Arcane-End

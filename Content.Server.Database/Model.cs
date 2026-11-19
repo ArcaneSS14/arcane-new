@@ -70,6 +70,10 @@ namespace Content.Server.Database
         public DbSet<PollVote> PollVotes { get; set; } = default!;
         // </Trauma>
         public DbSet<PollSeen> PollSeen { get; set; } = default!; // Arcane
+        // Arcane-Start
+        public DbSet<AchievementProgress> AchievementProgress { get; set; } = default!;
+        public DbSet<AchievementProgressBatch> AchievementProgressBatches { get; set; } = default!;
+        // Arcane-End
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -424,6 +428,7 @@ namespace Content.Server.Database
             ModelBan.OnModelCreating(modelBuilder);
             ModelPollSeen.OnModelCreating(modelBuilder); // Arcane
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
+            ModelAchievements.OnModelCreating(modelBuilder); // Arcane
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)

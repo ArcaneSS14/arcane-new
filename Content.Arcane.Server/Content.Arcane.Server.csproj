@@ -13,6 +13,7 @@
 		<ProjectReference Include="../Content.Arcane.Shared/Content.Arcane.Shared.csproj" />
 		<ProjectReference Include="../Content.Server/Content.Server.csproj" />
 		<ProjectReference Include="../Content.Goobstation.Server/Content.Goobstation.Server.csproj" />
+		<ProjectReference Include="../Content.Lavaland.Shared/Content.Lavaland.Shared.csproj" />
 	</ItemGroup>
 
 	<Import Project="../RobustToolbox/Imports/Server.props" />
