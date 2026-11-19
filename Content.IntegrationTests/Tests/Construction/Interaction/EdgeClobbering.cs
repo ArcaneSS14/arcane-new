@@ -31,6 +31,7 @@ public sealed class EdgeClobbering : InteractionTest
   - type: Construction
     graph: ExampleGraph
     node: A
+    deconstructionTarget: A # Arcane
 
     ";
 
