@@ -60,7 +60,7 @@ public sealed partial class SharedEntityEffectsSystem : EntitySystem, IEntityEff
                 if (!group.Contains(args.Method))
                     continue;
 
-                ApplyEffects(entity, val.Effects, scale);
+                ApplyReactiveEffects(entity, val.Effects, scale); // Arcane-Edit: ApplyEffects > ApplyReactiveEffects
             }
         }
 
@@ -72,10 +72,25 @@ public sealed partial class SharedEntityEffectsSystem : EntitySystem, IEntityEff
                     continue;
 
                 if (entry.Reagents == null || entry.Reagents.Contains(args.Reagent.ID))
-                    ApplyEffects(entity, entry.Effects, scale);
+                    ApplyReactiveEffects(entity, entry.Effects, scale); // Arcane-Edit: ApplyEffects > ApplyReactiveEffects
             }
         }
     }
+
+    // Arcane-Start
+    private void ApplyReactiveEffects(Entity<ReactiveComponent> ent, EntityEffect[] effects, float scale)
+    {
+        if (ent.Comp.RaiseEffectsApplyingEvent)
+        {
+            var applying = new ReactiveEffectsApplyingEvent(effects, scale);
+            RaiseLocalEvent(ent.Owner, ref applying);
+            if (applying.Handled)
+                return;
+        }
+
+        ApplyEffects(ent, effects, scale);
+    }
+    // Arcane-End
 
     private void OnMapInit(Entity<EntityEffectOnMapInitComponent> entity, ref MapInitEvent args)
     {

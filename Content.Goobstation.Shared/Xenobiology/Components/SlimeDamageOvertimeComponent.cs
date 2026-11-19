@@ -2,6 +2,11 @@
 
 using Content.Shared.Damage;
 
+// Arcane-Start
+using Content.Shared.Chemistry.Reagent;
+using Content.Shared.FixedPoint;
+// Arcane-End
+
 namespace Content.Goobstation.Shared.Xenobiology.Components;
 
 /// <summary>
@@ -12,6 +17,17 @@ public sealed partial class SlimeDamageOvertimeComponent : Component
 {
     [DataField]
     public EntityUid? SourceEntityUid;
+
+    // Arcane-Start
+    [DataField]
+    public FixedPoint2 SuctionUnits = 2.5;
+
+    [DataField]
+    public ProtoId<ReagentPrototype> ToxinReagent = "XenobioSlimeToxin";
+
+    [DataField]
+    public FixedPoint2 ToxinUnits = 0.15;
+    // Arcane-End
 
     [DataField]
     public DamageSpecifier Damage = new()

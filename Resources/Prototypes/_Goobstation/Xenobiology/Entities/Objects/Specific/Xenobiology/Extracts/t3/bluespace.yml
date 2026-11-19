@@ -25,9 +25,11 @@
       effects:
       - !type:NestedEffect
         proto: XenobioExtractReaction
-      - !type:SpawnEntity
-        entity: MaterialBSCrystal1
-        number: 5
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: BSCrystal
+        amount: 5
+      # Arcane-Edit-End
     - reagents: [ Blood ]
       methods: [ Touch, Injection ]
       effects:

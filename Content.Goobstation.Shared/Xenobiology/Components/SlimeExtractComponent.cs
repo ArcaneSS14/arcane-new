@@ -4,14 +4,16 @@ using Content.Shared.EntityEffects;
 
 namespace Content.Goobstation.Shared.Xenobiology.Components;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: Replicate Used
 public sealed partial class SlimeExtractComponent : Component
 {
     /// <summary>
     ///     Was this extract already used?
     ///     Ideally this should come as a replacement to ReactiveComponent checks in the not so far future.
     /// </summary>
-    [DataField] public bool Used = false;
+    [DataField, AutoNetworkedField] public bool Used = false; // Arcane-Edit
+
+    [DataField] public TimeSpan ReactionDelay = TimeSpan.FromSeconds(5); // Arcane
 
     /// <summary>
     ///     Minor effect that should happen when a luminescent slimeperson presses the funny action button.
