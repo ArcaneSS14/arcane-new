@@ -1,6 +1,5 @@
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Content.Arcane.Shared.Paint;
 using Content.Server.Administration;
@@ -15,13 +14,9 @@ namespace Content.Arcane.Server.Paint;
 [AdminCommand(AdminFlags.Fun)]
 public sealed partial class PaintLoadUrlCommand : LocalizedEntityCommands
 {
-    private const int MaxDownloadBytes = 8 * 1024 * 1024;
-    private static readonly TimeSpan DownloadTimeout = TimeSpan.FromSeconds(15);
-
     [Dependency] private IAdminManager _admin = default!;
     private bool _busy;
 
-    [Dependency] private IHttpClientHolder _http = default!;
     [Dependency] private PaintSurfaceSystem _paint = default!;
     [Dependency] private PaintLogSystem _paintLog = default!;
 
@@ -53,7 +48,7 @@ public sealed partial class PaintLoadUrlCommand : LocalizedEntityCommands
         }
 
         if (!Uri.TryCreate(args[1], UriKind.Absolute, out var uri)
-            || !IsAllowedUri(uri))
+            || !PaintImageDownloader.IsAllowedUri(uri))
         {
             shell.WriteError(Loc.GetString("cmd-paintloadurl-bad-url"));
             return;
@@ -69,10 +64,10 @@ public sealed partial class PaintLoadUrlCommand : LocalizedEntityCommands
         _busy = true;
         try
         {
-            var data = await Download(uri);
+            var data = await PaintImageDownloader.Download(uri);
             image = await Task.Run(() => PaintImageImporter.Import(data, size, background));
         }
-        catch (Exception e) when (e is HttpRequestException or TaskCanceledException or InvalidDataException)
+        catch (Exception e) when (e is HttpRequestException or OperationCanceledException or InvalidDataException or IOException)
         {
             shell.WriteError(Loc.GetString("cmd-paintloadurl-download-failed", ("error", e.GetType().Name)));
             return;
@@ -103,35 +98,6 @@ public sealed partial class PaintLoadUrlCommand : LocalizedEntityCommands
         _paintLog.LogImageLoaded(target.Value, shell.Player, uri.GetLeftPart(UriPartial.Authority), image);
         shell.WriteLine(Loc.GetString("cmd-paintloadurl-success",
             ("target", EntityManager.ToPrettyString(target.Value))));
-    }
-
-    private static bool IsAllowedUri(Uri uri) =>
-        (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && string.IsNullOrEmpty(uri.UserInfo);
-
-    private async Task<byte[]> Download(Uri uri)
-    {
-        using var cancel = new CancellationTokenSource(DownloadTimeout);
-        using var response = await _http.Client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancel.Token);
-        response.EnsureSuccessStatusCode();
-        if (response.RequestMessage?.RequestUri is not { } finalUri || !IsAllowedUri(finalUri))
-            throw new InvalidDataException("Invalid redirect destination.");
-
-        if (response.Content.Headers.ContentLength > MaxDownloadBytes)
-            throw new InvalidDataException(Loc.GetString("cmd-paintloadurl-too-large"));
-
-        await using var stream = await response.Content.ReadAsStreamAsync(cancel.Token);
-        using var memory = new MemoryStream();
-        var buffer = new byte[81920];
-        int read;
-        while ((read = await stream.ReadAsync(buffer, cancel.Token)) > 0)
-        {
-            if (memory.Length + read > MaxDownloadBytes)
-                throw new InvalidDataException(Loc.GetString("cmd-paintloadurl-too-large"));
-
-            memory.Write(buffer, 0, read);
-        }
-
-        return memory.ToArray();
     }
 
     public override CompletionResult GetCompletion(IConsoleShell shell, string[] args)
