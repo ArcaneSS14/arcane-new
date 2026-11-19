@@ -1,0 +1,24 @@
+- type: prize
+  id: ClawLose
+  weight: 0.8
+  winSound: !type:SoundPathSpecifier
+    path: /Audio/Machines/buzz-two.ogg
+  winMessage: clawmachine-fail-generic
+  announceType: Popup
+
+- type: prize
+  id: ClawGame
+  weight: 0.5
+  winSound: !type:SoundPathSpecifier
+    path: /Audio/Effects/Arcade/win.ogg
+  prizeTable: !type:NestedSelector
+    tableId: AllPlushiesTable
+
+- type: prize
+  id: ClawGameEvil
+  weight: 0.6
+  winSound: !type:SoundPathSpecifier
+    path: /Audio/Effects/Arcade/win.ogg
+  prizeTable: !type:NestedSelector
+    tableId: AllPlushiesTable
+  winMessage: clawmachine-win-evil

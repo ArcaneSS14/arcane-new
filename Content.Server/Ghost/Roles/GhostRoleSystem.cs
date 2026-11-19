@@ -318,6 +318,11 @@ public sealed partial class GhostRoleSystem : EntitySystem
 
     public void RegisterGhostRole(Entity<GhostRoleComponent> role)
     {
+        // Arcane-Start: Mind removal must not revive a role after its only shutdown callback.
+        if (role.Comp.LifeStage > ComponentLifeStage.Running || TerminatingOrDeleted(role.Owner))
+            return;
+        // Arcane-End
+
         if (_ghostRoles.ContainsValue(role))
             return;
 
@@ -856,8 +861,6 @@ public sealed partial class GhostRoleSystem : EntitySystem
             return;
         }
 
-        ghostRole.Taken = true;
-
         var mind = EnsureComp<MindContainerComponent>(uid);
 
         if (mind.HasMind && !component.IgnoreMindCheck) // Goobstation edit
@@ -866,6 +869,7 @@ public sealed partial class GhostRoleSystem : EntitySystem
             return;
         }
 
+        ghostRole.Taken = true; // Arcane - reserve the role only after checking for an existing mind.
         if (ghostRole.MakeSentient)
             _mindSystem.MakeSentient(uid, ghostRole.AllowMovement, ghostRole.AllowSpeech);
 

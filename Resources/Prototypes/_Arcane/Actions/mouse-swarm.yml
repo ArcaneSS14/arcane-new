@@ -1,0 +1,18 @@
+- type: entity
+  parent: BaseAction
+  id: ActionMouseSwarm
+  components:
+  - type: Sprite
+    sprite: Mobs/Animals/mouse.rsi
+    state: mouse-0
+  - type: Action
+    useDelay: 2
+  - type: TargetAction
+    range: 1.5
+    interactOnMiss: false
+  - type: EntityTargetAction
+    event: !type:MouseSwarmActionEvent
+    canTargetSelf: false
+    whitelist:
+      components:
+      - MouseSwarm

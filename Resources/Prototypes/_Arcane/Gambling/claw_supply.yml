@@ -1,0 +1,28 @@
+- type: entity
+  parent: BaseFlatpack
+  id: ClawMachineFlatPack
+  name: claw machine flat pack
+  description: A flatpack used for constructing a claw machine
+  components:
+  - type: Flatpack
+    entity: ClawMachine
+
+- type: entity
+  id: CrateClawMachine
+  parent: CrateGenericSteel
+  name: claw machine crate
+  description: A crate with a claw machine inside, plushies included with every purchase!
+  components:
+  - type: StorageFill
+    contents:
+    - id: ClawMachineFlatPack
+
+- type: cargoProduct
+  id: ClawMachineCargo
+  icon:
+    sprite: _Arcane/Structures/Machines/slotmachines/claw_machine.rsi
+    state: clawmachine
+  product: CrateClawMachine
+  cost: 1000
+  category: cargoproduct-category-name-service
+  group: market

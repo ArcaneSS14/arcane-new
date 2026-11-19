@@ -1,0 +1,5 @@
+# Goob service bot assets
+
+The `fillbot.rsi` and `plantbot.rsi` directories are unchanged copies from `Resources/Textures/_EinsteinEngines/Mobs/Silicon/Bots/` in [Goob-Station/Goob-Station revision cc1d2c911f5cb6c90b36e0899ce918010bd41262](https://github.com/Goob-Station/Goob-Station/tree/cc1d2c911f5cb6c90b36e0899ce918010bd41262/Resources/Textures/_EinsteinEngines/Mobs/Silicon/Bots). Both original metadata files credit Timfa and license the artwork under CC-BY-SA-3.0. PNG pixels, dimensions, frame counts, animation timings and attribution are preserved.
+
+The bots were ported from EinsteinEngines by [Goob #2839](https://github.com/Goob-Station/Goob-Station/pull/2839), credited to Rouden and Timfa2112. [Goob #3325](https://github.com/Goob-Station/Goob-Station/pull/3325), by Timfa, adjusted the Fillbot fixtures. Runtime behavior is adapted to Arcane's current hands, device links, material storage, plant trays and NPC navigation; these implementation adaptations do not change the imported artwork's license or author credit.

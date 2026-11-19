@@ -4,4 +4,6 @@
   - Adjectives
   - Verbs
   - CodeWords # Trauma
+  - ArcaneTraitorJobs # Arcane
   amount: 4
+  pickDatasetFirst: true # Arcane

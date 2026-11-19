@@ -26,8 +26,10 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.Preferences; // Arcane
-using Content.Arcane.Common.Sponsors; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Preferences;
+using Content.Arcane.Common.Sponsors;
+// Arcane-End
 
 namespace Content.Server.Preferences.Managers
 {
@@ -202,7 +204,8 @@ namespace Content.Server.Preferences.Managers
                 (
                     Color.FromHex(profile.EyeColor),
                     Color.FromHex(profile.SkinColor),
-                    markings
+                    markings, // Arcane-Edit: markings > markings,
+                    profile.EarsAboveHair // Arcane
                 ),
                 spawnPriority,
                 jobs,

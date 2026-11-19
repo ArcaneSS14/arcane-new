@@ -10,6 +10,8 @@ using Content.Shared.Resist;
 using Content.Shared.Storage;
 using Robust.Shared.Containers;
 
+using Content.Trauma.Common.Carrying; // Arcane
+
 namespace Content.Server.Resist;
 
 public sealed partial class EscapeInventorySystem : EntitySystem
@@ -19,6 +21,7 @@ public sealed partial class EscapeInventorySystem : EntitySystem
     [Dependency] private SharedContainerSystem _containerSystem = default!;
     [Dependency] private ActionBlockerSystem _actionBlockerSystem = default!;
     [Dependency] private SharedHandsSystem _handsSystem = default!;
+    [Dependency] private CommonCarryingSystem _carrying = default!; // Arcane
 
     public override void Initialize()
     {
@@ -33,6 +36,14 @@ public sealed partial class EscapeInventorySystem : EntitySystem
     {
         if (!args.HasDirectionalMovement)
             return;
+
+        // Arcane: A carried mob is parented to its carrier, outside an inventory container.
+        if (_carrying.GetCarrier(uid) is { } carrier)
+        {
+            if (_actionBlockerSystem.CanInteract(uid, carrier))
+                AttemptEscape(uid, carrier, component, breakOnMove: false);
+            return;
+        }
 
         if (!_containerSystem.TryGetContainingContainer((uid, null, null), out var container) || !_actionBlockerSystem.CanInteract(uid, container.Owner))
             return;
@@ -56,7 +67,8 @@ public sealed partial class EscapeInventorySystem : EntitySystem
             AttemptEscape(uid, container.Owner, component);
     }
 
-    private void AttemptEscape(EntityUid user, EntityUid container, CanEscapeInventoryComponent component, float multiplier = 1f)
+    private void AttemptEscape(EntityUid user, EntityUid container, CanEscapeInventoryComponent component, float multiplier = 1f,
+        bool breakOnMove = true) // Arcane
     {
         if (component.IsEscaping)
             return;
@@ -64,7 +76,7 @@ public sealed partial class EscapeInventorySystem : EntitySystem
         var doAfterEventArgs = new DoAfterArgs(EntityManager, user, component.BaseResistTime * multiplier, new EscapeInventoryEvent(), user, target: container)
         {
             CancelDuplicate = false, // Trauma
-            BreakOnMove = true,
+            BreakOnMove = breakOnMove,
             BreakOnDamage = true,
             NeedHand = false
         };
@@ -87,6 +99,11 @@ public sealed partial class EscapeInventorySystem : EntitySystem
         component.DoAfter = null;
 
         if (args.Handled || args.Cancelled)
+            return;
+
+        // Arcane: The carrying system handles completion and cleans up both ends.
+        if (_carrying.GetCarrier(uid) != null || args.Args.Target is not { } original ||
+            !_containerSystem.TryGetContainingContainer((uid, null, null), out var current) || current.Owner != original)
             return;
 
         _containerSystem.AttachParentToContainerOrGrid((uid, Transform(uid)));

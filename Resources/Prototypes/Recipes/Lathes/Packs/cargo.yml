@@ -28,6 +28,8 @@
   - DrillHead # Trauma
   # Arcane-Start
   - MarkerBeacon
+  - PickaxeDiamond
+  - MiningDrillSuper
   # Arcane-End
 
 - type: latheRecipePack

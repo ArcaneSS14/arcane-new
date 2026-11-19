@@ -8,6 +8,8 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Containers;
 using Content.Trauma.Common.VentCrawling;
 
+using Content.Shared.Zombies; // Arcane
+
 namespace Content.Trauma.Server.VentCrawling;
 
 public sealed partial class VentCrawableSystem : EntitySystem
@@ -21,7 +23,22 @@ public sealed partial class VentCrawableSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<VentCrawlerHolderComponent, VentCrawlingExitEvent>(OnVentCrawlingExitEvent);
+        SubscribeLocalEvent<BeingVentCrawlerComponent, EntityZombifiedEvent>(OnZombified); // Arcane
     }
+
+    // Arcane-Start
+    private void OnZombified(Entity<BeingVentCrawlerComponent> ent, ref EntityZombifiedEvent args)
+    {
+        var holder = ent.Comp.Holder;
+        if (!TryComp<VentCrawlerHolderComponent>(holder, out var crawler) ||
+            crawler.IsExitingVentCraws ||
+            !crawler.Container.Contains(ent))
+            return;
+
+        var exit = new VentCrawlingExitEvent { holderTransform = Transform(holder) };
+        RaiseLocalEvent(holder, ref exit);
+    }
+    // Arcane-End
 
     /// <summary>
     /// Exits the vent craws for the specified VentCrawlerHolderComponent, removing it and any contained entities from the craws.

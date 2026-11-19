@@ -1,0 +1,27 @@
+- type: entity
+  parent: BaseMentalAction
+  id: ActionStationAiCameraLights
+  name: Toggle nearby camera lights
+  description: Illuminate cameras near your viewpoint while they have power.
+  components:
+  - type: Action
+    useDelay: 0.5
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: Interface/Actions/actions_ai.rsi
+    state: ai_core
+  - type: InstantAction
+    event: !type:ToggleStationAiCameraLightsEvent
+
+- type: entity
+  parent: BaseMentalAction
+  id: ActionStationAiRetire
+  components:
+  - type: Action
+    useDelay: 1
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: Interface/Actions/actions_ai.rsi
+    state: ai_core
+  - type: InstantAction
+    event: !type:StationAiRetireEvent

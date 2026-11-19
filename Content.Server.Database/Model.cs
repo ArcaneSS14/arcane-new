@@ -69,6 +69,11 @@ namespace Content.Server.Database
         public DbSet<PollOption> PollOptions { get; set; } = default!;
         public DbSet<PollVote> PollVotes { get; set; } = default!;
         // </Trauma>
+        public DbSet<PollSeen> PollSeen { get; set; } = default!; // Arcane
+        // Arcane-Start
+        public DbSet<AchievementProgress> AchievementProgress { get; set; } = default!;
+        public DbSet<AchievementProgressBatch> AchievementProgressBatches { get; set; } = default!;
+        // Arcane-End
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -421,7 +426,9 @@ namespace Content.Server.Database
             // </Trauma>
 
             ModelBan.OnModelCreating(modelBuilder);
+            ModelPollSeen.OnModelCreating(modelBuilder); // Arcane
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
+            ModelAchievements.OnModelCreating(modelBuilder); // Arcane
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)
@@ -470,6 +477,7 @@ namespace Content.Server.Database
         // Arcane-Start: Persist character scale settings
         public float Scale { get; set; } = 1f;
         // Arcane-End
+        public bool EarsAboveHair { get; set; } // Arcane
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

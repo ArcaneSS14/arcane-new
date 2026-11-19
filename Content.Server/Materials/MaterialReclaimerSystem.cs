@@ -25,6 +25,11 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 
+// Arcane-Start
+using Content.Shared.Suicide;
+using Content.Shared.Damage.Components;
+// Arcane-End
+
 namespace Content.Server.Materials;
 
 /// <inheritdoc/>
@@ -45,6 +50,7 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
     [Dependency] private IAdminLogManager _adminLogger = default!;
     [Dependency] private SharedDestructibleSystem _destructible = default!;
     [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private SharedSuicideSystem _suicide = default!; // Arcane
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -88,7 +94,11 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
             Filter.PvsExcept(victim, entityManager: EntityManager),
             true);
 
-        _gibbing.Gib(victim);
+        DamageRecyclerVictim(entity, victim, entity.Comp); // Arcane-Edit: gibbing > ordinary recycler limb damage
+        // Arcane-Start
+        if (TryComp<DamageableComponent>(victim, out var damageable))
+            _suicide.ApplyLethalDamage((victim, damageable), "Blunt");
+        // Arcane-End
         _appearance.SetData(entity.Owner, RecyclerVisuals.Bloody, true);
         args.Handled = true;
     }
@@ -185,9 +195,10 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         {
             var didBloody = false;
 
-            // Trauma - add targetPart and canMiss
-            if (component.DamageOnEmag is not null && _damage.TryChangeDamage(item, component.DamageOnEmag, false, targetPart: _body.GetRandomExtremity(item), canMiss: false)) // It shouldn't ignore resistance
+            // Arcane-Edit-Start
+            if (DamageRecyclerVictim(uid, item, component))
                 didBloody = true;
+            // Arcane-Edit-End
 
             /* Trauma - just delimb instead of gibbing, the mob itself doesnt have destructible thresholds
             if (_destructible.CanDestroy(item) && component.GibOnEmag)
@@ -213,6 +224,23 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
 
         _destructible.DestroyEntity(item);
     }
+
+    // Arcane-Start
+    private bool DamageRecyclerVictim(EntityUid reclaimer, EntityUid victim, MaterialReclaimerComponent component)
+    {
+        if (component.DamageOnEmag is not { } damage
+            || !_damage.TryChangeDamage(victim, damage, out var result, false,
+                targetPart: _body.GetRandomExtremity(victim), canMiss: false))
+            return false;
+
+        if (result.GetTotal() > 0)
+        {
+            var damaged = new RecyclerDamagedEvent(reclaimer);
+            RaiseLocalEvent(victim, ref damaged);
+        }
+        return true;
+    }
+    // Arcane-End
 
     private void SpawnMaterialsFromComposition(EntityUid reclaimer,
         EntityUid item,
@@ -298,3 +326,8 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
         }
     }
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct RecyclerDamagedEvent(EntityUid Recycler);
+// Arcane-End

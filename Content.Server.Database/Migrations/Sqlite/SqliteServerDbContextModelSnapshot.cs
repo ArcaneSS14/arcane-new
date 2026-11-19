@@ -17,6 +17,81 @@ namespace Content.Server.Database.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.6");
 
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.AchievementProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("achievement_progress_id");
+
+                    b.Property<string>("AchievementId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("achievement_id");
+
+                    b.Property<Guid>("PlayerUserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("player_user_id");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("progress");
+
+                    b.Property<DateTime?>("UnlockedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("unlocked_at");
+
+                    b.HasKey("Id")
+                        .HasName("PK_achievement_progress");
+
+                    b.HasIndex("AchievementId")
+                        .HasDatabaseName("IX_achievement_progress_achievement_id");
+
+                    b.HasIndex("PlayerUserId", "AchievementId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_achievement_progress_player_user_id_achievement_id");
+
+                    b.ToTable("achievement_progress", (string)null);
+                });
+            // Arcane-End
+
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.AchievementProgressBatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("achievement_progress_batch_id");
+
+                    b.Property<string>("AchievementId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("achievement_id");
+
+                    b.Property<int>("Delta")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("delta");
+
+                    b.Property<bool>("MarksUnlocked")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("marks_unlocked");
+
+                    b.Property<Guid>("PlayerUserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("player_user_id");
+
+                    b.HasKey("Id")
+                        .HasName("PK_achievement_progress_batch");
+
+                    b.HasIndex("PlayerUserId");
+
+                    b.ToTable("achievement_progress_batch", (string)null);
+                });
+            // Arcane-End
+
             modelBuilder.Entity("Content.Server.Database.Admin", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1097,6 +1172,40 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("poll_options", (string)null);
                 });
 
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("poll_seen_id");
+
+                    b.Property<Guid>("PlayerUserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("player_user_id");
+
+                    b.Property<int>("PollId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("poll_id");
+
+                    b.Property<DateTime>("SeenAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("seen_at");
+
+                    b.HasKey("Id")
+                        .HasName("PK_poll_seen");
+
+                    b.HasIndex("PlayerUserId")
+                        .HasDatabaseName("IX_poll_seen_player_user_id");
+
+                    b.HasIndex("PollId", "PlayerUserId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_poll_seen_poll_id_player_user_id");
+
+                    b.ToTable("poll_seen", (string)null);
+                });
+            // Arcane-End
+
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {
                     b.Property<int>("Id")
@@ -1198,6 +1307,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("char_name");
+
+                    // Arcane-Start: Ear layering preference
+                    b.Property<bool>("EarsAboveHair")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("ears_above_hair");
+                    // Arcane-End
 
                     b.Property<string>("EyeColor")
                         .IsRequired()
@@ -2326,6 +2441,30 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Navigation("Poll");
                 });
 
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.PollSeen", b =>
+                {
+                    b.HasOne("Content.Server.Database.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerUserId")
+                        .HasPrincipalKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_poll_seen_player_player_id");
+
+                    b.HasOne("Content.Server.Database.Poll", "Poll")
+                        .WithMany()
+                        .HasForeignKey("PollId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_poll_seen_polls_poll_id");
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Poll");
+                });
+            // Arcane-End
+
             modelBuilder.Entity("Content.Server.Database.PollVote", b =>
                 {
                     b.HasOne("Content.Server.Database.Player", "Player")
@@ -2753,6 +2892,36 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                     b.Navigation("Rounds");
                 });
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.AchievementProgress", b =>
+                {
+                    b.HasOne("Content.Server.Database.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerUserId")
+                        .HasPrincipalKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_achievement_progress_player_player_id");
+
+                    b.Navigation("Player");
+                });
+            // Arcane-End
+
+            // Arcane-Start
+            modelBuilder.Entity("Content.Server.Database.AchievementProgressBatch", b =>
+                {
+                    b.HasOne("Content.Server.Database.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerUserId")
+                        .HasPrincipalKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_achievement_progress_batch_player_player_id");
+
+                    b.Navigation("Player");
+                });
+            // Arcane-End
+
 #pragma warning restore 612, 618
         }
     }

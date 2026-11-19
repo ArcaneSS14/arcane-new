@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Contraband HUD states from Goob Station PR #5266 by Androidonator, source https://github.com/Goob-Station/Goob-Station/pull/5266",
+  "size": { "x": 8, "y": 8 },
+  "states": [
+    { "name": "hud_contraband" },
+    { "name": "hud_none" }
+  ]
+}

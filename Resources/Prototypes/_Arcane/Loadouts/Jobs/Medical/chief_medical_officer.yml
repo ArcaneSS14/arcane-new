@@ -1,0 +1,7 @@
+- type: loadout
+  id: ChiefMedicalOfficerLabCoatWinter
+  equipment:
+    outerClothing: ClothingOuterLabWinterCMO
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MasterCMO

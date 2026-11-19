@@ -17,11 +17,44 @@ public sealed partial class PollManager
     public event Action<int>? OnPollClosed;
     public event Action<PollData, List<PollVoteData>>? OnPollDetailsReceived;
     public event Action<bool, string?>? OnVoteResponse;
+    // Arcane-Start
+    public event Action<IReadOnlyList<int>>? SeenPollIdsReceived;
+    public event Action<int>? PollDisplayed;
+    public event Action<int, int>? SeenCountChanged;
+    // Arcane-End
 
     public IReadOnlyDictionary<int, PollData> ActivePolls => _activePolls;
 
+    internal void NotifyPollDisplayed(int id) => PollDisplayed?.Invoke(id); // Arcane
+
+    // Arcane-Start
+    public void UpdateSeenCount(int id, int count)
+    {
+        if (!_activePolls.TryGetValue(id, out var poll) || count <= poll.SeenCount)
+            return;
+
+        // A delayed view count must not replace newer votes or reopen a closed poll.
+        poll.SeenCount = count;
+        SeenCountChanged?.Invoke(id, count);
+    }
+
+    private PollData PreserveSeenCount(PollData poll)
+    {
+        if (_activePolls.TryGetValue(poll.PollId, out var previous) && previous.StartTime == poll.StartTime)
+            poll.SeenCount = Math.Max(poll.SeenCount, previous.SeenCount);
+        return poll;
+    }
+
+    private void OnDisconnect(object? sender, NetDisconnectedArgs args)
+    {
+        _activePolls.Clear();
+        _playerVotes.Clear();
+    }
+    // Arcane-End
+
     public void Initialize()
     {
+        _net.Disconnect += OnDisconnect; // Arcane
         _net.RegisterNetMessage<MsgRequestActivePolls>();
         _net.RegisterNetMessage<MsgActivePollsResponse>(HandleActivePollsResponse);
         _net.RegisterNetMessage<MsgRequestPollDetails>();
@@ -100,19 +133,24 @@ public sealed partial class PollManager
 
     private void HandleActivePollsResponse(MsgActivePollsResponse msg)
     {
+        // Arcane-Start
+        foreach (var poll in msg.Polls)
+            PreserveSeenCount(poll);
+        // Arcane-End
         _activePolls.Clear();
 
         foreach (var poll in msg.Polls)
             _activePolls[poll.PollId] = poll;
 
         OnActivePollsUpdated?.Invoke(msg.Polls);
+        SeenPollIdsReceived?.Invoke(msg.SeenPollIds); // Arcane
     }
 
     private void HandlePollDetailsResponse(MsgPollDetailsResponse msg)
     {
         if (msg.Poll != null)
         {
-            _activePolls[msg.Poll.PollId] = msg.Poll;
+            _activePolls[msg.Poll.PollId] = PreserveSeenCount(msg.Poll); // Arcane-Edit
             _playerVotes[msg.Poll.PollId] = msg.PlayerVotes;
 
             OnPollDetailsReceived?.Invoke(msg.Poll, msg.PlayerVotes);
@@ -122,14 +160,14 @@ public sealed partial class PollManager
     private void HandlePollVoteResponse(MsgPollVoteResponse msg)
     {
         if (msg.Success && msg.UpdatedPoll != null)
-            _activePolls[msg.UpdatedPoll.PollId] = msg.UpdatedPoll;
+            _activePolls[msg.UpdatedPoll.PollId] = PreserveSeenCount(msg.UpdatedPoll); // Arcane-Edit
 
         OnVoteResponse?.Invoke(msg.Success, msg.ErrorMessage);
     }
 
     private void HandlePollUpdated(MsgPollUpdated msg)
     {
-        _activePolls[msg.Poll.PollId] = msg.Poll;
+        _activePolls[msg.Poll.PollId] = PreserveSeenCount(msg.Poll); // Arcane-Edit
         OnPollUpdated?.Invoke(msg.Poll);
     }
 

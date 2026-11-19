@@ -118,6 +118,11 @@
   - type: Weldable
     fuel: 5
     time: 3
+  # Arcane-Start
+  - type: WeldingEffectPath
+    startOffset: -0.5,0
+    endOffset: 0.5,0
+  # Arcane-End
   - type: Firelock
   - type: Appearance
   - type: WiresVisuals
@@ -213,6 +218,11 @@
   parent: Firelock
   name: firelock
   components:
+    # Arcane-Start
+    - type: WeldingEffectPath
+      startOffset: 0,-0.2
+      endOffset: 0,-0.5
+    # Arcane-End
     - type: Sprite
       sprite: Structures/Doors/Misc/edge_door_hazard.rsi
       snapCardinals: false

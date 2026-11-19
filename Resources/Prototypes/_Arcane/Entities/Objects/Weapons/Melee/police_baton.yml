@@ -1,0 +1,37 @@
+- type: entity
+  parent: [BaseItem, BaseSecurityContraband, ClothingBeltBase]
+  id: PoliceBaton
+  name: police baton
+  description: A wooden baton carried by security officers.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Weapons/Melee/baton.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Arcane/Objects/Weapons/Melee/baton.rsi
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,2
+  - type: MeleeWeapon
+    canWideSwing: false
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 10
+    angle: 0
+    animation: WeaponArcThrust
+  - type: UseDelay
+    delays:
+      hit:
+        length: 2
+  - type: UseDelayBlockMelee
+    delays:
+    - hit
+  - type: KnockdownOnHit
+    duration: 0.15
+  - type: StaminaDamageOnHit
+    damage: 35
+    sound: /Audio/_Goobstation/Weapons/Baton/woodhit.ogg
+  - type: StaticPrice
+    price: 65

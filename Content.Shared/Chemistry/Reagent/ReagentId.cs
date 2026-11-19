@@ -60,8 +60,23 @@ public partial struct ReagentId : IEquatable<ReagentId>
         if (other.Data == null)
             return false;
 
-        if (Data.Except(other.Data).Any() || other.Data.Except(Data).Any() || Data.Count != other.Data.Count)
+        // Arcane-Edit-Start
+        if (ReferenceEquals(Data, other.Data))
+            return true;
+
+        if (Data.Count != other.Data.Count)
             return false;
+
+        if (Data.Count == 0)
+            return true;
+
+        if (Data.Count == 1)
+            return other.Data.Contains(Data[0]) && Data.Contains(other.Data[0]);
+
+        // Keep the existing set comparison for larger metadata lists; repeated Contains becomes quadratic.
+        if (Data.Except(other.Data).Any() || other.Data.Except(Data).Any())
+            return false;
+        // Arcane-Edit-End
 
         return true;
     }
@@ -84,21 +99,25 @@ public partial struct ReagentId : IEquatable<ReagentId>
 
     public override int GetHashCode()
     {
-        // We need to make sure we take the hash code of Data by value in order
-        // for hashed key lookups to work properly
-        var hash = 17;
-        unchecked
+        // Arcane-Start: Equal metadata has the same count and members, in any order.
+        if (Data is not { Count: > 0 } data)
+            return HashCode.Combine(Prototype, Data?.Count ?? -1);
+
+        if (data.Count == 1)
+            return HashCode.Combine(Prototype, data[0].GetHashCode());
+
+        // Extrema are independent of both order and duplicate multiplicities.
+        var lowest = int.MaxValue;
+        var highest = int.MinValue;
+        foreach (var entry in data)
         {
-            if (Data?.Count != 0)
-            {
-                foreach (var data in Data ?? [])
-                {
-                    hash = hash * 23 + data.GetHashCode();
-                }
-            }
+            var hash = entry.GetHashCode();
+            lowest = Math.Min(lowest, hash);
+            highest = Math.Max(highest, hash);
         }
 
-        return HashCode.Combine(Prototype, hash);
+        return HashCode.Combine(Prototype, data.Count, lowest, highest);
+        // Arcane-End
     }
 
     public string ToString(FixedPoint2 quantity)

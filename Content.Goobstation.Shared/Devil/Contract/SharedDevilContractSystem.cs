@@ -94,6 +94,13 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
 
     private void OnSignAttempt(Entity<DevilContractComponent> contract, ref SignAttemptEvent args)
     {
+        // Arcane-Start
+        if (contract.Comp.IsContractFullySigned)
+        {
+            args.Cancelled = true;
+            return;
+        }
+        // Arcane-End
         // Make sure that weight is set properly!
         UpdateContractWeight(contract);
 
@@ -144,6 +151,10 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
 
     private void OnSigned(Entity<DevilContractComponent> contract, ref PaperSignedEvent args)
     {
+        // Arcane-Start
+        if (contract.Comp.IsContractFullySigned)
+            return;
+        // Arcane-End
         // Determine signing phase
         if (!contract.Comp.IsVictimSigned)
             HandleVictimSign(contract, args.User);
@@ -212,6 +223,11 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
         }
 
         _popup.PopupEntity(Loc.GetString("contract-victim-signed"), contract, signer);
+
+        // Arcane-Start
+        var signedEvent = new DevilContractSignedEvent(contract);
+        RaiseLocalEvent(signer, ref signedEvent);
+        // Arcane-End
     }
 
     private void HandleDevilSign(Entity<DevilContractComponent> contract, EntityUid signer)
@@ -308,3 +324,8 @@ public abstract partial class SharedDevilContractSystem : EntitySystem
     }
 
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct DevilContractSignedEvent(EntityUid Contract);
+// Arcane-End

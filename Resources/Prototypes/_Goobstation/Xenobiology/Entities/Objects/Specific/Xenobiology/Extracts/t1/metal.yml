@@ -20,9 +20,11 @@
         proto: XenobioExtractReaction
       - !type:SpawnEntity
         entity: SheetGlass15
-      - !type:SpawnEntity
-        entity: SheetRGlass1
-        number: 5 # pick up that can freeman
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: ReinforcedGlass
+        amount: 5
+      # Arcane-Edit-End
     - reagents: [ Plasma ]
       methods: [ Touch, Injection ]
       effects:
@@ -30,9 +32,11 @@
         proto: XenobioExtractReaction
       - !type:SpawnEntity
         entity: SheetSteel15
-      - !type:SpawnEntity
-        entity: SheetPlasteel1
-        number: 5 # pick up that can freeman
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: Plasteel
+        amount: 5
+      # Arcane-Edit-End
     - reagents: [ Blood ]
       methods: [ Touch, Injection ]
       effects:

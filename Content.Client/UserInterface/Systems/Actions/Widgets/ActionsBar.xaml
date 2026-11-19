@@ -22,12 +22,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     HorizontalExpand="False"
 >
     <BoxContainer Orientation="Vertical">
+        <!-- Arcane-Edit-Start -->
         <controls:ActionButtonContainer
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             MaxSize="64 9999"
-            Name="ActionsContainer"
-            Access="Public"
+            Name="DefaultActionsContainer"
+            Access="Private"
             Rows="1"/>
+        <!-- Arcane-Edit-End -->
     </BoxContainer>
 </widgets:ActionsBar>

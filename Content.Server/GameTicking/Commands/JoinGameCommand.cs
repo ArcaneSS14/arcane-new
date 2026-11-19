@@ -8,6 +8,8 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.Prototypes;
 
+using Robust.Shared.Enums; // Arcane
+
 namespace Content.Server.GameTicking.Commands
 {
     [AnyCommand]
@@ -47,6 +49,10 @@ namespace Content.Server.GameTicking.Commands
                 return;
             }
 
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             var ticker = _entManager.System<ServerGameTicker>();
             var stationJobs = _entManager.System<ServerStationJobsSystem>();
 

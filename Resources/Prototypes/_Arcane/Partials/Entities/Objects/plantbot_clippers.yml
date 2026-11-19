@@ -1,0 +1,6 @@
+- type: entity
+  id: HydroponicsToolClippers
+  components:
+  - type: Tag
+    tags:
+    - HydroponicsToolClippers

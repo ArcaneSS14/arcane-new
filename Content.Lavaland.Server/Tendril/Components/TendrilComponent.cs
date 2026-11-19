@@ -47,4 +47,9 @@ public sealed partial class TendrilComponent : Component
 
     [DataField]
     public float UpdateFrequency = 5;
+
+    // Arcane-Start
+    [DataField]
+    public float ActivationRange = 20;
+    // Arcane-End
 }

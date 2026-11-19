@@ -2,3 +2,8 @@
   id: Flap
   kind: source
   path: "/Textures/_Arcane/Shaders/flap.swsl"
+
+- type: shader
+  id: ArcaneJiggle
+  kind: source
+  path: "/Textures/_Arcane/Shaders/jiggle.swsl"

@@ -23,6 +23,11 @@ public partial struct StampDisplayInfo
 
     [DataField("stampedColor")]
     public Color StampedColor;
+
+    // Arcane-Start
+    [DataField]
+    public string? StampLargeIcon;
+    // Arcane-End
 };
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: networked for the chameleon stamp
@@ -45,6 +50,12 @@ public sealed partial class StampComponent : Component
     /// </summary>
     [DataField("stampedColor"), AutoNetworkedField] // Arcane-Edit
     public Color StampedColor = Color.FromHex("#BB3232"); // StyleNano.DangerousRedFore
+
+    // Arcane-Start
+    /// <summary>Optional texture-relative graphical imprint, snapshotted onto stamped paper.</summary>
+    [DataField, AutoNetworkedField]
+    public string? StampLargeIcon;
+    // Arcane-End
 
     /// <summary>
     /// The sound when stamp stamped

@@ -238,6 +238,7 @@ public abstract partial class SharedDoorSystem : EntitySystem
     /// </summary>
     private void OnAfterPry(EntityUid uid, DoorComponent door, ref PriedEvent args)
     {
+        var previousState = door.State; // Arcane
         if (door.State == DoorState.Closed)
         {
             _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} open");
@@ -248,6 +249,15 @@ public abstract partial class SharedDoorSystem : EntitySystem
             _adminLog.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(args.User)} pried {ToPrettyString(uid)} closed");
             StartClosing(uid, door, args.User, true, CompOrNull<AirlockComponent>(uid)?.ForceCloseSound); // Arcane-Edit: Use the configured pry sound.
         }
+
+        // Arcane-Start
+        if ((previousState == DoorState.Closed && door.State == DoorState.Opening)
+            || (previousState == DoorState.Open && door.State == DoorState.Closing))
+        {
+            var pried = new DoorPryTransitionEvent(args.User);
+            RaiseLocalEvent(uid, ref pried);
+        }
+        // Arcane-End
     }
 
     private void OnWeldAttempt(EntityUid uid, DoorComponent component, WeldableAttemptEvent args)
@@ -902,3 +912,8 @@ public abstract partial class SharedDoorSystem : EntitySystem
     }
     #endregion
 }
+
+// Arcane-Start
+[ByRefEvent]
+public readonly record struct DoorPryTransitionEvent(EntityUid User);
+// Arcane-End

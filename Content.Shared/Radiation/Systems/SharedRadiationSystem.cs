@@ -18,4 +18,12 @@ public abstract partial class SharedRadiationSystem : EntitySystem
 
         entity.Comp.Intensity = intensity;
     }
+
+    // Arcane-Start
+    public void SetTransientIntensity(Entity<RadiationSourceComponent?> entity, float? intensity)
+    {
+        if (SourceQuery.Resolve(entity, ref entity.Comp, false))
+            entity.Comp.TransientIntensity = intensity;
+    }
+    // Arcane-End
 }

@@ -24,6 +24,12 @@
     sprite: Objects/Tools/Cowtools/haycutters.rsi
   - type: BotanySampleTaker
 
+  # Arcane-Start
+  - type: Tag
+    tags:
+    - Wirecutter
+  # Arcane-End
+
 - type: entity
   name: moodriver
   parent: BaseItem
@@ -47,6 +53,12 @@
       collection: Screwdriver
     speedModifier: 0.05
 
+  # Arcane-Start
+  - type: Tag
+    tags:
+    - Screwdriver
+  # Arcane-End
+
 - type: entity
   name: wronch
   parent: BaseItem
@@ -69,6 +81,12 @@
     useSound:
       path: /Audio/Items/ratchet.ogg
     speedModifier: 0.05
+
+  # Arcane-Start
+  - type: Tag
+    tags:
+    - Wrench
+  # Arcane-End
 
 - type: entity
   name: cowbar
@@ -98,6 +116,12 @@
     delay: 10
   - type: Prying
     speedModifier: 0.05
+
+  # Arcane-Start
+  - type: Tag
+    tags:
+    - Crowbar
+  # Arcane-End
 
 - type: entity
   name: mooltitool

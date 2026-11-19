@@ -24,7 +24,12 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.GameTicking; // Arcane
+using Content.Arcane.Common.GameTicking;
+
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Robust.Shared.Enums;
+// Arcane-End
 
 namespace Content.Server.GameTicking
 {
@@ -136,6 +141,10 @@ namespace Content.Server.GameTicking
             bool lateJoin = true,
             bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             var character = GetPlayerProfile(player);
 
             var jobBans = _banManager.GetJobBans(player.UserId);
@@ -161,6 +170,10 @@ namespace Content.Server.GameTicking
             bool lateJoin = true,
             bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             // Can't spawn players with a dummy ticker!
             if (DummyTicker)
                 return;
@@ -374,6 +387,10 @@ namespace Content.Server.GameTicking
 
         public void Respawn(ICommonSession player)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             Mind.WipeMind(player);
             Admin.Add(LogType.Respawn, LogImpact.Medium, $"Player {player} was respawned.");
 
@@ -386,6 +403,10 @@ namespace Content.Server.GameTicking
         /// <inheritdoc/>
         public override void MakeJoinGame(ICommonSession player, EntityUid station, string? jobId = null, bool silent = false)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (!_playerGameStatuses.ContainsKey(player.UserId))
                 return;
 
@@ -400,6 +421,10 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void JoinAsObserver(ICommonSession player)
         {
+            // Arcane-Start
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             // Can't spawn players with a dummy ticker!
             if (DummyTicker)
                 return;
@@ -414,6 +439,10 @@ namespace Content.Server.GameTicking
         /// </summary>
         public void SpawnObserver(ICommonSession player)
         {
+            // Arcane-Start: Direct admin callers must also wait for queue admission.
+            if (player.Status != SessionStatus.InGame)
+                return;
+            // Arcane-End
             if (DummyTicker)
                 return;
 
@@ -447,6 +476,7 @@ namespace Content.Server.GameTicking
             {
                 if (point.SpawnType != SpawnPointType.Observer
                    || transform.MapUid == null
+                   || HasComp<ThunderdomeMapComponent>(transform.MapUid) // Arcane
                    || TerminatingOrDeleted(transform.MapUid.Value))
                 {
                     continue;
@@ -462,7 +492,7 @@ namespace Content.Server.GameTicking
                 while (query.MoveNext(out var uid, out _))
                 {
                     // Band-aid fix cause we aren't queueing observer re-attach.
-                    if (!TerminatingOrDeleted(uid))
+                    if (!TerminatingOrDeleted(uid) && !HasComp<ThunderdomeMapComponent>(Transform(uid).MapUid)) // Arcane-Edit: Keep station observers outside the arena
                         _possiblePositions.Add(new EntityCoordinates(uid, Vector2.Zero));
                 }
             }
@@ -487,7 +517,7 @@ namespace Content.Server.GameTicking
             if (Map.MapExists(DefaultMap))
             {
                 var mapUid = Map.GetMapOrInvalid(DefaultMap);
-                if (!TerminatingOrDeleted(mapUid))
+                if (!TerminatingOrDeleted(mapUid) && !HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: Exclude the arena
                     return new EntityCoordinates(mapUid, Vector2.Zero);
             }
 
@@ -497,7 +527,7 @@ namespace Content.Server.GameTicking
                 var mapUid = Map.GetMapOrInvalid(map);
                 var meta = MetaData(mapUid);
 
-                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta))
+                if (meta.EntityPaused || TerminatingOrDeleted(mapUid, meta) || HasComp<ThunderdomeMapComponent>(mapUid)) // Arcane-Edit: Exclude the arena
                     continue;
 
                 return new EntityCoordinates(mapUid, Vector2.Zero);

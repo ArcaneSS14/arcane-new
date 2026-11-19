@@ -1,0 +1,229 @@
+using Content.Arcane.Server.CloneProjector;
+using Content.Arcane.Shared.CloneProjector;
+using Content.IntegrationTests.Tests.Interaction;
+using Content.Server.Ghost.Roles.Components;
+using Content.Shared.Access.Components;
+using Content.Shared.Access.Systems;
+using Content.Shared.Actions;
+using Content.Shared.Actions.Components;
+using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.CombatMode.Pacification;
+using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Emp;
+using Content.Shared.Inventory;
+using Content.Shared.Mech.Components;
+using Content.Shared.Mech.EntitySystems;
+using Content.Shared.Mind;
+using Content.Shared.Mobs.Systems;
+using Content.Shared.PDA;
+using Content.Shared.Roles;
+using Content.Shared.Storage;
+using Robust.Shared.Containers;
+using Robust.Shared.Map;
+
+namespace Content.IntegrationTests.Tests._Arcane;
+
+public sealed class P20GeminiRuntimeTest : InteractionTest
+{
+    [Test]
+    public async Task GeminiRecallsAndReleasesOriginalItemsAndMindOnRemoval()
+    {
+        EntityUid clone = default;
+        EntityUid copy = default;
+        EntityUid original = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            var host = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
+            var backpack = SEntMan.SpawnAttachedTo("ClothingBackpack", position);
+            var idCard = SEntMan.SpawnAttachedTo("CaptainIDCard", position); // Arcane-Edit
+            var heldIdCard = SEntMan.SpawnAttachedTo("PassengerIDCard", position);
+            original = SEntMan.SpawnAttachedTo("Crowbar", position);
+            var inventory = SEntMan.System<InventorySystem>();
+            var containers = SEntMan.System<SharedContainerSystem>();
+            var actions = SEntMan.System<SharedActionsSystem>();
+            var minds = SEntMan.System<SharedMindSystem>();
+            var mechs = SEntMan.System<SharedMechSystem>();
+            var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
+
+            Assert.That(inventory.TryEquip(host, backpack, "back", silent: true, force: true), Is.True);
+            Assert.That(inventory.TryEquip(host, idCard, "id", silent: true, force: true), Is.True);
+            var idCards = SEntMan.System<SharedIdCardSystem>();
+            Assert.That(idCards.TryChangeJobTitle(idCard, "Custom Gemini title"), Is.True);
+            // Arcane-Start
+            var originalAccess = SEntMan.GetComponent<AccessComponent>(idCard);
+            Assert.That(SEntMan.System<SharedAccessSystem>().TrySetTags(idCard, ["Engineering"], originalAccess), Is.True);
+            SEntMan.System<SharedAccessSystem>().SetAccessEnabled(idCard, false, originalAccess);
+            // Arcane-End
+            Assert.That(idCards.TryChangeJobTitle(heldIdCard, "Other job"), Is.True);
+            Assert.That(HandSys.TryPickup(host, heldIdCard), Is.True);
+            Assert.That(HandSys.GetActiveItem(host), Is.EqualTo(heldIdCard));
+            Assert.That(containers.Insert(original, SEntMan.GetComponent<StorageComponent>(backpack).Container), Is.True);
+            Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
+            Assert.That(data.ActionEntity, Is.Not.Null);
+            var action = data.ActionEntity!.Value;
+            var actionEntity = (action, SEntMan.GetComponent<ActionComponent>(action));
+            Assert.That(actions.PerformAction(host, actionEntity), Is.True);
+            Assert.That(data.CloneUid, Is.Not.Null);
+            clone = data.CloneUid!.Value;
+            Assert.That(inventory.TryGetSlotEntity(clone, "id", out var clonedId), Is.True);
+            Assert.That(clonedId, Is.Not.EqualTo(idCard));
+            Assert.That(SEntMan.GetComponent<IdCardComponent>(clonedId!.Value).LocalizedJobTitle, Is.EqualTo("Custom Gemini title"));
+            // Arcane-Start
+            Assert.That(SEntMan.HasComponent<AccessComponent>(clonedId.Value), Is.False,
+                "A direct projected card must not regain the prototype's Captain access.");
+            Assert.That(originalAccess.Enabled, Is.False);
+            Assert.That(originalAccess.Tags, Has.Count.EqualTo(1));
+            Assert.That(originalAccess.Tags.Contains("Engineering"), Is.True);
+            // Arcane-End
+            Assert.That(inventory.TryGetSlotEntity(clone, "back", out var equipped), Is.True);
+            copy = equipped!.Value;
+            Assert.That(copy, Is.Not.EqualTo(backpack));
+            var copyStorage = SEntMan.GetComponent<StorageComponent>(copy).Container;
+            Assert.That(copyStorage.Count, Is.Zero);
+            Assert.That(SEntMan.HasComponent<GhostRoleComponent>(clone), Is.True);
+            Assert.That(SEntMan.System<MobThresholdSystem>().TryGetDeadThreshold(clone, out var threshold), Is.True);
+            Assert.That((float) threshold!.Value, Is.EqualTo(42f));
+
+            var mind = minds.CreateMind(null, "Gemini runtime fixture");
+            var roles = SEntMan.System<SharedRoleSystem>();
+            minds.TransferTo(mind.Owner, clone, mind: mind.Comp);
+            roles.MindAddRole(mind.Owner, "MindRoleGemini", mind: mind.Comp);
+            Assert.That(containers.Insert(original, copyStorage), Is.True);
+
+            // Arcane-Start
+            var target = position.Offset(new Vector2(4, 0));
+            Assert.That(SEntMan.HasComponent<PacifiedComponent>(clone), Is.True);
+            // Arcane-End
+
+            var mech = SEntMan.SpawnAttachedTo("MechRipleyBattery", position);
+            var gun = SEntMan.SpawnAttachedTo("WeaponMechDebugLaser", position);
+            mechs.InsertEquipment(mech, gun);
+            mechs.CycleEquipment(mech);
+            Assert.That(SGun.TryGetGun(mech, out var equippedGun), Is.True);
+            Assert.That(equippedGun.Owner, Is.EqualTo(gun));
+
+            // The server shoots as the mech when handling the pilot's request.
+            Assert.That(mechs.TryInsert(mech, clone), Is.True);
+            var nextFire = equippedGun.Comp.NextFire;
+            Assert.That(SGun.AttemptShoot(mech, equippedGun, target), Is.False);
+            Assert.That(equippedGun.Comp.NextFire, Is.EqualTo(nextFire));
+
+            Assert.That(actions.PerformAction(host, actionEntity), Is.True);
+            Assert.That(SEntMan.HasComponent<MechPilotComponent>(clone), Is.False);
+            Assert.That(SEntMan.GetComponent<MechComponent>(mech).PilotSlot.ContainedEntity, Is.Null);
+            Assert.That(SGun.AttemptShoot(mech, equippedGun, target), Is.True);
+            Assert.That(SEntMan.HasComponent<GhostRoleComponent>(clone), Is.False);
+            Assert.That(mind.Comp.OwnedEntity, Is.EqualTo(clone));
+            Assert.That(copyStorage.Count, Is.Zero);
+            Assert.That(containers.TryGetContainingContainer(original, out _), Is.False);
+
+            Assert.That(actions.PerformAction(host, actionEntity), Is.True);
+            Assert.That(SEntMan.HasComponent<GhostRoleComponent>(clone), Is.False);
+            var emp = new EmpPulseEvent(0f, false, false, TimeSpan.FromSeconds(10), null);
+            SEntMan.EventBus.RaiseLocalEvent(clone, ref emp);
+            Assert.That(emp.Affected && emp.Disabled, Is.True);
+            Assert.That(SEntMan.GetComponent<GeminiProjectionComponent>(clone).Deployed, Is.False);
+            Assert.That(actions.PerformAction(host, actionEntity), Is.False);
+
+            // Arcane-Start
+            Assert.That(SEntMan.System<Content.Server.Ghost.GhostSystem>().OnGhostAttempt(mind.Owner, canReturnGlobal: true), Is.True,
+                "A recalled projection must retain the voluntary ghost path during its cooldown.");
+            Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.False);
+            // Arcane-End
+            Assert.That(inventory.TryUnequip(host, "belt", silent: true, force: true), Is.True);
+            Assert.That(data.CloneUid, Is.Null);
+            Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.False);
+            Assert.That(SEntMan.EntityExists(original), Is.True);
+        });
+
+        await RunTicksSync(1);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(clone), Is.False);
+            Assert.That(SEntMan.EntityExists(copy), Is.False);
+            Assert.That(SEntMan.EntityExists(original), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task GeminiProjectsATitleInAPdaWithoutCopyingContentsAndRecallsOnDeath()
+    {
+        EntityUid originalCard = default;
+        EntityUid projectedCard = default;
+        await Server.WaitAssertion(() =>
+        {
+            var position = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            var host = SEntMan.SpawnAttachedTo("MobHuman", position);
+            var projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", position);
+            var tank = SEntMan.SpawnAttachedTo("ClothingBackpackFirefighterTank", position);
+            var pda = SEntMan.SpawnAttachedTo("PassengerPDA", position);
+            var inventory = SEntMan.System<InventorySystem>();
+            var idCards = SEntMan.System<SharedIdCardSystem>();
+            var actions = SEntMan.System<SharedActionsSystem>();
+            var solutions = SEntMan.System<SharedSolutionContainerSystem>();
+            var damage = SEntMan.System<DamageableSystem>();
+            var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
+            Assert.That(inventory.TryEquip(host, tank, "back", silent: true, force: true), Is.True);
+            Assert.That(inventory.TryEquip(host, pda, "id", silent: true, force: true), Is.True);
+            Assert.That(idCards.TryGetIdCard(pda, out var idCard), Is.True);
+            originalCard = idCard;
+            Assert.That(idCards.TryChangeJobTitle(idCard, "Custom PDA title", idCard.Comp), Is.True);
+
+            Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
+            var action = data.ActionEntity!.Value;
+            var actionEntity = (action, SEntMan.GetComponent<ActionComponent>(action));
+            Assert.That(actions.PerformAction(host, actionEntity), Is.True);
+            var clone = data.CloneUid!.Value;
+            Assert.That(inventory.TryGetSlotEntity(clone, "id", out var copiedPda), Is.True);
+            Assert.That(idCards.TryGetIdCard(copiedPda!.Value, out var copiedCard), Is.True);
+            projectedCard = copiedCard;
+            Assert.That(projectedCard, Is.Not.EqualTo(originalCard));
+            Assert.That(copiedCard.Comp.LocalizedJobTitle, Is.EqualTo("Custom PDA title"));
+            Assert.That(SEntMan.HasComponent<AccessComponent>(projectedCard), Is.False);
+            var copiedPdaData = SEntMan.GetComponent<PdaComponent>(copiedPda.Value);
+            Assert.That(copiedPdaData.PenSlot.HasItem, Is.False);
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryEject(copiedPda.Value, copiedPdaData.IdSlot, clone, out _), Is.False);
+
+            Assert.That(inventory.TryGetSlotEntity(clone, "back", out var copiedTank), Is.True);
+            Assert.That(solutions.TryGetSolution(tank, "tank", out _, out var original), Is.True);
+            Assert.That(solutions.TryGetSolution(copiedTank!.Value, "tank", out _, out var copy), Is.True);
+            Assert.That(original!.Volume > 0, Is.True);
+            Assert.That(copy!.Volume == 0, Is.True);
+
+            var minds = SEntMan.System<SharedMindSystem>();
+            var roles = SEntMan.System<SharedRoleSystem>();
+            var mind = minds.CreateMind(null, "Occupied Gemini removal fixture");
+            minds.TransferTo(mind.Owner, clone, mind: mind.Comp);
+            roles.MindAddRole(mind.Owner, "MindRoleGemini", mind: mind.Comp);
+
+            var hit = new DamageSpecifier { DamageDict = { ["Blunt"] = 50 } };
+            damage.TryChangeDamage(clone, hit, ignoreResistances: true, canMiss: false);
+            Assert.That(SEntMan.GetComponent<GeminiProjectionComponent>(clone).Deployed, Is.False);
+            Assert.That(SEntMan.HasComponent<GhostRoleComponent>(clone), Is.False);
+            Assert.That(damage.GetTotalDamage(host) > 0, Is.True);
+            var integrity = damage.GetTotalDamage(clone);
+            damage.TryChangeDamage(clone, hit, ignoreResistances: true, canMiss: false);
+            Assert.That(damage.GetTotalDamage(clone), Is.EqualTo(integrity));
+            Assert.That(actions.PerformAction(host, actionEntity), Is.False);
+            Assert.That(copiedPdaData.ContainedId, Is.EqualTo(projectedCard));
+            Assert.That(SEntMan.GetComponent<PdaComponent>(pda).ContainedId, Is.EqualTo(originalCard));
+            Assert.That(mind.Comp.OwnedEntity, Is.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.True);
+            Assert.That(inventory.TryUnequip(host, "belt", silent: true, force: true), Is.True);
+            Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.False);
+        });
+        await RunTicksSync(1);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(projectedCard), Is.False);
+            Assert.That(SEntMan.EntityExists(originalCard), Is.True);
+        });
+    }
+}

@@ -31,6 +31,11 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using System.Linq;
 
+// Arcane-Start
+using Content.Shared.Atmos.Components;
+using Content.Shared.Atmos.EntitySystems;
+// Arcane-End
+
 namespace Content.Shared.RCD.Systems;
 
 public sealed partial class RCDSystem : EntitySystem
@@ -51,6 +56,7 @@ public sealed partial class RCDSystem : EntitySystem
     [Dependency] private SharedMapSystem _mapSystem = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private TagSystem _tags = default!;
+    [Dependency] private SharedAtmosPipeLayersSystem _pipeLayers = default!; // Arcane
     [Dependency] private AccessReaderSystem _accessReader = default!; // Goobstation - RCD respects door access
 
     private readonly int _instantConstructionDelay = 0;
@@ -516,7 +522,7 @@ public sealed partial class RCDSystem : EntitySystem
             // This is to prevent spamming objects on the same tile (e.g. lights)
             if (prototype.Prototype != null && MetaData(ent).EntityPrototype?.ID == prototype.Prototype)
             {
-                var isIdentical = true;
+                var isIdentical = Transform(ent).Anchored; // Arcane-Edit: true > only anchored duplicates block construction
 
                 if (prototype.AllowMultiDirection)
                 {
@@ -524,6 +530,11 @@ public sealed partial class RCDSystem : EntitySystem
                     if (entDirection != direction)
                         isIdentical = false;
                 }
+
+                // Arcane-Start: RPD builds on the primary pipe layer.
+                if (TryComp<AtmosPipeLayersComponent>(ent, out var pipeLayers) && !_pipeLayers.IsPrimaryLayer((ent, pipeLayers)))
+                    isIdentical = false;
+                // Arcane-End
 
                 if (isIdentical)
                 {

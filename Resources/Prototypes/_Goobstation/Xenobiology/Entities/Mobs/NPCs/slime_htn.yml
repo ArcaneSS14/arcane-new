@@ -9,6 +9,11 @@
   - tasks:
     - !type:HTNCompoundTask
       task: LatchCompound
+  # Arcane-Start
+  - tasks:
+    - !type:HTNCompoundTask
+      task: XenoSlimeEatCorpseCompound
+  # Arcane-End
   - tasks:
     - !type:HTNCompoundTask
       task: IdleCompound

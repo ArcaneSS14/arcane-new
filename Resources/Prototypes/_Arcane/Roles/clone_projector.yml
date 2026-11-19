@@ -1,0 +1,12 @@
+- type: entity
+  parent: MindRoleGhostRoleFamiliar
+  id: MindRoleGemini
+  name: Gemini Role
+  components:
+  - type: MindRole
+    antag: true
+    antagPrototype: TempGeminiGhostRoleAntag
+    exclusiveAntag: true
+    roleType: Familiar
+    subtype: role-subtype-gemini
+  - type: GeminiRole

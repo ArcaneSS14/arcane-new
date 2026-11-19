@@ -17,17 +17,21 @@
       effects:
       - !type:NestedEffect
         proto: XenobioExtractReaction
-      - !type:SpawnEntity
-        entity: SheetPlastic10
-        number: 3
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: Plastic
+        amount: 30
+      # Arcane-Edit-End
     - reagents: [ Plasma ]
       methods: [ Touch, Injection ]
       effects:
       - !type:NestedEffect
         proto: XenobioExtractReaction
-      - !type:SpawnEntity
-        entity: SheetPlasma1
-        number: 3
+      # Arcane-Edit-Start
+      - !type:SpawnExtractStack
+        stack: Plasma
+        amount: 3
+      # Arcane-Edit-End
     - reagents: [ Blood ]
       methods: [ Touch, Injection ]
       effects:

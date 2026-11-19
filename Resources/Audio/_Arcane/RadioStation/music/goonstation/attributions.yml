@@ -1,0 +1,50 @@
+# Source attribution and license checked separately from the remaining imports.
+- files: ["black_wing_interface.ogg", "cloudskymanguy.ogg", "oh_no_evil_star.ogg", "planets.ogg", "riverdancer.ogg", "waystations.ogg"]
+  license: "Custom"
+  copyright: "Chronoquest (MechaDaleEarnhardt). Re-encoded by Goob Station. License: CC-BY-NC-SA-3.0-US (https://creativecommons.org/licenses/by-nc-sa/3.0/us/)"
+  source: "https://github.com/goonstation/goonstation/pull/2664"
+
+- files: ["monkey_riot.ogg"]
+  license: "Custom"
+  copyright: "WyrdDoe. Re-encoded by Goob Station. License: CC-BY-NC-SA-3.0-US (https://creativecommons.org/licenses/by-nc-sa/3.0/us/)"
+  source: "https://github.com/goonstation/goonstation/pull/22611"
+
+- files: ["second_reality.ogg"]
+  license: "Custom"
+  copyright: "Purple Motion / Future Crew (1993). Original music data released under The Unlicense; converted to OGG by Goob Station from Goon Station's S3M. License: https://github.com/mtuomi/SecondReality/blob/071a82eddb7a7390dbaa491a8a473e0e923a55c2/UNLICENSE"
+  source: "https://github.com/mtuomi/SecondReality/blob/071a82eddb7a7390dbaa491a8a473e0e923a55c2/MAIN/MUSIC1.S3M"
+
+- files: ["april.ogg", "august.ogg", "december.ogg", "february.ogg", "january.ogg", "july.ogg", "june.ogg", "november.ogg", "october.ogg", "september.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Blz (Wojciech Golczewski). Re-encoded by Goob Station."
+  source: "https://ftp.modland.com/pub/modules/Fasttracker%202/Blz/"
+
+- files: ["march.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Blz (Wojciech Golczewski); sample 0e credited to keyg. Re-encoded by Goob Station."
+  source: "https://ftp.modland.com/pub/modules/Fasttracker%202/Blz/march.xm"
+
+- files: ["may.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Blz (Wojciech Golczewski); sample 04 credited to protas. Original module: Springmellow p.II, renamed May in Goon Station. Re-encoded by Goob Station."
+  source: "https://ftp.modland.com/pub/modules/Fasttracker%202/Blz/springmellow%20p.ii.xm"
+
+- files: ["adventure_1.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "4mat. Original module: back again. Re-encoded by Goob Station."
+  source: "https://modarchive.org/index.php?query=76215&request=view_by_moduleid"
+
+- files: ["adventure_2.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Maverick. Original module: Urban Rebel. Re-encoded by Goob Station."
+  source: "https://ftp.modland.com/pub/modules/Screamtracker%203/Maverick/urban%20rebel.s3m"
+
+- files: ["adventure_6.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "Jester/Sanity (original), Faction (remix), Faction & Toolshed (embedded copyright). Original module: Anarchy-main. Re-encoded by Goob Station."
+  source: "https://modarchive.org/index.php?query=33540&request=view_by_moduleid"
+
+- files: ["Banjo1.ogg"]
+  license: "CC-BY-NC-3.0"
+  copyright: "tum tum philips (artist tag in the original OGG). Re-encoded by Goob Station."
+  source: "https://github.com/goonstation/goonstation/blob/dc8068884676b78d2f6ab553dad672b04fb210d2/sound/radio_station/music/Banjo1.ogg"

@@ -59,6 +59,8 @@ public abstract partial class SharedVisualBodySystem
         if (!Resolve(source, ref source.Comp) || !Resolve(target, ref target.Comp))
             return;
 
+        CopyDirectionalAppearance(source.Owner, target.Owner); // Arcane
+
         var sourceOrgans = _container.EnsureContainer<Container>(source, BodyComponent.ContainerID);
 
         foreach (var sourceOrgan in sourceOrgans.ContainedEntities)
@@ -148,6 +150,8 @@ public abstract partial class SharedVisualBodySystem
     {
         if (!Resolve(ent, ref ent.Comp))
             return;
+
+        SetEarsAboveHair((ent.Owner, ent.Comp), appearance.EarsAboveHair); // Arcane
 
         ApplyProfile(ent,
             new()

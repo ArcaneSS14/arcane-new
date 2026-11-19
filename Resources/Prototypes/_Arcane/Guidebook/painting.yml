@@ -1,0 +1,5 @@
+- type: guideEntry
+  id: Painting
+  name: guide-entry-painting
+  text: "/ServerInfo/_Arcane/Guidebook/Service/Painting.xml"
+  filterEnabled: True

@@ -1,0 +1,26 @@
+- type: stationAiCustomization
+  id: StationAiHologramHorror
+  name: station-ai-hologram-horror
+  previewKey: Hologram
+  layerData:
+    Hologram:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_holograms.rsi
+      state: ai_horror
+
+- type: stationAiCustomization
+  id: StationAiHologramQueen
+  name: station-ai-hologram-queen
+  previewKey: Hologram
+  layerData:
+    Hologram:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_holograms.rsi
+      state: ai_queen
+
+- type: stationAiCustomization
+  id: StationAiHologramPerformer
+  name: station-ai-hologram-performer
+  previewKey: Hologram
+  layerData:
+    Hologram:
+      sprite: _Arcane/Mobs/Silicon/goob_ai_holograms.rsi
+      state: ai_performer

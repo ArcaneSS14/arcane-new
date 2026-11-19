@@ -7,6 +7,9 @@ namespace Content.Server.DeviceNetwork.Systems;
 
 public sealed partial class DeviceNetworkSystem
 {
+    public EntityUid? FindDevice(int netId, string address) // Arcane
+        => TryGetDevice(netId, address, out var device) ? device.Value.Owner : null;
+
     [PublicAPI]
     public override bool SendPacket<T>(
         Entity<DeviceNetworkComponent?> ent,

@@ -25,6 +25,7 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
     private uint _lastColorUpdate;
     // </Trauma>
     [Dependency] private IEntityManager _entity = default!;
+    [Dependency] private MarkingManager _markingManager = default!; // Arcane
 
     private readonly SpriteSystem _sprite;
 
@@ -74,6 +75,10 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
 
         _markingsModel.MarkingsReset += UpdateSelection;
         _markingsModel.MarkingsChanged += MarkingsChanged;
+        // Arcane-Start
+        _markingsModel.PreviewChanged += UpdateData;
+        UpdateData();
+        // Arcane-End
     }
 
     protected override void ExitedTree()
@@ -82,6 +87,7 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
 
         _markingsModel.MarkingsReset -= UpdateSelection;
         _markingsModel.MarkingsChanged -= MarkingsChanged;
+        _markingsModel.PreviewChanged -= UpdateData; // Arcane
     }
 
     private void MarkingsChanged(ProtoId<OrganCategoryPrototype> organ, HumanoidVisualLayers layer)
@@ -95,13 +101,19 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
     private void UpdateData()
     {
         // Trauma - changed _sprite.Frame0 to north direction selection so it looks better
-        MarkingTexture.Textures = _markingPrototype.Sprites.Select(layer => _sprite.RsiStateLike(layer).TextureFor(Direction.North)).ToList();
+        // Arcane-Edit-Start
+        var display = _markingPrototype;
+        if (_markingsModel.AnimatePreview && _markingManager.TryGetWaggingMarking(display.ID, out var animated))
+            display = _markingManager.MarkingsByLayer(_layer)[animated];
+        MarkingTexture.SetStates(display.Sprites.Select(layer => _sprite.RsiStateLike(layer)).ToList());
+        MarkingTexture.Animate = _markingsModel.AnimatePreview;
+        // Arcane-Edit-End
         SelectButton.Text = Loc.GetString($"marking-{_markingPrototype.ID}");
     }
 
     private void UpdateSelection()
     {
-        var selected = _markingsModel.IsMarkingSelected(_organ, _layer, _markingPrototype.ID);
+        var selected = GetSelectedMarking() is not null; // Arcane-Edit: _markingsModel.IsMarkingSelected(_organ, _layer, _markingPrototype.ID) > GetSelectedMarking() is not null
         SelectButton.Pressed = selected && _interactive;
         ColorsButton.Visible = selected && _interactive && _markingsModel.IsMarkingColorCustomizable(_organ, _layer, _markingPrototype.ID);
 
@@ -111,7 +123,7 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
             ColorsContainer.Visible = false;
         }
 
-        if (_markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) is { } marking &&
+        if (GetSelectedMarking() is { } marking && // Arcane-Edit: _markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) > GetSelectedMarking()
             _colorSliders is { } sliders)
         {
             for (var i = 0; i < _markingPrototype.Sprites.Count; i++)
@@ -129,9 +141,9 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
             return;
         }
 
-        if (_markingsModel.IsMarkingSelected(_organ, _layer, _markingPrototype.ID))
+        if (GetSelectedMarking() is { } selected) // Arcane-Edit: _markingsModel.IsMarkingSelected(_organ, _layer, _markingPrototype.ID) > GetSelectedMarking() is { } selected
         {
-            if (!_markingsModel.TryDeselectMarking(_organ, _layer, _markingPrototype.ID))
+            if (!_markingsModel.TryDeselectMarking(_organ, _layer, selected.MarkingId)) // Arcane-Edit: _markingPrototype.ID > selected.MarkingId
             {
                 SelectButton.Pressed = true;
             }
@@ -152,7 +164,7 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
         if (_colorSliders is not null)
             return;
 
-        if (_markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) is not { } marking)
+        if (GetSelectedMarking() is not { } marking) // Arcane-Edit: _markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) > GetSelectedMarking()
             return;
 
         _colorSliders = new();
@@ -194,10 +206,25 @@ public sealed partial class LayerMarkingItem : BoxContainer, ISearchableControl
 
                 _lastColorUpdate = now;
                 // </Trauma>
-                _markingsModel.TrySetMarkingColor(_organ, _layer, _markingPrototype.ID, colorIndex, selector.Color);
+                // Arcane-Edit-Start
+                if (GetSelectedMarking() is { } selected)
+                    _markingsModel.TrySetMarkingColor(_organ, _layer, selected.MarkingId, colorIndex, selector.Color);
+                // Arcane-Edit-End
             };
         }
     }
+
+    // Arcane-Start
+    private Marking? GetSelectedMarking()
+    {
+        if (_markingsModel.GetMarking(_organ, _layer, _markingPrototype.ID) is { } marking)
+            return marking;
+
+        return _markingManager.TryGetWaggingMarking(_markingPrototype.ID, out var animated)
+            ? _markingsModel.GetMarking(_organ, _layer, animated)
+            : null;
+    }
+    // Arcane-End
 
     public bool CheckMatchesSearch(string query)
     {

@@ -19,6 +19,7 @@
   delay: 0
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: PipeBend
@@ -30,6 +31,7 @@
   delay: 0
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: PipeTJunction
@@ -54,6 +56,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: VolumetricPump
@@ -66,6 +69,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: ManualValve
@@ -78,6 +82,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: SignalValve
@@ -90,6 +95,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: PressureValve
@@ -115,6 +121,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: VentScrubber
@@ -127,6 +134,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: VentGas
@@ -139,6 +147,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: DualPortVent
@@ -151,6 +160,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: VentPassive
@@ -163,6 +173,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: Radiator
@@ -175,6 +186,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: RadiatorBend
@@ -187,6 +199,7 @@
   collisionMask: Impassable
   rotation: User
   fx: EffectRCDConstruct0
+  allowMultiDirection: true # Arcane
 
 - type: rcd
   id: MixerGas

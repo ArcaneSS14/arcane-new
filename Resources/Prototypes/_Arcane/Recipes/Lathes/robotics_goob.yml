@@ -1,0 +1,22 @@
+- type: latheRecipe
+  id: AiRemoteBrain
+  result: AiRemoteBrain
+  completetime: 4
+  materials:
+    Steel: 300
+    Glass: 400
+    Gold: 400
+    Silver: 200
+
+# S.E.C. cyborg
+
+- type: latheRecipe
+  parent: BaseRoboticsRecipe
+  id: SecEndoskeleton
+  result: CyborgEndoskeletonSEC
+  completetime: 4
+  materials:
+    Steel: 8000
+    Gold: 1500
+    Silver: 1500
+    Uranium: 1000

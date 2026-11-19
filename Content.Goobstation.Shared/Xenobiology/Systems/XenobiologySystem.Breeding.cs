@@ -12,6 +12,7 @@ namespace Content.Goobstation.Shared.Xenobiology.Systems;
 public partial class XenobiologySystem
 {
     private List<Entity<SlimeComponent>> _splitting = new();
+    [Dependency] private EntityLookupSystem _breedingLookup = default!; // Arcane
 
     [SubscribeLocalEvent]
     private void OnPendingSlimeMapInit(Entity<PendingSlimeSpawnComponent> ent, ref MapInitEvent args)
@@ -22,7 +23,14 @@ public partial class XenobiologySystem
 
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
 
+        RandomizeNewSlime(slime, rand); // Arcane-Edit: Use the same breeding variation for livestock crates
+    }
+
+    // Arcane-Start
+    private void RandomizeNewSlime(Entity<SlimeComponent> slime, IRobustRandom rand)
+    {
         var s = slime.Comp;
+        // Arcane-End
         // every xenobio slime copy is personalized. feel free to tweak it as you like
         // the rest of the shit such as inheritance is handled by SpawnSlime
         s.MutationChance *= rand.NextFloat(.5f, 1.5f);
@@ -80,9 +88,10 @@ public partial class XenobiologySystem
     private void DoMitosis(Entity<SlimeComponent> ent)
     {
         var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent));
-        var offspringCount = rand.Next(1, ent.Comp.MaxOffspring + 1);
-        if (_net.IsServer) // no local entity for PlayPredicted and i dont trust this israelgpt slop anyway
-            _audio.PlayPvs(ent.Comp.MitosisSound, ent);
+        // Arcane-Edit-Start: Old Arcane #386/#533, one density lookup per attempted split.
+        var offspringCount = Math.Min(rand.Next(1, ent.Comp.MaxOffspring + 1), GetMitosisCapacity(ent));
+        var spawned = false;
+        // Arcane-Edit-End
 
         for (var i = 0; i < offspringCount; i++)
         {
@@ -93,6 +102,7 @@ public partial class XenobiologySystem
 
             if (SpawnSlime(ent, ent.Comp.DefaultSlimeProto, selectedBreed) is { } sl)
             {
+                spawned = true; // Arcane
                 // carries over generations. type shit.
                 sl.Comp.Tamer = ent.Comp.Tamer;
                 sl.Comp.MutationChance = ent.Comp.MutationChance;
@@ -102,9 +112,35 @@ public partial class XenobiologySystem
             }
         }
 
+        // Arcane-Start
+        if (!spawned)
+            return;
+
+        if (_net.IsServer)
+            _audio.PlayPvs(ent.Comp.MitosisSound, ent);
+        // Arcane-End
+
         _container.EmptyContainer(ent.Comp.Stomach);
         PredictedQueueDel(ent);
     }
+
+    // Arcane-Start
+    private int GetMitosisCapacity(Entity<SlimeComponent> ent)
+    {
+        var remaining = ent.Comp.MitosisDensityLimit;
+        var range = ent.Comp.MitosisDensityRange;
+        if (remaining <= 0 || range <= 0)
+            return int.MaxValue;
+
+        foreach (var (uid, _) in _breedingLookup.GetEntitiesInRange<SlimeComponent>(Transform(ent).Coordinates, range))
+        {
+            if (uid != ent.Owner && --remaining <= 0)
+                return 0;
+        }
+
+        return remaining;
+    }
+    // Arcane-End
 
     /// <summary>
     ///     Spawns a slime with a given mutation
@@ -122,12 +158,40 @@ public partial class XenobiologySystem
         if (!TryComp<SlimeComponent>(newEntityUid, out var newSlime))
             return null;
 
-        if (newSlime.ShouldHaveShader && newSlime.Shader != null)
-            _appearance.SetData(newEntityUid, XenoSlimeVisuals.Shader, newSlime.Shader);
-
-        _appearance.SetData(newEntityUid, XenoSlimeVisuals.Color, newSlime.SlimeColor);
-        _meta.SetEntityName(newEntityUid, newBreed.BreedName);
-
+        // Arcane-Start
+        ConfigureNewSlime((newEntityUid, newSlime), newBreed);
         return (newEntityUid, newSlime);
+    }
+
+    public bool TrySpawnSlimeInContainer(EntityUid owner, string container, EntProtoId prototype, ProtoId<BreedPrototype> breed)
+    {
+        if (!_net.IsServer
+            || !ProtoMan.TryIndex(breed, out var breedPrototype)
+            || !TrySpawnInContainer(prototype.Id, owner, container, out var uid, overrides: breedPrototype.Components))
+            return false;
+
+        if (!TryComp<SlimeComponent>(uid, out var component))
+        {
+            QueueDel(uid.Value);
+            return false;
+        }
+
+        var slime = (uid.Value, component);
+        ConfigureNewSlime(slime, breedPrototype);
+        RandomizeNewSlime(slime, SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(uid.Value)));
+        return true;
+    }
+
+    private void ConfigureNewSlime(Entity<SlimeComponent> slime, BreedPrototype breed)
+    {
+        var (uid, component) = slime;
+        // Arcane-End
+        // Arcane-Edit-Start
+        if (component.ShouldHaveShader && component.Shader != null)
+            _appearance.SetData(uid, XenoSlimeVisuals.Shader, component.Shader);
+
+        _appearance.SetData(uid, XenoSlimeVisuals.Color, component.SlimeColor);
+        _meta.SetEntityName(uid, breed.BreedName);
+        // Arcane-Edit-End
     }
 }

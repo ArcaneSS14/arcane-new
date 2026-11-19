@@ -1,0 +1,9 @@
+- type: entity
+  id: BaseMobBody
+  components:
+  - type: LimbGnawingTarget
+
+- type: entity
+  id: BaseSpeciesMob
+  components:
+  - type: LimbGnawingTarget

@@ -20,6 +20,11 @@ public sealed partial class LavalandRuinPoolPrototype : IPrototype
     [DataField]
     public int MaxDistance = 256; // TODO make this value higher after proper GPS UI is added
 
+    // Arcane-Start
+    [DataField]
+    public int MinDistance;
+    // Arcane-End
+
     /// <summary>
     /// List of all grid ruins and their count.
     /// Used for ruins that are loaded as proper grids.

@@ -7,12 +7,18 @@ using Content.Shared.Ghost.Systems;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Robust.Shared.Configuration;
+// Arcane-End
+
 namespace Content.Client.UserInterface.Systems.Ghost;
 
 // TODO hud refactor BEFORE MERGE fix ghost gui being too far up
 public sealed partial class GhostUIController : UIController, IOnSystemChanged<GhostSystem>
 {
     [Dependency] private IEntityNetworkManager _net = default!;
+    [Dependency] private IConfigurationManager _configuration = default!; // Arcane
     [UISystemDependency] private readonly GhostSystem? _system = default;
 
     private GhostGui? Gui => UIManager.GetActiveUIWidgetOrNull<GhostGui>();
@@ -66,6 +72,7 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
         }
 
         Gui.Visible = _system?.IsGhost ?? false;
+        Gui.ThunderdomeButton.Visible = _configuration.GetCVar(ThunderdomeCVars.Enabled); // Arcane
         Gui.Update(_system?.AvailableGhostRoleCount, _system?.Player?.CanReturnToBody, _system?.Player?.CanTakeGhostRoles); // Goob edit
     }
 
@@ -140,6 +147,7 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
         Gui.RequestWarpsPressed += RequestWarps;
         Gui.ReturnToBodyPressed += ReturnToBody;
         Gui.GhostRolesPressed += GhostRolesPressed;
+        Gui.ThunderdomeButton.OnPressed += OnThunderdomePressed; // Arcane
         Gui.TargetWindow.WarpClicked += OnWarpClicked;
         Gui.TargetWindow.OnGhostnadoClicked += OnGhostnadoClicked;
         Gui.TargetWindow.OnWarpToRandomFollowedClicked += OnWarpToRandomFollowedClicked;
@@ -156,6 +164,7 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
         Gui.RequestWarpsPressed -= RequestWarps;
         Gui.ReturnToBodyPressed -= ReturnToBody;
         Gui.GhostRolesPressed -= GhostRolesPressed;
+        Gui.ThunderdomeButton.OnPressed -= OnThunderdomePressed; // Arcane
         Gui.TargetWindow.WarpClicked -= OnWarpClicked;
 
         Gui.Hide();
@@ -177,4 +186,9 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
     {
         _system?.OpenGhostRoles();
     }
+
+    // Arcane-Start
+    private void OnThunderdomePressed(Robust.Client.UserInterface.Controls.BaseButton.ButtonEventArgs args) =>
+        _net.SendSystemNetworkMessage(new ThunderdomeJoinEvent());
+    // Arcane-End
 }

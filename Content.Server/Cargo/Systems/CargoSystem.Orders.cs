@@ -22,6 +22,8 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
+using Content.Arcane.Common.AlmanacBlade; // Arcane
+
 namespace Content.Server.Cargo.Systems
 {
     public sealed partial class CargoSystem
@@ -75,7 +77,7 @@ namespace Content.Server.Cargo.Systems
                 return;
             }
 
-            if (!ent.Comp.AllowedGroups.Contains(product.Group))
+            if (!ent.Comp.AllowedGroups.Contains(product.Group) || !IsCargoProductAvailable(product.ID)) // Arcane-Edit
                 return;
 
             var orderId = GenerateOrderId(orderDatabase);
@@ -197,7 +199,7 @@ namespace Content.Server.Cargo.Systems
             // </Trauma>
 
             // Invalid order
-            if (!ProtoMan.Resolve(order.Product, out var product))
+            if (!ProtoMan.Resolve(order.Product, out var product) || !IsCargoProductAvailable(product.ID)) // Arcane-Edit
             {
                 _popup.PopupCursor(Loc.GetString("cargo-console-invalid-product"), args.Actor);
                 PlayDenySound(uid, component);
@@ -625,6 +627,11 @@ namespace Content.Server.Cargo.Systems
 
         public bool TryAddOrder(EntityUid dbUid, ProtoId<CargoAccountPrototype> account, CargoOrderData data, StationCargoOrderDatabaseComponent component)
         {
+            // Arcane-Start
+            if (!IsCargoProductAvailable(data.Product.Id))
+                return false;
+            // Arcane-End
+
             component.Orders[account].Add(data);
             UpdateOrders(dbUid);
             return true;
@@ -767,7 +774,7 @@ namespace Content.Server.Cargo.Systems
             var markets = ent.Comp.AllowedGroups.Intersect(db.Markets).ToList();
             foreach (var product in ProtoMan.EnumeratePrototypes<CargoProductPrototype>())
             {
-                if (!markets.Contains(product.Group))
+                if (!markets.Contains(product.Group) || !IsCargoProductAvailable(product.ID)) // Arcane-Edit
                     continue;
 
                 products.Add(product.ID);
@@ -775,6 +782,15 @@ namespace Content.Server.Cargo.Systems
 
             return products;
         }
+
+        // Arcane-Start: Use the same availability rule for the catalogue and server-side purchase paths.
+        private bool IsCargoProductAvailable(string product)
+        {
+            var ev = new CargoProductAvailabilityEvent(product);
+            RaiseLocalEvent(ref ev);
+            return !ev.Hidden;
+        }
+        // Arcane-End
 
         #region Station
 

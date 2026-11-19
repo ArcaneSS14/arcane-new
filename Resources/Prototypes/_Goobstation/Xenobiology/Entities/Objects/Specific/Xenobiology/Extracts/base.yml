@@ -28,6 +28,7 @@
   - type: SlimeExtract
   - type: Reactive
     scaleOverride: 1 # don't light someone on fire 20x as hard if injecting 20u
+    raiseEffectsApplyingEvent: true # Arcane
   - type: StatusEffects # used for jittering and stuff
     allowed:
     - Jitter

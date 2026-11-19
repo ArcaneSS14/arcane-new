@@ -30,7 +30,7 @@ namespace Content.Shared.Destructible.Thresholds.Behaviors
 
             if (HasAct(ThresholdActs.Destruction))
             {
-                system.DestroyEntity(owner);
+                system.DestroyEntity(owner, cause); // Arcane-Edit: owner > owner, cause
             }
         }
     }

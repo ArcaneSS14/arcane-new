@@ -57,6 +57,11 @@ public sealed partial class OreSiloSystem : SharedOreSiloSystem
         }
 
         // Get all clients of this silo, including those out of range.
+        // Arcane-Start
+        if (ent.Comp.Clients.RemoveWhere(client => TerminatingOrDeleted(client) ||
+                !TryComp<OreSiloClientComponent>(client, out var linked) || linked.Silo != ent.Owner) > 0)
+            Dirty(ent);
+        // Arcane-End
         foreach (var client in ent.Comp.Clients)
         {
             var netEnt = GetNetEntity(client);

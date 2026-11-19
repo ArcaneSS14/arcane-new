@@ -169,7 +169,7 @@
     - SleepingCarpKneeHaul
     - SleepingCarpCrashingWaves
   - type: NoGun
-  # TODO: split bullet protection into its own component
+  - type: SleepingCarpDodge # Arcane
 
 - type: entity
   parent: BaseMartialArtsKnowledge

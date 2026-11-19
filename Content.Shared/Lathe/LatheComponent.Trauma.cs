@@ -13,4 +13,9 @@ public sealed partial class LatheComponent
     /// </summary>
     [DataField]
     public EntityUid? SoundEntity;
+
+    // Arcane-Start
+    [DataField]
+    public bool AnnounceRecipeUnlocksLocally = true;
+    // Arcane-End
 }
