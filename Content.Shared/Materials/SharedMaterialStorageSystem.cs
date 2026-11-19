@@ -340,7 +340,7 @@ public abstract partial class SharedMaterialStorageSystem : EntitySystem
         return TryChangeMaterialAmount(uid, materialId, delta, component);
     }
 
-    // Arcane-Start: let item-carrying NPCs check ordinary insertion without consuming the item.
+    // Arcane-Start: Let item-carrying NPCs check ordinary insertion without consuming the item.
     /// <summary>
     /// Checks ordinary material eligibility without raising insertion events or changing storage.
     /// A successful check does not reserve capacity; callers must still use TryInsertMaterialEntity.
@@ -396,7 +396,7 @@ public abstract partial class SharedMaterialStorageSystem : EntitySystem
             return !attemptEv.Cancelled;
         // </Trauma>
 
-        // Arcane-Edit-Start: share the ordinary eligibility check while retaining the insertion event above.
+        // Arcane-Edit-Start: Share the ordinary eligibility check while retaining the insertion event above.
         if (!CanInsertMaterialEntity(toInsert, receiver, storage, material, composition))
             return false;
 

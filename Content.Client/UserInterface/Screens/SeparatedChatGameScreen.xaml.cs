@@ -43,7 +43,7 @@ public sealed partial class SeparatedChatGameScreen : InGameScreen
     private void ResizeActionContainer()
     {
         float indent = 20;
-        Actions.ActionsContainer.MaxGridWidth = Math.Max(1f, ViewportContainer.Size.X - indent); // Arcane-Edit: allow setup before the first arrange
+        Actions.ActionsContainer.MaxGridWidth = Math.Max(1f, ViewportContainer.Size.X - indent); // Arcane-Edit: Allow setup before the first arrange
     }
 
     public override ChatBox ChatBox => GetWidget<ChatBox>()!;

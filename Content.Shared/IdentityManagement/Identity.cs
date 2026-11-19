@@ -56,7 +56,7 @@ public static class Identity
             var displayName = new GetEntityDisplayNameEvent(uidName);
             ent.EventBus.RaiseLocalEvent(uid, ref displayName);
             // Arcane-End
-            return FormattedMessage.EscapeText(displayName.Name); // Arcane-Edit: use the presentation name
+            return FormattedMessage.EscapeText(displayName.Name); // Arcane-Edit: Use the presentation name
         }
 
         var ident = identity.IdentityEntitySlot?.ContainedEntity;

@@ -7,7 +7,7 @@ namespace Content.Client.Paper.UI;
 
 [UsedImplicitly]
 [Virtual] // Arcane
-public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: owner-local paper window factory
+public class PaperBoundUserInterface : BoundUserInterface // Arcane-Edit: Owner-local paper window factory
 {
     [ViewVariables]
     private PaperWindow? _window;

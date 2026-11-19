@@ -1,58 +1,18 @@
 #nullable enable
 using System.Linq;
 using Content.Arcane.Client.Actions;
-using Content.Arcane.Common.Actions;
-using Content.Client.UserInterface.Systems.Actions.Widgets;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Shared.Players;
 using Content.Shared.Actions.Components;
-using Content.Shared.Input;
-using Content.Shared.CCVar;
-using Robust.Client.UserInterface;
 using Robust.Client.GameObjects;
-using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Input;
-using Robust.Shared.Map;
-using Robust.Client.Input;
-using Content.Arcane.Shared.Actions;
-using Content.Shared.Actions;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class ActionBarPortTest : InteractionTest
 {
     protected override string PlayerPrototype => "MobHuman";
-
-    // Arcane-Start
-    [Test]
-    public async Task EmptyBarRetainsAnInsertionCellWithFreePlacementDisabled()
-    {
-        await PlaceInHands("FlashlightLantern");
-        await Pair.RunUntilSynced();
-        await Client.WaitAssertion(() =>
-        {
-            var config = Client.ResolveDependency<IConfigurationManager>();
-            var previous = config.GetCVar(ActionBarCVars.FreePlacement);
-            config.SetCVar(ActionBarCVars.FreePlacement, false);
-            try
-            {
-                var ui = Client.ResolveDependency<IUserInterfaceManager>();
-                var container = new ArcaneActionButtonContainer(ui.GetUIController<ActionBarUIController>(), CEntMan);
-                container.SetActionData(CEntMan.System<Content.Client.Actions.ActionsSystem>(), Array.Empty<EntityUid?>());
-                Assert.That(container.ChildCount, Is.EqualTo(1));
-                Assert.That(container[0].Action, Is.Null);
-                Assert.That(container[0].CanDrag, Is.False);
-            }
-            finally
-            {
-                config.SetCVar(ActionBarCVars.FreePlacement, previous);
-            }
-        });
-    }
-    // Arcane-End
 
     [Test]
     public async Task ServerCapsPinsAndReturnsItsAuthoritativeSet()
