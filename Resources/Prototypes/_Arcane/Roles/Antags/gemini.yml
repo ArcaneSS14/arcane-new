@@ -1,0 +1,11 @@
+- type: antag
+  id: TempGeminiGhostRoleAntag
+  name: role-type-familiar-name
+  antagonist: true
+  objective: never-shown
+  requirements:
+  - !type:OverallPlaytimeRequirement
+    time: 5h
+  - !type:RoleTimeRequirement
+    role: JobScientist
+    time: 5h
