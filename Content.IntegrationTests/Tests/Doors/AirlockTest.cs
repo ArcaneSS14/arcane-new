@@ -149,7 +149,9 @@ namespace Content.IntegrationTests.Tests.Doors
             await server.WaitAssertion(() => Check(DoorState.Opening, true, false));
             await Advance(0.1);
             await server.WaitAssertion(() => Check(DoorState.Opening, false, true));
-            await Advance(0.4);
+            await Advance(0.3);
+            await server.WaitAssertion(() => Check(DoorState.Opening, false, true));
+            await Advance(0.1);
             await server.WaitAssertion(() =>
             {
                 Check(DoorState.Open, false, false);
