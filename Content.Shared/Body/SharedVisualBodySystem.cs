@@ -94,7 +94,7 @@ public abstract partial class SharedVisualBodySystem : EntitySystem
         ent.Comp.Markings = markings;
         ent.Comp.MarkingsDisplacement = displacement.ShallowClone();
         Dirty(ent);
-        // Arcane-Start: notify consumers of direct organ edits as well as whole-body profile changes.
+        // Arcane-Start: Notify consumers of direct organ edits as well as whole-body profile changes.
         if (TryComp<OrganComponent>(ent, out var organ) && organ.Body is { } body)
         {
             var changed = new VisualBodyMarkingsChangedEvent(ent);

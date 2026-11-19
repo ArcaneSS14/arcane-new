@@ -99,7 +99,7 @@ public partial struct ReagentId : IEquatable<ReagentId>
 
     public override int GetHashCode()
     {
-        // Arcane-Start: equal metadata has the same count and members, in any order.
+        // Arcane-Start: Equal metadata has the same count and members, in any order.
         if (Data is not { Count: > 0 } data)
             return HashCode.Combine(Prototype, Data?.Count ?? -1);
 
