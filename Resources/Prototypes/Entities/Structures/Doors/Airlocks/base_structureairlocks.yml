@@ -93,6 +93,12 @@
   - type: AccessReader
     containerAccessProvider: board
   - type: Door
+    # Arcane-Start
+    openTimeOne: 0.2
+    openTimeTwo: 0.4
+    closeTimeOne: 0.3
+    closeTimeTwo: 0.3
+    # Arcane-End
     crushDamage:
       types:
         Blunt: 15
@@ -112,6 +118,12 @@
   # Arcane-End
   - type: Airlock
     openUnlitVisible: true
+    # Arcane-Start
+    forceOpenSound:
+      path: /Audio/_Arcane/Machines/airlock/airlock_open_force.ogg
+    forceCloseSound:
+      path: /Audio/_Arcane/Machines/airlock/airlock_close_force.ogg
+    # Arcane-End
   - type: NavMapDoor
   - type: DoorBolt
   - type: Appearance

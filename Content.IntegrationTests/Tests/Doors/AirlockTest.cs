@@ -7,6 +7,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Maths;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Timing; // Arcane
 
 namespace Content.IntegrationTests.Tests.Doors
 {
@@ -37,7 +38,9 @@ namespace Content.IntegrationTests.Tests.Doors
   id: AirlockDummy
   components:
   - type: Door
+    openTimeTwo: 0.3 # Arcane
   - type: Airlock
+  - type: Occluder # Arcane
   - type: DoorBolt
   - type: ApcPowerReceiver
     needsPower: false
@@ -60,6 +63,7 @@ namespace Content.IntegrationTests.Tests.Doors
 
             var entityManager = server.ResolveDependency<IEntityManager>();
             var doors = entityManager.EntitySysManager.GetEntitySystem<DoorSystem>();
+            var timing = server.ResolveDependency<IGameTiming>(); // Arcane
 
             EntityUid airlock = default;
             DoorComponent doorComponent = null;
@@ -84,6 +88,19 @@ namespace Content.IntegrationTests.Tests.Doors
 
             await server.WaitIdleAsync();
 
+            // Arcane-Start
+            await server.WaitAssertion(() =>
+            {
+                doors.OnPartialOpen(airlock);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(doorComponent.NextStateChange, Is.EqualTo(timing.CurTime + doorComponent.OpenTimeTwo));
+                    Assert.That(entityManager.GetComponent<PhysicsComponent>(airlock).CanCollide, Is.False);
+                    Assert.That(entityManager.GetComponent<OccluderComponent>(airlock).Enabled, Is.False);
+                });
+            });
+            // Arcane-End
+
             await PoolManager.WaitUntil(server, () => doorComponent.State == DoorState.Open);
 
             Assert.That(doorComponent.State, Is.EqualTo(DoorState.Open));
@@ -93,6 +110,19 @@ namespace Content.IntegrationTests.Tests.Doors
                 doors.TryClose(airlock);
                 Assert.That(doorComponent.State, Is.EqualTo(DoorState.Closing));
             });
+
+            // Arcane-Start
+            await server.WaitAssertion(() =>
+            {
+                Assert.That(doors.OnPartialClose(airlock), Is.True);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(doorComponent.NextStateChange, Is.EqualTo(timing.CurTime + doorComponent.CloseTimeTwo));
+                    Assert.That(entityManager.GetComponent<PhysicsComponent>(airlock).CanCollide, Is.True);
+                    Assert.That(entityManager.GetComponent<OccluderComponent>(airlock).Enabled, Is.True);
+                });
+            });
+            // Arcane-End
 
             await PoolManager.WaitUntil(server, () => doorComponent.State == DoorState.Closed);
 

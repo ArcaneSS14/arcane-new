@@ -78,7 +78,7 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
     private void OnAnimationCompleted(Entity<DoorComponent> ent, ref AnimationCompletedEvent args)
     {
-        if (args.Key != DoorComponent.OpenKey && args.Key != DoorComponent.CloseKey)
+        if (!args.Finished || (args.Key != DoorComponent.OpenKey && args.Key != DoorComponent.CloseKey)) // Arcane-Edit: A stopped animation is handled by the new door state.
             return;
 
         if (!TryComp<SpriteComponent>(ent, out var sprite))
@@ -90,6 +90,7 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
                 foreach (var (layer, layerState) in ent.Comp.OpenSpriteStates)
                 {
+                    _sprite.LayerSetAutoAnimated((ent.Owner, sprite), layer, true); // Arcane
                     _sprite.LayerSetRsiState((ent.Owner, sprite), layer, layerState);
                 }
 
@@ -98,6 +99,7 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
                 foreach (var (layer, layerState) in ent.Comp.ClosedSpriteStates)
                 {
+                    _sprite.LayerSetAutoAnimated((ent.Owner, sprite), layer, true); // Arcane
                     _sprite.LayerSetRsiState((ent.Owner, sprite), layer, layerState);
                 }
 
@@ -130,14 +132,17 @@ public sealed partial class DoorSystem : SharedDoorSystem
         switch (state)
         {
             case DoorState.Open:
+                _animationSystem.Stop(entity, null, DoorComponent.CloseKey); // Arcane-Edit: Cancel closing when the door encounters an obstruction.
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
                     return;
 
+                /* // Arcane-Edit-Start
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
                 {
                     _animationSystem.Stop(entity, null, DoorComponent.CloseKey);
                     _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.OpenKey);
                 }
+                */ // Arcane-Edit-End
 
                 foreach (var (layer, layerState) in entity.Comp.OpenSpriteStates)
                 {
@@ -149,14 +154,17 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
                 return;
             case DoorState.Closed:
+                _animationSystem.Stop(entity, null, DoorComponent.OpenKey); // Arcane-Edit
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.CloseKey))
                     return;
 
+                /* // Arcane-Edit-Start
                 if (_animationSystem.HasRunningAnimation(entity, DoorComponent.OpenKey))
                 {
                     _animationSystem.Stop(entity, null, DoorComponent.OpenKey);
                     _animationSystem.Play(entity, (Animation)entity.Comp.OpeningAnimation, DoorComponent.CloseKey);
                 }
+                */ // Arcane-Edit-End
 
                 foreach (var (layer, layerState) in entity.Comp.ClosedSpriteStates)
                 {
@@ -166,6 +174,7 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
                 return;
             case DoorState.Opening:
+                _animationSystem.Stop(entity, null, DoorComponent.CloseKey); // Arcane
                 if (entity.Comp.OpeningAnimationTime == TimeSpan.Zero)
                     return;
 
@@ -176,6 +185,7 @@ public sealed partial class DoorSystem : SharedDoorSystem
 
                 return;
             case DoorState.Closing:
+                _animationSystem.Stop(entity, null, DoorComponent.OpenKey); // Arcane
                 if (entity.Comp.ClosingAnimationTime == TimeSpan.Zero)
                     return;
 
