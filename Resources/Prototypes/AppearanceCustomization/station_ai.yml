@@ -41,6 +41,9 @@
   - StationAiIconLamp
   - StationAiIconLizard
   - StationAiIconVox
+  - StationAiIconBingle
+  - StationAiIconBlank
+  - StationAiIconPerformer
   # Arcane-End
 
 - type: stationAiCustomizationGroup
@@ -67,6 +70,9 @@
   - StationAiHologramBorb
   - StationAiHologramCloudkat
   - StationAiHologramPhoenix
+  - StationAiHologramHorror
+  - StationAiHologramQueen
+  - StationAiHologramPerformer
   # Arcane-End
 
 # Iconography

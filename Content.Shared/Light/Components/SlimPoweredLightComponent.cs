@@ -14,4 +14,9 @@ public sealed partial class SlimPoweredLightComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool Enabled = true;
+
+    // Arcane-Start
+    /// <summary>Whether nearby station AI observers request light independently of the manual switch.</summary>
+    public bool AiIllumination;
+    // Arcane-End
 }

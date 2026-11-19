@@ -49,6 +49,30 @@ public abstract partial class SharedKnowledgeSystem
             UpdateEntityLanguages((args.Holder, speaker));
     }
 
+    // Arcane-Start: Recompute language lists after applying or removing a chassis's grants.
+    private void RefreshBorgLanguages(EntityUid uid)
+    {
+        if (!TryComp<LanguageSpeakerComponent>(uid, out var speaker))
+            return;
+
+        if (GetContainer(uid) != null)
+        {
+            UpdateEntityLanguages((uid, speaker));
+            return;
+        }
+
+        speaker.Speaks.Clear();
+        speaker.Understands.Clear();
+        if (Prototype(uid)?.TryGetComponent<LanguageSpeakerComponent>(out var defaults) == true)
+        {
+            speaker.Speaks.AddRange(defaults.Speaks);
+            speaker.Understands.AddRange(defaults.Understands);
+        }
+        _language.EnsureValidLanguage((uid, speaker));
+        Dirty(uid, speaker);
+    }
+    // Arcane-End
+
     /// <summary>
     /// Directly sets the current spoken language.
     /// </summary>
@@ -104,6 +128,7 @@ public abstract partial class SharedKnowledgeSystem
 
         ent.Comp.Speaks.AddRange(ev.SpokenLanguages);
         ent.Comp.Understands.AddRange(ev.UnderstoodLanguages);
+        Dirty(ent); // Arcane: The current language may still be valid while the available lists have changed.
 
         _language.EnsureValidLanguage(ent.AsNullable());
 

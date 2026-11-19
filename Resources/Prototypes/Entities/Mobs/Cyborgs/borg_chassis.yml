@@ -30,7 +30,7 @@
   - type: BorgSwitchableType
     inherentRadioChannels:
     - Common
-    # - Binary # Goobstation - replaced with collective mind
+    - Binary # Arcane-Edit: Restore the radio channel
 
 
 - type: entity
