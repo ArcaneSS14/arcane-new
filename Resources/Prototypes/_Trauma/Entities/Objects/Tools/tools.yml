@@ -25,6 +25,10 @@
     - PipeStraight
     - PipeBend
     - PipeTJunction
+    # Arcane-Start
+    - PipeManifold
+    - PipePressureRegulator
+    # Arcane-End
     - OutletInjector
     - ManualValve
     - VolumetricPump

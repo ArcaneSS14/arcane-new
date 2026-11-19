@@ -1,0 +1,35 @@
+- type: loadoutEffectGroup
+  id: SeniorAtmos
+  effects:
+  - !type:JobRequirementLoadoutEffect
+    requirement:
+      !type:RoleTimeRequirement
+      role: JobAtmosphericTechnician
+      time: 6h
+  - !type:JobRequirementLoadoutEffect
+    requirement:
+      !type:DepartmentTimeRequirement
+      department: Engineering
+      time: 60h
+
+- type: loadoutGroup
+  id: AtmosphericTechnicianBelt
+  minLimit: 1
+  maxLimit: 1
+  name: loadout-group-atmospheric-technician-belt
+  loadouts:
+  - AtmosphericTechnicianUtilityBelt
+  - AtmosphericTechnicianAtmosBelt
+
+- type: loadout
+  id: AtmosphericTechnicianUtilityBelt
+  equipment:
+    belt: ClothingBeltUtilityEngineering
+
+- type: loadout
+  id: AtmosphericTechnicianAtmosBelt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: SeniorAtmos
+  equipment:
+    belt: ClothingBeltUtilityAtmosFilled

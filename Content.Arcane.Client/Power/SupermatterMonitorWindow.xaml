@@ -1,0 +1,22 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                      xmlns:controls="using:Content.Client.UserInterface.Controls"
+                      Title="{Loc 'supermatter-console-window-title'}"
+                      SetSize="410 470"
+                      MinSize="360 340">
+    <BoxContainer Orientation="Vertical" SeparationOverride="6" Margin="10">
+        <Label Name="NoCrystals" Text="{Loc 'arcane-supermatter-monitor-no-crystals'}"/>
+        <OptionButton Name="CrystalSelection" HorizontalExpand="True"/>
+        <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
+            <BoxContainer Name="Readings" Orientation="Vertical" SeparationOverride="4">
+                <Label Name="Integrity"/>
+                <Label Name="Power"/>
+                <Label Name="Radiation"/>
+                <Label Name="Moles"/>
+                <Label Name="Temperature"/>
+                <Label Name="Waste"/>
+                <Label Name="Absorption"/>
+                <BoxContainer Name="GasReadings" Orientation="Vertical"/>
+            </BoxContainer>
+        </ScrollContainer>
+    </BoxContainer>
+</controls:FancyWindow>
