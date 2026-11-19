@@ -321,7 +321,7 @@ namespace Content.Server.Connection
                 softPlayerCount -= _adminManager.ActiveAdmins.Count();
             }
 
-            // Arcane-Edit-Start: defer the player cap to the queue while preserving priority access.
+            // Arcane-Edit-Start: Defer the player cap to the queue while preserving priority access.
             if (softPlayerCount >= _cfg.GetCVar(CCVars.SoftMaxPlayers) && !adminBypass && !sponsorPriorityJoin
                 && !wasInGame && !_cfg.GetCVar(GoobCVars.QueueEnabled))
             // Arcane-Edit-End
