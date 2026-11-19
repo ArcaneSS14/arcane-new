@@ -93,7 +93,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
 
     private void OnFultonDoAfter(FultonedDoAfterEvent args)
     {
-        // Arcane-Edit-Start: validate the target and beacon again before consuming the stack
+        // Arcane-Edit-Start: Validate the target and beacon again before consuming the stack
         if (args.Cancelled || args.Handled || args.Target is not { } target || args.Used is not { } used ||
             TerminatingOrDeleted(target) || TerminatingOrDeleted(used) ||
             !TryComp<FultonComponent>(used, out var fulton) || !fulton.AttachOnInteract ||
@@ -202,7 +202,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
         Dirty(args.NewId, newFulton);
     }
 
-    // Arcane-Start: emagged and ordinary packs retain their behavior when split or merged.
+    // Arcane-Start: Emagged and ordinary packs retain their behavior when split or merged.
     private void OnFultonEmagged(Entity<FultonComponent> pack, ref GotEmaggedEvent args)
     {
         if (args.Handled || (args.Type & EmagType.Interaction) == 0 || !pack.Comp.AttachOnInteract || pack.Comp.MindTargetOverride)
@@ -251,7 +251,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
         return true;
     }
 
-    // Arcane: recheck the beacon when a pack is attached and when the balloon arrives.
+    // Arcane: Recheck the beacon when a pack is attached and when the balloon arrives.
     protected bool CanReceiveFulton(EntityUid? uid)
     {
         return uid is { } beacon && !TerminatingOrDeleted(beacon) && HasComp<FultonBeaconComponent>(beacon) &&

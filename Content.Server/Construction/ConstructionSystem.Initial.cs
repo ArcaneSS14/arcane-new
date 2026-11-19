@@ -432,7 +432,7 @@ namespace Content.Server.Construction
                     GetCoordinates(ev.Location),
                     ev.Angle,
                     ev.Ack,
-                    args.SenderSession, ev.With); // Arcane-Edit: validate the supplied material
+                    args.SenderSession, ev.With); // Arcane-Edit: Validate the supplied material
         }
 
         /// <summary>
@@ -444,7 +444,7 @@ namespace Content.Server.Construction
             EntityCoordinates location,
             Angle angle,
             int ack = 0,
-            // Arcane-Edit-Start: preserve the existing constructor call and accept player material.
+            // Arcane-Edit-Start: Preserve the existing constructor call and accept player material.
             ICommonSession? senderSession = null,
             NetEntity? with = null)
             // Arcane-Edit-End
@@ -550,7 +550,7 @@ namespace Content.Server.Construction
             if(edge == null)
                 throw new InvalidDataException($"Can't find edge from starting node to the next node in pathfinding! Recipe: {prototypeName}");
 
-            // Arcane-Edit-Start: validate the material the player actually uses.
+            // Arcane-Edit-Start: Validate the material the player actually uses.
             if (senderSession != null) // Constructor machines collect their own materials.
             {
                 var candidate = _handsSystem.GetActiveItem((user, hands));

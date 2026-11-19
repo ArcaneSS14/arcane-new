@@ -25,6 +25,6 @@ public readonly struct EntityZombifiedEvent
 /// </summary>
 public sealed partial class ZombifySelfActionEvent : InstantActionEvent { };
 
-// Arcane: silicon can replace the organic infection symptom.
+// Arcane: Silicon can replace the organic infection symptom.
 [ByRefEvent]
 public record struct PendingZombieSymptomEvent(bool Handled = false);

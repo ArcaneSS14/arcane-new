@@ -137,7 +137,7 @@ public sealed partial class ZombieSystem
                 Log.Error($"Mind for session '{sess}' could not be found");
         }
 
-        CaptureZombieState(target); // Arcane: save the components this in-place conversion will alter.
+        CaptureZombieState(target); // Arcane: Save the components this in-place conversion will alter.
         //you're a real zombie now, son.
         RaiseLocalEvent(target, new RejuvenateEvent(false, false)); // Shitmed Change
         var zombiecomp = AddComp<ZombieComponent>(target);

@@ -54,7 +54,7 @@ namespace Content.Server.GameTicking
                         session.Data.ContentDataUncast = data;
                     }
 
-                    // Arcane-Edit-Start: load before a possible queue wait, without entering the world twice.
+                    // Arcane-Edit-Start: Load before a possible queue wait, without entering the world twice.
                     var joining = new PlayerJoinRequestedEvent(session);
                     RaiseLocalEvent(ref joining);
                     _userDb.ClientConnected(session);
@@ -77,14 +77,14 @@ namespace Content.Server.GameTicking
                             Filter.Empty().AddPlayers(_adminManager.ActiveAdmins), false,
                             audioParams: new AudioParams { Volume = -5f });
 
-                    // Arcane-Edit: countdown begins on admission below, rather than while waiting Connected.
+                    // Arcane-Edit: Countdown begins on admission below, rather than while waiting Connected.
 
                     break;
                 }
 
                 case SessionStatus.InGame:
                 {
-                    // Arcane-Edit: user data now starts loading in Connected, before queue admission.
+                    // Arcane-Edit: User data now starts loading in Connected, before queue admission.
                     // Arcane-Start
                     if (LobbyEnabled && _roundStartCountdownHasNotStartedYetDueToNoPlayers)
                     {

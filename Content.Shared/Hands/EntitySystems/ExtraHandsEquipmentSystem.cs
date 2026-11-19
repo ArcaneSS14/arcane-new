@@ -30,7 +30,7 @@ public sealed partial class ExtraHandsEquipmentSystem : EntitySystem
         AddEquipmentHands((args.EquipTarget, handsComp), ent); // Arcane
     }
 
-    // Arcane-Start: rebuild only hands from equipment that is still worn.
+    // Arcane-Start: Rebuild only hands from equipment that is still worn.
     public HashSet<string> GetEquipmentHandIds(EntityUid body)
     {
         var ids = new HashSet<string>();

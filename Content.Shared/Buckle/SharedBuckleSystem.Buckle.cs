@@ -458,7 +458,7 @@ public abstract partial class SharedBuckleSystem
         if (buckle.Owner == user && strap.Comp.SelfUnBuckleDelay != TimeSpan.Zero)
         {
             var doAfter = new DoAfterArgs(EntityManager, buckle.Owner, strap.Comp.SelfUnBuckleDelay, new UnbuckleDoAfterEvent(),
-                buckle.Owner, target: strap.Owner) // Arcane: keep the action tied to this strap
+                buckle.Owner, target: strap.Owner) // Arcane: Keep the action tied to this strap
             {
                 BreakOnMove = true,
                 BreakOnDamage = true,

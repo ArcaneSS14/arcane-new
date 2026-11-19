@@ -98,7 +98,7 @@ public sealed partial class IdCardSystem : SharedIdCardSystem
 
             var random = _random.Pick(ids);
 
-            var accessAdded = access.Tags.Add(random.ID); // Arcane-Edit: retain whether access was actually added
+            var accessAdded = access.Tags.Add(random.ID); // Arcane-Edit: Retain whether access was actually added
             Dirty(uid, access);
 
             // Arcane-Start

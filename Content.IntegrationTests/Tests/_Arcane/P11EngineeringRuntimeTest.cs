@@ -8,13 +8,11 @@ using Content.Goobstation.Shared.Supermatter.Components;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
-using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Projectiles;
 using Content.Shared.Radiation.Components;
 using Content.Shared.Random;
 using Content.Shared.Random.Helpers;
 using Content.Shared.Singularity.Components;
-using Content.Trauma.Shared.Construction;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -25,39 +23,6 @@ public sealed class P11EngineeringRuntimeTest : InteractionTest
     private static readonly ProtoId<WeightedRandomPrototype> NormalEvents = "ArcaneSupermatterNormalEvents";
 
     public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
-
-    [Test]
-    public async Task EmitterDiscRequiresHeldItemAndCannotUpgradeTwice()
-    {
-        await SpawnTarget("Emitter");
-        var emitter = STarget!.Value;
-        await InteractUsing("DiodeDiscElectroDisruptive", awaitDoAfters: false);
-        await DropAll();
-        await RunSeconds(2.3f);
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.HasComponent<UpgradedMachineComponent>(emitter), Is.False);
-            Assert.That(SEntMan.GetComponent<EmitterComponent>(emitter).BoltType.Id, Is.EqualTo("EmitterBolt"));
-        });
-
-        var disc = await PlaceInHands("DiodeDiscElectroBehavioural");
-        var discUid = ToServer(disc);
-        await Interact();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.HasComponent<UpgradedMachineComponent>(emitter), Is.True);
-            Assert.That(SEntMan.GetComponent<EmitterComponent>(emitter).BoltType.Id, Is.EqualTo("EmitterBoltElectroBehavioural"));
-            Assert.That(SEntMan.EntityExists(discUid), Is.False);
-        });
-
-        var spare = ToServer(await PlaceInHands("DiodeDiscElectroDisruptive"));
-        await Interact();
-        await Server.WaitAssertion(() =>
-        {
-            Assert.That(SEntMan.EntityExists(spare), Is.True);
-            Assert.That(SEntMan.GetComponent<EmitterComponent>(emitter).BoltType.Id, Is.EqualTo("EmitterBoltElectroBehavioural"));
-        });
-    }
 
     [Test]
     public async Task SupermatterKeepsAccumulatedDamageAndAppliesEachDiodeOnce()

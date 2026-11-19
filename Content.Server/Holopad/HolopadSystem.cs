@@ -790,7 +790,7 @@ public sealed partial class HolopadSystem : SharedHolopadSystem
         }
     }
 
-    // Arcane-Start: resolve the sole live projection controlled by the station AI.
+    // Arcane-Start: Resolve the sole live projection controlled by the station AI.
     public EntityUid? GetPointingOrigin(EntityUid user)
     {
         if (!HasComp<StationAiHeldComponent>(user) ||

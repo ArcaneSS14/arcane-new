@@ -17,7 +17,7 @@ namespace Content.Client.Paper.UI
 {
     [GenerateTypedNameReferences]
     [Virtual] // Arcane
-    public partial class PaperWindow : BaseWindow // Arcane-Edit: allow the paper-specific field renderer
+    public partial class PaperWindow : BaseWindow // Arcane-Edit: Allow the paper-specific field renderer
     {
         [Dependency] private IInputManager _inputManager = default!;
         [Dependency] private IResourceCache _resCache = default!;
@@ -261,7 +261,7 @@ namespace Content.Client.Paper.UI
             InputContainer.Visible = isEditing;
             EditButtons.Visible = isEditing;
 
-            var msg = FormatPaperText(state); // Arcane-Edit: owner-specific paper markup
+            var msg = FormatPaperText(state); // Arcane-Edit: Owner-specific paper markup
 
             // For premade documents, we want to be able to edit them rather than
             // replace them.

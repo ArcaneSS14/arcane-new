@@ -478,7 +478,7 @@ public abstract partial class SharedKnowledgeSystem : CommonKnowledgeSystem
         ent.Comp.KnowledgeDict.Remove(id);
         DirtyField(ent, ent.Comp, nameof(KnowledgeContainerComponent.KnowledgeDict));
 
-        // Arcane-Edit-Start: a loose borg brain can lose temporary chassis knowledge.
+        // Arcane-Edit-Start: A loose borg brain can lose temporary chassis knowledge.
         if (ent.Comp.Holder is { } holder)
         {
             var ev = new KnowledgeRemovedEvent(ent, holder);

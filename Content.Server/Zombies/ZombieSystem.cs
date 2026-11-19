@@ -130,7 +130,7 @@ namespace Content.Server.Zombies
             var query = EntityQueryEnumerator<PendingZombieComponent, Shared.Damage.Components.DamageableComponent, MobStateComponent>();
             while (query.MoveNext(out var uid, out var comp, out var damage, out var mobState))
             {
-                if (HasComp<ZombieComponent>(uid)) // Arcane: conversion defers removal of the infection.
+                if (HasComp<ZombieComponent>(uid)) // Arcane: Conversion defers removal of the infection.
                     continue;
 
                 // Process only once per second

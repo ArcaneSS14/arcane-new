@@ -31,7 +31,7 @@ public sealed partial class LavalandSystem
         Log.Debug($"Spawning {pool.GridRuins.Count} GridRuins on {ToPrettyString(lavaland)} planet.");
         SetupHugeRuins(pool.GridRuins, lavaland, preloader, random, ref coords, ref usedSpace);
 
-        coords.RemoveAll(coord => usedSpace.Any(box => box.Contains(coord))); // Arcane-Edit: remove candidates inside placed ruins
+        coords.RemoveAll(coord => usedSpace.Any(box => box.Contains(coord))); // Arcane-Edit: Remove candidates inside placed ruins
 
         // Load dungeon ruins
         // TODO: make it actual dungeons instead of spawning markers
@@ -132,7 +132,7 @@ public sealed partial class LavalandSystem
         if (coords.Count == 0)
             return false;
 
-        // Arcane-Edit-Start: keep distance overrides local to the selected ruin
+        // Arcane-Edit-Start: Keep distance overrides local to the selected ruin
         var candidates = ruin.MinDistance != null || ruin.MaxDistance != null
             ? coords.FindAll(point => InRuinDistance(point, ruin.MinDistance ?? 0, ruin.MaxDistance ?? int.MaxValue))
             : coords;
@@ -158,11 +158,11 @@ public sealed partial class LavalandSystem
         if (usedSpace.Any(used => used.Intersects(ruinBox)))
         {
             Log.Debug($"Ruin {ruin.ID} can't be placed on picked coordinates {coord.ToString()} on {ToPrettyString(lavaland)} planet, skipping spawn.");
-            Del(spawned); // Arcane: discard the rejected preloaded grid
+            Del(spawned); // Arcane: Discard the rejected preloaded grid
             return false;
         }
 
-        _transform.SetCoordinates(spawned, new EntityCoordinates(preloader, coord)); // Arcane: move only an accepted grid
+        _transform.SetCoordinates(spawned, new EntityCoordinates(preloader, coord)); // Arcane: Move only an accepted grid
         usedSpace.Add(ruinBox);
         coords.Remove(coord);
 
@@ -174,7 +174,7 @@ public sealed partial class LavalandSystem
             _metaData.SetEntityName(spawned, Loc.GetString(ruin.Name));
             _transform.SetParent(spawned, spawnedXForm, lavaland);
             _transform.SetCoordinates(spawned,
-                new EntityCoordinates(lavaland, coord)); // Arcane-Edit: use the checked placement coordinate
+                new EntityCoordinates(lavaland, coord)); // Arcane-Edit: Use the checked placement coordinate
 
             var componentsToGrant = EnsureComp<LavalandGridGrantComponent>(spawned);
             foreach (var (key, comp) in ruin.ComponentsToGrant)
