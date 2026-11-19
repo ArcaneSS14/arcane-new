@@ -1,3 +1,4 @@
+
 using Content.Shared.Preferences; // Arcane
 
 namespace Content.Client.Lobby.UI;
