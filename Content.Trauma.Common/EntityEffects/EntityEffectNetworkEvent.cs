@@ -9,6 +9,6 @@ namespace Content.Trauma.Common.EntityEffects;
 [Serializable, NetSerializable, ImplicitDataDefinitionForInheritors]
 public abstract partial class EntityEffectNetworkEvent : EntityEventArgs
 {
-    // Arcane-Edit: the target is runtime network state, not prototype configuration.
+    // Arcane-Edit: The target is runtime network state, not prototype configuration.
     public NetEntity? Entity;
 }

@@ -19,7 +19,7 @@ public sealed partial class BaseSwitchableOverlay<TComp> : Overlay where TComp :
 
     public bool IsActive = true;
 
-    public bool RestrictToPlayerViewport; // Arcane: opt in without changing other overlay users.
+    public bool RestrictToPlayerViewport; // Arcane: Opt in without changing other overlay users.
 
     public readonly ProtoId<ShaderPrototype> NightVision = "NightVision";
 

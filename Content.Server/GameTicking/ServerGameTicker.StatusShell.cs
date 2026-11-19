@@ -36,7 +36,7 @@ public sealed partial class ServerGameTicker
             jObject["map"] = _gameMapManager.GetSelectedMap()?.MapName;
             jObject["round_id"] = RoundId;
             jObject["players"] = Cfg.GetCVar(CCVars.AdminsCountInReportedPlayerCount)
-                // Arcane-Edit-Start: use main-thread snapshots; never raise content events on the status HTTP thread.
+                // Arcane-Edit-Start: Use main-thread snapshots; never raise content events on the status HTTP thread.
                 ? AdmittedPlayerCount
                 : AdmittedNonAdminPlayerCount;
             // Arcane-Edit-End
