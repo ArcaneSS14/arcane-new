@@ -69,6 +69,11 @@
     mode: NoSprite
   - type: PlacementReplacement
     key: blastdoors
+  # Arcane-Start
+  - type: WeldingEffectPath
+    startOffset: 0,0.5
+    endOffset: 0,-0.5
+  # Arcane-End
 
 
 - type: entity

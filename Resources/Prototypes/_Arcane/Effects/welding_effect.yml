@@ -1,0 +1,58 @@
+- type: entity
+  id: ArcaneWeldingEffectAnchor
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: WeldingEffect
+    workSound:
+      path: /Audio/_Arcane/Effects/Welding/welding_work.ogg
+      params:
+        loop: true
+        volume: -6.5
+        variation: 0.02
+        maxDistance: 6
+
+- type: entity
+  id: ArcaneWeldingLight
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Arcane/Effects/welding_effect.rsi
+    layers:
+    - state: smoke
+    - state: welding_sparks
+      sprite: _Arcane/Effects/welding_arc_and_sparks.rsi
+      shader: unshaded
+  - type: PointLight
+    radius: 1.55
+    energy: 2.35
+    color: Orange
+  - type: LightBehaviour
+    behaviours:
+    - !type:BriefDimBehaviour
+      property: Energy
+      minDuration: 0.42
+      maxDuration: 0.78
+      dimDuration: 0.067
+      startValue: 2.35
+      endValue: 0.35
+      enabled: true
+      isLooped: true
+
+- type: entity
+  id: ArcaneExperimentalWeldingLight
+  parent: ArcaneWeldingLight
+  categories: [ HideSpawnMenu ]
+  save: false
+  components:
+  - type: Sprite
+    layers:
+    - state: smoke
+    - state: exp_welding_sparks
+      sprite: _Arcane/Effects/welding_arc_and_sparks.rsi
+      shader: unshaded
+  - type: PointLight
+    color: MediumAquamarine

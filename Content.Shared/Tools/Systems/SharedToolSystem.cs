@@ -20,6 +20,8 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
+using System.Numerics; // Arcane
+
 namespace Content.Shared.Tools.Systems;
 
 public abstract partial class SharedToolSystem : EntitySystem
@@ -40,6 +42,7 @@ public abstract partial class SharedToolSystem : EntitySystem
 
     public const string CutQuality = "Cutting";
     public const string PulseQuality = "Pulsing";
+    private static readonly ProtoId<ToolQualityPrototype> WeldingQuality = "Welding"; // Arcane
 
     public override void Initialize()
     {
@@ -141,6 +144,7 @@ public abstract partial class SharedToolSystem : EntitySystem
     /// the event that this tool-use cancelled an existing DoAfter</param>
     /// <param name="fuel">Amount of fuel that should be taken from the tool.</param>
     /// <param name="toolComponent">The tool component.</param>
+    /// <param name="weldingContact">The clicked point for the welding effect.</param> <!-- Arcane -->
     /// <returns>Returns true if any interaction takes place.</returns>
     public bool UseTool(
         EntityUid tool,
@@ -151,7 +155,8 @@ public abstract partial class SharedToolSystem : EntitySystem
         DoAfterEvent doAfterEv,
         out DoAfterId? id,
         float fuel = 0,
-        ToolComponent? toolComponent = null)
+        ToolComponent? toolComponent = null, // Arcane-Edit: Allow the tile caller to supply the welding point
+        EntityCoordinates? weldingContact = null) // Arcane
     {
         id = null;
         if (!Resolve(tool, ref toolComponent, false))
@@ -184,9 +189,46 @@ public abstract partial class SharedToolSystem : EntitySystem
             ExamineText = examineText,
         };
 
-        _doAfterSystem.TryStartDoAfter(doAfterArgs, out id);
+        var started = _doAfterSystem.TryStartDoAfter(doAfterArgs, out id); // Arcane-Edit
+        // Arcane-Start
+        if (_net.IsServer && started && id is { } action && _doAfterSystem.IsRunning(action) &&
+            toolQualitiesNeeded.Contains(WeldingQuality))
+        {
+            if (target is { } entity && entity != tool)
+            {
+                var doorWeld = doAfterEv is WeldFinishedEvent;
+                var reverse = doorWeld && TryComp<WeldableComponent>(entity, out var weldable) && weldable.IsWelded;
+                RaiseWeldingStarted(action, tool, GetWeldingContact(entity, weldingContact), doorWeld, reverse);
+            }
+            else if (weldingContact is { } tileContact)
+                RaiseWeldingStarted(action, tool, tileContact);
+        }
+        // Arcane-End
         return true;
     }
+
+    // Arcane-Start
+    private EntityCoordinates GetWeldingContact(EntityUid target, EntityCoordinates? click)
+    {
+        if (click is not { } point || !_transformSystem.IsValid(point) ||
+            !TryComp(point.EntityId, out TransformComponent? clickedTransform) ||
+            !TryComp(target, out TransformComponent? targetTransform) || clickedTransform.MapID != targetTransform.MapID)
+            return new EntityCoordinates(target, Vector2.Zero);
+
+        var local = _transformSystem.WithEntityId(point, target);
+        if (!_transformSystem.IsValid(local))
+            return new EntityCoordinates(target, Vector2.Zero);
+        // A client-supplied cursor point can only move the effect within the target's tile footprint.
+        return new EntityCoordinates(target, Vector2.Clamp(local.Position, new Vector2(-0.5f), new Vector2(0.5f)));
+    }
+
+    private void RaiseWeldingStarted(DoAfterId action, EntityUid tool, EntityCoordinates contact,
+        bool doorWeld = false, bool reverse = false)
+    {
+        var ev = new WeldingToolStartedEvent(action, tool, contact, doorWeld, reverse);
+        RaiseLocalEvent(ref ev);
+    }
+    // Arcane-End
 
     /// <summary>
     ///     Attempts to use a tool on some entity, which will start a DoAfter. Returns true if an interaction occurred.

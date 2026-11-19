@@ -35,6 +35,8 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
+using Content.Shared.Repairable; // Arcane
+
 namespace Content.Server.Atmos.EntitySystems
 {
     public sealed partial class FlammableSystem : EntitySystem
@@ -70,7 +72,7 @@ namespace Content.Server.Atmos.EntitySystems
             UpdatesAfter.Add(typeof(AtmosphereSystem));
 
             SubscribeLocalEvent<FlammableComponent, MapInitEvent>(OnMapInit);
-            SubscribeLocalEvent<FlammableComponent, InteractUsingEvent>(OnInteractUsing);
+            SubscribeLocalEvent<FlammableComponent, InteractUsingEvent>(OnInteractUsing, after: [typeof(RepairableSystem)]); // Arcane-Edit: Repair a damaged chassis before attempting ignition.
             SubscribeLocalEvent<FlammableComponent, StartCollideEvent>(OnCollide);
             SubscribeLocalEvent<FlammableComponent, IsHotEvent>(OnIsHot);
             SubscribeLocalEvent<FlammableComponent, TileFireEvent>(OnTileFire);
