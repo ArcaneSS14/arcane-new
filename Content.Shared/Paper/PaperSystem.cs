@@ -189,7 +189,7 @@ public sealed partial class PaperSystem : EntitySystem
         return new StampDisplayInfo
         {
             StampedName = stamp.StampedName,
-            StampedColor = stamp.StampedColor, // Arcane-Edit: carry optional graphical imprint
+            StampedColor = stamp.StampedColor, // Arcane-Edit: Carry optional graphical imprint
             StampLargeIcon = stamp.StampLargeIcon, // Arcane
         };
     }

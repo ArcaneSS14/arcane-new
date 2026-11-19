@@ -166,7 +166,7 @@ public sealed partial class ServerNukeopsRuleSystem : NukeopsRuleSystem
                 if (ev.OwningStation == GetOutpost(uid))
                 {
                     nukeops.WinConditions.Add(WinCondition.NukeExplodedOnNukieOutpost);
-                    RaiseLocalEvent(new NukeopsOutpostDestroyedEvent()); // Arcane: record the outcome before the rule can end the round
+                    RaiseLocalEvent(new NukeopsOutpostDestroyedEvent()); // Arcane: Record the outcome before the rule can end the round
                     SetWinType((uid, nukeops), WinType.CrewMajor, GameTicker.IsGameRuleActive(NukeopsGameRule)); // End the round ONLY if the actual gamemode is NukeOps.
                     if (!GameTicker.IsGameRuleActive(NukeopsGameRule)) // End the rule if the LoneOp shuttle got nuked, because that particular LoneOp clearly failed, and should not be considered a Syndie victory even if a future LoneOp wins.
                         GameTicker.EndGameRule(uid);

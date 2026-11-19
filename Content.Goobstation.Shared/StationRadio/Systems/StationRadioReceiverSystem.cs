@@ -41,10 +41,10 @@ public sealed partial class StationRadioReceiverSystem : EntitySystem
     private void OnMediaPlayed(EntityUid uid, StationRadioReceiverComponent comp, ref StationRadioMediaPlayedEvent args)
     {
         // client cant predict storing a long term sound
-        if (_net.IsClient || _audio.PlayPvs(args.MediaPlayed, uid, comp.DefaultParams) is not {} audio) // Arcane-Edit: play the already selected track
+        if (_net.IsClient || _audio.PlayPvs(args.MediaPlayed, uid, comp.DefaultParams) is not {} audio) // Arcane-Edit: Play the already selected track
             return;
 
-        _audio.Stop(comp.SoundEntity); // Arcane: replace the previous stream
+        _audio.Stop(comp.SoundEntity); // Arcane: Replace the previous stream
         comp.SoundEntity = audio.Entity;
         EnsureComp<CopyrightedAudioComponent>(audio.Entity);
         EnsureComp<StationRadioPlaybackComponent>(audio.Entity); // Arcane

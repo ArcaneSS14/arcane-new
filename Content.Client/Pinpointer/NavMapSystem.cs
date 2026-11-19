@@ -66,7 +66,7 @@ public sealed partial class NavMapSystem : SharedNavMapSystem
             component.RegionProperties[regionOwner] = regionData;
             validRegionOwners.Add(regionOwner);
 
-            if (!changed && component.RegionOverlays.ContainsKey(regionOwner)) // Arcane-Edit: re-flood when the definition changes
+            if (!changed && component.RegionOverlays.ContainsKey(regionOwner)) // Arcane-Edit: Re-flood when the definition changes
                 continue;
 
             if (component.QueuedRegionsToFlood.Contains(regionOwner))

@@ -99,7 +99,7 @@ public abstract partial class SharedToolSystem
             ? _transformSystem.WithEntityId(clickLocation, gridUid)
             : (EntityCoordinates?) null;
         // Arcane-End
-        UseTool(ent, user, ent, comp.Delay * tileDef.DeconstructTimeMultiplier, tool.Qualities, args, out _, toolComponent: tool, weldingContact: contact); // Arcane-Edit: add per-call welding contact
+        UseTool(ent, user, ent, comp.Delay * tileDef.DeconstructTimeMultiplier, tool.Qualities, args, out _, toolComponent: tool, weldingContact: contact); // Arcane-Edit: Add per-call welding contact
         return true;
     }
 
