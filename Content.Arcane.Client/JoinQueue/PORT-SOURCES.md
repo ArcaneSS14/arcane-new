@@ -21,8 +21,9 @@ current waiting connection. Network messages belong to the client application's
 lifetime; world systems are recreated on reconnect.
 
 Audio under `Resources/Audio/_Arcane/MiniGames` was copied unchanged from old
-Arcane. Its inherited Freesound references have not been matched to the shipped
-files; their attribution remains unresolved. The files are retained in the draft
-pending source verification, not certified as CC0. The spacepod sprite is
+Arcane. Its metadata uses CC-BY-NC-3.0 as declared by Arcane's owner. The original
+recording authors remain unidentified. The source URL points to Arcane #102;
+the inherited Freesound references did not match the shipped recordings and
+are not used as their provenance. The spacepod sprite is
 CC-BY-SA-3.0, credited to Paradise Station / Space Station 13 in its RSI metadata.
 Existing Trauma fonts and creature sprites are reused.
