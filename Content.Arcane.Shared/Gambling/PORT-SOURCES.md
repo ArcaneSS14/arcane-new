@@ -11,4 +11,13 @@ Source code is licensed under AGPL-3.0-or-later according to the source reposito
 
 Resource-specific attribution is retained in the adjacent metadata. Card graphics credit coookies369 under CC-BY-SA-3.0; card sounds credit Kenney.nl under CC0-1.0. Tennis racket graphics credit Hardbassman under CC-BY-SA-4.0. Existing tennis-ball, audio and vinyl graphics are reused without replacing their attribution.
 
-The original slot-machine audio and imported radio music are retained at the owner's explicit request while provenance is clarified. Their upstream attribution contains unresolved errors, including duplicated or missing slot-sound entries and conflicting radio-music license/source claims. Reproducing those claims does not independently verify their authorship or license. Audio attribution file lists are restricted to the files actually imported; original upstream records remain in the source archive. No replacement authorship is asserted.
+The original slot-machine audio and imported radio music are retained unchanged.
+Arcane's owner declares CC-BY-NC-3.0 for the 20 recordings whose licensing was
+previously unresolved. This declaration is separate from the independently
+verified source licenses: the six Chronoquest tracks and Monkey Riot retain
+CC-BY-NC-SA-3.0-US, Second Reality retains The Unlicense, and the big-win effect
+retains CC0-1.0. Asset-specific metadata names the known composers and original
+tracker titles, preserves the keyg and protas sample credits, and identifies
+recordings whose authors remain unknown. Godpot is Goon's
+`sound/voice/heavenly3.ogg`; the jackpot effect has its own attribution entry.
+Original upstream license declarations remain available at the linked revisions.
