@@ -1257,7 +1257,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("flavor_text");
 
-                    // Arcane-Start: extended flavor text
+                    // Arcane-Start: Extended flavor text
                     b.Property<string>("CharacterFlavorText")
                         .IsRequired()
                         .HasColumnType("TEXT")
