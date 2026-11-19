@@ -54,7 +54,7 @@
       collection: LasersDrop
 
 - type: entity
-  parent: [BaseWeaponCustomCell, BasePistolWhip]
+  parent: [BaseWeaponCustomCell, BasePistolWhip, BaseSidearmFlashlightMount] # Arcane
   id: BaseWeaponCustomCellSmall
   abstract: true
   components:
@@ -276,7 +276,7 @@
 
 - type: entity
   name: Lawbringer
-  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband]
+  parent: [BaseWeaponBatterySmall, BaseGrandTheftContraband, BaseSidearmFlashlightMount] # Arcane
   id: WeaponEnergyGunLawbringer
   description: A versatile energy gun, with many different modes. The owner of this gun embodies the law itself.
   components:

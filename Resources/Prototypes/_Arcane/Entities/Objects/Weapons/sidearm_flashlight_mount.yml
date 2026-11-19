@@ -1,0 +1,17 @@
+- type: entity
+  id: BaseSidearmFlashlightMount
+  abstract: true
+  components:
+  - type: UpgradeableWeapon
+  - type: SidearmFlashlightMount
+    slot:
+      name: weapon-upgrade-slot-name-flashlight
+      priority: -1
+      swap: false
+      insertDelay: 0.4
+      ejectDelay: 0.2
+      ejectOnBreak: true
+      occludesLight: false
+      whitelist:
+        components:
+        - GunUpgradeFlashlight
