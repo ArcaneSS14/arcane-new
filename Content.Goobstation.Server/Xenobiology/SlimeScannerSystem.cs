@@ -66,7 +66,7 @@ public sealed partial class SlimeScannerSystem : EntitySystem
             var info = ProtoMan.Index(mutations[i]);
 
             var color = "white";
-            // Arcane-Edit-Start: resolve the registered component from the breed
+            // Arcane-Edit-Start: Resolve the registered component from the breed
             if (info.Components.TryGetComponent<SlimeComponent>(Factory, out var sc))
                 color = sc.SlimeColor.ToHex();
             // Arcane-Edit-End

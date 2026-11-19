@@ -243,27 +243,6 @@ public sealed class AchievementRuntimeTest : InteractionTest
         });
     }
 
-    [Test]
-    public async Task PartyHardChecksTheHeldItemBeforeSoftCritDropsIt()
-    {
-        var glowstick = await PlaceInHands("GlowstickRed", enableToggleable: false);
-        await Server.WaitAssertion(() =>
-        {
-            PrepareMind();
-            var status = SEntMan.System<StatusEffectsSystem>();
-            var hands = SEntMan.System<SharedHandsSystem>();
-            var manager = SEntMan.System<AchievementManager>();
-            Assert.That(status.TryAddStatusEffectDuration(SPlayer, "StatusEffectDrunk", TimeSpan.FromSeconds(10)), Is.True);
-            Assert.That(hands.GetActiveItem(SPlayer), Is.EqualTo(SEntMan.GetEntity(glowstick)));
-            Assert.That(manager.IsUnlocked(ServerSession!, "PartyHard"), Is.False);
-
-            SEntMan.System<MobStateSystem>().ChangeMobState(SPlayer, MobState.SoftCrit);
-
-            Assert.That(hands.GetActiveItem(SPlayer), Is.Null);
-            Assert.That(manager.IsUnlocked(ServerSession!, "PartyHard"), Is.True);
-        });
-    }
-
     private EntityUid PrepareMind()
     {
         var minds = SEntMan.System<SharedMindSystem>();

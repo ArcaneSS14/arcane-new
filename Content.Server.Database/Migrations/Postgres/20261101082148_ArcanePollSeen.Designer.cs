@@ -1330,7 +1330,7 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("flavor_text");
 
-                    // Arcane-Start: extended flavor text
+                    // Arcane-Start: Extended flavor text
                     b.Property<string>("CharacterFlavorText")
                         .IsRequired()
                         .HasColumnType("text")

@@ -55,7 +55,7 @@ public sealed partial class BlobTileSystem : EntitySystem
         if (!_observerQuery.TryComp(user, out var observer))
             return;
 
-        if (observer.Core is not { } core || ent.Comp.Core != core) // Arcane-Edit: only offer upgrades on the observer's network
+        if (observer.Core is not { } core || ent.Comp.Core != core) // Arcane-Edit: Only offer upgrades on the observer's network
             return;
 
         if (!Transform(ent).Anchored)

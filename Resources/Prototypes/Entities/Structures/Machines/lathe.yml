@@ -558,7 +558,7 @@
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist
   - type: OreSiloClient
-  # Arcane-Edit-Start: announce new recipes on the department channel
+  # Arcane-Edit-Start: Announce new recipes on the department channel
   - type: TechFabRecipeRadio
     channel: Security
   # Arcane-Edit-End
@@ -674,7 +674,7 @@
   - type: StealTarget
     stealGroup: MedicalTechFabCircuitboard
   - type: OreSiloClient
-  # Arcane-Edit-Start: announce new recipes on the department channel
+  # Arcane-Edit-Start: Announce new recipes on the department channel
   - type: TechFabRecipeRadio
     channel: Medical
   # Arcane-Edit-End

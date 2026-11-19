@@ -31,7 +31,7 @@ public sealed partial class LatheSystem
 
     private void AnnounceAddedRecipes(Entity<LatheComponent> ent, List<string>? recipes)
     {
-        if (!ent.Comp.AnnounceRecipeUnlocksLocally || recipes is not { Count: > 0 } list) // Arcane-Edit: techfabs with a radio announcement skip local speech
+        if (!ent.Comp.AnnounceRecipeUnlocksLocally || recipes is not { Count: > 0 } list) // Arcane-Edit: Techfabs with a radio announcement skip local speech
             return;
 
         var recipesCount = 0;

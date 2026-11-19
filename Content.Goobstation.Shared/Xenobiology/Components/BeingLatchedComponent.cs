@@ -9,7 +9,7 @@ namespace Content.Goobstation.Shared.Xenobiology.Components;
 /// Marks an entity as being consumed so it is not targeted by other entities.
 /// Freaky.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: retain the owner of this reservation
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: Retain the owner of this reservation
 public sealed partial class BeingLatchedComponent : Component
 {
     // Arcane-Start

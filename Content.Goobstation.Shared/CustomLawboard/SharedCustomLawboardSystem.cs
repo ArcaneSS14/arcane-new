@@ -50,9 +50,9 @@ public abstract partial class SharedCustomLawboardSystem : EntitySystem
 
             sanitizedLaws.Add(new SiliconLaw()
             {
-                LawString = SanitizeText(law.LawString ?? string.Empty), // Arcane-Edit: sanitize and limit law text
+                LawString = SanitizeText(law.LawString ?? string.Empty), // Arcane-Edit: Sanitize and limit law text
                 Order = law.Order,
-                LawIdentifierOverride = law.LawIdentifierOverride is { } label ? SanitizeText(label) : null, // Arcane-Edit: sanitize and limit law label
+                LawIdentifierOverride = law.LawIdentifierOverride is { } label ? SanitizeText(label) : null, // Arcane-Edit: Sanitize and limit law label
             });
         }
         return sanitizedLaws;

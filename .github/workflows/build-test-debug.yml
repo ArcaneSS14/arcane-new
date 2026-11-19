@@ -107,7 +107,7 @@ jobs:
     needs: build
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    # Arcane-Start: bound per-runner resource usage while keeping both sets required.
+    # Arcane-Start: Bound per-runner resource usage while keeping both sets required.
     strategy:
       fail-fast: false
       matrix:
@@ -129,7 +129,7 @@ jobs:
       env:
         MAIN_TEST_FILTER: ${{ matrix.filter }}
       # Arcane-End
-      # Arcane-Edit-Start: send the complete filter through VSTest.
+      # Arcane-Edit-Start: Send the complete filter through VSTest.
       run: |
         DOTNET_gcServer=1 dotnet test bin/Content.IntegrationTests/Content.IntegrationTests.dll \
           --filter "TestCategory!=MapTests&TestCategory!=GameRuleTests&$MAIN_TEST_FILTER" -- \
@@ -140,7 +140,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: nunit3-results-main-${{ matrix.suite }}-${{ github.run_attempt }} # Arcane-Edit: include the suite name.
+        name: nunit3-results-main-${{ matrix.suite }}-${{ github.run_attempt }} # Arcane-Edit: Include the suite name.
         path: test_results/*
         retention-days: 7
         compression-level: 9

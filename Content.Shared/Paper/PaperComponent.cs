@@ -53,7 +53,7 @@ public sealed partial class PaperComponent : Component
         public readonly string Text;
         public readonly Guid SaveId; // Arcane
 
-        public PaperInputTextMessage(string text, Guid saveId = default) // Arcane-Edit: correlate each save and its reply
+        public PaperInputTextMessage(string text, Guid saveId = default) // Arcane-Edit: Correlate each save and its reply
         {
             Text = text;
             SaveId = saveId; // Arcane

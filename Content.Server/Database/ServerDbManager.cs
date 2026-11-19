@@ -26,7 +26,7 @@ using MSLogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Content.Server.Database
 {
-    public partial interface IServerDbManager // Arcane-Edit: partial achievement persistence contract
+    public partial interface IServerDbManager // Arcane-Edit: Partial achievement persistence contract
     {
         // <Trauma>
         #region Patrons

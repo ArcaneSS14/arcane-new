@@ -104,7 +104,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         sm.ZapAccumulator++;
         sm.YellAccumulator++;
 
-        var hasGasSample = ProcessAtmos(uid, sm); // Arcane-Edit: track whether the cycle sampled gas
+        var hasGasSample = ProcessAtmos(uid, sm); // Arcane-Edit: Track whether the cycle sampled gas
         HandleDamage(uid, sm);
 
         if (sm.Damage >= sm.DelaminationPoint || sm.Delamming)
@@ -135,18 +135,18 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
     /// <summary>
     ///     Handle power and radiation output depending on atmospheric things.
     /// </summary>
-    private bool ProcessAtmos(EntityUid uid, SupermatterComponent sm) // Arcane-Edit: report whether gas was sampled
+    private bool ProcessAtmos(EntityUid uid, SupermatterComponent sm) // Arcane-Edit: Report whether gas was sampled
     {
         var mix = _atmosphere.GetContainingMixture(uid, true, true);
 
         if (mix is not { })
-            return false; // Arcane-Edit: no gas sample
+            return false; // Arcane-Edit: No gas sample
 
-        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: apply the active surge
+        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: Apply the active surge
         var moles = absorbedGas.TotalMoles;
 
         if (!(moles > 0f))
-            return false; // Arcane-Edit: no gas sample
+            return false; // Arcane-Edit: No gas sample
 
         var gases = sm.GasStorage;
         var facts = sm.GasDataFields;
@@ -306,7 +306,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         }
 
         // Absorbed gas from surrounding area
-        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: apply the active surge
+        var absorbedGas = mix.Remove(sm.EffectiveGasEfficiency * mix.TotalMoles); // Arcane-Edit: Apply the active surge
         var moles = absorbedGas.TotalMoles;
 
         var totalDamage = sm.Damage; // Arcane-Edit: 0f > accumulate current damage
@@ -358,7 +358,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
             break;
         }
 
-        sm.Damage = Math.Max(Math.Min(sm.DamageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage), 0f); // Arcane-Edit: clamp damage at zero
+        sm.Damage = Math.Max(Math.Min(sm.DamageArchived + sm.DamageHardcap * sm.DelaminationPoint, totalDamage), 0f); // Arcane-Edit: Clamp damage at zero
 
         // Return the manipulated gas back to the mix
         _atmosphere.Merge(mix, absorbedGas);
