@@ -1,0 +1,102 @@
+- type: blobChem
+  id: ComatoseFiber
+  blobbernautDamageModifiers: BlobBlobbernaut
+  chargeSpecialTileCosts: true
+  spaceGrowthCost: 6
+  name: "comatose fiber"
+  info: |
+    Deals 22 asphyxiation and 150 structural damage.
+    Growing in space costs the same as growing on a floor.
+  color: "#191978"
+  damage:
+    types:
+      Asphyxiation: 22
+      Structural: 150
+  smokeSolution:
+    reagents:
+    - ReagentId: ChloralHydrate
+      Quantity: 30
+
+- type: blobChem
+  id: ChainCoating
+  chargeSpecialTileCosts: true
+  spaceGrowthCost: 23
+  tileCostOverrides:
+    Normal: 9
+    Strong: 10
+    Reflective: 10
+    Factory: 100
+    Resource: 85
+  nodePulseSeconds: 6
+  name: "chain coating"
+  info: |
+    Deals 12 blunt and 12 slash damage, and 150 structural damage.
+    Blob tiles become more resistant, while growth costs increase and resource production decreases.
+  color: "#3b3b3b"
+  damage:
+    types:
+      Blunt: 12
+      Slash: 12
+      Structural: 150
+  smokeSolution:
+    reagents:
+    - ReagentId: Razorium
+      Quantity: 30
+  blobbernautDamageModifiers: BlobBlobbernautChainCoating
+  damageModifiers: ChainCoatingBlob
+  bonusPoints: -1
+
+- type: blobChem
+  id: SinewyTendons
+  blobbernautDamageModifiers: BlobBlobbernaut
+  chargeSpecialTileCosts: true
+  tileCostOverrides:
+    Strong: 25
+    Reflective: 20
+    Factory: 60
+    Resource: 40
+  nodePulseSeconds: 2.5
+  podSpawnLimit: 5
+  name: "sinewy tendons"
+  info: |
+    Heals 8 damage of several types and deals 150 structural damage.
+    Nodes pulse faster, factories and resource blobs cost less, and factories support more pods.
+  color: "#690f53"
+  damage:
+    types:
+      Blunt: -8
+      Slash: -8
+      Piercing: -8
+      Poison: -8
+      Heat: -8
+      Cold: -8
+      Asphyxiation: -8
+      Structural: 150
+  smokeSolution:
+    reagents:
+    - ReagentId: Ipecac
+      Quantity: 15
+    - ReagentId: Profanol
+      Quantity: 15
+  damageModifiers: SinewyTendonsBlob
+
+- type: blobChem
+  id: CorrosiveSlime
+  blobbernautDamageModifiers: BlobBlobbernaut
+  chargeSpecialTileCosts: true
+  tileCostOverrides:
+    Node: 100
+  name: "corrosive slime"
+  info: |
+    Deals 13 caustic, 2 cellular, and 320 structural damage.
+    Blob nodes cost more.
+  color: "#9cae6b"
+  damage:
+    types:
+      Caustic: 13
+      Cellular: 2
+      Structural: 320
+  smokeSolution:
+    reagents:
+    - ReagentId: PolytrinicAcid
+      Quantity: 30
