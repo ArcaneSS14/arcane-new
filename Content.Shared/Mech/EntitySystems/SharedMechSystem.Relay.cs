@@ -1,5 +1,6 @@
 using Content.Shared.Interaction.Events;
 using Content.Shared.Mech.Components;
+
 using Content.Shared.Weapons.Ranged.Events; // Arcane
 
 namespace Content.Shared.Mech.EntitySystems;

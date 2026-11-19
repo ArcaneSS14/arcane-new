@@ -27,14 +27,14 @@ public sealed partial class SwapOnProjectileHitSystem : EntitySystem
         if (!_whitelist.IsValid(comp.Whitelist, args.Target))
             return;
 
-        var swapped = _spells.Swap(args.Shooter.Value,
+        var swapped = _spells.Swap(args.Shooter.Value, // Arcane-Edit
             Transform(args.Shooter.Value),
             args.Target,
             Transform(args.Target),
             comp.Sound,
             comp.Effect);
 
-        if (swapped && comp.DeleteProjectileOnSwap)
+        if (swapped && comp.DeleteProjectileOnSwap) // Arcane-Edit
             PredictedDel(uid);
     }
 }

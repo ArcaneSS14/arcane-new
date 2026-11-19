@@ -522,9 +522,7 @@ public sealed partial class SupermatterSystem : SharedSupermatterSystem
         if (sm.DelamTimer > sm.DelamTimerAccumulator)
             return;
 
-        // Arcane-Start
-        RaiseLocalEvent(new Content.Goobstation.Shared.Supermatter.Events.SupermatterDelaminatedEvent(uid));
-        // Arcane-End
+        RaiseLocalEvent(new Content.Goobstation.Shared.Supermatter.Events.SupermatterDelaminatedEvent(uid)); // Arcane
 
         switch (_delamType)
         {

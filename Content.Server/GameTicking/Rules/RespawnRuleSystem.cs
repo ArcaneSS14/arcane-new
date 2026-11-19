@@ -1,4 +1,3 @@
-using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Station.Systems;
@@ -7,16 +6,20 @@ using Content.Shared.GameTicking.Components;
 using Content.Shared.GameTicking.Rules;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Mind;
-using Content.Shared.Ghost.Components; // Arcane
 using Content.Shared.Mobs;
-using Content.Shared.Mobs.Systems; // Arcane
 using Content.Shared.Players;
 using Robust.Server.Player;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Robust.Shared.Enums; // Arcane
+
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Mobs.Systems;
+using Robust.Shared.Enums;
+// Arcane-End
 
 namespace Content.Server.GameTicking.Rules;
 

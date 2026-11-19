@@ -476,8 +476,10 @@ public sealed partial class PolymorphSystem : SharedPolymorphSystem // Trauma - 
                 // Arcane-Edit-End
             }
 
-            if (Terminating(uid)) // Arcane
-                DropUntransferredInventory(uid, parent); // Arcane
+            // Arcane-Start
+            if (Terminating(uid))
+                DropUntransferredInventory(uid, parent);
+            // Arcane-End
         }
         else
         {

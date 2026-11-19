@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Shared.Antag.Components;
 using Content.Shared.Database;
 using Content.Shared.Ghost.Components;
@@ -11,6 +10,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+
+using Content.Arcane.Common.Thunderdome; // Arcane
 
 namespace Content.Shared.Antag;
 

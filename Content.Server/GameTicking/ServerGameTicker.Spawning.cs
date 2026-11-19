@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.GameTicking.Events;
@@ -25,8 +24,12 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.GameTicking; // Arcane
-using Robust.Shared.Enums; // Arcane
+using Content.Arcane.Common.GameTicking;
+
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Robust.Shared.Enums;
+// Arcane-End
 
 namespace Content.Server.GameTicking
 {

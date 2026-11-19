@@ -19,10 +19,9 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
-// Arcane-Start
 using Content.Arcane.Common.Sponsors;
-using Content.Goobstation.Common.CCVar;
-// Arcane-End
+
+using Content.Goobstation.Common.CCVar; // Arcane
 
 /*
  * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
