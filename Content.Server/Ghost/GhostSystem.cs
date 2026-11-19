@@ -28,7 +28,6 @@ using Content.Shared.GameTicking;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Ghost.Systems;
 using Content.Shared.GhostTypes;
-using Robust.Shared.Network; // Arcane
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
@@ -50,6 +49,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Content.Arcane.Common.Ghost; // Arcane
+
+using Robust.Shared.Network; // Arcane
 
 namespace Content.Server.Ghost
 {
@@ -520,14 +521,16 @@ namespace Content.Server.Ghost
                 }
             }
 
-            // Arcane-Edit-Start: custom ghosts
-            var ghostProto = new GhostPrototypeEvent(appearanceUser ?? mind.Comp.UserId, ServerGameTicker.ObserverPrototypeName); // Arcane
+            // Arcane-Start
+            var ghostProto = new GhostPrototypeEvent(appearanceUser ?? mind.Comp.UserId, ServerGameTicker.ObserverPrototypeName);
             RaiseLocalEvent(ref ghostProto);
-            var ghost = SpawnAtPosition(ghostProto.Prototype, spawnPosition.Value);
-            // Arcane-Edit-End
+            // Arcane-End
+            var ghost = SpawnAtPosition(ghostProto.Prototype, spawnPosition.Value); // Arcane-Edit
             var ghostComponent = Comp<GhostComponent>(ghost);
-            var spawned = new GhostSpawnedEvent(ghost, appearanceUser ?? mind.Comp.UserId); // Arcane
-            RaiseLocalEvent(ref spawned); // Arcane
+            // Arcane-Start
+            var spawned = new GhostSpawnedEvent(ghost, appearanceUser ?? mind.Comp.UserId);
+            RaiseLocalEvent(ref spawned);
+            // Arcane-End
 
             if (!ghostProto.Custom && TryComp<GhostSpriteStateComponent>(ghost, out var state)) // Arcane-Edit: TryComp > !ghostProto.Custom && TryComp, custom sprites lack death states  // If more TryComps are added this should be turned into an event
             {

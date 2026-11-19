@@ -13,17 +13,20 @@ namespace Content.Arcane.Server.Paint;
 public static class PaintImageImporter
 {
     public const int MaxSourceDimension = 8192;
+    public const long MaxSourcePixels = 4 * 1024 * 1024;
 
     public static PaintImage Import(byte[] data, Vector2i size, Color background)
     {
         if (!PaintImage.IsValidSize(size))
             throw new ArgumentOutOfRangeException(nameof(size));
 
-        var info = Image.Identify(data);
-        if (info.Width > MaxSourceDimension || info.Height > MaxSourceDimension)
-            throw new InvalidImageContentException($"Image is {info.Width}x{info.Height}, the limit is {MaxSourceDimension}x{MaxSourceDimension}.");
+        var options = new DecoderOptions { MaxFrames = 1, SkipMetadata = true };
+        var info = Image.Identify(options, data);
+        if (info.Width > MaxSourceDimension || info.Height > MaxSourceDimension ||
+            (long) info.Width * info.Height > MaxSourcePixels)
+            throw new InvalidImageContentException($"Image is {info.Width}x{info.Height}; source limit is {MaxSourcePixels} pixels and {MaxSourceDimension} per side.");
 
-        using var image = Image.Load<Rgba32>(new DecoderOptions { MaxFrames = 1 }, data);
+        using var image = Image.Load<Rgba32>(options, data);
 
         var backgroundColor = ImageColor.FromPixel(new Rgba32(background.RByte, background.GByte, background.BByte));
         var resize = new ResizeOptions

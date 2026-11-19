@@ -1,4 +1,3 @@
-using Content.Arcane.Common.Thunderdome; // Arcane
 using Content.Client.Gameplay;
 using Content.Client.Ghost;
 using Content.Client.UserInterface.Systems.Gameplay;
@@ -7,7 +6,11 @@ using Content.Shared.Ghost.Components;
 using Content.Shared.Ghost.Systems;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
-using Robust.Shared.Configuration; // Arcane
+
+// Arcane-Start
+using Content.Arcane.Common.Thunderdome;
+using Robust.Shared.Configuration;
+// Arcane-End
 
 namespace Content.Client.UserInterface.Systems.Ghost;
 
@@ -184,6 +187,8 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
         _system?.OpenGhostRoles();
     }
 
-    private void OnThunderdomePressed(Robust.Client.UserInterface.Controls.BaseButton.ButtonEventArgs args) => // Arcane
-        _net.SendSystemNetworkMessage(new ThunderdomeJoinEvent()); // Arcane
+    // Arcane-Start
+    private void OnThunderdomePressed(Robust.Client.UserInterface.Controls.BaseButton.ButtonEventArgs args) =>
+        _net.SendSystemNetworkMessage(new ThunderdomeJoinEvent());
+    // Arcane-End
 }

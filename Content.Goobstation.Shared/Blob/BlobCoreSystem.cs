@@ -11,6 +11,7 @@ using Content.Shared.Weapons.Melee;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Timing;
+
 using Content.Shared.Damage.Prototypes; // Arcane
 
 namespace Content.Goobstation.Shared.Blob;

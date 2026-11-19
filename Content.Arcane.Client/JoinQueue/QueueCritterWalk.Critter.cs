@@ -4,8 +4,6 @@ using Robust.Shared.Graphics.RSI;
 
 namespace Content.Arcane.Client.JoinQueue;
 
-// I wanted a partial class because the first file was getting a little too big for my liking, but I couldn't think of a good name so now we have QueueCritterWalk.Critter. Gem.
-
 public sealed partial class QueueCritterWalk
 {
     private sealed class Critter

@@ -30,7 +30,7 @@
   - type: BorgSwitchableType
     inherentRadioChannels:
     - Common
-    - Binary # Arcane
+    - Binary # Arcane-Edit: Restore the radio channel
 
 
 - type: entity
