@@ -1306,6 +1306,12 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("char_name");
 
+                    // Arcane-Start: Ear layering preference
+                    b.Property<bool>("EarsAboveHair")
+                        .HasColumnType("boolean")
+                        .HasColumnName("ears_above_hair");
+                    // Arcane-End
+
                     b.Property<string>("EyeColor")
                         .IsRequired()
                         .HasColumnType("text")

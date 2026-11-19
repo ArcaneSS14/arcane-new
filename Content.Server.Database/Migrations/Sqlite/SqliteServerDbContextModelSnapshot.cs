@@ -1233,6 +1233,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("char_name");
 
+                    // Arcane-Start: Ear layering preference
+                    b.Property<bool>("EarsAboveHair")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("ears_above_hair");
+                    // Arcane-End
+
                     b.Property<string>("EyeColor")
                         .IsRequired()
                         .HasColumnType("TEXT")

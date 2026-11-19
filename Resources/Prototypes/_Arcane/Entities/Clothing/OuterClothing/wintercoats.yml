@@ -10,3 +10,19 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: ClothingHeadHatHoodWinterSec
+
+- type: entity
+  parent: [ClothingOuterWinterCoat, BaseCommandContraband]
+  id: ClothingOuterLabWinterCMO
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/WinterCoats/cmocoat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/WinterCoats/cmocoat.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Slash: 0.9
+        Heat: 0.8
+        Caustic: 0.6
+    priceMultiplier: 0.15

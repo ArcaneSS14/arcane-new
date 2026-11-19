@@ -42,6 +42,7 @@
 - type: marking
   id: TajaranEarsRetro
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/ears.rsi
@@ -50,6 +51,7 @@
 - type: marking
   id: TajaranEarsSeparate
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/ears.rsi
@@ -60,6 +62,7 @@
 - type: marking
   id: TajaranEarsRetroNear
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/ears.rsi
@@ -68,6 +71,7 @@
 - type: marking
   id: TajaranEarsSeparateNear
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/ears.rsi
@@ -182,6 +186,7 @@
 - type: marking
   id: TajaranEarsBasic
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -192,6 +197,7 @@
 - type: marking
   id: TajaranEarsCurled
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -202,6 +208,7 @@
 - type: marking
   id: TajaranEarsDroopy
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -212,6 +219,7 @@
 - type: marking
   id: TajaranEarsFuzzy
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -222,6 +230,7 @@
 - type: marking
   id: TajaranEarsStubby
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -232,6 +241,7 @@
 - type: marking
   id: TajaranEarsTall
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -244,6 +254,7 @@
 - type: marking
   id: TajaranEarsTorn
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
@@ -254,6 +265,7 @@
 - type: marking
   id: TajaranEarsWide
   bodyPart: HeadTop
+  underHair: true # Arcane
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/extra_ears.rsi
