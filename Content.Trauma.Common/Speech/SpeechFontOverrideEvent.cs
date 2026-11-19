@@ -9,7 +9,7 @@ namespace Content.Trauma.Common.Speech;
 /// This overrides languages.
 /// </summary>
 [ByRefEvent]
-public record struct SpeechFontOverrideEvent(EntityUid Source, string Font, Color? Color = null) : IInventoryRelayEvent // Arcane-Edit: add optional color override
+public record struct SpeechFontOverrideEvent(EntityUid Source, string Font, Color? Color = null) : IInventoryRelayEvent // Arcane-Edit: Add optional color override
 {
     SlotFlags IInventoryRelayEvent.TargetSlots => SlotFlags.WITHOUT_POCKET;
 }
