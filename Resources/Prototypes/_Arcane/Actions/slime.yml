@@ -1,0 +1,17 @@
+- type: entity
+  parent: BaseAction
+  id: ActionSlimeRegrowLimb
+  name: Regrow limb
+  description: Spend food and water to regrow one missing limb or your head.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: NoItem
+    useDelay: 240
+  - type: Sprite
+    sprite: _Arcane/Interface/Actions/slime_regrow.rsi
+    layers:
+    - state: regrow
+      map: [ "enum.ActionVisuals.Icon" ]
+  - type: InstantAction
+    event: !type:SlimeRegrowActionEvent
