@@ -43,7 +43,7 @@ Rules are repository policy; skills are task playbooks. A selected skill is an e
 ## Always-on invariants
 
 - Arcane runtime projects are root-level `Content.Arcane.Common`, `Content.Arcane.Shared`, `Content.Arcane.Server`, and `Content.Arcane.Client`. Arcane resources use existing `Resources` owner directories such as `Resources/Prototypes/_Arcane`, `Resources/Textures/_Arcane`, and `Resources/Locale/{culture}/_Arcane`. `Modules/Arcane` currently contains guidance, not runtime projects.
-- Arcane-owned projects and `_Arcane` owner directories do not need Arcane edit markers. Inherited paths on the TraumaStation sync surface do; consult the marker rule for language-specific syntax and line-count details.
+- Resolve [owner-local placement](rules/architecture-and-ownership.md#owner-local-paths) before markers; modules, resources, same-assembly partials and infrastructure follow that table. Only inherited edits need the marker rule.
 - Never author our change under another fork's marker. Preserve upstream markers on lines we did not change.
 - `en-US` is the structural source of truth and the only locale updated by default. Change `ru-RU` only when the user explicitly requests Russian localization; then preserve the existing key contract, attributes, variables, selectors, paths, and ordering.
 - Do not cross engine boundaries, invent APIs, bypass access modifiers, or expand repository searches beyond the task's evidence needs.

@@ -7,7 +7,7 @@ description: Write repository-consistent C# only after proving symbol access, ow
 
 ## Когда применять
 
-Use before writing or reviewing C# that crosses symbols, assemblies, ECS/prototype contracts, or compatibility surfaces.
+Use when writing or reviewing C#, including layout/comments and symbol, assembly or compatibility boundaries.
 
 ## До изменения
 
@@ -39,5 +39,7 @@ Use the current owner pattern and explicit stable API for cross-assembly behavio
 Verify declarations/access/references before calling them. Build only the affected project and run focused owner coverage when code behavior changed; documentation-only work needs diff checks.
 
 ## References
+
+- For header/layout edits or file moves, read [C# layout](../../rules/csharp-writing-conventions.md#file-layout); for documentation/comments read [commenting conventions](../../rules/commenting-conventions.md). Inspect the resulting header, namespace boundaries and XML docs, not just changed tokens.
 
 - [Dependency injection](references/dependency-injection.md): Read this when selecting an injected system, dependency field name, or common namespace; verify the current declaration before use.

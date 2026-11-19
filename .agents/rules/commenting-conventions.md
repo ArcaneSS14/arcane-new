@@ -1,6 +1,6 @@
 # Commenting conventions
 
-Where comments belong, and where they do not. The distribution in this repository is not even: components carry dense documentation, systems carry almost none.
+Document contracts and non-obvious reasoning; comment count is not a quality target.
 
 ## Where comments are expected
 
@@ -8,12 +8,11 @@ Where comments belong, and where they do not. The distribution in this repositor
 
 Every `[DataField]` member gets an XML doc comment. So do prototype types and the configuration records they expose.
 
-This is not stylistic preference. A `[DataField]` member is populated from YAML by name, so its field name and its doc comment are the only documentation a designer or content contributor ever sees. `Content.Shared/Polymorph/PolymorphPrototype.cs` has 26 `<summary>` blocks across 53 members. That density is the local norm: 1027 of 1061 component files carry comments, at a median of one comment line per line of code.
+Explain the field contract for YAML authors. Put `<summary>`, its text and `</summary>` on separate `///` lines; retain useful multiline explanations rather than forcing the whole comment into three lines.
 
 ```csharp
 /// <summary>
 /// What entity the polymorph will turn the target into.
-/// Must be in here because it makes no sense if it isn't.
 /// </summary>
 [DataField]
 public EntProtoId? Entity;
@@ -96,13 +95,13 @@ Do not add `// --- Dependencies ---`, `// --- Helpers ---`, or `// Region X`. Me
 
 ### Marking ownership
 
-Do not annotate a file or block with the contributor, fork, or migration it came from. Ownership lives in SPDX headers and the repository's identity rules.
+Do not add redundant ownership labels in owner-local files. Preserve source attribution and license text; inherited edits still require [Arcane markers](arcane-edit-markers.md). These markers do not replace explanations of non-obvious behavior.
 
 ## Handling existing comments
 
 When editing a line, remove a comment that only narrates it. Do not launch a comment-removal pass over a file as a side effect of an unrelated change.
 
-Match the density of the file you are in. Adding a `// this increments the counter` to a well-documented file is as wrong as deleting a genuine derivation comment from one that needs it.
+Preserve useful explanations and derivations; do not add narration to imitate neighbouring comment density.
 
 ## License headers
 

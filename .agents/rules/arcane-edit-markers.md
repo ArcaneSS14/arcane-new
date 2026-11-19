@@ -2,7 +2,7 @@
 
 Marking an inherited file is what makes an Arcane change survive the next upstream sync. A change that is not marked is a change that will be reverted by someone else's rebase.
 
-Marking applies only outside owner-local paths. Arcane runtime projects are root-level `Content.Arcane.*`; Arcane-owned resource directories include existing `Resources/**/_Arcane/**` paths. `Modules/Arcane` currently contains guidance files, not runtime code.
+First choose the [owner-local destination](architecture-and-ownership.md#owner-local-paths), including same-assembly `_Arcane` partials and infrastructure. Mark only changed portions of inherited files. A whole-file wrapper never substitutes for correct placement.
 
 ## Which form to use
 
@@ -55,7 +55,7 @@ Either `-Start` takes an optional `<reason>` suffix, and it means the same thing
 
 Use the marker form above consistently in C# and YAML: one added line gets a trailing `Arcane`, multiple added lines get a paired block, one changed line gets a trailing `Arcane-Edit`, and multiple changed lines get a paired edit block.
 
-A multi-line C# change still prefers an owner-local partial file when the addition is additive enough to live there. The marker requirement is separate from that choice: wherever the change does land, it gets the form its line count calls for.
+Apply line-count rules only after establishing that the edit is in an inherited file; owner-local files need no edit markers.
 
 ```csharp
 // two or more changed lines
@@ -71,7 +71,7 @@ A bare `# Arcane` is the single-line addition form in YAML.
 
 ## Added usings
 
-Every added `using` goes below all other `using` directives in the file, and inside a marker. One added `using` gets a trailing `// Arcane`; two or more get the pair.
+Keep `global using` directives before all non-global usings. Within each category, collect Arcane imports into one contiguous group after inherited imports, without blank lines between adjacent directives. Sort our group System-first, then alphabetically; preserve inherited order within each category. One Arcane import uses trailing `// Arcane`; two or more share one pair. In owner-local files, sort each category the same way, without markers.
 
 ```csharp
 // one added using
@@ -88,9 +88,7 @@ using Content.Arcane.Shared.Map;
 // Arcane-End
 ```
 
-Two requirements at once: last position, and marked. A new `using` placed alphabetically among the existing ones is wrong even when it is marked, because it will collide with every upstream edit to the using block.
-
-The current C# tree does not follow this yet. Arcane has never marked a `using` in C#, and existing fork usings use `// <Trauma>` / `// </Trauma>` or a trailing `// Trauma` instead. Those are upstream markers on lines we did not touch, so they stay. New Arcane usings follow the rule above.
+“Last” means after inherited groups, not unsorted after existing Arcane imports. Preserve untouched foreign markers. Keep the header/namespace spacing from [C# layout](csharp-writing-conventions.md#file-layout).
 
 ## More than five modified lines
 
@@ -313,7 +311,7 @@ Placement differs by owner and file. Preserve upstream placement on untouched co
 
 ## Marking inside Trauma files
 
-`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are owner-local for Arcane, but they are also upstream surface for everyone syncing TraumaStation, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
+`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are Trauma-owned upstream surface, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
 
 Mark Arcane changes in inherited Trauma files with Arcane markers:
 
@@ -335,13 +333,13 @@ private static readonly EntProtoId IceWallPrototype = "WallRockSnow"; // Arcane-
 # Arcane-End
 ```
 
-Arcane-owned means no marker is needed for ownership. `Content.Arcane.*` and existing `Resources/**/_Arcane/**` paths do not sync from TraumaStation, so an Arcane marker there is unnecessary.
+Arcane-owned paths from the [placement table](architecture-and-ownership.md#owner-local-paths) need no ownership markers, including runtime and infrastructure `_Arcane` directories.
 
 An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's, not Trauma's. That is exactly the information a sync needs.
 
 ## Never do this
 
-- add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
+- add ownership markers inside an owner-local path or wrap a whole file instead of correcting its destination
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked
 - keep an upstream marker on a line we changed. Replacing `Trauma - ` with `Arcane-Edit: <upstream value> > <our value>` is the correct result, not an unauthorized conversion
