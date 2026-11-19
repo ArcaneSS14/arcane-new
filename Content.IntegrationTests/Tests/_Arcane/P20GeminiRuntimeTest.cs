@@ -196,6 +196,12 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(original!.Volume > 0, Is.True);
             Assert.That(copy!.Volume == 0, Is.True);
 
+            var minds = SEntMan.System<SharedMindSystem>();
+            var roles = SEntMan.System<SharedRoleSystem>();
+            var mind = minds.CreateMind(null, "Occupied Gemini removal fixture");
+            minds.TransferTo(mind.Owner, clone, mind: mind.Comp);
+            roles.MindAddRole(mind.Owner, "MindRoleGemini", mind: mind.Comp);
+
             var hit = new DamageSpecifier { DamageDict = { ["Blunt"] = 50 } };
             damage.TryChangeDamage(clone, hit, ignoreResistances: true, canMiss: false);
             Assert.That(SEntMan.GetComponent<GeminiProjectionComponent>(clone).Deployed, Is.False);
@@ -207,7 +213,11 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
             Assert.That(actions.PerformAction(host, actionEntity), Is.False);
             Assert.That(copiedPdaData.ContainedId, Is.EqualTo(projectedCard));
             Assert.That(SEntMan.GetComponent<PdaComponent>(pda).ContainedId, Is.EqualTo(originalCard));
+            Assert.That(mind.Comp.OwnedEntity, Is.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.True);
             Assert.That(inventory.TryUnequip(host, "belt", silent: true, force: true), Is.True);
+            Assert.That(mind.Comp.OwnedEntity, Is.Not.EqualTo(clone));
+            Assert.That(roles.MindHasRole<GeminiRoleComponent>(mind.Owner), Is.False);
         });
         await RunTicksSync(1);
         await Server.WaitAssertion(() =>
