@@ -14,7 +14,7 @@ public sealed partial class CauseZombieInfectionEntityEffectsSystem : EntityEffe
     protected override void Effect(Entity<MobStateComponent> entity, ref EntityEffectEvent<CauseZombieInfection> args)
     {
         if (HasComp<ZombieImmuneComponent>(entity) || HasComp<IncurableZombieComponent>(entity) ||
-            HasComp<SiliconZombieComponent>(entity)) // Arcane: silicon is susceptible to bites, not Romerol.
+            HasComp<SiliconZombieComponent>(entity)) // Arcane: Silicon is susceptible to bites, not Romerol.
             return;
 
         EnsureComp<ZombifyOnDeathComponent>(entity);

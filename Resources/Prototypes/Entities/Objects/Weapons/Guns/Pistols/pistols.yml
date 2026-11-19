@@ -226,7 +226,7 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/mk58.ogg
-  # Arcane-Start: keep the existing MK58 artwork and show the source attachment layer.
+  # Arcane-Start: Keep the existing MK58 artwork and show the source attachment layer.
   - type: ItemMapper
     sprite: _Arcane/Objects/Weapons/Guns/Pistols/mk58_attachment.rsi
     containerWhitelist: [ flashlight ]

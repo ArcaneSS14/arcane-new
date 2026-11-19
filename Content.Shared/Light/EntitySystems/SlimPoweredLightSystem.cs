@@ -46,10 +46,10 @@ public sealed partial class SlimPoweredLightSystem : EntitySystem
 
         entity.Comp.Enabled = enabled;
         Dirty(entity);
-        RefreshLight((entity.Owner, entity.Comp), _receiver.IsPowered(entity.Owner)); // Arcane-Edit: combine manual and AI illumination
+        RefreshLight((entity.Owner, entity.Comp), _receiver.IsPowered(entity.Owner)); // Arcane-Edit: Combine manual and AI illumination
     }
 
-    // Arcane-Start: automatic illumination does not own the manual switch.
+    // Arcane-Start: Automatic illumination does not own the manual switch.
     public void SetAiIllumination(Entity<SlimPoweredLightComponent?> entity, bool enabled)
     {
         if (!Resolve(entity.Owner, ref entity.Comp, false) || entity.Comp.AiIllumination == enabled)

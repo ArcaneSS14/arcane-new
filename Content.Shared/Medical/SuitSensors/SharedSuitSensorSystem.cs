@@ -137,7 +137,7 @@ public abstract partial class SharedSuitSensorSystem : EntitySystem
         args.Affected = true;
         args.Disabled = true;
 
-        // Arcane-Start: a repeat pulse must not replace the original settings.
+        // Arcane-Start: A repeat pulse must not replace the original settings.
         if (!HasComp<EmpDisabledComponent>(ent))
         {
             ent.Comp.PreviousControlsLocked = ent.Comp.ControlsLocked;

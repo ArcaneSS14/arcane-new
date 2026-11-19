@@ -89,7 +89,7 @@ public sealed partial class SlimeLatchSystem : EntitySystem
     {
         _damageable.ChangeDamage(ent.Owner, ent.Comp.Damage, ignoreResistances: true, targetPart: TargetBodyPart.All);
 
-        // Arcane-Edit-Start: only accepted blood feeds the slime
+        // Arcane-Edit-Start: Only accepted blood feeds the slime
         if (_net.IsClient || TerminatingOrDeleted(ent) || _mobState.IsDead(ent))
             return;
 
@@ -275,7 +275,7 @@ public sealed partial class SlimeLatchSystem : EntitySystem
             BreakOnMove = true,
         };
 
-        // Arcane-Edit-Start: support synchronous completion and undo a rejected start
+        // Arcane-Edit-Start: Support synchronous completion and undo a rejected start
         var reservation = EnsureComp<BeingLatchedComponent>(target);
         reservation.Slime = ent;
         Dirty(target, reservation);
@@ -309,7 +309,7 @@ public sealed partial class SlimeLatchSystem : EntitySystem
         ent.Comp.PendingLatchTarget = null;
         Dirty(ent);
         // Arcane-End
-        if (args.Handled || args.Cancelled || !CanLatch(ent, target)) // Arcane-Edit: the target may have moved or died
+        if (args.Handled || args.Cancelled || !CanLatch(ent, target)) // Arcane-Edit: The target may have moved or died
         {
             ReleaseLatchReservation(ent, target); // Arcane-Edit
             return;
@@ -351,7 +351,7 @@ public sealed partial class SlimeLatchSystem : EntitySystem
         return StartSlimeLatchDoAfter(ent, target);
     }
 
-    private void Latch(Entity<SlimeComponent> ent, EntityUid target) // Arcane-Edit: require a completed latch attempt
+    private void Latch(Entity<SlimeComponent> ent, EntityUid target) // Arcane-Edit: Require a completed latch attempt
     {
         if (IsLatched(ent))
             Unlatch(ent);
@@ -380,13 +380,13 @@ public sealed partial class SlimeLatchSystem : EntitySystem
         if (ent.Comp.LatchedTarget is not { } target)
             return;
 
-        // Arcane-Edit-Start: only this slime can clear its latch and damage effect
+        // Arcane-Edit-Start: Only this slime can clear its latch and damage effect
         ReleaseLatchReservation(ent, target);
         if (TryComp<SlimeDamageOvertimeComponent>(target, out var damage) && damage.SourceEntityUid == ent.Owner)
             RemCompDeferred(target, damage);
         // Arcane-Edit-End
 
-        // Arcane-Edit-Start: the entire grid can be terminating with the victim
+        // Arcane-Edit-Start: The entire grid can be terminating with the victim
         if (TryComp(target, out TransformComponent? targetTransform) && !TerminatingOrDeleted(targetTransform.ParentUid))
             _xform.SetParent(ent, targetTransform.ParentUid);
         // Arcane-Edit-End

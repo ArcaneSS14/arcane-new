@@ -19,7 +19,7 @@
     anchored: true
   - type: Physics
     bodyType: Static
-  # Arcane-Start: include the pit in the ghost location list.
+  # Arcane-Start: Include the pit in the ghost location list.
   - type: WarpPoint
     location: thunderdome-warp-bingle-pit
   # Arcane-End

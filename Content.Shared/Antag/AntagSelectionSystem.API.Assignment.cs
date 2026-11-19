@@ -88,7 +88,7 @@ public abstract partial class AntagSelectionSystem
         AntagSpecifierPrototype def)
     {
         // Cannot be antag if you're not in the game.
-        if (IsDisconnected(player) || HasComp<ThunderdomeParticipantComponent>(player.AttachedEntity)) // Arcane-Edit: exclude arena avatars
+        if (IsDisconnected(player) || HasComp<ThunderdomeParticipantComponent>(player.AttachedEntity)) // Arcane-Edit: Exclude arena avatars
             return false;
 
         if (IsAntagBanned(player, def))

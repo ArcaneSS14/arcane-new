@@ -34,7 +34,7 @@
       WallsKnowledge: 10
       InfrastructureKnowledge: 10
       ElectronicsKnowledge: 10
-      # Arcane-Start: crew languages available while using this chassis
+      # Arcane-Start: Crew languages available while using this chassis
       LanguageTauCetiBasic: 100
       LanguageRobotTalk: 100
       LanguageBubblish: 100

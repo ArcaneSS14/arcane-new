@@ -95,7 +95,7 @@ public sealed partial class SSDIndicatorSystem : EntitySystem
                 continue;
 
             _statusEffects.TryUpdateStatusEffectDuration(uid, StatusEffectSSDSleeping);
-            ssd.NextUpdate = curTime + ssd.UpdateInterval; // Arcane-Edit: schedule from the actual update, after the sleep delay
+            ssd.NextUpdate = curTime + ssd.UpdateInterval; // Arcane-Edit: Schedule from the actual update, after the sleep delay
             Dirty(uid, ssd);
         }
     }

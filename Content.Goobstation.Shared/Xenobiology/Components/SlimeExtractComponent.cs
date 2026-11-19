@@ -4,7 +4,7 @@ using Content.Shared.EntityEffects;
 
 namespace Content.Goobstation.Shared.Xenobiology.Components;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: replicate Used
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: Replicate Used
 public sealed partial class SlimeExtractComponent : Component
 {
     /// <summary>

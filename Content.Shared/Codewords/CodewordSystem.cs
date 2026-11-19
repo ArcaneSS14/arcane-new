@@ -65,7 +65,7 @@ public sealed partial class CodewordSystem : EntitySystem
     {
         var generator = ProtoMan.Index(generatorId);
 
-        // Arcane-Start: keep small datasets from being drowned out by large ones.
+        // Arcane-Start: Keep small datasets from being drowned out by large ones.
         if (generator.PickDatasetFirst)
         {
             var datasets = generator.Words.Distinct()

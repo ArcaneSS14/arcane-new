@@ -16,7 +16,7 @@ namespace Content.Shared.PAI;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class PAIComponent : Component
 {
-    // Arcane-Start: opt-in camera for station AI
+    // Arcane-Start: Opt-in camera for station AI
     [DataField]
     public EntProtoId? CameraAction;
 

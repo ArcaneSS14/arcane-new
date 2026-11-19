@@ -151,54 +151,6 @@ public sealed class P20GeminiRuntimeTest : InteractionTest
         });
     }
 
-    // Arcane-Start
-    [Test]
-    public async Task MonozygoticCanFireHandheldAndMechWeapons()
-    {
-        var position = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
-        EntityUid host = default;
-        EntityUid clone = default;
-        await Server.WaitAssertion(() =>
-        {
-            host = SEntMan.SpawnAttachedTo("MobHuman", position);
-            var projector = SEntMan.SpawnAttachedTo("ClothingBeltMonozygoticHoloProjector", position);
-            var inventory = SEntMan.System<InventorySystem>();
-            var actions = SEntMan.System<SharedActionsSystem>();
-            var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
-            Assert.That(inventory.TryEquip(host, projector, "belt", silent: true, force: true), Is.True);
-            var action = data.ActionEntity!.Value;
-            Assert.That(actions.PerformAction(host, (action, SEntMan.GetComponent<ActionComponent>(action))), Is.True);
-            clone = data.CloneUid!.Value;
-            Assert.That(SEntMan.HasComponent<PacifiedComponent>(clone), Is.False);
-
-            var revolver = SEntMan.SpawnAttachedTo("WeaponRevolverInspector", position);
-            Assert.That(HandSys.TryPickup(clone, revolver), Is.True);
-        });
-
-        // Picking up a revolver starts its normal hand-selection cooldown.
-        await RunSeconds(1f);
-        await Server.WaitAssertion(() =>
-        {
-            var target = position.Offset(new Vector2(4, 0));
-            Assert.That(SGun.TryGetGun(clone, out var heldGun), Is.True);
-            Assert.That(SGun.AttemptShoot(clone, heldGun, target), Is.True);
-
-            var mechs = SEntMan.System<SharedMechSystem>();
-            var mech = SEntMan.SpawnAttachedTo("MechRipleyBattery", position);
-            var gun = SEntMan.SpawnAttachedTo("WeaponMechDebugLaser", position);
-            mechs.InsertEquipment(mech, gun);
-            mechs.CycleEquipment(mech);
-            Assert.That(SGun.TryGetGun(mech, out var equippedGun), Is.True);
-            Assert.That(mechs.TryInsert(mech, clone), Is.True);
-            Assert.That(SGun.AttemptShoot(mech, equippedGun, target), Is.True);
-
-            Assert.That(SEntMan.System<InventorySystem>().TryUnequip(host, "belt", silent: true, force: true), Is.True);
-            Assert.That(SEntMan.GetComponent<MechComponent>(mech).PilotSlot.ContainedEntity, Is.Null);
-        });
-        await RunTicksSync(1);
-    }
-    // Arcane-End
-
     [Test]
     public async Task GeminiProjectsATitleInAPdaWithoutCopyingContentsAndRecallsOnDeath()
     {

@@ -215,7 +215,7 @@ public sealed partial class ServerStationJobsSystem : StationJobsSystem
         return jobsComponent.PlayerJobs.Remove(userId);
     }
 
-    // Arcane-Start: release only the specified assignment on this station.
+    // Arcane-Start: Release only the specified assignment on this station.
     public bool TryReleasePlayerJob(EntityUid station, NetUserId userId, ProtoId<JobPrototype> job)
     {
         if (!TryComp<StationJobsComponent>(station, out var component) ||

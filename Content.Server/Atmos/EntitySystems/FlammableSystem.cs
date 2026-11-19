@@ -71,7 +71,7 @@ namespace Content.Server.Atmos.EntitySystems
             UpdatesAfter.Add(typeof(AtmosphereSystem));
 
             SubscribeLocalEvent<FlammableComponent, MapInitEvent>(OnMapInit);
-            // Arcane: let tools repair a damaged chassis before falling back to ignition.
+            // Arcane: Let tools repair a damaged chassis before falling back to ignition.
             SubscribeLocalEvent<FlammableComponent, InteractUsingEvent>(OnInteractUsing, after: [typeof(RepairableSystem)]);
             SubscribeLocalEvent<FlammableComponent, StartCollideEvent>(OnCollide);
             SubscribeLocalEvent<FlammableComponent, IsHotEvent>(OnIsHot);

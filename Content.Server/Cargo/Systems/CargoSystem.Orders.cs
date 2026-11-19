@@ -780,7 +780,7 @@ namespace Content.Server.Cargo.Systems
             return products;
         }
 
-        // Arcane: use the same availability rule for the catalogue and server-side purchase paths.
+        // Arcane: Use the same availability rule for the catalogue and server-side purchase paths.
         private bool IsCargoProductAvailable(string product)
         {
             var ev = new CargoProductAvailabilityEvent(product);
