@@ -24,7 +24,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using Content.Arcane.Common.GameTicking; // Arcane
+using Content.Arcane.Common.GameTicking;
+
 using Robust.Shared.Enums; // Arcane
 
 namespace Content.Server.GameTicking
