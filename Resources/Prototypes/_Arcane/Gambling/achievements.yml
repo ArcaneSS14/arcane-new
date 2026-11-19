@@ -1,0 +1,11 @@
+- type: achievement
+  id: Jackpot
+  name: achievement-jackpot-name
+  description: achievement-jackpot-desc
+  category: General
+  icon: { entity: SlotMachine }
+  condition: !type:PrizeWonCondition
+    prizes:
+    - Jackpot
+    - GodPot
+    - QmJackpot

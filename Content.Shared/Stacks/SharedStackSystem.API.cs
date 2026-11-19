@@ -334,6 +334,14 @@ public abstract partial class SharedStackSystem
     #endregion
     #region Getters
 
+    // Arcane-Start
+    /// <summary>Whether a stack can be used without reducing its count. Missing stacks fail closed.</summary>
+    public bool IsUnlimited(Entity<StackComponent?> ent)
+    {
+        return !_stackQuery.Resolve(ent.Owner, ref ent.Comp, false) || ent.Comp.Unlimited;
+    }
+    // Arcane-End
+
     /// <summary>
     /// Gets the count in a stack. If it cannot be stacked, returns 1.
     /// </summary>

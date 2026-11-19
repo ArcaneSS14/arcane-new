@@ -81,8 +81,22 @@
         density: 20
         mask:
         - ItemMask
-        restitution: 0.5 # a little bouncy
-        friction: 0.2
+        # Arcane-Edit-Start: restitution 0.5 > 1; friction 0.2 > 0.1
+        restitution: 1 # a little bouncy
+        friction: 0.1
+        # Arcane-Edit-End
+        # Arcane-Start
+        layer:
+        - MobLayer
+        # Arcane-End
+  # Arcane-Start
+  - type: TileFrictionModifier
+    modifier: 0.15
+  - type: Damageable
+    damageModifierSet: Metallic
+  - type: Injurable
+    damageContainer: Inorganic
+  # Arcane-End
   - type: Item
     size: Small
     sprite: Objects/Fun/Balls/tennisball.rsi

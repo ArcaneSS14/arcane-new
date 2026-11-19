@@ -1,0 +1,28 @@
+- type: entity
+  parent: BaseFlatpack
+  id: CoinFlipperFlatPack
+  name: coin flipper flatpack
+  description: A flatpack used for constructing a coin flipper
+  components:
+  - type: Flatpack
+    entity: CoinFlipper
+
+- type: entity
+  id: CrateCoinFlipper
+  parent: CrateGenericSteel
+  name: coin flipper crate
+  description: A crate with a coin flipper inside, 50/50 odds are good!
+  components:
+  - type: StorageFill
+    contents:
+    - id: CoinFlipperFlatPack
+
+- type: cargoProduct
+  id: CoinFlipperCargo
+  icon:
+    sprite: _Arcane/Structures/Machines/slotmachines/coinflipper.rsi
+    state: Coinflipper
+  product: CrateCoinFlipper
+  cost: 5000
+  category: cargoproduct-category-name-service
+  group: market
