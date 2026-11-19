@@ -53,7 +53,12 @@ public sealed partial class SetSelectorSystem : EntitySystem
 
     private void OnApprove(Entity<SetSelectorComponent> selector, ref SetSelectorApproveMessage args)
     {
-        if (selector.Comp.SelectedSets.Count != selector.Comp.MaxSelectedSets)
+        // Arcane-Edit-Start
+        if (TerminatingOrDeleted(selector) || EntityManager.IsQueuedForDeletion(selector)
+            || selector.Comp.SelectedSets.Count != selector.Comp.MaxSelectedSets
+            || selector.Comp.SelectedSets.Distinct().Count() != selector.Comp.SelectedSets.Count
+            || selector.Comp.SelectedSets.Any(index => index < 0 || index >= selector.Comp.AvailableSets.Count))
+        // Arcane-Edit-End
             return;
 
         EntityUid spawnedStorage = default;
@@ -119,6 +124,12 @@ public sealed partial class SetSelectorSystem : EntitySystem
 
     private void OnChangeSet(Entity<SetSelectorComponent> selector, ref SetSelectorChangeSetMessage args)
     {
+        // Arcane-Start
+        if (TerminatingOrDeleted(selector) || EntityManager.IsQueuedForDeletion(selector)
+            || args.SetNumber < 0 || args.SetNumber >= selector.Comp.AvailableSets.Count)
+            return;
+        // Arcane-End
+
         // Switch selecting set
         if (!selector.Comp.SelectedSets.Remove(args.SetNumber))
              selector.Comp.SelectedSets.Add(args.SetNumber);

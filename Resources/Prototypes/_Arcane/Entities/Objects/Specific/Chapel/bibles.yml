@@ -1,0 +1,116 @@
+- type: entity
+  parent: Bible
+  id: BibleVeda
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/veda.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/veda.rsi
+
+- type: entity
+  parent: Bible
+  id: BibleVelesBook
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/veles_book.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/veles_book.rsi
+
+- type: entity
+  parent: Bible
+  id: BibleSatanic
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/satanicbible.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/satanicbible.rsi
+
+- type: selectableSet
+  id: BibleVedaSet
+  name: arcane-chaplain-set-bible-veda-set-name
+  description: arcane-chaplain-set-bible-veda-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/veda.rsi
+    state: icon
+  content:
+  - BibleVeda
+
+- type: selectableSet
+  id: VelesBookSet
+  name: arcane-chaplain-set-veles-book-set-name
+  description: arcane-chaplain-set-veles-book-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/veles_book.rsi
+    state: icon
+  content:
+  - BibleVelesBook
+
+- type: selectableSet
+  id: BibleDruidSet
+  name: arcane-chaplain-set-bible-druid-set-name
+  description: arcane-chaplain-set-bible-druid-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/mysteryofthedruids.rsi
+    state: icon
+  content:
+  - BibleDruid
+
+- type: selectableSet
+  id: BibleCommunistSet
+  name: arcane-chaplain-set-bible-communist-set-name
+  description: arcane-chaplain-set-bible-communist-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/communistmanifesto.rsi
+    state: icon
+  content:
+  - BibleCommunistManifesto
+
+- type: selectableSet
+  id: BibleSatanicSet
+  name: arcane-chaplain-set-bible-satanic-set-name
+  description: arcane-chaplain-set-bible-satanic-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/satanicbible.rsi
+    state: icon
+  content:
+  - BibleSatanic
+
+- type: selectableSet
+  id: BibleNarsieSet
+  name: arcane-chaplain-set-bible-narsie-set-name
+  description: arcane-chaplain-set-bible-narsie-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/tomeofnarsie.rsi
+    state: icon
+  content:
+  - BibleNarsie
+
+- type: selectableSet
+  id: BibleNanoTrasenSet
+  name: arcane-chaplain-set-bible-nano-trasen-set-name
+  description: arcane-chaplain-set-bible-nano-trasen-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/codexnanotrasimus.rsi
+    state: icon
+  content:
+  - BibleNanoTrasen
+
+- type: selectableSet
+  id: BibleHonkSet
+  name: arcane-chaplain-set-bible-honk-set-name
+  description: arcane-chaplain-set-bible-honk-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/honk.rsi
+    state: icon
+  content:
+  - BibleHonk
+
+- type: selectableSet
+  id: BibleRatvarSet
+  name: arcane-chaplain-set-bible-ratvar-set-name
+  description: arcane-chaplain-set-bible-ratvar-set-description
+  sprite:
+    sprite: _Arcane/Objects/Specific/Chapel/ratvartablet.rsi
+    state: icon
+  content:
+  - BibleRatvar
