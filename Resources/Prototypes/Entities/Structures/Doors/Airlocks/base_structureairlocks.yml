@@ -93,6 +93,12 @@
   - type: AccessReader
     containerAccessProvider: board
   - type: Door
+    # Arcane-Start
+    openTimeOne: 0.2
+    openTimeTwo: 0.4
+    closeTimeOne: 0.3
+    closeTimeTwo: 0.3
+    # Arcane-End
     crushDamage:
       types:
         Blunt: 15

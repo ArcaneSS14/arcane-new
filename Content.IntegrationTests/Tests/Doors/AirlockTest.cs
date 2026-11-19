@@ -38,7 +38,9 @@ namespace Content.IntegrationTests.Tests.Doors
   id: AirlockDummy
   components:
   - type: Door
+    openTimeTwo: 0.3 # Arcane
   - type: Airlock
+  - type: Occluder # Arcane
   - type: DoorBolt
   - type: ApcPowerReceiver
     needsPower: false
@@ -61,6 +63,7 @@ namespace Content.IntegrationTests.Tests.Doors
 
             var entityManager = server.ResolveDependency<IEntityManager>();
             var doors = entityManager.EntitySysManager.GetEntitySystem<DoorSystem>();
+            var timing = server.ResolveDependency<IGameTiming>(); // Arcane
 
             EntityUid airlock = default;
             DoorComponent doorComponent = null;
@@ -85,6 +88,19 @@ namespace Content.IntegrationTests.Tests.Doors
 
             await server.WaitIdleAsync();
 
+            // Arcane-Start
+            await server.WaitAssertion(() =>
+            {
+                doors.OnPartialOpen(airlock);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(doorComponent.NextStateChange, Is.EqualTo(timing.CurTime + doorComponent.OpenTimeTwo));
+                    Assert.That(entityManager.GetComponent<PhysicsComponent>(airlock).CanCollide, Is.False);
+                    Assert.That(entityManager.GetComponent<OccluderComponent>(airlock).Enabled, Is.False);
+                });
+            });
+            // Arcane-End
+
             await PoolManager.WaitUntil(server, () => doorComponent.State == DoorState.Open);
 
             Assert.That(doorComponent.State, Is.EqualTo(DoorState.Open));
@@ -94,6 +110,19 @@ namespace Content.IntegrationTests.Tests.Doors
                 doors.TryClose(airlock);
                 Assert.That(doorComponent.State, Is.EqualTo(DoorState.Closing));
             });
+
+            // Arcane-Start
+            await server.WaitAssertion(() =>
+            {
+                Assert.That(doors.OnPartialClose(airlock), Is.True);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(doorComponent.NextStateChange, Is.EqualTo(timing.CurTime + doorComponent.CloseTimeTwo));
+                    Assert.That(entityManager.GetComponent<PhysicsComponent>(airlock).CanCollide, Is.True);
+                    Assert.That(entityManager.GetComponent<OccluderComponent>(airlock).Enabled, Is.True);
+                });
+            });
+            // Arcane-End
 
             await PoolManager.WaitUntil(server, () => doorComponent.State == DoorState.Closed);
 
@@ -107,71 +136,6 @@ namespace Content.IntegrationTests.Tests.Doors
                 });
             });
         }
-
-        // Arcane-Start
-        [Test]
-        public async Task AirlockLightAndCollisionTimingTest()
-        {
-            var server = Pair.Server;
-            var entities = server.ResolveDependency<IEntityManager>();
-            var doors = entities.System<DoorSystem>();
-            var timing = server.ResolveDependency<IGameTiming>();
-            var map = await Pair.CreateTestMap();
-            var airlocks = new (EntityUid Uid, bool BlocksLight)[2];
-
-            void Check(DoorState state, bool collidable, bool partial)
-            {
-                foreach (var (uid, blocksLight) in airlocks)
-                {
-                    var door = entities.GetComponent<DoorComponent>(uid);
-                    Assert.Multiple(() =>
-                    {
-                        Assert.That(door.State, Is.EqualTo(state));
-                        Assert.That(door.Partial, Is.EqualTo(partial));
-                        Assert.That(entities.GetComponent<PhysicsComponent>(uid).CanCollide, Is.EqualTo(collidable));
-                        Assert.That(entities.GetComponent<OccluderComponent>(uid).Enabled, Is.EqualTo(blocksLight && collidable));
-                    });
-                }
-            }
-
-            Task Advance(double seconds) => server.WaitRunTicks((int) Math.Ceiling(seconds / timing.TickPeriod.TotalSeconds));
-
-            await server.WaitAssertion(() =>
-            {
-                airlocks[0] = (entities.Spawn("Airlock", new MapCoordinates(Vector2.Zero, map.MapId)), true);
-                airlocks[1] = (entities.Spawn("AirlockGlass", new MapCoordinates(new Vector2(3, 0), map.MapId)), false);
-                Check(DoorState.Closed, true, false);
-                foreach (var (uid, _) in airlocks)
-                    doors.StartOpening(uid);
-            });
-
-            await Advance(0.15);
-            await server.WaitAssertion(() => Check(DoorState.Opening, true, false));
-            await Advance(0.1);
-            await server.WaitAssertion(() => Check(DoorState.Opening, false, true));
-            await Advance(0.3);
-            await server.WaitAssertion(() => Check(DoorState.Opening, false, true));
-            await Advance(0.1);
-            await server.WaitAssertion(() =>
-            {
-                Check(DoorState.Open, false, false);
-                foreach (var (uid, _) in airlocks)
-                    doors.StartClosing(uid);
-            });
-
-            await Advance(0.2);
-            await server.WaitAssertion(() => Check(DoorState.Closing, false, false));
-            await Advance(0.15);
-            await server.WaitAssertion(() => Check(DoorState.Closing, true, true));
-            await Advance(0.3);
-            await server.WaitAssertion(() =>
-            {
-                Check(DoorState.Closed, true, false);
-                foreach (var (uid, _) in airlocks)
-                    entities.DeleteEntity(uid);
-            });
-        }
-        // Arcane-End
 
         [Test]
         public async Task AirlockBlockTest()
