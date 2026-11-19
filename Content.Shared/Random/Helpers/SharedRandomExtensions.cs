@@ -28,8 +28,10 @@ namespace Content.Shared.Random.Helpers
         {
             IoCManager.Resolve(ref random);
             var picks = prototype.Weights;
-            var sum = picks.Values.Sum();
-            var accumulated = 0f;
+            // Arcane-Edit-Start
+            var sum = SumWeights(picks);
+            var accumulated = 0d;
+            // Arcane-Edit-End
 
             var rand = random.NextFloat() * sum;
 
@@ -58,8 +60,10 @@ namespace Content.Shared.Random.Helpers
         public static T Pick<T>(this IRobustRandom random, Dictionary<T, float> weights)
             where T: notnull
         {
-            var sum = weights.Values.Sum();
-            var accumulated = 0f;
+            // Arcane-Edit-Start
+            var sum = SumWeights(weights);
+            var accumulated = 0d;
+            // Arcane-Edit-End
 
             var rand = random.NextFloat() * sum;
 
@@ -99,8 +103,10 @@ namespace Content.Shared.Random.Helpers
         public static T Pick<T>(Dictionary<T, float> weights, IRobustRandom random)
             where T : notnull
         {
-            var sum = weights.Values.Sum();
-            var accumulated = 0f;
+            // Arcane-Edit-Start
+            var sum = SumWeights(weights);
+            var accumulated = 0d;
+            // Arcane-Edit-End
 
             var rand = random.NextFloat() * sum;
 
@@ -116,6 +122,16 @@ namespace Content.Shared.Random.Helpers
 
             throw new InvalidOperationException("Invalid weighted pick");
         }
+
+        // Arcane-Start: Match the draw's summation order so rounding cannot leave the final entry uncovered.
+        private static double SumWeights<T>(Dictionary<T, float> weights) where T : notnull
+        {
+            var sum = 0d;
+            foreach (var weight in weights.Values)
+                sum += weight;
+            return sum;
+        }
+        // Arcane-End
 
         public static (string reagent, FixedPoint2 quantity) Pick(this WeightedRandomFillSolutionPrototype prototype, IRobustRandom? random = null)
         {
