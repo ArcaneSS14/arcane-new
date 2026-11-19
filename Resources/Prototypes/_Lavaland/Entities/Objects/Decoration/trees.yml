@@ -50,7 +50,7 @@
         acts: [ "Destruction" ]
       - !type:SpawnEntitiesBehavior
         spawn:
-          # Arcane-Edit-Start: cut ash trees into ashwood logs
+          # Arcane-Edit-Start: Cut ash trees into ashwood logs
           AshwoodLog:
             min: 2
             max: 4

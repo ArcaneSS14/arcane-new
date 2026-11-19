@@ -67,7 +67,7 @@
     context: "human"
   - type: PAI
     cameraAction: ActionTogglePAICamera # Arcane
-  # Arcane-Start: optional view for the station AI
+  # Arcane-Start: Optional view for the station AI
   - type: StationAiVision
     enabled: false
     range: 1
@@ -154,7 +154,7 @@
   name: syndicate personal ai device
   description: Your Syndicate pal who's fun to be with!
   components:
-  # Arcane-Start: exclude the Syndicate device from station cameras
+  # Arcane-Start: Exclude the Syndicate device from station cameras
   - type: PAI
     cameraAction: null
   # Arcane-End
@@ -202,7 +202,7 @@
   name: golden personal ai device
   description: Your electronic pal who's fun to be with! Special golden edition!
   components:
-  # Arcane-Start: camera sharing is available on the ordinary device
+  # Arcane-Start: Camera sharing is available on the ordinary device
   - type: PAI
     cameraAction: null
   # Arcane-End
@@ -227,7 +227,7 @@
   name: potato artificial intelligence
   description: It's a potato. You forced it to be sentient, you monster.
   components:
-  # Arcane-Start: camera sharing is available on the ordinary device
+  # Arcane-Start: Camera sharing is available on the ordinary device
   - type: PAI
     cameraAction: null
   # Arcane-End
@@ -264,7 +264,7 @@
 
 # PAI Actions
 
-# Arcane-Start: optional view for the station AI
+# Arcane-Start: Optional view for the station AI
 - type: entity
   parent: BaseMentalAction
   id: ActionTogglePAICamera

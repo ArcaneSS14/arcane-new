@@ -56,7 +56,7 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         //  1.) Hit the first entity that you targeted.
         //  2.) Hit the first entity that doesn't require you to aim at it specifically to be hit.
         var targetCoords = args.TargetCoordinates; // Goob
-        // Arcane-Edit-Start: a dodging target does not block the beam or count as a hit.
+        // Arcane-Edit-Start: A dodging target does not block the beam or count as a hit.
         var shooterContained = _container.IsEntityOrParentInContainer(shooter);
         RayCastResults? result = null;
         HashSet<EntityUid>? dodged = null;

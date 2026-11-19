@@ -55,7 +55,7 @@ public sealed partial class SlimeGrinderSystem : EntitySystem
             grinder.ProcessingTimer = Math.Clamp(grinder.ProcessingTimer - frameTime, 0, grinder.ProcessingTimer);
 
             if (grinder.ProcessingTimer > 0)
-                continue; // Arcane-Edit: keep updating the other grinders
+                continue; // Arcane-Edit: Keep updating the other grinders
 
             foreach (var yield in grinder.YieldQueue)
             {
@@ -109,7 +109,7 @@ public sealed partial class SlimeGrinderSystem : EntitySystem
 
     private void OnDoAfter(Entity<SlimeGrinderComponent> grinder, ref ReclaimerDoAfterEvent args)
     {
-        if (args.Handled || args.Cancelled || args.Args.Used is not { } toProcess || !CanGrind(grinder, toProcess)) // Arcane-Edit: revalidate at completion
+        if (args.Handled || args.Cancelled || args.Args.Used is not { } toProcess || !CanGrind(grinder, toProcess)) // Arcane-Edit: Revalidate at completion
             return;
 
         QueueProcess(toProcess, grinder);

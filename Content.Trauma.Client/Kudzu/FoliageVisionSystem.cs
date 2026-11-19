@@ -25,7 +25,7 @@ public sealed partial class FoliageVisionSystem : EntitySystem
         SubscribeLocalEvent<HideableFoliageComponent, ComponentShutdown>((uid, _, args) => OnKudzuComponentShutdown(uid, args));
     }
 
-    // Arcane-Start: restore ordinary layering before the local vision owner is torn down.
+    // Arcane-Start: Restore ordinary layering before the local vision owner is torn down.
     public override void Shutdown()
     {
         SetFoliageIgnoringVision(false);

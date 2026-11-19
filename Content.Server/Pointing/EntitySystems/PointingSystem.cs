@@ -106,7 +106,7 @@ namespace Content.Server.Pointing.EntitySystems
                 // Someone pointing at YOU is slightly more important
                 var popupType = viewerEntity == pointed ? PopupType.Medium : PopupType.Small;
 
-                // Arcane-Start: the operator's camera may not have the hologram in its state yet.
+                // Arcane-Start: The operator's camera may not have the hologram in its state yet.
                 if (viewerEntity == source && origin != source)
                 {
                     _popup.PopupCursor(message, viewer, popupType);
@@ -319,7 +319,7 @@ namespace Content.Server.Pointing.EntitySystems
 
             _pointers[session] = _gameTiming.CurTime;
 
-            SendMessage(player, origin, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage); // Arcane-Edit: pass the projection origin
+            SendMessage(player, origin, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage); // Arcane-Edit: Pass the projection origin
 
             return true;
         }

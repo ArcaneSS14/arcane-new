@@ -123,7 +123,7 @@
   description: This implant allows the user to access Binary and communicate with silicons (use :b). # Arcane-Edit: +b > :b
   categories: [ HideSpawnMenu ]
   components:
-  # Arcane-Start: grant the Binary radio channel
+  # Arcane-Start: Grant the Binary radio channel
   - type: RadioImplant
     radioChannels:
     - Binary

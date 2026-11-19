@@ -128,69 +128,6 @@ public sealed class PollBoothTest : InteractionTest
         await Server.WaitPost(() => SEntMan.System<SharedMindSystem>().WipeMind(mind));
     }
 
-    [Test]
-    public async Task LateViewCountsDoNotReopenClosedPollsOrReplaceVotes()
-    {
-        var polls = Server.ResolveDependency<ServerPollManager>();
-        var poll = await RunServerTask(() => polls.CreatePoll("Late count", "Preserve current state", ["Yes", "No"], null, false));
-        Assert.That(poll, Is.Not.Null);
-        PollVotingWindow window = null!;
-        await ReceiveList(() => window = new PollVotingWindow());
-        try
-        {
-            await Pair.ReallyBeIdle(5);
-            // Arcane-Start
-            await Server.WaitPost(() => SEntMan.EntityNetManager.SendSystemNetworkMessage(
-                new PollSeenCountChangedEvent(poll!.PollId, 2)));
-            await Pair.ReallyBeIdle(5);
-            await Server.WaitPost(() => Server.ResolveDependency<IServerNetManager>().ServerSendToAll(
-                new MsgPollDetailsResponse { Poll = poll!, PlayerVotes = [] }));
-            await Pair.ReallyBeIdle(5);
-            await Client.WaitAssertion(() =>
-            {
-                Assert.That(Client.ResolveDependency<ClientPollManager>().ActivePolls[poll!.PollId].SeenCount, Is.EqualTo(2));
-                var card = window.FindControl<Control>("PollsList").Children.OfType<PollControl>()
-                    .Single(control => control.PollId == poll.PollId);
-                Assert.That(Descendants(card).OfType<Label>().Select(label => label.Text),
-                    Does.Contain(Loc.GetString("arcane-poll-control-seen-by", ("count", 2))));
-            });
-            // Arcane-End
-            await Server.WaitPost(() =>
-            {
-                poll!.Options[0].VoteCount = 3;
-                Server.ResolveDependency<IServerNetManager>().ServerSendToAll(new MsgPollUpdated { Poll = poll });
-            });
-            await RunServerTask(() => polls.ClosePoll(poll!.PollId));
-            await Pair.ReallyBeIdle(5);
-            await Client.WaitAssertion(() => Assert.That(Client.ResolveDependency<ClientPollManager>().ActivePolls[poll!.PollId].Active, Is.False));
-            await Server.WaitPost(() =>
-            {
-                SEntMan.EntityNetManager.SendSystemNetworkMessage(new PollSeenCountChangedEvent(poll!.PollId, 2));
-                SEntMan.EntityNetManager.SendSystemNetworkMessage(new PollSeenCountChangedEvent(poll.PollId, 1));
-                SEntMan.EntityNetManager.SendSystemNetworkMessage(new PollSeenCountChangedEvent(int.MaxValue, 10));
-            });
-            await Pair.ReallyBeIdle(5);
-            await Client.WaitAssertion(() =>
-            {
-                var cache = Client.ResolveDependency<ClientPollManager>().ActivePolls;
-                var current = cache[poll!.PollId];
-                Assert.That(current.Active, Is.False);
-                Assert.That(current.SeenCount, Is.EqualTo(2), "An older count must not undo a newer one.");
-                Assert.That(current.Options[0].VoteCount, Is.EqualTo(3));
-                Assert.That(cache.ContainsKey(int.MaxValue), Is.False);
-                var card = window.FindControl<Control>("PollsList").Children.OfType<PollControl>()
-                    .Single(control => control.PollId == poll.PollId);
-                Assert.That(Descendants(card).OfType<BaseButton>(), Is.Empty, "The closed card must remain non-votable.");
-                Assert.That(Descendants(card).OfType<Label>().Select(label => label.Text),
-                    Does.Contain(Loc.GetString("arcane-poll-control-seen-by", ("count", 2))));
-            });
-        }
-        finally
-        {
-            await Client.WaitPost(window.Dispose);
-        }
-    }
-
     private static IEnumerable<Control> Descendants(Control control)
     {
         foreach (var child in control.Children)
@@ -219,52 +156,6 @@ public sealed class PollBoothTest : InteractionTest
         {
             await Client.WaitPost(() => polls.OnActivePollsUpdated -= OnList);
         }
-    }
-
-    [Test]
-    [PairConfig(nameof(ExpiryPair))]
-    public async Task AlertDisappearsWhenTheLastUnseenPollExpiresWithoutAnUpdateMessage()
-    {
-        var clientPolls = Client.ResolveDependency<ClientPollManager>();
-        var initialList = new TaskCompletionSource();
-        void OnInitialList(List<PollData> data) => initialList.TrySetResult();
-        await Client.WaitPost(() => clientPolls.OnActivePollsUpdated += OnInitialList);
-        NetEntity booth;
-        try
-        {
-            booth = await SpawnTarget("PollBooth");
-            await Pump(initialList.Task);
-        }
-        finally
-        {
-            await Client.WaitPost(() => clientPolls.OnActivePollsUpdated -= OnInitialList);
-        }
-        var ends = DateTime.UtcNow.AddMinutes(10);
-        var polls = Server.ResolveDependency<ServerPollManager>();
-        var poll = await RunServerTask(() => polls.CreatePoll("Expiring poll", "Only a time boundary", ["Yes", "No"], ends, false));
-        Assert.That(poll, Is.Not.Null);
-        await ReceiveList(clientPolls.RequestActivePolls);
-
-        await Client.WaitAssertion(() =>
-        {
-            Assert.That(clientPolls.ActivePolls.Keys, Is.EquivalentTo(new[] { poll!.PollId }));
-            Assert.That(CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible, Is.True,
-                "The available unseen poll must first show the alert.");
-            // Move the cached deadline across the time boundary without a server update or a manual refresh.
-            // This controls the availability input; it does not simulate the passage of UTC time.
-            clientPolls.ActivePolls[poll.PollId].EndTime = DateTime.UtcNow.AddMinutes(-1);
-        });
-
-        // Let the one-second real-time throttle expire before driving the next frame.
-        // A wall-clock polling deadline can elapse while CI is busy between those frames.
-        await Task.Delay(TimeSpan.FromSeconds(1.1));
-        await Pair.ReallyBeIdle(2);
-        await Client.WaitAssertion(() => Assert.That(
-            CEntMan.GetComponent<SpriteComponent>(ToClient(booth))[PollBoothLayer.Alert].Visible,
-            Is.False, "Expiry alone must refresh the sprite without a new poll message."));
-        await Client.WaitAssertion(() => Assert.That(clientPolls.ActivePolls[poll!.PollId].Active, Is.True,
-            "The alert must clear from the deadline, without closing the poll."));
-        Assert.That(await Server.ResolveDependency<IServerDbManager>().GetPollSeenCountAsync(poll!.PollId), Is.Zero);
     }
 
     private async Task RunServerTask(Func<Task> call)

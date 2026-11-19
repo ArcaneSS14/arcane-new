@@ -47,7 +47,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
             return false;
         }
 
-        // Arcane: keep the localization key stable across server languages.
+        // Arcane: Keep the localization key stable across server languages.
         var issuers = ProtoMan.Index(rule.Comp.ObjectiveIssuers).Values;
         var issuer = issuers.Count > 0 ? _random.Pick(issuers) : "objective-issuer-unknown";
 
@@ -102,7 +102,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
         var color = TraitorCodewordColor; // Fall back to a dark red Syndicate color if a prototype is not found
 
         // The mind entity is stored in nullspace with a PVS override for the owner, so only they can see the codewords.
-        // Arcane-Start: honor rules with codewords disabled.
+        // Arcane-Start: Honor rules with codewords disabled.
         if (rule.Comp.GiveCodewords)
         {
             var codewordComp = EnsureComp<RoleCodewordComponent>(mindId);
@@ -124,7 +124,7 @@ public abstract partial class TraitorRuleSystem : GameRuleSystem<TraitorRuleComp
     // TODO: figure out how to handle this? add priority to briefing event?
     private string GenerateBriefing(string[] codewords, Note[]? uplinkCode, string objectiveIssuer, bool implantIssued, bool characterPanel)
     {
-        // Arcane-Edit-Start: use the assigned corporation and actual uplink result in both views.
+        // Arcane-Edit-Start: Use the assigned corporation and actual uplink result in both views.
         var prefix = $"arcane-traitor-{objectiveIssuer}";
         var sb = new StringBuilder();
         sb.AppendLine(Loc.TryGetString($"{prefix}-intro", out var intro)

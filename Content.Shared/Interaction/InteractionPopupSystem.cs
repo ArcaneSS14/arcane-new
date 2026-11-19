@@ -60,7 +60,7 @@ public sealed partial class InteractionPopupSystem : EntitySystem
         HandledEntityEventArgs args,
         EntityUid target,
         EntityUid user, // Arcane-Edit: user) > user,
-        bool ghostHug = false) // Arcane: spectral hugs have no physical success event
+        bool ghostHug = false) // Arcane: Spectral hugs have no physical success event
     {
         if (args.Handled || user == target)
             return;

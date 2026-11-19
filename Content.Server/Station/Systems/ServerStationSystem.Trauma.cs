@@ -25,7 +25,7 @@ public sealed partial class ServerStationSystem
 
             tile = new Vector2i(randomX, randomY);
 
-            // Arcane-Edit-Start: share tile eligibility with the antagonist spawn fallback.
+            // Arcane-Edit-Start: Share tile eligibility with the antagonist spawn fallback.
             if (!Map.TryGetTile(grid.Comp, tile, out var selectedTile) ||
                 !IsValidSpawnTile(grid, tile, selectedTile))
                 continue;
@@ -38,7 +38,7 @@ public sealed partial class ServerStationSystem
         return false;
     }
 
-    // Arcane-Start: exhaust valid station tiles only after antagonist spawn sampling fails.
+    // Arcane-Start: Exhaust valid station tiles only after antagonist spawn sampling fails.
     internal bool TryFindFallbackSpawnTile(Entity<MapGridComponent> grid, out EntityCoordinates coordinates)
     {
         var candidates = Map.GetAllTiles(grid, grid.Comp);

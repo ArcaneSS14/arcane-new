@@ -5,7 +5,7 @@ using Robust.Shared.GameStates; // Arcane
 
 namespace Content.Goobstation.Shared.CustomLawboard;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: synchronize lawboard contents
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState] // Arcane-Edit: Synchronize lawboard contents
 public sealed partial class CustomLawboardComponent : Component
 {
     /// <summary>

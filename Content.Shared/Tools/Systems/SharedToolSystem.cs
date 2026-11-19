@@ -154,7 +154,7 @@ public abstract partial class SharedToolSystem : EntitySystem
         DoAfterEvent doAfterEv,
         out DoAfterId? id,
         float fuel = 0,
-        ToolComponent? toolComponent = null, // Arcane-Edit: allow the tile caller to supply the welding point
+        ToolComponent? toolComponent = null, // Arcane-Edit: Allow the tile caller to supply the welding point
         EntityCoordinates? weldingContact = null) // Arcane
     {
         id = null;

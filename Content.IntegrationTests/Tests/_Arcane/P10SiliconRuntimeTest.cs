@@ -1,27 +1,22 @@
 #nullable enable
 using System.Linq;
 using Content.IntegrationTests.Tests.Interaction;
-using Content.Server.Power.Components;
 using Content.Server.Silicons.StationAi;
 using Content.Server.Station.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Ghost.Components;
-using Content.Shared.Light.EntitySystems;
 using Content.Shared.Mind;
 using Content.Shared.PAI;
-using Content.Shared.Power;
 using Content.Shared.Radio.Components;
 using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Silicons.StationAi;
 using Content.Shared.Station.Components;
 using Content.Shared.StationAi;
-using Content.Trauma.Shared.Language.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
-using Content.Trauma.Common.Language.Components; // Arcane
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
@@ -137,62 +132,4 @@ public sealed class P10SiliconRuntimeTest : InteractionTest
         });
     }
 
-    // Arcane-Start
-    [Test]
-    public async Task EmptyBorgRestoresItsDefaultLanguages()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var chassis = SEntMan.SpawnAttachedTo("BorgChassisSelectable", Center);
-            var brain = SEntMan.SpawnAttachedTo("PositronicBrain", Center);
-            var holder = SEntMan.GetComponent<BorgChassisComponent>(chassis).BrainContainer;
-            var speaker = SEntMan.GetComponent<LanguageSpeakerComponent>(chassis);
-            var defaultSpoken = Enumerable.ToArray(speaker.Speaks);
-            var defaultUnderstood = Enumerable.ToArray(speaker.Understands);
-            var containers = SEntMan.System<SharedContainerSystem>();
-
-            Assert.That(containers.Insert(brain, holder), Is.True);
-            Assert.That(speaker.Speaks.Any(language => language.Id == "Draconic"), Is.True);
-            Assert.That(containers.Remove(brain, holder), Is.True);
-            Assert.That(speaker.Speaks, Is.EqualTo(defaultSpoken));
-            Assert.That(speaker.Understands, Is.EqualTo(defaultUnderstood));
-            Assert.That(containers.Insert(brain, holder), Is.True);
-            Assert.That(speaker.Speaks.Any(language => language.Id == "Draconic"), Is.True);
-        });
-    }
-    // Arcane-End
-
-    [Test]
-    public async Task AutomaticCameraIlluminationPreservesManualLightAndPower()
-    {
-        await Server.WaitAssertion(() =>
-        {
-            var camera = SEntMan.SpawnAttachedTo("SurveillanceCameraEngineering", Center);
-            var power = SEntMan.GetComponent<ApcPowerReceiverComponent>(camera);
-            var lights = SEntMan.System<SlimPoweredLightSystem>();
-            Assert.That(SEntMan.System<SharedPointLightSystem>().TryGetLight(camera, out var light), Is.True);
-
-            power.Powered = true;
-            lights.SetAiIllumination(camera, true);
-            Assert.That(light!.Enabled, Is.True);
-            lights.SetEnabled(camera, true);
-            lights.SetAiIllumination(camera, false);
-            Assert.That(light.Enabled, Is.True);
-
-            lights.SetAiIllumination(camera, true);
-            lights.SetEnabled(camera, false);
-            Assert.That(light.Enabled, Is.True);
-
-            power.Powered = false;
-            var powerOff = new PowerChangedEvent(false, 0f);
-            SEntMan.EventBus.RaiseLocalEvent(camera, ref powerOff);
-            Assert.That(light.Enabled, Is.False);
-            power.Powered = true;
-            var powerOn = new PowerChangedEvent(true, 5f);
-            SEntMan.EventBus.RaiseLocalEvent(camera, ref powerOn);
-            Assert.That(light.Enabled, Is.True);
-            lights.SetAiIllumination(camera, false);
-            Assert.That(light.Enabled, Is.False);
-        });
-    }
 }

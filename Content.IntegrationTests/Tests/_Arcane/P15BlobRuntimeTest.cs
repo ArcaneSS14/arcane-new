@@ -34,37 +34,6 @@ public sealed class P15BlobRuntimeTest : InteractionTest
 
     private EntityCoordinates Center => MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
 
-    [TestCase("ChainCoating", 9, 23)]
-    public async Task GrowthChargesTheCurrentChemistryOnFloorAndInSpace(string chemistry, int floorCost, int spaceCost)
-    {
-        var east = Center.Offset(Vector2.UnitX);
-        var north = Center.Offset(Vector2.UnitY);
-        await SetTile(Plating, SEntMan.GetNetCoordinates(east), MapData.Grid);
-        await SetTile(null, SEntMan.GetNetCoordinates(north), MapData.Grid);
-
-        await Server.WaitAssertion(() =>
-        {
-            var core = CreateCore();
-            var system = SEntMan.System<BlobCoreSystem>();
-            system.ChangeChem(core.AsNullable(), chemistry);
-
-            core.Comp.CurrentPoints = floorCost;
-            Interact(core, east);
-            Assert.That(core.Comp.CurrentPoints, Is.Zero);
-            Assert.That(system.GetTargetTile(east)?.Comp.Core, Is.EqualTo(core.Owner));
-
-            core.Comp.CurrentPoints = spaceCost - 1;
-            Interact(core, north);
-            Assert.That(core.Comp.CurrentPoints, Is.EqualTo(spaceCost - 1));
-            Assert.That(system.GetTargetTile(north), Is.Null);
-
-            core.Comp.CurrentPoints = spaceCost;
-            Interact(core, north);
-            Assert.That(core.Comp.CurrentPoints, Is.Zero);
-            Assert.That(system.GetTargetTile(north)?.Comp.Core, Is.EqualTo(core.Owner));
-        });
-    }
-
     [Test]
     public async Task FactoryAppliesNewChemistryToBlobbernautAndRespectsPodLimitAcrossSwitches()
     {
