@@ -73,6 +73,13 @@ namespace Content.Server.Database
         // </Trauma>
         void Init();
 
+        // Arcane-Start
+        Task<bool> MarkPollSeenAsync(int pollId, NetUserId userId, CancellationToken cancel = default);
+        Task<HashSet<int>> GetSeenPollIdsAsync(NetUserId userId, CancellationToken cancel = default);
+        Task<int> GetPollSeenCountAsync(int pollId, CancellationToken cancel = default);
+        Task<Dictionary<int, int>> GetPollSeenCountsAsync(int[] pollIds, CancellationToken cancel = default);
+        // Arcane-End
+
         void Shutdown();
 
         Task<bool> HasPendingModelChanges();
