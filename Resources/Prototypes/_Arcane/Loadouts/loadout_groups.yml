@@ -8,3 +8,380 @@
   - ChemistUshanka
   - InteQBeret
   - InteQHatSoft
+
+- type: loadoutGroup
+  id: HoPMask
+  name: loadout-group-hop-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasHoPPatreon
+
+- type: loadoutGroup
+  id: ChiefEngineerMask
+  name: loadout-group-chief-engineer-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasCEPatreon
+
+- type: loadoutGroup
+  id: ChiefMedicalOfficerMask
+  name: loadout-group-chief-medical-officer-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasCMOPatreon
+
+- type: loadoutGroup
+  id: QuartermasterMask
+  name: loadout-group-quartermaster-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasQMPatreon
+
+- type: loadoutGroup
+  id: ResearchDirectorMask
+  name: loadout-group-research-director-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasRDPatreon
+
+- type: loadoutGroup
+  id: HeadofSecurityMask
+  name: loadout-group-head-of-security-mask
+  minLimit: 0
+  loadouts:
+  - MaskGasHoSPatreon
+
+- type: loadoutGroup
+  id: AdjutantHead
+  name: loadout-group-adj-head
+  loadouts:
+  - AdjutantCap
+  - AdjutantBeret
+  - AdjutantGarrisonCap
+
+- type: loadoutGroup
+  id: AdjutantOuterClothing
+  name: loadout-group-adj-outerClothing
+  loadouts:
+  - AdjutantCoat
+
+- type: loadoutGroup
+  id: CommandMaidHead
+  name: loadout-group-command-maid-head
+  minLimit: 0
+  loadouts:
+  - CommandMaidCap
+  - CommandMaidBowsCap
+  - CommandMaidBlackCap
+  - CommandMaidMaidFura
+
+- type: loadoutGroup
+  id: CommandMaidneck
+  name: loadout-group-command-maid-neck
+  minLimit: 0
+  loadouts:
+  - CommandMaidNeckBowTie
+  - CommandMaidNeckShortTie
+  - CommandMaidNeckMediumTie
+
+- type: loadoutGroup
+  id: CommandMaidBelt
+  name: loadout-group-command-maid-belt
+  minLimit: 0
+  loadouts:
+  - CommandMaidBeltJanitorBow
+  - CommandMaidBeltPouch
+
+- type: loadoutGroup
+  id: CommandMaidMask
+  name: loadout-group-command-maid-mask
+  minLimit: 0
+  loadouts:
+  - CommandMaidGasMask
+
+- type: loadoutGroup
+  id: CommandMaidSocks
+  name: loadout-group-command-maid-socks
+  minLimit: 0
+  loadouts:
+  - CommandMaidSocksWhiteRigged
+
+- type: loadoutGroup
+  id: ServiceWorkerJumpsuit
+  name: loadout-group-service-worker-jumpsuit
+  loadouts:
+  - BartenderJumpsuit
+  - BartenderJumpskirt
+  - BartenderJumpsuitPurple
+  - ServiceMJ
+  - BartenderPatron
+  - BartenderSkirtPatron
+  - ServiveShirtPatron
+  - ServiveShirtSkirtPatron
+
+- type: loadoutGroup
+  id: ServiceWorkerShoes
+  name: loadout-group-service-worker-shoes
+  minLimit: 0
+  loadouts:
+  - WorkerBootsPatron
+
+- type: loadoutGroup
+  id: ServiceWorkerBelt
+  name: loadout-group-service-worker-belt
+  minLimit: 0
+  loadouts:
+  - ServiceApronPatron
+
+- type: loadoutGroup
+  id: ServiceCloak
+  name: loadout-group-service-cloak
+  minLimit: 0
+  loadouts:
+  - ServiceCloakPatron
+
+# Medical
+
+- type: loadoutGroup
+  id: MedicalCloak
+  name: loadout-group-medical-cloak
+  minLimit: 0
+  loadouts:
+  - MeicalCloakPatron
+
+- type: loadoutGroup
+  id: DoctorBikini
+  name: loadout-group-doctor-bikini
+  minLimit: 0
+  loadouts:
+  - DoctorBikiniPatron
+
+- type: loadoutGroup
+  id: VirologistBikini
+  name: loadout-group-virologist-bikini
+  minLimit: 0
+  loadouts:
+  - VirologistBikiniPatron
+
+- type: loadoutGroup
+  id: ParamedicBikini
+  name: loadout-group-paramedic-bikini
+  minLimit: 0
+  loadouts:
+  - ParamedicBikiniPatron
+
+- type: loadoutGroup
+  id: ChemistBikini
+  name: loadout-group-chemist-bikini
+  minLimit: 0
+  loadouts:
+  - ChemistBikiniPatron
+
+- type: loadoutGroup
+  id: ParamedicVisor
+  name: loadout-group-paramedic-visor
+  minLimit: 0
+  loadouts:
+  - ParamedicGlassesPatron
+
+# RND
+
+- type: loadoutGroup
+  id: RNDCloak
+  name: loadout-group-rnd-cloak
+  minLimit: 0
+  loadouts:
+  - RNDCloakPatron
+
+# Cargo
+
+- type: loadoutGroup
+  id: CargoCloak
+  name: loadout-group-cargo-cloak
+  minLimit: 0
+  loadouts:
+  - CargoCloakPatron
+
+# Engineer
+
+- type: loadoutGroup
+  id: EngineerCloak
+  name: loadout-group-engineer-cloak
+  minLimit: 0
+  loadouts:
+  - EngineerCloakPatron
+
+- type: loadoutGroup
+  id: ClownUnderwear
+  name: loadout-group-clown-underwear
+  loadouts:
+  - JesterPantsPatron
+
+- type: loadoutGroup
+  id: MimeHands
+  name: loadout-group-mime-hands
+  loadouts:
+  - MimeMittensPatron
+
+- type: loadoutGroup
+  id: MimeSocks
+  name: loadout-group-mime-socks
+  loadouts:
+  - MimeStockingsPatron
+
+- type: loadoutGroup
+  id: MusicianShoes
+  name: loadout-group-musician-shoes
+  minLimit: 0
+  loadouts:
+  - MusicianBootsPatron
+
+- type: loadoutGroup
+  id: QuartermasterHands
+  name: loadout-group-quartermaster-hands
+  minLimit: 0
+  loadouts:
+  - QMGlovesPatron
+
+- type: loadoutGroup
+  id: LibrarianShoes
+  name: loadout-group-librarian-shoes
+  minLimit: 0
+  maxLimit: 1
+  loadouts:
+  - TwilightSparkleBootsPatron
+
+- type: loadoutGroup
+  id: LibrarianGlasses
+  name: loadout-group-librarian-glasses
+  minLimit: 0
+  maxLimit: 1
+  loadouts:
+  - TwilightSparkleGlassesPatron
+
+- type: loadoutGroup
+  id: ZookeeperHead
+  name: loadout-group-zookeeper-head
+  minLimit: 1
+  maxLimit: 1
+  loadouts:
+  - CamouflageHatPatron
+
+- type: loadoutGroup
+  id: ZookeeperJumpsuit
+  name: loadout-group-zookeeper-jumpsuit
+  minLimit: 1
+  maxLimit: 1
+  loadouts:
+  - CamouflageUniformPatron
+  - SterileUniformPatron
+
+- type: loadoutGroup
+  id: RadioHostOuterclothing
+  name: loadout-group-radiohost-outerclothing
+  loadouts:
+  - RadioHostJacketPatron
+
+- type: loadoutGroup
+  id: AdjutantJumpsuit
+  name: loadout-group-adj-jumpsuit
+  loadouts:
+  - AdjutantJumpsuit
+  - AdjutantJumpskirt
+
+- type: loadoutGroup
+  id: AdjutantBackpack
+  name: loadout-group-adj-backpack
+  loadouts:
+  - AdjutantBackpack
+  - AdjutantSatchel
+  - AdjutantDuffel
+
+- type: loadoutGroup
+  id: CommandMaidJumpsuit
+  name: loadout-group-command-maid-jumpsuit
+  loadouts:
+  - CommandMaidJumpskirt
+  - CommandMaidJumpskirtAlt
+  - CommandMaidJumpskirtMaidLong
+  - CommandMaidJumpskirtJanimaidmini
+  - CommandMaidJumpskirtMaidStrict
+  - CommandMaidJumpskirtElegantMaid
+  - CommandMaidJumpskirtJanimaid
+  - CommandMaidJumpskirtMaidPink
+  - CommandMaidJumpskirtMaidBlue
+  - CommandMaidJumpsuit
+  - CommandMaidJumpsuitButler
+
+- type: loadoutGroup
+  id: CommandMaidBackpack
+  name: loadout-group-command-maid-backpack
+  loadouts:
+  - CommandMaidBackpack
+  - CommandMaidSatchel
+
+- type: loadoutGroup
+  id: CommandMaidGloves
+  minLimit: 0
+  name: loadout-group-command-maid-gloves
+  loadouts:
+  - CommandMaidGloves
+
+- type: loadoutGroup
+  id: CommandMaidShoes
+  name: loadout-group-command-maid-shoes
+  loadouts:
+  - CommandMaidShoes
+  - CommandMaidShoesLaceup
+
+- type: loadoutGroup
+  id: IAAJumpsuit
+  name: loadout-group-iaa-jumpsuit
+  loadouts:
+  - IAAJumpsuit
+
+- type: loadoutGroup
+  id: ChiefEngineerBackpack
+  name: loadout-group-chief-engineer-backpack
+  loadouts:
+  - ChiefEngineerBackpack
+  - ChiefEngineerSatchel
+  - ChiefEngineerDuffel
+
+- type: loadoutGroup
+  id: ChiefMedicalOfficerBackpack
+  name: loadout-group-chief-medical-officer-backpack
+  loadouts:
+  - ChiefMedicalOfficerBackpack
+  - ChiefMedicalOfficerSatchel
+  - ChiefMedicalOfficerDuffel
+
+- type: loadoutGroup
+  id: QuartermasterBackpack
+  name: loadout-group-quartermaster-backpack
+  loadouts:
+  - QuartermasterBackpack
+  - QuartermasterSatchel
+  - QuartermasterDuffel
+
+- type: loadoutGroup
+  id: ResearchDirectorBackpack
+  name: loadout-group-research-director-backpack
+  loadouts:
+  - ResearchDirectorBackpack
+  - ResearchDirectorSatchel
+  - ResearchDirectorDuffel
+
+- type: loadoutGroup
+  id: Patron
+  name: loadout-group-patron
+  minLimit: 0
+  loadouts:
+  - BoomboxPatron
+
+- type: loadoutGroup
+  id: RadioHostMicrophone
+  name: loadout-group-radiohost-microphone
+  minLimit: 0
+  loadouts:
+  - RadioHostMicrophonePatron

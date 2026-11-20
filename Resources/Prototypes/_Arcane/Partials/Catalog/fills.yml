@@ -1,0 +1,6 @@
+- type: entityTable
+  id: FillClosetJanitor
+  table: !type:AllSelector
+    children:
+    - id: FlatpackWashingMachine
+      amount: 2

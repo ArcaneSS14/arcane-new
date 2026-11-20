@@ -1,0 +1,25 @@
+# Destructible base of the RMC14 platforms, which Trauma does not define.
+- type: entity
+  abstract: true
+  parent: CMPlatformBase
+  id: CMPlatformBaseDestructible
+  components:
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+      - trigger:
+          !type:DamageTrigger
+          damage: 150 # Excessive damage
+        behaviors:
+          - !type:DoActsBehavior
+            acts: ["Destruction"]
+      - trigger:
+          !type:DamageTrigger
+          damage: 100
+        behaviors:
+          - !type:ChangeConstructionNodeBehavior
+            node: platformBroken
+          - !type:DoActsBehavior
+            acts: ["Breakage"]

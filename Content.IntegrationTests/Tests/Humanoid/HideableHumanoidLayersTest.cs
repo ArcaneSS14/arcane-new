@@ -19,6 +19,7 @@ public sealed class HideableHumanoidLayersTest : InteractionTest
         await SpawnTarget("ClothingMaskGas");
         await Pickup(); // equip mask
         await UseInHand();
+        await AwaitDoAfters(); // Arcane
 
         await Server.WaitAssertion(() =>
         {
@@ -54,6 +55,7 @@ public sealed class HideableHumanoidLayersTest : InteractionTest
         await SpawnTarget("ClothingMaskGas");
         await Pickup(); // equip mask
         await UseInHand();
+        await AwaitDoAfters(); // Arcane
 
         await RunTicks(20);
 

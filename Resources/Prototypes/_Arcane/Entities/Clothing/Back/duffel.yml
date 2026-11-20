@@ -33,3 +33,80 @@
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Back/Duffels/white_captain_duffel.rsi
+
+- type: entity
+  parent: ClothingBackpackDuffel
+  id: ClothingBackpackDuffelAdjutant
+  name: adjutant duffel
+  description: It looks redundantly empty, with only a crumpled piece of paper lying lonely at the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/adjutant.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
+  id: ClothingBackpackDuffellCE
+  name: senior engineer's duffel bag
+  description: It looks excessively empty, with only a piece of wire at the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/ce.rsi
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
+  id: ClothingBackpackDuffellCMO
+  name: chief physician's duffel bag
+  description: It looks excessively empty, with only a Band-Aid glued to the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/cmo.rsi
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
+  id: ClothingBackpackDuffellHoP
+  name: head of staff's duffel bag
+  description: It looks excessively empty, with only an ink stain on the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/hop.rsi
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
+  id: ClothingBackpackDuffellQuartermaster
+  name: quartermaster's duffel bag
+  description: It looks excessively empty, with only a torn loan lying alone at the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/quartermaster.rsi
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCommandContraband]
+  id: ClothingBackpackDuffellRD
+  name: supervisor's duffel bag
+  description: It looks excessively empty, only a smiley face stain is drawn on the bottom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/rd.rsi
+
+- type: entity
+  parent: [ClothingBackpackDuffel, BaseCentcommContraband]
+  id: ClothingBackpackDuffellCentcomm
+  name: centcomm duffel bag
+  description: An expensive dark green duffel. Smells like fax machines.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/Duffels/centcommduffel.rsi
+
+- type: entity
+  parent: ClothingBackpackDuffel
+  id: ClothingBackpackDuffelUSSP
+  name: ussp mail duffel
+  description: A large shoulder bag, quite roomy and fit for storing a large amount of belongings.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Back/USSP/duffellussp.rsi
+  - type: ClothingSpeedModifier
+    sprintModifier: 0.95

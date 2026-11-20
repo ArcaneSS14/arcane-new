@@ -1,0 +1,8 @@
+# Arcane resprites of inherited clothing.
+- type: entity
+  id: ClothingHeadHatBeretWarden
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/beret_warden.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/beret_warden.rsi
