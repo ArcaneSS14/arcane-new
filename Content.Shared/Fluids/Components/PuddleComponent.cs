@@ -25,6 +25,14 @@ namespace Content.Shared.Fluids.Components
         [DataField]
         public float DefaultSlippery = 5.5f;
 
+        // Arcane-Start
+        [ViewVariables]
+        public string PuddleKey = "direction";
+
+        [DataField, ViewVariables]
+        public string PuddleState = "splat";
+        // Arcane-End
+
         [ViewVariables, Access(Other = AccessPermissions.ReadWriteExecute)] // Goob - allow full access
         public Entity<SolutionComponent>? Solution;
     }

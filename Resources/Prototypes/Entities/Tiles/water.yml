@@ -84,9 +84,12 @@
     convertTo: FloorCosmicDecay
   - type: IconSmooth
     key: water
-    base: water
-    additionalKeys:
-    - walls
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ water, walls ]
+      base: water
+    # Arcane-Edit-End
   - type: PlacementReplacement
     key: tileOverlay
 
@@ -101,6 +104,12 @@
     sprite: Tiles/TileEntities/swimming-pool.rsi
   - type: IconSmooth
     key: pool
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ pool ]
+      base: water
+    # Arcane-End
   - type: Fixtures
     fixtures:
       fix1:

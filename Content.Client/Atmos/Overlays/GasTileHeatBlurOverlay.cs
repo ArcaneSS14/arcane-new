@@ -165,6 +165,11 @@ public sealed partial class GasTileHeatBlurOverlay : Overlay
                     // for each tile and its gas --->
                     foreach (var chunk in comp.Chunks.Values)
                     {
+                        // Arcane-Start
+                        if (!SharedGasTileOverlaySystem.ChunkIntersects(chunk, localBounds))
+                            continue;
+
+                        // Arcane-End
                         var enumerator = new GasChunkEnumerator(chunk);
 
                         while (enumerator.MoveNext(out var tileGas))

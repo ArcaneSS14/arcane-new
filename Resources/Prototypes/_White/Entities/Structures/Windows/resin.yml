@@ -46,6 +46,11 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: walls
-    base: membrane
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: membrane
+    # Arcane-Edit-End
   - type: Appearance

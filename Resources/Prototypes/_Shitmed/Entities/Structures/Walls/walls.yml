@@ -23,9 +23,13 @@
     sprite: _Shitmed/Structures/Walls/abductor_diagonal.rsi
     state: state0
   - type: IconSmooth
-    mode: Diagonal
+    # Arcane-Edit-Start
     key: walls
-    base: state
+    states:
+    - !type:DiagonalSpriteSmoothing
+      mask: [ walls ]
+      base: state
+    # Arcane-Edit-End
   - type: Icon
     sprite: _Shitmed/Structures/Walls/abductor_diagonal.rsi
     state: state0
@@ -86,8 +90,13 @@
     graph: Girder
     node: shuttleWall
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: walls
-    base: state
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: state
+    # Arcane-Edit-End
   - type: Appearance
   - type: Reflect
     reflectProb: 1

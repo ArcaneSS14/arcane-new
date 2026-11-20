@@ -1,4 +1,5 @@
 using Robust.Client.GameObjects;
+using Robust.Shared.Map; // Arcane
 
 namespace Content.Client.Wall;
 
@@ -81,6 +82,23 @@ public sealed class ViewportFadeState(SpriteSystem sprite, EntityQuery<SpriteCom
     /// Whether FOV was enabled during the previous frame.
     /// </summary>
     public bool WasFovEnabled = true;
+
+    // Arcane-Start
+    /// <summary>
+    /// Frames drawn so far, which spreads the visibility checks of entities over several frames.
+    /// </summary>
+    public uint Frame;
+
+    /// <summary>
+    /// Where the eye was on the previous frame. While it stays there, visibility can't change much.
+    /// </summary>
+    public (MapCoordinates Position, Angle Rotation) LastEye;
+
+    /// <summary>
+    /// Frames the eye has to stay still before checks slow down, so every wall-mount is checked once from where it stopped.
+    /// </summary>
+    public uint MovingFramesLeft;
+    // Arcane-End
 
     public void Dispose()
     {

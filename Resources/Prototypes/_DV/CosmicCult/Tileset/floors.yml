@@ -142,8 +142,13 @@
     sprite: _DV/CosmicCult/Tileset/cosmicdecay.rsi
     state: full
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: decay
-    base: decay
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ decay ]
+      base: decay
+    # Arcane-Edit-End
   - type: Tag
     tags:
       - HideContextMenu
@@ -172,8 +177,13 @@
     sprite: _DV/CosmicCult/Tileset/cosmicdecayalt.rsi
     state: full
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: floor
-    base: void
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ floor ]
+      base: void
+    # Arcane-Edit-End
   - type: Tag
     tags:
       - HideContextMenu

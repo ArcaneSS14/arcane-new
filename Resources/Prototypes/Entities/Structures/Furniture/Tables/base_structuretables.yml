@@ -27,8 +27,13 @@
   - type: Icon
     state: full
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: table
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ table ]
+      base: state_
+    # Arcane-Edit-End
   - type: Climbable
   - type: Bonkable
     bonkDamage:
@@ -61,3 +66,11 @@
         - BulletImpassable # Trauma
         - TableLayer
         - LowImpassable
+  # Arcane-Start
+  - type: IconSmooth
+    key: counter
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ counter ]
+      base: state_
+  # Arcane-End

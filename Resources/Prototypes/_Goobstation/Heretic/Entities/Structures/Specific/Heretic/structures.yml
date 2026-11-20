@@ -96,6 +96,11 @@
   - type: Icon
     sprite: _Goobstation/Heretic/Structures/stone_window_pane.rsi
     state: stone_window_pane
+  # Arcane-Edit-Start
+  - type: IconSmooth
+    key: windows-plastitanium
+    states: !Clear []
+  # Arcane-Edit-End
   - type: Airtight
   - type: ExaminableDamage
     messages: null

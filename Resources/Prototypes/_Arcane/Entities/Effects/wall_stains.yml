@@ -5,7 +5,16 @@
   - type: Transform
     anchored: false
   - type: WallStain
-  - type: SolutionContainerManager
+  - type: SolutionManager
     solutions:
-      stain:
-        maxVol: 5
+    - ArcaneWallStainSolution
+
+- type: entity
+  parent: Solution
+  id: ArcaneWallStainSolution
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stain
+    solution:
+      maxVol: 5

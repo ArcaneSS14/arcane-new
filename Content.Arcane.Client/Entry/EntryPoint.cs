@@ -1,3 +1,4 @@
+using Content.Arcane.Client.Serialization;
 using Robust.Shared.ContentPack;
 using Content.Arcane.Client.JoinQueue;
 using Robust.Shared.Prototypes;
@@ -24,6 +25,8 @@ public sealed class EntryPoint : GameClient
         base.PostInit();
         _queue = Dependencies.Resolve<JoinQueueManager>();
         _queue.Initialize();
+
+        new ComponentCopyWarmup().Start();
     }
 
     protected override void Dispose(bool disposing)

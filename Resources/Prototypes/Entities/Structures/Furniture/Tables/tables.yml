@@ -26,8 +26,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -79,8 +84,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -131,8 +141,13 @@
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: IconSmooth
-    key: state
-    base: state_
+    # Arcane-Edit-Start
+    key: tableframe
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ tableframe ]
+      base: state_
+    # Arcane-Edit-End
   - type: Destructible
     thresholds:
     - trigger:
@@ -187,9 +202,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: metaltable
-    base: state_
   - type: Construction
     graph: Table
     node: Table
@@ -226,7 +238,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: metalreinforcedtable
+    # Arcane-Edit-Start
+    key: metaltable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ metaltable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableReinforced
@@ -278,6 +296,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: glasstable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableGlass
@@ -329,6 +353,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: cardtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cardtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableCard
@@ -376,7 +406,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: reinforcedglasstable
+    # Arcane-Edit-Start
+    key: glasstable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableReinforcedGlass
@@ -427,7 +463,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: plasmaglasstable
+    # Arcane-Edit-Start
+    key: glasstable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ glasstable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TablePlasmaGlass
@@ -471,7 +513,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: brasstable
+    # Arcane-Edit-Start
+    key: metaltable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ metaltable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableBrass
@@ -508,6 +556,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: woodtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ woodtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: Table
     node: TableWood
@@ -553,7 +607,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    key: woodgambletable
+    # Arcane-Edit-Start
+    key: woodtable
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ woodtable ]
+      base: state_
+    # Arcane-Edit-End
   - type: Construction
     graph: Table
     node: TableCarpet
@@ -590,6 +650,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: stonetable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ stonetable ]
+      base: state_
+    # Arcane-End
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepFloor
@@ -623,6 +689,12 @@
           "/Audio/Weapons/slash.ogg"
   - type: IconSmooth
     key: webtable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ webtable ]
+      base: state_
+    # Arcane-End
   - type: Construction
     graph: WebStructures
     node: table
@@ -692,6 +764,12 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: fancytable
+    # Arcane-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ fancytable ]
+      base: state_
+    # Arcane-End
   - type: Tag
     tags:
     - Wooden
@@ -714,8 +792,6 @@
   - type: Construction
     graph: Table
     node: TableFancyBlue
-  - type: IconSmooth
-    key: fancytableblue
 
 - type: entity
   id: TableFancySkyBlue
@@ -729,8 +805,6 @@
   - type: Construction
     graph: Table
     node: TableFancySkyBlue
-  - type: IconSmooth
-    key: fancytableskyblue
 
 - type: entity
   id: TableFancyCyan
@@ -744,8 +818,6 @@
   - type: Construction
     graph: Table
     node: TableFancyCyan
-  - type: IconSmooth
-    key: fancytablecyan
 
 - type: entity
   id: TableFancyBlack
@@ -759,8 +831,6 @@
   - type: Construction
     graph: Table
     node: TableFancyBlack
-  - type: IconSmooth
-    key: fancytableblack
 
 - type: entity
   id: TableFancyRed
@@ -774,8 +844,6 @@
   - type: Construction
     graph: Table
     node: TableFancyRed
-  - type: IconSmooth
-    key: fancytablered
 
 - type: entity
   id: TableFancyPurple
@@ -789,8 +857,6 @@
   - type: Construction
     graph: Table
     node: TableFancyPurple
-  - type: IconSmooth
-    key: fancytablepurple
 
 - type: entity
   id: TableFancyPink
@@ -804,8 +870,6 @@
   - type: Construction
     graph: Table
     node: TableFancyPink
-  - type: IconSmooth
-    key: fancytablepink
 
 - type: entity
   id: TableFancyGreen
@@ -819,8 +883,6 @@
   - type: Construction
     graph: Table
     node: TableFancyGreen
-  - type: IconSmooth
-    key: fancytablegreen
 
 - type: entity
   id: TableFancyOrange
@@ -834,8 +896,6 @@
   - type: Construction
     graph: Table
     node: TableFancyOrange
-  - type: IconSmooth
-    key: fancytableorange
 
 - type: entity
   id: TableFancyWhite
@@ -849,8 +909,6 @@
   - type: Construction
     graph: Table
     node: TableFancyWhite
-  - type: IconSmooth
-    key: fancytablewhite
 
 #Debug
 
@@ -907,9 +965,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: counterwood
-    base: state_
   - type: Construction
     graph: Table
     node: CounterWood
@@ -950,9 +1005,6 @@
             max: 1
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: IconSmooth
-    key: countermetal
-    base: state_
   - type: Construction
     graph: Table
     node: CounterMetal

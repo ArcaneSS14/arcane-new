@@ -13,9 +13,14 @@
   - type: Icon
     sprite: _RMC14/Structures/Xenos/xeno_resin_wall.rsi # Goobstation new sprites
     state: resin
-  - type: IconSmooth # Goobstation new sprites
+# Arcane-Edit-Start
+  - type: IconSmooth
     key: walls
-    base: resin
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: resin
+# Arcane-Edit-End
   - type: Damageable
     damageModifierSet: Resin
   - type: Injurable

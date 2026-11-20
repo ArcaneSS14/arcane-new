@@ -42,9 +42,12 @@
   - type: SpiderWebObject
   - type: IconSmooth
     key: web
-    additionalKeys:
-    - walls
-    base: web_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ web, walls ]
+      base: web_
+    # Arcane-Edit-End
   - type: Construction
     graph: CobwebsGraph
     node: start

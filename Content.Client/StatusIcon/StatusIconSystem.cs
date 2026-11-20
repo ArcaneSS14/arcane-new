@@ -52,9 +52,14 @@ public sealed partial class StatusIconSystem : SharedStatusIconSystem
             _overlay.AddOverlay(new StatusIconOverlay());
     }
 
+    private readonly List<StatusIconData> _statusIcons = new(); // Arcane
+
     public List<StatusIconData> GetStatusIcons(EntityUid uid, MetaDataComponent? meta = null)
     {
-        var list = new List<StatusIconData>();
+        // Arcane-Start
+        var list = _statusIcons;
+        list.Clear();
+        // Arcane-End
         if (!Resolve(uid, ref meta))
             return list;
 

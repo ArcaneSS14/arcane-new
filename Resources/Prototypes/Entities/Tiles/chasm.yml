@@ -28,9 +28,12 @@
     state: full
   - type: IconSmooth
     key: chasm
-    additionalKeys:
-    - walls
-    base: chasm_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ chasm, walls ]
+      base: chasm_
+    # Arcane-Edit-End
   - type: Physics
     bodyType: Static
   - type: Fixtures

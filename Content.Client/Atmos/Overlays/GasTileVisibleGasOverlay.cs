@@ -178,7 +178,12 @@ public sealed partial class GasTileVisibleGasOverlay : Overlay
                 state.drawHandle.UseShader(null);
                 foreach (var chunk in comp.Chunks.Values)
                 {
-                    var enumerator = new GasChunkEnumerator(chunk);
+                    // Arcane-Start
+                    if (!SharedGasTileOverlaySystem.ChunkIntersects(chunk, localBounds))
+                        continue;
+
+                    // Arcane-End
+                    var enumerator = new GasChunkMaskEnumerator(chunk, chunk.VisibleGasTiles); // Arcane-Edit: GasChunkEnumerator(chunk) > GasChunkMaskEnumerator(chunk, chunk.VisibleGasTiles)
 
                     while (enumerator.MoveNext(out var gas))
                     {
@@ -225,6 +230,11 @@ public sealed partial class GasTileVisibleGasOverlay : Overlay
         if (!mapGrid && args.Space != OverlaySpace.WorldSpaceBelowWorld)
             return;
 
+        // Arcane-Start
+        if (!HasVisibleGas(atmos.OverlayData))
+            return;
+
+        // Arcane-End
         var bottomLeft = args.WorldAABB.BottomLeft.Floored();
         var topRight = args.WorldAABB.TopRight.Ceiled();
 
@@ -244,4 +254,17 @@ public sealed partial class GasTileVisibleGasOverlay : Overlay
             }
         }
     }
+
+    // Arcane-Start
+    private static bool HasVisibleGas(SharedGasTileOverlaySystem.GasOverlayData data)
+    {
+        foreach (var opacity in data.Opacity)
+        {
+            if (opacity > 0)
+                return true;
+        }
+
+        return false;
+    }
+    // Arcane-End
 }

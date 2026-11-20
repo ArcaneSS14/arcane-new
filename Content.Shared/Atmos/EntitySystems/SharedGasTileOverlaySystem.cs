@@ -63,6 +63,19 @@ public abstract partial class SharedGasTileOverlaySystem : EntitySystem
         return new Vector2i((int)MathF.Floor((float)indices.X / ChunkSize), (int)MathF.Floor((float)indices.Y / ChunkSize));
     }
 
+    // Arcane-Start
+    /// <summary>
+    /// Whether a chunk has any tile within bounds, as <see cref="Box2i.Contains(Vector2i, bool)"/> sees them.
+    /// </summary>
+    public static bool ChunkIntersects(GasOverlayChunk chunk, Box2i bounds)
+    {
+        return chunk.Origin.X <= bounds.Right
+            && chunk.Origin.Y <= bounds.Top
+            && chunk.Origin.X + ChunkSize > bounds.Left
+            && chunk.Origin.Y + ChunkSize > bounds.Bottom;
+    }
+    // Arcane-End
+
     [Serializable, NetSerializable]
     public readonly struct GasOverlayData : IEquatable<GasOverlayData>
     {

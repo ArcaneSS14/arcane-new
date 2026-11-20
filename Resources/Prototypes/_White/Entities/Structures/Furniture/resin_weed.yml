@@ -29,9 +29,13 @@
     sprite: _RMC14/Structures/Xenos/xeno_weeds.rsi
     state: weed0
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: cm_xeno_weeds
-    base: weed_dir
-    mode: CardinalFlags
+    states:
+    - !type:DirectionSpriteSmoothing
+      mask: [ cm_xeno_weeds ]
+      base: weed_dir
+    # Arcane-Edit-End
   - type: Damageable
     damageModifierSet: Resin
   - type: Injurable

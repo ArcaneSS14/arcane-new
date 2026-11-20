@@ -65,7 +65,7 @@
 - type: latheRecipe
   parent: [ BaseCheapElectronicsRecipe, BaseCircuitryRecipeCategory ]
   id: StationMapElectronics
-  icon: { sprite: Structures/Machines/station_map.rsi, state: station_map0 } # Goobstation
+  icon: { sprite: Structures/Wallmounts/station-map.rsi, state: base } # Arcane-Edit: Structures/Machines/station_map.rsi, station_map0 > Structures/Wallmounts/station-map.rsi, base
   result: StationMapCircuitboard
 
 - type: latheRecipe

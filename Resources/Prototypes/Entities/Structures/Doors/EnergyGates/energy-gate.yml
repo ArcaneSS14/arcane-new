@@ -71,8 +71,9 @@
     node: energyGate
   - type: DirectionalArrowIndicator
   - type: IconSmooth
-    key: walls
-    mode: NoSprite
+    # Arcane-Edit-Start
+    key: doors
+    # Arcane-Edit-End
   - type: PointLight
     energy: 2.2
     color: "#cc3a41"

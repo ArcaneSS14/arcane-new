@@ -8,6 +8,14 @@ namespace Content.Shared.IconSmoothing;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class RandomIconSmoothComponent : Component
 {
+    // Arcane-Start
+    /// <summary>
+    /// Declares the index of the smoothing state to update.
+    /// </summary>
+    [DataField]
+    public int Index;
+    // Arcane-End
+
     /// <summary>
     /// StateBase will be randomly selected from this list. Allows to randomize the visual.
     /// </summary>

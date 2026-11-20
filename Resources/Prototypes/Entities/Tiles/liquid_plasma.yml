@@ -45,9 +45,12 @@
     state: full
   - type: IconSmooth
     key: phoron
-    base: water
-    additionalKeys:
-    - walls
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ phoron, walls ]
+      base: water
+    # Arcane-Edit-End
   - type: Physics
     bodyType: Static
   - type: Fixtures

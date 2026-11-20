@@ -33,7 +33,10 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: walls
-    base: bananium
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: bananium
   - type: Fixtures
     fixtures:
       fix1:
@@ -76,7 +79,10 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: walls
-    base: cult
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: cult
 
 - type: entity
   parent: [ BaseWall, StructureHealthWallWeak ]
@@ -108,4 +114,7 @@
         acts: [ "Destruction" ]
   - type: IconSmooth
     key: walls
-    base: diamond
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ walls ]
+      base: diamond

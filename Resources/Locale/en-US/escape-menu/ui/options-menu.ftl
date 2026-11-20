@@ -407,3 +407,10 @@ ui-options-admin-overlay-ghost-hide-distance = Ghost overlay hide range from mou
 
 ui-options-admin-strip-overlay-title = Strip Overlay
 ui-options-admin-strip-overlay-setting = Show strip overlay by default
+
+# Arcane-Start
+arcane-ui-options-lighting-shader-quality = Lighting Shader Quality:
+arcane-ui-options-lighting-shader-quality-none = None
+arcane-ui-options-lighting-shader-quality-silly = Silly
+arcane-ui-options-lighting-shader-quality-strong = Strong
+# Arcane-End

@@ -69,7 +69,12 @@
     state: cargo_pallet_sell
   - type: IconSmooth
     key: cargo_pallet_sell
-    base: cargo_pallet_sell_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cargo_pallet_sell ]
+      base: cargo_pallet_sell_
+    # Arcane-Edit-End
 
 - type: entity
   id: CargoPalletBuy
@@ -86,4 +91,9 @@
     state: cargo_pallet_buy
   - type: IconSmooth
     key: cargo_pallet_buy
-    base: cargo_pallet_buy_
+    # Arcane-Edit-Start
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cargo_pallet_buy ]
+      base: cargo_pallet_buy_
+    # Arcane-Edit-End

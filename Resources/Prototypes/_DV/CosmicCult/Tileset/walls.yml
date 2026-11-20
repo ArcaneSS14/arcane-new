@@ -21,8 +21,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
+    # Arcane-Edit-Start
     key: cultwalls
-    base: malign # Arcane-Edit
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cultwalls ]
+      base: malign
+    # Arcane-Edit-End
 
 - type: entity
   parent: WallCosmicCult
@@ -35,20 +40,19 @@
     state: full
   - type: Sprite
     sprite: _DV/CosmicCult/Tileset/cosmicwall.rsi
+    # Arcane-Edit-Start
     layers:
-      - state: full
-      - map: [ "enum.EdgeLayer.South" ]
-        state: trim_south
-      - map: [ "enum.EdgeLayer.East" ]
-        state: trim_east
-      - map: [ "enum.EdgeLayer.North" ]
-        state: trim_north
-      - map: [ "enum.EdgeLayer.West" ]
-        state: trim_west
+    - state: full
   - type: IconSmooth
     key: cultwalls
-    base: malign # Arcane-Edit
-  - type: SmoothEdge
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ cultwalls ]
+      base: malign
+    - !type:EdgeSpriteSmoothing
+      mask: [ cultwalls ]
+      base: trim_
+    # Arcane-Edit-End
 
 - type: entity
   parent: WindowRCDResistant
@@ -84,7 +88,13 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
   - type: IconSmooth
-    base: malign # Arcane-Edit
+    # Arcane-Edit-Start
+    key: windows
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ windows ]
+      base: malign
+    # Arcane-Edit-End
   - type: Appearance
   - type: DamageVisuals
     thresholds: [5, 10, 20]
@@ -108,7 +118,13 @@
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_dark.rsi
     state: full
   - type: IconSmooth
-    base: cosDwindow
+    # Arcane-Edit-Start
+    key: windows
+    states:
+    - !type:CornerSpriteSmoothing
+      mask: [ windows ]
+      base: cosDwindow
+    # Arcane-Edit-End
 
 - type: entity
   parent: WallShuttleDiagonal
@@ -128,9 +144,13 @@
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_diagonal.rsi
     state: state0 # Arcane-Edit
   - type: IconSmooth
-    mode: Diagonal
+    # Arcane-Edit-Start
     key: cultwindows
-    base: state # Arcane-Edit
+    states:
+    - !type:DiagonalSpriteSmoothing
+      mask: [ cultwindows ]
+      base: state
+    # Arcane-Edit-End
   - type: Icon
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_diagonal.rsi
     state: state0 # Arcane-Edit
@@ -160,9 +180,13 @@
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_dark_diagonal.rsi
     state: cosDwindow0
   - type: IconSmooth
-    mode: Diagonal
+    # Arcane-Edit-Start
     key: cultwindows
-    base: cosDwindow
+    states:
+    - !type:DiagonalSpriteSmoothing
+      mask: [ cultwindows ]
+      base: cosDwindow
+    # Arcane-Edit-End
   - type: Icon
     sprite: _DV/CosmicCult/Tileset/cosmicwindow_dark_diagonal.rsi
     state: cosDwindow0
