@@ -177,6 +177,7 @@
       - grilles
       - marble
       - doors
+      - windows-reinf
       base: state
     # Arcane-Edit-End
   - type: Icon

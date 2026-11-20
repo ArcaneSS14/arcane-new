@@ -240,9 +240,8 @@ public sealed partial class IconSmoothSystem : EntitySystem
     }
     private void UpdateAnchored(AnchoredEntitiesEnumerator entities)
     {
-        // Instead of doing HasComp -> Enqueue -> TryGetComp, we will just enqueue all entities. Generally when
-        // dealing with walls neighboring anchored entities will also be walls, and in those instances that will
-        // require one less component fetch/check.
+        // Only anchored entities with enabled smoothing get queued. One TryComp both checks for the component and
+        // fetches it, so the queued entry already carries it.
         while (entities.MoveNext(out var entity))
         {
             if (_iconSmoothQuery.TryComp(entity, out var iconSmooth) && iconSmooth.Enabled)

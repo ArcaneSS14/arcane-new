@@ -70,6 +70,9 @@ public sealed partial class GlowHaloOverlay : Overlay
     private readonly List<Entity<SpriteComponent, TransformComponent>> _scanned = new();
     private readonly List<Entity<SharedPointLightComponent, TransformComponent>> _lights = new();
     private readonly List<(Matrix3x2 Matrix, Texture Texture, Color Color)> _glowLayers = new();
+
+    // Snap offset of each grid for the viewport being drawn. Every sprite on a grid shares it.
+    private readonly Dictionary<EntityUid, Vector2> _gridSnaps = new();
     private readonly List<(Matrix3x2 Matrix, Texture Texture, Color Color)> _lampLayers = new();
 
     // Above entities, below FOV, so halos don't show through walls.
@@ -120,6 +123,7 @@ public sealed partial class GlowHaloOverlay : Overlay
         var viewPosition = eye.Position.Position + eye.Offset;
 
         _glowLayers.Clear();
+        _gridSnaps.Clear();
         _lampLayers.Clear();
         foreach (var (uid, sprite, xform) in glow.Sprites)
         {
@@ -138,8 +142,13 @@ public sealed partial class GlowHaloOverlay : Overlay
             // with the sprite it surrounds.
             if (xform.GridUid is { } gridUid && _gridQuery.HasComponent(gridUid))
             {
-                var gridPosition = _transform.GetWorldPosition(gridUid);
-                worldPosition += PixelSnapOffset(gridPosition, viewPosition, eyeRotation, viewScale, args.Viewport.Size);
+                if (!_gridSnaps.TryGetValue(gridUid, out var snap))
+                {
+                    var gridPosition = _transform.GetWorldPosition(gridUid);
+                    _gridSnaps[gridUid] = snap = PixelSnapOffset(gridPosition, viewPosition, eyeRotation, viewScale, args.Viewport.Size);
+                }
+
+                worldPosition += snap;
             }
 
             CollectLayers((uid, sprite), eyeRotation, worldRotation, worldPosition);

@@ -98,6 +98,7 @@
       - grilles
       - marble
       - doors
+      - windows-shuttle
       base: state
     # Arcane-Edit-End
   - type: Icon

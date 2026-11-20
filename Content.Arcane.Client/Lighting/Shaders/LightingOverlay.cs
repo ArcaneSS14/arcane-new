@@ -125,10 +125,14 @@ public sealed class LightingOverlay : Overlay
 
         // Silly quality, or a reduced light resolution, draws the low resolution masks.
         var lowMask = _useLowResMask || _quality == QualitySilly;
-        BuildCells();
+        // A lone light only overlaps itself, at distance zero, which always comes to 1.
+        var alone = _visible.Count == 1;
+        if (!alone)
+            BuildCells();
+
         foreach (var (pos, baseColor, worldMatrix, component) in _visible)
         {
-            var overlap = GetOverlap(pos);
+            var overlap = alone ? 1f : GetOverlap(pos);
             var color = baseColor.WithAlpha(baseColor.A / (1f + (overlap - 1f) * OverlapStrength));
             handle.SetTransform(worldMatrix);
 

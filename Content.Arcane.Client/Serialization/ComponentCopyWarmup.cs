@@ -14,7 +14,8 @@ using Robust.Shared.Serialization.Manager;
 namespace Content.Arcane.Client.Serialization;
 
 /// <summary>
-/// Copies the components of every entity prototype once while the game is loading.
+/// Copies entity prototype components while the game is loading, up to <see cref="MaxCopiesPerComponent"/> per
+/// component name rather than every prototype's.
 /// </summary>
 /// <remarks>
 /// The first copy of a type compiles its delegates on the main thread, which is what makes the first entity of each

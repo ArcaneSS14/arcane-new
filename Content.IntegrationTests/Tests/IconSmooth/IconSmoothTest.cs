@@ -6,6 +6,7 @@ using Content.IntegrationTests.Fixtures.Attributes;
 using Content.IntegrationTests.Utility;
 using Content.Shared.Fluids.Components;
 using Content.Shared.Maps;
+using Robust.Client.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Maths;
@@ -28,9 +29,102 @@ public sealed class IconSmoothTest : GameTest
     [SidedDependency(Side.Client)] private IconSmoothSystem _iconSmooth = default!;
     [SidedDependency(Side.Server)] private SharedMapSystem _map = default!;
     [SidedDependency(Side.Server)] private SharedTransformSystem _xform = default!;
+    [SidedDependency(Side.Client)] private SpriteSystem _sprite = default!;
 
     private static readonly string[] IconSmoothEntities = GameDataScrounger.EntitiesWithComponent("IconSmooth");
     private List<EntityUid> _spawned = new ();
+
+    /// <summary>
+    /// Every diagonal window with the window it is cut from. Plain glass is the control, its key was always in the mask.
+    /// </summary>
+    private static readonly (string Diagonal, string Window)[] DiagonalWindows =
+    [
+        ("WindowDiagonal", "Window"),
+        ("ReinforcedWindowDiagonal", "ReinforcedWindow"),
+        ("PlasmaWindowDiagonal", "PlasmaWindow"),
+        ("ReinforcedPlasmaWindowDiagonal", "ReinforcedPlasmaWindow"),
+        ("UraniumWindowDiagonal", "UraniumWindow"),
+        ("ReinforcedUraniumWindowDiagonal", "ReinforcedUraniumWindow"),
+        ("ShuttleWindowDiagonal", "ShuttleWindow"),
+        ("PlastitaniumWindowDiagonal", "PlastitaniumWindow"),
+    ];
+
+    /// <summary>
+    /// A diagonal window joins windows of its own kind on all three sides of its corner (south, south-east, east),
+    /// and stays unjoined once one of those sides is empty.
+    /// </summary>
+    [Test]
+    public async Task DiagonalWindowsJoinTheirOwnKind()
+    {
+        await Pair.CreateTestMap();
+        await Pair.SyncTicks();
+
+        var diagonals = new List<EntityUid>();
+        var east = new List<EntityUid>();
+
+        await Server.WaitPost(() =>
+        {
+            var grid = TestMap!.Grid;
+            var plating = new Tile(_tileDefMan[TileRef].TileId);
+
+            EntityUid Place(string proto, int x, int y)
+            {
+                var uid = SEntMan.SpawnAtPosition(proto, new EntityCoordinates(grid, x + 0.5f, y + 0.5f));
+                _spawned.Add(uid);
+                return uid;
+            }
+
+            // Each window gets its own 2x2 corner, with an empty column between them.
+            for (var i = 0; i < DiagonalWindows.Length; i++)
+            {
+                var (diagonal, window) = DiagonalWindows[i];
+                var x = i * 3;
+                for (var dx = 0; dx <= 1; dx++)
+                {
+                    for (var dy = 0; dy <= 1; dy++)
+                    {
+                        _map.SetTile(grid, grid, new Vector2i(x + dx, dy), plating);
+                    }
+                }
+
+                diagonals.Add(Place(diagonal, x, 1));
+                Place(window, x, 0);
+                Place(window, x + 1, 0);
+                east.Add(Place(window, x + 1, 1));
+            }
+        });
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() => AssertDiagonalStates(diagonals, "state1"));
+
+        await Server.WaitPost(() =>
+        {
+            foreach (var uid in east)
+            {
+                SEntMan.DeleteEntity(uid);
+            }
+        });
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() => AssertDiagonalStates(diagonals, "state0"));
+
+        await Server.WaitPost(DeleteAll);
+        await Pair.RunUntilSynced();
+    }
+
+    private void AssertDiagonalStates(List<EntityUid> diagonals, string expected)
+    {
+        // Sprites are updated on frame updates, which integration tests don't run on their own.
+        _iconSmooth.FrameUpdate(0f);
+
+        for (var i = 0; i < diagonals.Count; i++)
+        {
+            var uid = Pair.ToClientUid(diagonals[i]);
+            var sprite = CComp<SpriteComponent>(uid);
+            var name = DiagonalWindows[i].Diagonal;
+
+            Assert.That(_sprite.LayerMapTryGet((uid, sprite), "corner", out var layer, false), Is.True, $"{name} has no corner layer");
+            Assert.That(sprite[layer].RsiState.Name, Is.EqualTo(expected), name);
+        }
+    }
 
     /// <summary>
     /// Every pair of these keys is its own key set: 276 of them, more than a byte could index.

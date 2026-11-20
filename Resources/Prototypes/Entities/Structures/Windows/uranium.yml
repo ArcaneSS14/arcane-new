@@ -173,6 +173,7 @@
       - grilles
       - marble
       - doors
+      - windows-uranium
       base: state
     # Arcane-Edit-End
   - type: Icon

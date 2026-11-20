@@ -185,6 +185,7 @@
       - grilles
       - marble
       - doors
+      - windows-plastitanium
       base: state
     # Arcane-Edit-End
   - type: Fixtures
