@@ -84,7 +84,7 @@ public sealed partial class GoobBibleSystem : EntitySystem
                 origin: bible,
                 targetPart: TargetBodyPart.All,
                 ignoreBlockers: true);
-            _stun.TryAddParalyzeDuration(target, bibleComp.SmiteStunDuration * multiplier);
+            // _stun.TryAddParalyzeDuration(target, bibleComp.SmiteStunDuration * multiplier); // Arcane-Edit: smiting stuns > smiting only burns
             _delay.TryResetDelay((bible, useDelay));
         }
         else if (isDevil)

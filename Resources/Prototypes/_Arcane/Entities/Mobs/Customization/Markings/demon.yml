@@ -1,0 +1,650 @@
+# Tail
+
+- type: marking
+  id: DemonTail1
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: demon_tail
+
+- type: marking
+  id: DemonTailLong
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: long
+
+- type: marking
+  id: DemonTailUp
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: up
+
+
+- type: marking
+  id: DemonTailBroom
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_broom
+
+- type: marking
+  id: DemonTailBroomAnimated
+  bodyPart: Tail
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_broom_animated
+
+- type: marking
+  id: DemonTailDefault
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+
+- type: marking
+  id: DemonTailFishnet
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_fishnet
+
+- type: marking
+  id: DemonTailFin
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_fin
+
+- type: marking
+  id: DemonTailMermaid
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_mermaid
+
+- type: marking
+  id: DemonTailArrow
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_arrow
+
+- type: marking
+  id: DemonTailArrowAnimated
+  bodyPart: Tail
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_arrow_animated
+
+- type: marking
+  id: DemonTailTrident
+  bodyPart: Tail
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/parts.rsi
+    state: tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tail_trident
+
+- type: marking
+  id: DemonTailTrientBig
+  bodyPart: Tail
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings_big.rsi
+    state: devil_trident_tail
+
+- type: marking
+  id: DemonTailHimera
+  bodyPart: Tail
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings_big.rsi
+    state: himera_tail
+  - sprite: _Arcane/Mobs/Species/Demon/markings_big.rsi
+    state: himera_tail_hair
+
+- type: marking
+  id: DemonTailMermaidAnimatedBase
+  bodyPart: Tail
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings_big.rsi
+    state: mermaid_animated_base
+  - sprite: _Arcane/Mobs/Species/Demon/markings_big.rsi
+    state: mermaid_animated_fluff
+
+# HeadSide
+
+- type: marking
+  id: DemonCowEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: cow_ears
+
+- type: marking
+  id: DemonEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: demon_ears
+
+- type: marking
+  id: EarsArcanaAlt
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: arcana_ears_alt
+
+- type: marking
+  id: EarsArcana
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: arcana_ears
+
+- type: marking
+  id: DemonBiggerCowEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: bigger_cow_ears
+
+- type: marking
+  id: DemonFinEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: fin_ears
+
+- type: marking
+  id: DemonOxEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: ox_ears
+
+- type: marking
+  id: DemonHugeEars
+  bodyPart: HeadSide
+  underHair: true
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: ears_huge
+
+# HeadTop
+
+- type: marking
+  id: DemonCowHorns
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: cow_horns
+
+- type: marking
+  id: DemonHornsDeer
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: deer_antlers_horns
+
+- type: marking
+  id: DemonHornsSmall
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: small_horns
+
+- type: marking
+  id: DemonCurvedHorns
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: curved
+
+- type: marking
+  id: DemonTwistedHorns
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: twisted
+
+- type: marking
+  id: DemonSheepHorns
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: sheep
+
+- type: marking
+  id: DemonBullHorns
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: bull
+
+- type: marking
+  id: DemonHornsDouble
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_double
+
+- type: marking
+  id: DemonHornsDoubleAlt
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_double_alt
+
+- type: marking
+  id: DemonHornsNarrow
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_narrow
+
+- type: marking
+  id: DemonHornsGoatee
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_goatee
+
+- type: marking
+  id: DemonHornsGoateeAlt
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_goatee_alt
+
+- type: marking
+  id: DemonHornsSharp
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_sharp
+
+- type: marking
+  id: DemonHornsGrowths
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_growths
+
+- type: marking
+  id: DemonHornsBrokenOne
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_broken_one
+
+- type: marking
+  id: DemonHornsStout
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_stout
+
+- type: marking
+  id: DemonHornsEnormous
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_enormous
+
+- type: marking
+  id: DemonHornsScythe
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_scythe
+
+- type: marking
+  id: DemonHornsTapering
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_tapering
+
+- type: marking
+  id: DemonHornsDirectional
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_directional
+
+- type: marking
+  id: DemonHornsThick
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_thick
+
+- type: marking
+  id: DemonHornsSickle
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_sickle
+
+- type: marking
+  id: DemonHornsSlim
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: horns_slim
+
+- type: marking
+  id: DemonHornsDiadema
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: diadema
+
+- type: marking
+  id: DemonHornsHeart
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: heart
+
+- type: marking
+  id: DemonHornsPretzel
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: pretzel
+
+- type: marking
+  id: DemonHornsSmallAlt
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: small_horns_alt
+
+- type: marking
+  id: DemonHornsLongOx
+  bodyPart: HeadTop
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: long_ox_horns
+
+# FacialHair
+
+- type: marking
+  id: DemonGoatee
+  bodyPart: FacialHair
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: goatee
+
+# Chest
+
+- type: marking
+  id: DemonBodyCowSpots
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: cow_spots
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: cow_spots_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: cow_spots_r_hand
+
+- type: marking
+  id: DemonBodyGuardStripes
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: guards_stripes
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: guards_stripes_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: guards_stripes_r_hand
+
+- type: marking
+  id: DemonBodyLinesEmperos
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: lines_emperos
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: lines_emperos_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: lines_emperos_r_hand
+
+- type: marking
+  id: DemonBodyQueenLines
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: queen_lines
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: queen_lines_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: queen_lines_r_hand
+
+- type: marking
+  id: DemonBodyTreeLines
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tree_lines
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tree_lines_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: tree_lines_r_hand
+
+- type: marking
+  id: DemonBodyTrinitySpots
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: trinity_spots
+
+- type: marking
+  id: DemonBodyAratakiPainting
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: arataki_painting
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: arataki_painting_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: arataki_painting_r_hand
+
+- type: marking
+  id: DemonBodyGradientPaint
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: gradient_paint
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: gradient_paint_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: gradient_paint_r_hand
+
+- type: marking
+  id: DemonBodySkeleton
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: skeleton
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: skeleton_l_hand
+  - sprite: _Arcane/Mobs/Species/Demon/markings.rsi
+    state: skeleton_r_hand
+
+# Wings
+
+- type: marking
+  id: SuccubusWingsDemon
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings
+
+- type: marking
+  id: SuccubusWingsDemonTwo
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings-2
+
+- type: marking
+  id: SuccubusWingsDemonAnimated
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings_animated
+
+- type: marking
+  id: SuccubusWingsWithTail
+  bodyPart: Wings
+  groupWhitelist: [ Demon, Slime ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/succubus.rsi
+    state: succubus
+
+- type: marking
+  id: SuccubusWingsNotWithTail
+  bodyPart: Wings
+  groupWhitelist: [ Demon, Slime ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/succubus.rsi
+    state: succubus_not_tail
+
+- type: marking
+  id: SuccubusWingsWingsBig
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings_big
+
+- type: marking
+  id: SuccubusWingsWingsFin
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings_fin
+
+- type: marking
+  id: SuccubusWingsWingsLower
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings_lower
+
+- type: marking
+  id: SuccubusWingsWingsLowerTwo
+  bodyPart: Wings
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demonwings.rsi
+    state: succubus_wings_lower2
+
+- type: marking
+  id: DrakeSpine
+  bodyPart: Chest
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demondrake.rsi
+    state: drake_spine
+
+- type: marking
+  id: LeftDrakeArm
+  bodyPart: LArm
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demondrake.rsi
+    state: l_drake_arm
+
+- type: marking
+  id: RightDrakeArm
+  bodyPart: RArm
+  groupWhitelist: [ Demon ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/demondrake.rsi
+    state: r_drake_arm

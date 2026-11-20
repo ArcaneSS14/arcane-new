@@ -1,0 +1,26 @@
+- type: entity
+  id: StationAiBrain
+  components:
+  - type: LanguageSpeaker
+    speaks:
+    - Dwarvish
+    - Karshan
+    understands:
+    - Dwarvish
+    - Karshan
+  - type: TTS
+    voice: Glados
+
+- type: entity
+  id: AiHeld
+  components:
+  - type: ActionGrant
+    actions:
+    - ActionTTSVoiceChange
+
+- type: entity
+  id: AiHeldIntellicard
+  components:
+  - type: ActionGrant
+    actions:
+    - ActionTTSVoiceChange

@@ -32,7 +32,7 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
         }
 
         // Update smoothing and sprite based on volume.
-        if (TryComp<IconSmoothComponent>(uid, out var smooth))
+        if (TryComp<IconSmoothComponent>(uid, out var smooth) && smooth.Mode != IconSmoothingMode.NoSprite) // Arcane-Edit: added NoSprite check
         {
             if (volume < LowThreshold)
             {

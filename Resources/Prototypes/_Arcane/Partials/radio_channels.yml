@@ -1,0 +1,47 @@
+- type: radioChannel
+  id: Common
+  icon: JobIconPassenger
+
+- type: radioChannel
+  id: CentCom
+  icon: JobIconNanotrasen
+
+- type: radioChannel
+  id: Command
+  icon: JobIconCaptain
+
+- type: radioChannel
+  id: Engineering
+  icon: JobIconStationEngineer
+
+- type: radioChannel
+  id: Medical
+  icon: JobIconMedicalDoctor
+
+- type: radioChannel
+  id: Science
+  icon: JobIconScientist
+
+- type: radioChannel
+  id: Security
+  icon: JobIconSecurityOfficer
+
+- type: radioChannel
+  id: Service
+  icon: JobIconServiceWorker
+
+- type: radioChannel
+  id: Supply
+  icon: JobIconCargoTechnician
+
+- type: radioChannel
+  id: Syndicate
+  icon: JobIconSyndicate
+
+- type: radioChannel
+  id: Xenoborg
+  icon: JobIconBorg
+
+- type: radioChannel
+  id: Mothership
+  icon: JobIconBorg

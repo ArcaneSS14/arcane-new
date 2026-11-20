@@ -1,0 +1,5 @@
+- type: entity
+  id: MobRatKing
+  components:
+  - type: TTS
+    voice: Twitch

@@ -13,6 +13,7 @@ using Robust.Client.Graphics;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Client.Humanoid; // Arcane
 
 namespace Content.Client.Body;
 
@@ -22,6 +23,7 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
     [Dependency] private DisplacementMapSystem _displacement = default!;
     [Dependency] private MarkingManager _marking = default!;
     [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private HairGradientSystem _hairGradient = default!; // Arcane
 
     public override void Initialize()
     {
@@ -266,6 +268,10 @@ public sealed partial class VisualBodySystem : SharedVisualBodySystem
                     // TODO: fix this when LayerSetShader is moved out of component
                     target.Comp.LayerSetShader(index + i + 1 + numDisplacements, shader);
                 }
+                // Arcane-Start: hair gradient
+                if (proto.BodyPart == HumanoidVisualLayers.Hair)
+                    _hairGradient.OnHairLayer(target, layerId, rsi);
+                // Arcane-End
             }
 
             applied.Add(marking);

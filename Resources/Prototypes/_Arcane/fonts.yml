@@ -3,6 +3,15 @@
   path: /Fonts/_Arcane/supernatural.ttf
 
 # Used by the Schechi (Resomi) language font.
+
 - type: font
   id: Schoolbell
   path: /Fonts/_Arcane/Schoolbell/Schoolbell.ttf
+
+- type: font
+  id: Waoki
+  path: /Fonts/_Arcane/Languages/Waoki.otf
+
+- type: font
+  id: DwarvishPixel
+  path: /Fonts/_Arcane/Languages/PxPlus_IBM_VGA_8x16.ttf

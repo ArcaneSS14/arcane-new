@@ -252,6 +252,7 @@ public sealed partial class HumanoidProfileEditor
         RefreshTraits();
         // </Trauma>
         UpdateGrowthControls(); // Arcane
+        UpdateCustomization(); // Arcane
     }
 
     private void SetAge(int newAge)

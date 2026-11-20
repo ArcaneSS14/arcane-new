@@ -1,0 +1,6 @@
+- type: entity
+  id: ClothingOuterModsuitBase
+  components:
+  - type: Tag
+    tags:
+    - NoXeno
