@@ -3,7 +3,8 @@
 - type: marking
   id: RodentiaHeadTopEarDefault
   bodyPart: HeadTop
-  groupWhitelist: [Rodentia]
+  underHair: true
+  groupWhitelist: [Rodentia, Human]
   coloring:
     default:
       type: !type:TattooColoring
@@ -29,6 +30,7 @@
 - type: marking
   id: RodentiaHeadTopEarBat
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -37,6 +39,7 @@
 - type: marking
   id: RodentiaHeadTopEarBatLarge
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -45,6 +48,7 @@
 - type: marking
   id: RodentiaHeadTopEarHamster
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -55,6 +59,7 @@
 - type: marking
   id: RodentiaHeadTopEarLong
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -65,6 +70,7 @@
 - type: marking
   id: RodentiaHeadTopEarMouse
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -75,6 +81,7 @@
 - type: marking
   id: RodentiaHeadTopEarMouseLarge
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -85,6 +92,7 @@
 - type: marking
   id: RodentiaHeadTopEarNone
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -93,6 +101,7 @@
 - type: marking
   id: RodentiaHeadTopEarPointy
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -101,6 +110,7 @@
 - type: marking
   id: RodentiaHeadTopEarRabbit
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -111,6 +121,7 @@
 - type: marking
   id: RodentiaHeadTopEarSmall
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Rodentia]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Rodentia/ear_markings.rsi
@@ -434,3 +445,11 @@
 
 ## HEAD
 
+
+- type: marking
+  id: RodentiaTailJerboa
+  bodyPart: Tail
+  groupWhitelist: [Rodentia]
+  sprites:
+    - sprite: _Arcane/Mobs/Customization/Rodentia/long_tails.rsi
+      state: tail_jerboa

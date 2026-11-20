@@ -235,7 +235,8 @@ namespace Content.Server.Preferences.Managers
                     NsfwOoc = profile.NsfwOocFlavorText,
                     NsfwLinks = profile.NsfwLinksFlavorText,
                     NsfwTags = profile.NsfwTagsFlavorText,
-                });
+                })
+                .WithCustomization(CharacterCustomizationDb.Read(profile));
                 // Arcane-End
         }
 
