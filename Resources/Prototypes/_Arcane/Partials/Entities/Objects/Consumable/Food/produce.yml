@@ -1,0 +1,69 @@
+- type: entity
+  id: FoodBanana
+  components:
+  - type: Tag
+    tags:
+    - SexToyDildo
+
+- type: entity
+  id: FoodPumpkin
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole
+
+- type: entity
+  id: FoodCarrot
+  components:
+  - type: Tag
+    tags:
+    - SexToyDildo
+
+- type: entity
+  id: FoodCorn
+  components:
+  - type: Tag
+    tags:
+    - SexToyDildo
+
+- type: entity
+  id: FoodChiliPepper
+  components:
+  - type: Tag
+    tags:
+    - SexToyDildo
+
+- type: entity
+  id: FoodBluePumpkin
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole
+
+- type: entity
+  id: FoodEggplant
+  components:
+  - type: Tag
+    tags:
+    - SexToyDildo
+
+- type: entity
+  id: FoodWatermelon
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole
+
+- type: entity
+  id: FoodCabbage
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole
+
+- type: entity
+  id: FoodPineapple
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole

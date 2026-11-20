@@ -1,0 +1,7 @@
+- type: soundCollection
+  id: RoundEnd
+  files: !Clear
+  - /Audio/_Arcane/Announcements/RoundEnd/favourite_fish.ogg
+  - /Audio/_Arcane/Announcements/RoundEnd/mark_was_good.ogg
+  - /Audio/_Arcane/Announcements/RoundEnd/okay_man.ogg
+  - /Audio/_Arcane/Announcements/RoundEnd/she_loves.ogg

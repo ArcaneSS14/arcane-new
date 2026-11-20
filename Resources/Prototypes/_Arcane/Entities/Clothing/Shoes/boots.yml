@@ -74,6 +74,15 @@
       params:
         volume: -6
         variation: 0.09
+  # Arcane-Edit-Start
+  - type: HeelSlip
+    slipChance: 0.01
+    runSpeedThreshold: 3.0
+    slowdownModifier: 0.25
+    slowdownDurationMin: 3
+    slowdownDurationMax: 5
+    knockdownTime: 4.5
+  # Arcane-Edit-End
 
 - type: entity
   parent: ClothingShoesBootsMagDeathsquad
@@ -83,3 +92,14 @@
   - type: ItemToggle
     activated: true
   - type: Unremoveable
+
+- type: entity
+  parent: ClothingShoesHeelsWide
+  id: ClothingShoesBootsCommandMaid
+  name: command maid's shoes
+  description: Extremely comfortable and pleasant to wear.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Shoes/Boots/command_maid_shoes.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Shoes/Boots/command_maid_shoes.rsi

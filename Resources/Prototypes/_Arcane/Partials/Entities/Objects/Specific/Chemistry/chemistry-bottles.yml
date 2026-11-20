@@ -1,0 +1,9 @@
+- type: entity
+  id: BaseChemistryEmptyBottle
+  components:
+  - type: EmitSoundOnDrop
+    sound:
+      path: /Audio/_Arcane/Items/ReagentContainers/beaker_place.ogg
+      params:
+        volume: -4
+        variation: 0.125

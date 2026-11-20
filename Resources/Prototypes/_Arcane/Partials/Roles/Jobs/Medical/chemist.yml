@@ -1,0 +1,6 @@
+- type: job
+  id: Chemist
+  alternateTitles:
+  - ChemistPharmacist
+  - ChemistLabTechnician
+  - ChemistBiochemist

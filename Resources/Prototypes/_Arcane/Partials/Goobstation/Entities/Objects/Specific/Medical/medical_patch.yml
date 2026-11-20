@@ -1,0 +1,6 @@
+- type: entity
+  id: BaseMedicalPatch
+  components:
+  - type: Sticky
+    stickDelay: 2
+    unstickDelay: 1.5

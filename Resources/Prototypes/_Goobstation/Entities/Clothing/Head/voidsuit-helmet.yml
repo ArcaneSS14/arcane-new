@@ -195,21 +195,27 @@
   description: A dark green helmet with glowing cyan nodes, a mirrored visor, and a mounted side light.
   components:
   - type: Sprite
-    sprite: _Goobstation/Clothing/Head/Helmets/ntr_experimental_helmet.rsi
+    sprite: _Arcane/Clothing/Head/Helmets/ntr_experimental_helmet.rsi # Arcane-Edit: _Goobstation/Clothing/Head/Helmets/ntr_experimental_helmet.rsi > _Arcane/Clothing/Head/Helmets/ntr_experimental_helmet.rsi
   - type: Clothing
-    sprite: _Goobstation/Clothing/Head/Helmets/ntr_experimental_helmet.rsi
+    sprite: _Arcane/Clothing/Head/Helmets/ntr_experimental_helmet.rsi # Arcane-Edit: _Goobstation/Clothing/Head/Helmets/ntr_experimental_helmet.rsi > _Arcane/Clothing/Head/Helmets/ntr_experimental_helmet.rsi
     clothingVisuals:
       head:
       - state: equipped-head
+      # Arcane-Start
+      head-vox:
+      - state: equipped-head-vox
+      # Arcane-End
   - type: PointLight
     color: white
     radius: 7
     energy: 5
-  - type: ToggleableVisuals
-    clothingVisuals:
-      head:
-      - state: equipped-head-light
-        shader: unshaded
+  # Arcane-Edit-Start: the Arcane sprite has no light overlay
+  # - type: ToggleableVisuals
+  #   clothingVisuals:
+  #     head:
+  #     - state: equipped-head-light
+  #       shader: unshaded
+  # Arcane-Edit-End
   - type: PressureProtection
     highPressureMultiplier: 0.05
     lowPressureMultiplier: 1000

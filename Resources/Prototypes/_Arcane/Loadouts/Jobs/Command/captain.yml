@@ -25,10 +25,11 @@
     jumpsuit: ClothingUniformJumpsuitWhiteCaptainTurtleneck
 
 # Head
+
 - type: loadout
   id: CaptainWhiteBeret
   equipment:
-    head: ClothingHeadHatBeretCaptainWhite
+    head: ClothingHeadHatBeretCaptainWhiteBlue # Arcane-Edit
 
 - type: loadout
   id: SheriffBeret
@@ -46,6 +47,7 @@
     head: ClothingHeadHatCapcapSheriff
 
 # Gloves
+
 - type: loadout
   id: CaptainWhiteGloves
   equipment:
@@ -57,6 +59,7 @@
     gloves: ClothingHandsGlovesSheriff
 
 # Neck
+
 - type: loadout
   id: CaptainWideCloak
   equipment:
@@ -78,6 +81,7 @@
     neck: ClothingNeckMantleCaptainWhiteShoulder
 
 # Outer clothing
+
 - type: loadout
   id: CaptainWhiteCoat
   equipment:

@@ -1,0 +1,53 @@
+# Arcane's Command Maid: a preferable command-service job with its own gear; clothes come from the loadout.
+- type: job
+  id: CommandMaid
+  requirements: !Clear
+  - !type:RoleTimeRequirement
+    role: JobJanitor
+    time: 5h
+  - !type:RoleTimeRequirement
+    role: JobChef
+    time: 2h
+  - !type:RoleTimeRequirement
+    role: JobBartender
+    time: 2h
+  - !type:OverallPlaytimeRequirement
+    time: 30h
+  setPreference: true
+  access: !Clear
+  - Command
+  - Service
+  - Maintenance
+  - Bar
+  - Kitchen
+  - Janitor
+  - Theatre
+  - Hydroponics
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: CommandStaff
+    - type: Condemned
+      soulOwnedNotDevil: true
+  alternateTitles:
+  - CommandMaidButler
+  - CommandMaidCommandJanitor
+  - CommandMaidCorporateMaid
+
+- type: startingGear
+  id: CommandMaidGear
+  equipment: !Clear
+    id: CommandMaidPDA
+    ears: ClothingHeadsetCommandMaid
+    belt: ClothingBeltJanitorFilled
+  inhand: !Clear []
+  storage:
+    back:
+    - Flash
+
+- type: chameleonOutfit
+  id: CommandMaidChameleonOutfit
+  equipment: !Clear
+    head: ClothingHeadHatCommandMaid
+    neck: ClothingNeckTieBowCommandMaid
+    gloves: ClothingHandsGlovesCommandMaid

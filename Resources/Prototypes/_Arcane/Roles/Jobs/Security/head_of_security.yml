@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: HOSSecurityCommander
+  name: job-name-alt-hos-1
+
+- type: jobAlternateTitle
+  id: HOSChiefWarden
+  name: job-name-alt-hos-2
+
+- type: jobAlternateTitle
+  id: HOSSheriff
+  name: job-name-alt-hos-3
+
+- type: jobAlternateTitle
+  id: HOSSecurityChief
+  name: job-name-alt-hos-4

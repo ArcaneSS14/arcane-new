@@ -1,0 +1,8 @@
+- type: job
+  id: HeadOfPersonnel
+  alternateTitles:
+  - HoPPersonnelCoordinator
+  - HoPHumanResourcesOfficer
+  - HoPPersonnelChief
+  - HoPHRDirector
+  - HoPStaffAdministrator

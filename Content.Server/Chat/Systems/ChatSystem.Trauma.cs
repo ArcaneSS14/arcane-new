@@ -8,10 +8,12 @@ namespace Content.Server.Chat.Systems;
 
 public sealed partial class ChatSystem
 {
-    public const bool SpeakRespectsLOS = false; // You can hear through walls.
-    public const bool WhisperRespectsLOS = false; // You can hear some whispers through walls.
+    // Arcane-Edit-Start
+    public const bool SpeakRespectsLOS = true; // false > true: speech is not heard through walls
+    public const bool WhisperRespectsLOS = true; // false > true
+    // Arcane-Edit-End
     public const bool EmoteRespectsLOS = true; // You can still hear the noises, but you don't know who is making them.
-    public const bool LocalOOCRespectsLOS = false; // LOOC can be seen through walls.
+    public const bool LocalOOCRespectsLOS = true; // Arcane-Edit: false > true
 
     private void SendCollectiveMindChat(EntityUid source, string message, CollectiveMindPrototype? collectiveMind)
     {

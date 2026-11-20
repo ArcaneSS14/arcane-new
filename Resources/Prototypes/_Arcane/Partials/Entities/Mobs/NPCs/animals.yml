@@ -1,0 +1,5 @@
+- type: entity
+  id: MobSpiderBase
+  components:
+  - type: TTS
+    voice: Broodmother_dota_2

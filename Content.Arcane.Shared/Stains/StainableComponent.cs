@@ -1,0 +1,40 @@
+using Content.Shared.FixedPoint;
+using Content.Shared.Hands.Components;
+using Robust.Shared.GameStates;
+using Robust.Shared.Serialization;
+using Content.Shared.DoAfter;
+
+namespace Content.Arcane.Shared.Stains;
+
+[RegisterComponent, NetworkedComponent]
+public sealed partial class StainableComponent : Component
+{
+    [DataField]
+    public string SolutionId = "stain";
+
+    [DataField]
+    public FixedPoint2 MaxVolume = FixedPoint2.New(5);
+
+    [DataField]
+    public FixedPoint2 StainVolume = 0.5f;
+
+    [DataField]
+    public Dictionary<string, List<PrototypeLayerData>> ClothingVisuals = new();
+
+    [DataField]
+    public Dictionary<HandLocation, List<PrototypeLayerData>> ItemVisuals = new();
+
+    [DataField]
+    public List<PrototypeLayerData> IconVisuals = new();
+
+    [ViewVariables]
+    public HashSet<int> RevealedIconVisuals = new();
+
+    [DataField]
+    public float CleanseDelay = 15f;
+}
+
+[Serializable, NetSerializable]
+public sealed partial class WringStainDoAfterEvent : SimpleDoAfterEvent
+{
+}

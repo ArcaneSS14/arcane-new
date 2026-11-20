@@ -1,0 +1,6 @@
+- type: job
+  id: Psychologist
+  alternateTitles:
+  - PsychologistTherapist
+  - PsychologistGuidanceCounselor
+  - PsychologistPsychiatrist

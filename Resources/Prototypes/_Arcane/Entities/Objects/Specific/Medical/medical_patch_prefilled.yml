@@ -1,0 +1,108 @@
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledProcenylLazide
+  name: advanced anti-brute patch
+  suffix: Procenyl Lazide
+  components:
+  - type: Label
+    localizedLabel: medical-label-procenyl-lazide-10u
+  - type: Solution
+    solution:
+      maxVol: 10
+      reagents:
+        - ReagentId: ProcenylLazide
+          Quantity: 10
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledDermalineSmall
+  name: advanced anti-burn patch
+  suffix: Dermaline 10u
+  components:
+  - type: Label
+    localizedLabel: medical-label-dermaline-10u
+  - type: Solution
+    solution:
+      maxVol: 10
+      reagents:
+        - ReagentId: Dermaline
+          Quantity: 10
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledSalbutamol
+  name: air patch
+  suffix: Salbutamol
+  components:
+  - type: Label
+    localizedLabel: medical-label-salbutamol-30u
+  - type: Solution
+    solution:
+      maxVol: 30
+      reagents:
+        - ReagentId: Salbutamol
+          Quantity: 30
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledBicaridineSmall
+  name: advanced anti-tox patch
+  suffix: Bicaridine 10u
+  components:
+  - type: Label
+    localizedLabel: medical-label-bicaridine-10u
+  - type: Solution
+    solution:
+      maxVol: 10
+      reagents:
+        - ReagentId: Bicaridine
+          Quantity: 10
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledHyronalin
+  name: anti-radiation patch
+  suffix: Hyronalin
+  components:
+  - type: Label
+    localizedLabel: medical-label-hyronalin-30u
+  - type: Solution
+    solution:
+      maxVol: 30
+      reagents:
+        - ReagentId: Hyronalin
+          Quantity: 30
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledFormaldehyde
+  name: anti-rot patch
+  suffix: Formaldehyde
+  components:
+  - type: Label
+    localizedLabel: medical-label-formaldehyde-30u
+  - type: Solution
+    solution:
+      maxVol: 30
+      reagents:
+        - ReagentId: Formaldehyde
+          Quantity: 30
+  - type: MedicalPatch
+    transferAmount: 0.1
+
+- type: entity
+  parent: MedicalPatchPrefilledBase
+  id: MedicalPatchPrefilledSynthflesh
+  name: synthflesh patch
+  suffix: Synthflesh
+  components:
+  - type: Label
+    localizedLabel: medical-label-synthflesh-40u
+  - type: Solution
+    solution:
+      maxVol: 40
+      reagents:
+        - ReagentId: Synthflesh
+          Quantity: 40
+  - type: MedicalPatch
+    transferAmount: 1

@@ -4,6 +4,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Preferences;
 using Robust.Shared.GameObjects.Components.Localization;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Preferences; // Arcane
 
 namespace Content.Shared.Humanoid;
 
@@ -28,12 +29,15 @@ public sealed partial class HumanoidProfileSystem : EntitySystem
         ent.Comp.Species = profile.Species;
         ent.Comp.Voice = profile.Voice;
         ent.Comp.Sex = profile.Sex;
+        ent.Comp.Customization = profile.Customization; // Arcane
         Dirty(ent);
         // <Trauma>
         SetBarkVoice((ent, ent.Comp), profile.BarkVoice);
         SetKnowledgeProfile((ent, ent.Comp), profile.Knowledge);
         // </Trauma>
         ApplyGrowth((ent.Owner, ent.Comp), profile.Scale); // Arcane
+        var arcaneEv = new HumanoidProfileAppliedEvent(profile); // Arcane
+        RaiseLocalEvent(ent, ref arcaneEv); // Arcane
 
         var voiceChanged = new VoiceChangedEvent(ent.Comp.Voice, profile.Voice);
         RaiseLocalEvent(ent, ref voiceChanged);
@@ -47,7 +51,7 @@ public sealed partial class HumanoidProfileSystem : EntitySystem
     private void OnExamined(Entity<HumanoidProfileComponent> ent, ref ExaminedEvent args)
     {
         var identity = Identity.Entity(ent, EntityManager);
-        var species = GetSpeciesRepresentation(ent.Comp.Species).ToLower();
+        var species = CharacterCustomization.GetSpeciesLongName(GetSpeciesRepresentation(ent.Comp.Species), ent.Comp.Customization.CustomSpeciesName).ToLower(); // Arcane-Edit: GetSpeciesRepresentation(...) > with the custom species name
         var age = GetAgeRepresentation(ent.Comp.Species, ent.Comp.Age);
 
         args.PushText(Loc.GetString("humanoid-appearance-component-examine", ("user", identity), ("age", age), ("species", species)));
