@@ -5,18 +5,34 @@ using Content.Shared.Mind;
 using Content.Shared.Mobs;
 using Content.Shared.Objectives.Components;
 
+// Arcane-Start
+using Content.Arcane.Shared.Bitrunning.Components;
+using Content.Server.Objectives.Systems;
+using Content.Server.Polymorph.Systems;
+using Content.Shared.Ghost.Components;
+using Content.Shared.Mind.Components;
+using Content.Shared.Mobs.Systems;
+// Arcane-End
+
 namespace Content.Trauma.Server.Objectives;
 
 /// <summary>
 /// Handles Teach a Lesson logic on if a specific entity has died at least once during the round
 /// </summary>
-public sealed class TeachALessonConditionSystem : EntitySystem
+public sealed partial class TeachALessonConditionSystem : EntitySystem // Arcane-Edit
 {
+    // Arcane-Start
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private TargetObjectiveSystem _objectives = default!;
+    [Dependency] private PolymorphSystem _polymorph = default!;
+    // Arcane-End
+
     public override void Initialize()
     {
         base.Initialize();
 
-        SubscribeLocalEvent<TeachALessonTargetComponent, MobStateChangedEvent>(OnMobStateChanged);
+        SubscribeLocalEvent<TeachALessonBodyComponent, MobStateChangedEvent>(OnMobStateChanged); // Arcane-Edit
+        SubscribeLocalEvent<TeachALessonTargetComponent, MindGotAddedEvent>(OnTargetMoved); // Arcane
         SubscribeLocalEvent<TeachALessonConditionComponent, ObjectiveAfterAssignEvent>(OnAfterAssign);
         SubscribeLocalEvent<TeachALessonConditionComponent, ObjectiveGetProgressEvent>(OnGetProgress);
     }
@@ -28,34 +44,83 @@ public sealed class TeachALessonConditionSystem : EntitySystem
 
     private void OnAfterAssign(Entity<TeachALessonConditionComponent> ent, ref ObjectiveAfterAssignEvent args)
     {
-        if (!TryComp(ent.Owner, out TargetObjectiveComponent? targetObjective))
+        if (!_objectives.GetTarget(ent.Owner, out var targetMindId) || !TryComp<MindComponent>(targetMindId, out var targetMind)) // Arcane-Edit
             return;
-        var targetMindUid = targetObjective.Target;
-        if (targetMindUid is null)
-            return;
-        if (!TryComp(targetMindUid, out MindComponent? targetMind))
-            return;
-        var targetMobUid = targetMind.CurrentEntity;
-        if (targetMobUid is null)
-            return;
-        var targetComponent = EnsureComp<TeachALessonTargetComponent>(targetMobUid.Value);
-        targetComponent.Teachers.Add(ent);
 
+        // Arcane-Edit-Start
+        var mind = targetMindId.Value;
+        var target = EnsureComp<TeachALessonTargetComponent>(mind);
+        target.Teachers.Add(ent);
+        WatchCharacter((mind, target), targetMind.OwnedEntity);
+        // Arcane-Edit-End
     }
 
-    private void OnMobStateChanged(Entity<TeachALessonTargetComponent> ent, ref MobStateChangedEvent args)
+    // Arcane-Start
+    private void OnTargetMoved(Entity<TeachALessonTargetComponent> ent, ref MindGotAddedEvent args)
+        => WatchCharacter(ent, args.Container.Owner);
+
+    private void WatchCharacter(Entity<TeachALessonTargetComponent> target, EntityUid? entity)
     {
-       // Goob - fix teach a lesson
-        if (!TryComp<MindComponent>(ent.Owner, out var targetMind))
-            return;
-        if (args.NewMobState != MobState.Dead && targetMind.OwnedEntity != null)
-        // Goob end
-            return;
-        foreach (var teacher in ent.Comp.Teachers)
+        if (TryComp<GhostComponent>(entity, out var ghost))
         {
-            if(!TryComp(teacher, out TeachALessonConditionComponent? condition))
+            if (!ghost.CanReturnToBody ||
+                target.Comp.Body is { } watchedBody && TerminatingOrDeleted(watchedBody))
+                Complete(target.Comp);
+            return;
+        }
+
+        var body = entity;
+        for (var current = entity; current is { } candidate; current = _polymorph.GetPolymorphParent(candidate))
+        {
+            if (!TryComp<AvatarConnectionComponent>(candidate, out var avatar))
                 continue;
+
+            body = avatar.OriginalBody;
+            break;
+        }
+        if (body is not { } uid || TerminatingOrDeleted(uid))
+            return;
+
+        if (target.Comp.Body != uid)
+        {
+            if (TryComp<TeachALessonBodyComponent>(target.Comp.Body, out var previous))
+                previous.Minds.Remove(target.Owner);
+
+            EnsureComp<TeachALessonBodyComponent>(uid).Minds.Add(target.Owner);
+            target.Comp.Body = uid;
+        }
+
+        if (_mobState.IsDead(uid))
+            Complete(target.Comp);
+    }
+
+    // Arcane-End
+
+    private void OnMobStateChanged(Entity<TeachALessonBodyComponent> ent, ref MobStateChangedEvent args) // Arcane-Edit
+    {
+        if (args.NewMobState != MobState.Dead) // Arcane-Edit
+            return;
+
+        // Arcane-Edit-Start
+        foreach (var mind in ent.Comp.Minds)
+        {
+            if (TryComp<TeachALessonTargetComponent>(mind, out var target) && target.Body == ent.Owner)
+                Complete(target);
+        }
+        // Arcane-Edit-End
+    }
+
+    // Arcane-Start
+    private void Complete(TeachALessonTargetComponent target)
+    {
+        target.Teachers.RemoveWhere(teacher => !HasComp<TeachALessonConditionComponent>(teacher));
+        foreach (var teacher in target.Teachers)
+        {
+            if (!TryComp<TeachALessonConditionComponent>(teacher, out var condition))
+                continue;
+
             condition.HasDied = true;
         }
     }
+    // Arcane-End
 }

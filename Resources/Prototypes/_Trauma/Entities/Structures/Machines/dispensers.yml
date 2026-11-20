@@ -46,6 +46,11 @@
       Astrotame: 8
       HorseradishSauce: 4
       Cornoil: 4
+      # Arcane-Start
+      Fiber: 4
+      Coldsauce: 3
+      Nutriment: 30
+      # Arcane-End
 
 - type: entity
   abstract: true

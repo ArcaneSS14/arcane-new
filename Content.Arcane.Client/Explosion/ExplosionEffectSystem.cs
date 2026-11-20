@@ -1,4 +1,4 @@
-using Content.Shared.Explosion.EntitySystems;
+using Content.Arcane.Shared.Explosion.Systems;
 using Robust.Client.Graphics;
 
 namespace Content.Arcane.Client.Explosion;

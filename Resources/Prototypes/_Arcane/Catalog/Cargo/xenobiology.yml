@@ -1,0 +1,21 @@
+- type: cargoProduct
+  id: LivestockXenobioSlimes
+  icon:
+    sprite: _Goobstation/Xenobiology/Mobs/slimesBaby.rsi
+    state: base
+  product: CrateNPCXenobioSlime
+  cost: 12600
+  category: cargoproduct-category-name-science
+  group: market
+
+- type: entity
+  id: CrateNPCXenobioSlime
+  parent: CrateLivestock
+  name: crate of xenobiology slimes
+  description: A crate containing two young grey slimes.
+  components:
+  - type: SlimeLivestockFill
+    breed: GreyMutation
+    prototype: MobSlimeXenobioBaby
+    count: 2
+    container: entity_storage

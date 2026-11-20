@@ -1,5 +1,5 @@
 using System.Numerics;
-using Content.Shared.Explosion.Components;
+using Content.Arcane.Shared.Explosion.Components;
 using Robust.Client.Graphics;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;

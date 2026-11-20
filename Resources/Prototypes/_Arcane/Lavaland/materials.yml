@@ -1,0 +1,365 @@
+- type: entity
+  parent: MaterialBase
+  id: MaterialAshwoodPlank
+  name: ashwood
+  suffix: Full
+  components:
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      Ashwood: 100
+  - type: Stack
+    stackType: AshwoodPlank
+    baseLayer: base
+    layerStates:
+    - wood
+    - wood_2
+    - wood_3
+  - type: Sprite
+    sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi
+    state: wood
+    layers:
+    - state: wood
+      map: ["base"]
+  - type: Appearance
+  - type: Item
+    sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi
+    heldPrefix: wood
+  - type: Tag
+    tags:
+    - Wooden
+    - RawMaterial
+    - DroneUsable # Goobstation
+  - type: Extractable
+    grindableSolutionName: wood
+  - type: Solution
+    id: wood
+    solution:
+      reagents:
+      - ReagentId: Cellulose
+        Quantity: 5
+      - ReagentId: Ash
+        Quantity: 5
+
+- type: entity
+  parent: MaterialAshwoodPlank
+  id: MaterialAshwoodPlank10
+  suffix: 10
+  components:
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: MaterialAshwoodPlank
+  id: MaterialAshwoodPlank1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: MaterialBase
+  id: MaterialAshwoodStick
+  name: ashwood stick
+  suffix: Full
+  components:
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      Ashwood: 50
+  - type: Stack
+    stackType: AshwoodStick
+    baseLayer: base
+    layerStates:
+    - wood
+    - wood_2
+    - wood_3
+  - type: Sprite
+    sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi
+    state: wood
+    layers:
+    - state: wood
+      map: ["base"]
+  - type: Appearance
+  - type: Item
+    sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi
+    heldPrefix: wood
+  - type: Tag
+    tags:
+    - Wooden
+    - RawMaterial
+    - DroneUsable # Goobstation
+  - type: Extractable
+    grindableSolutionName: wood
+  - type: Solution
+    id: wood
+    solution:
+      reagents:
+      - ReagentId: Cellulose
+        Quantity: 2.5
+      - ReagentId: Ash
+        Quantity: 2.5
+  - type: Construction
+    graph: AshwoodStick
+    node: stick
+
+- type: entity
+  parent: MaterialAshwoodStick
+  id: MaterialAshwoodStick10
+  suffix: 10
+  components:
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: MaterialAshwoodStick
+  id: MaterialAshwoodStick1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: MaterialBase
+  id: MaterialWoodStick
+  name: wood stick
+  suffix: Full
+  components:
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      Wood: 50
+  - type: Stack
+    stackType: WoodStick
+    baseLayer: base
+    layerStates:
+    - wood
+    - wood_2
+    - wood_3
+  - type: Sprite
+    sprite: _Trauma/Objects/Materials/materials.rsi
+    state: wood
+    layers:
+    - state: wood
+      map: ["base"]
+  - type: Appearance
+  - type: Item
+    sprite: _Trauma/Objects/Materials/materials.rsi
+    heldPrefix: wood
+  - type: Tag
+    tags:
+    - Wooden
+    - RawMaterial
+    - DroneUsable # Goobstation
+  - type: Extractable
+    grindableSolutionName: wood
+  - type: Solution
+    id: wood
+    solution:
+      reagents:
+      - ReagentId: Cellulose
+        Quantity: 5
+  - type: Construction
+    graph: WoodStick
+    node: stick
+
+- type: entity
+  parent: MaterialWoodStick
+  id: MaterialWoodStick10
+  suffix: 10
+  components:
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: MaterialWoodStick
+  id: MaterialWoodStick1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: MaterialBase
+  id: MaterialFlowersAsh
+  name: ash flowers
+  suffix: Full
+  components:
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      Cloth: 50
+  - type: Stack
+    stackType: FlowersAsh
+    baseLayer: base
+    layerStates:
+    - dark_1
+    - dark_2
+    - dark_3
+  - type: Sprite
+    sprite: _Arcane/Lavaland/Objects/Materials/biomaterial.rsi
+    layers:
+    - state: dark_1
+      map: ["base"]
+  - type: Appearance
+  - type: Tag
+    tags:
+    - ClothMade
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 1
+  - type: Edible
+    requiresSpecialDigestion: true
+  - type: FlavorProfile
+    flavors:
+    - fiber
+  - type: Solution
+    id: food
+    solution:
+      maxVol: 2
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 2
+
+- type: entity
+  parent: MaterialFlowersAsh
+  id: MaterialFlowersAsh10
+  suffix: 10
+  components:
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: MaterialFlowersAsh
+  id: MaterialFlowersAsh1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: MaterialBase
+  id: MaterialFlowersPale
+  name: pale flowers
+  suffix: Full
+  components:
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      Cloth: 100
+  - type: Stack
+    stackType: FlowersPale
+    baseLayer: base
+    layerStates:
+    - light_1
+    - light_2
+    - light_3
+  - type: Sprite
+    sprite: _Arcane/Lavaland/Objects/Materials/biomaterial.rsi
+    layers:
+    - state: light_1
+      map: ["base"]
+  - type: Appearance
+  - type: Tag
+    tags:
+    - ClothMade
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 3
+  - type: Edible
+    requiresSpecialDigestion: true
+  - type: FlavorProfile
+    flavors:
+    - fiber
+  - type: Solution
+    id: food
+    solution:
+      maxVol: 5
+      reagents:
+      - ReagentId: Fiber
+        Quantity: 5
+
+- type: entity
+  parent: MaterialFlowersPale
+  id: MaterialFlowersPale10
+  suffix: 10
+  components:
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: MaterialFlowersPale
+  id: MaterialFlowersPale1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: material
+  id: Ashwood
+  stackEntity: MaterialAshwoodPlank1
+  name: materials-ashwood
+  unit: materials-unit-plank
+  icon: { sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi, state: wood }
+  color: "#6d6b68"
+  price: 0.15 # $15 for 1 unit
+
+- type: stack
+  id: AshwoodPlank
+  name: stack-ashwood-plank
+  icon: { sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi, state: wood }
+  spawn: MaterialAshwoodPlank1
+  maxCount: 30
+
+- type: stack
+  id: AshwoodStick
+  name: stack-ashwood-stick
+  icon: { sprite: _Arcane/Lavaland/Objects/Materials/ashwood.rsi, state: wood }
+  spawn: MaterialAshwoodStick1
+  maxCount: 30
+
+- type: stack
+  id: WoodStick
+  name: stack-wood-stick
+  icon: { sprite: _Trauma/Objects/Materials/materials.rsi, state: wood }
+  spawn: MaterialWoodStick1
+  maxCount: 30
+
+- type: stack
+  id: FlowersAsh
+  name: stack-flowers-ash
+  icon:
+    sprite: _Arcane/Lavaland/Objects/Materials/biomaterial.rsi
+    state: dark_1
+  spawn: MaterialFlowersAsh1
+  maxCount: 30
+
+- type: stack
+  id: FlowersPale
+  name: stack-flowers-pale
+  icon:
+    sprite: _Arcane/Lavaland/Objects/Materials/biomaterial.rsi
+    state: light_1
+  spawn: MaterialFlowersPale1
+  maxCount: 30
+
+- type: entity
+  name: ashwood log
+  description: A heavy log from the ash trees of Lavaland. It can be sawn into planks.
+  id: AshwoodLog
+  parent: Log
+  components:
+  - type: Sprite
+    color: "#B6A5A1"
+  - type: PhysicalComposition
+    materialComposition:
+      Ashwood: 100
+  - type: ToolRefinable
+    qualityNeeded: Sawing
+    refineResult:
+    - id: MaterialAshwoodPlank1
+      amount: 1

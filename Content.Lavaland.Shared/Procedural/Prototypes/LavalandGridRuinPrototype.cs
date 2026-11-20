@@ -19,6 +19,14 @@ public sealed partial class LavalandGridRuinPrototype : IPrototype
     [DataField]
     public int SpawnAttempts = 8;
 
+    // Arcane-Start
+    [DataField]
+    public int? MinDistance;
+
+    [DataField]
+    public int? MaxDistance;
+    // Arcane-End
+
     [DataField]
     public bool PatchToPlanet = true;
 

@@ -1,8 +1,9 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 // Arcane-Start
-using Robust.Shared.Serialization;
+using Content.Arcane.Common.Research;
 using Content.Shared.Radio;
+using Robust.Shared.Serialization;
 // Arcane-End
 
 namespace Content.Shared.Research.Prototypes;
@@ -178,9 +179,7 @@ public sealed partial class TechnologyPrototype : IPrototype
     [DataField(required: true)]
     public Vector2i Position { get; private set; }
 
-    // Arcane-Start
-    public IEnumerable<ProtoId<TechnologyPrototype>> AllRequiredTechnologies => TechnologyPrerequisites;
-    // Arcane-End
+    public IEnumerable<ProtoId<TechnologyPrototype>> AllRequiredTechnologies => TechnologyPrerequisites; // Arcane
 }
 
 // Arcane-Start

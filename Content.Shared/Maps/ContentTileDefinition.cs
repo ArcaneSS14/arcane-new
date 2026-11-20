@@ -133,6 +133,8 @@ public sealed partial class ContentTileDefinition : IPrototype, IInheritingProto
     /// </summary>
     [DataField] public bool EditorHidden { get; private set; } = false;
 
+    [DataField] public bool ProtectDecals { get; private set; } // Arcane
+
     /// <summary>
     /// If this tile is reclaimed, what materials would come out of it?
     /// </summary>

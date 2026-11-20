@@ -18,6 +18,8 @@ using Content.Trauma.Common.MartialArts;
 using Content.Trauma.Shared.MartialArts;
 using Content.Trauma.Shared.MartialArts.Components;
 
+using Content.Shared.Weapons.Hitscan.Events; // Arcane
+
 namespace Content.Trauma.Shared.Knowledge.Systems;
 
 public abstract partial class SharedKnowledgeSystem
@@ -36,6 +38,10 @@ public abstract partial class SharedKnowledgeSystem
         SubscribeLocalEvent<KnowledgeHolderComponent, RefreshMovementSpeedModifiersEvent>(RelayMartialArt);
         SubscribeLocalEvent<KnowledgeHolderComponent, GetMeleeAttackRateEvent>(RelayActiveEvent);
         SubscribeLocalEvent<KnowledgeHolderComponent, ProjectileReflectAttemptEvent>(RelayMartialArt);
+        // Arcane-Start
+        SubscribeLocalEvent<KnowledgeHolderComponent, ProjectileDodgeAttemptEvent>(RelayMartialArt);
+        SubscribeLocalEvent<KnowledgeHolderComponent, HitscanDodgeAttemptEvent>(RelayMartialArt);
+        // Arcane-End
         SubscribeLocalEvent<KnowledgeHolderComponent, TryForceStandEvent>(RelayMartialArt);
     }
 

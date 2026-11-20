@@ -20,6 +20,11 @@ public sealed partial class SSDIndicatorComponent : Component
     [DataField, ViewVariables(VVAccess.ReadOnly)]
     public bool IsSSD = true;
 
+    // Arcane-Start
+    [DataField, AutoNetworkedField]
+    public bool HadPlayer;
+    // Arcane-End
+
     /// <summary>
     /// The icon displayed next to the associated entity when it is SSD.
     /// </summary>

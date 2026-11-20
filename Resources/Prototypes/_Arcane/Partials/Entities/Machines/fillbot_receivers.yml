@@ -1,0 +1,21 @@
+- type: entity
+  id: BaseLatheNoSilo
+  abstract: true
+  components:
+  - type: DeviceLinkSink
+    ports:
+    - FillbotAnyItem
+
+- type: entity
+  id: DisposalUnit
+  components:
+  - type: DeviceLinkSink
+    ports:
+    - FillbotAnyItem
+
+- type: entity
+  id: MailingUnit
+  components:
+  - type: DeviceLinkSink
+    ports:
+    - FillbotAnyItem

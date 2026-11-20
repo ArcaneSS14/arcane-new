@@ -26,6 +26,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
 
+using Content.Server.Holopad; // Arcane
+
 namespace Content.Server.Pointing.EntitySystems
 {
     [UsedImplicitly]
@@ -46,6 +48,7 @@ namespace Content.Server.Pointing.EntitySystems
         [Dependency] private IAdminLogManager _adminLogger = default!;
         [Dependency] private ExamineSystemShared _examine = default!;
         [Dependency] private EntityQuery<InventoryComponent> _inventoryQuery = default!;
+        [Dependency] private HolopadSystem _holopad = default!; // Arcane
 
         private TimeSpan _pointDelay = TimeSpan.FromSeconds(0.5f);
 
@@ -79,13 +82,14 @@ namespace Content.Server.Pointing.EntitySystems
         // TODO: FOV
         private void SendMessage(
             EntityUid source,
+            EntityUid origin, // Arcane
             IEnumerable<ICommonSession> viewers,
             EntityUid pointed,
             string selfMessage,
             string viewerMessage,
             string? viewerPointedAtMessage = null)
         {
-            var netSource = GetNetEntity(source);
+            var netSource = GetNetEntity(origin); // Arcane-Edit: source > projection origin
 
             foreach (var viewer in viewers)
             {
@@ -103,6 +107,13 @@ namespace Content.Server.Pointing.EntitySystems
                 // Someone pointing at YOU is slightly more important
                 var popupType = viewerEntity == pointed ? PopupType.Medium : PopupType.Small;
 
+                // Arcane-Start: The operator's camera may not have the hologram in its state yet.
+                if (viewerEntity == source && origin != source)
+                {
+                    _popup.PopupCursor(message, viewer, popupType);
+                    continue;
+                }
+                // Arcane-End
                 RaiseNetworkEvent(new PopupEntityEvent(message, popupType, _gameTiming.CurTick, netSource), viewerEntity); // TODO: Make this use the popup system API
             }
 
@@ -159,19 +170,20 @@ namespace Content.Server.Pointing.EntitySystems
                 return false;
             }
 
-            if (!InRange(player, coordsPointed))
+            var origin = _holopad.GetPointingOrigin(player) ?? player; // Arcane
+            if (!InRange(origin, coordsPointed)) // Arcane-Edit: player > origin
             {
                 _popup.PopupEntity(Loc.GetString("pointing-system-try-point-cannot-reach"), player, player);
                 return false;
             }
             var mapCoordsPointed = _transform.ToMapCoordinates(coordsPointed);
-            _rotateToFaceSystem.TryFaceCoordinates(player, mapCoordsPointed.Position);
+            _rotateToFaceSystem.TryFaceCoordinates(origin, mapCoordsPointed.Position); // Arcane-Edit: player > origin
 
             var arrow = Spawn("PointingArrow", coordsPointed);
 
             if (TryComp<PointingArrowComponent>(arrow, out var pointing))
             {
-                pointing.StartPosition = _transform.ToCoordinates((arrow, Transform(arrow)), _transform.ToMapCoordinates(Transform(player).Coordinates)).Position;
+                pointing.StartPosition = _transform.ToCoordinates((arrow, Transform(arrow)), _transform.ToMapCoordinates(Transform(origin).Coordinates)).Position; // Arcane-Edit: player > origin
                 pointing.EndTime = _gameTiming.CurTime + PointDuration;
 
                 Dirty(arrow, pointing);
@@ -202,7 +214,7 @@ namespace Content.Server.Pointing.EntitySystems
                     (eyeComp.VisibilityMask & layer) == 0)
                     return false;
 
-                return _transform.GetMapCoordinates(ent).InRange(_transform.GetMapCoordinates(player), PointingRange);
+                return playerSession == session || _transform.GetMapCoordinates(ent).InRange(_transform.GetMapCoordinates(origin), PointingRange); // Arcane-Edit: player range > projection range with feedback for the operator
             }
 
             var viewers = Filter.Empty()
@@ -308,7 +320,7 @@ namespace Content.Server.Pointing.EntitySystems
 
             _pointers[session] = _gameTiming.CurTime;
 
-            SendMessage(player, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage);
+            SendMessage(player, origin, viewers, pointed, selfMessage, viewerMessage, viewerPointedAtMessage); // Arcane-Edit: Pass the projection origin
 
             return true;
         }

@@ -43,7 +43,6 @@ namespace Content.Client.Examine
             typeof(Robust.Client.UserInterface.RichText.ColorTag),
             typeof(Robust.Client.UserInterface.RichText.HeadingTag),
             typeof(Robust.Client.UserInterface.RichText.ItalicTag),
-            typeof(Content.Client.UserInterface.RichText.RadioChannelColorTag),
         ];
         // Arcane-End
 
@@ -292,7 +291,7 @@ namespace Content.Client.Examine
                     continue;
 
                 var richLabel = new RichTextLabel() { Margin = new Thickness(4, 4, 0, 4)};
-                richLabel.SetMessage(message, ExamineMarkupTags); // Arcane-Edit: SetMessage(message) > SetMessage(message, ExamineMarkupTags)
+                richLabel.SetMessage(message, _markupTags); // Arcane-Edit: SetMessage(message) > SetMessage(message, _markupTags)
                 vBox.AddChild(richLabel);
                 break;
             }

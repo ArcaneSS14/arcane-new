@@ -16,6 +16,7 @@
   - ScanningReagentCryostylane
   recipeUnlocks:
   - LargeBeaker
+  - ECigarette
   - Beaker
   - Bloodpack
   - Bonesetter
@@ -169,6 +170,7 @@
   - CryoPodMachineCircuitboard
   - CryostasisBeaker
   - SyringeCryostasis
+  - CryostasisCigarette
   - StasisOperatingTableCircuitboard
   - StasisBedMachineCircuitboard
   position: 6,11

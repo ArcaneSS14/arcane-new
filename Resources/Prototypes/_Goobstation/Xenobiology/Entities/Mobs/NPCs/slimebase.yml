@@ -138,6 +138,11 @@
   - type: ActionGrant
     actions:
     - ActionSlimeLatch
+    - ActionSlimeEatCorpse # Arcane
+  # Arcane-Start
+  - type: SlimeCorpseEater
+  - type: IgnoreBadFood
+  # Arcane-End
   - type: HTN
     rootTask:
       task: XenoSlimeCompound

@@ -1,0 +1,36 @@
+- type: latheRecipe
+  parent: BaseUpgradeKit
+  id: DiodeDiscElectroDisruptive
+  result: DiodeDiscElectroDisruptive
+
+- type: latheRecipe
+  parent: BaseUpgradeKit
+  id: DiodeDiscElectroBehavioural
+  result: DiodeDiscElectroBehavioural
+
+- type: latheRecipePack
+  id: AdvancedEmitters
+  recipes:
+  - DiodeDiscElectroDisruptive
+  - DiodeDiscElectroBehavioural
+
+- type: technology
+  id: AdvancedEmitters
+  name: research-technology-advanced-emitters
+  description: research-technology-advanced-emitters-desc
+  icon:
+    sprite: _Arcane/Objects/Tools/diodedisc.rsi
+    state: icon
+  discipline: Engineering
+  tier: 1
+  announceChannels:
+  - Engineering
+  pointCosts:
+  - type: General
+    amount: 3000
+  technologyPrerequisites:
+  - EnergyManipulation
+  recipeUnlocks:
+  - DiodeDiscElectroDisruptive
+  - DiodeDiscElectroBehavioural
+  position: 9,4

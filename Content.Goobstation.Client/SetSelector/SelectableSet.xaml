@@ -17,11 +17,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			</GridContainer>
 			<controls:Separator ColorOverride="#404040" Margin="0 5"/>
 			<!-- Icon and Description -->
-			<GridContainer Margin="0 5" Columns="2">
+			<!-- Arcane-Edit-Start: the description uses the remaining width and can wrap. -->
+			<BoxContainer Margin="0 5" Orientation="Horizontal">
 				<TextureRect Name="Icon" Margin="10" Stretch="KeepAspectCentered"
 							VerticalAlignment="Center" HorizontalAlignment="Right" SetSize="64 64"/>
-				<Label Name="SetDescription" Text="Description"></Label>
-			</GridContainer>
+				<RichTextLabel Name="SetDescription" HorizontalExpand="True" VerticalAlignment="Center" />
+			</BoxContainer>
+			<!-- Arcane-Edit-End -->
 		</BoxContainer>
 	</PanelContainer>
 </Control>

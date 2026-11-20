@@ -29,15 +29,26 @@ public sealed partial class AntagGhostRoleTest : AntagTest
     [SidedDependency(Side.Server)] private IRobustRandom _random = default!;
     [SidedDependency(Side.Server)] private GhostRoleSystem _ghostRole = default!;
 
+    /* // Arcane-Edit-Start
     private static readonly string[] AntagGameRules = GameDataScrounger.EntitiesWithComponent("AntagSelection");
+    */ // Arcane-Edit-End
+    private string[] AntagGameRules => GameDataScrounger.EntitiesWithComponent(SProtoMan, "AntagSelection"); // Arcane
 
     [Explicit] // Trauma - takes too long
     [Test]
     [TestOf(typeof(ServerGameTicker)), TestOf(typeof(AntagSelectionSystem)), TestOf(typeof(AntagSelectionComponent)), TestOf(typeof(GhostRoleSystem))]
-    [TestCaseSource(nameof(AntagGameRules))]
+    // [TestCaseSource(nameof(AntagGameRules))] // Arcane-Edit
     [Description($"Ensures all GameRule entities with {nameof(AntagSelectionComponent)} can properly spawn those roles and they can be taken.")]
     [RunOnSide(Side.Server)]
-    public void TestAntagGhostRoles(string ruleId)
+    // Arcane-Edit-Start
+    public void TestAntagGhostRoles()
+    {
+        foreach (var ruleId in AntagGameRules)
+            CheckAntagGhostRole(ruleId);
+    }
+
+    private void CheckAntagGhostRole(string ruleId)
+    // Arcane-Edit-End
     {
         var rule = SProtoMan.Index<EntityPrototype>(ruleId);
         Assert.That(rule.TryComp<AntagSelectionComponent>(out var antag, SEntMan.ComponentFactory), Is.True);

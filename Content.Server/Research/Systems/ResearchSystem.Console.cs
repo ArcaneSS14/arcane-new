@@ -12,7 +12,10 @@ using Content.Shared.Emag.Systems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
-using Content.Shared.Research; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Research;
+using Content.Shared.Research;
+// Arcane-End
 
 namespace Content.Server.Research.Systems;
 

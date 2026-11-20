@@ -1,0 +1,68 @@
+- type: entity
+  parent: AltarBase
+  id: AltarDragon
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/dragonaltar.rsi
+    layers:
+    - state: dragonaltar
+    - state: miniportal
+      shader: unshaded
+  - type: Icon
+    sprite: _Arcane/Structures/dragonaltar.rsi
+    state: dragonaltar
+  - type: Construction
+    graph: AltarsGraph
+    node: DragonAltarNode
+    containers:
+    - altar_offering
+  - type: ContainerContainer
+    containers:
+      altar_offering: !type:Container
+  - type: ContainerFill
+    containers:
+      altar_offering:
+      - PlushieCarp
+  - type: AltarSource
+    rodProto: DragonsTail
+    effectProto: EffectSpark
+    soundPath: /Audio/Effects/hallelujah.ogg
+  - type: PointLight
+    color: "#366db5"
+    radius: 1.5
+    energy: 1
+  - type: EnchantingTable
+    userWhitelist:
+      components:
+      - BibleUser
+
+- type: entity
+  parent: AltarBase
+  id: AltarEmpire
+  components:
+  - type: Sprite
+    sprite: _Arcane/Structures/empirealtar.rsi
+    state: empire
+  - type: Icon
+    sprite: _Arcane/Structures/empirealtar.rsi
+    state: empire
+  - type: Construction
+    graph: AltarsGraph
+    node: EmpireAltarNode
+    containers:
+    - altar_offering
+  - type: ContainerContainer
+    containers:
+      altar_offering: !type:Container
+  - type: ContainerFill
+    containers:
+      altar_offering:
+      - BookRandom
+  - type: AltarSource
+    rodProto: InquisitorChainSword
+    effectProto: EffectSpark
+    soundPath: /Audio/Effects/hallelujah.ogg
+  - type: EnchantingTable
+    userWhitelist:
+      components:
+      - BibleUser

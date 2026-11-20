@@ -4,6 +4,7 @@ using Content.Shared.Research.Prototypes;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Common.Construction.Prototypes; // Arcane
 
 namespace Content.Shared.Lathe
 {

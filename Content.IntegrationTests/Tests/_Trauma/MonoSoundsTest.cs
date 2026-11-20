@@ -46,6 +46,11 @@ public sealed class MonoSoundsTests : GameTest
 
             if (vinyl.Song is SoundPathSpecifier sound)
                 AssertMono(sound.Path);
+            // Arcane-Start
+            else if (vinyl.Song is SoundCollectionSpecifier { Collection: { } collection })
+                foreach (var path in CProtoMan.Index(collection).PickFiles)
+                    AssertMono(path);
+            // Arcane-End
             else
                 failed.Add($"Non-path specifier {vinyl.Song} for vinyl {proto.ID} is not supported by this test!");
         }

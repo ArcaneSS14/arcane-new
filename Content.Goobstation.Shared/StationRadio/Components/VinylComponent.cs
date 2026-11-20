@@ -11,5 +11,5 @@ public sealed partial class VinylComponent : Component
     /// What song should be played when the vinyl is played
     /// </summary>
     [DataField(required: true)]
-    public SoundPathSpecifier? Song;
+    public SoundSpecifier? Song; // Arcane-Edit: SoundPathSpecifier > SoundSpecifier
 }

@@ -54,6 +54,10 @@ public sealed partial class ServerBlobCoreSystem : BlobCoreSystem
     [SubscribeLocalEvent]
     private void OnShutdown(Entity<BlobCoreComponent> ent, ref ComponentShutdown args)
     {
+        // Arcane-Start
+        var shuttingDown = new BlobCoreShutdownEvent();
+        RaiseLocalEvent(ent, ref shuttingDown);
+        // Arcane-End
         CreateKillBlobCoreJob(ent);
     }
 

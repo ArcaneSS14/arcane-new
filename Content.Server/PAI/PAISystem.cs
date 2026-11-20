@@ -10,6 +10,12 @@ using Content.Shared.Instruments;
 using Robust.Shared.Random;
 using System.Text;
 
+// Arcane-Start
+using Content.Shared.Actions;
+using Content.Shared.Silicons.StationAi;
+using Content.Shared.StationAi;
+// Arcane-End
+
 namespace Content.Server.PAI;
 
 public sealed partial class PAISystem : EntitySystem
@@ -19,6 +25,10 @@ public sealed partial class PAISystem : EntitySystem
     [Dependency] private MetaDataSystem _metaData = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private ToggleableGhostRoleSystem _toggleableGhostRole = default!;
+    // Arcane-Start
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private SharedStationAiSystem _stationAi = default!;
+    // Arcane-End
 
     /// <summary>
     /// Possible symbols that can be part of a scrambled pai's name.
@@ -33,6 +43,10 @@ public sealed partial class PAISystem : EntitySystem
         SubscribeLocalEvent<PAIComponent, MindAddedMessage>(OnMindAdded);
         SubscribeLocalEvent<PAIComponent, MindRemovedMessage>(OnMindRemoved);
         SubscribeLocalEvent<PAIComponent, BeingMicrowavedEvent>(OnMicrowaved);
+        // Arcane-Start
+        SubscribeLocalEvent<PAIComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<PAIComponent, TogglePAICameraEvent>(OnToggleCamera);
+        // Arcane-End
     }
 
     private void OnUseInHand(EntityUid uid, PAIComponent component, UseInHandEvent args)
@@ -50,6 +64,11 @@ public sealed partial class PAISystem : EntitySystem
 
     private void OnMindAdded(EntityUid uid, PAIComponent component, MindAddedMessage args)
     {
+        // Arcane-Start: Optional camera action
+        if (component.CameraAction is { } action)
+            _actions.AddAction(uid, ref component.CameraActionEntity, action.Id);
+        // Arcane-End
+
         if (component.LastUser == null)
             return;
 
@@ -67,8 +86,42 @@ public sealed partial class PAISystem : EntitySystem
     private void OnMindRemoved(EntityUid uid, PAIComponent component, MindRemovedMessage args)
     {
         // Mind was removed, shutdown the PAI.
+        DisableCamera(uid, component); // Arcane
         PAITurningOff(uid);
     }
+
+    // Arcane-Start: Opt-in camera for station AI
+    private void OnToggleCamera(Entity<PAIComponent> entity, ref TogglePAICameraEvent args)
+    {
+        if (args.Handled || args.Performer != entity.Owner || entity.Comp.CameraAction is null ||
+            entity.Comp.CameraActionEntity != args.Action.Owner ||
+            !TryComp<MindContainerComponent>(entity, out var mind) || !mind.HasMind ||
+            !TryComp<StationAiVisionComponent>(entity, out var vision))
+            return;
+
+        args.Handled = true;
+        _stationAi.SetVisionEnabled((entity.Owner, vision), !vision.Enabled);
+        _actions.SetToggled(args.Action.AsNullable(), vision.Enabled);
+    }
+
+    private void OnShutdown(Entity<PAIComponent> entity, ref ComponentShutdown args)
+    {
+        if (!TerminatingOrDeleted(entity))
+            DisableCamera(entity.Owner, entity.Comp);
+    }
+
+    private void DisableCamera(EntityUid uid, PAIComponent component)
+    {
+        if (component.CameraActionEntity is not { } action)
+            return;
+
+        if (TryComp<StationAiVisionComponent>(uid, out var vision))
+            _stationAi.SetVisionEnabled((uid, vision), false);
+
+        _actions.RemoveAction(uid, action);
+        component.CameraActionEntity = null;
+    }
+    // Arcane-End
 
     private void OnMicrowaved(EntityUid uid, PAIComponent comp, BeingMicrowavedEvent args)
     {

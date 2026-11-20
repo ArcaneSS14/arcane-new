@@ -29,6 +29,7 @@
     - !type:RaiseNetworkEvents
       events:
       - !type:AnimationFlipEmoteEvent
+    - !type:RecordAlmanacFlip # Arcane
     falseEffects:
     - !type:ModifyStatusEffect
       effectProto: BlockVomitEmotesStatusEffect

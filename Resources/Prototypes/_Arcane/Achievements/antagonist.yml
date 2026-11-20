@@ -1,0 +1,136 @@
+- type: achievement
+  id: MissionComplete
+  name: achievement-mission-complete-name
+  description: achievement-mission-complete-desc
+  category: Antagonist
+  icon: { entity: RubberStampApproved }
+  condition: !type:RoundEndCondition
+    requirements:
+    - !type:ObjectivesCompletedCondition
+
+- type: achievement
+  id: Expendable
+  name: achievement-expendable-name
+  description: achievement-expendable-desc
+  category: Antagonist
+  icon: { entity: Flash }
+  condition: !type:MobStateEnteredCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - RevolutionaryRole
+
+- type: achievement
+  id: BlobEverywhere
+  name: achievement-blob-everywhere-name
+  description: achievement-blob-everywhere-desc
+  category: Antagonist
+  icon: { entity: MobBlobPod }
+  condition: !type:RoundEndCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - BlobRole
+    - !type:ObjectivesCompletedCondition
+
+- type: achievement
+  id: ProfessionalThief
+  name: achievement-professional-thief-name
+  description: achievement-professional-thief-desc
+  category: Antagonist
+  icon: { entity: ToolboxThief }
+  condition: !type:RoundEndCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - ThiefRole
+    - !type:ObjectivesCompletedCondition
+
+- type: achievement
+  id: LightsOut
+  name: achievement-lights-out-name
+  description: achievement-lights-out-desc
+  category: Antagonist
+  icon: { sprite: _EinsteinEngines/Mobs/shadowling_ascend.rsi, state: shadowling_ascend }
+  hidden: true
+  condition: !type:ShadowlingAscensionCondition
+
+- type: achievement
+  id: ChosenOne
+  name: achievement-chosen-one-name
+  description: achievement-chosen-one-desc
+  category: Antagonist
+  icon: { entity: ClothingHeadHatWizard }
+  condition: !type:RoundEndCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - WizardRole
+        - ApprenticeRole
+    - !type:ObjectivesCompletedCondition
+    - !type:MobStateCondition
+      mobstate: Alive
+
+- type: achievement
+  id: NotAgain
+  name: achievement-not-again-name
+  description: achievement-not-again-desc
+  category: Antagonist
+  icon: { entity: OrganAbductorHeart }
+  hidden: true
+  condition: !type:AbductedAgainCondition
+
+- type: achievement
+  id: Brains
+  name: achievement-brains-name
+  description: achievement-brains-desc
+  category: Antagonist
+  icon: { entity: FoodMeat }
+  condition: !type:ZombieVictoryCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - InitialInfectedRole
+
+- type: achievement
+  id: HeyCanIHaveThis
+  name: achievement-hey-can-i-have-this-name
+  description: achievement-hey-can-i-have-this-desc
+  category: Antagonist
+  icon: { entity: ClothingHandsChameleonThief }
+  condition: !type:PickpocketCondition
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - ThiefRole
+
+- type: achievement
+  id: IngloriousLife
+  name: achievement-inglorious-life-name
+  description: achievement-inglorious-life-desc
+  category: Antagonist
+  icon: { entity: CrateCoffin }
+  condition: !type:RoundEndCondition
+    requirements:
+    - !type:ObjectiveFailedCondition
+      objective: DieObjective
+
+- type: achievement
+  id: YouAreMyFire
+  name: achievement-you-are-my-fire-name
+  description: achievement-you-are-my-fire-desc
+  category: Antagonist
+  icon: { entity: AcousticGuitarInstrument }
+  condition: !type:BandCondition
+    requireTwin: true
+    requirements:
+    - !type:RoleCondition
+      whitelist:
+        components:
+        - ParadoxCloneRole

@@ -1,0 +1,14 @@
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: PhotocopierMachineCircuitboard
+  components:
+  - type: Sprite
+    state: service
+  - type: MachineBoard
+    prototype: Photocopier
+    partRequirements:
+      Servo: 1
+    stackRequirements:
+      Glass: 2
+      Cable: 2
+      Steel: 2

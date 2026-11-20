@@ -12,6 +12,7 @@
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
 		<ProjectReference Include="../Content.Client/Content.Client.csproj" />
+		<ProjectReference Include="../Content.Goobstation.Client/Content.Goobstation.Client.csproj" />
 		<ProjectReference Include="../Content.Arcane.Shared/Content.Arcane.Shared.csproj" />
 	</ItemGroup>
 

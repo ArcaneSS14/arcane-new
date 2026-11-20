@@ -1,0 +1,19 @@
+- type: entity
+  parent: CrayonInedible
+  id: CrayonRainbowLarge
+  components:
+  - type: Sprite
+    state: rainbow
+  - type: Item
+    heldPrefix: rainbow
+  - type: Crayon
+    color: Red
+    selectableColor: true
+  - type: AutoRecharge
+    rechargeDuration: 1
+  - type: Tag
+    tags:
+    - Write
+    - Crayon
+    - Recyclable
+    - Trash

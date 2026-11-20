@@ -16,6 +16,10 @@
         Quantity: 9
       - ReagentId: LabGrownNutriment
         Quantity: 1
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 5
+      # Arcane-End
 
 # Organic snacks, made by the chef so no slop
 # Can't use them in cooking though because microwave is utter shitcode :)

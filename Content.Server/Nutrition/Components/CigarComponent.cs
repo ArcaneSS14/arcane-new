@@ -8,5 +8,10 @@ namespace Content.Server.Nutrition.Components
     [RegisterComponent, Access(typeof(SmokingSystem))]
     public sealed partial class CigarComponent : Component
     {
+        // Arcane-Start
+        /// <summary>Can be lit again by activation, including after being extinguished or emptied.</summary>
+        [DataField]
+        public bool SelfIgniting;
+        // Arcane-End
     }
 }

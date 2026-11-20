@@ -105,6 +105,11 @@ public sealed partial class GatherableSystem : EntitySystem
         if (TryComp<SoundOnGatherComponent>(gathered, out var soundComp))
             _audio.PlayPredicted(soundComp.Sound, pos, gatherer);
 
+        // Arcane-Start
+        var gatheredEvent = new GatheredEvent(gatherer);
+        RaiseLocalEvent(gathered, ref gatheredEvent);
+        // Arcane-End
+
         _destructible.DestroyEntity(gathered);
 
         if (gathered.Comp.Loot is null)
@@ -123,3 +128,9 @@ public sealed partial class GatherableSystem : EntitySystem
         }
     }
 }
+
+// Arcane-Start
+/// <summary>Raised after gathering succeeds, before destroying the gathered entity.</summary>
+[ByRefEvent]
+public readonly record struct GatheredEvent(EntityUid? Gatherer);
+// Arcane-End

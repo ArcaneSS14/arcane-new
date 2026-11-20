@@ -1,0 +1,119 @@
+- type: entity
+  id: AltarBase
+  components:
+  - type: NullrodRecallAltar
+
+- type: entity
+  id: BlessingOfTheReaper
+  components:
+  - type: NullrodRecallBlocked
+
+- type: entity
+  id: ArmamentsBeacon
+  components:
+  - type: RadialItemSelector
+    entries:
+    - prototype: SpawnArmamentsDraconic
+      icon:
+        sprite: _Arcane/Clothing/OuterClothing/Misc/dragonsuit.rsi
+        state: full
+    - prototype: SpawnArmamentsInquisitor
+      icon:
+        sprite: _Arcane/Clothing/OuterClothing/Misc/inquisitor.rsi
+        state: full
+
+- type: entity
+  id: AltarConvertMaint
+  components:
+  - type: Construction
+    containers:
+    - altar_offering
+  - type: ContainerContainer
+    containers:
+      altar_offering: !type:Container
+  - type: ContainerFill
+    containers:
+      altar_offering:
+      - ClothingHandsGlovesColorYellowBudget
+
+- type: entity
+  id: ChaplainUndeterminedBible
+  components:
+  - type: Clothing
+    slots:
+    - Belt
+  - type: SetSelector
+    possibleSets:
+    - BibleVedaSet
+    - VelesBookSet
+    - BibleDruidSet
+    - BibleCommunistSet
+    - BibleSatanicSet
+    - BibleNarsieSet
+    - BibleNanoTrasenSet
+    - BibleHonkSet
+    - BibleRatvarSet
+
+- type: entity
+  abstract: false
+  id: BibleDruid
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/mysteryofthedruids.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/mysteryofthedruids.rsi
+
+- type: entity
+  abstract: false
+  id: BibleCommunistManifesto
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/communistmanifesto.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/communistmanifesto.rsi
+
+- type: entity
+  abstract: false
+  id: BibleNarsie
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/tomeofnarsie.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/tomeofnarsie.rsi
+
+- type: entity
+  abstract: false
+  id: BibleNanoTrasen
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/codexnanotrasimus.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/codexnanotrasimus.rsi
+
+- type: entity
+  abstract: false
+  id: BibleHonk
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/honk.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/honk.rsi
+
+- type: entity
+  abstract: false
+  id: BibleRatvar
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Chapel/ratvartablet.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Chapel/ratvartablet.rsi
+
+- type: startingGear
+  id: VisitorChaplain
+  equipment:
+    belt: ChaplainUndeterminedBible
+
+- type: startingGear
+  id: VisitorChaplainAlt
+  equipment:
+    belt: ChaplainUndeterminedBible

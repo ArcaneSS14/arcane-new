@@ -17,7 +17,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Content.Shared.Interaction.ForcedFacing; // Arcane
+using Content.Arcane.Common.Interaction; // Arcane
 
 namespace Content.Shared.DoAfter;
 
@@ -28,7 +28,6 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private SharedMoverController _mover = default!;
     [Dependency] private TagSystem _tag = default!;
-    [Dependency] private ForcedFacingSystem _forcedFacing = default!; // Arcane
 
     private ModifyDoAfterDelayEvent _modifyEv = new(); // Trauma - reused object because it can't be a struct
 
@@ -352,7 +351,7 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             RaiseDoAfterEvents(doAfter, comp);
             // Arcane-Start
             if (args.FaceTarget)
-                _forcedFacing.RefreshForcedFacing(args.User);
+                ForcedFacingRefreshRequest.Raise(EntityManager, args.User);
             // Arcane-End
             // We don't store instant do-afters. This is just a lazy way of hiding them from client-side visuals.
             return true;
@@ -364,7 +363,7 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
         args.Event.DoAfter = doAfter;
         // Arcane-Start
         if (args.FaceTarget)
-            _forcedFacing.RefreshForcedFacing(args.User);
+            ForcedFacingRefreshRequest.Raise(EntityManager, args.User);
         // Arcane-End
         return true;
     }
@@ -466,7 +465,7 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
         RaiseDoAfterEvents(doAfter, component);
         // Arcane-Start
         if (doAfter.Args.FaceTarget)
-            _forcedFacing.RefreshForcedFacing(doAfter.Args.User);
+            ForcedFacingRefreshRequest.Raise(EntityManager, doAfter.Args.User);
         // Arcane-End
     }
     #endregion

@@ -107,6 +107,7 @@
       - CombatKnife
       - Truncheon
       - BolaEnergy
+      - EnergyMagAmmo # Arcane
       - EnergySpeedloader
       - MilitaryPowerCell
       - HandGrenade

@@ -915,7 +915,10 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
         var userXform = Transform(ev.Performer);
         var targetXform = Transform(ev.Target);
 
-        Swap(ev.Performer, userXform, ev.Target, targetXform, ev.Sound, ev.Effect);
+        // Arcane-Edit-Start
+        if (!Swap(ev.Performer, userXform, ev.Target, targetXform, ev.Sound, ev.Effect))
+            return;
+        // Arcane-Edit-End
 
         if (swap.SecondaryTarget != null && Exists(swap.SecondaryTarget) &&
             swap.SecondaryTarget.Value != ev.Target && swap.SecondaryTarget.Value != ev.Performer)
@@ -923,8 +926,11 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
             var secondaryTarget = swap.SecondaryTarget.Value;
             var secondaryTargetXform = Transform(secondaryTarget);
 
-            if (secondaryTargetXform.MapID == userXform.MapID &&
-                TransformSystem.InRange((ev.Performer, userXform), (secondaryTarget, secondaryTargetXform), ev.Range))
+            // Arcane-Edit-Start
+            if (secondaryTargetXform.MapID == userXform.MapID && !IsTouchSpellDenied(secondaryTarget) &&
+                TransformSystem.InRange((ev.Performer, userXform), (secondaryTarget, secondaryTargetXform), ev.Range) &&
+                (ev.ThroughWalls || _examine.InRangeUnOccluded(ev.Performer, secondaryTarget, ev.Range)))
+            // Arcane-Edit-End
                 Swap(secondaryTarget, secondaryTargetXform, ev.Target, targetXform, ev.Sound, ev.Effect, false);
         }
 
@@ -1117,7 +1123,7 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
 
     #region Helpers
 
-    public void Swap(EntityUid uid,
+    public bool Swap(EntityUid uid, // Arcane-Edit: void > bool
         TransformComponent xform,
         EntityUid otherUid,
         TransformComponent otherXform,
@@ -1125,31 +1131,46 @@ public abstract partial class SharedSpellsSystem : CommonSpellsSystem
         EntProtoId swapEffect,
         bool spawnSecondaryEffects = true)
     {
+        // Arcane-Start: Reject invalid positions before touching either entity.
+        if (uid == otherUid || TerminatingOrDeleted(uid) || TerminatingOrDeleted(otherUid) ||
+            Paused(uid) || Paused(otherUid) || xform.MapID == MapId.Nullspace || xform.MapID != otherXform.MapID ||
+            xform.Anchored || otherXform.Anchored || Container.IsEntityOrParentInContainer(uid) ||
+            Container.IsEntityOrParentInContainer(otherUid) || TransformSystem.IsParentOf(xform, otherUid) ||
+            TransformSystem.IsParentOf(otherXform, uid))
+            return false;
+
+        var origin = TransformSystem.GetMoverCoordinates(uid, xform);
+        var otherOrigin = TransformSystem.GetMoverCoordinates(otherUid, otherXform);
+        TransformSystem.SetCoordinates(uid, otherOrigin);
+        TransformSystem.SetCoordinates(otherUid, origin);
+        // Arcane-End
+
         _pulling.StopAllPulls(uid);
         _pulling.StopAllPulls(otherUid);
-        SpawnEffects(uid, xform);
+        SpawnEffects(uid, origin); // Arcane-Edit: Use the position before the swap
         if (spawnSecondaryEffects)
-            SpawnEffects(otherUid, otherXform);
-        TransformSystem.SwapPositions((uid, xform), (otherUid, otherXform));
+            SpawnEffects(otherUid, otherOrigin); // Arcane-Edit: Use the position before the swap
         Physics.WakeBody(uid);
         Physics.WakeBody(otherUid);
-        return;
+        return true; // Arcane-Edit: Report a completed swap
 
-        void SpawnEffects(EntityUid ent, TransformComponent transform)
+        void SpawnEffects(EntityUid ent, EntityCoordinates from) // Arcane-Edit: TransformComponent > EntityCoordinates
         {
             if (_net.IsClient)
                 return;
 
-            Audio.PlayPvs(swapSound, transform.Coordinates);
-            var effect = Spawn(swapEffect, transform.Coordinates);
+            // Arcane-Edit-Start
+            Audio.PlayPvs(swapSound, from);
+            var effect = Spawn(swapEffect, from);
+            // Arcane-Edit-End
             if (TryComp(effect, out TrailComponent? trail))
             {
-                trail.SpawnPosition = TransformSystem.GetWorldPosition(transform);
+                trail.SpawnPosition = TransformSystem.ToMapCoordinates(from).Position; // Arcane-Edit: Use the world position before the swap
                 trail.RenderedEntity = ent;
                 Dirty(effect, trail);
             }
 
-            TransformSystem.SetParent(effect, Transform(effect), ent, transform);
+            TransformSystem.SetParent(effect, Transform(effect), ent, Transform(ent)); // Arcane-Edit: Use the current transform after the swap
         }
     }
 

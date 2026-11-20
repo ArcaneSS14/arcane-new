@@ -24,8 +24,17 @@ namespace Content.Server.Nutrition.EntitySystems
             if (!TryComp(entity, out SmokableComponent? smokable))
                 return;
 
+            // Arcane-Edit-Start
             if (smokable.State != SmokableState.Lit)
+            {
+                if (entity.Comp.SelfIgniting)
+                {
+                    SetSmokableState(entity, SmokableState.Lit, smokable);
+                    args.Handled = true;
+                }
                 return;
+            }
+            // Arcane-Edit-End
 
             SetSmokableState(entity, SmokableState.Burnt, smokable);
             args.Handled = true;
@@ -47,6 +56,11 @@ namespace Content.Server.Nutrition.EntitySystems
 
             if (!isHotEvent.IsHot)
                 return;
+
+            // Arcane-Start
+            if (entity.Comp.SelfIgniting)
+                return;
+            // Arcane-End
 
             SetSmokableState(entity, SmokableState.Lit, smokable);
             args.Handled = true;

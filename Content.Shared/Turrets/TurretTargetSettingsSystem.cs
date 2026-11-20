@@ -3,6 +3,8 @@ using Content.Shared.Access.Systems;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 
+using Content.Shared.Silicons.Borgs; // Arcane
+
 namespace Content.Shared.Turrets;
 
 /// <summary>
@@ -13,6 +15,7 @@ namespace Content.Shared.Turrets;
 public sealed partial class TurretTargetSettingsSystem : EntitySystem
 {
     [Dependency] private AccessReaderSystem _accessReader = default!;
+    [Dependency] private SharedBorgSystem _borg = default!; // Arcane
 
     private ProtoId<AccessLevelPrototype> _accessLevelBorg = "Borg";
     private ProtoId<AccessLevelPrototype> _accessLevelBasicSilicon = "BasicSilicon";
@@ -126,6 +129,9 @@ public sealed partial class TurretTargetSettingsSystem : EntitySystem
 
         if (accessLevels.Contains(_accessLevelBasicSilicon))
             return !HasAccessLevelExemption(ent, _accessLevelBasicSilicon);
+
+        if (_borg.IsInactiveBorg(target)) // Arcane
+            return !HasAccessLevelExemption(ent, _accessLevelBorg);
 
         return !HasAnyAccessLevelExemption(ent, accessLevels);
     }

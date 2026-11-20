@@ -30,6 +30,9 @@ public sealed partial class PendingZombieComponent : Component
     [DataField("nextTick", customTypeSerializer:typeof(TimeOffsetSerializer))]
     public TimeSpan NextTick;
 
+    // Arcane: Counts down alongside infection ticks, so it pauses with the host.
+    public TimeSpan SymptomCooldown;
+
     /// <summary>
     /// The amount of time left before the infected begins to take damage.
     /// </summary>

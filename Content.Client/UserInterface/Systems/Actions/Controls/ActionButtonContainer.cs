@@ -30,7 +30,7 @@ public partial class ActionButtonContainer : GridContainer
 
     public void SetActionData(ActionsSystem system, params EntityUid?[] actionTypes)
     {
-        var uniqueCount = Math.Min(system.GetClientActions().Count(), actionTypes.Length + 1);
+        var uniqueCount = GetButtonCount(system, actionTypes); // Arcane-Edit
         var keys = ContentKeyFunctions.GetHotbarBoundKeys();
 
         for (var i = 0; i < uniqueCount; i++)
@@ -52,7 +52,7 @@ public partial class ActionButtonContainer : GridContainer
 
         ActionButton MakeButton(int index)
         {
-            var button = new ActionButton(_entity);
+            var button = CreateButton(_entity); // Arcane-Edit
 
             if (!keys.TryGetValue(index, out var boundKey))
                 return button;
@@ -74,6 +74,13 @@ public partial class ActionButtonContainer : GridContainer
             ((ActionButton) button).ClearData();
         }
     }
+
+    // Arcane-Start
+    protected virtual ActionButton CreateButton(IEntityManager entities) => new(entities);
+
+    protected virtual int GetButtonCount(ActionsSystem system, EntityUid?[] actions)
+        => Math.Min(system.GetClientActions().Count(), actions.Length + 1);
+    // Arcane-End
 
     protected override void ChildAdded(Control newChild)
     {

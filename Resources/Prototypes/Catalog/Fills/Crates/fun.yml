@@ -231,8 +231,23 @@
   components:
   - type: EntityTableContainerFill
     containers:
-      entity_storage:
-        id: CrayonBox
+      # Arcane-Edit-Start
+      entity_storage: !type:AllSelector
+        children:
+        - id: CrayonBox
+        - id: Paintbrush
+        - id: PaintCanvas
+          amount: !type:ConstantNumberSelector
+            value: 2
+        - id: PaintCanvasLandscape
+        - id: PaintCanvasSmall
+        - id: PaintingFrameWood
+          amount: !type:ConstantNumberSelector
+            value: 2
+        - id: PaintCanRed
+        - id: PaintCanYellow
+        - id: PaintCanBlue
+      # Arcane-Edit-End
 
 - type: entity
   parent: CrateGenericSteel

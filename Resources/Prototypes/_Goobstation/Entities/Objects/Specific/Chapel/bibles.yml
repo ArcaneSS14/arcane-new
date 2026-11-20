@@ -61,8 +61,10 @@
 
 - type: selectableSet
   id: BibleSet
-  name: The Holy Bible
-  description: Sever any tie, but the ties that bind me to your service and to your heart.
+  # Arcane-Edit-Start
+  name: arcane-chaplain-set-bible-name
+  description: arcane-chaplain-set-bible-description
+  # Arcane-Edit-End
   sprite:
     sprite: Objects/Specific/Chapel/bible.rsi
     state: icon
@@ -71,8 +73,10 @@
 
 - type: selectableSet
   id: QuaranSet
-  name: The Quaran
-  description: Then which of your Lord’s favours will you ˹humans and jinn˺ both deny?
+  # Arcane-Edit-Start
+  name: arcane-chaplain-set-quaran-name
+  description: arcane-chaplain-set-quaran-description
+  # Arcane-Edit-End
   sprite:
     sprite: _Goobstation/Objects/Specific/Chapel/allah.rsi
     state: icon
@@ -81,8 +85,10 @@
 
 - type: selectableSet
   id: TanakhSet
-  name: The Tanakh Scrolls
-  description: As you teach, you learn.
+  # Arcane-Edit-Start
+  name: arcane-chaplain-set-tanakh-name
+  description: arcane-chaplain-set-tanakh-description
+  # Arcane-Edit-End
   sprite:
     sprite: _Goobstation/Wizard/Objects/scroll.rsi
     state: scroll2
@@ -91,8 +97,10 @@
 
 - type: selectableSet
   id: ClockworkSet
-  name: The Clockwork Slab
-  description: A link between you and the Celestial Derelict. It contains information, recites scripture, and is your most vital tool as a Servant.
+  # Arcane-Edit-Start
+  name: arcane-chaplain-set-clockwork-name
+  description: arcane-chaplain-set-clockwork-description
+  # Arcane-Edit-End
   sprite:
     sprite: _ShitChap/Objects/clockwork_slab.rsi
     state: icon

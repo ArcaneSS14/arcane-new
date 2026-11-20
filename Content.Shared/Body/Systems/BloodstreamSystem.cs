@@ -691,13 +691,13 @@ public sealed partial class BloodstreamSystem : EntitySystem
 
         // Scale the solution to the volume of the blood.
         var newReagentsSolution = reagents.Clone();
-        newReagentsSolution.ScaleTo(ent.Comp.BloodReferenceSolution.MaxVolume);
+        newReagentsSolution.ScaleTo(ent.Comp.BloodReferenceSolution.Volume); // Arcane-Edit: MaxVolume > Volume
 
         // Set the scaled solution as the new blood reference.
         ent.Comp.BloodReferenceSolution = newReagentsSolution;
         DirtyField(ent, ent.Comp, nameof(BloodstreamComponent.BloodReferenceSolution));
 
-        if (currentVolume == FixedPoint2.Zero)
+        if (currentVolume == FixedPoint2.Zero || newReagentsSolution.Volume == FixedPoint2.Zero) // Arcane-Edit: Require blood in both solutions
             return;
 
         var solution = ent.Comp.BloodReferenceSolution.Clone();

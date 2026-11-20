@@ -201,6 +201,18 @@ public sealed partial class StorageUIController : UIController, IOnSystemChanged
         if (type != KeyEventType.Down)
             return;
 
+        // Arcane-Start
+        // Let the action button consume its pin binding before storage rotation handles the raw mouse key.
+        if (keyEvent.Key == Keyboard.Key.MouseMiddle)
+        {
+            for (var control = UIManager.CurrentlyHovered; control != null; control = control.Parent)
+            {
+                if (control is Content.Client.UserInterface.Systems.Actions.Controls.ActionButton)
+                    return;
+            }
+        }
+        // Arcane-End
+
         //todo there's gotta be a method for this in InputManager just expose it to content I BEG.
         if (!_input.TryGetKeyBinding(ContentKeyFunctions.RotateStoredItem, out var binding))
             return;

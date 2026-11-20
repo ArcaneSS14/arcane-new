@@ -35,6 +35,17 @@ public sealed partial class AirlockComponent : Component
     [DataField]
     public SoundSpecifier EmergencyOffSound = new SoundPathSpecifier("/Audio/Machines/airlock_emergencyoff.ogg");
 
+    // Arcane-Start
+    /// <summary>
+    /// Optional sounds used when the airlock is pried instead of operated normally.
+    /// </summary>
+    [DataField]
+    public SoundSpecifier? ForceOpenSound;
+
+    [DataField]
+    public SoundSpecifier? ForceCloseSound;
+    // Arcane-End
+
     /// <summary>
     /// Pry modifier for a powered airlock.
     /// Most anything that can pry powered has a pry speed bonus,

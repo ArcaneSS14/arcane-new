@@ -102,13 +102,20 @@ public sealed partial class BlobCoreActionSystem : EntitySystem
             return;
 
         var placing = ProtoMan.Index(GrowthTile);
-        var cost = placing.Cost;
+        // Arcane-Start
+        var cost = _core.GetTileCost(core.Comp, GrowthTile);
         if (targetTileEmpty)
         {
-            // 2.5x
-            cost *= 5;
-            cost /= 2;
+            var chem = ProtoMan.Index(core.Comp.CurrentChem);
+            if (chem.SpaceGrowthCost is { } spaceCost)
+                cost = spaceCost;
+            else
+            {
+                cost *= 5;
+                cost /= 2;
+            }
         }
+        // Arcane-End
 
         if (!_core.TryUseAbility(core.AsNullable(), cost, location))
             return;

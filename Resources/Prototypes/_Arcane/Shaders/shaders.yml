@@ -56,3 +56,7 @@
   kind: source
   path: "/Textures/_Arcane/Shaders/lighting_highlights.swsl"
 
+- type: shader
+  id: ArcaneJiggle
+  kind: source
+  path: "/Textures/_Arcane/Shaders/jiggle.swsl"

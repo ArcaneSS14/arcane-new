@@ -26,7 +26,7 @@ using MSLogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Content.Server.Database
 {
-    public interface IServerDbManager
+    public partial interface IServerDbManager // Arcane-Edit: Partial achievement persistence contract
     {
         // <Trauma>
         #region Patrons
@@ -72,6 +72,13 @@ namespace Content.Server.Database
         #endregion
         // </Trauma>
         void Init();
+
+        // Arcane-Start
+        Task<bool> MarkPollSeenAsync(int pollId, NetUserId userId, CancellationToken cancel = default);
+        Task<HashSet<int>> GetSeenPollIdsAsync(NetUserId userId, CancellationToken cancel = default);
+        Task<int> GetPollSeenCountAsync(int pollId, CancellationToken cancel = default);
+        Task<Dictionary<int, int>> GetPollSeenCountsAsync(int[] pollIds, CancellationToken cancel = default);
+        // Arcane-End
 
         void Shutdown();
 

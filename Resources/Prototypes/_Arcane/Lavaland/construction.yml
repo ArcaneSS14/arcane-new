@@ -1,0 +1,238 @@
+- type: constructionGraph
+  id: ArcaneLavalandCloth
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: cloth
+      steps:
+      - material: FlowersAsh
+        amount: 2
+        doAfter: 2
+
+  - node: paleflower
+    edges:
+    - to: cloth
+      steps:
+      - material: FlowersPale
+        amount: 1
+        doAfter: 1.5
+
+  - node: cloth
+    entity: MaterialCloth1
+
+- type: constructionGraph
+  id: AshwoodStick
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: stick
+      completed:
+      - !type:SetStackCount
+        amount: 2
+      steps:
+      - material: AshwoodPlank
+        amount: 1
+  - node: stick
+    entity: MaterialAshwoodStick
+
+- type: constructionGraph
+  id: WoodStick
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: stick
+      completed:
+      - !type:SetStackCount
+        amount: 2
+      steps:
+      - material: WoodPlank
+        amount: 1
+  - node: stick
+    entity: MaterialWoodStick
+
+- type: constructionGraph
+  id: WoodenCudgel
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: incompleteCudgel
+      steps:
+      - material: WoodPlank
+        amount: 6
+        doAfter: 4
+
+  - node: incompleteCudgel
+    entity: IncompleteWoodCudgel
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: MaterialWoodPlank1
+        amount: 6
+      - !type:DeleteEntity {}
+      steps:
+      - tool: Prying
+        doAfter: 1
+    - to: cudgel
+      completed:
+      - !type:AdminLog
+        message: "Construction"
+        impact: High
+      steps:
+      - tool: Slicing
+        doAfter: 4
+
+  - node: cudgel
+    entity: WeaponCudgelWood
+
+- type: constructionGraph
+  id: AshwoodCudgel
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: incompleteCudgel
+      steps:
+      - material: AshwoodPlank
+        amount: 6
+        doAfter: 4
+
+  - node: incompleteCudgel
+    entity: IncompleteAshwoodCudgel
+    edges:
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: MaterialAshwoodPlank1
+        amount: 6
+      - !type:DeleteEntity {}
+      steps:
+      - tool: Prying
+        doAfter: 1
+    - to: cudgel
+      completed:
+      - !type:AdminLog
+        message: "Construction"
+        impact: High
+      steps:
+      - tool: Slicing
+        doAfter: 4
+
+  - node: cudgel
+    entity: WeaponCudgelAshwood
+
+- type: constructionGraph
+  id: PickaxeWood
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: pickaxe
+      steps:
+      - material: Cloth
+        amount: 3
+        doAfter: 3
+      - material: WoodPlank
+        amount: 3
+        doAfter: 2
+      - material: WoodStick
+        amount: 4
+        doAfter: 2
+  - node: pickaxe
+    entity: PickaxeWood
+
+- type: constructionGraph
+  id: PickaxeAshwood
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: pickaxe
+      steps:
+      - material: Cloth
+        amount: 3
+        doAfter: 3
+      - material: AshwoodPlank
+        amount: 3
+        doAfter: 2
+      - material: AshwoodStick
+        amount: 4
+        doAfter: 2
+  - node: pickaxe
+    entity: PickaxeAshwood
+
+- type: construction
+  id: AshFlowersCloth
+  graph: ArcaneLavalandCloth
+  theory: {}
+  useQuality: false
+  startNode: start
+  targetNode: cloth
+  category: construction-category-materials
+  objectType: Item
+
+- type: construction
+  id: PaleFlowersCloth
+  graph: ArcaneLavalandCloth
+  theory: {}
+  useQuality: false
+  startNode: paleflower
+  targetNode: cloth
+  category: construction-category-materials
+  objectType: Item
+
+- type: construction
+  id: AshwoodStick
+  graph: AshwoodStick
+  theory: {}
+  useQuality: false
+  startNode: start
+  targetNode: stick
+  category: construction-category-materials
+  objectType: Item
+
+- type: construction
+  id: WoodStick
+  graph: WoodStick
+  theory: {}
+  useQuality: false
+  startNode: start
+  targetNode: stick
+  category: construction-category-materials
+  objectType: Item
+
+- type: construction
+  id: WoodCudgelConstruction
+  graph: WoodenCudgel
+  theory: {}
+  category: construction-category-weapons
+  targetNode: cudgel
+  objectType: Item
+
+- type: construction
+  id: AshwoodCudgelConstruction
+  graph: AshwoodCudgel
+  theory: {}
+  category: construction-category-weapons
+  targetNode: cudgel
+  objectType: Item
+
+- type: construction
+  id: WoodPickaxeConstruction
+  graph: PickaxeWood
+  theory: {}
+  category: construction-category-weapons
+  targetNode: pickaxe
+  objectType: Item
+
+- type: construction
+  id: AshwoodPickaxeConstruction
+  graph: PickaxeAshwood
+  theory: {}
+  category: construction-category-weapons
+  targetNode: pickaxe
+  objectType: Item

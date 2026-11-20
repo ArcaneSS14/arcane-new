@@ -53,6 +53,7 @@
     - replay_load
     - saveconfig
     - chatwindow
+    - achievements # Arcane
 
 - Flags: DEBUG
   Commands:

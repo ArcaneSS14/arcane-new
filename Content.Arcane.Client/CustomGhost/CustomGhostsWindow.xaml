@@ -9,6 +9,7 @@
             <Label Text="{Loc 'custom-ghosts-window-title'}" HorizontalAlignment="Center" />
         </controls:StripeBack>
             <CheckBox Name="ShowAllCheckBox" VerticalAlignment="Center" Text="{Loc 'custom-ghosts-window-show-all-checkbox'}" ToolTip="{Loc 'custom-ghosts-window-show-all-checkbox-tooltip'}" />
+        <BoxContainer Name="AccessoryOptions" Orientation="Vertical" />
         <ScrollContainer VerticalExpand="True">
             <BoxContainer Name="ScrollBox" Orientation="Vertical">
             </BoxContainer>

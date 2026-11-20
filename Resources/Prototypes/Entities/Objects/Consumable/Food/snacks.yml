@@ -148,6 +148,10 @@
         Quantity: 3
       - ReagentId: CocoaPowder
         Quantity: 2
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 5
+      # Arcane-End
 
 - type: entity
   parent: FoodSnackBase
@@ -314,6 +318,7 @@
     solution: food
   - type: Solution
     solution:
+      maxVol: 45 # Arcane
       reagents:
       - ReagentId: DryRamen
         Quantity: 18 # Trauma - was 20
@@ -321,6 +326,10 @@
         Quantity: 2
       - ReagentId: Soysauce
         Quantity: 5
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 15
+      # Arcane-End
   - type: Sprite
     state: ramen
   - type: Edible
@@ -345,6 +354,10 @@
         Quantity: 2
       - ReagentId: CapsaicinOil
         Quantity: 5
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 15
+      # Arcane-End
 
 - type: entity
   parent: FoodSnackBase
@@ -371,6 +384,10 @@
         Quantity: 1
       - ReagentId: Soysauce
         Quantity: 2
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 5
+      # Arcane-End
   - type: Edible
     trash:
     - FoodPacketChowMeinTrash
@@ -402,6 +419,10 @@
         Quantity: 2
       - ReagentId: Soysauce
         Quantity: 2
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 5
+      # Arcane-End
   - type: Edible
     trash:
     - FoodPacketDanDanTrash
@@ -521,6 +542,10 @@
         Quantity: 0.5
       - ReagentId: Theobromine
         Quantity: 1
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 5
+      # Arcane-End
 
 - type: entity
   parent: FoodSnackHealthyBase # Trauma - healthy snack, it's real cane sugar
@@ -546,6 +571,10 @@
       reagents:
       - ReagentId: Sugar
         Quantity: 15
+      # Arcane-Start
+      - ReagentId: JunkFood
+        Quantity: 1
+      # Arcane-End
   - type: FlavorProfile
     flavors:
     - sweet

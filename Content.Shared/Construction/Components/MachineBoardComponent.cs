@@ -2,7 +2,10 @@ using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
-using Content.Shared.Construction.Prototypes; // Arcane
+// Arcane-Start
+using Content.Arcane.Common.Construction.Prototypes;
+using Content.Shared.Construction.Prototypes;
+// Arcane-End
 
 namespace Content.Shared.Construction.Components;
 

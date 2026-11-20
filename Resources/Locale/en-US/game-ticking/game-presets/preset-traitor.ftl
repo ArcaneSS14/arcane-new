@@ -45,3 +45,5 @@ traitor-role-codewords-short =
     {$codewords}.
 traitor-role-uplink-code-short = Your uplink code is {$code}. Set it as your PDA ringtone to access your uplink.
 traitor-role-uplink-implant-short = Your uplink was implanted. Access it from the action menu.
+# Arcane
+traitor-role-no-uplink = No uplink was issued for this assignment.

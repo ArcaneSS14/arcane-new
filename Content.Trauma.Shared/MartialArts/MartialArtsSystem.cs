@@ -138,9 +138,4 @@ public sealed partial class MartialArtsSystem : EntitySystem
             args.Stage = ent.Comp.StartingStage;
     }
 
-    [SubscribeLocalEvent]
-    private void OnProjectileHitMartialArt(Entity<NoGunComponent> ent, ref ProjectileReflectAttemptEvent args)
-    {
-        args.Cancelled = true;
-    }
 }

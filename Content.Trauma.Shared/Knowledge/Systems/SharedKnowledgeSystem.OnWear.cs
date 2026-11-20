@@ -60,11 +60,22 @@ public abstract partial class SharedKnowledgeSystem
 
     [SubscribeLocalEvent]
     private void OnBrainInsertedIntoBorg(Entity<KnowledgeGrantOnWearComponent> ent, ref BrainInsertedIntoBorgEvent args)
-        => ApplyKnowledgeModifiers(args.Brain, ent);
+    // Arcane-Edit-Start
+    {
+        ApplyKnowledgeModifiers(args.Brain, ent);
+        RefreshBorgLanguages(ent.Owner);
+    }
+    // Arcane-Edit-End
 
     [SubscribeLocalEvent]
     private void OnBrainRemovedFromBorg(Entity<KnowledgeGrantOnWearComponent> ent, ref BrainRemovedFromBorgEvent args)
-        => RemoveKnowledgeModifiers(args.Brain, ent);
+    // Arcane-Edit-Start
+    {
+        RemoveKnowledgeModifiers(args.Brain, ent);
+        RefreshBorgLanguages(args.Brain);
+        RefreshBorgLanguages(ent.Owner);
+    }
+    // Arcane-Edit-End
 
     [SubscribeLocalEvent]
     private void OnImplantImplanted(Entity<KnowledgeGrantOnWearComponent> ent, ref ImplantImplantedEvent args)

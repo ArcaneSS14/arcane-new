@@ -1,0 +1,30 @@
+- type: latheRecipePack
+  id: ServiceBoardsStatic
+  recipes:
+  - PhotocopierMachineCircuitboard
+
+- type: latheRecipePack
+  id: LatheMiscStatic
+  recipes:
+  - PaintCan
+
+- type: latheRecipePack
+  id: BasicService
+  recipes:
+  - CrayonRainbowLarge
+
+- type: technology
+  id: OfficeEquipment
+  recipeUnlocks:
+  - PaintCan
+  - PhotocopierMachineCircuitboard
+
+- type: technology
+  id: MusicalInstruments
+  recipeUnlocks:
+  - CrayonRainbowLarge
+
+- type: guideEntry
+  id: Service
+  children:
+  - Painting

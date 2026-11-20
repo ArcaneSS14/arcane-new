@@ -8,6 +8,7 @@ using Content.Shared.SMES;
 using JetBrains.Annotations;
 using Robust.Shared.Timing;
 // Arcane-Start
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
 // Arcane-End

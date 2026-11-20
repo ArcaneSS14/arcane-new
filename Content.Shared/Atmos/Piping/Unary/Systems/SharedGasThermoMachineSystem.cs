@@ -4,6 +4,7 @@ using Content.Shared.Database;
 using Content.Shared.Examine;
 using Content.Shared.Power.EntitySystems;
 // Arcane-Start
+using Content.Arcane.Common.Construction;
 using Content.Shared.Construction;
 using Content.Shared.Construction.Events;
 // Arcane-End

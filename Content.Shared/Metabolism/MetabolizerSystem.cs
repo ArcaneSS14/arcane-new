@@ -18,6 +18,8 @@ using Content.Shared.Random.Helpers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
+using Content.Shared.Zombies; // Arcane
+
 namespace Content.Shared.Metabolism;
 
 /// <inheritdoc/>
@@ -266,6 +268,9 @@ public sealed partial class MetabolizerSystem : EntitySystem
     private void TryMetabolize(Entity<MetabolizerComponent, OrganComponent?, SolutionManagerComponent?> ent)
     {
         _organQuery.Resolve(ent, ref ent.Comp2, logMissing: false);
+        if (HasComp<ZombieComponent>(ent.Comp2?.Body ?? ent.Owner)) // Arcane
+            return;
+
         _solutionQuery.Resolve(ent, ref ent.Comp3, logMissing: false);
 
         foreach (var stage in ent.Comp1.Stages)
