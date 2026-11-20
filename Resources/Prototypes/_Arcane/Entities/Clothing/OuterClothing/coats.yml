@@ -1,0 +1,164 @@
+- type: entity
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase, BaseSecurityCommandContraband]
+  id: ClothingOuterArmorHoSLeather
+  categories: [ HideSpawnMenu ]
+  name: leather coat
+  description: A black leather coat with an experimental bluespace assisted alloy for some extra protection and style for those with a commanding presence.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/leather_coat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/leather_coat.rsi
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatLabEasy
+  categories: [ HideSpawnMenu ]
+  name: easy lab coat
+  description: A suit that protects against minor chemical spills.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/robe.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/robe.rsi
+  - type: Armor
+    coverage:
+    - Torso
+    - Tail
+    - Arm
+    - Leg
+    modifiers:
+      coefficients:
+        Caustic: 0.65
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatLabBelts
+  categories: [ HideSpawnMenu ]
+  name: lab coat with belts
+  description: A suit that protects against minor chemical spills. Has some black belts on chest.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/robe_belts.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/robe_belts.rsi
+  - type: Armor
+    coverage:
+    - Torso
+    - Tail
+    - Arm
+    - Leg
+    modifiers:
+      coefficients:
+        Caustic: 0.65
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatLabBlack
+  categories: [ HideSpawnMenu ]
+  name: black lab coat
+  description: Black suit that protects against minor chemical spills.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/black_robe.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/black_robe.rsi
+  - type: Armor
+    coverage:
+    - Torso
+    - Tail
+    - Arm
+    - Leg
+    modifiers:
+      coefficients:
+        Caustic: 0.65
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatLabEnlightenment
+  categories: [ HideSpawnMenu ]
+  name: enlightenment lab coat
+  description: Word "bacchus" and word "death" means same for you.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/livsey.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/livsey.rsi
+  - type: Armor
+    coverage:
+    - Torso
+    - Tail
+    - Arm
+    - Leg
+    modifiers:
+      coefficients:
+        Caustic: 0.65
+
+- type: entity
+  parent: ClothingOuterBase
+  id: ClothingOuterApostolCoat
+  categories: [ HideSpawnMenu ]
+  name: apostol coat
+  description: Heed the voice of my prayer when I call upon You.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/apostol.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/apostol.rsi
+
+- type: entity
+  parent: ClothingOuterStorageBase
+  id: ClothingOuterCoatAdjutant
+  name: adjutant's winter jacket
+  description: heavy jacket made of 'synthetic' animal fur.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Coats/adjutantcoat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Coats/adjutantcoat.rsi
+
+# USSP
+
+- type: entity
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase]
+  id: ClothingOuterUSSPTrenchCoat
+  name: trench coat
+  description: A warm coat will protect against the harsh cold.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/USSP/trench_coat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/USSP/trench_coat.rsi
+
+- type: entity
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase]
+  id: ClothingOuterUSSPInvestigator
+  name: investigator coat
+  description: A black, baggy coat. A good coat for hiding something.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/USSP/investigator.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/USSP/investigator.rsi
+
+- type: entity
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase]
+  id: ClothingOuterUSSPGreatcoat
+  name: police greatcoat
+  description: A warm coat will protect against the harsh cold.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/USSP/greatcoat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/USSP/greatcoat.rsi
+
+- type: entity
+  parent: [ClothingOuterWinterSecArmored, BaseCargoContraband]
+  id: ClothingOuterCoatBitrunner
+  name: bitrunner coat
+  description: A dark coat with a blood-red lining for those who like to look menacing even while wandering the station corridors.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Coats/bitrunner_coat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Coats/bitrunner_coat.rsi

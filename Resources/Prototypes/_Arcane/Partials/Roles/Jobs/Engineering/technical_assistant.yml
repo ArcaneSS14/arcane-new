@@ -1,0 +1,7 @@
+- type: job
+  id: TechnicalAssistant
+  alternateTitles:
+  - TechnicalAssistantApprentice
+  - TechnicalAssistantTrainee
+  - TechnicalAssistantTechIntern
+  - TechnicalAssistantTechApprentice

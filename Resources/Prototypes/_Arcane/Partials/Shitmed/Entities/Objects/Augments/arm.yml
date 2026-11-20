@@ -1,0 +1,11 @@
+- type: entity
+  id: BaseIncompleteAugmentStrength
+  components:
+  - type: Construction
+    defaultTarget: augment
+
+- type: entity
+  id: BaseIncompleteAugmentToolPanel
+  components:
+  - type: Construction
+    defaultTarget: "utility tools panel"

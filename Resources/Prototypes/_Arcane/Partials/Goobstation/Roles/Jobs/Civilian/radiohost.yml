@@ -1,0 +1,7 @@
+- type: job
+  id: RadioHost
+  alternateTitles:
+  - RadioHostStationDJ
+  - RadioHostBroadcaster
+  - RadioHostAnnouncer
+  - RadioHostShowHost

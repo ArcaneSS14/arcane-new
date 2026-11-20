@@ -1,0 +1,82 @@
+- type: job
+  id: IAA
+  name: job-name-iaa
+  description: job-description-iaa
+  playTimeTracker: JobIAA
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 20h
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 10h
+  - !type:RoleTimeRequirement
+    role: JobLawyer
+    time: 5h
+  - !type:TraitsRequirement
+    inverted: true
+    traits:
+    - Muted
+  startingGear: IAAGear
+  icon: "JobIconIAA"
+  supervisors: job-supervisors-centcom
+  setPreference: true
+  guides:
+  - SpaceLaw
+  access:
+  - Service
+  - Brig
+  - Maintenance
+  - Command
+  - External
+  - Lawyer
+  special:
+    - !type:AddImplantSpecial
+      implants: [MindShieldImplant]
+    - !type:AddComponentSpecial
+      components:
+      - type: CommandStaff
+      - type: Condemned
+        soulOwnedNotDevil: true
+  alternateTitles:
+  - IAAComplianceOfficer
+  - IAAAuditor
+  - IAAInternalAffairsRepresentative
+  - IAAInternalAffairsInspector
+
+- type: startingGear
+  id: IAAGear
+  equipment:
+    shoes: ClothingShoesColorBlack
+    id: IAAPDA
+    eyes: ClothingEyesGlassesSunglasses
+    ears: ClothingHeadsetIAA
+    pocket2: BookSpaceLaw
+  inhand:
+    - BriefcaseIAAFilled
+  storage:
+    back:
+    - Flash
+    - TelescopicBaton
+
+- type: chameleonOutfit
+  id: IAAChameleonOutfit
+  job: IAA
+  equipment:
+    eyes: ClothingEyesGlassesSunglasses
+
+- type: jobAlternateTitle
+  id: IAAComplianceOfficer
+  name: job-name-alt-iaa-1
+
+- type: jobAlternateTitle
+  id: IAAAuditor
+  name: job-name-alt-iaa-2
+
+- type: jobAlternateTitle
+  id: IAAInternalAffairsRepresentative
+  name: job-name-alt-iaa-3
+
+- type: jobAlternateTitle
+  id: IAAInternalAffairsInspector
+  name: job-name-alt-iaa-4

@@ -1,0 +1,21 @@
+- type: jobAlternateTitle
+  id: JanitorMaid
+  name: job-name-alt-janitor-3
+  femaleName: job-name-alt-janitor-3-f
+  maleName: job-name-alt-janitor-3-m
+
+- type: jobAlternateTitle
+  id: JanitorCustodialTechnician
+  name: job-name-alt-janitor-2
+
+- type: jobAlternateTitle
+  id: JanitorPlumber
+  name: job-name-alt-janitor-1
+
+- type: jobAlternateTitle
+  id: JanitorCleaner
+  name: job-name-alt-janitor-5
+
+- type: jobAlternateTitle
+  id: JanitorStreetSweeper
+  name: job-name-alt-janitor-4

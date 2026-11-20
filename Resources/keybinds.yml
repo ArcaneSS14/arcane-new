@@ -715,4 +715,7 @@ binds:
 - function: PosingRotatePositive
   type: State
   key: E
+- function: OfferItem
+  type: State
+  key: H
 # Arcane-End

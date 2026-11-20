@@ -1,0 +1,7 @@
+- type: entity
+  id: ConstructionBag
+  components:
+  - type: Storage
+    whitelist:
+      components:
+      - Circuitboard

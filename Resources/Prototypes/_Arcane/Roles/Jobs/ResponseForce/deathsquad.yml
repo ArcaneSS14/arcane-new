@@ -5,7 +5,7 @@
   playTimeTracker: JobDeathSquadLeader
   setPreference: false
   startingGear: DeathSquadLeaderGear
-  icon: "JobIconNanotrasen"
+  icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   accessGroups:
   - AllAccess

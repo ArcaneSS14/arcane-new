@@ -1,0 +1,5 @@
+- type: entity
+  id: WeaponMechCombatMissileRack6
+  components:
+  - type: BatteryAmmoProvider
+    proto: BulletGrenadeFrag

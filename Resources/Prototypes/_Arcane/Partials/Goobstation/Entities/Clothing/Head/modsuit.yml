@@ -1,0 +1,13 @@
+- type: entity
+  id: ClothingModsuitHelmetStandard
+  components:
+  - type: Tag
+    tags:
+    - NoXeno
+
+- type: entity
+  id: BaseClothingModsuitHelmet
+  components:
+  - type: Tag
+    tags:
+    - NoXeno

@@ -118,3 +118,13 @@
       blacklist:
         tags:
         - PetOnly
+    - name: plug
+      slotTexture: plug
+      fullTextureName: template_small
+      slotFlags: PLUG
+      slotGroup: Extra
+      uiWindowPos: 1,2
+      strippingWindowPos: 3,5
+      displayName: Plug
+      stripTime: 3
+      stripHidden: true

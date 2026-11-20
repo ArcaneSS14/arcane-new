@@ -1,0 +1,32 @@
+- type: roleLoadout
+  id: JobAdjutant
+  groups:
+  - AdjutantHead
+  - AdjutantJumpsuit
+  - AdjutantOuterClothing
+  - AdjutantBackpack
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - Survival
+  - Patron
+  - GroupGrimoire
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists
+
+- type: roleLoadout
+  id: JobIAA
+  groups:
+  - IAAJumpsuit
+  - CommonBackpack
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - Survival
+  - Patron
+  - GroupGrimoire
+  - GroupGrimoire
+  - Undershirt
+  - Underwear
+  - Socks
+  - Wrists

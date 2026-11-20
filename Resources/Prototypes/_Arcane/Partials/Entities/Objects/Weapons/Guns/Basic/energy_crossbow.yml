@@ -1,0 +1,16 @@
+- type: entity
+  id: WeaponEnergyCrossbowBase
+  components:
+  - type: EmitSoundOnDrop
+    sound:
+      collection: LasersDrop
+  - type: EmitSoundOnLand
+    sound:
+      collection: LasersDrop
+  - type: Gun
+    fireRate: 0.3
+    projectileSpeed: 18
+    resetOnHandSelected: false
+  - type: Multishot
+    missChance: 0
+    spreadAddition: 15

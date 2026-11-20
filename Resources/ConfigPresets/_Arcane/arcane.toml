@@ -1,0 +1,14 @@
+# Arcane server defaults, applied after the Trauma preset.
+
+[audio]
+lobby_music_collection = "ArcaneLobbyMusic"
+
+[vote]
+# The round preset is picked by AutoVotingSystem; the map vote starts on every round restart.
+preset_enabled = false
+timermap = 120
+timerpreset = 120
+
+[server]
+# The guidebook rules page and the rules popup show the Arcane rules.
+rules_file = "ArcaneRuleset"

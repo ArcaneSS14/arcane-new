@@ -1,0 +1,15 @@
+- type: job
+  id: Borg
+  alternateTitles:
+  - BorgCyborg
+  - BorgAndroid
+  - BorgRobot
+  - BorgUnit
+
+- type: job
+  id: StationAi
+  alternateTitles:
+  - StationAiAutomatedOverseer
+  - StationAiStationIntelligence
+  - StationAiCentralAi
+  - StationAiShipboardAi

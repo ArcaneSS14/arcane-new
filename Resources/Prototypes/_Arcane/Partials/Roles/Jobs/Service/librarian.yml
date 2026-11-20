@@ -1,0 +1,8 @@
+- type: job
+  id: Librarian
+  alternateTitles:
+  - LibrarianClerk
+  - LibrarianWriter
+  - LibrarianProfessor
+  - LibrarianCurator
+  - LibrarianHistorian

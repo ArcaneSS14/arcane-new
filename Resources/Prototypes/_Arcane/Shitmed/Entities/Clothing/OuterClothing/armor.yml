@@ -1,0 +1,6 @@
+- type: entity
+  parent: ClothingOuterCoatAbductor
+  id: ClothingOuterCoatAbductorUnremoveable
+  suffix: Unremoveable
+  components:
+  - type: Unremoveable

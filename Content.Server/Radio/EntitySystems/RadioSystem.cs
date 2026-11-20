@@ -1,4 +1,5 @@
 // <Trauma>
+using Content.Arcane.Common.Radio; // Arcane
 using Content.Goobstation.Shared.Radio;
 using Content.Trauma.Common.Language;
 using Content.Trauma.Common.Language.Systems;
@@ -85,6 +86,8 @@ public sealed partial class RadioSystem : SharedRadioSystem
             msg = args.LanguageObfuscatedChatMsg;
 
         _netMan.ServerSendMessage(new MsgChatMessage { Message = msg }, actor.PlayerSession.Channel);
+        var arcaneEv = new IntrinsicRadioReceivedEvent(args.MessageSource, args.OriginalChatMsg.Message, args.Language.ID, args.Channel.Frequency.Int()); // Arcane
+        RaiseLocalEvent(uid, ref arcaneEv); // Arcane
         // <Trauma>
     }
 

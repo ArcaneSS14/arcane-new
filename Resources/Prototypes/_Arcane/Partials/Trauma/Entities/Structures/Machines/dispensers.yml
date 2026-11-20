@@ -1,0 +1,7 @@
+- type: entity
+  id: ServiceEnergyChemDispenser
+  components:
+  - type: EnergyReagentDispenser
+    reagents:
+      Blood: 15
+      Carbon: 10

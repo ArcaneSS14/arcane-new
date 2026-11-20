@@ -1,0 +1,7 @@
+- type: entity
+  id: PelletShotgunTranquilizer
+  components:
+  - type: SolutionInjectOnProjectileHit
+    damageModifierResistances: !Clear
+      Piercing: 3
+    pierceArmor: false

@@ -1,0 +1,11 @@
+- type: weightedRandom
+  id: NumberStationThreats
+  weights:
+    GreyTide: !Remove
+    Ninja: 0.25
+    Nukeops: 0.15
+    Slasher: 0.4
+    SyndicateSleeperAgent: 0.6
+    VoxRaiders: !Remove
+    Xenoborgs: 0.3
+

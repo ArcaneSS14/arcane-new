@@ -1,0 +1,5 @@
+- type: entity
+  id: ClothingHeadHatParamedicsoft
+  components:
+  - type: StaticPrice
+    price: 5

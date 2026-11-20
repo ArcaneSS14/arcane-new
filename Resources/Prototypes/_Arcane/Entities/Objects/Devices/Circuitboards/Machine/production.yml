@@ -50,3 +50,16 @@
   components:
   - type: ComputerBoard
     prototype: QuantumConsole
+
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: WashingMachineCircuitboard
+  name: washing machine board
+  components:
+  - type: MachineBoard
+    prototype: WashingMachine
+    stackRequirements:
+      Steel: 1
+      Cable: 1
+    partRequirements:
+      Servo: 1

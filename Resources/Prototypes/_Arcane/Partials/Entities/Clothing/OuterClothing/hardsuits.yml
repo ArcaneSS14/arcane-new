@@ -1,0 +1,6 @@
+- type: entity
+  id: ClothingOuterHardsuitDeathsquad
+  components:
+  - type: Tag
+    tags:
+    - Hardsuit

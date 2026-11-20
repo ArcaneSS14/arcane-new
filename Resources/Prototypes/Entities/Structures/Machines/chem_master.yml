@@ -30,6 +30,11 @@
     snapCardinals: true
     layers:
     - state: mixer_empty
+    # Arcane-Start
+    - state: mixer_fill-1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+    # Arcane-End
     - state: mixer_screens
       shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]

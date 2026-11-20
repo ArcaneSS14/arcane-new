@@ -6,3 +6,12 @@
     overtime: 0
     lightAttackDamageMultiplier: 1
     lightAttackOvertimeDamageMultiplier: 1
+
+- type: entity
+  id: PortableFlasher
+  parent:
+  - ConstructibleMachine
+  components:
+    - type: Machine
+      board: PortableFlasherMachineCircuitboard
+    - type: WiresPanel

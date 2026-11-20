@@ -1,0 +1,5 @@
+- type: entity
+  id: MobSiliconBase
+  components:
+  - type: TTS
+    voice: Fact_core
