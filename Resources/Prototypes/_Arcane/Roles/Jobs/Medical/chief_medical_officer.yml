@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: CMOMedicalDirector
+  name: job-name-alt-cmo-1
+
+- type: jobAlternateTitle
+  id: CMOSeniorMedicalOfficer
+  name: job-name-alt-cmo-3
+
+- type: jobAlternateTitle
+  id: CMOMedicalOfficeChief
+  name: job-name-alt-cmo-2

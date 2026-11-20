@@ -16,7 +16,7 @@ public sealed partial class CCVars
     ///     Only the file name (without extension) must be given for this variable.
     /// </remarks>
     public static readonly CVarDef<string> ConfigPresets =
-        CVarDef.Create("config.presets", "_Trauma/trauma", CVar.SERVERONLY); // Trauma - temporary until it can be set on live server
+        CVarDef.Create("config.presets", "_Trauma/trauma,_Arcane/arcane", CVar.SERVERONLY); // Arcane-Edit: "_Trauma/trauma" > "_Trauma/trauma,_Arcane/arcane" // Trauma - temporary until it can be set on live server
 
     /// <summary>
     ///     Whether to load the preset development CVars.

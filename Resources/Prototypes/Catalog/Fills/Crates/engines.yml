@@ -10,7 +10,7 @@
     containers:
       entity_storage:
         id: AmePartFlatpack
-        amount: 9
+        amount: 12 # Arcane-Edit: 9 > 12
 
 - type: entity
   parent: CrateEngineeringSecure

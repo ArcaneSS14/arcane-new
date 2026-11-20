@@ -516,7 +516,7 @@
         - !type:HealthChange
           conditions:
           - !type:MetabolizerTypeCondition # Goob
-            type: [ Vox ]
+            type: [ Vox, HumanoidXeno ] # Arcane-Edit: [ Vox ] > [ Vox, HumanoidXeno ]
             inverted: true
           damage:
             types:
@@ -556,7 +556,7 @@
       - !type:PopupMessage
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Animal, Vox, Arachnid, Plant, Bloodsucker, Synth ] # Arcane-Edit: [ Animal, Vox, Arachnid, Plant, Bloodsucker ] > [..., Synth]
+          type: [ Animal, Vox, Arachnid, Plant, Bloodsucker, Synth, Slime, HumanoidXeno ] # Arcane-Edit: [ Animal, Vox, Arachnid, Plant, Bloodsucker ] > [..., Synth, Slime, HumanoidXeno]
           inverted: true
         type: Local
         visualType: MediumCaution
@@ -566,7 +566,7 @@
         probability: 0.1
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Animal, Vox, Plant, Arachnid, Bloodsucker, Synth ] # Arcane-Edit: [ Animal, Vox, Plant, Arachnid, Bloodsucker ] > [..., Synth]
+          type: [ Animal, Vox, Plant, Arachnid, Bloodsucker, Synth, Slime, HumanoidXeno ] # Arcane-Edit: [ Animal, Vox, Plant, Arachnid, Bloodsucker ] > [..., Synth, Slime, HumanoidXeno]
           inverted: true
       - !type:InfectDisease
         probability: 0.05
@@ -586,7 +586,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Animal, Vox, Plant, Arachnid, Synth ] # Arcane-Edit: [ Animal, Vox, Plant, Arachnid ] > [..., Synth]
+          type: [ Animal, Vox, Plant, Arachnid, Synth, Slime, HumanoidXeno ] # Arcane-Edit: [ Animal, Vox, Plant, Arachnid ] > [..., Synth, Slime, HumanoidXeno]
           inverted: true
         damage:
           types:
@@ -610,6 +610,14 @@
           type: [ Vox ]
         reagent: Protein
         amount: 0.25
+      # Arcane-Start
+      - !type:AdjustReagent
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Slime, HumanoidXeno ]
+        reagent: Protein
+        amount: 0.5
+      # Arcane-End
 
 - type: reagent
   id: Allicin

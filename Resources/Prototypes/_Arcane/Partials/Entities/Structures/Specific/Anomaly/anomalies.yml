@@ -1,0 +1,23 @@
+- type: entity
+  id: AnomalySanta
+  components:
+  - type: EntitySpawnAnomaly
+    entries: !Clear
+    - settings:
+        spawnOnPulse: true
+        minAmount: 2
+        maxAmount: 5
+        maxRange: 5
+      spawns:
+      - PresentRandom
+      - PresentRandomCoal
+      - PresentRandomCash
+      - ClothingHeadHatSantahat
+      - FoodCakeChristmasSlice
+    - settings:
+        spawnOnSuperCritical: true
+        minAmount: 10
+        maxAmount: 20
+        maxRange: 6
+      spawns:
+      - PresentRandomCash

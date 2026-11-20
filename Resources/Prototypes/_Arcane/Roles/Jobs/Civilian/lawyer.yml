@@ -1,0 +1,7 @@
+- type: jobAlternateTitle
+  id: LawyerAttorney
+  name: job-name-alt-lawyer-1
+
+- type: jobAlternateTitle
+  id: LawyerLegalRepresentative
+  name: job-name-alt-lawyer-2

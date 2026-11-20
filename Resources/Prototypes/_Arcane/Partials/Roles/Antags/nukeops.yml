@@ -1,0 +1,11 @@
+- type: startingGear
+  id: SyndicateOperativeMedicFull
+  storage:
+    back: !Clear
+    - SyndiHypo
+    - CombatKnife
+    - WeaponPistolViper
+    - PinpointerSyndicateNuclear
+    - CombatMedipen
+    - DeathAcidifierImplanter
+    - MedkitCombatStandardFilled

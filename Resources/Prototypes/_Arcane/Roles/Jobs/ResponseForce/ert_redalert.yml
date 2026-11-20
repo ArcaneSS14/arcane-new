@@ -16,7 +16,7 @@
     pocket2: FlashlightSeclite
   storage:
     back:
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled # Goobstation - No reason not to.
     - BoxZiptie
     - CrowbarRed
     - WeaponDisablerSMG
@@ -89,7 +89,7 @@
     pocket2: FlashlightSeclite
   storage:
     back:
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled # Goobstation - No reason not to.
     - BoxZiptie
     - CrowbarRed
     - WeaponDisablerSMG
@@ -105,13 +105,12 @@
     head: ClothingHeadHelmetERTMedic
     neck: ExecutiveIDCard # Goobstation - Executive Access!
     eyes: ClothingEyesGlassesMedSec # Goobstation
-    gloves: ClothingHandsGlovesNitrile
+    gloves: ClothingHandsGlovesSurgical
     outerClothing: ClothingOuterHardsuitERTMedical
     id: ERTMedicPDA
     ears: ClothingHeadsetAltCentCom
     belt: ClothingBeltSecurityWebbingFilledMedical # Fancier
     pocket1: WeaponPistolMk58
-    pocket2: Flare
   storage:
     back:
     - CentCommHypo
@@ -120,9 +119,7 @@
     - ChemistryBottleOmnizine
     - JugOxandrolone
     - JugSalicylicAcid
-    - ParamedHypo
-    - CartridgeAtropine
-    - CartridgeAtropine
-    - MedicalBeamGunBattery
     - MagazinePistol
     - MagazinePistol
+  inhand:
+  - MedicalBeamGunBattery

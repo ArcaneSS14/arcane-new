@@ -225,6 +225,7 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ArcaneKeyFunctions.PosingOffsetDown);
             AddButton(ArcaneKeyFunctions.PosingRotateNegative);
             AddButton(ArcaneKeyFunctions.PosingRotatePositive);
+            AddButton(ArcaneKeyFunctions.OfferItem);
             // Arcane-End
 
             AddHeader("ui-options-header-interaction-adv");

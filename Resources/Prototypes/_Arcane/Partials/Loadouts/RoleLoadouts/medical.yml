@@ -1,0 +1,24 @@
+- type: roleLoadout
+  id: JobMedicalIntern
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobParamedic
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobChemist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobChiefMedicalOfficer
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobMedicalDoctor
+  groups:
+  - GroupGrimoire

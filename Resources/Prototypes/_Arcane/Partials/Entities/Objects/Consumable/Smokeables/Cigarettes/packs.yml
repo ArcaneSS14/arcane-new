@@ -1,0 +1,13 @@
+- type: entity
+  id: CigPackBase
+  components:
+  - type: Tag
+    tags:
+    - CigStorage
+
+- type: entity
+  id: CigPackMixedBase
+  components:
+  - type: Tag
+    tags:
+    - CigStorage

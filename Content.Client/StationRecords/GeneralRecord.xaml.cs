@@ -19,6 +19,7 @@ public sealed partial class GeneralRecord : Control
         Title.Text = Loc.GetString("general-station-record-console-record-title",
             ("job", record.JobTitle));
         var species = Loc.GetString(prototypeManager.Index<SpeciesPrototype>(record.Species).Name);
+        species = Content.Arcane.Common.Preferences.CharacterCustomization.GetSpeciesLongName(species, record.CustomSpeciesName); // Arcane
         Species.Text = Loc.GetString("general-station-record-console-record-species", ("species", species));
         Gender.Text = Loc.GetString("general-station-record-console-record-gender",
             ("gender", record.Gender.ToString()));

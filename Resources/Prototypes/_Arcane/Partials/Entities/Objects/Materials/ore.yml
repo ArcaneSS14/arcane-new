@@ -1,0 +1,10 @@
+- type: entity
+  id: OreBase
+  components:
+  - type: ResearchAnalyzable
+    methodPointRewards:
+      Deconstruct:
+      - type: General
+        amount: 67
+      - type: Experimental
+        amount: 5

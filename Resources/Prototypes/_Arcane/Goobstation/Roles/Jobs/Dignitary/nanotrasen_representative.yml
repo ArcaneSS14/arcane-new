@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: NTRepConsultant
+  name: job-name-alt-ntrep-3
+
+- type: jobAlternateTitle
+  id: NTRepAuditor
+  name: job-name-alt-ntrep-2
+
+- type: jobAlternateTitle
+  id: NTRepLiason
+  name: job-name-alt-ntrep-1
+
+- type: jobAlternateTitle
+  id: NTRepCorporateAdvisor
+  name: job-name-alt-ntrep-4

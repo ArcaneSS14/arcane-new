@@ -1,0 +1,15 @@
+- type: marking
+  id: TattooTribal1
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooNanotrasenChest
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooLoops
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: BuffChest
+  groupWhitelist: [ Demon ]

@@ -49,3 +49,17 @@
       - impulse: 0,45
       - delay: 0.12
         impulse: 0,-40
+
+- type: emote
+  id: Growl
+  chatTriggers:
+  - урчит
+  - урчит.
+  - урчит!
+  - урчание
+  - урчание.
+  - урчание!
+  whitelist:
+    tags:
+    - FelinidEmotes
+    - HarpyEmotes

@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: ParamedicTraumaTeamResponder
+  name: job-name-alt-paramedic-3
+
+- type: jobAlternateTitle
+  id: ParamedicParamedic
+  name: job-name-alt-paramedic-1
+
+- type: jobAlternateTitle
+  id: ParamedicDutyPhysician
+  name: job-name-alt-paramedic-2

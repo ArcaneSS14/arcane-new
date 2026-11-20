@@ -1,0 +1,8 @@
+- type: job
+  id: SecurityOfficer
+  alternateTitles:
+  - SecurityOfficerOperative
+  - SecurityOfficerSpecialist
+  - SecurityOfficerGuard
+  - SecurityOfficerLawEnforcer
+  - SecurityOfficerStaff

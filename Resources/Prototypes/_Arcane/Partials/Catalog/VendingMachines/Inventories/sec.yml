@@ -1,0 +1,4 @@
+- type: vendingMachineInventory
+  id: SecTechInventory
+  startingInventory:
+    PinpointerSecSquad: 8

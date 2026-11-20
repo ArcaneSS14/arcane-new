@@ -12,6 +12,7 @@
   - type: General
     amount: 500
   recipeUnlocks:
+  - WashingMachineCircuitboard
   - HandLabeler
   - ParcelWrap
   - CutterMachineCircuitboard

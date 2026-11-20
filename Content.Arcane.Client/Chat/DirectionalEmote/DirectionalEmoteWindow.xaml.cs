@@ -8,6 +8,13 @@ public sealed partial class DirectionalEmoteWindow : FancyWindow
     public NetEntity Target { get; set; }
     public string Text { get; private set; } = string.Empty;
 
+    public bool HideName => HideNameCheck.Visible && HideNameCheck.Pressed;
+
+    public bool CanHideName
+    {
+        set => HideNameCheck.Visible = value;
+    }
+
     public event Action? AcceptPressed;
     public event Action? MessageChanged;
 

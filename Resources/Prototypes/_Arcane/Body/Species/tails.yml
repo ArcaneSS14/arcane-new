@@ -1,0 +1,45 @@
+# Tails and wings for species whose base body has none, so they can wear tail and wing markings.
+
+- type: entity
+  parent: [ OrganBaseTail, OrganHumanExternal ]
+  id: OrganHumanTail
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Species/Vulpkanin/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the tail marking draws it
+
+- type: entity
+  parent: [ OrganBaseTail, OrganSlimePersonExternal ]
+  id: OrganSlimePersonTail
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Species/Vulpkanin/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the tail marking draws it
+
+- type: entity
+  parent: [ OrganBaseWings, OrganSlimePersonExternal ]
+  id: OrganSlimePersonWings
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Species/Moth/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the wings marking draws them
+
+- type: entity
+  parent: [ OrganIPCExternal, OrganBaseTail ]
+  id: OrganIPCTail
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Species/Vulpkanin/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the tail marking draws it

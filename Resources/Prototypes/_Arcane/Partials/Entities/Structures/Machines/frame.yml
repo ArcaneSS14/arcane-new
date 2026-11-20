@@ -1,0 +1,5 @@
+- type: entity
+  id: UnfinishedMachineFrame
+  components:
+    - type: Construction
+      defaultTarget: machine

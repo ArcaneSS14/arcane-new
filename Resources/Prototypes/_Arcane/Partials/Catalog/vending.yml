@@ -2,3 +2,17 @@
   id: DiscountDansInventory
   startingInventory:
     FoodSnackCoalCrunch: 3
+
+- type: vendingMachineInventory
+  id: JaniDrobeInventory
+  startingInventory:
+    ClothingUniformJumpskirtMaidStrict: 2
+    ClothingBeltJanitorBow: 1
+
+- type: vendingMachineInventory
+  id: AutoDrobeInventory
+  startingInventory:
+    ClothingHeadKubanka: 2
+    ClothingUniformBeshmet: 2
+    ClothingOuterSuitBlackCherkassa: 2
+    ClothingUniformJumpskirtMimeSexy: 2
