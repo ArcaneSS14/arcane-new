@@ -1,11 +1,10 @@
-// Arcane-Start
 using Content.Trauma.Common.Knowledge;
-using Robust.Client.Graphics;
+using Content.Trauma.Common.Knowledge.Systems;
 
-namespace Content.Trauma.Client.Knowledge.UI;
+namespace Content.Arcane.Client.Knowledge;
 
 /// <summary>
-/// One skill in <see cref="KnowledgeTab"/>, kept alive between updates so that changes are shown in place.
+/// One skill in the character window's knowledge tab, kept alive between updates so that changes are shown in place.
 /// </summary>
 public sealed class KnowledgeEntry : PanelContainer
 {
@@ -25,7 +24,7 @@ public sealed class KnowledgeEntry : PanelContainer
         Color.FromHex("#e6b84f"),
     ];
 
-    private readonly KnowledgeSystem _knowledge;
+    private readonly CommonKnowledgeSystem _knowledge;
     private readonly SpriteSystem _sprite;
     private readonly StyleBoxFlat _stripeStyle = new();
     private readonly StyleBoxFlat _levelStyle = new();
@@ -44,7 +43,7 @@ public sealed class KnowledgeEntry : PanelContainer
 
     private KnowledgeInfo? _info;
 
-    public KnowledgeEntry(KnowledgeSystem knowledge, SpriteSystem sprite, bool showProgress)
+    public KnowledgeEntry(CommonKnowledgeSystem knowledge, SpriteSystem sprite, bool showProgress)
     {
         _knowledge = knowledge;
         _sprite = sprite;
@@ -164,4 +163,3 @@ public sealed class KnowledgeEntry : PanelContainer
         return row;
     }
 }
-// Arcane-End

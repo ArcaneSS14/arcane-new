@@ -2,6 +2,7 @@
 
 using Content.Client.UserInterface.Controls;
 // Arcane-Start
+using Content.Arcane.Client.Knowledge;
 using Content.Trauma.Common.Knowledge;
 using Content.Trauma.Common.Knowledge.Prototypes;
 using Robust.Client.Player;
@@ -86,25 +87,30 @@ public sealed partial class KnowledgeTab : Control
 
         KnowledgePlaceholder.Visible = knowledge == null;
         KnowledgeSummary.Visible = knowledge != null;
+        // Arcane-Edit-End
         KnowledgeBox.SeparationOverride = 10;
 
+        // Arcane-Edit-Start
         ProtoId<KnowledgeCategoryPrototype>? lastGroup = null;
+        BoxContainer stack = default!;
         var groupIndex = -1;
         var entryIndex = 0;
         var count = 0;
         var experts = 0;
+        // the only sort on this path, GrabAllKnowledge leaves it to here
         var sorted = (knowledge ?? []).OrderBy(skill => skill.Category).ThenBy(skill => skill.Info.Name).ThenBy(skill => skill.Info.Id);
         foreach (var (groupId, info) in sorted)
         {
+            // sorted by category, so each group only needs finding once
             if (groupId != lastGroup)
             {
                 lastGroup = groupId;
                 groupIndex++;
                 entryIndex = 0;
-            }
 
-            var (group, stack) = EnsureGroup(groupId);
-            SetPosition(group, groupIndex);
+                (var group, stack) = EnsureGroup(groupId);
+                SetPosition(group, groupIndex);
+            }
 
             // display names aren't guaranteed to be unique
             var key = (groupId, info.Id);

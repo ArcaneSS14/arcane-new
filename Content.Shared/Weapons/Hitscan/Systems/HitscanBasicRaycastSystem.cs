@@ -97,7 +97,7 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };
         RaiseLocalEvent(ent, ref attemptEvent);
 
-        // Arcane-Edit-Start
+        // Arcane-Start: effects and the next trace come after the reflection checks
         if (!attemptEvent.SkipEffects)
             FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
 

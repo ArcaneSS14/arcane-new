@@ -1,3 +1,4 @@
+using Content.Arcane.Common.Weapons;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Projectiles;
@@ -5,7 +6,6 @@ using Content.Shared.Random.Helpers;
 using Content.Shared.Standing;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
-using Content.Shared.Weapons.Ranged.Events;
 using Content.Trauma.Common.Weapons;
 using Content.Trauma.Shared.Knowledge.Systems;
 using Robust.Shared.Audio;
@@ -72,13 +72,10 @@ public sealed partial class CapoeiraParrySystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnHitscan(Entity<CapoeiraParryWindowComponent> ent, ref HitScanReflectAttemptEvent args)
+    private void OnHitscan(Entity<CapoeiraParryWindowComponent> ent, ref HitscanPassThroughAttemptEvent args)
     {
-        if (args.Reflected || !TryParry(ent, args.Shooter))
-            return;
-
-        args.Reflected = true;
-        args.PassThrough = true;
+        if (!args.PassThrough && TryParry(ent, args.Shooter))
+            args.PassThrough = true;
     }
 
     private bool TryParry(Entity<CapoeiraParryWindowComponent> ent, EntityUid? attacker)

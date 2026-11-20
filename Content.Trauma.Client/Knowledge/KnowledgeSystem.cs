@@ -132,8 +132,10 @@ public sealed partial class KnowledgeSystem : SharedKnowledgeSystem
 
         return knowledgeList
             .Select(ent => GetKnowledgeInfo(ent))
-            .OrderBy(data => data.Category)
-            .ThenBy(data => data.Info.Name)
+            // Arcane-Edit-Start: sorted here > sorted once by KnowledgeTab.SetKnowledge, which also orders by id
+            // .OrderBy(data => data.Category)
+            // .ThenBy(data => data.Info.Name)
+            // Arcane-Edit-End
             .ToList();
     }
 

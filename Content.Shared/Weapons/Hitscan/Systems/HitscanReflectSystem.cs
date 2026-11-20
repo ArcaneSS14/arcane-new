@@ -8,7 +8,7 @@ namespace Content.Shared.Weapons.Hitscan.Systems;
 
 public sealed partial class HitscanReflectSystem : EntitySystem
 {
-    private const int MaxPassThroughs = 16; // Arcane
+    private const int MaxPassThroughs = 16; // Arcane: bounds pass-through retraces, each needs a different entity anyway
 
     public override void Initialize()
     {
@@ -24,6 +24,9 @@ public sealed partial class HitscanReflectSystem : EntitySystem
         if (hitscan.Comp.ReflectiveType == ReflectType.None || data.HitEntity == null)
             return;
 
+        if (TryPassThrough(ref args)) // Arcane
+            return; // Arcane
+
         if (hitscan.Comp.CurrentReflections >= hitscan.Comp.MaxReflections)
             return;
 
@@ -34,25 +37,9 @@ public sealed partial class HitscanReflectSystem : EntitySystem
         if (!ev.Reflected)
             return;
 
-        // hitscan.Comp.CurrentReflections++; // Arcane-Edit
+        hitscan.Comp.CurrentReflections++;
 
         args.Cancelled = true;
-
-        // Arcane-Start: the same shot again, as if the target wasn't there, so it isn't counted as a reflection
-        if (ev.PassThrough)
-        {
-            var trace = data.Trace;
-            if (trace.Ignored?.Count >= MaxPassThroughs)
-                return;
-
-            trace.Ignored = trace.Ignored == null ? [data.HitEntity.Value] : [.. trace.Ignored, data.HitEntity.Value];
-            args.NextTrace = trace;
-            args.SkipEffects = true;
-            return;
-        }
-        // Arcane-End
-
-        hitscan.Comp.CurrentReflections++; // Arcane
 
         var fromEffect = Transform(data.HitEntity.Value).Coordinates;
 
