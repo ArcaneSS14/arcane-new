@@ -11,6 +11,7 @@
   id: ResomiTailFeathers
   bodyPart: Tail
   groupWhitelist: [ Resomi ]
+  underHair: true # Arcane
   sprites:
   - sprite: _Arcane/Mobs/Customization/Resomi/resomi_parts.rsi
     state: tail_feathers

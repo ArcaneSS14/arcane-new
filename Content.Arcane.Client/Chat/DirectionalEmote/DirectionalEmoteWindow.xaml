@@ -9,6 +9,7 @@
         </PanelContainer.PanelOverride>
         <BoxContainer Orientation="Vertical" Margin="10">
             <TextEdit Name="MessageInput" VerticalExpand="True" HorizontalExpand="True" />
+            <CheckBox Name="HideNameCheck" Text="{Loc 'directional-emote-hide-name'}" Visible="False" />
             <Button Name="AcceptButton"
                     Text="{Loc 'directional-emote-button'}"
                     StyleClasses="OpenBoth"

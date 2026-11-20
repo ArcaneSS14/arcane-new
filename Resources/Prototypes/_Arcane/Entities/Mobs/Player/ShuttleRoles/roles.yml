@@ -1,0 +1,208 @@
+- type: entity
+  id: VisitorCivilianBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-civilian-name
+      description: ghost-role-information-civilian-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorEngineeringBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-engineering-name
+      description: ghost-role-information-engineering-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorCivilianChefBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-civilian-name
+      description: ghost-role-information-civilian-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: KnowledgeGrant
+          skills:
+            LanguageSpaceItalian: 100
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorMedicalBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-medical-name
+      description: ghost-role-information-medical-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorCommandBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-command-name
+      description: ghost-role-information-command-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: default
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: AutoImplant
+          implants:
+          - MindShieldImplant
+        - type: AntagImmune
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorCivilianLibrarianBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-civilian-name
+      description: ghost-role-information-civilian-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorCargoBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-cargo-name
+      description: ghost-role-information-cargo-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorScienceBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-science-name
+      description: ghost-role-information-science-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: short
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard
+
+- type: entity
+  id: VisitorSecurityBase
+  abstract: true
+  parent: MarkerBase
+  categories: [ Spawner ]
+  components:
+    - type: GhostTakeoverAvailable
+    - type: GhostRole
+      name: ghost-role-information-security-name
+      description: ghost-role-information-security-description
+      rules: ghost-role-information-nonantagonist-rules
+      raffle:
+        settings: default
+    - type: CloningAppearance
+      components:
+        - type: IdBind
+        - type: AutoImplant
+          implants:
+          - MindShieldImplant
+        - type: AntagImmune
+        - type: RandomMetadata
+          nameSegments:
+          - NamesFirst
+          - NamesLast
+          nameFormat: name-format-standard

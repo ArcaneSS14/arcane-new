@@ -58,6 +58,8 @@
   params:
     variation: 0.125
   sounds:
+    Moan:
+      collection: MoansMale
     Scream:
       collection: MaleScreams
     Laugh:
@@ -100,6 +102,8 @@
   params:
     variation: 0.125
   sounds:
+    Moan:
+      collection: MoansFemale
     Scream:
       collection: FemaleScreams
     Laugh:

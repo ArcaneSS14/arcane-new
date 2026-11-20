@@ -385,7 +385,7 @@ WarpPointLibrary: null
 WarpPointMorgue: null
 WarpPointReporter: null
 WarpPointSingulo: null
-WashingMachine: null
+# WashingMachine: null # Arcane-Edit: WashingMachine: null > removed, the washing machine exists again
 WashingMachineBroken: null
 WashingMachineFilledClothes: null
 WeaponShotgunKammererNonLethal: null

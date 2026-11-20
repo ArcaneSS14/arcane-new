@@ -1,0 +1,5 @@
+- type: entity
+  id: SpawnPointCosmicColossus
+  components:
+  - type: GhostRole
+    banJob: GhostRoleCosmicCult

@@ -19,6 +19,8 @@
   params:
     variation: 0.125
   sounds:
+    Moan:
+      collection: MoansMale
     Scream:
       path: /Audio/Animals/mouse_squeak.ogg
     Laugh:
@@ -57,6 +59,8 @@
   params:
     variation: 0.125
   sounds:
+    Moan:
+      collection: MoansFemale
     Scream:
       path: /Audio/Animals/mouse_squeak.ogg
     Laugh:

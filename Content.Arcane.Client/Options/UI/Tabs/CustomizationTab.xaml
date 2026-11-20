@@ -4,6 +4,8 @@
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
             <BoxContainer Orientation="Vertical" Margin="8">
+                <ui:OptionDropDown Name="ThemeDropDown"
+                                   Title="{Loc 'ui-options-arcane-theme'}"/>
                 <CheckBox Name="UseRunechat"
                           Text="{Loc 'ui-options-runechat'}"/>
                 <ui:OptionDropDown Name="RunechatFontDropDown"

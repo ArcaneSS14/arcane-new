@@ -1,0 +1,17 @@
+- type: emoteSounds
+  id: MonkeyMode
+  sounds:
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: FemaleMoth
+  sounds:
+    Moan:
+      collection: MoansFemale
+
+- type: emoteSounds
+  id: MaleMoth
+  sounds:
+    Moan:
+      collection: MoansMale

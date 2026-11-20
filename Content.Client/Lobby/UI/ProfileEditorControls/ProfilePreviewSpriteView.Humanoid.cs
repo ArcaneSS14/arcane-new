@@ -27,6 +27,7 @@ public sealed partial class ProfilePreviewSpriteView
 
         EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
         EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale)); // Arcane
+        SetDummyCustomization(humanoid); // Arcane
     }
 
     /// <summary>
@@ -61,6 +62,8 @@ public sealed partial class ProfilePreviewSpriteView
         // Arcane-Start
         if (humanoid is not null && EntMan.HasComponent<VisualBodyComponent>(PreviewDummy))
             EntMan.System<HumanoidProfileSystem>().SetGrowthVisualScale(PreviewDummy, new(humanoid.Scale, humanoid.Scale));
+        if (humanoid is not null)
+            SetDummyCustomization(humanoid);
         // Arcane-End
 
         if (humanoid != null && jobClothes)

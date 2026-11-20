@@ -1,0 +1,7 @@
+# Putting clothing on yourself or taking it off takes a moment. Clothing with its own delay keeps it.
+- type: entity
+  id: Clothing
+  components:
+  - type: Clothing
+    equipDelay: 0.4
+    unequipDelay: 0.4

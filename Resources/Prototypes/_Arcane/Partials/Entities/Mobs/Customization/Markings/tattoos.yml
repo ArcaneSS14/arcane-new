@@ -1,0 +1,39 @@
+- type: marking
+  id: TattooSilverburghLeftLeg
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooNightlingChest
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooSilverburghRightLeg
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooCampbellLeftArm
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooCampbellRightArm
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooEyeshadowLower
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooCampbellLeftLeg
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooHiveChest
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooEyeshadowUpper
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: TattooCampbellRightLeg
+  groupWhitelist: [ Demon ]

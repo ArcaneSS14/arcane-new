@@ -235,7 +235,10 @@ namespace Content.Server.Preferences.Managers
                     NsfwOoc = profile.NsfwOocFlavorText,
                     NsfwLinks = profile.NsfwLinksFlavorText,
                     NsfwTags = profile.NsfwTagsFlavorText,
-                });
+                })
+                .WithCustomization(CharacterCustomizationDb.Read(profile))
+                .WithErpPreference(Enum.IsDefined((ErpPreference) profile.ErpPreference) ? (ErpPreference) profile.ErpPreference : ErpPreference.No)
+                .WithTtsVoice(string.IsNullOrEmpty(profile.TtsVoice) ? HumanoidCharacterProfile.DefaultTtsVoice : profile.TtsVoice);
                 // Arcane-End
         }
 

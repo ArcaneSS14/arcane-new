@@ -256,6 +256,7 @@
     sexStateOverrides:
       Male: torso_m
       Female: torso_f
+      Futanari: torso_f
   # Arcane-End
 
 - type: entity

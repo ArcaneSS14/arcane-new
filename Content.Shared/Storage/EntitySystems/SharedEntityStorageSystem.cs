@@ -235,7 +235,10 @@ public abstract partial class SharedEntityStorageSystem : EntitySystem
         RaiseLocalEvent(target, ref beforeev);
         target.Comp.Open = true;
         Dirty(target);
-        EmptyContents(target, target.Comp);
+        // Arcane-Edit-Start
+        if (!beforeev.SkipEmptyContents)
+            EmptyContents(target, target.Comp);
+        // Arcane-Edit-End
         ModifyComponents(target, target.Comp);
         _audio.PlayLocal(target.Comp.OpenSound, target, user);
         ReleaseGas(target, target.Comp);

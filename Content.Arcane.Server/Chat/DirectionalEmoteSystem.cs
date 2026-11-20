@@ -42,7 +42,8 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
             || target == source
             || !TryComp<ActorComponent>(target, out var targetActor)
             || !TryComp<DirectionalEmoteTargetComponent>(source, out var emote)
-            || !HasComp<DirectionalEmoteTargetComponent>(target))
+            || !HasComp<DirectionalEmoteTargetComponent>(target)
+            || args.HideName && !emote.CanHideName)
             return;
 
         var now = _timing.CurTime;
@@ -71,15 +72,17 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
 
         var text = args.Text.Trim();
         // The apparent identity, like ordinary emotes: a masked sender is not named.
-        var wrapped = Loc.GetString("chat-manager-entity-directional-emote-wrap-message",
-            ("entityName", FormattedMessage.EscapeText(Name(Identity.Entity(source, EntityManager)))),
-            ("message", FormattedMessage.EscapeText(text)));
+        var wrapped = args.HideName
+            ? Loc.GetString("chat-manager-entity-directional-emote-anonymous-wrap-message", ("message", FormattedMessage.EscapeText(text)))
+            : Loc.GetString("chat-manager-entity-directional-emote-wrap-message",
+                ("entityName", FormattedMessage.EscapeText(Name(Identity.Entity(source, EntityManager)))),
+                ("message", FormattedMessage.EscapeText(text)));
 
         _chat.ChatMessageToMany(ChatChannel.Emotes, text, wrapped, source, false, true,
             [targetActor.PlayerSession.Channel, channel]);
 
         emote.LastSend = now;
         _adminLogger.Add(LogType.Chat, LogImpact.Low,
-            $"{ToPrettyString(source):source} sent a directional emote to {ToPrettyString(target):target}: {text}");
+            $"{ToPrettyString(source):source} sent a directional emote{(args.HideName ? " without a name" : "")} to {ToPrettyString(target):target}: {text}");
     }
 }
