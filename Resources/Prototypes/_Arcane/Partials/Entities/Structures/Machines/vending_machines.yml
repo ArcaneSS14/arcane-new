@@ -1,0 +1,5 @@
+- type: entity
+  id: VendingMachine
+  components:
+  - type: TTS
+    voice: Adventure_core

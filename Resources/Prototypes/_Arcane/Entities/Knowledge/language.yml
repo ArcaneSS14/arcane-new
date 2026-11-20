@@ -39,3 +39,17 @@
   components:
   - type: LanguageKnowledge
     languageId: Hydraspeak
+
+- type: entity
+  parent: BaseLanguageKnowledge
+  id: LanguageDwarvish
+  components:
+  - type: LanguageKnowledge
+    languageId: Dwarvish
+
+- type: entity
+  parent: BaseLanguageKnowledge
+  id: LanguageKarshan
+  components:
+  - type: LanguageKnowledge
+    languageId: Karshan

@@ -1,0 +1,8 @@
+- type: emoteSounds
+  id: UnisexIPC
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+      params:
+        variation: 0.125

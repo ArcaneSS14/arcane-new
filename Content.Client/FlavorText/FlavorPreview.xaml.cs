@@ -84,9 +84,10 @@ public sealed partial class FlavorPreview : Control
         CharacterView.SetEntity(uid);
     }
 
-    public void SetCharacter(string name, ProtoId<SpeciesPrototype> species, Sex sex, Gender gender)
+    public void SetCharacter(string name, ProtoId<SpeciesPrototype> species, Sex sex, Gender gender, string customSpeciesName = "")
     {
         var speciesName = _proto.TryIndex(species, out var speciesProto) ? Loc.GetString(speciesProto.Name) : species.Id;
+        speciesName = CharacterCustomization.GetSpeciesLongName(speciesName, customSpeciesName);
         var sexName = Loc.GetString($"humanoid-profile-editor-sex-{sex.ToString().ToLowerInvariant()}-text");
         var genderName = Loc.GetString($"humanoid-profile-editor-pronouns-{gender.ToString().ToLowerInvariant()}-text");
 

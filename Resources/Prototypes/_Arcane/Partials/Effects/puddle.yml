@@ -1,0 +1,4 @@
+- type: entity
+  id: Puddle
+  components:
+  - type: StainSource

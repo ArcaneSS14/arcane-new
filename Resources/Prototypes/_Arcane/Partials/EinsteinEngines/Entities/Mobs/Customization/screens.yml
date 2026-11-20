@@ -1,0 +1,7 @@
+- type: marking
+  id: ScreenEight
+  sprites: !Clear
+    - sprite: _Arcane/Mobs/Customization/ipc_screens.rsi
+      state: ipc_screen
+    - sprite: _Arcane/Mobs/Customization/ipc_screens.rsi
+      state: ipc_screen_eight

@@ -78,6 +78,10 @@
         {
             "name": "coyote-inner",
             "directions": 4
+        },
+        {
+            "name": "fox-tips",
+            "directions": 4
         }
     ]
 }

@@ -1,0 +1,31 @@
+- type: emote
+  id: Moan
+  name: chat-emote-name-moan
+  category: Vocal
+  icon: _Arcane/Interface/Emotes/moan.png
+  whitelist:
+    components:
+    - Vocal
+  chatMessages: ["chat-emote-msg-moan"]
+  chatTriggers:
+    - moan
+    - moans
+    - moans.
+    - moans!
+    - moaning
+    - moaned
+    - стонет
+    - стонет.
+    - стонет!
+    - стонать
+    - стонать.
+    - стонать!
+    - стон
+    - стон.
+    - стон!
+    - простонал
+    - простонал.
+    - простонал!
+    - простонала
+    - простонала.
+    - простонала!

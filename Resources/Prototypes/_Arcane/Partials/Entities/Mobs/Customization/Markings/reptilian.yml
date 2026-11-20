@@ -1,0 +1,25 @@
+- type: marking
+  id: LizardTailSmooth
+  groupWhitelist:
+  - Human
+  - Slime
+  - Demon
+
+- type: marking
+  id: LizardHornsFloppyKoboldEars
+  underHair: true
+
+- type: marking
+  id: LizardHornsKoboldEars
+  underHair: true
+
+- type: marking
+  id: LizardTailSpikes
+  groupWhitelist: [ Demon ]
+- type: marking
+  id: LizardTailAquatic
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: LizardTailLarge
+  groupWhitelist: [ Demon ]

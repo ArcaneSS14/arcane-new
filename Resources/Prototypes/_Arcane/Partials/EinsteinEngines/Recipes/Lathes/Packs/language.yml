@@ -1,0 +1,11 @@
+- type: latheRecipePack
+  id: TranslatorImplanters
+  recipes:
+  - KarshanTranslatorImplanter
+  - DwarvishTranslatorImplanter
+
+- type: latheRecipePack
+  id: Translators
+  recipes:
+  - KarshanTranslator
+  - DwarvishTranslator
