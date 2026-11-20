@@ -67,6 +67,11 @@
           SheetSteel1:
             min: 1
             max: 2
+  # Arcane-Start
+  - type: Tag
+    tags:
+    - Bed
+  # Arcane-End
 
 - type: entity
   parent: Bed
