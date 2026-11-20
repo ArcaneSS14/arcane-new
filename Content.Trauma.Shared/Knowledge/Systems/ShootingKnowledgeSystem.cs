@@ -40,7 +40,7 @@ public sealed partial class ShootingKnowledgeSystem : EntitySystem
         if (_knowledge.GetContainer(ent.Owner) is not { } brain)
             return;
         // TODO: scale it based on the gun, pistols are easier to shoot than railguns
-        _knowledge.AddExperience(brain, ShootingKnowledge, 1, 20);
+        _knowledge.AddExperience(brain, ShootingKnowledge, 1); // Arcane-Edit: limit 20 > no limit
     }
 
     private void OnHitShootingExperience(Entity<ProjectileComponent> ent, ref ProjectileHitEvent args)
@@ -49,6 +49,6 @@ public sealed partial class ShootingKnowledgeSystem : EntitySystem
             return;
 
         // TODO: higher caliber has higher limit
-        _knowledge.AddExperience(brain, ShootingKnowledge, 1, 10);
+        _knowledge.AddExperience(brain, ShootingKnowledge, 1); // Arcane-Edit: limit 10 > no limit
     }
 }

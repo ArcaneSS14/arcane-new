@@ -1,0 +1,1 @@
+capoeira-parry-popup = Deflected!

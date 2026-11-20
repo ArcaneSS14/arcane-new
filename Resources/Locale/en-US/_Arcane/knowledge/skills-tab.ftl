@@ -1,0 +1,9 @@
+knowledge-tab-summary = Known: { $count } | Expert or above: { $experts }
+knowledge-group-title = { $name } ({ $count })
+knowledge-entry-level-label = Level
+knowledge-entry-experience-label = XP
+knowledge-entry-level = { $level } / 100
+knowledge-entry-level-bonus = { $level } / 100 ({ $bonus })
+knowledge-entry-experience = { $experience } / { $cost }
+knowledge-entry-experience-max = Max
+knowledge-entry-tooltip = Learned: { $learned } | From equipment and chips: { $bonus }

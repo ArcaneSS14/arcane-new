@@ -62,6 +62,14 @@ public sealed partial class WeaponClassSystem : EntitySystem
     public bool IsUnarmed(EntityUid user, EntityUid weapon)
         => user == weapon || _query.TryComp(weapon, out var comp) && comp.Class == Unarmed;
 
+    // Arcane-Start
+    /// <summary>
+    /// Gets the training knowledge of a weapon, or null if it has no class.
+    /// </summary>
+    public EntProtoId? GetKnowledge(EntityUid weapon)
+        => _query.TryComp(weapon, out var comp) ? ProtoMan.Index(comp.Class).Knowledge : (EntProtoId?) null;
+    // Arcane-End
+
     public int GetSkillLevel(Entity<WeaponClassComponent> ent, EntityUid user)
         => GetSkillLevel(ProtoMan.Index(ent.Comp.Class), user);
 

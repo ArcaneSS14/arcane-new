@@ -95,7 +95,8 @@ public sealed partial class KnowledgeProfileEditor : BoxContainer
             }
             else
             {
-                var newCategory = new SkillCategory(Loc.GetString(_proto.Index(comp.Category).Name));
+                var categoryProto = _proto.Index(comp.Category); // Arcane
+                var newCategory = new SkillCategory(Loc.GetString(categoryProto.Name), categoryProto.Color); // Arcane-Edit: name > name and color
                 EnabledSkills.AddChild(newCategory);
                 newCategory.AddChild(control);
                 categories.TryAdd(comp.Category, newCategory);

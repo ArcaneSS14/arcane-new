@@ -17,6 +17,7 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
+using System.Linq; // Arcane
 
 namespace Content.Shared.Weapons.Hitscan.Systems;
 
@@ -49,6 +50,10 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         var mapCords = _transform.ToMapCoordinates(args.FromCoordinates);
         var ray = new CollisionRay(mapCords.Position, args.ShotDirection, (int) ent.Comp.CollisionMask);
         var rayCastResults = _physics.IntersectRay(mapCords.MapId, ray, ent.Comp.MaxDistance, shooter, false);
+        // Arcane-Start
+        if (args.Ignored is { } ignored)
+            rayCastResults = rayCastResults.Where(hit => !ignored.Contains(hit.HitEntity));
+        // Arcane-End
 
         var target = args.Target;
         // If you are in a container, use the raycast result
@@ -85,10 +90,12 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
 
         var distanceTried = result?.Distance ?? ent.Comp.MaxDistance;
 
+        // Arcane-Edit-Start: commented out
         // Do visuals without an event. They should always happen and putting it on the attempt event is weird!
         // If more stuff gets added here, it should probably be turned into an event.
         // Trauma - passed Shooter, no i will turn this into an event
-        FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
+        // FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
+        // Arcane-Edit-End
 
         // Admin logging
         if (result?.HitEntity != null)
@@ -105,10 +112,19 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
             Hitscan = ent.Owner,
             Shooter = args.Shooter,
             HitEntity = result?.HitEntity,
+            Trace = args, // Arcane
         };
 
         var attemptEvent = new AttemptHitscanRaycastFiredEvent { Data = data };
         RaiseLocalEvent(ent, ref attemptEvent);
+
+        // Arcane-Start: effects and the next trace come after the reflection checks
+        if (!attemptEvent.SkipEffects)
+            FireEffects(args.FromCoordinates, distanceTried, args.ShotDirection.ToAngle(), ent.Owner, args.Shooter);
+
+        if (attemptEvent.NextTrace is { } nextTrace)
+            RaiseLocalEvent(ent, ref nextTrace);
+        // Arcane-End
 
         if (attemptEvent.Cancelled)
             return;

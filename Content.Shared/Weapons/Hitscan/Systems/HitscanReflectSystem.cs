@@ -8,6 +8,8 @@ namespace Content.Shared.Weapons.Hitscan.Systems;
 
 public sealed partial class HitscanReflectSystem : EntitySystem
 {
+    private const int MaxPassThroughs = 16; // Arcane: bounds pass-through retraces, each needs a different entity anyway
+
     public override void Initialize()
     {
         base.Initialize();
@@ -21,6 +23,9 @@ public sealed partial class HitscanReflectSystem : EntitySystem
 
         if (hitscan.Comp.ReflectiveType == ReflectType.None || data.HitEntity == null)
             return;
+
+        if (TryPassThrough(ref args)) // Arcane
+            return; // Arcane
 
         if (hitscan.Comp.CurrentReflections >= hitscan.Comp.MaxReflections)
             return;
@@ -46,6 +51,6 @@ public sealed partial class HitscanReflectSystem : EntitySystem
             Shooter = data.HitEntity.Value,
         };
 
-        RaiseLocalEvent(hitscan, ref hitFiredEvent);
+        args.NextTrace = hitFiredEvent; // Arcane-Edit: RaiseLocalEvent > fired by the raycast system after its effects
     }
 }

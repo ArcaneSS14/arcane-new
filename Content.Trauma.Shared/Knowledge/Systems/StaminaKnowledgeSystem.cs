@@ -30,8 +30,6 @@ public sealed partial class StaminaKnowledgeSystem : EntitySystem
     private void OnTookStaminaDamage(Entity<StaminaKnowledgeComponent> ent, ref TookStaminaDamageEvent args)
     {
         var xp = Math.Min((int) args.Amount / ent.Comp.DamageScale, ent.Comp.MaxGain);
-        // TODO: better limit
-        var limit = 60;
-        _knowledge.AddExperience(ent.Owner, args.Target, xp, limit);
+        _knowledge.AddExperience(ent.Owner, args.Target, xp); // Arcane-Edit: limit 60 > no limit
     }
 }

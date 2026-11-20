@@ -274,6 +274,13 @@ public sealed partial class HealingSystem
         // Logic to determine whether or not to repeat the healing action
         args.Repeat = !dontRepeat && IsAnythingToHeal(args.User, ent, (args.Used.Value, healing)); // Arcane-Edit: Repeat while wounds remain > stop when the last dose is consumed.
         args.Handled = true;
+        // Arcane-Start
+        if (healedTotal.GetTotal() > 0 || healedBleed || healedBleedLevel)
+            RaiseAppliedHealing(args.User);
+
+        if (args.Repeat)
+            args.Args.Delay = GetHealingDelay((args.Used.Value, healing), ent, args.User);
+        // Arcane-End
 
         if (args.Repeat || dontRepeat)
             return;

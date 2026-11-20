@@ -27,6 +27,7 @@ using Content.Shared.StatusEffectNew;
 using Content.Trauma.Common.Body.Part;
 using Robust.Shared.Containers;
 using System.Linq;
+using Content.Arcane.Common.Medical.Skills; // Arcane
 
 namespace Content.Medical.Shared.Surgery;
 
@@ -764,9 +765,13 @@ public sealed partial class SurgerySystem
         if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
             speed *= surgerySpeedMod.SpeedModifier;
 
-        // Arcane-Start: self-surgery penalty
+        // Arcane-Start
         if (user == target && TryComp<SurgeryTargetComponent>(target, out var surgeryTarget))
             speed *= surgeryTarget.SelfSurgerySpeedModifier;
+
+        var skillEv = new GetSurgeryTimeMultiplierEvent(1f);
+        RaiseLocalEvent(user, ref skillEv);
+        speed /= skillEv.Multiplier;
         // Arcane-End
 
         return stepComp.Duration / MathF.Max(speed, 0.01f); // Arcane-Edit: guard against zero speed

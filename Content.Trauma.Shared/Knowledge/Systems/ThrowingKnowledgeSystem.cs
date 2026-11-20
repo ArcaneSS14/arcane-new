@@ -45,7 +45,10 @@ public sealed partial class ThrowingKnowledgeSystem : EntitySystem
         }
 
         // Make it so you gotta throw it further then just at a wall in front.
-        _knowledge.AddExperience(brain, ThrowingKnowledge, 1, (int) args.Distance * 5);
+        // Arcane-Edit-Start: limit distance * 5 > no limit, a too short throw still gives nothing
+        if (args.Distance >= 1f)
+            _knowledge.AddExperience(brain, ThrowingKnowledge, 1);
+        // Arcane-Edit-End
 
         args.BaseThrowSpeed = baseThrowSpeed;
     }

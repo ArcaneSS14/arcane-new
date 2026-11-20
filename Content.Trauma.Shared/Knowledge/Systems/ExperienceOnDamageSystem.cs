@@ -23,8 +23,6 @@ public sealed partial class ExperienceOnDamageSystem : EntitySystem
             return;
 
         var xp = Math.Min(args.Damage / ent.Comp.DamageScale, ent.Comp.MaxGain);
-        // max level is capped by the damage taken in 1 hit
-        // to get 100 toughness you have to take 100 damage over and over... have fun
-        _knowledge.AddExperience(ent.Owner, args.Target, xp, limit: args.Damage);
+        _knowledge.AddExperience(ent.Owner, args.Target, xp); // Arcane-Edit: limit by damage in one hit > no limit
     }
 }

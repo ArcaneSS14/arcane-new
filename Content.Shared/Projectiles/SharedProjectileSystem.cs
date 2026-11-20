@@ -295,6 +295,13 @@ public sealed class ImpactEffectEvent : EntityEventArgs
 // Trauma - add Target
 public record struct ProjectileReflectAttemptEvent(EntityUid ProjUid, ProjectileComponent Component, bool Cancelled, EntityUid Target) : IInventoryRelayEvent
 {
+    // Arcane-Start
+    /// <summary>
+    /// With <see cref="Cancelled"/>, the projectile ignores the target and keeps its shooter instead of being reflected.
+    /// </summary>
+    public bool PassThrough;
+    // Arcane-End
+
     SlotFlags IInventoryRelayEvent.TargetSlots => SlotFlags.WITHOUT_POCKET;
 }
 
