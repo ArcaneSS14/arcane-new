@@ -1,0 +1,38 @@
+# Arcane-Start
+name: Changelog tests
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/changelog*.yml'
+      - '.github/workflows/publish.yml'
+      - 'Tools/changelog/**'
+      - 'Tools/actions_changelogs_since_last_run.py'
+  push:
+    paths:
+      - '.github/workflows/changelog*.yml'
+      - '.github/workflows/publish.yml'
+      - 'Tools/changelog/**'
+      - 'Tools/actions_changelogs_since_last_run.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  changelog-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24.x
+      - name: Install changelog dependencies
+        run: |
+          npm install --prefix Tools/changelog --ignore-scripts --no-package-lock
+          sudo apt-get install -y python3-requests python3-yaml
+      - name: Check collection and recovery
+        run: node --test Tools/changelog/changelog.test.js
+      - name: Check Discord rendering and delivery
+        run: /usr/bin/python3 -m unittest discover -s Tools/changelog -p test_discord.py
+# Arcane-End

@@ -8,6 +8,7 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Serialization.Markdown.Mapping;
 using Robust.Shared.Utility;
+using System.IO; // Arcane
 
 namespace Content.Client.Changelog
 {
@@ -19,9 +20,21 @@ namespace Content.Client.Changelog
         [Dependency] private IConfigurationManager _configManager = default!;
 
         private const string SawmillName = "changelog";
-        public const string MainChangelogName = "Traumalog";
+        public const string MainChangelogName = "Arcane"; // Arcane-Edit: Traumalog > Arcane
 
         private ISawmill _sawmill = default!;
+
+        // Arcane-Start: published snapshots can assign different numeric IDs to the same PR.
+        private const string ReadEntriesHeader = "arcane-changelog-read-v2";
+        private readonly HashSet<string> _readEntryKeys = new();
+        private HashSet<string> _entryKeys = new();
+        private ResPath ReadEntriesPath => new($"/changelog_read_v2_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}");
+
+        private static string EntryKey(ChangelogEntry entry) =>
+            string.IsNullOrWhiteSpace(entry.Url) ? $"id:{entry.Id}" : entry.Url;
+
+        public bool IsRead(ChangelogEntry entry) => _readEntryKeys.Contains(EntryKey(entry));
+        // Arcane-End
 
         public bool NewChangelogEntries { get; private set; }
         public int LastReadId { get; private set; }
@@ -42,9 +55,18 @@ namespace Content.Client.Changelog
             NewChangelogEntries = false;
             NewChangelogEntriesChanged?.Invoke();
 
-            using var sw = _resource.UserData.OpenWriteText(new ($"/changelog_last_seen_{_configManager.GetCVar(CCVars.ServerId)}"));
+            using var sw = _resource.UserData.OpenWriteText(new ($"/changelog_last_seen_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}")); // Arcane-Edit: isolate read IDs from upstream journals
 
             sw.Write(MaxId.ToString());
+
+            // Arcane-Start: keep the in-memory read snapshot for the window's unread divider.
+            using TextWriter entriesWriter = _resource.UserData.OpenWriteText(ReadEntriesPath);
+            entriesWriter.WriteLine(ReadEntriesHeader);
+            foreach (var key in _readEntryKeys.Union(_entryKeys).OrderBy(key => key))
+            {
+                entriesWriter.WriteLine(key);
+            }
+            // Arcane-End
         }
 
         public async void Initialize()
@@ -69,7 +91,7 @@ namespace Content.Client.Changelog
                 return;
             }
 
-            var changelog = changelogs[0];
+            var changelog = mainChangelogs[0]; // Arcane-Edit: use the named journal regardless of tab ordering
             if (mainChangelogs.Length > 1)
             {
                 _sawmill.Error($"More than one file found in Resource/Changelog with name {MainChangelogName}");
@@ -81,19 +103,39 @@ namespace Content.Client.Changelog
             }
 
             MaxId = changelog.Entries.Max(c => c.Id);
+            _entryKeys = changelog.Entries.Select(EntryKey).ToHashSet(); // Arcane
 
             CheckLastSeenEntry();
         }
 
         private void CheckLastSeenEntry()
         {
-            var path = new ResPath($"/changelog_last_seen_{_configManager.GetCVar(CCVars.ServerId)}");
-            if (_resource.UserData.TryReadAllText(path, out var lastReadIdText))
+            // Arcane-Edit-Start: isolate journals and reset absent or damaged per-server read markers.
+            var path = new ResPath($"/changelog_last_seen_{MainChangelogName}_{_configManager.GetCVar(CCVars.ServerId)}");
+            LastReadId = _resource.UserData.TryReadAllText(path, out var lastReadIdText) &&
+                         int.TryParse(lastReadIdText, out var lastReadId)
+                ? Math.Max(0, lastReadId)
+                : 0;
+            // Arcane-Edit-End
+
+            // Arcane-Edit-Start: a new file deliberately avoids guessing URL identities from old IDs.
+            _readEntryKeys.Clear();
+            if (_resource.UserData.TryReadAllText(ReadEntriesPath, out var readEntriesText))
             {
-                LastReadId = int.Parse(lastReadIdText);
+                using var entriesReader = new StringReader(readEntriesText);
+                if (entriesReader.ReadLine() == ReadEntriesHeader)
+                {
+                    while (entriesReader.ReadLine() is { } line)
+                    {
+                        var key = line.Trim();
+                        if (!string.IsNullOrEmpty(key))
+                            _readEntryKeys.Add(key);
+                    }
+                }
             }
 
-            NewChangelogEntries = LastReadId < MaxId;
+            NewChangelogEntries = !_entryKeys.IsSubsetOf(_readEntryKeys);
+            // Arcane-Edit-End
 
             NewChangelogEntriesChanged?.Invoke();
         }
@@ -212,6 +254,11 @@ namespace Content.Client.Changelog
             /// </summary>
             [DataField]
             public List<string> Labels { get; private set; } = [];
+
+            // Arcane-Start
+            [DataField]
+            public string Url { get; private set; } = "";
+            // Arcane-End
         }
 
         [DataDefinition]
