@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: AtmosphericTechnicianAtmosphereSpecialist
+  name: job-name-alt-atmos-2
+
+- type: jobAlternateTitle
+  id: AtmosphericTechnicianGasTechnician
+  name: job-name-alt-atmos-1
+
+- type: jobAlternateTitle
+  id: AtmosphericTechnicianGasSystemsOperator
+  name: job-name-alt-atmos-3

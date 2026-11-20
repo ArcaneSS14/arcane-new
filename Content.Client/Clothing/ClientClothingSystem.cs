@@ -54,6 +54,7 @@ public sealed partial class ClientClothingSystem : ClothingSystem
         {"undershirt", "UNDERSHIRT"},
         {"socks", "SOCKS"},
         {"wrists", "WRISTS"},
+        {"plug", "PLUG"},
         // Arcane-End
     };
 
@@ -361,6 +362,7 @@ public sealed partial class ClientClothingSystem : ClothingSystem
                         displacementData = inventory.MaleDisplacements.GetValueOrDefault(slot);
                     break;
                 case Sex.Female:
+                case Sex.Futanari: // Arcane
                     if (inventory.FemaleDisplacements.Count > 0)
                         displacementData = inventory.FemaleDisplacements.GetValueOrDefault(slot);
                     break;

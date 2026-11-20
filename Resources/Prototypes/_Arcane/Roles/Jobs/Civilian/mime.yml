@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: MimeSilentActor
+  name: job-name-alt-mime-2
+
+- type: jobAlternateTitle
+  id: MimePantomimist
+  name: job-name-alt-mime-1
+
+- type: jobAlternateTitle
+  id: MimeSilentOne
+  name: job-name-alt-mime-3
+
+- type: jobAlternateTitle
+  id: MimePantomimeArtist
+  name: job-name-alt-mime-4

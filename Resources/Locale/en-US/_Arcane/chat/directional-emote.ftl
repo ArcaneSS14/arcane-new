@@ -6,3 +6,6 @@ directional-emote-button = Send
 directional-emote-verb-name = Directional emote
 directional-emote-range-error = [bolditalic]To send a directed emotion, you must be close to the target![/bolditalic]
 directional-emote-length-error = [bolditalic]Your message should not exceed { $maxLength } characters![/bolditalic]
+chat-manager-entity-directional-emote-anonymous-wrap-message = [italic]Hidden emoting:[/italic]
+    { $message }
+directional-emote-hide-name = Hide my name

@@ -1,4 +1,5 @@
 using Content.Shared.Clothing;
+using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Preferences;
 using Content.Shared.Preferences.Loadouts;
@@ -52,5 +53,14 @@ public sealed partial class ProfilePreviewSpriteView
             if (!inventory.TryEquip(PreviewDummy, item, slot, silent: true, force: true))
                 EntMan.DeleteEntity(item);
         }
+    }
+
+    /// <summary>
+    /// The doll only gets the appearance, so the hair gradient is copied over by hand.
+    /// </summary>
+    private void SetDummyCustomization(HumanoidCharacterProfile humanoid)
+    {
+        if (EntMan.TryGetComponent<HumanoidProfileComponent>(PreviewDummy, out var profile))
+            profile.Customization = humanoid.Customization;
     }
 }

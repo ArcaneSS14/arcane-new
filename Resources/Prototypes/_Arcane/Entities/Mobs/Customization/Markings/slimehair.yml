@@ -1,0 +1,7 @@
+- type: marking
+  id: SlimeHairFoam
+  bodyPart: Hair
+  groupWhitelist: [ Slime ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/hair.rsi
+    state: hairfoam

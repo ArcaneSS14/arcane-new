@@ -1,0 +1,5 @@
+- type: entity
+  id: MobPollyParrot
+  components:
+  - type: TTS
+    voice: Alchemist_dota_2

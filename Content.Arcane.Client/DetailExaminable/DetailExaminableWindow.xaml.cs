@@ -15,7 +15,7 @@ public sealed partial class DetailExaminableWindow : FancyWindow
 
     public void UpdateState(DetailExaminableEuiState state, IEntityManager entMan)
     {
-        Preview.SetCharacter(state.Name, state.Species, state.Sex, state.Gender);
+        Preview.SetCharacter(state.Name, state.Species, state.Sex, state.Gender, state.CustomSpeciesName);
         Preview.SetEntity(entMan.GetEntity(state.Target));
         Preview.SetFlavor(state.FlavorText, state.Extended, state.ShowNsfw);
     }

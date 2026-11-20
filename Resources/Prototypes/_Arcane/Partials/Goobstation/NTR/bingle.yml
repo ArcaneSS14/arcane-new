@@ -1,0 +1,11 @@
+- type: entity
+  id: CargoBingleSpawnCoin
+  components:
+  - type: GhostRole
+    banJob: GhostRoleBingle
+
+- type: entity
+  id: MobBingleCargo
+  components:
+  - type: GhostRole
+    banJob: GhostRoleBingle

@@ -1,21 +1,21 @@
 - type: damageModifierSet
   id: Tajaran
-  coefficients: # Heat and cold adjustments for a fur-bearing species
+  coefficients:
     Blunt: 1.15
     Slash: 1.15
-    Piercing: 1.15
-    Heat: 1.20
-    Cold: 0.80
+    Heat: 1.2
+    Cold: 0.70
   ignoreArmorPierceFlags: All
 
 - type: damageModifierSet
   id: Chitinid
   coefficients:
-    Blunt: 0.9
-    Piercing: 0.9
-    Slash: 0.9
-    Cold: 1.1
-    Shock: 1.15
+    Blunt: 0.8
+    Piercing: 0.8
+    Slash: 0.8
+    Cold: 1.2
+    Shock: 1.25
+    Heat: 1.25
     Radiation: 0.2
   ignoreArmorPierceFlags: All
 
@@ -24,17 +24,17 @@
   coefficients:
     Blunt: 1.15
     Slash: 1.15
-    Piercing: 1.15
+    Poison: 0.6
   ignoreArmorPierceFlags: All
 
 - type: damageModifierSet
   id: Shadowkin
   coefficients:
-    Blunt: 1.25
-    Slash: 1.25
-    Piercing: 1.25
+    Blunt: 1.15
+    Slash: 0.85
+    Piercing: 1.15
+    Heat: 1.2
     Asphyxiation: 0.50
-    Heat: 1.4
   ignoreArmorPierceFlags: All
 
 - type: damageModifierSet
@@ -42,7 +42,8 @@
   coefficients:
     Blunt: 0.85
     Slash: 0.85
-    Piercing: 0.85
+    Piercing: 0.9
+    Holy: 1
   ignoreArmorPierceFlags: All
 
 - type: damageModifierSet
@@ -57,14 +58,20 @@
 - type: damageModifierSet
   id: Feroxi
   coefficients:
-    Cold: 0.9
-    Blunt: 0.9
-    Slash: 1.1
+    Cold: 0.75
+    Blunt: 0.8
+    Piercing: 0.9
+    Slash: 1.2
+    Heat: 1.2
+  ignoreArmorPierceFlags: All
 
 - type: damageModifierSet
   id: Hydrakin
   coefficients:
-    Heat: 1.15
-    Cold: 0
-    Blunt: 0.9
-    Slash: 1.15
+    Heat: 1.25
+    Cold: 0.0
+    Radiation: 1.0
+    Shock: 1.0
+    Blunt: 0.8
+    Slash: 1.25
+    Piercing: 0.75

@@ -19,3 +19,7 @@
 - type: inventorySlot
   id: wrists
   flags: WRISTS
+
+- type: inventorySlot
+  id: plug
+  flags: PLUG

@@ -19,12 +19,20 @@ public sealed partial class DirectionalEmoteSystem : EntitySystem
         SubscribeLocalEvent<DirectionalEmoteTargetComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
     }
 
-    public void Send(NetEntity target, string text)
+    public void Send(NetEntity target, string text, bool hideName = false)
     {
         if (string.IsNullOrWhiteSpace(text) || text.Length > _cfg.GetCVar(ArcaneCVars.DirectionalEmoteMaxLength))
             return;
 
-        RaiseNetworkEvent(new SendDirectionalEmoteEvent(target, text));
+        RaiseNetworkEvent(new SendDirectionalEmoteEvent(target, text, hideName));
+    }
+
+    /// <summary>
+    /// Whether the local player's entity may send emotes without its name.
+    /// </summary>
+    public bool CanHideName(EntityUid? user)
+    {
+        return TryComp<DirectionalEmoteTargetComponent>(user, out var emote) && emote.CanHideName;
     }
 
     private void OnGetVerbs(Entity<DirectionalEmoteTargetComponent> ent, ref GetVerbsEvent<Verb> args)

@@ -1,0 +1,19 @@
+- type: language
+  id: Xeno
+  speech: !Clear
+    color: "#5e6ad4"
+    fontId: Rubikmaze
+    boldFontId: Rubikmaze
+    fontSize: 16
+  obfuscation:
+    # hissing, Arcane's х and ш in English
+    replacement:
+    - h
+    - H
+    - sh
+    - Sh
+
+- type: language
+  id: Mouse
+  speech: !Clear
+    color: "#F5C2C4"

@@ -229,6 +229,7 @@ namespace Content.Server.Voting.Managers
                     ? TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteTimerAlone))
                     : TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteTimerPreset))
             };
+            options.DisplayVotes = false; // Arcane
 
             if (alone)
                 options.InitiatorTimeout = TimeSpan.FromSeconds(10);
@@ -275,6 +276,7 @@ namespace Content.Server.Voting.Managers
                     ? TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteTimerAlone))
                     : TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteTimerMap))
             };
+            options.DisplayVotes = false; // Arcane
 
             if (alone)
                 options.InitiatorTimeout = TimeSpan.FromSeconds(10);

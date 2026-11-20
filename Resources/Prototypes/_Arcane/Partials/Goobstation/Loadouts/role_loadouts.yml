@@ -1,0 +1,34 @@
+- type: roleLoadout
+  id: JobBrigmedic
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobRadioHost
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobVirologist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobNanotrasenRepresentative
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobSecurityClown
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobRoboticist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobPartyMaker
+  groups:
+  - GroupGrimoire
