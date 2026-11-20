@@ -1,0 +1,10 @@
+- type: entity
+  id: PersonalAI
+  components:
+  - type: LanguageSpeaker
+    speaks:
+    - Dwarvish
+    - Karshan
+    understands:
+    - Dwarvish
+    - Karshan

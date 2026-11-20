@@ -1,0 +1,20 @@
+- type: marking
+  id: ADTFoxTail
+  bodyPart: Tail
+  groupWhitelist: [ Human, Vulpkanin, Slime, IPC ]
+  coloring:
+    default:
+      type:
+        !type:CategoryColoring
+          category: Hair
+      fallbackTypes:
+        - !type:CategoryColoring
+          category: FacialHair
+        - !type:SkinColoring
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/fox_parts.rsi
+    state: tail_fox_wag_stripes_prime
+  - sprite: _Arcane/Mobs/Customization/fox_parts.rsi
+    state: tail_fox_wag_stripes_second
+  - sprite: _Arcane/Mobs/Customization/fox_parts.rsi
+    state: tail_fox_wag_stripes_third

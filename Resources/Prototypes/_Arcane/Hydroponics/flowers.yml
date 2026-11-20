@@ -1,0 +1,389 @@
+- type: entity
+  parent: BasePlant
+  id: CornflowerPlants
+  categories: [HideSpawnMenu]
+  name: cornflower plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/cornflower.rsi
+  - type: PlantData
+    name: seeds-cornflower-name
+    packetPrototype: CornflowerSeeds
+    productPrototypes: [ FlowerCornflower ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.50
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: GeraniumPlants
+  categories: [HideSpawnMenu]
+  name: geranium plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/geranium.rsi
+  - type: PlantData
+    name: seeds-geranium-name
+    packetPrototype: GeraniumSeeds
+    productPrototypes: [ FlowerGeranium ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.50
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: LilyOfTheValleyPlants
+  categories: [HideSpawnMenu]
+  name: lily of the valley plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/lily_of_the_valley.rsi
+  - type: PlantData
+    name: seeds-lily-of-the-valley-name
+    packetPrototype: LilyOfTheValleySeeds
+    productPrototypes: [ FlowerLilyOfTheValley ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: WhiteLilyPlants
+  categories: [HideSpawnMenu]
+  name: white lily plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/white_lily.rsi
+  - type: PlantData
+    name: seeds-white-lily-name
+    packetPrototype: WhiteLilySeeds
+    productPrototypes: [ FlowerWhiteLily ]
+  - type: Plant
+    lifespan: 40
+    maturation: 9
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: PinkLilyPlants
+  categories: [HideSpawnMenu]
+  name: pink lily plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/pink_lily.rsi
+  - type: PlantData
+    name: seeds-pink-lily-name
+    packetPrototype: PinkLilySeeds
+    productPrototypes: [ FlowerPinkLily ]
+  - type: Plant
+    lifespan: 40
+    maturation: 9
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: PeonyPlants
+  categories: [HideSpawnMenu]
+  name: peony plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/peony.rsi
+  - type: PlantData
+    name: seeds-peony-name
+    packetPrototype: PeonySeeds
+    productPrototypes: [ FlowerPeony ]
+  - type: Plant
+    lifespan: 45
+    maturation: 10
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: SunflowerPlants
+  categories: [HideSpawnMenu]
+  name: sunflower plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/sunflower.rsi
+  - type: PlantData
+    name: seeds-sunflower-name
+    packetPrototype: SunflowerSeeds
+    productPrototypes: [ FlowerSunflower ]
+  - type: Plant
+    lifespan: 50
+    maturation: 10
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.60
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 10
+        potencyDivisor: 10
+
+- type: entity
+  parent: BasePlant
+  id: WhiteRosePlants
+  categories: [HideSpawnMenu]
+  name: white rose plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/white_rose.rsi
+  - type: PlantData
+    name: seeds-white-rose-name
+    packetPrototype: WhiteRoseSeeds
+    productPrototypes: [ FlowerWhiteRose ]
+  - type: Plant
+    lifespan: 45
+    maturation: 10
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: RedRosePlants
+  categories: [HideSpawnMenu]
+  name: red rose plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/red_rose.rsi
+  - type: PlantData
+    name: seeds-red-rose-name
+    packetPrototype: RedRoseSeeds
+    productPrototypes: [ FlowerRedRose ]
+  - type: Plant
+    lifespan: 45
+    maturation: 10
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.55
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: ChamomilePlants
+  categories: [HideSpawnMenu]
+  name: chamomile plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/chamomile.rsi
+  - type: PlantData
+    name: seeds-chamomile-name
+    packetPrototype: ChamomileSeeds
+    productPrototypes: [ FlowerChamomile ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 3
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.45
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: YellowTulipPlants
+  categories: [HideSpawnMenu]
+  name: yellow tulip plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/yellow_tulip.rsi
+  - type: PlantData
+    name: seeds-yellow-tulip-name
+    packetPrototype: YellowTulipSeeds
+    productPrototypes: [ FlowerYellowTulip ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.50
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: PinkTulipPlants
+  categories: [HideSpawnMenu]
+  name: pink tulip plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/pink_tulip.rsi
+  - type: PlantData
+    name: seeds-pink-tulip-name
+    packetPrototype: PinkTulipSeeds
+    productPrototypes: [ FlowerPinkTulip ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 4
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.50
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20
+
+- type: entity
+  parent: BasePlant
+  id: PomatoPlants
+  categories: [HideSpawnMenu]
+  name: pomato plant
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Hydroponics/pomato.rsi
+  - type: PlantData
+    name: seeds-pomato-name
+    packetPrototype: PomatoSeeds
+    productPrototypes: [ FoodPotato, FoodTomato ]
+  - type: Plant
+    lifespan: 40
+    maturation: 8
+    production: 5
+    yield: 2
+    potency: 10
+    growthStages: 3
+  - type: PlantHarvest
+    harvestRepeat: Repeat
+  - type: PlantGrowth
+    waterConsumption: 0.50
+  - type: PlantChemicals
+    chemicals:
+      Nutriment:
+        min: 1
+        max: 5
+        potencyDivisor: 20

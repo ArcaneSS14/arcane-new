@@ -1,0 +1,73 @@
+- type: emoteSounds
+  id: FemaleDwarf
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: UnisexDwarf
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: MaleSlime
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: FemaleSlime
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: FemaleHuman
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: MaleHuman
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses
+
+- type: emoteSounds
+  id: FemaleVulpkanin
+  sounds:
+    Growl:
+      collection: FemaleVulpkaninGrowls
+    Howl:
+      collection: FemaleVulpkaninHowls
+    Laugh:
+      collection: VulpkaninLaugh
+    Scream:
+      collection: FemaleVulpkaninScreams
+    Awoo:
+      collection: FemaleVulpkaninHowls
+    Crying:
+      collection: VulpkaninCry
+
+- type: emoteSounds
+  id: MaleVulpkanin
+  sounds:
+    Growl:
+      collection: MaleVulpkaninGrowls
+    Howl:
+      collection: MaleVulpkaninHowls
+    Laugh:
+      collection: VulpkaninLaugh
+    Scream:
+      collection: MaleVulpkaninScreams
+    Awoo:
+      collection: MaleVulpkaninHowls
+    Crying:
+      collection: VulpkaninCry

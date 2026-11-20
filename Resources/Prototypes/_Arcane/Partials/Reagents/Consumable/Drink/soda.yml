@@ -1,0 +1,55 @@
+- type: reagent
+  id: ShirleyTemple
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type:
+            - HumanoidXeno
+          damage:
+            types:
+              Poison: 2
+
+- type: reagent
+  id: EnergyDrink
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type:
+            - HumanoidXeno
+          damage:
+            types:
+              Poison: 2
+
+- type: reagent
+  id: Cola
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type:
+            - HumanoidXeno
+          damage:
+            types:
+              Poison: 2
+
+- type: reagent
+  id: RoyRogers
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type:
+            - HumanoidXeno
+          damage:
+            types:
+              Poison: 2

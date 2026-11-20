@@ -1,5 +1,61 @@
 - type: entity
   parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitAdjutant
+  name: adjutant jumpsuit
+  description: Sewn to perfection with breathable fabric that will keep you on your feet for your entire shift.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/adjutant.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/adjutant.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformMajordomCommandMaid
+  name: command maid majordom
+  description: It is made of breathable fabric, which will allow you to stay on your feet for the entire shift.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/command_maid.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/command_maid.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitBlackSuit
+  name: black formal suit
+  description: A tailored jacket and trousers ensemble made of high-quality wool or its synthetic equivalents. Its simple cut and deep color symbolize professional status, authority, and a willingness to handle any administrative decision.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Legal/black_suit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Legal/black_suit.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitBrownSuit
+  name: brown formal suit
+  description: A brown business suit is an elegant ensemble in warm shades of wool or tweed, combining formality with a touch of informal confidence. Its color suggests stability, practicality, and a willingness to embrace long-term solutions that transcend black-and-white bureaucracy.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Legal/brown_suit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Legal/brown_suit.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingUniformBase
   id: ClothingUniformJumpsuitInteQFormal
   name: InteQ formal suit
   description: The InteQ uniform is made in an elegant style, it's even a pity to do badass tricks in this.
@@ -447,3 +503,37 @@
         color: "#2d2d33"
       - state: equipped-decor-department
         color: "#39393f"
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformBlueShieldCommon
+  name: “Blue Shield” Special Uniform
+  description: Special uniforms designed for “Blue Shield” officers
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/blueshieldcommonuniform.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/blueshieldcommonuniform.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformBlueShieldCeremonial
+  name: “Blue Shield” Ceremonial Uniform
+  description: Ceremonial uniforms designed for “Blue Shield” officers
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/blueshieldceremonialuniform.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/blueshieldceremonialuniform.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformWellMaintainedDetective
+  categories: [ HideSpawnMenu ]
+  name: the well-groomed detective uniform
+  description: Immaculately pressed dark red suit. He exudes expensive cologne and unsolved shift secrets.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Sponsor/detective.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Uniforms/Jumpsuits/Sponsor/detective.rsi

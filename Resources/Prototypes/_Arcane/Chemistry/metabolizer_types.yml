@@ -13,3 +13,7 @@
 - type: metabolizerType
   id: Hydrakin
   name: metabolizer-type-hydrakin
+
+- type: metabolizerType
+  id: HumanoidXeno
+  name: metabolizer-type-humanoid-xeno
