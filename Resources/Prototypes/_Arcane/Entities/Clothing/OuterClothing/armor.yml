@@ -73,6 +73,7 @@
       head: ClothingHeadHelmetInteQIronTombstone
   - type: PointLight
     color: "#FF8C00"
+
 - type: entity
   parent: ClothingOuterArmorBasic
   id: ClothingOuterArmorKendoBogu
@@ -152,3 +153,31 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.75
     sprintModifier: 0.75
+
+- type: entity
+  parent: [ClothingOuterArmorHoS, ClothingOuterStorageBase, BaseSecurityCommandContraband]
+  id: ClothingOuterHOSLongVest
+  categories: [ HideSpawnMenu ]
+  name: HOS' long vest
+  description: A high-quality armored vest made from a hard synthetic material. It is surprisingly flexible and light, despite formidable armor plating.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/HOS_armor.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/HOS_armor.rsi
+
+- type: entity
+  parent: [ClothingOuterArmorBasic]
+  id: ClothingOuterLightBronnik
+  categories: [ HideSpawnMenu ]
+  name: lightweight body armor of an SB patrol officer
+  description: It is intended exclusively for everyday station detours.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/light_bronnik.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/OuterClothing/Sponsor/light_bronnik.rsi
+  - type: Tag
+    tags:
+    - CorgiWearable
+    - WhitelistChameleon

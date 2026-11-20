@@ -429,6 +429,7 @@ namespace Content.Server.Database
             ModelPollSeen.OnModelCreating(modelBuilder); // Arcane
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
             ModelAchievements.OnModelCreating(modelBuilder); // Arcane
+            ModelDiscordRoles.OnModelCreating(modelBuilder); // Arcane
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)
@@ -478,6 +479,12 @@ namespace Content.Server.Database
         public float Scale { get; set; } = 1f;
         // Arcane-End
         public bool EarsAboveHair { get; set; } // Arcane
+        // Arcane-Start: custom species name, hair gradient
+        public string CustomSpeciesName { get; set; } = string.Empty;
+        public bool HairGradientEnabled { get; set; }
+        public string? HairGradientData { get; set; }
+        // Arcane-End
+        public int ErpPreference { get; set; } = 1; // Arcane
         public string Sex { get; set; } = null!;
         public string? Voice { get; set; } = null!; // If null, the voice gets defaulted to the sex associated value
         public string Gender { get; set; } = null!;

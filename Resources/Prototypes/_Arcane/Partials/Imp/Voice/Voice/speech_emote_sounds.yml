@@ -1,0 +1,6 @@
+- type: emoteSounds
+  id: AnimalSlime
+  sounds:
+    CatHisses: !Remove
+    Hiss:
+      collection: CatHisses

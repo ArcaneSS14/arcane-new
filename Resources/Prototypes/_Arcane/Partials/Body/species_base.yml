@@ -1,0 +1,11 @@
+- type: entity
+  id: BaseSpeciesMob
+  components:
+  - type: Reactive
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCumOverlayReaction
+  - type: ScentPath
+  - type: ErpPanelOwner

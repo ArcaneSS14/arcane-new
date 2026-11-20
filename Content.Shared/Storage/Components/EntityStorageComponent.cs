@@ -184,7 +184,7 @@ public record struct EntityStorageIntoContainerAttemptEvent(BaseContainer Contai
 public record struct StorageOpenAttemptEvent(EntityUid User, bool Silent, bool Cancelled = false);
 
 [ByRefEvent]
-public readonly record struct StorageBeforeOpenEvent(EntityUid? User);
+public record struct StorageBeforeOpenEvent(EntityUid? User, bool SkipEmptyContents = false); // Arcane-Edit: readonly record struct StorageBeforeOpenEvent(EntityUid? User) > record struct with SkipEmptyContents
 
 [ByRefEvent]
 public readonly record struct StorageAfterOpenEvent(EntityUid? User);

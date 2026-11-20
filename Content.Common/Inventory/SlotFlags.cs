@@ -32,6 +32,7 @@ public enum SlotFlags
     UNDERSHIRT = 1 << 18,
     SOCKS = 1 << 19,
     WRISTS = 1 << 20,
+    PLUG = 1 << 21,
     // Arcane-End
     All = ~NONE,
 

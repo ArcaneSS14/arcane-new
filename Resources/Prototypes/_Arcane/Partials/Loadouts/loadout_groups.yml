@@ -1,0 +1,307 @@
+# Sponsor loadouts offered in the job loadout groups.
+
+- type: loadoutGroup
+  id: CaptainNeck
+  loadouts:
+  - CloakSolemnCapPatron
+
+- type: loadoutGroup
+  id: HoPNeck
+  loadouts:
+  - IanCloakPatron
+  - ServiceCloakPatron
+
+- type: loadoutGroup
+  id: BartenderJumpsuit
+  loadouts:
+  - BartenderPatron
+  - BartenderSkirtPatron
+
+- type: loadoutGroup
+  id: ChefHead
+  loadouts:
+  - FishCookBandanaPatron
+  - HighCookHatPatron
+  - InclinedCookHatPatron
+  - RedCookHatPatron
+
+- type: loadoutGroup
+  id: ChefJumpsuit
+  loadouts:
+  - ChiefCookUniformPatron
+  - CookUniformPatron
+
+- type: loadoutGroup
+  id: ChefOuterClothing
+  loadouts:
+  - CookApronPatron
+  - CowCostumePatron
+
+- type: loadoutGroup
+  id: LibrarianJumpsuit
+  loadouts:
+  - TwilightSparklePatron
+
+- type: loadoutGroup
+  id: ChaplainJumpsuit
+  loadouts:
+  - NunDressPatron
+
+- type: loadoutGroup
+  id: ChaplainOuterClothing
+  loadouts:
+  - ApostolCoatPatron
+
+- type: loadoutGroup
+  id: JanitorJumpsuit
+  loadouts:
+  - FreeClothesPatron
+  - SterileUniformPatron
+
+- type: loadoutGroup
+  id: JanitorOuterClothing
+  loadouts:
+  - CleanerJumpsuitPatron
+
+- type: loadoutGroup
+  id: BotanistHead
+  loadouts:
+  - BotanistHatPatron
+  - CamouflageHatPatron
+
+- type: loadoutGroup
+  id: BotanistJumpsuit
+  loadouts:
+  - BotanistUniformPatron
+  - BotanistUniformWithStrapsPatron
+  - CamouflageUniformPatron
+
+- type: loadoutGroup
+  id: ClownHead
+  loadouts:
+  - ClownPinkHatPatron
+  - JesterHatPatron
+  - ClownCilinderPatron
+
+- type: loadoutGroup
+  id: ClownJumpsuit
+  loadouts:
+  - ClownPinkPatron
+  - JesterCostumePatron
+
+- type: loadoutGroup
+  id: ClownShoes
+  loadouts:
+  - JesterShoesPatron
+
+- type: loadoutGroup
+  id: MimeJumpsuit
+  loadouts:
+  - MimeJumpskirtSexy
+  - FeminineUniformPatron
+  - EmptyFeminineUniformPatron
+
+- type: loadoutGroup
+  id: MusicianJumpsuit
+  loadouts:
+  - DancerDressPatron
+  - PerfomanceDressPatron
+
+- type: loadoutGroup
+  id: MusicianOuterClothing
+  loadouts:
+  - MusicianJacketPatron
+
+- type: loadoutGroup
+  id: QuartermasterHead
+  loadouts:
+  - QMBlackBeretPatron
+
+- type: loadoutGroup
+  id: QuartermasterJumpsuit
+  loadouts:
+  - SleevelesQMBlackSkirtPatron
+  - SleevelesQMBlackPatron
+  - SleevelesQMSkirtPatron
+  - SleevelesQMPatron
+
+- type: loadoutGroup
+  id: QuartermasterNeck
+  loadouts:
+  - QMBlackCloakPatron
+  - QMWhiteCloakPatron
+  - CargoCloakPatron
+  - CloakSolemnQMPatron
+
+- type: loadoutGroup
+  id: QuartermasterShoes
+  loadouts:
+  - QMShoesPatron
+
+- type: loadoutGroup
+  id: ChiefEngineerNeck
+  loadouts:
+  - EngineerCloakPatron
+
+- type: loadoutGroup
+  id: ResearchDirectorNeck
+  loadouts:
+  - RNDCloakPatron
+
+- type: loadoutGroup
+  id: ScientistNeck
+  loadouts:
+  - RNDCloakPatron
+
+- type: loadoutGroup
+  id: HeadofSecurityHead
+  loadouts:
+  - HOSCapPatron
+
+- type: loadoutGroup
+  id: HeadofSecurityJumpsuit
+  loadouts:
+  - HOSShortDressPatron
+
+- type: loadoutGroup
+  id: HeadofSecurityNeck
+  loadouts:
+  - HOSBlackCloakPatron
+  - HOSRedCloakPatron
+  - SecurityCloakPatron
+
+- type: loadoutGroup
+  id: HeadofSecurityOuterClothing
+  loadouts:
+  - LeatherCoatPatron
+  - HOSLongVestPatron
+
+- type: loadoutGroup
+  id: SecurityOuterClothing
+  loadouts:
+  - ClothingOuterLightBronnikPatron
+
+- type: loadoutGroup
+  id: DetectiveNeck
+  loadouts:
+  - SecurityCloakPatron
+
+- type: loadoutGroup
+  id: DetectiveJumpsuit
+  loadouts:
+  - DetectiveJumpsuitMaintainedPatron
+  - DetectiveJumpskirtMaintainedPatron
+
+- type: loadoutGroup
+  id: ChiefMedicalOfficerHead
+  loadouts:
+  - CMOHatPatron
+
+- type: loadoutGroup
+  id: ChiefMedicalOfficerJumpsuit
+  loadouts:
+  - CMOSweaterSkirtPatron
+  - CMOSweaterPatron
+
+- type: loadoutGroup
+  id: ChiefMedicalOfficerNeck
+  loadouts:
+  - CMOHonorableCloakPatron
+  - MeicalCloakPatron
+
+- type: loadoutGroup
+  id: MedicalDoctorHead
+  loadouts:
+  - SanitarHatPatron
+
+- type: loadoutGroup
+  id: MedicalDoctorJumpsuit
+  loadouts:
+  - DoctorTurtleneckPatron
+  - DoctorTurtleneckSkirtPatron
+
+- type: loadoutGroup
+  id: MedicalDoctorOuterClothing
+  loadouts:
+  - EeayLabCoatPatron
+  - LabCoatBeltsPatron
+  - LabCoatBlackPatron
+  - LivseyCoatPatron
+
+- type: loadoutGroup
+  id: MedicalShoes
+  loadouts:
+  - OldFashionesDoctorShoesPatron
+
+- type: loadoutGroup
+  id: ChemistJumpsuit
+  loadouts:
+  - ChemistUniformPatron
+  - ChemistUniformSkirtPatron
+  - ChemistTurtleneckPatron
+  - ChemistTurtleneckSkirtPatron
+
+- type: loadoutGroup
+  id: ParamedicJumpsuit
+  loadouts:
+  - ParamedicUniformPatron
+  - ParamedicUniformSkirtPatron
+  - ParamedicTurtleneckPatron
+  - ParamedicTurtleneckSkirtPatron
+
+- type: loadoutGroup
+  id: NanotrasenRepresentativeHead
+  loadouts:
+  - NTRBlackBeretPatron
+
+- type: loadoutGroup
+  id: NanotrasenRepresentativeNeck
+  loadouts:
+  - NTRBlackCloakPatron
+  - NTRTricolorCloakPatron
+
+- type: loadoutGroup
+  id: NanotrasenRepresentativeJumpsuit
+  loadouts:
+  - NTRBlackPatron
+  - NTRBlackSkirtPatron
+  - NTRWhiteSkirtPatron
+  - NTRWhitePatron
+
+- type: loadoutGroup
+  id: SecurityNeck
+  loadouts:
+  - SecurityCloakPatron
+
+- type: loadoutGroup
+  id: CaptainMask
+  loadouts:
+  - MaskGasCaptainPatreon
+
+- type: loadoutGroup
+  id: SalvageSpecialistNeck
+  loadouts:
+  - CargoCloakPatron
+
+- type: loadoutGroup
+  id: VirologistJumpsuit
+  loadouts:
+  - VirologistUniformPatron
+  - VirologistUniformSkirtPatron
+  - VirologistTurtleneckPatron
+  - VirologistTurtleneckSkirtPatron
+
+- type: loadoutGroup
+  id: RadioHostJumpsuit
+  loadouts:
+  - ComfortableUniformPatron
+
+- type: loadoutGroup
+  id: HoPBackpack
+  loadouts:
+  - !Remove CommonBackpack
+  - !Remove CommonSatchel
+  - !Remove CommonDuffel
+  - HeadOfPersonnelBackpack
+  - HeadOfPersonnelSatchel
+  - HeadOfPersonnelDuffel

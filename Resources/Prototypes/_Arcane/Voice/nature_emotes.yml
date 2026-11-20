@@ -1,0 +1,225 @@
+- type: emote
+  id: Meow
+  name: chat-emote-name-catmeow
+  category: Vocal
+  icon: _Goobstation/Interface/Emotes/meow.png
+  whitelist:
+    tags:
+    - FelinidEmotes
+    - HarpyEmotes
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: ["chat-emote-msg-catmeow"]
+  chatTriggers:
+    - meow
+    - meows
+    - meowing
+    - meowed
+    - miau
+    - miaus
+    - nya
+    - nyas
+    - mraow
+    - mraows
+    - мяу
+    - мяу.
+    - мяу!
+    - мяукает
+    - мяукает.
+    - мяукает!
+    - мрау
+    - мрау.
+    - мрау!
+    - мяукнул
+    - мяукнул.
+    - мяукнул!
+    - мяукнула
+    - мяукнула.
+    - мяукнула!
+
+- type: emote
+  id: Mew
+  name: chat-emote-name-mew
+  category: Vocal
+  icon: _Goobstation/Interface/Emotes/mew.png
+  whitelist:
+    tags:
+    - FelinidEmotes
+    - HarpyEmotes
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: ["chat-emote-msg-mew"]
+  chatTriggers:
+    - mew
+    - mews
+    - mewing
+    - mewed
+    - мью
+    - мью.
+    - мью!
+    - мяв
+    - мяв.
+    - мяв!
+    - ня
+    - ня.
+    - ня!
+    - мя
+    - мя.
+    - мя!
+    - мявкает
+    - мявкает.
+    - мявкает!
+    - мявкнул
+    - мявкнул.
+    - мявкнул!
+    - мявкнула
+    - мявкнула.
+    - мявкнула!
+
+- type: emote
+  id: Purr
+  name: chat-emote-name-purr
+  category: Vocal
+  icon: _Goobstation/Interface/Emotes/purr.png
+  whitelist:
+    tags:
+    - FelinidEmotes
+    - HarpyEmotes
+    - ReptilianEmotes # Omu
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: ["chat-emote-msg-purr"]
+  chatTriggers:
+    - purr
+    - purrs
+    - purring
+    - purred
+    - мурчит
+    - мурчит.
+    - мурчит!
+    - мурлыкает
+    - мурлыкает.
+    - мурлыкает!
+    - замурчал
+    - замурчал.
+    - замурчал!
+    - замурчала
+    - замурчала.
+    - замурчала!
+
+- type: emote
+  id: Awoo
+  name: chat-emote-name-awoo
+  category: Vocal
+  icon: _Goobstation/Interface/Emotes/awoo.png
+  whitelist:
+    tags:
+    - VulpEmotes
+    - HarpyEmotes
+  blacklist:
+    components:
+    - BorgChassis
+  chatMessages: ["chat-emote-msg-awoo"]
+  chatTriggers:
+    - awoo
+    - awoos
+    - awooing
+    - awooed
+    - аву
+    - аву.
+    - аву!
+    - ауу
+    - ауу.
+    - ауу!
+    - аууу
+    - аууу.
+    - аууу!
+    - жалобно воет
+    - жалобно воет.
+    - жалобно воет!
+
+# Feroxi
+
+- type: emote
+  id: HorseSnorts
+  name: chat-emote-name-horse-snorts
+  category: Vocal
+  icon: _Arcane/Interface/Emotes/horse_snort.png
+  whitelist:
+    requireAll: true
+    components:
+    - Vocal
+    tags:
+    - HorseEmotes
+  chatMessages: ["chat-emote-msg-horse-snorts"]
+  chatTriggers:
+    - фырчит
+    - фырчит.
+    - фырчит!
+    - фыр
+    - фыр.
+    - фыр!
+    - фырк
+    - фырк.
+    - фырк!
+    - фыркнул
+    - фыркнул.
+    - фыркнул!
+    - фыркнула
+    - фыркнула.
+    - фыркнула!
+
+- type: emote
+  id: HorseNeighs
+  name: chat-emote-name-horse-neighs
+  category: Vocal
+  icon: _Arcane/Interface/Emotes/horse_whinny.png
+  whitelist:
+    requireAll: true
+    components:
+    - Vocal
+    tags:
+    - HorseEmotes
+  chatMessages: ["chat-emote-msg-horse-neighs"]
+  chatTriggers:
+    - гогочет
+    - гогочет.
+    - гогочет!
+    - гогот
+    - гогот.
+    - гогот!
+    - гоготнул
+    - гоготнул.
+    - гоготнул!
+    - гоготнула
+    - гоготнула.
+    - гоготнула!
+    - игого
+    - игого.
+    - игого!
+
+- type: emote
+  id: HorseWhinny
+  name: chat-emote-name-horse-whinny
+  category: Vocal
+  icon: _Arcane/Interface/Emotes/horse_whinny.png
+  whitelist:
+    requireAll: true
+    components:
+    - Vocal
+    tags:
+    - HorseEmotes
+  chatMessages: ["chat-emote-msg-horse-whinny"]
+  chatTriggers:
+    - ржёт
+    - ржёт.
+    - ржёт!
+    - заржал
+    - заржал.
+    - заржал!
+    - заржала
+    - заржала.
+    - заржала!

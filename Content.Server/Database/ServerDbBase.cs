@@ -232,6 +232,8 @@ namespace Content.Server.Database
             // Arcane-Start: Save character scale settings
             profile.Scale = humanoid.Scale;
             // Arcane-End
+            CharacterCustomizationDb.Write(profile, humanoid.Customization); // Arcane
+            profile.ErpPreference = (int) humanoid.ErpPreference; // Arcane
             profile.Sex = humanoid.Sex.ToString();
             profile.Voice = humanoid.Voice.ToString();
             profile.Gender = humanoid.Gender.ToString();
