@@ -1,0 +1,37 @@
+- type: randomHumanoidSettings
+  id: NavyOfficerUndercover
+  speciesWhitelist: Human
+
+- type: randomHumanoidSettings
+  id: CentcommHumanoid
+  speciesBlacklist:
+  - Chitinid
+  - Diona
+  - Felinid
+  - Harpy
+  - HumanoidXeno
+  - Hydrakin
+  - Oni
+  - Plasmaman
+  - Resomi
+  - Rodentia
+  - Shadowkin
+  - Vox
+  - Yowie
+  speciesWhitelist: !Remove
+
+- type: randomHumanoidSettings
+  id: NavyOfficer
+  speciesWhitelist: Human
+
+- type: randomHumanoidSettings
+  id: DiplomatGear
+  speciesWhitelist: Human
+
+- type: randomHumanoidSettings
+  id: InspectorGear
+  speciesWhitelist: Human
+
+- type: randomHumanoidSettings
+  id: NavyCaptain
+  speciesWhitelist: Human

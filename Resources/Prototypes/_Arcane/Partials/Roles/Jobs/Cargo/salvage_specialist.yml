@@ -1,0 +1,5 @@
+- type: job
+  id: SalvageSpecialist
+  alternateTitles:
+  - SalvageSpecialistMiner
+  - SalvageSpecialistGatherer

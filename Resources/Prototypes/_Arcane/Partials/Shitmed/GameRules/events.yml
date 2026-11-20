@@ -1,0 +1,11 @@
+- type: entity
+  id: LoneAbductorSpawn
+  components:
+  - type: StationEvent
+    weight: 1.5
+
+- type: entity
+  id: DuoAbductorSpawn
+  components:
+  - type: StationEvent
+    weight: 1.5

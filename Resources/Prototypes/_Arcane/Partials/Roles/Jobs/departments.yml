@@ -1,0 +1,10 @@
+- type: department
+  id: Command
+  roles:
+  - Adjutant
+
+- type: department
+  id: Civilian
+  roles:
+  - CommandMaid
+  - !Remove Lawyer # in the Legal department

@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: RDScienceDirector
+  name: job-name-alt-rd-1
+
+- type: jobAlternateTitle
+  id: RDResearchDirector
+  name: job-name-alt-rd-2
+
+- type: jobAlternateTitle
+  id: ResearchDirectorHeadOfResearch
+  name: job-name-alt-rd-4
+
+- type: jobAlternateTitle
+  id: ResearchDirectorDirectorOfScience
+  name: job-name-alt-rd-3

@@ -17,6 +17,7 @@
   recipeUnlocks:
   - LargeBeaker
   - ECigarette
+  - XLargeBeaker
   - Beaker
   - Bloodpack
   - Bonesetter
@@ -110,6 +111,7 @@
   - SprayBottleRed
   - SprayBottleBlue
   - SprayBottleOrange
+  - MetamaterialBeaker
   - BoneGel
   - SodaDispenserMachineCircuitboard
   - BoozeDispenserMachineCircuitboard

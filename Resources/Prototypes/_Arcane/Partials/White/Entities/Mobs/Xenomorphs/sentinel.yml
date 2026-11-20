@@ -1,0 +1,5 @@
+- type: entity
+  id: MobXenomorphSentinel
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph

@@ -1,0 +1,6 @@
+- type: entity
+  id: ClothingHeadHelmetHEV
+  components:
+  - type: Armor
+    coverage:
+    - Head

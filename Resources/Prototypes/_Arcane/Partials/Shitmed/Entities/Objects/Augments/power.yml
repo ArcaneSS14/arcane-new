@@ -1,0 +1,19 @@
+- type: entity
+  id: AugmentRechargerCables
+  description: Can be implanted into a body to recharge an internal power cell. A cell recharger board makes it charge from APCs, a cyborg recharging station board from cyborg recharging stations. This one is incomplete.
+  components:
+  - type: Construction
+    defaultTarget: apc
+
+- type: entity
+  id: AugmentRechargerCasing
+  description: Can be implanted into a body to recharge an internal power cell. A cell recharger board makes it charge from APCs, a cyborg recharging station board from cyborg recharging stations. This one is incomplete.
+  components:
+  - type: Construction
+    defaultTarget: apc
+
+- type: entity
+  id: AugmentPowerCellSlotCables
+  components:
+  - type: Construction
+    defaultTarget: augment

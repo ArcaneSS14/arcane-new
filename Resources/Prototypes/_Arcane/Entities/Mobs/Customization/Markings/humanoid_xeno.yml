@@ -1,0 +1,1073 @@
+# Tail
+
+- type: marking
+  id: HumanoidXenoTailDrone
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: tail_drone
+
+- type: marking
+  id: HumanoidXenoTailPredalien
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: predalien_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: predalien_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailPretor
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: pretor_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: pretor_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailQueen
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: queen_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: queen_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailRavager
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: ravager_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: ravager_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailSpitter
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: spitter_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: spitter_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailRunner
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: runner_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: runner_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailBoiler
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: boiler_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: boiler_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailCrusher
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: crusher_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: crusher_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailQueenLong
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: queen_long_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: queen_long_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailNeomprph
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: neomorph_tail
+
+- type: marking
+  id: HumanoidXenoTailProwler
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: prowler_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: prowler_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailBers
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: bers_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: bers_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: bers_tail_spike
+
+- type: marking
+  id: HumanoidXenoTailChris
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: chris_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: chris_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: chris_tail_spike
+
+- type: marking
+  id: HumanoidXenoTailCougar
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: cougar_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: cougar_tail_veins
+
+- type: marking
+  id: HumanoidXenoTailCrocodile
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: crocodile_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: crocodile_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailRazor
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: razor_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: razor_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: razor_tail_spike
+
+- type: marking
+  id: HumanoidXenoTailBurrower
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: burrower_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: burrower_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: burrower_tail_spike
+
+- type: marking
+  id: HumanoidXenoTailLord
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: lord_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: lord_tail_butt
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: lord_tail_spikes
+
+- type: marking
+  id: HumanoidXenoTailOpress
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: opress_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: opress_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailValkyr
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: valkyr_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: valkyr_tail_grad
+
+- type: marking
+  id: HumanoidXenoTailDefender
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: defer_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: defer_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: defer_tail_ball
+
+- type: marking
+  id: HumanoidXenoTailWarrior
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: warrior_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: warrior_tail_thin
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: warrior_tail_thin_grad
+
+- type: marking
+  id: HumanoidXenoTailQueenAlt
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: alt_queen_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: alt_queen_tail_grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: alt_queen_tail_hands
+
+- type: marking
+  id: HumanoidXenoTailKing
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: king-tail-l
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: king-tail-l-grad
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: king-tail-r
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: king-tail-r-grad
+
+- type: marking
+  id: HumanoidXenoTailRogueKing
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: rogue-tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tails.rsi
+    state: rogue-tail-grad
+
+- type: marking
+  id: HumanoidXenoTailRen
+  bodyPart: Tail
+  groupWhitelist: [ HumanoidXeno ]
+  sponsorOnly: true
+  sponsorRoles: [ ArtLead ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: ren_tail
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tail.rsi
+    state: ren_tail_grad
+
+# Head
+
+- type: marking
+  id: HumanoidXenoHeadDrone
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: drone_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: teeth_drone
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: shine
+
+- type: marking
+  id: HumanoidXenoHeadSpitter
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: spitter_head
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: spitter_teeth
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: spitter_veins
+
+- type: marking
+  id: HumanoidXenoHeadPretor
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: pretor_head
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: pretor_teeth
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: pretor_shine
+
+- type: marking
+  id: HumanoidXenoHeadQueen
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: queen_head
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: queen_teeth
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: queen_shine
+
+- type: marking
+  id: HumanoidXenoHeadPredalien
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: predalien_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: predalien_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: predalien_shine
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: predalien_hair
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: predalien_mandibles
+
+- type: marking
+  id: HumanoidXenoHeadRavager
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: ravager_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: ravager_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: ravager_shine
+
+- type: marking
+  id: HumanoidXenoHeadRunner
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: runner_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: runner_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: runner_shine
+
+- type: marking
+  id: HumanoidXenoHeadBoiler
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: boiler_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: boiler_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: boiler_veins
+
+- type: marking
+  id: HumanoidXenoHeadCrusher
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crusher_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crusher_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crusher_shine
+
+- type: marking
+  id: HumanoidXenoHeadCarrier
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: carrier_plate
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: carrier_neck
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: carrier_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: carrier_shine
+
+- type: marking
+  id: HumanoidXenoHeadNeomorph
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: neomorph_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: neomorph_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: neomorph_veins
+
+- type: marking
+  id: HumanoidXenoHeadBers
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: bers_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: bers_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: bers_plates
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: bers_shine
+
+- type: marking
+  id: HumanoidXenoHeadCat
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cat_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cat_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cat_plate
+
+- type: marking
+  id: HumanoidXenoHeadCris
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: chris_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: chris_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: chris_plate
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: chris_grad
+
+- type: marking
+  id: HumanoidXenoHeadCougar
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cougar_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cougar_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: cougar_veins
+
+- type: marking
+  id: HumanoidXenoHeadCrocodile
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crocodile_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crocodile_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: crocodile_shine
+
+- type: marking
+  id: HumanoidXenoHeadProwler
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: prowler_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: prowler_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: prowler_grad
+
+- type: marking
+  id: HumanoidXenoHeadRazor
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: razor_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: razor_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: razor_plate
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: razor_shine
+
+- type: marking
+  id: HumanoidXenoHeadBurrower
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: burrower_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: burrower_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: burrower_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadDefender
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: defer_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: defer_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: defer_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadValkyr
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: valkyr_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: valkyr_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: valkyr_head_plates
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: valkyr_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadWarrior
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: warrior_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: warrior_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: warrior_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadOppressor
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: oppressor_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: oppressor_head_plates
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: oppressor_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: oppressor_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadQueenAlt
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: queen_alt_head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: queen_alt_teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: queen_alt_head_skeleton
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: queen_alt_head_shine
+
+- type: marking
+  id: HumanoidXenoHeadEmpress
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: red-queen-head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: red-queen-veins
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: red-queen-teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: red-queen-shine
+
+- type: marking
+  id: HumanoidXenoHeadKing
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: king-head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: king-teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: king-shine
+
+- type: marking
+  id: HumanoidXenoHeadRogueKing
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: rogue-head
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: rogue-teeth
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/big_heads.rsi
+    state: rogue-shine
+
+- type: marking
+  id: HumanoidXenoHeadRen
+  bodyPart: Head
+  groupWhitelist: [ HumanoidXeno ]
+  sponsorOnly: true
+  sponsorRoles: [ ArtLead ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/head.rsi
+    state: ren_head
+
+# Chest
+
+- type: marking
+  id: HumanoidXenoChestPredalien
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: predalien_chest
+
+- type: marking
+  id: HumanoidXenoChestSpitter
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: spitter_chest
+
+- type: marking
+  id: HumanoidXenoChestMuscles
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: muscles_belly
+
+- type: marking
+  id: HumanoidXenoChestNeomorph
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: neomorph_body
+
+- type: marking
+  id: HumanoidXenoChestUnnaturalMuscles
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: unnatural_muscles_body
+
+- type: marking
+  id: HumanoidXenoChestQueen
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: queen_body
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/chest.rsi
+    state: queen_body_tubed
+
+# Tracheas
+
+- type: marking
+  id: HumanoidXenoTracheasDrone
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: tubes_drone
+
+- type: marking
+  id: HumanoidXenoTracheasPredalien
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: predalien_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasPretor
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: pretor_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasQueen
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: queen_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasRavager
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: ravager_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasBoiler
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: boiler_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasCrusher
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: crusher_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasNeomorph
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: neomorph_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasCarrier
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tracheas.rsi
+    state: carrier_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasChris
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: chris_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasCougar
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: cougar_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasCrocodile
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: crocodile_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasBers
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: bers_tubes
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: bers_tubes_veins
+
+- type: marking
+  id: HumanoidXenoTracheasWarrior
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: warrior_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasQueenAlt
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: alt_queen_tubes
+
+- type: marking
+  id: HumanoidXenoTracheasEmpress
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: red-queen-tubes
+
+- type: marking
+  id: HumanoidXenoTracheasKing
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tracheas.rsi
+    state: king-tubes
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tracheas.rsi
+    state: king-tubes-grad
+
+- type: marking
+  id: HumanoidXenoTracheasRogueKing
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/long_tracheas.rsi
+    state: rogue-tubes
+
+- type: marking
+  id: HumanoidXenoTracheasRen
+  bodyPart: Chest
+  groupWhitelist: [ HumanoidXeno ]
+  sponsorOnly: true
+  sponsorRoles: [ ArtLead ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/tracheas.rsi
+    state: ren_tubes
+
+# Legs
+
+- type: marking
+  id: HumanoidXenoLegsPredalien
+  bodyPart: LLeg
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/legs.rsi
+    state: predalien_legs
+
+- type: marking
+  id: HumanoidXenoLegsMuscles
+  bodyPart: LLeg
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/legs.rsi
+    state: muscles_legs
+
+- type: marking
+  id: HumanoidXenoLegsCougar
+  bodyPart: LLeg
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/legs.rsi
+    state: cougar_legs
+
+# Feet
+
+- type: marking
+  id: HumanoidXenoLegsChrisLeft
+  bodyPart: LFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: chris_claws_left
+
+- type: marking
+  id: HumanoidXenoLegsChrisRight
+  bodyPart: RFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: chris_claws_right
+
+- type: marking
+  id: HumanoidXenoLegsRazorLeft
+  bodyPart: LFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: razor_feet_left
+
+- type: marking
+  id: HumanoidXenoLegsRazorRight
+  bodyPart: RFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: razor_feet_right
+
+- type: marking
+  id: HumanoidXenoLegsBurrowerRight
+  bodyPart: RFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: burrower_claws_r_foot
+
+- type: marking
+  id: HumanoidXenoLegsBurrowerLeft
+  bodyPart: LFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: burrower_claws_l_foot
+
+- type: marking
+  id: HumanoidXenoFeetQueenLeft
+  bodyPart: LFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: queen_heel_l
+
+- type: marking
+  id: HumanoidXenoFeetQueenRight
+  bodyPart: RFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: queen_heel_r
+
+- type: marking
+  id: HumanoidXenoFeetEmpressLeft
+  bodyPart: LFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: red-queen-leg-left
+
+- type: marking
+  id: HumanoidXenoFeetEmpressRight
+  bodyPart: RFoot
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_legs.rsi
+    state: red-queen-leg-right
+
+# Arms
+
+- type: marking
+  id: HumanoidXenoArmsPredalien
+  bodyPart: LArm
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/arms.rsi
+    state: predalien_arms
+
+- type: marking
+  id: HumanoidXenoArmsRavager
+  bodyPart: LArm
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/arms.rsi
+    state: ravager_arms
+
+- type: marking
+  id: HumanoidXenoArmsMuscles
+  bodyPart: LArm
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/arms.rsi
+    state: muscles_arms
+
+- type: marking
+  id: HumanoidXenoArmsChris
+  bodyPart: LArm
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/arms.rsi
+    state: chris_arms
+
+- type: marking
+  id: HumanoidXenoArmsCougar
+  bodyPart: LArm
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/arms.rsi
+    state: cougar_arms
+
+# Hands
+
+- type: marking
+  id: HumanoidXenoHandRazorLeft
+  bodyPart: LHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_arms.rsi
+    state: razor_claws_left
+
+- type: marking
+  id: HumanoidXenoHandRazorRight
+  bodyPart: RHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/claws_arms.rsi
+    state: razor_claws_right
+
+- type: marking
+  id: HumanoidXenoHandClawsLeft
+  bodyPart: LHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: short_claws_left
+
+- type: marking
+  id: HumanoidXenoHandClawsRight
+  bodyPart: RHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: short_claws_right
+
+- type: marking
+  id: HumanoidXenoHandBurrowerRight
+  bodyPart: RHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: burrower_claws_r_hand
+
+- type: marking
+  id: HumanoidXenoHandBurrowerLeft
+  bodyPart: LHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: burrower_claws_l_hand
+
+- type: marking
+  id: HumanoidXenoHandEmpressLeft
+  bodyPart: LHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: red-queen-hand-left
+
+- type: marking
+  id: HumanoidXenoHandEmpressRight
+  bodyPart: RHand
+  groupWhitelist: [ HumanoidXeno ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/HumanoidXeno/short_claws_arms.rsi
+    state: red-queen-hand-right

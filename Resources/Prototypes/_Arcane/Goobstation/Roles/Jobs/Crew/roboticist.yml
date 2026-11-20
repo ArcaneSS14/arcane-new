@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: RoboticistMechatronicist
+  name: job-name-alt-roboticist-4
+
+- type: jobAlternateTitle
+  id: RoboticistMechConstructionSpecialist
+  name: job-name-alt-roboticist-2
+
+- type: jobAlternateTitle
+  id: RoboticistMechanicalEngineeringSpecialist
+  name: job-name-alt-roboticist-1
+
+- type: jobAlternateTitle
+  id: RoboticistCyberneticist
+  name: job-name-alt-roboticist-3

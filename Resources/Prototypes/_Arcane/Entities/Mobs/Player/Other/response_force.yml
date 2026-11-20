@@ -3,15 +3,19 @@
   id: BaseResponseForce
   randomizeName: false
   speciesBlacklist:
-  - Monkey
-  - Kobold
-  - Abductor
-  - IPC
+  - Chitinid
   - Diona
-  - Vox
-  - Gingerbread
+  - Felinid
+  - Harpy
+  - HumanoidXeno
+  - Hydrakin
+  - Oni
   - Plasmaman
+  - Resomi
+  - Rodentia
   - Shadowkin
+  - Vox
+  - Yowie
   components:
   - type: RandomMetadata
     nameSegments:
@@ -29,6 +33,7 @@
   - type: ResponseForce
 
 # Base NanoTrasen ERT
+
 - type: randomHumanoidSettings
   id: BaseNanoTrasenERT
   components:
@@ -100,6 +105,7 @@
     job: ERTMedical
 
 # Base InteQ ERT
+
 - type: randomHumanoidSettings
   id: BaseInteQERT
   components:
@@ -107,6 +113,7 @@
     implants: [ RadioImplantInteQ, NutrimentPumpImplant, DeathRattleImplantInteQ ]
 
 # Base Honk ERT
+
 - type: randomHumanoidSettings
   id: BaseHonkERT
   components:
@@ -209,6 +216,7 @@
     settings: NanoTrasenERTMedicalGreen
 
 ## ERT BLUE ALERT
+
 - type: randomHumanoidSettings
   parent: NanoTrasenERTLeader
   id: NanoTrasenERTLeaderBlue
@@ -302,6 +310,7 @@
     settings: NanoTrasenERTMedicalBlue
 
 ## ERT AMBER ALERT
+
 - type: randomHumanoidSettings
   parent: NanoTrasenERTLeader
   id: NanoTrasenERTLeaderAmber
@@ -395,6 +404,7 @@
     settings: NanoTrasenERTMedicalAmber
 
 ## ERT RED ALERT
+
 - type: randomHumanoidSettings
   parent: NanoTrasenERTLeader
   id: NanoTrasenERTLeaderRed
@@ -488,6 +498,7 @@
     settings: NanoTrasenERTMedicalRed
 
 ## ERT GAMMA ALERT
+
 - type: randomHumanoidSettings
   parent: NanoTrasenERTLeader
   id: NanoTrasenERTLeaderGamma
@@ -581,6 +592,7 @@
     settings: NanoTrasenERTMedicalGamma
 
 ## ERT EPSILON ALERT
+
 - type: randomHumanoidSettings
   parent: NanoTrasenERTLeader
   id: NanoTrasenERTLeaderEpsilon
@@ -674,6 +686,7 @@
     settings: NanoTrasenERTMedicalEpsilon
 
 ## CBURN
+
 - type: randomHumanoidSettings
   parent: [ CBURNAgent, BaseResponseForce ]
   id: CBURNLeader
@@ -694,6 +707,7 @@
     settings: CBURNLeader
 
 ## DEATH SQUAD
+
 - type: randomHumanoidSettings
   parent: [ DeathSquad, BaseResponseForce ]
   id: DeathSquadLeader
@@ -714,6 +728,7 @@
     settings: DeathSquadLeader
 
 ## InteQ
+
 - type: randomHumanoidSettings
   parent: [ BaseInteQERT, InteQVanguardLeader, BaseResponseForce ]
   id: InteQVanguardLeaderERT
@@ -789,6 +804,7 @@
     settings: InteQVanguardMedicERT
 
 ## InteQ Strike Team
+
 - type: randomHumanoidSettings
   parent: [ BaseInteQERT, InteQVanguardLeader, BaseResponseForce ]
   id: InteQVanguardLeaderERT-Strike
@@ -840,6 +856,7 @@
     settings: InteQVanguardOperativeERT-Strike
 
 ## ERT Clown
+
 - type: randomHumanoidSettings
   parent: [ BaseHonkERT, BaseResponseForce ]
   id: ClownERTLeader
@@ -885,6 +902,7 @@
     settings: ClownERT
 
 ## ERT Assistant
+
 - type: randomHumanoidSettings
   parent: [ BaseNanoTrasenERT, BaseResponseForce ]
   id: AssistantERTLeader

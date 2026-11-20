@@ -1,0 +1,4 @@
+- type: jobWeight
+  id: Default
+  weights:
+    CommandMaid: 5

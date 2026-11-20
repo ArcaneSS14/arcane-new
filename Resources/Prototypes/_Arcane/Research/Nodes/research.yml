@@ -91,14 +91,14 @@
   - MaterialSiloMachineCircuitboard
   - DrinkShakerBluespace
   - OreBagOfHolding
-  - BluespaceBeaker
-  - SyringeBluespace
   - BluespaceBodyBag
   - ConstructionBagOfHolding
   - ClothingBeltChemBagXenobiologyHolding
   - PlantBagOfHolding
-  - VialBluespace
   - ClothingBackpackHarmpack
+  - WeaponParticleDecelerator
+  - VehicleHoverchairSci
+  - SprayPainterInfinite
   position: 0,6
 
 - type: technology
@@ -183,12 +183,13 @@
   - ClothingBackpackMessengerHolding
   - ClothingBackpackHolding
   - ClothingBackpackSatchelHolding
+  - BluespaceBeaker
+  - VialBluespace
+  - SyringeBluespace
   - WeaponTetherGun
   - WeaponGauntletGorilla
   - ClothingOuterArmorReactiveUnfinished
 #  - PolymorphBelt # TODO
-  - VehicleHoverchairSci
-  - WeaponParticleDecelerator
   - WeaponForceGun
   - WeaponGauntletGorilla
   position: 1,8
@@ -216,6 +217,8 @@
   - MofficTranslator
   - ChevalTranslatorImplanter
   - NewKinPidginTranslator
+  - KarshanTranslator
+  - DwarvishTranslator
   position: -1,8
 
 - type: technology
@@ -242,4 +245,6 @@
   - NewKinPidginTranslatorImplanter
   - AnimalTranslator
   - XenoTranslator
+  - KarshanTranslatorImplanter
+  - DwarvishTranslatorImplanter
   position: -1,9

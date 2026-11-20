@@ -1,0 +1,21 @@
+- type: entity
+  parent: BaseAction
+  id: ActionArcaneScramImplant
+  name: SCRAM!
+  description: Randomly teleports you within a large distance.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: LimitedCharges
+    maxCharges: 3
+  - type: Action
+    checkCanInteract: false
+    useDelay: 30
+    itemIconStyle: BigAction
+    priority: -20
+  - type: InstantAction
+    event: !type:ScramImplantEvent
+  - type: Sprite
+    sprite: Structures/Specific/anomaly.rsi
+    layers:
+    - state: anom4
+      map: ["enum.ActionVisuals.Icon"]

@@ -57,3 +57,20 @@
     Glass: 300
     Silver: 100
     Gold: 100
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  icon: { sprite: Objects/Weapons/pflash.rsi, state: "on" }
+  id: PortableFlasherMachineCircuitboard
+  result: PortableFlasherMachineCircuitboard
+
+- type: latheRecipe
+  id: ClothingAggressionInhibitor
+  result: ClothingAggressionInhibitor
+  categories:
+  - Clothing
+  completetime: 4
+  materials:
+    Steel: 500
+    Plastic: 250
+    Cloth: 500

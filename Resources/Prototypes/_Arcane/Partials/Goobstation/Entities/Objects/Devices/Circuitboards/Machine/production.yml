@@ -1,0 +1,6 @@
+- type: entity
+  id: EnergyChemDispenserMachineCircuitboard
+  components:
+    - type: MachineBoard
+      partRequirements:
+        Capacitor: 1

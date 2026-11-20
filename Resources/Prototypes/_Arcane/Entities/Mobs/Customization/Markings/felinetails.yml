@@ -1,0 +1,18 @@
+- type: marking
+  id: Felinetailstripes
+  bodyPart: Tail
+  groupWhitelist: [ Human ]
+  coloring:
+    default:
+      type:
+        !type:CategoryColoring
+        category: Hair
+      fallbackTypes:
+        - !type:CategoryColoring
+          category: FacialHair
+        - !type:SkinColoring
+  sprites:
+    - sprite: _Arcane/Mobs/Customization/felinetails.rsi
+      state: tail_cat_wag_stripes_prime
+    - sprite: _Arcane/Mobs/Customization/felinetails.rsi
+      state: tail_cat_wag_stripes_second

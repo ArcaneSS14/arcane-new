@@ -1,0 +1,27 @@
+- type: entity
+  id: BaseDeltaPressureReinforcedGlass
+  components:
+  - type: DeltaPressure
+    minPressure: 30000
+    minPressureDelta: 20000
+
+- type: entity
+  id: BaseDeltaPressurePlasmaQuarter
+  components:
+  - type: DeltaPressure
+    minPressure: 25000
+    minPressureDelta: 20000
+
+- type: entity
+  id: BaseDeltaPressureGlassQuarter
+  components:
+  - type: DeltaPressure
+    minPressure: 1000
+    minPressureDelta: 700
+
+- type: entity
+  id: BaseDeltaPressureGlass
+  components:
+  - type: DeltaPressure
+    minPressure: 5000
+    minPressureDelta: 4000

@@ -1,0 +1,9 @@
+- type: listing
+  id: UplinkBulldog
+  cost:
+    Telecrystal: 80
+
+- type: listing
+  id: UplinkEnergyCrossbow
+  cost:
+    Telecrystal: 45

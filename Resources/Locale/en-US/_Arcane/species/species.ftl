@@ -1,0 +1,11 @@
+alerts-faoli-name = Faoli
+alerts-faoli-desc = The amount of mystical energy in your body.
+metabolizer-type-humanoid-xeno = Xenomorph
+store-category-demon-cantrips = Cantrips
+lathe-recipe-KarshanTranslatorImplanter-subname = Karshan translator implant
+chat-emote-name-awoo = Howl plaintively
+chat-emote-msg-awoo = howls plaintively.
+chat-emote-name-mew = Mew
+chat-emote-msg-mew = mews.
+chat-emote-name-purr = Purr
+chat-emote-msg-purr = purrs.

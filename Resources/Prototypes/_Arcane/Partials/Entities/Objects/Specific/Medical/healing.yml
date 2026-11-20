@@ -1,0 +1,137 @@
+- type: entity
+  id: Gauze
+  components:
+  - type: Healing
+    delay: 0.5
+  - type: Sprite
+    layers: !Clear
+    - state: gauze-3
+      map: ["base"]
+    state: gauze-3
+  - type: Stack
+    baseLayer: base
+    layerStates:
+    - gauze
+    - gauze-2
+    - gauze-3
+
+- type: entity
+  id: BaseHealingItem
+  abstract: true
+  components:
+  - type: Appearance
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Medical/healing.rsi
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Medical/healing.rsi
+
+- type: entity
+  id: Brutepack
+  components:
+  - type: Sprite
+    layers: !Clear
+    - state: brutepack-3
+      map: ["base"]
+    state: brutepack-3
+  - type: Stack
+    baseLayer: base
+    layerStates:
+    - brutepack
+    - brutepack-2
+    - brutepack-3
+
+- type: entity
+  id: MedicatedSuture
+  components:
+  - type: EmitSoundOnDrop
+    sound:
+      path: /Audio/_Arcane/Items/Medical/regenerative_mesh/regen_mesh_drop1.ogg
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/_Arcane/Items/Medical/regenerative_mesh/regen_mesh_drop1.ogg
+  - type: EmitSoundOnPickup
+    sound:
+      path: /Audio/_Arcane/Items/Medical/suture/needle_pickup1.ogg
+  - type: Healing
+    healingBeginSound:
+      collection: SutureBegin
+      params:
+        volume: 4.0
+        variation: 0.125
+      path: !Remove
+    healingEndSound:
+      collection: SutureContinuous
+      params:
+        volume: 4.0
+        variation: 0.125
+      path: !Remove
+  - type: Sprite
+    layers: !Clear
+    - state: medicated-suture-3
+      map: ["base"]
+    state: medicated-suture-3
+  - type: Stack
+    baseLayer: base
+    count: 10
+    layerStates:
+    - medicated-suture
+    - medicated-suture-2
+    - medicated-suture-3
+  - type: StackPrice
+    price: 40
+  - type: SurgeryTool
+    endSound:
+      collection: SutureContinuous
+      path: !Remove
+    startSound:
+      collection: SutureBegin
+      path: !Remove
+
+- type: entity
+  id: Ointment
+  components:
+  - type: Healing
+    damage:
+      types:
+        Heat: -5
+        Cold: -5
+        Shock: -5
+        Caustic: -2
+  - type: Sprite
+    layers: !Clear
+    - state: ointment-3
+      map: ["base"]
+    state: ointment-3
+  - type: Stack
+    baseLayer: base
+    layerStates:
+    - ointment
+    - ointment-2
+    - ointment-3
+
+- type: entity
+  id: OintmentAdvanced1
+  parent: AdvancedRegenerativeMeshOpened
+  components:
+  - type: Stack
+    stackType: AdvancedRegenerativeMesh
+
+- type: entity
+  id: AloeCream
+  components:
+  - type: Healing
+    damage:
+      types:
+        Heat: -7
+        Cold: -6
+        Shock: -6
+        Caustic: -5
+  - type: Sprite
+    layers: !Clear
+    - state: cream
+      map: ["base"]
+  - type: Stack
+    baseLayer: base
+    layerStates:
+    - cream
+    - cream

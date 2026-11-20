@@ -1,0 +1,101 @@
+- type: entity
+  id: MobAncientLegsWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobLionWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobMonstrosityHeadWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobAncientRobot1Wraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobShadeWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobAncientRobot2Wraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobBearGoonWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobMonstrosityBodyWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobBGunbotWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobNukebotWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobSkeletonGoonLesser
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobCrunchedWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobAncientGuardBotWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobBrullbarWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobAncientRepairBotWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobAncientRobot3Wraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith
+
+- type: entity
+  id: MobSkeletonGoonWraith
+  components:
+  - type: GhostRole
+    banJob: GhostRoleWraith

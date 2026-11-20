@@ -1,0 +1,6 @@
+- type: job
+  id: Captain
+  alternateTitles:
+  - CaptainStationDirector
+  - CaptainCommander
+  - CaptainStationChief

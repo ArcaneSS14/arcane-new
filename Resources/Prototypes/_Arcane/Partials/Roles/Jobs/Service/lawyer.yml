@@ -1,0 +1,11 @@
+- type: startingGear
+  id: LawyerGear
+  equipment:
+    ears: ClothingHeadsetLawyer
+
+- type: job
+  id: Lawyer
+  alternateTitles:
+  - LawyerAttorney
+  - LawyerLegalRepresentative
+  supervisors: job-supervisors-IAA

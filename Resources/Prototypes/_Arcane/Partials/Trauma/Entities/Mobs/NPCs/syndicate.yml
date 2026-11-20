@@ -1,0 +1,11 @@
+- type: entity
+  id: MobNukieSpider
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
+
+- type: entity
+  id: MobNukieMouse
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate

@@ -1,0 +1,12 @@
+- type: antag
+  id: MothershipCore
+  requirements: !Clear
+  - !type:OverallPlaytimeRequirement
+    time: 10h
+
+- type: antag
+  id: Xenoborg
+  requirements: !Clear
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 10h

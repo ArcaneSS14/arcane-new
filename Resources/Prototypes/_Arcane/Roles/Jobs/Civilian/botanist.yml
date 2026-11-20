@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: BotanistHydroponicsSpecialist
+  name: job-name-alt-botanist-1
+
+- type: jobAlternateTitle
+  id: BotanistAgronomist
+  name: job-name-alt-botanist-2
+
+- type: jobAlternateTitle
+  id: BotanistGardener
+  name: job-name-alt-botanist-4
+
+- type: jobAlternateTitle
+  id: BotanistFarmer
+  name: job-name-alt-botanist-3

@@ -1,0 +1,188 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Taken from tgstation at https://github.com/tgstation/tgstation/blob/623290915c2292b56da11048deb62d758e1e3fb4/icons/obj/bloodpack.dmi and https://github.com/tgstation/tgstation/commit/0b8f4dc9cebe5f8413d25860050a38b4fcc5c217, Blood pack redone by Ubaser, Tourniquet Sprite by PoorMansDreams. All another in-hand and upgraded sprites by UmbiMax",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "brutepack"
+        },
+        {
+            "name": "brutepack-2"
+        },
+        {
+            "name": "brutepack-3"
+        },
+        {
+            "name": "brutepack-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "brutepack-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "cast"
+        },
+        {
+            "name": "gauze"
+        },
+        {
+            "name": "gauze-2"
+        },
+        {
+            "name": "gauze-3"
+        },
+        {
+            "name": "gauze-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "gauze-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "tourniquet"
+        },
+        {
+            "name": "tourniquet-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "tourniquet-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "morphine"
+        },
+        {
+            "name": "ointment"
+        },
+        {
+            "name": "ointment-2"
+        },
+        {
+            "name": "ointment-3"
+        },
+        {
+            "name": "ointment-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "ointment-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "bloodpack"
+        },
+        {
+            "name": "bloodpack-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "bloodpack-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "suture"
+        },
+        {
+            "name": "suture-2"
+        },
+        {
+            "name": "suture-3"
+        },
+        {
+            "name": "suture-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "suture-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "medicated-suture"
+        },
+        {
+            "name": "medicated-suture-2"
+        },
+        {
+            "name": "medicated-suture-3"
+        },
+        {
+            "name": "medicated-suture-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "medicated-suture-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "regenerative-mesh"
+        },
+        {
+            "name": "regenerative-mesh-2"
+        },
+        {
+            "name": "regenerative-mesh-3"
+        },
+        {
+            "name": "regenerative-mesh-closed"
+        },
+        {
+            "name": "regenerative-mesh-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "regenerative-mesh-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "aloe-mesh"
+        },
+        {
+            "name": "aloe-mesh-2"
+        },
+        {
+            "name": "aloe-mesh-3"
+        },
+        {
+            "name": "aloe-mesh-closed"
+        },
+        {
+            "name": "aloe-mesh-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "aloe-mesh-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "bloodpack-empty"
+        },
+        {
+            "name": "bloodpack-liquid-1"
+        },
+        {
+            "name": "bloodpack-liquid-2"
+        },
+        {
+            "name": "bloodpack-liquid-3"
+        },
+        {
+            "name": "bloodpack-liquid-4"
+        },
+        {
+            "name": "bloodpack-liquid-5"
+        },
+        {
+            "name": "bloodpack-blue"
+        },
+        {
+            "name": "ointment-storage"
+        }
+    ]
+}

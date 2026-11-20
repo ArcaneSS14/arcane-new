@@ -1,0 +1,16 @@
+- type: reaction
+  id: Tirimol
+  reactants:
+    Nitrogen:
+      amount: 3
+    SodiumPolyacrylate: !Remove
+    SulfuricAcid:
+      amount: 1
+      catalyst: true
+
+- type: reaction
+  id: Synthcells
+  products:
+    Carbon: 2
+    Sodium: 2
+    Synthcells: 2

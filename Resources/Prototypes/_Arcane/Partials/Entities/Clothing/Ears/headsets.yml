@@ -1,0 +1,7 @@
+- type: entity
+  id: ClothingHeadset
+  components:
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeyCommon

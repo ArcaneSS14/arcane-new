@@ -119,6 +119,16 @@ namespace Content.Client.RoundEnd
             //Put observers at the bottom of the list. Put antags on top.
             var sortedPlayersInfo = playersInfo.OrderBy(p => p.Observer).ThenBy(p => !p.Antag);
 
+            // Arcane-Start
+            var playerEntries = new List<(PanelContainer, string)>();
+            var searchBar = new LineEdit
+            {
+                PlaceHolder = Loc.GetString("round-end-summary-window-player-manifest-search"),
+                HorizontalExpand = true,
+                Margin = new Thickness(10, 6, 10, 2),
+            };
+            // Arcane-End
+
             //Create labels for each player info.
             foreach (var playerInfo in sortedPlayersInfo)
             {
@@ -309,8 +319,22 @@ namespace Content.Client.RoundEnd
                 hBox.AddChild(textVBox);
                 panel.AddChild(hBox);
                 playerInfoContainer.AddChild(panel);
+                // Arcane-Start
+                var searchRole = Loc.TryGetString(playerInfo.Role, out var locRole) ? locRole : playerInfo.Role;
+                var searchText = $"{playerInfo.PlayerICName} {playerInfo.PlayerOOCName} {searchRole}".ToLowerInvariant();
+                playerEntries.Add((panel, searchText));
+                // Arcane-End
             }
 
+            // Arcane-Start
+            searchBar.OnTextChanged += args =>
+            {
+                var query = args.Text.ToLowerInvariant();
+                foreach (var (entry, searchText) in playerEntries)
+                    entry.Visible = searchText.Contains(query);
+            };
+            playerManifestTab.AddChild(searchBar);
+            // Arcane-End
             playerInfoContainerScrollbox.AddChild(playerInfoContainer);
             playerManifestTab.AddChild(playerInfoContainerScrollbox);
 

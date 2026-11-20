@@ -1,0 +1,6 @@
+- type: entity
+  id: LockerBrigmedic
+  components:
+  - type: AccessReader
+    access: !Clear [["Medical"], ["Armory"]]
+

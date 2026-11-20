@@ -1,0 +1,4 @@
+- type: loadoutGroup
+  id: SurvivalMedical
+  loadouts:
+  - EmergencySynth

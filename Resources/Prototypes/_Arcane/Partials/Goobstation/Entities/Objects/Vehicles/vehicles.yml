@@ -1,0 +1,8 @@
+- type: entity
+  id: VehicleSecway
+  components:
+  - type: Vehicle
+    sirenSound:
+      params:
+        variation: 0.125
+        loop: true

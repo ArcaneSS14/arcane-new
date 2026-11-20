@@ -1,0 +1,5 @@
+- type: entity
+  id: VentClog
+  components:
+  - type: VentClogRule
+    spread: 20

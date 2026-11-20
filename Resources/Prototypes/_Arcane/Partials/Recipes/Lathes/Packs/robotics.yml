@@ -1,0 +1,6 @@
+- type: latheRecipePack
+  id: MechEquipment
+  recipes:
+  - !Remove WeaponMechCombatMissileRack6
+  - !Remove WeaponMechChainSword
+  - !Remove WeaponMechCombatTeslaCannon

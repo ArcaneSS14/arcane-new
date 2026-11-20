@@ -1,0 +1,35 @@
+- type: entity
+  id: ReinforcementRadioSyndicateCyborgSaboteur
+  components:
+    - type: GhostRole
+      banJob: GhostRoleSyndicate
+
+- type: entity
+  id: ReinforcementRadioSyndicateNukieCarp
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
+
+- type: entity
+  id: ReinforcementRadioSyndicateNukieSpider
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
+
+- type: entity
+  id: ReinforcementRadioSyndicateNukieMouse
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
+
+- type: entity
+  id: ReinforcementRadioSyndicateBehonker
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
+
+- type: entity
+  id: ReinforcementRadioSyndicateCyborgMedical
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate
