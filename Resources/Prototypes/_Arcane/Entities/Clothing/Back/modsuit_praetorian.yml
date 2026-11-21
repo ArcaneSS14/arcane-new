@@ -1,0 +1,134 @@
+- type: entity
+  parent: ClothingModsuitSecurityPowerCell
+  id: ClothingModsuitPraetorian
+  suffix: ""
+  name: Praetorian MOD control unit
+  description: A prototype of the Magnate-class modular suit, issued to Blueshield officers. Its reinforced plating shields the equipment carried inside from blasts.
+  components:
+  - !Remove type: Construction
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Modsuits/praetorian.rsi
+    layers:
+    - state: control
+    - state: control-sealed
+      visible: false
+      map: [sealed]
+  - type: ModSuit
+    parts:
+      head: ClothingModsuitHelmetPraetorian
+      outerClothing: ClothingModsuitChestplatePraetorian
+      gloves: ClothingModsuitGauntletsPraetorian
+      shoes: ClothingModsuitBootsPraetorian
+    startingModules:
+    - ModsuitModuleStorageLarge
+    - ModsuitModuleMagneticHarness
+    - ModsuitModuleFlashlight
+    - ModsuitModuleProjectileDampener
+    - ModsuitModuleQuickCarry
+    - ModsuitModuleHolster
+  - type: ClothingSpeedModifier
+    walkModifier: 1
+    sprintModifier: 1
+  - type: ExplosionResistance
+    damageCoefficient: 0
+    worn: false
+
+- type: entity
+  parent: ClothingModsuitHelmetSecurity
+  id: ClothingModsuitHelmetPraetorian
+  name: Praetorian MOD helmet
+  description: An opaque blue visor covers the helmet when sealed.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Modsuits/praetorian.rsi
+  - type: Armor
+    modifiers: &praetorianArmor
+      coefficients:
+        Blunt: 0.65
+        Slash: 0.65
+        Piercing: 0.65
+        Ballistic: 0.85
+        Heat: 0.7
+        Shock: 0.6
+        Caustic: 0.25
+    traumaDeductions: &praetorianTrauma
+      Dismemberment: 0.2
+      OrganDamage: 0.2
+      BoneDamage: 0.2
+  - type: FireProtection
+    reduction: 1
+  - type: Clothing
+    clothingVisuals:
+      head-vox:
+      - state: equipped-HEAD
+  - type: SealableClothingVisuals
+    clothingVisuals:
+      head-vox:
+      - state: equipped-HEAD-sealed
+
+- type: entity
+  parent: ClothingModsuitChestplateSecurity
+  id: ClothingModsuitChestplatePraetorian
+  name: Praetorian MOD chestplate
+  description: Reinforced plating with a restricted suit storage slot for security tools and breathing tanks.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Modsuits/praetorian.rsi
+  - !Remove type: ModifyDelayedKnockdown
+  - !Remove type: StaminaResistance
+  - type: Armor
+    modifiers: *praetorianArmor
+    traumaDeductions: *praetorianTrauma
+  - type: ExplosionResistance
+    damageCoefficient: 0.75
+  - type: FireProtection
+    reduction: 1
+  - type: ClothingSpeedModifier
+    walkModifier: 0.888889
+    sprintModifier: 0.75
+  - type: AllowSuitStorage
+    allowWhitelistedItems: true
+    whitelist:
+      components: [GasTank, Handcuff, Flash]
+      tags: [PepperSpray, Stunbaton]
+  - type: SealableClothingVisuals
+    clothingVisuals:
+      outerClothing-vox:
+      - state: equipped-OUTERCLOTHING-sealed
+
+- type: entity
+  parent: ClothingModsuitGauntletsSecurity
+  id: ClothingModsuitGauntletsPraetorian
+  name: Praetorian MOD gauntlets
+  description: Armored gauntlets with mount points for powered handling modules.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Modsuits/praetorian.rsi
+  - type: Insulated
+  - type: FireProtection
+    reduction: 1
+  - type: Armor
+    coverage: [Hand]
+    modifiers: *praetorianArmor
+    traumaDeductions: *praetorianTrauma
+  - type: SealableClothingVisuals
+    clothingVisuals:
+      gloves-vox:
+      - state: equipped-HAND-sealed
+
+- type: entity
+  parent: ClothingModsuitBootsSecurity
+  id: ClothingModsuitBootsPraetorian
+  name: Praetorian MOD boots
+  description: Boots for the Praetorian MOD suit.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/OuterClothing/Modsuits/praetorian.rsi
+  - !Remove type: ClothingSlowOnDamageModifier
+  - !Remove type: ModifyStandingUpTime
+  - type: FireProtection
+    reduction: 1
+  - type: Armor
+    coverage: [Foot]
+    modifiers: *praetorianArmor
+    traumaDeductions: *praetorianTrauma

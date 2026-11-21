@@ -1783,6 +1783,46 @@ public sealed class ModCoreTest : InteractionTest
     }
 
     [Test]
+    public async Task PraetorianDeploysAndPowersItsSixModules()
+    {
+        EntityUid control = default;
+        await Server.WaitAssertion(() =>
+        {
+            var location = MapData.GridCoords;
+            var wearer = SEntMan.SpawnAttachedTo("MobHuman", location);
+            control = SEntMan.SpawnAttachedTo("ClothingModsuitPraetorian", location);
+            var component = SEntMan.GetComponent<ModSuitComponent>(control);
+            var suit = (control, component);
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(suits.GetBattery(suit), Is.Not.Null);
+            var modules = component.ModulesContainer!.ContainedEntities
+                .Select(uid => SEntMan.GetComponent<MetaDataComponent>(uid).EntityPrototype?.ID);
+            Assert.That(modules, Is.EquivalentTo(new[]
+            {
+                "ModsuitModuleStorageLarge", "ModsuitModuleMagneticHarness", "ModsuitModuleFlashlight",
+                "ModsuitModuleProjectileDampener", "ModsuitModuleQuickCarry", "ModsuitModuleHolster",
+            }));
+
+            var inventory = SEntMan.System<InventorySystem>();
+            Assert.That(inventory.TryEquip(wearer, control, "back", force: true), Is.True);
+            foreach (var slot in component.PartEntities.Keys)
+                Assert.That(suits.TryDeployPart(suit, slot, wearer), Is.True, slot);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+            var baton = SEntMan.SpawnAttachedTo("Stunbaton", location);
+            var gun = SEntMan.SpawnAttachedTo("WeaponPistolMk58", location);
+            Assert.That(inventory.TryEquip(wearer, gun, "suitstorage", silent: true), Is.False);
+            Assert.That(inventory.TryEquip(wearer, baton, "suitstorage", silent: true), Is.True);
+        });
+        await RunSeconds(5.2f);
+        await Server.WaitAssertion(() =>
+        {
+            var suit = SEntMan.GetComponent<ModSuitComponent>(control);
+            Assert.That(suit.State, Is.EqualTo(ModSuitState.Active));
+            Assert.That(suit.PartEntities.Values.All(item => SEntMan.GetComponent<ModPartComponent>(item).Sealed), Is.True);
+        });
+    }
+
+    [Test]
     public async Task ExistingLoadoutsAndCraftedCoreUseTheSameControlSystem()
     {
         await Server.WaitAssertion(() =>
