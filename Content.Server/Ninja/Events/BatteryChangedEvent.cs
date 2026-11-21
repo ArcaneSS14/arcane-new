@@ -4,4 +4,4 @@ namespace Content.Server.Ninja.Events;
 /// Raised on the ninja and suit when the suit has its powercell changed.
 /// </summary>
 [ByRefEvent]
-public record struct NinjaBatteryChangedEvent(EntityUid Battery, EntityUid BatteryHolder);
+public record struct NinjaBatteryChangedEvent(EntityUid? Battery, EntityUid BatteryHolder); // Arcane-Edit: a MOD core can be removed.

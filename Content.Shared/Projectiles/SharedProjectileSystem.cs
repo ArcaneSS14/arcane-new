@@ -91,6 +91,12 @@ public abstract partial class SharedProjectileSystem : EntitySystem
         if (!embeddable.Comp.EmbedOnThrow)
             return;
 
+        // Arcane-Edit-Start: restricted projectiles attach only to their first eligible target.
+        if (embeddable.Comp.ThrowEmbedWhitelist is { } whitelist
+            && (embeddable.Comp.EmbeddedIntoUid != null || _whitelist.IsWhitelistFail(whitelist, args.Target)))
+            return;
+        // Arcane-Edit-End
+
         EmbedAttach(embeddable, args.Target, null, embeddable.Comp);
     }
 

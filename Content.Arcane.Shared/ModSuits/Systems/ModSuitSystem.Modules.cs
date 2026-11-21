@@ -36,6 +36,7 @@ public sealed partial class ModSuitSystem
     {
         SubscribeLocalEvent<ModSuitComponent, InteractUsingEvent>(OnModuleInteractUsing, before: [typeof(SharedStorageSystem)]);
         SubscribeLocalEvent<ModModuleComponent, ModModuleActionEvent>(OnModuleAction);
+        SubscribeLocalEvent<ModModuleComponent, ModNinjaNetActionEvent>(OnNinjaNetAction);
         SubscribeLocalEvent<ModModuleComponent, EntityTerminatingEvent>(OnModuleTerminating);
     }
 
@@ -396,16 +397,33 @@ public sealed partial class ModSuitSystem
 
     private void OnModuleInteractUsing(Entity<ModSuitComponent> suit, ref InteractUsingEvent args)
     {
-        if (_net.IsClient || args.Handled || !HasComp<ModModuleComponent>(args.Used))
+        if (_net.IsClient || args.Handled)
             return;
 
-        TryInstallModule(suit, args.Used, args.User);
-        args.Handled = true;
+        if (HasComp<ModModuleComponent>(args.Used))
+        {
+            TryInstallModule(suit, args.Used, args.User);
+            args.Handled = true;
+            return;
+        }
+
+        if (!CanAccessModules(suit, args.User))
+            return;
+
+        var use = new ModSuitUseItemEvent(args.User, args.Used);
+        RaiseLocalEvent(suit.Owner, ref use);
+        args.Handled = use.Handled;
     }
 
     private void OnModuleAction(Entity<ModModuleComponent> module, ref ModModuleActionEvent args)
     {
         if (!args.Handled && TryUseModule(module, args.Performer))
+            args.Handled = true;
+    }
+
+    private void OnNinjaNetAction(Entity<ModModuleComponent> module, ref ModNinjaNetActionEvent args)
+    {
+        if (!args.Handled && TryUseModule(module, args.Performer, args))
             args.Handled = true;
     }
 

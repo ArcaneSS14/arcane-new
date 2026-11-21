@@ -1,0 +1,131 @@
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleNinjaStarDispenser
+  name: MOD energy star dispenser module
+  description: Turns stored energy into a Spider Clan shuriken that emits electromagnetic pulses.
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    state: dispenser
+  - type: ModModule
+    moduleType: Usable
+    complexity: 0
+    usePower: 14.4
+    cooldown: 0.5
+    requiredParts: [gloves]
+  - type: ModSpawnModule
+    prototypes: [ThrowingStarNinjaEnergy]
+    toHand: true
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleNinjaRecall
+  name: MOD energy katana recall module
+  description: Recalls the wearer's attuned energy katana from within sight or through bluespace.
+  categories: [HideSpawnMenu]
+  components:
+  - type: ModModule
+    moduleType: Usable
+    cooldown: 0.5
+    requiredParts: [gloves]
+  - type: NinjaModRecall
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleNinjaStimulant
+  name: MOD Spider Clan emergency stimulant module
+  description: Clears stuns and fatigue with an emergency injection. Refill the control unit with radium after use.
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    state: adrenaline_boost
+  - type: ModModule
+    moduleType: Usable
+    cooldown: 12
+    allowFlags: Incapacitated
+    action: ActionModAdrenalineBoost
+  - type: NinjaModStimulant
+  - type: SolutionManager
+    solutions:
+    - SolutionNinjaModRadium
+
+- type: entity
+  parent: Solution
+  id: SolutionNinjaModRadium
+  components:
+  - type: Solution
+    id: radium
+    solution:
+      maxVol: 20
+      reagents:
+      - ReagentId: Radium
+        Quantity: 20
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleNinjaEnergyNet
+  name: MOD energy net module
+  description: Launches a hardlight net. Break the net or deactivate the MOD to release its captive.
+  categories: [HideSpawnMenu]
+  components:
+  - type: ModModule
+    moduleType: Usable
+    cooldown: 5
+    usePower: 21.6
+    requiredParts: [gloves]
+    action: ActionModNinjaEnergyNet
+  - type: NinjaModNet
+
+- type: entity
+  parent: BaseBullet
+  id: NinjaNetProjectile
+  name: hardlight net projectile
+  categories: [HideSpawnMenu]
+  components:
+  - !Remove type: FlyBySound
+  - type: Sprite
+    sprite: _Goobstation/Objects/Weapons/Throwable/energy_bola.rsi
+    layers:
+    - state: icon
+      shader: unshaded
+  - type: Tracer
+    color: "#64ff88"
+  - type: Projectile
+    impactEffect: null
+    damage:
+      types:
+        Ballistic: 0
+    soundHit: null
+  - type: TimedDespawn
+    lifetime: 0.6
+  - type: NinjaNetProjectile
+
+- type: entity
+  parent: BaseStructure
+  id: NinjaEnergyNet
+  name: hardlight net
+  description: A lattice of green light. Smash it to release the captive.
+  categories: [HideSpawnMenu]
+  components:
+  - type: Transform
+    anchored: false
+  - type: Sprite
+    sprite: _Goobstation/Objects/Weapons/Throwable/energy_bola.rsi
+    layers:
+    - state: icon
+      shader: unshaded
+      scale: 1.5, 1.5
+      color: "#64ff88"
+    drawdepth: OverMobs
+  - type: Strap
+    position: Stand
+  - type: NinjaNet
+  - type: Damageable
+    damageContainer: StructuralInorganic
+  - type: Destructible
+    thresholds:
+    - trigger: !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [Destruction]

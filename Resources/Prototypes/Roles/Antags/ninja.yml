@@ -14,7 +14,7 @@
   id: SpaceNinja
   spawnerPrototype: SpawnPointGhostSpaceNinja
   pickPlayer: false
-  startingGear: SpaceNinjaGear
+  startingGear: SpaceNinjaModGear # Arcane-Edit: SpaceNinjaGear > SpaceNinjaModGear
   roleLoadout:
   - RoleSurvivalSpaceNinja
   briefing:
@@ -38,17 +38,15 @@
   - MindRoleNinja
 
 #Ninja Gear
+# Arcane-Edit-Start: Shared gear for the starting MOD and the legacy outfit.
 - type: startingGear
-  id: SpaceNinjaGear
+  abstract: true
+  id: SpaceNinjaCommonGear
+# Arcane-Edit-End
   equipment:
     jumpsuit: ClothingUniformJumpsuitNinja
-    back: ClothingBackpackSatchelNinja
     mask: ClothingMaskNinja
-    head: ClothingHeadHelmetSpaceNinja
     eyes: ClothingEyesVisorNinja
-    gloves: ClothingHandsGlovesSpaceNinja
-    outerClothing: ClothingOuterSuitSpaceNinja
-    shoes: ClothingShoesSpaceNinja
     id: NinjaPDA
     ears: ClothingHeadsetNinja
     pocket1: SpiderCharge
@@ -69,6 +67,19 @@
     - Flare
     #- FoodSnackNutribrick # Trauma - rob chef instead chud
     - DrinkWaterBottleFull
+
+# Arcane-Start
+- type: startingGear
+  parent: SpaceNinjaCommonGear
+  id: SpaceNinjaGear
+  abstract: false
+  equipment:
+    back: ClothingBackpackSatchelNinja
+    head: ClothingHeadHelmetSpaceNinja
+    gloves: ClothingHandsGlovesSpaceNinja
+    outerClothing: ClothingOuterSuitSpaceNinja
+    shoes: ClothingShoesSpaceNinja
+# Arcane-End
 
 - type: chameleonOutfit
   id: NinjaChameleonOutfit

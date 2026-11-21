@@ -2,7 +2,10 @@ using Content.Arcane.Shared.ModSuits.Components;
 using Content.Shared.Alert;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Inventory;
+using Content.Shared.Item.ItemToggle;
+using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Movement.Systems;
+using Content.Shared.Ninja.Components;
 using Content.Shared.Power;
 using Content.Shared.Power.Components;
 using Content.Shared.Power.EntitySystems;
@@ -22,6 +25,7 @@ public sealed partial class ModSuitSystem : EntitySystem
     [Dependency] private SharedContainerSystem _containers = default!;
     [Dependency] private AlertsSystem _alerts = default!;
     [Dependency] private MovementSpeedModifierSystem _movement = default!;
+    [Dependency] private ItemToggleSystem _itemToggle = default!;
 
     private static readonly ProtoId<AlertPrototype> PowerAlert = "ModsuitPower";
 
@@ -34,6 +38,8 @@ public sealed partial class ModSuitSystem : EntitySystem
         SubscribeLocalEvent<ModSuitComponent, InventoryRelayedEvent<FindBatteryEvent>>(OnFindWornBattery);
         SubscribeLocalEvent<ModSuitComponent, EntInsertedIntoContainerMessage>(OnSuitItemInserted);
         SubscribeLocalEvent<ModSuitComponent, EntRemovedFromContainerMessage>(OnSuitItemRemoved);
+        SubscribeLocalEvent<ModSuitComponent, ItemToggleActivateAttemptEvent>(OnNinjaCloakAttempt);
+        SubscribeLocalEvent<ModSuitComponent, ItemToggledEvent>(OnNinjaCloakToggled);
         SubscribeLocalEvent<ModSuitComponent, InventoryRelayedEvent<RefreshMovementSpeedModifiersEvent>>(OnRefreshSuitSpeed);
         InitializeParts();
         InitializeActivation();
@@ -89,6 +95,7 @@ public sealed partial class ModSuitSystem : EntitySystem
             return;
 
         UpdatePower(suit);
+        RaiseBatteryChanged(suit);
         RefreshDrain(suit);
     }
 
@@ -107,6 +114,7 @@ public sealed partial class ModSuitSystem : EntitySystem
             return;
 
         UpdatePower(suit);
+        RaiseBatteryChanged(suit);
         if (!TerminatingOrDeleted(args.Entity)
             && _powerCell.TryGetBatteryFromEntityOrSlot(args.Entity, out var detached))
             _battery.RefreshChargeRate(detached.Value.AsNullable());
@@ -121,15 +129,51 @@ public sealed partial class ModSuitSystem : EntitySystem
 
     private void OnCoreCellChanged(Entity<ModCoreComponent> core, ref PowerCellChangedEvent args)
     {
-        if (TryGetSuit(core, out var suit))
-            UpdatePower(suit);
+        if (!TryGetSuit(core, out var suit))
+            return;
+
+        UpdatePower(suit);
+        RaiseBatteryChanged(suit);
+    }
+
+    private void RaiseBatteryChanged(Entity<ModSuitComponent> suit)
+    {
+        if (_net.IsClient || !HasComp<NinjaSuitComponent>(suit) || suit.Comp.Wearer is not { } wearer)
+            return;
+
+        var ev = new ModSuitBatteryChangedEvent(wearer, GetBattery(suit)?.Owner);
+        RaiseLocalEvent(suit.Owner, ref ev);
+    }
+
+    private void OnNinjaCloakAttempt(Entity<ModSuitComponent> suit, ref ItemToggleActivateAttemptEvent args)
+    {
+        if (!HasComp<NinjaSuitComponent>(suit) || args.Cancelled)
+            return;
+
+        if (args.User != suit.Comp.Wearer || !HasModuleCharge(suit, NinjaCloakDrain))
+        {
+            args.Cancelled = true;
+            args.Popup = "ninja-no-power";
+        }
+    }
+
+    private void OnNinjaCloakToggled(Entity<ModSuitComponent> suit, ref ItemToggledEvent args)
+    {
+        if (HasComp<NinjaSuitComponent>(suit))
+            RefreshDrain(suit);
     }
 
     private void OnCoreRefreshChargeRate(Entity<ModCoreComponent> core, ref RefreshChargeRateEvent args)
     {
         if (TryGetSuit(core, out var suit))
+        {
             args.NewChargeRate -= GetTotalDrain(suit);
+            if (HasComp<NinjaSuitComponent>(suit) && _itemToggle.IsActivated(suit.Owner))
+                args.NewChargeRate -= NinjaCloakDrain;
+        }
     }
+
+    private const float NinjaCloakDrain = 3.6f;
 
     public float GetTotalDrain(Entity<ModSuitComponent> suit) => suit.Comp.State switch
     {
@@ -168,6 +212,8 @@ public sealed partial class ModSuitSystem : EntitySystem
 
         suit.Comp.Powered = hasPower;
         Dirty(suit);
+        if (!hasPower && HasComp<NinjaSuitComponent>(suit))
+            _itemToggle.TryDeactivate(suit.Owner, suit.Comp.Wearer, predicted: false, consciousAction: false);
         if (!hasPower && suit.Comp.State == ModSuitState.Activating)
             StopActivation(suit);
         else

@@ -24,4 +24,4 @@ public sealed partial class BindItemOnEquipSystem : EntitySystem
 /// <see cref="Item"/> and does not enforce ownership or replacement behavior.
 /// </remarks>
 [ByRefEvent]
-public readonly record struct BindItemEvent(EntityUid Item);
+public readonly record struct BindItemEvent(EntityUid Item, bool ReplaceDeleted = false); // Arcane: modular katana recall can be re-attuned.

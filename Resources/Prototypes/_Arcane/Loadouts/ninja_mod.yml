@@ -1,0 +1,6 @@
+- type: startingGear
+  parent: SpaceNinjaCommonGear
+  id: SpaceNinjaModGear
+  abstract: false
+  equipment:
+    back: ClothingModsuitNinja
