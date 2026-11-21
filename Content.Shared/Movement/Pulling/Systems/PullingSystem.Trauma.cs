@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Numerics;
+using Content.Arcane.Common.ModSuits; // Arcane
 using Content.Goobstation.Common.Hands;
 using Content.Shared.CombatMode;
 using Content.Shared.CombatMode.Pacification;
@@ -252,6 +253,14 @@ public sealed partial class PullingSystem
         {
             newStage = grabStageOverride.Value;
         }
+        // Arcane: powered MOD gloves upgrade the initial soft grab.
+        else if (puller.Comp.GrabStage == GrabStage.No && newStage == GrabStage.Soft)
+        {
+            var modifiers = new ModifyGrabEvent();
+            RaiseLocalEvent(puller, ref modifiers);
+            if (modifiers.UpgradeSoft)
+                newStage = GrabStage.Hard;
+        }
 
         if (!TrySetGrabStages((puller, puller.Comp), (pullable, pullable.Comp), newStage, escapeAttemptModifier))
             return false;
@@ -309,7 +318,14 @@ public sealed partial class PullingSystem
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        pullable.Comp.GrabEscapeChance = Math.Clamp(puller.Comp.EscapeChances[stage] * escapeAttemptModifier, 0f, 1f);
+        var escapeChance = puller.Comp.EscapeChances[stage] * escapeAttemptModifier;
+        if (stage != GrabStage.No) // Arcane
+        {
+            var modifiers = new ModifyGrabEvent();
+            RaiseLocalEvent(puller, ref modifiers);
+            escapeChance = escapeChance * modifiers.EscapeMultiplier + modifiers.EscapeOffset;
+        }
+        pullable.Comp.GrabEscapeChance = Math.Clamp(escapeChance, 0f, 1f);
 
         _alertsSystem.ShowAlert(puller.Owner, puller.Comp.PullingAlert, puller.Comp.PullingAlertSeverity[stage]);
         _alertsSystem.ShowAlert(pullable.Owner, pullable.Comp.PulledAlert, pullable.Comp.PulledAlertAlertSeverity[stage]);

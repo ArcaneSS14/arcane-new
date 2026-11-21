@@ -58,6 +58,17 @@ public abstract partial class SharedChameleonClothingSystem : EntitySystem
         PrepareAllVariants();
     }
 
+    // Arcane: a MOD chameleon module adds this component at runtime.
+    public void InitializeModChameleon(EntityUid uid, ChameleonClothingComponent component, EntProtoId original, EntityUid? wearer)
+    {
+        component.Slot = SlotFlags.BACK;
+        component.ShowVerb = false;
+        component.Default = original;
+        component.User = wearer;
+
+        SetSelectedPrototype(uid, original.Id, forceUpdate: true, validate: false, component: component);
+    }
+
     private void OnPrototypeReload(EntityUid uid, ChameleonClothingComponent component, PrototypesReloadedEventArgs args)
     {
         PrepareAllVariants();

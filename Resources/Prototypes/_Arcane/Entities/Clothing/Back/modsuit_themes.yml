@@ -1,0 +1,75 @@
+- type: modTheme
+  id: ModThemeStandard
+
+- type: modTheme
+  id: ModThemeSecurity
+
+- type: modTheme
+  id: ModThemeSafeguard
+
+- type: modTheme
+  id: ModThemeMedical
+
+- type: modTheme
+  id: ModThemeEngineering
+
+- type: modTheme
+  id: ModThemeAtmospheric
+
+- type: modTheme
+  id: ModThemeResearch
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeMagnate
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeContractor
+
+- type: modTheme
+  id: ModThemeSuspicious
+
+- type: modTheme
+  id: ModThemeApocryphal
+  complexityMax: 25
+
+- type: modTheme
+  id: ModThemeCorporate
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeResponsory
+  complexityMax: 20
+
+- type: modTheme
+  id: ModThemeMining
+  name: modsuit-theme-mining
+  complexityMax: 13
+  chargeDrain: 1.6
+  inbuiltModules: [ ModsuitModuleBuiltinSphereTransform, ModsuitModuleBuiltinAshAccretion ]
+
+- type: modTheme
+  id: ModThemeLoader
+  name: modsuit-theme-loader
+  complexityMax: 10
+  inbuiltModules: [ ModsuitModuleBuiltinHydraulicArms, ModsuitModuleBuiltinLoaderClamp, ModsuitModuleBuiltinLoaderMagnet ]
+
+- type: modTheme
+  id: ModThemeBrigMed
+  name: modsuit-theme-brigmed
+  activationStepTime: 0.75
+
+- type: modTheme
+  id: ModThemeSyndicate
+  name: modsuit-theme-syndicate
+  complexityMax: 20
+  activationStepTime: 0.5
+  inbuiltModules: [ ModsuitModuleBuiltinFlashProtection, ModsuitModuleBuiltinNightVision, ModsuitModuleBuiltinInsulation ]
+
+- type: modTheme
+  id: ModThemeElite
+  name: modsuit-theme-elite
+  complexityMax: 19
+  activationStepTime: 0.5
+  inbuiltModules: [ ModsuitModuleBuiltinFlashProtection, ModsuitModuleBuiltinNightVision, ModsuitModuleBuiltinInsulation ]

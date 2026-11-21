@@ -1,0 +1,124 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleQuickCarry
+  name: MOD quick carry module
+  description: Assists the wearer in picking someone up by using servos in the gauntlets.
+  components:
+  - type: Sprite
+    state: carry
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.1
+    requiredParts: [ gloves ]
+    incompatible:
+      tags: [ ModsuitModuleCarry ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleCarry ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModQuickCarry
+      multiplier: 0.4
+
+- type: entity
+  parent: ModsuitModuleQuickCarry
+  id: ModsuitModuleQuickCarryAdvanced
+  name: MOD advanced quick carry module
+  description: High-power servos speed up picking someone up.
+  components:
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.2
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModQuickCarry
+      multiplier: 0.15
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleThreadRipper
+  name: MOD thread ripper module
+  description: Opens and restitches clothing as the wearer performs surgery.
+  components:
+  - type: Sprite
+    state: thread_ripper
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: SurgeryIgnoreClothing
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleRestraintAssist
+  name: MOD restraint assist module
+  description: Enhanced grip pads make it quicker to apply restraints.
+  components:
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ gloves ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModQuickCuff
+      multiplier: 0.5
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleBulwark
+  name: MOD bulwark module
+  description: Hydraulic stabilizers keep the wearer planted against shoves.
+  components:
+  - type: Sprite
+    state: bulwark
+  - type: ModModule
+    complexity: 3
+    idlePower: 0.2
+    requiredParts: [ shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModShoveBlocker
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleTRay
+  name: MOD t-ray scan module
+  description: Reveals wiring and pipes underneath the floor.
+  components:
+  - type: Sprite
+    state: tray
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.4
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: TrayScanner
+      enabled: true
+  - type: ModTrayScannerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleHolster
+  name: MOD holster module
+  description: Holds one firearm for quick retrieval, even while the suit is inactive.
+  components:
+  - type: Sprite
+    state: holster
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    allowFlags: Inactive
+    cooldown: 0.5
+  - type: ModHolsterModule
+  - type: ContainerContainer
+    containers:
+      mod-holster: !type:ContainerSlot

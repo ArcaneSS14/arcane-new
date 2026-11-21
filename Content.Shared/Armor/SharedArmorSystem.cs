@@ -44,7 +44,7 @@ public abstract partial class SharedArmorSystem : EntitySystem
         if (TryComp<MaskComponent>(ent, out var mask) && mask.IsToggled)
             return;
 
-        foreach (var armorCoefficient in ent.Comp.Modifiers.Coefficients)
+        foreach (var armorCoefficient in GetArmorModifiers(ent, ent.Comp).Coefficients) // Arcane
         {
             args.Args.DamageModifiers.Coefficients[armorCoefficient.Key] = args.Args.DamageModifiers.Coefficients.TryGetValue(armorCoefficient.Key, out var coefficient) ? coefficient * armorCoefficient.Value : armorCoefficient.Value;
         }
@@ -67,7 +67,7 @@ public abstract partial class SharedArmorSystem : EntitySystem
             return;
 
         // apply penetration to base modifiers
-        var modifierSet = DamageSpecifier.PenetrateArmor(component.Modifiers, args.Args.Damage.ArmorPenetration);
+        var modifierSet = DamageSpecifier.PenetrateArmor(GetArmorModifiers(uid, component), args.Args.Damage.ArmorPenetration); // Arcane
         if (mult >= 1f)
         {
             args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, modifierSet);
@@ -104,7 +104,7 @@ public abstract partial class SharedArmorSystem : EntitySystem
         if (component is { ArmourCoverageHidden: true, ArmourModifiersHidden: true })
             return;
 
-        var examineMarkup = GetArmorExamine(component);
+        var examineMarkup = GetArmorExamine(component, GetArmorModifiers(uid, component)); // Arcane
         // Shitmed Change End
         var ev = new ArmorExamineEvent(examineMarkup);
         RaiseLocalEvent(uid, ref ev);
@@ -114,17 +114,25 @@ public abstract partial class SharedArmorSystem : EntitySystem
             Loc.GetString("armor-examinable-verb-message"));
     }
 
+    // Arcane-Edit-Start: share effective modifiers between equipped armor and examination.
+    private DamageModifierSet GetArmorModifiers(EntityUid uid, ArmorComponent component)
+    {
+        var query = new ArmorModifiersQueryEvent(component.Modifiers);
+        RaiseLocalEvent(uid, ref query);
+        return query.Modifiers;
+    }
+    // Arcane-Edit-End
+
     // Shitmed Change: Mostly changed.
-    private FormattedMessage GetArmorExamine(ArmorComponent component)
+    private FormattedMessage GetArmorExamine(ArmorComponent component, DamageModifierSet armorModifiers) // Arcane
     {
         var msg = new FormattedMessage();
         msg.AddMarkupOrThrow(Loc.GetString("armor-examine"));
 
-        if (!component.Modifiers.Coefficients.Any() && !component.Modifiers.FlatReductions.Any())
+        if (armorModifiers.Coefficients.Count == 0 && armorModifiers.FlatReductions.Count == 0) // Arcane
             return msg;
 
         var coverage = component.ArmorCoverage;
-        var armorModifiers = component.Modifiers;
 
         if (!component.ArmourCoverageHidden)
         {

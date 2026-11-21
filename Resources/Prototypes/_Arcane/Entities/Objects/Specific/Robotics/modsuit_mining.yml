@@ -1,0 +1,371 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleOreBag
+  name: MOD ore bag module
+  description: Magnetic compartments collect nearby ore and artifact fragments while active.
+  components:
+  - type: Sprite
+    state: ore
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ gloves ]
+  - type: ModStorageModule
+  - type: ModOreBagModule
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,9,5
+    quickInsert: true
+    areaInsert: true
+    clickInsert: false
+    openOnActivate: false
+    showVerb: false
+    whitelist:
+      tags: [ ArtifactFragment, Ore ]
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleClamp
+  name: MOD hydraulic clamp module
+  description: Hydraulic actuators for picking up and setting down cargo crates.
+  components:
+  - type: Sprite
+    state: clamp
+  - type: ModModule
+    moduleType: Active
+    complexity: 3
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceClamp
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleBuiltinLoaderClamp
+  name: MOD loader hydraulic clamp module
+  description: A high-capacity hydraulic clamp for the Loader suit.
+  components:
+  - type: Sprite
+    state: clamp_loader
+  - type: ModModule
+    moduleType: Active
+    removable: false
+    activePower: 0.4
+    requiredParts: [ outerClothing ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceLoaderClamp
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseItem
+  id: ModsuitDeviceClamp
+  name: MOD hydraulic clamp
+  description: Use on a crate to lift it and on the floor to set it down.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: clamp
+  - type: Item
+    size: Huge
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+  - type: ModClamp
+  - type: ContainerContainer
+    containers:
+      mod-clamp: !type:Container
+        ents: []
+
+- type: entity
+  parent: ModsuitDeviceClamp
+  id: ModsuitDeviceLoaderClamp
+  name: MOD loader hydraulic clamp
+  components:
+  - type: Sprite
+    state: clamp_loader
+  - type: ModClamp
+    maxContents: 5
+    grabDelay: 1
+    dropDelay: 0.5
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleDrill
+  name: MOD drill module
+  description: Extends a mining drill over the user's hand. It also cuts through rocks when rolling in sphere form.
+  components:
+  - type: Sprite
+    state: drill
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceDrill
+  - type: ModSphereDrill
+    damage:
+      types:
+        Structural: 50
+    whitelist:
+      components: [ MiningScannerViewable ]
+
+- type: entity
+  parent: MiningDrill
+  id: ModsuitDeviceDrill
+  name: MOD drill
+  description: A drill extending over the suit's hand.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinSphereTransform
+  name: MOD sphere transform module
+  description: Folds the suit around its wearer into a rolling sphere equipped with mining micromissiles.
+  components:
+  - type: Sprite
+    state: sphere
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 1.6
+    cooldown: 1
+    requiredParts: [ head, outerClothing, gloves, shoes ]
+  - type: ModSphereTransformModule
+  - type: ModArmorModule
+    slots: [ outerClothing ]
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.9
+
+- type: entity
+  parent: ModsuitModuleBuiltinSphereTransform
+  id: ModsuitModuleBuiltinSphereTransformCorporate
+  suffix: Corporate
+  components:
+  - type: ModSphereTransformModule
+    primaryColor: "#254022"
+    darkColor: "#152413"
+    accentColor: "#bf8133"
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinAshAccretion
+  name: MOD ash accretion module
+  description: Collects ash into a protective coating. The coating erodes when crossing ordinary floors.
+  components:
+  - type: Sprite
+    state: ash_accretion
+  - type: ModModule
+    requiredParts: [ head, outerClothing, gloves, shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: AshStormImmune
+    - type: ModAshCoat
+      accretionTilePrefixes:
+      - FloorPlanetAsh
+      - FloorBasalt
+      - FloorAsteroidSand
+      - FloorAsteroidCoarseSand
+      - FloorAsteroidTile
+      - FloorAstroAsteroidSand
+      - FloorPlanetDirt
+      - FloorDirt
+      - FloorChromite
+      keepTilePrefixes:
+      - FloorAsteroidIronsand
+      - FloorGrass
+      - FloorPlanetGrass
+      - FloorAstroGrass
+      - FloorDarkAstroGrass
+      - FloorLightAstroGrass
+      - FloorJungleAstroGrass
+      - FloorMowedAstroGrass
+      - FloorDesertAstroSand
+      - FloorIce
+      - FloorAstroIce
+      - FloorSnow
+      - FloorAstroSnow
+      accretionWeather: [ WeatherAshfall, WeatherAshfallLight, WeatherAshfallHeavy ]
+      layerReductions:
+        Blunt: 0.03
+        Slash: 0.03
+        Piercing: 0.01
+        Heat: 0.02
+
+- type: entity
+  parent: BaseBullet
+  id: BulletModMiningMissile
+  name: mining micromissile
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    noRot: false
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    rotation: 180
+    layers:
+    - state: mine_missile
+      shader: unshaded
+  - type: Projectile
+    impactEffect: BulletImpactEffectKinetic
+    soundHit:
+      path: /Audio/_Arcane/Items/Modsuit/sonic_jackhammer.ogg
+      params:
+        volume: -6
+    damage:
+      types:
+        Blunt: 3
+        Structural: 15
+  - type: ModMiningMissile
+  - type: HomingProjectile
+    homingSpeed: 540
+  - type: TimedDespawn
+    lifetime: 0.6
+  - type: PointLight
+    radius: 1.5
+    energy: 1
+    color: "#89cff0"
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSphereMissiles
+  name: Launch micromissiles
+  description: Fire a volley of mining micromissiles at the target.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: mine_missile
+  - type: Action
+    itemIconStyle: BigAction
+    useDelay: 3
+    checkCanInteract: false
+  - type: TargetAction
+    checkCanAccess: false
+    range: 8
+  - type: WorldTargetAction
+    event: !type:ModSphereMissileActionEvent
+
+- type: entity
+  id: ModsuitPlatingMining
+  parent: [ PartModsuit, BaseCargoContraband ]
+  name: MOD mining plating
+  description: A part used in MOD construction.
+  components:
+  - type: Sprite
+    state: standard-plating
+  - type: Icon
+    state: standard-plating
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 75
+      Glass: 37
+      Plasma: 12
+  - type: Tag
+    tags:
+    - ModsuitPart
+    - ModsuitPlatingMining
+
+- type: entity
+  id: ModsuitPlatingLoader
+  parent: [ PartModsuit, BaseCommandContraband ]
+  name: MOD loader plating
+  description: A part used in MOD construction. An experimental motorized harness plating from Scarborough Arms, issued to quartermasters.
+  components:
+  - type: Sprite
+    state: standard-plating
+  - type: Icon
+    state: standard-plating
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 75
+      Glass: 37
+      Plasma: 12
+  - type: Tag
+    tags:
+    - ModsuitPart
+    - ModsuitPlatingLoader
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinHydraulicArms
+  name: MOD loader hydraulic arms module
+  description: Uses hydraulic pressure to propel the Loader suit.
+  components:
+  - type: Sprite
+    state: launch_loader
+  - type: ModModule
+    moduleType: Usable
+    usePower: 60
+    cooldown: 4
+    action: ActionModHydraulicLaunch
+    requiredParts: [ outerClothing ]
+  - type: ModPowerKickModule
+    damage:
+      types:
+        Blunt: 5
+    knockdownTime: 3
+    chargeTime: 2
+    speed: 14
+    chargePopup: modsuit-hydraulic-charge
+    chargeSound:
+      path: /Audio/_Arcane/Items/Modsuit/loader_charge.ogg
+    launchSound:
+      path: /Audio/_Arcane/Items/Modsuit/loader_launch.ogg
+    hitSound:
+      path: /Audio/Weapons/genhit1.ogg
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinLoaderMagnet
+  name: MOD loader hydraulic magnet module
+  description: Pulls crates and lockers towards the suit. It can also launch cargo you are already pulling.
+  components:
+  - type: Sprite
+    state: magnet_loader
+  - type: ModModule
+    moduleType: Usable
+    usePower: 15
+    cooldown: 1.5
+    action: ActionModLoaderMagnet
+    requiredParts: [ outerClothing ]
+  - type: ModLoaderMagnet
+    whitelist:
+      components: [ EntityStorage ]
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleCandelaSpool
+  name: MOD Candela beacon spool module
+  description: Automatically deploys marker beacons from the suit's storage as the wearer moves.
+  components:
+  - type: Sprite
+    state: candela_spool
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ outerClothing, gloves ]
+  - type: ModCandelaModule
+    whitelist:
+      tags: [ MarkerBeacon ]

@@ -24,6 +24,10 @@
   parent: [ ClothingModsuitStandard, BaseCentcommContraband, BaseModsuitBatteryMicroreactor ]
   id: BaseModsuitERT
   components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreBluespaceReactorCell
   - type: Storage
     grid:
     - 0,0,10,3

@@ -14,8 +14,9 @@
   name: Leader Responsory modsuit control unit
   description: The main controller for a Leader Responsory modsuit.
   components:
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeResponsory
+    parts:
       head: ClothingModsuitHelmetResponsoryLeader
       gloves: ClothingModsuitGauntletsResponsoryLeader
       outerClothing: ClothingModsuitChestplateResponsoryLeader

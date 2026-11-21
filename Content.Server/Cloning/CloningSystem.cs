@@ -30,6 +30,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Arcane.Common.ModSuits; // Arcane
 
 namespace Content.Server.Cloning;
 
@@ -227,32 +228,81 @@ public sealed partial class CloningSystem : SharedCloningSystem
             return;
 
         var coords = Transform(clone).Coordinates;
+        // Arcane-Start
+        List<(EntityUid Original, EntityUid Copy)> copiedEquipment = new();
+        HashSet<EntityUid> equippedCopies = new();
+        HashSet<EntityUid> eligibleItems = new();
+        List<(EntityUid Item, SlotDefinition Slot)> dependentItems = new();
+        // Arcane-End
 
         // Iterate over all inventory slots
         var slotEnumerator = _inventory.GetSlotEnumerator(original, slotFlags);
         while (slotEnumerator.NextItem(out var item, out var slot))
         {
+            // Arcane-Start
+            if (_whitelist.CheckBoth(item, blacklist, whitelist))
+                eligibleItems.Add(item);
+            var resolve = new ResolveEquipmentCopyItemEvent(item);
+            RaiseLocalEvent(item, ref resolve);
+            if (resolve.Item is not { } source)
+                continue;
+            item = source;
+            if (slot.SlotFlags.HasFlag(SlotFlags.SUITSTORAGE))
+            {
+                dependentItems.Add((item, slot));
+                continue;
+            }
+            CopySlot(item, slot);
+            // Arcane-End
+        }
+
+        // Arcane-Start: replicate MOD deployment before equipping items that require a chestplate.
+        foreach (var (source, copy) in copiedEquipment)
+        {
+            var equipped = new EquipmentCopyEquippedEvent(copy, eligibleItems, equippedCopies);
+            RaiseLocalEvent(source, ref equipped);
+        }
+
+        foreach (var (item, slot) in dependentItems)
+            CopySlot(item, slot);
+
+        if (makeUnremoveable)
+        {
+            foreach (var copy in equippedCopies)
+                EnsureComp<UnremoveableComponent>(copy);
+        }
+
+        void CopySlot(EntityUid item, SlotDefinition slot)
+        {
+            // Arcane-End
             var cloneItem = CopyItem(item, coords, whitelist, blacklist, copyStorage); // Trauma - pass copyStorage
 
             // Goob edit start
             if (cloneItem == null)
-                continue;
+                return; // Arcane-Edit: continue > return
 
             if (!_inventory.TryEquip(clone, cloneItem.Value, slot.Name, silent: true, inventory: clone.Comp))
             {
                 Del(cloneItem); // delete it again if the clone cannot equip it
-                continue;
+                return; // Arcane-Edit: continue > return
             }
 
-            if (makeUnremoveable)
-                EnsureComp<UnremoveableComponent>(cloneItem.Value);
-
+            // Arcane-Edit-Start: defer copy protection until after deployment.
+            copiedEquipment.Add((item, cloneItem.Value));
+            equippedCopies.Add(cloneItem.Value);
+            // Arcane-Edit-End
             if (internalContentsUnremoveable && TryComp(cloneItem.Value, out ContainerManagerComponent? manager))
             {
                 foreach (var container in manager.Containers.Values)
                 {
                     foreach (var contained in container.ContainedEntities)
                     {
+                        // Arcane-Start: linked MOD parts are managed by their control unit.
+                        var resolve = new ResolveEquipmentCopyItemEvent(contained);
+                        RaiseLocalEvent(contained, ref resolve);
+                        if (resolve.Item != contained)
+                            continue;
+                        // Arcane-End
                         if (!HasComp<AttachedClothingComponent>(contained))
                             EnsureComp<UnremoveableComponent>(contained);
                     }
@@ -261,7 +311,7 @@ public sealed partial class CloningSystem : SharedCloningSystem
 
             if (!TryComp(item, out ToggleableClothingComponent? toggleable) || toggleable.ClothingUids.Count == 0 ||
                 !TryComp(cloneItem.Value, out ToggleableClothingComponent? clonedToggleable))
-                continue;
+                return; // Arcane-Edit: continue > return
 
             var allEquipped = true;
             List<EntityUid> equipped = new();
@@ -291,7 +341,7 @@ public sealed partial class CloningSystem : SharedCloningSystem
             if (!allEquipped || !TryComp(item, out SealableClothingControlComponent? sealable) ||
                 !sealable.IsCurrentlySealed ||
                 !TryComp(cloneItem.Value, out SealableClothingControlComponent? clonedSealable))
-                continue;
+                return; // Arcane-Edit: continue > return
 
             var success = true;
             foreach (var toSeal in equipped)

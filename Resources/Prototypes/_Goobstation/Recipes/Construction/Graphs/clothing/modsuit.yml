@@ -10,7 +10,7 @@
       steps:
       - tag: ModsuitCore
         name: construction-graph-tag-mod-core
-        store: core-container
+        store: mod-core # Arcane
         completed:
         - !type:PlaySound
           sound: /Audio/Items/screwdriver2.ogg
@@ -24,7 +24,7 @@
       - tool: Prying
         completed:
           - !type:EmptyContainer
-            container: core-container
+            container: mod-core # Arcane
     - to: shell-core-secured
       steps:
       - tool: Screwing
@@ -109,9 +109,53 @@
 
         - tool: Anchoring
           doAfter: 1
+    - to: mining # Arcane
+      steps:
+        - tag: ModsuitPlatingMining
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
+
+    - to: loader # Arcane
+      steps:
+        - tag: ModsuitPlatingLoader
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
+
+    - to: brigmed # Arcane
+      steps:
+        - tag: ModsuitPlatingBrigMed
+          name: construction-graph-tag-mod-plating
+          doAfter: 1
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Items/screwdriver2.ogg
+
+        - tool: Anchoring
+          doAfter: 1
 
   - node: standard
     entity: ClothingModsuitStandard
+
+  - node: mining # Arcane
+    entity: ClothingModsuitMining
+
+  - node: loader # Arcane
+    entity: ClothingModsuitLoader
+
+  - node: brigmed # Arcane
+    entity: ClothingModsuitBrigMed
 
   - node: security
     entity: ClothingModsuitSecurity

@@ -1,0 +1,30 @@
+- type: latheRecipePack
+  id: ModsuitSecurityEquipment
+  recipes:
+  - ModsuitModuleVisorSecurity
+  - ModsuitModuleMegaphone
+  - ModsuitModuleEmpShield
+  - ModsuitModulePepperShoulders
+  - ModsuitModuleRestraintAssist
+  - ModsuitModuleBulwark
+  - ModsuitModuleHolster
+  - ModsuitModuleThermalVisor
+  - ModsuitModuleShockAbsorber
+  - ModsuitModuleNightVisor
+  - ModsuitModuleCriminalCapture
+  - ModsuitModuleMagneticHarness
+  - ModsuitModuleProjectileDampener
+  - ModsuitModuleShootingAssistant
+  - ModsuitPlatingBrigMed
+
+- type: latheRecipePack
+  id: ModsuitMedicalEquipment
+  recipes:
+  - ModsuitModuleVisorMedical
+  - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleInjector
+  - ModsuitModuleDefibrillator
+  - ModsuitModuleNightVisor
+  - ModsuitModuleQuickCarry
+  - ModsuitModuleQuickCarryAdvanced
+  - ModsuitModuleThreadRipper

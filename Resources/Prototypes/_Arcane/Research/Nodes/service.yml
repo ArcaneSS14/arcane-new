@@ -12,6 +12,10 @@
   - type: General
     amount: 500
   recipeUnlocks:
+  - ModsuitModuleStamper
+  - ModsuitModuleBikeHorn
+  - ModsuitModuleWaddle
+  - ModsuitModulePaperDispenser
   - HandLabeler
   - ParcelWrap
   - CutterMachineCircuitboard
@@ -80,6 +84,7 @@
   discountExperimentCosts:
     ScanningRandomJanitorTrash: 5000
   recipeUnlocks:
+  - ModsuitModuleJanitorMister
   - AdvMopItem
   - LightReplacer
   - SprayBottle
@@ -134,6 +139,7 @@
     PhysicalArcadeWinner: 5000
   recipeUnlocks:
   - BlockGameArcadeComputerCircuitboard
+  - ModsuitModuleBalloonBlower
   - SpaceVillainArcadeComputerCircuitboard
   position: 10,-4
 
@@ -151,6 +157,8 @@
   - type: General
     amount: 500
   recipeUnlocks:
+  - ModsuitModuleMouthhole
+  - ModsuitModuleBurgerDispenser
   - ElectricGrillMachineCircuitboard
   - MicrowaveMachineCircuitboard
   - FoodBowlBig
@@ -244,6 +252,7 @@
     amount: 500
   recipeUnlocks:
   - FishingRod
+  - ModsuitModuleFishingGlove
   position: 11,-2
 
 - type: technology

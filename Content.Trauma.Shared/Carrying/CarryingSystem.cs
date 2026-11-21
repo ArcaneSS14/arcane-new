@@ -280,6 +280,12 @@ public sealed partial class CarryingSystem : CommonCarryingSystem
         if (!HasComp<KnockedDownComponent>(carried))
             length *= 2f;
 
+        // Arcane-Edit-Start: equipped MOD servos can reduce pickup time.
+        var duration = new ModifyCarryDurationEvent(carried);
+        RaiseLocalEvent(carrier, ref duration);
+        length *= duration.Multiplier;
+        // Arcane-Edit-End
+
         var ev = new CarryDoAfterEvent();
         var args = new DoAfterArgs(EntityManager, carrier, length, ev, carried, target: carried)
         {

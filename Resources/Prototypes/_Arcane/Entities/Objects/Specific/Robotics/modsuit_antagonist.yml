@@ -1,0 +1,146 @@
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleCloak
+  name: MOD prototype cloaking module
+  description: Bends light around a stationary wearer. Attacking, shooting or taking a hit breaks the cloak.
+  components:
+  - type: Sprite
+    state: cloak_traitor
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 1.6
+    cooldown: 5
+  - type: ModCloakModule
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: Stealth
+      enabledOnDeath: false
+      enabledOnCrit: false
+      revealOnAttack: false
+      revealOnDamage: false
+    - type: StealthOnMove
+      passiveVisibilityRate: -0.4
+      movementVisibilityRate: 0.7
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleAdrenalineBoost
+  name: MOD adrenaline boost module
+  description: An emergency injector that releases stimulants and helps the wearer recover from a stun.
+  components:
+  - type: Sprite
+    state: adrenaline_boost
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    usePower: 90
+    cooldown: 120
+    allowFlags: Incapacitated
+    action: ActionModAdrenalineBoost
+  - type: ModAdrenalineModule
+    solution:
+      reagents:
+      - ReagentId: Stimulants
+        Quantity: 10
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleInfiltrator
+  name: MOD infiltration core programs module
+  description: Silences the wearer's footsteps and masks their name in speech.
+  components:
+  - type: Sprite
+    state: infiltrator
+  - type: ModModule
+    complexity: 1
+    requiredParts: [ head, shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: FootstepModifier
+    - type: VoiceOverride
+      nameOverride: modsuit-infiltrator-voice
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModulePowerKick
+  name: MOD power kick module
+  description: Charges the boot servos for a short burst towards the target.
+  components:
+  - type: Sprite
+    state: power_kick
+  - type: ModModule
+    moduleType: Usable
+    complexity: 2
+    usePower: 45
+    cooldown: 5
+    action: ActionModPowerKick
+    requiredParts: [ shoes ]
+  - type: ModPowerKickModule
+    damage:
+      types:
+        Blunt: 20
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleEnergyShield
+  name: MOD energy shield module
+  description: Uses suit power to block an incoming attack and recharges between hits.
+  components:
+  - type: Sprite
+    state: energy_shield
+  - type: ModModule
+    complexity: 3
+    idlePower: 0.8
+  - type: ModEnergyShieldModule
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModulePlateCompression
+  name: MOD plate compression module
+  description: Compacts the control unit so it fits in a bag. Takes up the space used by storage modules.
+  components:
+  - type: Sprite
+    state: plate_compression
+  - type: ModModule
+    complexity: 2
+    allowFlags: Inactive
+    incompatible:
+      tags: [ ModsuitModuleStorage ]
+  - type: ModPlateCompressionModule
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleStorage ]
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleChameleon
+  name: MOD chameleon module
+  description: Disguises the control unit as another backpack.
+  components:
+  - type: Sprite
+    state: chameleon
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    allowFlags: [ Inactive, Unworn ]
+    incompatible:
+      components: [ ModChameleonModule ]
+  - type: ModChameleonModule
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinChameleon
+  name: integrated chameleon projector
+  description: Opens the control unit's disguise picker.
+  components:
+  - type: Sprite
+    state: chameleon
+  - type: ModModule
+    moduleType: Usable
+    allowFlags: Inactive
+    incompatible:
+      components: [ ModChameleonModule ]
+  - type: ModChameleonModule
+    builtIn: true

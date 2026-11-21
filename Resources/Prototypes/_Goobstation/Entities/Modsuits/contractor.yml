@@ -9,20 +9,21 @@
   components:
     - type: Sprite
       sprite: _Goobstation/Clothing/OuterClothing/Modsuits/contractor.rsi
-    - type: ToggleableClothing
-      clothingPrototypes:
+    - type: ModSuit # Arcane
+      theme: ModThemeContractor
+      inbuiltModules: [ ModsuitModuleBuiltinInstrument, ModsuitModuleBuiltinGrip, ModsuitModuleBuiltinChameleon ]
+      parts:
         head: ClothingModsuitHelmetContractor
         gloves: ClothingModsuitGauntletsContractor
         outerClothing: ClothingModsuitChestplateContractor
         shoes: ClothingModsuitBootsContractor
-    - type: ItemSlots
-      slots:
-        cell_slot:
-          name: power-cell-slot-component-slot-name-default
-          startingItem: PowerCellVortex # Arcane-Edit: PowerCellAntiqueProto > PowerCellVortex
-          whitelist:
-            components:
-              - PowerCell
+    - type: ChameleonClothing # Arcane
+      slot: [ back ]
+      default: ClothingModsuitContractor
+    - type: ContainerFill # Arcane: keep the current Vortex cell inside a MOD core
+      containers:
+        mod-core:
+        - ModsuitCoreVortexCell
 
 - type: entity
   parent: [ClothingModsuitGauntletsStandard, BaseSyndicateContraband]

@@ -183,7 +183,11 @@
   - ClothingBackpackMessengerHolding
   - ClothingBackpackHolding
   - ClothingBackpackSatchelHolding
+  - ModsuitModuleStorageBluespace
+  - ModsuitModuleStorageHolding
   - WeaponTetherGun
+  - ModsuitModuleTether
+  - ModsuitModuleKinesis
   - WeaponGauntletGorilla
   - ClothingOuterArmorReactiveUnfinished
 #  - PolymorphBelt # TODO

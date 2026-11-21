@@ -38,6 +38,58 @@
   - ModsuitGauntlets
   - ModsuitShell
   - ModsuitPlatingExternal
+  - ModsuitPlatingMining # Arcane
+  - ModsuitCoreStandard # Arcane
+  - ModsuitCoreStandardMicroreactor # Arcane
+  - ModsuitCorePlasma # Arcane
+  - ModsuitModuleStorageCompact # Arcane
+  - ModsuitModuleStorageCase # Arcane
+  - ModsuitModuleStorageLarge # Arcane
+  - ModsuitModuleStorageBluespace # Arcane
+  - ModsuitModuleStorageHolding # Arcane
+  - ModsuitModuleFlashlight # Arcane
+  - ModsuitModuleWelding # Arcane
+  - ModsuitModuleThermalRegulator # Arcane
+  - ModsuitModuleVisorDiagnostic # Arcane
+  - ModsuitModuleGps # Arcane
+  - ModsuitModuleTether # Arcane
+  - ModsuitModuleFishingGlove # Arcane
+  - ModsuitModuleMister # Arcane
+  - ModsuitModuleJanitorMister # Arcane
+  - ModsuitModuleResinMister # Arcane
+  - ModsuitModuleStamper # Arcane
+  - ModsuitModuleMouthhole # Arcane
+  - ModsuitModuleMagboots # Arcane
+  - ModsuitModuleMagbootsAdvanced # Arcane
+  - ModsuitModuleJetpack # Arcane
+  - ModsuitModuleJetpackAdvanced # Arcane
+  - ModsuitModuleBikeHorn # Arcane
+  - ModsuitModuleHeadProtector # Arcane
+  - ModsuitModuleRadProtection # Arcane
+  - ModsuitModuleEmpShieldAdvanced # Arcane
+  - ModsuitModuleReagentScanner # Arcane
+  - ModsuitModuleWaddle # Arcane
+  - ModsuitModuleBurgerDispenser # Arcane
+  - ModsuitModulePaperDispenser # Arcane
+  - ModsuitModuleBalloonBlower # Arcane
+  - ModsuitModuleAntiGravity # Arcane
+  - ModsuitModuleJumpJet # Arcane
+  - ModsuitModuleJointTorsion # Arcane
+  - ModsuitModulePlasmaStabilizer # Arcane
+  - ModsuitModuleTRay # Arcane
+  - ModsuitModuleOreBag # Arcane
+  - ModsuitModuleClamp # Arcane
+  - ModsuitModuleDrill # Arcane
+  - ModsuitModuleCandelaSpool # Arcane
+  - ModsuitModulePatientTransport # Arcane
+  - ModsuitModuleCriminalCapture # Arcane
+  - ModsuitModuleHatStabilizer # Arcane
+  - ModsuitModuleMagneticHarness # Arcane
+  - ModsuitModuleKinesis # Arcane
+  - ModsuitModuleRecycler # Arcane
+  - ModsuitModuleDonkRecycler # Arcane
+  - ModsuitModuleProjectileDampener # Arcane
+  - ModsuitModuleShootingAssistant # Arcane
 
 - type: latheRecipePack
   id: BorgModulesGoob
