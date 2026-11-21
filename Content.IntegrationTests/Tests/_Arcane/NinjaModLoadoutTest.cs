@@ -209,8 +209,17 @@ public sealed class NinjaModLoadoutTest : InteractionTest
             var shoot = new ModNinjaNetActionEvent { Performer = ninja, Target = destination };
             SEntMan.EventBus.RaiseLocalEvent(module, shoot);
             Assert.That(shoot.Handled, Is.True);
-            var projectiles = SEntMan.EntityQuery<MetaDataComponent>();
-            var projectile = projectiles.Single(item => item.EntityPrototype?.ID == "NinjaNetProjectile").Owner;
+            var projectiles = SEntMan.EntityQueryEnumerator<MetaDataComponent>();
+            var projectile = EntityUid.Invalid;
+            while (projectiles.MoveNext(out var uid, out var metadata))
+            {
+                if (metadata.EntityPrototype?.ID == "NinjaNetProjectile")
+                {
+                    Assert.That(projectile, Is.EqualTo(EntityUid.Invalid), "Only one net projectile");
+                    projectile = uid;
+                }
+            }
+            Assert.That(projectile, Is.Not.EqualTo(EntityUid.Invalid));
             var hit = new ProjectileHitEvent(new DamageSpecifier(), target, ninja);
             SEntMan.EventBus.RaiseLocalEvent(projectile, ref hit);
             net = SEntMan.GetComponent<TransformComponent>(target).ParentUid;

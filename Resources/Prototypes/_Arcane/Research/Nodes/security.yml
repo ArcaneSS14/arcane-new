@@ -94,6 +94,7 @@
   - ModsuitModuleHolster
   - ModsuitModuleCriminalCapture
   - ModsuitModuleMagneticHarness
+  - ModsuitModulePathfinder
   - ModsuitModuleProjectileDampener
   - ModsuitModuleShootingAssistant
   - ModsuitPlatingBrigMed

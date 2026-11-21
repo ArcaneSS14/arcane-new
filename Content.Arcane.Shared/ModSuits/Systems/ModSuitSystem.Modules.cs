@@ -229,7 +229,7 @@ public sealed partial class ModSuitSystem
             return false;
 
         var battery = GetBattery(suit);
-        if (component.UsePower > 0f && (battery == null || _battery.GetCharge(battery.Value.AsNullable()) < component.UsePower))
+        if (component.UsePower > 0f && (battery == null || _battery.GetCharge(battery.Value.Owner).Charge < component.UsePower))
             return false;
 
         if (component.Type == ModModuleType.Usable)

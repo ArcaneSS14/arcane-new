@@ -78,7 +78,7 @@ public sealed partial class ModSuitSystem : EntitySystem
     public bool HasPower(Entity<ModSuitComponent> suit) => suit.Comp.Powered;
 
     internal bool HasModuleCharge(Entity<ModSuitComponent> suit, float amount) =>
-        GetBattery(suit) is { } battery && _battery.GetCharge(battery.AsNullable()) >= amount;
+        GetBattery(suit) is { } battery && _battery.GetCharge(battery.Owner).Charge >= amount;
 
     internal bool TryUseModuleCharge(Entity<ModSuitComponent> suit, float amount) =>
         GetBattery(suit) is { } battery && _battery.TryUseCharge(battery.AsNullable(), amount);
@@ -206,7 +206,7 @@ public sealed partial class ModSuitSystem : EntitySystem
         if (_net.IsClient || _timing.ApplyingState || TerminatingOrDeleted(suit))
             return;
 
-        var hasPower = GetBattery(suit) is { } battery && _battery.GetCharge(battery.AsNullable()) > 0f;
+        var hasPower = GetBattery(suit) is { } battery && _battery.GetCharge(battery.Owner).Charge > 0f;
         if (suit.Comp.Powered == hasPower)
             return;
 

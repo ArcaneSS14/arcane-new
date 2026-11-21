@@ -94,7 +94,7 @@ public sealed partial class ModSuitSystem
                     return false;
 
                 if (suit.Comp.ActivationCharge > 0f && (GetBattery(suit) is not { } battery
-                    || _battery.GetCharge(battery.AsNullable()) <= suit.Comp.ActivationCharge
+                    || _battery.GetCharge(battery.Owner).Charge <= suit.Comp.ActivationCharge
                     || !_battery.TryUseCharge(battery.AsNullable(), suit.Comp.ActivationCharge)))
                     return false;
 

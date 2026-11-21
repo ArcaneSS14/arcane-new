@@ -34,7 +34,7 @@ public sealed partial class ModCoreSystem : EntitySystem
 
         args.Handled = true;
         var source = battery.Value.AsNullable();
-        var missing = battery.Value.Comp.MaxCharge - _battery.GetCharge(source);
+        var missing = battery.Value.Comp.MaxCharge - _battery.GetCharge(source.Owner).Charge;
         if (missing <= 0f)
         {
             _popup.PopupEntity(Loc.GetString("modsuit-core-full"), core, args.User);

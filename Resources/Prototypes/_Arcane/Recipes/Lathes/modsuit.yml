@@ -7,6 +7,31 @@
 
 - type: latheRecipe
   parent: BaseModsuitModuleRecipe
+  id: ModsuitModulePathfinder
+  result: ModsuitModulePathfinder
+  materials:
+    Steel: 500
+    Uranium: 500
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleStatusReadout
+  result: ModsuitModuleStatusReadout
+  materials:
+    Steel: 300
+    Glass: 300
+    Plasteel: 100
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
+  id: ModsuitModuleCrewMonitor
+  result: ModsuitModuleCrewMonitor
+  materials:
+    Steel: 300
+    Glass: 500
+
+- type: latheRecipe
+  parent: BaseModsuitModuleRecipe
   id: ModsuitCoreStandard
   result: ModsuitCoreStandard
   materials:

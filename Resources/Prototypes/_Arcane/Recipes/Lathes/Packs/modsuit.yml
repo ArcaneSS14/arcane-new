@@ -13,6 +13,7 @@
   - ModsuitModuleNightVisor
   - ModsuitModuleCriminalCapture
   - ModsuitModuleMagneticHarness
+  - ModsuitModulePathfinder
   - ModsuitModuleProjectileDampener
   - ModsuitModuleShootingAssistant
   - ModsuitPlatingBrigMed
@@ -22,6 +23,8 @@
   recipes:
   - ModsuitModuleVisorMedical
   - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleStatusReadout
+  - ModsuitModuleCrewMonitor
   - ModsuitModuleInjector
   - ModsuitModuleDefibrillator
   - ModsuitModuleNightVisor

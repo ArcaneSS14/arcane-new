@@ -145,6 +145,8 @@
   - DefibrillatorCompact
   - ModsuitModuleVisorMedical
   - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleStatusReadout
+  - ModsuitModuleCrewMonitor
   - ModsuitModuleInjector
   - ModsuitModuleDefibrillator
   - ModsuitModuleNightVisor

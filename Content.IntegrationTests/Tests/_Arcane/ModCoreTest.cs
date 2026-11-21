@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Arcane.Server.ModSuits;
 using Content.Arcane.Shared.ModSuits;
 using Content.Arcane.Shared.ModSuits.Components;
 using Content.Arcane.Shared.ModSuits.Systems;
@@ -27,6 +28,8 @@ using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Humanoid;
 using Content.Shared.Instruments;
+using Content.Shared.Implants;
+using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Item;
@@ -58,6 +61,152 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class ModCoreTest : InteractionTest
 {
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task PathfinderReturnsTheOriginalSuitOnlyToItsImplantedOwner(bool deleteModule)
+    {
+        EntityUid wearer = default;
+        EntityUid unit = default;
+        EntityUid module = default;
+        EntityUid implant = default;
+        float warmup = 0;
+        float travel = 0;
+        float chargeBefore = 0;
+        await Server.WaitAssertion(() =>
+        {
+            var location = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", location);
+            unit = SEntMan.SpawnAttachedTo("ClothingModsuitStandardPowerCell", location);
+            module = SEntMan.SpawnAttachedTo("ModsuitModulePathfinder", location);
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(unit);
+            var wires = SEntMan.System<SharedWiresSystem>();
+            Assert.That(wires.TogglePanel(unit, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(unit, panel, false), Is.True);
+            var pathfinder = SEntMan.GetComponent<ModPathfinderComponent>(module);
+            implant = pathfinder.Implant!.Value;
+            warmup = (float) pathfinder.Warmup.TotalSeconds;
+            travel = (float) pathfinder.FlightTime.TotalSeconds;
+            SEntMan.System<SharedImplanterSystem>().Implant(wearer, wearer,
+                (module, SEntMan.GetComponent<ImplanterComponent>(module)));
+            var link = (implant, SEntMan.GetComponent<ModPathfinderImplantComponent>(implant));
+            Assert.That(SEntMan.GetComponent<SubdermalImplantComponent>(implant).ImplantedEntity, Is.EqualTo(wearer));
+            var outsider = SEntMan.SpawnAttachedTo("MobHuman", location);
+            Assert.That(SEntMan.System<ModPathfinderSystem>().TryRecall(link, outsider), Is.False);
+            var inventory = SEntMan.System<InventorySystem>();
+            Assert.That(inventory.TryEquip(wearer, unit, "back"), Is.True);
+            Assert.That(SEntMan.System<ModPathfinderSystem>().TryRecall(link, wearer), Is.False, "A worn suit cannot be recalled");
+            Assert.That(inventory.TryUnequip(wearer, "back"), Is.True);
+            SEntMan.System<SharedTransformSystem>().SetCoordinates(unit, location.Offset(new Vector2(6, 0)));
+            chargeBefore = SEntMan.System<SharedBatterySystem>().GetCharge(suits.GetBattery(suit)!.Value.Owner).Charge;
+            var action = SEntMan.GetComponent<SubdermalImplantComponent>(implant).Action!.Value;
+            Assert.That(SEntMan.System<SharedActionsSystem>().PerformAction(wearer,
+                (action, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(action))), Is.True);
+            Assert.That(SEntMan.System<ModPathfinderSystem>().TryRecall(link, wearer), Is.False, "Only one recall may be in flight");
+        });
+
+        if (deleteModule)
+        {
+            await RunSeconds(warmup + travel / 2);
+            MapCoordinates origin = default;
+            await Server.WaitAssertion(() => origin = SEntMan.GetComponent<ModPathfinderFlightComponent>(unit).Origin);
+            await Server.WaitAssertion(() => SEntMan.DeleteEntity(module));
+            await RunTicksSync(3);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.EntityExists(unit), Is.True);
+                Assert.That(SEntMan.EntityExists(implant), Is.False);
+                Assert.That(SEntMan.HasComponent<ModPathfinderFlightComponent>(unit), Is.False);
+                Assert.That(SEntMan.System<SharedTransformSystem>().GetMapCoordinates(unit), Is.EqualTo(origin));
+            });
+            return;
+        }
+
+        await RunSeconds(warmup + travel / 2);
+        await Server.WaitAssertion(() =>
+        {
+            var flight = SEntMan.GetComponent<ModPathfinderFlightComponent>(unit);
+            Assert.That(flight.Launched, Is.True);
+            Assert.That(HandSys.TryPickup(wearer, unit), Is.False);
+            var transform = SEntMan.System<SharedTransformSystem>();
+            Assert.That((transform.GetMapCoordinates(unit).Position - transform.GetMapCoordinates(wearer).Position).Length(),
+                Is.InRange(0.1f, 5.9f), "The original suit travels rather than arriving immediately");
+        });
+
+        await RunSeconds(travel);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.System<InventorySystem>().TryGetSlotEntity(wearer, "back", out var returned), Is.True);
+            Assert.That(returned, Is.EqualTo(unit));
+            Assert.That(SEntMan.HasComponent<ModPathfinderFlightComponent>(unit), Is.False);
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (unit, SEntMan.GetComponent<ModSuitComponent>(unit));
+            var pathfinder = SEntMan.GetComponent<ModPathfinderComponent>(module);
+            Assert.That(suit.Item2.ModulesContainer!.ContainedEntities, Does.Contain(module));
+            Assert.That(SEntMan.System<SharedBatterySystem>().GetCharge(suits.GetBattery(suit)!.Value.Owner).Charge,
+                Is.EqualTo(chargeBefore - pathfinder.ChargeCost).Within(0.01f));
+            Assert.That(pathfinder.Implant, Is.EqualTo(implant));
+        });
+    }
+
+    [Test]
+    public async Task StatusReadoutDisclosesOnlyItsPoweredWearerAndClosesOnPowerLoss()
+    {
+        EntityUid wearer = default;
+        EntityUid module = default;
+        await Server.WaitAssertion(() =>
+        {
+            var location = MapData.GridCoords;
+            wearer = SEntMan.SpawnAttachedTo("MobHuman", location);
+            Server.PlayerMan.SetAttachedEntity(ServerSession, wearer);
+            var control = SEntMan.SpawnAttachedTo("TestModControlUnit", location);
+            module = SEntMan.SpawnAttachedTo("ModsuitModuleStatusReadout", location);
+            var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", location);
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            Assert.That(SEntMan.System<ItemSlotsSystem>().TryInsert(control, "mod-core", core, null), Is.True);
+            Assert.That(SEntMan.System<InventorySystem>().TryEquip(wearer, control, "back"), Is.True);
+            var wires = SEntMan.System<SharedWiresSystem>();
+            var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
+            Assert.That(wires.TogglePanel(control, panel, true), Is.True);
+            Assert.That(suits.TryInstallModule(suit, module, wearer), Is.True);
+            Assert.That(wires.TogglePanel(control, panel, false), Is.True);
+            Assert.That(suits.TryDeployPart(suit, "head", wearer), Is.True);
+            Assert.That(suits.TryToggleActivation(suit, wearer), Is.True);
+        });
+
+        await RunSeconds(1);
+        await Server.WaitAssertion(() =>
+        {
+            var component = SEntMan.GetComponent<ModStatusReadoutComponent>(module);
+            var status = SEntMan.System<ModStatusReadoutSystem>();
+            Assert.That(status.GetReadout((module, component), wearer), Is.Not.Null);
+            Assert.That(status.GetReadout((module, component), SPlayer), Is.Null);
+            var action = SEntMan.GetComponent<ModModuleComponent>(module).ActionEntity!.Value;
+            Assert.That(SEntMan.System<SharedActionsSystem>().PerformAction(wearer,
+                (action, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(action))), Is.True);
+            Assert.That(SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>()
+                .IsUiOpen(module, ModStatusReadoutUiKey.Key, wearer), Is.True);
+            Assert.That(SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>()
+                .TryOpenUi(module, ModStatusReadoutUiKey.Key, SPlayer), Is.False,
+                "A forged open request must not subscribe a different actor to the wearer's readings");
+            Assert.That(SEntMan.System<ModSuitSystem>().TryGetInstalledModuleSuit(module, out var suit), Is.True);
+            var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value;
+            SEntMan.System<SharedBatterySystem>().SetCharge(battery.AsNullable(), 0);
+            Assert.That(status.GetReadout((module, component), wearer), Is.Null);
+        });
+
+        await RunSeconds(1.1f);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>()
+                .IsUiOpen(module, ModStatusReadoutUiKey.Key), Is.False);
+            Server.PlayerMan.SetAttachedEntity(ServerSession, SPlayer);
+        });
+    }
+
     [TestPrototypes]
     private const string Prototypes = """
         - type: modTheme
@@ -322,11 +471,11 @@ public sealed class ModCoreTest : InteractionTest
             var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
             var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value.AsNullable();
             var charge = SEntMan.System<SharedBatterySystem>();
-            var before = charge.GetCharge(battery);
+            var before = charge.GetCharge(battery.Owner).Charge;
             var action = new ModModuleActionEvent { Performer = wearer };
             SEntMan.EventBus.RaiseLocalEvent(blower, action);
             Assert.That(action.Handled, Is.True);
-            Assert.That(charge.GetCharge(battery), Is.EqualTo(before - 5f).Within(0.01f));
+            Assert.That(charge.GetCharge(battery.Owner).Charge, Is.EqualTo(before - 5f).Within(0.01f));
 
             string[] variants = ["ModsuitBalloonRed", "ModsuitBalloonBlue", "ModsuitBalloonGreen"];
             var hands = SEntMan.System<SharedHandsSystem>();
@@ -392,9 +541,9 @@ public sealed class ModCoreTest : InteractionTest
             var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
             var battery = suits.GetBattery(suit)!.Value.AsNullable();
             var charge = SEntMan.System<SharedBatterySystem>();
-            var before = charge.GetCharge(battery);
+            var before = charge.GetCharge(battery.Owner).Charge;
             SEntMan.System<SharedEmpSystem>().EmpPulse(MapData.GridCoords, 1f, 100f, TimeSpan.Zero, predicted: false);
-            Assert.That(charge.GetCharge(battery), Is.EqualTo(before - 100f).Within(0.01f));
+            Assert.That(charge.GetCharge(battery.Owner).Charge, Is.EqualTo(before - 100f).Within(0.01f));
 
             var wires = SEntMan.System<SharedWiresSystem>();
             var panel = SEntMan.GetComponent<WiresPanelComponent>(control);
@@ -1988,7 +2137,7 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(stacks.GetCount(plasma), Is.EqualTo(10));
             batteries.SetCharge(battery, 450);
             Refuel();
-            Assert.That(batteries.GetCharge(battery), Is.EqualTo(720));
+            Assert.That(batteries.GetCharge(battery.Owner).Charge, Is.EqualTo(720));
             Assert.That(stacks.GetCount(plasma), Is.EqualTo(8));
 
             void Refuel()

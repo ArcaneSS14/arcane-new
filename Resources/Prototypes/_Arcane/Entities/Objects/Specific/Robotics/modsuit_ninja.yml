@@ -121,7 +121,6 @@
     position: Stand
   - type: NinjaNet
   - type: Damageable
-    damageContainer: StructuralInorganic
   - type: Destructible
     thresholds:
     - trigger: !type:DamageTrigger
