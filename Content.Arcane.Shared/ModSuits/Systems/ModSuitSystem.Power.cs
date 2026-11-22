@@ -63,6 +63,7 @@ public sealed partial class ModSuitSystem : EntitySystem
         InitializeAshCoat();
         InitializeLoaderModules();
         InitializeEquipmentCopy();
+        InitializeAssistants();
     }
 
     public EntityUid? GetCore(Entity<ModSuitComponent> suit) => _itemSlots.GetItemOrNull(suit.Owner, suit.Comp.CoreSlotId);
@@ -91,6 +92,9 @@ public sealed partial class ModSuitSystem : EntitySystem
 
     private void OnSuitItemInserted(Entity<ModSuitComponent> suit, ref EntInsertedIntoContainerMessage args)
     {
+        if (!_net.IsClient && !_timing.ApplyingState && IsAssistantSlot(args.Container.ID))
+            RefreshAssistant(suit);
+
         if (args.Container.ID != suit.Comp.CoreSlotId || _timing.ApplyingState)
             return;
 
@@ -101,6 +105,9 @@ public sealed partial class ModSuitSystem : EntitySystem
 
     private void OnSuitItemRemoved(Entity<ModSuitComponent> suit, ref EntRemovedFromContainerMessage args)
     {
+        if (!_net.IsClient && !_timing.ApplyingState && IsAssistantSlot(args.Container.ID))
+            RefreshAssistant(suit);
+
         if (_net.IsClient || _timing.ApplyingState || TerminatingOrDeleted(suit))
             return;
 
@@ -219,6 +226,7 @@ public sealed partial class ModSuitSystem : EntitySystem
         else
             RefreshModuleAvailability(suit);
         RefreshWearerPower(suit);
+        RefreshSuitAssistantActions(suit.Owner);
     }
 
     private void OnRefreshSuitSpeed(Entity<ModSuitComponent> suit, ref InventoryRelayedEvent<RefreshMovementSpeedModifiersEvent> args)

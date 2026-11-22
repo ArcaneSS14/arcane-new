@@ -70,6 +70,7 @@ public sealed partial class ModSuitSystem
         }
 
         SpawnStartingModules(suit);
+        RefreshAssistant(suit);
         Dirty(suit);
     }
 
@@ -90,13 +91,16 @@ public sealed partial class ModSuitSystem
 
     private bool TryDeployPart(Entity<ModSuitComponent> suit, string slot, EntityUid user, bool copying)
     {
+        var interacting = user;
+        if (IsAssistant(suit, user) && suit.Comp.Wearer is { } wearer)
+            user = wearer;
         if (_net.IsClient || suit.Comp.State != ModSuitState.Inactive || suit.Comp.Wearer != user
             || suit.Comp.Projected && !copying
             || suit.Comp.PartsContainer is not { } parts
             || !suit.Comp.PartEntities.TryGetValue(slot, out var uid) || !parts.Contains(uid)
             || !TryComp(uid, out ModPartComponent? part)
             || part.StoredClothing is not { ContainedEntity: null } storage
-            || !copying && !_actionBlocker.CanInteract(user, suit)
+            || !copying && !_actionBlocker.CanInteract(interacting, suit)
             || !_inventory.TryGetSlot(user, slot, out var slotDefinition)
             || _whitelist.IsWhitelistFail(slotDefinition.Whitelist, uid)
             || _whitelist.IsWhitelistPass(slotDefinition.Blacklist, uid)
@@ -133,9 +137,9 @@ public sealed partial class ModSuitSystem
     }
 
     public bool TryRetractPart(Entity<ModSuitComponent> suit, string slot, EntityUid user) =>
-        !_net.IsClient && !suit.Comp.Projected && suit.Comp.State == ModSuitState.Inactive && suit.Comp.Wearer == user
+        !_net.IsClient && !suit.Comp.Projected && suit.Comp.State == ModSuitState.Inactive && IsSuitOperator(suit, user)
         && _actionBlocker.CanInteract(user, suit)
-        && RetractPart(suit, slot, user);
+        && suit.Comp.Wearer is { } wearer && RetractPart(suit, slot, wearer);
 
     private bool RetractPart(Entity<ModSuitComponent> suit, string slot, EntityUid wearer)
     {
@@ -297,6 +301,7 @@ public sealed partial class ModSuitSystem
         if (_net.IsClient)
             return;
 
+        ReleaseAssistant(suit);
         if (suit.Comp.Wearer is { } wearer && !TerminatingOrDeleted(wearer))
             ClearPowerAlert(suit, wearer);
 

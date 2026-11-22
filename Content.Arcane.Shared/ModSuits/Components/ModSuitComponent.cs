@@ -43,6 +43,20 @@ public sealed partial class ModSuitComponent : Component
     [AutoNetworkedField]
     public EntityUid? Wearer;
 
+    [AutoNetworkedField]
+    public EntityUid? Assistant;
+
+    [DataField]
+    public float AssistantMovePower = 2.5f;
+
+    [DataField]
+    public float AssistantWornSpeedModifier = 0.5f;
+
+    [DataField]
+    public float AssistantUnwornSpeedModifier = 0.2f;
+
+    public EntityUid? DeploymentOperator;
+
     [DataField]
     public EntProtoId ActivateAction = "ActionModSuitActivate";
 

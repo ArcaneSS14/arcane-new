@@ -1,5 +1,22 @@
 - type: entity
   parent: BaseAction
+  id: ActionModAssistantInterface
+  name: MOD control panel
+  description: Control the MOD that contains your AI or pAI device.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: true
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: InstantAction
+    event: !type:ModAssistantInterfaceEvent
+
+- type: entity
+  parent: BaseAction
   id: ActionModPathfinderRecall
   name: Recall MOD
   description: Call your linked MOD. The suit must be unworn, powered and on the same map.

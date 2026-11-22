@@ -39,6 +39,7 @@ public sealed partial class ModSuitSystem
         UpdateEnergyShields();
         UpdateAsh();
         UpdateCandela();
+        UpdateAssistants(frameTime);
         var now = _timing.CurTime;
         var query = EntityQueryEnumerator<ModSuitComponent>();
         while (query.MoveNext(out var uid, out var component))
@@ -82,7 +83,7 @@ public sealed partial class ModSuitSystem
 
     public bool TryToggleActivation(Entity<ModSuitComponent> suit, EntityUid user)
     {
-        if (_net.IsClient || suit.Comp.Wearer != user || suit.Comp.DeploymentSteps.Count > 0
+        if (_net.IsClient || !IsSuitOperator(suit, user) || suit.Comp.Wearer == null || suit.Comp.DeploymentSteps.Count > 0
             || !_actionBlocker.CanInteract(user, suit) || !CanAccessModules(suit, user))
             return false;
 
@@ -233,6 +234,8 @@ public sealed partial class ModSuitSystem
         Dirty(suit);
         _appearance.SetData(suit, SealableClothingVisuals.Sealed, sealedState);
         _actions.SetToggled(suit.Comp.ActivateActionEntity, state is ModSuitState.Active or ModSuitState.Activating);
+        if (suit.Comp.Assistant is { } assistant && TryComp(assistant, out ModAssistantComponent? helper))
+            _actions.SetToggled(helper.ActivateAction, state is ModSuitState.Active or ModSuitState.Activating);
         RefreshModuleAvailability(suit);
         RefreshWearerPower(suit);
     }
@@ -268,7 +271,7 @@ public sealed partial class ModSuitSystem
 
     public bool TryToggleAllParts(Entity<ModSuitComponent> suit, EntityUid user)
     {
-        if (_net.IsClient || suit.Comp.Wearer != user || suit.Comp.State != ModSuitState.Inactive
+        if (_net.IsClient || !IsSuitOperator(suit, user) || suit.Comp.Wearer == null || suit.Comp.State != ModSuitState.Inactive
             || suit.Comp.DeploymentSteps.Count > 0 || !_actionBlocker.CanInteract(user, suit) || !CanAccessModules(suit, user))
             return false;
 
@@ -284,6 +287,7 @@ public sealed partial class ModSuitSystem
         }
 
         suit.Comp.Retracting = retract;
+        suit.Comp.DeploymentOperator = user;
         suit.Comp.NextDeploymentStep = _timing.CurTime;
         suit.Comp.Deploying = suit.Comp.DeploymentSteps.Count > 0;
         Dirty(suit);
@@ -292,7 +296,7 @@ public sealed partial class ModSuitSystem
 
     private void UpdateDeployment(Entity<ModSuitComponent> suit, TimeSpan now)
     {
-        if (suit.Comp.Wearer is not { } user || !CanAccessModules(suit, user))
+        if (suit.Comp.DeploymentOperator is not { } user || !IsSuitOperator(suit, user) || !CanAccessModules(suit, user))
         {
             CancelDeployment(suit);
             return;
@@ -318,6 +322,7 @@ public sealed partial class ModSuitSystem
 
         suit.Comp.DeploymentSteps.Clear();
         suit.Comp.Deploying = false;
+        suit.Comp.DeploymentOperator = null;
         Dirty(suit);
     }
 

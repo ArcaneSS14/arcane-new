@@ -5,6 +5,7 @@ using Content.Arcane.Shared.ModSuits.Systems;
 using Content.Client.UserInterface.Controls;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.Wires;
+using Robust.Client.Player;
 using Robust.Shared.Timing;
 
 namespace Content.Arcane.Client.ModSuits;
@@ -14,6 +15,7 @@ public sealed partial class ModSuitWindow : FancyWindow
 {
     [Dependency] private IEntityManager _entities = default!;
     [Dependency] private IPrototypeManager _prototypes = default!;
+    [Dependency] private IPlayerManager _players = default!;
 
     private readonly ModSuitSystem _suits;
     private readonly SharedBatterySystem _battery;
@@ -134,7 +136,11 @@ public sealed partial class ModSuitWindow : FancyWindow
 
             row.Remove.Disabled = !canEject || !module.Removable;
             if (row.Pin is { } pin)
-                pin.Text = Loc.GetString(module.Pinned ? "modsuit-ui-module-unpin" : "modsuit-ui-module-pin");
+            {
+                var pinned = _entities.TryGetComponent(_players.LocalEntity, out ModAssistantComponent? assistant)
+                    && assistant.Suit == suit.Owner ? assistant.PinnedModules.Contains(uid) : module.Pinned;
+                pin.Text = Loc.GetString(pinned ? "modsuit-ui-module-unpin" : "modsuit-ui-module-pin");
+            }
             if (row.Use is not { } use)
                 continue;
 

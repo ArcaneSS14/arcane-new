@@ -38,12 +38,17 @@
         ents: []
       mod-modules: !type:Container # Arcane
         ents: []
+      # Arcane-Start
+      station_ai_mind_slot: !type:ContainerSlot {}
+      mod-pai: !type:ContainerSlot {}
+      # Arcane-End
   - type: UserInterface
     interfaces:
       enum.StorageUiKey.Key:
         type: StorageBoundUserInterface
       enum.ModSuitUiKey.Key: # Arcane
         type: ModSuitBoundUserInterface
+        requireInputValidation: false # Arcane
       enum.ChameleonUiKey.Key: # Arcane
         type: ChameleonBoundUserInterface
   - type: UseDelay
@@ -58,6 +63,15 @@
       outerClothing: ClothingModsuitChestplateStandard
       shoes: ClothingModsuitBootsStandard
   - type: WiresPanel
+  # Arcane-Start
+  - type: StationAiHolder
+    renameOnInsert: false
+    slot:
+      name: station-ai-mind-slot
+      disableEject: true
+      whitelist:
+        tags: [StationAi]
+  # Arcane-End
   - type: ItemSlots
     slots:
       mod-core: # Arcane
@@ -65,9 +79,21 @@
         whitelist:
           components:
           - ModCore
+      # Arcane-Start
+      mod-pai:
+        name: modsuit-pai-slot-name
+        insertDelay: 5
+        ejectDelay: 5
+        whitelist:
+          components: [PAI]
+      # Arcane-End
   - type: ItemSlotsRequirePanel
     slots:
       mod-core: true # Arcane
+      # Arcane-Start
+      station_ai_mind_slot: true
+      mod-pai: true
+      # Arcane-End
   - type: ContainerFill # Arcane
     containers:
       mod-core:

@@ -22,6 +22,7 @@ public sealed partial class ModSuitSystem
         SubscribeLocalEvent<ModDeviceItemComponent, GotUnequippedHandEvent>(OnDeviceReleased);
         SubscribeLocalEvent<ModDeviceItemComponent, EntityTerminatingEvent>(OnDeviceTerminating);
         SubscribeLocalEvent<ModDeviceSelectorComponent, ModSelectDeviceActionEvent>(OnSelectDevice);
+        SubscribeLocalEvent<ModDeviceSelectorComponent, BoundUIOpenedEvent>(OnDeviceSelectorOpened);
         SubscribeLocalEvent<ModDeviceSelectorComponent, RadialSelectorSelectedMessage>(OnDeviceSelected);
     }
 
@@ -143,7 +144,8 @@ public sealed partial class ModSuitSystem
     {
         suit = default;
         if (_net.IsClient || !TryComp(module, out ModModuleComponent? installed) || installed.Suit is not { } uid
-            || !TryComp(uid, out ModSuitComponent? comp) || comp.Wearer != user || comp.ModulesContainer?.Contains(module) != true)
+            || !TryComp(uid, out ModSuitComponent? comp) || comp.Wearer == null || !IsSuitOperator((uid, comp), user)
+            || comp.ModulesContainer?.Contains(module) != true)
             return false;
 
         suit = (uid, comp);
@@ -157,6 +159,12 @@ public sealed partial class ModSuitSystem
 
         _ui.SetUiState(module.Owner, RadialSelectorUiKey.Key, new RadialSelectorState(module.Comp.Entries));
         args.Handled = _ui.TryOpenUi(module.Owner, RadialSelectorUiKey.Key, args.Performer);
+    }
+
+    private void OnDeviceSelectorOpened(Entity<ModDeviceSelectorComponent> module, ref BoundUIOpenedEvent args)
+    {
+        if (!_net.IsClient && args.UiKey is RadialSelectorUiKey.Key && !CanSelectDevice(module, args.Actor, out _))
+            _ui.CloseUi(module.Owner, RadialSelectorUiKey.Key, args.Actor);
     }
 
     private void OnDeviceSelected(Entity<ModDeviceSelectorComponent> module, ref RadialSelectorSelectedMessage args)

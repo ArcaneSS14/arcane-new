@@ -40,7 +40,8 @@ public sealed partial class ModSuitSystem
         if (_net.IsClient || args.UiKey is not ModSuitUiKey.Key)
             return;
 
-        if (!CanReachSuit(suit, args.Actor) || !CanAccessModules(suit, args.Actor))
+        if (!CanReachSuit(suit, args.Actor) || !CanAccessModules(suit, args.Actor)
+            || !_actionBlocker.CanInteract(args.Actor, suit))
             args.Cancel();
     }
 
@@ -52,7 +53,7 @@ public sealed partial class ModSuitSystem
 
     private void OnInterfaceTogglePart(Entity<ModSuitComponent> suit, ref ModSuitTogglePartMessage args)
     {
-        if (_net.IsClient || suit.Comp.Deploying || suit.Comp.Wearer != args.Actor || !CanAccessModules(suit, args.Actor))
+        if (_net.IsClient || suit.Comp.Deploying || !IsSuitOperator(suit, args.Actor) || !CanAccessModules(suit, args.Actor))
             return;
 
         if (IsPartDeployed(suit, args.Slot))
@@ -74,8 +75,18 @@ public sealed partial class ModSuitSystem
             || module.Comp.Type == ModModuleType.Passive || module.Comp.Action == null)
             return;
 
+        if (IsAssistant(suit, args.Actor) && TryComp(args.Actor, out ModAssistantComponent? helper))
+        {
+            if (!helper.PinnedModules.Remove(module.Owner))
+                helper.PinnedModules.Add(module.Owner);
+            Dirty(args.Actor, helper);
+            RefreshAssistantActions(suit, (args.Actor, helper));
+            return;
+        }
+
         module.Comp.Pinned = !module.Comp.Pinned;
         Dirty(module);
+        RefreshSuitAssistantActions(suit.Owner);
         if (suit.Comp.Wearer is not { } wearer)
             return;
 

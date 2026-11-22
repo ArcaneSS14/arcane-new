@@ -39,3 +39,4 @@ modsuit-shooting-mode-sharpshooter = Sharpshooter mode enabled.
 modsuit-theme-brigmed = Trauma
 modsuit-theme-syndicate = Syndicate
 modsuit-theme-elite = Elite Syndicate
+modsuit-pai-slot-name = MOD pAI assistant

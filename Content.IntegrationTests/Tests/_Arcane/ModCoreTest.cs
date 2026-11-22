@@ -33,6 +33,10 @@ using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Item;
+using Content.Shared.Mind;
+using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Systems;
+using Content.Shared.Silicons.StationAi;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.NightVision;
@@ -51,16 +55,334 @@ using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Wires;
 using Content.Trauma.Common.MartialArts;
+using Content.Trauma.Common.RadialSelector;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Player;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class ModCoreTest : InteractionTest
 {
+    [Test]
+    public async Task AssistantControlsOriginalSuitAndSurvivesItsDestruction()
+    {
+        var wearerSession = await Server.AddDummySession("MOD wearer");
+        try
+        {
+            await CheckAssistantControl("PersonalAI", wearerSession);
+            await CheckAssistantControl("StationAiBrain", wearerSession);
+        }
+        finally
+        {
+            await Server.RemoveDummySession(wearerSession);
+        }
+    }
+
+    private async Task CheckAssistantControl(string prototype, ICommonSession wearerSession)
+    {
+        var originalPlayer = SPlayer;
+        var originalNetPlayer = Player;
+        var originalClientPlayer = CPlayer;
+        var originalDoAfters = DoAfters;
+        var owned = new List<EntityUid>();
+        EntityUid helper = default;
+        EntityUid control = default;
+        EntityUid mind = default;
+        EntityUid lamp = default;
+        EntityUid stamper = default;
+        EntityUid kick = default;
+        EntityUid sourceCard = default;
+        float charge = 0;
+        float activationSeconds = 0;
+        Vector2 before = default;
+        try
+        {
+            await SpawnTarget("ClothingModsuitStandardPowerCell");
+            await Server.WaitAssertion(() =>
+            {
+                control = STarget!.Value;
+                owned.Add(control);
+                var location = MapData.GridCoords;
+                var gravity = SEntMan.EnsureComponent<Content.Shared.Gravity.GravityComponent>(location.EntityId);
+                gravity.Enabled = true;
+                gravity.Inherent = true;
+                SEntMan.System<Content.Shared.Gravity.SharedGravitySystem>().RefreshWeightless(control);
+                SPlayer = SEntMan.SpawnAttachedTo("MobHuman", location);
+                owned.Add(SPlayer);
+                SEntMan.EnsureComponent<Content.Shared.Damage.Components.GodmodeComponent>(SPlayer);
+                Player = SEntMan.GetNetEntity(SPlayer);
+                DoAfters = SEntMan.GetComponent<DoAfterComponent>(SPlayer);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, SPlayer);
+                helper = SEntMan.SpawnAttachedTo(prototype, location);
+                owned.Add(helper);
+                var minds = SEntMan.System<SharedMindSystem>();
+                mind = minds.CreateMind(null, "MOD assistant test").Owner;
+                minds.TransferTo(mind, helper, createGhost: false);
+                var slots = SEntMan.System<ItemSlotsSystem>();
+                var held = helper;
+                if (prototype == "StationAiBrain")
+                {
+                    held = SEntMan.SpawnAttachedTo("Intellicard", location);
+                    sourceCard = held;
+                    owned.Add(held);
+                    Assert.That(slots.TryInsert(held, StationAiHolderComponent.Container, helper, null), Is.True);
+                }
+                Assert.That(SEntMan.System<SharedHandsSystem>().TryPickup(SPlayer, held), Is.True);
+                Assert.That(SEntMan.System<SharedWiresSystem>().TogglePanel(control,
+                    SEntMan.GetComponent<WiresPanelComponent>(control), true), Is.True);
+                lamp = SEntMan.SpawnAttachedTo("ModsuitModuleFlashlight", location);
+                owned.Add(lamp);
+                Assert.That(SEntMan.System<ModSuitSystem>().TryInstallModule(
+                    (control, SEntMan.GetComponent<ModSuitComponent>(control)), lamp, SPlayer), Is.True);
+                stamper = SEntMan.SpawnAttachedTo("ModsuitModuleStamper", location);
+                owned.Add(stamper);
+                Assert.That(SEntMan.System<ModSuitSystem>().TryInstallModule(
+                    (control, SEntMan.GetComponent<ModSuitComponent>(control)), stamper, SPlayer), Is.True);
+                kick = SEntMan.SpawnAttachedTo("ModsuitModulePowerKick", location);
+                owned.Add(kick);
+                Assert.That(SEntMan.System<ModSuitSystem>().TryInstallModule(
+                    (control, SEntMan.GetComponent<ModSuitComponent>(control)), kick, SPlayer), Is.True);
+                Assert.That(SEntMan.GetComponent<Content.Shared.Mind.Components.MindContainerComponent>(helper).HasMind, Is.True);
+                Assert.That(SEntMan.System<SharedWiresSystem>().IsPanelOpen(control), Is.True);
+            });
+
+            await RunTicks(2);
+            await Client.WaitPost(() => CPlayer = CEntMan.GetEntity(Player));
+            await Interact(control, SEntMan.GetComponent<TransformComponent>(control).Coordinates);
+            await Server.WaitAssertion(() =>
+            {
+                var suits = SEntMan.System<ModSuitSystem>();
+                var component = SEntMan.GetComponent<ModSuitComponent>(control);
+                var suit = (control, component);
+                Assert.That(component.Assistant, Is.EqualTo(helper));
+                Assert.That(suits.IsAssistant(suit, helper), Is.True);
+                Assert.That(suits.IsAssistant(suit, SPlayer), Is.False);
+                Assert.That(SEntMan.System<InventorySystem>().TryEquip(SPlayer, control, "back", force: true), Is.True);
+                Assert.That(SEntMan.System<SharedWiresSystem>().TogglePanel(control,
+                    SEntMan.GetComponent<WiresPanelComponent>(control), false), Is.True);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, helper);
+                Server.PlayerMan.SetAttachedEntity(wearerSession, SPlayer);
+                var assistant = SEntMan.GetComponent<ModAssistantComponent>(helper);
+                var actions = SEntMan.System<SharedActionsSystem>();
+                var action = assistant.InterfaceAction!.Value;
+                Assert.That(actions.PerformAction(helper,
+                    (action, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(action))), Is.True);
+                var ui = SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>();
+                Assert.That(ui.IsUiOpen(control, ModSuitUiKey.Key, helper), Is.True);
+                var otherControl = SEntMan.SpawnAttachedTo("ClothingModsuitStandardPowerCell", MapData.GridCoords);
+                owned.Add(otherControl);
+                Assert.That(ui.TryOpenUi(otherControl, ModSuitUiKey.Key, helper), Is.False,
+                    "An installed assistant must not gain access to a different MOD");
+                action = assistant.DeployAction!.Value;
+                Assert.That(actions.PerformAction(helper,
+                    (action, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(action))), Is.True);
+            });
+
+            await RunSeconds(2.2f);
+            await Server.WaitAssertion(() =>
+            {
+                var component = SEntMan.GetComponent<ModSuitComponent>(control);
+                activationSeconds = (float)SProtoMan.Index(component.Theme).ActivationStepTime.TotalSeconds
+                    * (component.PartEntities.Count + 1) + TickPeriod * (component.PartEntities.Count + 2);
+                var action = SEntMan.GetComponent<ModAssistantComponent>(helper).ActivateAction!.Value;
+                Assert.That(SEntMan.System<SharedActionsSystem>().PerformAction(helper,
+                    (action, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(action))), Is.True);
+            });
+            await RunSeconds(activationSeconds);
+            await Server.WaitAssertion(() =>
+            {
+                var component = SEntMan.GetComponent<ModSuitComponent>(control);
+                Assert.That(component.State, Is.EqualTo(ModSuitState.Active));
+                var module = SEntMan.GetComponent<ModModuleComponent>(lamp);
+                var assistant = SEntMan.GetComponent<ModAssistantComponent>(helper);
+                var actions = SEntMan.System<SharedActionsSystem>();
+                var ui = SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>();
+                ui.RaiseUiMessage(control, ModSuitUiKey.Key,
+                    new ModSuitModulePinMessage(SEntMan.GetNetEntity(lamp)) { Actor = helper });
+                Assert.That(assistant.PinnedModules.Contains(lamp), Is.False);
+                Assert.That(module.Pinned, Is.True, "Assistant pins must not change the wearer's actions");
+                ui.RaiseUiMessage(control, ModSuitUiKey.Key,
+                    new ModSuitModulePinMessage(SEntMan.GetNetEntity(lamp)) { Actor = helper });
+                var selector = assistant.SelectorActions[stamper];
+                Assert.That(actions.PerformAction(helper,
+                    (selector, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(selector))), Is.True);
+                Assert.That(ui.IsUiOpen(stamper, RadialSelectorUiKey.Key, helper), Is.True);
+                ui.TryOpenUi(stamper, RadialSelectorUiKey.Key, originalPlayer);
+                Assert.That(ui.IsUiOpen(stamper, RadialSelectorUiKey.Key, originalPlayer), Is.False);
+                ui.RaiseUiMessage(stamper, RadialSelectorUiKey.Key,
+                    new RadialSelectorSelectedMessage("ModsuitDeviceStampDenied") { Actor = helper });
+                Assert.That(SEntMan.GetComponent<ModDeviceModuleComponent>(stamper).Device.Id, Is.EqualTo("ModsuitDeviceStampDenied"));
+                var kickAction = assistant.ModuleActions[kick];
+                var targetAction = (kickAction, SEntMan.GetComponent<Content.Shared.Actions.Components.EntityTargetActionComponent>(kickAction));
+                var nearby = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords.Offset(Vector2.UnitY));
+                var distant = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords.Offset(Vector2.UnitY * 20));
+                owned.Add(nearby);
+                owned.Add(distant);
+                Assert.That(actions.ValidateEntityTarget(helper, nearby, targetAction), Is.True,
+                    "Targeted modules must reach outside the assistant's nested container");
+                Assert.That(actions.ValidateEntityTarget(helper, SPlayer, targetAction), Is.False,
+                    "Self-target restrictions apply to the physical wearer");
+                Assert.That(actions.ValidateEntityTarget(helper, distant, targetAction), Is.False,
+                    "Assistant control must preserve the module's target range");
+                var helperAction = assistant.ModuleActions[lamp];
+                Assert.That(helperAction, Is.Not.EqualTo(module.ActionEntity));
+                Assert.That(SEntMan.System<SharedActionsSystem>().PerformAction(helper,
+                    (helperAction, SEntMan.GetComponent<Content.Shared.Actions.Components.ActionComponent>(helperAction))), Is.True);
+                Assert.That(module.Active, Is.True);
+                var battery = SEntMan.System<ModSuitSystem>().GetBattery((control, component))!.Value;
+                charge = SEntMan.System<SharedBatterySystem>().GetCharge(battery.Owner).Charge;
+                before = SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer);
+                SEntMan.System<SharedMoverController>().HandleRunChange(SPlayer, 0, true);
+                SEntMan.System<SharedMoverController>().HandleDirChange(
+                    (helper, SEntMan.GetComponent<InputMoverComponent>(helper)), Direction.East, 0, true);
+            });
+            await RunSeconds(0.3f);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer).X, Is.GreaterThan(before.X));
+                var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+                var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value;
+                var batteries = SEntMan.System<SharedBatterySystem>();
+                Assert.That(batteries.GetCharge(battery.Owner).Charge, Is.LessThan(charge));
+                var mover = SEntMan.System<SharedMoverController>();
+                var bodyInput = SEntMan.GetComponent<InputMoverComponent>(SPlayer);
+                var helperInput = SEntMan.GetComponent<InputMoverComponent>(helper);
+                Assert.That(bodyInput.Sprinting, Is.False, "The wearer's walking modifier survives relay setup");
+                mover.HandleRunChange(SPlayer, 0, false);
+                Assert.That(bodyInput.Sprinting, Is.True);
+                mover.HandleRunChange(SPlayer, 0, true);
+                mover.HandleDirChange((helper, helperInput), Direction.East, 0, false);
+                Assert.That(SEntMan.HasComponent<ModAssistantMoverComponent>(SPlayer), Is.False);
+                Assert.That(bodyInput.Sprinting, Is.False, "Releasing the helper must preserve the held walking modifier");
+                mover.HandleDirChange((helper, helperInput), Direction.East, 0, true);
+                Server.PlayerMan.SetAttachedEntity(wearerSession, null);
+                Assert.That(bodyInput.HasDirectionalMovement, Is.True, "Disconnecting the wearer must not discard the helper's input");
+                Assert.That(bodyInput.Sprinting, Is.True, "The disconnected wearer's own walking input must be cleared");
+                before = SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer);
+            });
+            await RunSeconds(0.2f);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer).X, Is.GreaterThan(before.X));
+                Server.PlayerMan.SetAttachedEntity(wearerSession, SPlayer);
+                Assert.That(SEntMan.GetComponent<InputMoverComponent>(SPlayer).HasDirectionalMovement, Is.True,
+                    "Reconnecting the wearer must not discard the helper's input");
+                before = SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer);
+            });
+            await RunSeconds(0.2f);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.System<SharedTransformSystem>().GetWorldPosition(SPlayer).X, Is.GreaterThan(before.X));
+                var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+                var battery = SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value;
+                SEntMan.System<SharedMoverController>().HandleRunChange(SPlayer, 0, true);
+                SEntMan.System<SharedMoverController>().HandleDirChange(
+                    (SPlayer, SEntMan.GetComponent<InputMoverComponent>(SPlayer)), Direction.East, 0, true);
+                SEntMan.System<Content.Shared.Mobs.Systems.MobStateSystem>().ChangeMobState(SPlayer, Content.Shared.Mobs.MobState.Critical);
+                Assert.That(SEntMan.GetComponent<InputMoverComponent>(SPlayer).CanMove, Is.True,
+                    "Powered sealed servos must be able to move an incapacitated wearer");
+                SEntMan.System<SharedBatterySystem>().SetCharge(battery.AsNullable(), 0);
+            });
+            await RunTicks(2);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.HasComponent<ModAssistantMoverComponent>(SPlayer), Is.False);
+                Assert.That(SEntMan.GetComponent<InputMoverComponent>(SPlayer).CanMove, Is.False);
+                Assert.That(SEntMan.GetComponent<InputMoverComponent>(SPlayer).HasDirectionalMovement, Is.True,
+                    "The wearer's matching key press must survive the assistant losing power");
+                Assert.That(SEntMan.GetComponent<InputMoverComponent>(SPlayer).Sprinting, Is.False,
+                    "The walking modifier must survive the assistant losing power");
+                SEntMan.System<Content.Shared.Mobs.Systems.MobStateSystem>().ChangeMobState(SPlayer, Content.Shared.Mobs.MobState.Alive);
+                SEntMan.System<SharedMoverController>().HandleDirChange(
+                    (SPlayer, SEntMan.GetComponent<InputMoverComponent>(SPlayer)), Direction.East, 0, false);
+                SEntMan.System<SharedMoverController>().HandleRunChange(SPlayer, 0, false);
+                Assert.That(SEntMan.System<Robust.Server.GameObjects.UserInterfaceSystem>()
+                    .IsUiOpen(control, ModSuitUiKey.Key, helper), Is.False);
+                var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+                Assert.That(SEntMan.System<InventorySystem>().TryUnequip(SPlayer, "back", force: true), Is.True);
+                SEntMan.System<SharedBatterySystem>().SetCharge(SEntMan.System<ModSuitSystem>().GetBattery(suit)!.Value.AsNullable(), charge);
+                before = SEntMan.System<SharedTransformSystem>().GetWorldPosition(control);
+            });
+            await RunSeconds(0.4f);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.GetComponent<ModSuitComponent>(control).Wearer, Is.Null);
+                Assert.That(SEntMan.System<SharedTransformSystem>().GetWorldPosition(control).X, Is.GreaterThan(before.X));
+                Server.PlayerMan.SetAttachedEntity(wearerSession, null);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, SPlayer);
+                Assert.That(SEntMan.HasComponent<InputMoverComponent>(control), Is.False,
+                    "Disconnecting the pilot must remove the loose suit's temporary mover");
+                Assert.That(SEntMan.System<SharedWiresSystem>().TogglePanel(control,
+                    SEntMan.GetComponent<WiresPanelComponent>(control), true), Is.True);
+                var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+                var assistant = SEntMan.GetComponent<ModAssistantComponent>(helper);
+                Assert.That(SEntMan.System<ModSuitSystem>().TryRemoveModule(suit, lamp, SPlayer), Is.True);
+                Assert.That(assistant.PinnedModules.Contains(lamp), Is.False);
+                Assert.That(assistant.ModuleActions.ContainsKey(lamp), Is.False);
+                Assert.That(SEntMan.System<SharedHandsSystem>().TryDrop(SPlayer, lamp), Is.True);
+                Assert.That(SEntMan.System<ModSuitSystem>().TryInstallModule(suit, lamp, SPlayer), Is.True);
+                Assert.That(assistant.PinnedModules.Contains(lamp), Is.True);
+                if (prototype == "PersonalAI")
+                {
+                    var slot = SEntMan.GetComponent<ItemSlotsComponent>(control).Slots["mod-pai"];
+                    Assert.That(SEntMan.System<ItemSlotsSystem>().TryEjectToHands(control, slot, SPlayer), Is.True);
+                }
+                else if (!SEntMan.System<SharedHandsSystem>().IsHolding(SPlayer, sourceCard))
+                    Assert.That(SEntMan.System<SharedHandsSystem>().TryPickup(SPlayer, sourceCard), Is.True);
+            });
+            if (prototype == "PersonalAI")
+                await AwaitDoAfters();
+            else
+                await Interact(control, SEntMan.GetComponent<TransformComponent>(control).Coordinates);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.GetComponent<ModSuitComponent>(control).Assistant, Is.Null);
+                Assert.That(SEntMan.HasComponent<ModAssistantComponent>(helper), Is.False);
+                Assert.That(SEntMan.System<SharedMindSystem>().TryGetMind(helper, out var returned, out _), Is.True);
+                Assert.That(returned, Is.EqualTo(mind));
+            });
+            await Interact(control, SEntMan.GetComponent<TransformComponent>(control).Coordinates);
+            await Server.WaitAssertion(() =>
+            {
+                Assert.That(SEntMan.GetComponent<ModSuitComponent>(control).Assistant, Is.EqualTo(helper));
+                SEntMan.DeleteEntity(control);
+                Assert.That(SEntMan.EntityExists(helper), Is.True);
+                Assert.That(SEntMan.HasComponent<ModAssistantComponent>(helper), Is.False);
+                Assert.That(SEntMan.System<SharedMindSystem>().TryGetMind(helper, out var returned, out _), Is.True);
+                Assert.That(returned, Is.EqualTo(mind));
+            });
+        }
+        finally
+        {
+            await Server.WaitPost(() =>
+            {
+                Server.PlayerMan.SetAttachedEntity(wearerSession, null);
+                Server.PlayerMan.SetAttachedEntity(ServerSession, originalPlayer);
+                SPlayer = originalPlayer;
+                Player = originalNetPlayer;
+                DoAfters = originalDoAfters;
+                if (SEntMan.EntityExists(mind))
+                {
+                    SEntMan.System<SharedMindSystem>().WipeMind(mind);
+                    SEntMan.DeleteEntity(mind);
+                }
+                if (SEntMan.EntityExists(helper) && SEntMan.System<SharedContainerSystem>().TryGetContainingContainer(helper, out var parent)
+                    && SEntMan.HasComponent<Content.Shared.Intellicard.IntellicardComponent>(parent.Owner) && !owned.Contains(parent.Owner))
+                    owned.Add(parent.Owner);
+                foreach (var entity in owned.AsEnumerable().Reverse())
+                {
+                    if (SEntMan.EntityExists(entity))
+                        SEntMan.DeleteEntity(entity);
+                }
+            });
+            CPlayer = originalClientPlayer;
+        }
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public async Task PathfinderReturnsTheOriginalSuitOnlyToItsImplantedOwner(bool deleteModule)

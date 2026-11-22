@@ -6,6 +6,8 @@ public sealed partial class ModSuitActivateActionEvent : InstantActionEvent;
 
 public sealed partial class ModSuitDeployActionEvent : InstantActionEvent;
 
+public sealed partial class ModAssistantInterfaceEvent : InstantActionEvent;
+
 public sealed partial class ModModuleActionEvent : InstantActionEvent;
 
 public sealed partial class ModSelectDeviceActionEvent : InstantActionEvent;
@@ -26,7 +28,7 @@ public readonly record struct ModModuleActivatedEvent(EntityUid Suit, EntityUid?
 public readonly record struct ModModuleDeactivatedEvent(EntityUid Suit, EntityUid? Wearer);
 
 [ByRefEvent]
-public record struct ModModuleUsedEvent(EntityUid Suit, EntityUid User, BaseActionEvent? Action = null)
+public record struct ModModuleUsedEvent(EntityUid Suit, EntityUid User, BaseActionEvent? Action = null, EntityUid? Operator = null)
 {
     public bool Handled;
 }

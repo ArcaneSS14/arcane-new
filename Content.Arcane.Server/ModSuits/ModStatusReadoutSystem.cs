@@ -39,16 +39,17 @@ public sealed partial class ModStatusReadoutSystem : EntitySystem
     private bool CanRead(EntityUid module, EntityUid user)
     {
         return _suits.TryGetInstalledModuleSuit(module, out var suit)
-            && suit.Comp.Wearer == user && suit.Comp.State == ModSuitState.Active
+            && (suit.Comp.Wearer == user || _suits.IsAssistant(suit, user)) && suit.Comp.State == ModSuitState.Active
             && suit.Comp.Powered && !suit.Comp.Projected;
     }
 
     private void OnUsed(Entity<ModStatusReadoutComponent> ent, ref ModModuleUsedEvent args)
     {
-        if (!CanRead(ent, args.User))
+        var actor = args.Operator ?? args.User;
+        if (!CanRead(ent, actor))
             return;
 
-        args.Handled = _ui.TryToggleUi(ent.Owner, ModStatusReadoutUiKey.Key, args.User);
+        args.Handled = _ui.TryToggleUi(ent.Owner, ModStatusReadoutUiKey.Key, actor);
     }
 
     private void OnOpen(Entity<ModStatusReadoutComponent> ent, ref BoundUIOpenedEvent args)
@@ -98,7 +99,7 @@ public sealed partial class ModStatusReadoutSystem : EntitySystem
     {
         if (!_suits.TryGetInstalledModuleSuit(ent, out var suit) || suit.Comp.Wearer is not { } wearer
             || GetReadout(ent, wearer) is not { } state
-            || !_ui.IsUiOpen(ent.Owner, ModStatusReadoutUiKey.Key, wearer))
+            || !_ui.IsUiOpen(ent.Owner, ModStatusReadoutUiKey.Key))
         {
             _ui.CloseUi(ent.Owner, ModStatusReadoutUiKey.Key);
             _open.Remove(ent);
@@ -112,6 +113,10 @@ public sealed partial class ModStatusReadoutSystem : EntitySystem
     {
         if (!CanRead(module, user))
             return null;
+
+        if (!_suits.TryGetInstalledModuleSuit(module, out var suit) || suit.Comp.Wearer is not { } wearer)
+            return null;
+        user = wearer;
 
         return new ModStatusReadoutState(
             MetaData(user).EntityName,

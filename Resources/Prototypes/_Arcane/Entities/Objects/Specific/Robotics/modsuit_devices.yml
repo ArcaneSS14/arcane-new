@@ -212,6 +212,7 @@
     interfaces:
       enum.RadialSelectorUiKey.Key:
         type: RadialSelectorMenuBUI
+        requireInputValidation: false
 
 - type: entity
   parent: RubberStampApproved

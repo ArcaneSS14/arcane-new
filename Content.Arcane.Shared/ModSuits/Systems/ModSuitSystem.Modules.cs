@@ -183,9 +183,9 @@ public sealed partial class ModSuitSystem
     }
 
     private bool CanReachSuit(Entity<ModSuitComponent> suit, EntityUid user) =>
-        !TerminatingOrDeleted(suit) && (suit.Comp.Wearer is { } wearer
+        !TerminatingOrDeleted(suit) && (IsAssistant(suit, user) || (suit.Comp.Wearer is { } wearer
             ? wearer == user
-            : HasComp<HandsComponent>(user) && _interaction.InRangeAndAccessible(user, suit.Owner));
+            : HasComp<HandsComponent>(user) && _interaction.InRangeAndAccessible(user, suit.Owner)));
 
     private bool CanAccessModules(Entity<ModSuitComponent> suit, EntityUid user)
     {
@@ -215,9 +215,13 @@ public sealed partial class ModSuitSystem
             return false;
 
         if (!CanReachSuit(suit, user) || !CanAccessModules(suit, user)
-            || (!component.AllowFlags.HasFlag(ModModuleAllowFlags.Unworn) && control.Wearer != user)
+            || (!component.AllowFlags.HasFlag(ModModuleAllowFlags.Unworn) && !IsSuitOperator(suit, user))
             || (!component.AllowFlags.HasFlag(ModModuleAllowFlags.Incapacitated) && !_actionBlocker.CanInteract(user, uid)))
             return false;
+
+        var actor = user;
+        if (IsAssistant(suit, user) && control.Wearer is { } wearer)
+            user = wearer;
 
         if (component.Active && component.Type is ModModuleType.Toggle or ModModuleType.Active)
         {
@@ -234,7 +238,7 @@ public sealed partial class ModSuitSystem
 
         if (component.Type == ModModuleType.Usable)
         {
-            var used = new ModModuleUsedEvent(uid, user, action);
+            var used = new ModModuleUsedEvent(uid, user, action, actor);
             RaiseLocalEvent(module.Owner, ref used);
             if (!used.Handled)
                 return false;
@@ -263,6 +267,8 @@ public sealed partial class ModSuitSystem
         component.NextUse = _timing.CurTime + component.Cooldown;
         Dirty(module);
         _actions.SetCooldown(component.ActionEntity, component.Cooldown);
+        if (action != null && action.Action.Owner.IsValid() && action.Action.Owner != component.ActionEntity)
+            _actions.SetCooldown(action.Action.Owner, component.Cooldown);
         return true;
     }
 
@@ -320,6 +326,9 @@ public sealed partial class ModSuitSystem
         module.Comp.Active = active;
         Dirty(module);
         _actions.SetToggled(module.Comp.ActionEntity, active);
+        if (suit.Comp.Assistant is { } assistant && TryComp(assistant, out ModAssistantComponent? helper)
+            && helper.ModuleActions.TryGetValue(module.Owner, out var helperAction))
+            _actions.SetToggled(helperAction, active);
         if (active)
         {
             var activated = new ModModuleActivatedEvent(suit, suit.Comp.Wearer);
@@ -410,6 +419,12 @@ public sealed partial class ModSuitSystem
         if (!CanAccessModules(suit, args.User))
             return;
 
+        if (TryUseAssistantCard(suit, args.User, args.Used))
+        {
+            args.Handled = true;
+            return;
+        }
+
         var use = new ModSuitUseItemEvent(args.User, args.Used);
         RaiseLocalEvent(suit.Owner, ref use);
         args.Handled = use.Handled;
@@ -417,7 +432,7 @@ public sealed partial class ModSuitSystem
 
     private void OnModuleAction(Entity<ModModuleComponent> module, ref ModModuleActionEvent args)
     {
-        if (!args.Handled && TryUseModule(module, args.Performer))
+        if (!args.Handled && TryUseModule(module, args.Performer, args))
             args.Handled = true;
     }
 
