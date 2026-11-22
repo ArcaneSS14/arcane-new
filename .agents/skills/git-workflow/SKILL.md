@@ -21,7 +21,7 @@ Before switching branches or creating a worktree, follow [Git safety](../../rule
 - Follow the [root SPDX boundary](../../../AGENTS.md#ownership-and-edit-markers): no unsolicited metadata changes or automatic REUSE repair. Only the exact SPDX change specified by the user's current request is an exception; preserve other notices.
 - Do not force-push, `reset --hard`, clean untracked files, rewrite published history, or choose merge/rebase without approval.
 - Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: choose the result that preserves confirmed behavior and intent; an incoming complete implementation may supersede an older Arcane divergence, while partial or unclear equivalence requires escalation.
-- Create commits only with the exact count/message requested by the user. A local task record, local commit, and remote push are distinct states.
+- Commit only when requested; honor an exact count or message when specified. A local task record, local commit, and remote push are distinct states.
 
 ### Source ledger
 

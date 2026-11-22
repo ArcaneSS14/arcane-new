@@ -50,17 +50,6 @@ if (stack.Count < 1000) // Unlikely to have over 1000 nested entities unless the
 
 The first explains why the traversal exists. The second documents a bound and the condition that would violate it. Both are load-bearing.
 
-Comments in systems do concentrate on reasoning. Representative examples from the current tree:
-
-```csharp
-// this is the actual entity-world targeting magic
-// Server-validated, AnyCommand is acceptable here.
-// This, too, is O(n^2). I think.
-// It cannot be null if its handled, but good to check to avoid ugly null ignores
-```
-
-Each names a framework subtlety, a security constraint, a complexity claim, or the reason a null check exists. That is the acceptable register, not narration.
-
 ## Where comments are not expected
 
 ### Narrating mechanics
