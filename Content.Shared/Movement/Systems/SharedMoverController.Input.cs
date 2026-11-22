@@ -92,7 +92,7 @@ namespace Content.Shared.Movement.Systems
             return oldMovement;
         }
 
-        protected void SetMoveInput(Entity<InputMoverComponent> entity, MoveButtons buttons)
+        public void SetMoveInput(Entity<InputMoverComponent> entity, MoveButtons buttons) // Arcane-Edit: Restore a complete native input state
         {
             if (entity.Comp.HeldMoveButtons == buttons)
                 return;
@@ -331,12 +331,19 @@ namespace Content.Shared.Movement.Systems
                 PhysicsSystem.SetBodyType(entity.Owner, BodyType.KinematicController, body: physics);
         }
 
-        private void HandleDirChange(Entity<InputMoverComponent?> entity, Direction dir, ushort subTick, bool state)
+        public void HandleDirChange(Entity<InputMoverComponent?> entity, Direction dir, ushort subTick, bool state, EntityUid? source = null) // Arcane-Edit: Expose native input forwarding with its original source
         {
             // Relayed movement just uses the same keybinds given we're moving the relayed entity
             // the same as us.
             if (!MoverQuery.Resolve(entity, ref entity.Comp, false)) // Trauma - dont log error for a non-mover pressing WASD...
                 return;
+
+            // Arcane-Start
+            source ??= entity.Owner;
+            var intent = new DirectionInputEvent(source.Value, dir, state);
+            RaiseLocalEvent(entity, ref intent);
+            state = intent.State;
+            // Arcane-End
 
             // TODO: Should move this into HandleMobMovement itself.
             if (entity.Comp.CanMove && RelayQuery.TryComp(entity, out var relayMover))
@@ -347,7 +354,7 @@ namespace Content.Shared.Movement.Systems
                 if (MoverQuery.TryGetComponent(entity, out var mover))
                     SetMoveInput((entity, mover), MoveButtons.None);
 
-                HandleDirChange(relayMover.RelayEntity, dir, subTick, state);
+                HandleDirChange(relayMover.RelayEntity, dir, subTick, state, source); // Arcane-Edit: Retain the original source through relay chains
                 return;
             }
 
@@ -377,9 +384,16 @@ namespace Content.Shared.Movement.Systems
             RaiseLocalEvent(entity, new SprintingInputEvent(entity)); // WD EDIT
         }
 
-        private void HandleRunChange(EntityUid uid, ushort subTick, bool walking)
+        public void HandleRunChange(EntityUid uid, ushort subTick, bool walking, EntityUid? source = null) // Arcane-Edit: Retain the original walking input source
         {
             MoverQuery.TryGetComponent(uid, out var moverComp);
+
+            // Arcane-Start
+            source ??= uid;
+            var intent = new WalkingInputEvent(source.Value, walking);
+            RaiseLocalEvent(uid, ref intent);
+            walking = intent.Walking;
+            // Arcane-End
 
             if (TryComp<RelayInputMoverComponent>(uid, out var relayMover))
             {
@@ -390,7 +404,7 @@ namespace Content.Shared.Movement.Systems
                     RaiseLocalEvent(uid, new SprintingInputEvent((uid, moverComp))); // WD EDIT
                 }
 
-                HandleRunChange(relayMover.RelayEntity, subTick, walking);
+                HandleRunChange(relayMover.RelayEntity, subTick, walking, source); // Arcane-Edit: Preserve the original walking input source through relays
                 return;
             }
 

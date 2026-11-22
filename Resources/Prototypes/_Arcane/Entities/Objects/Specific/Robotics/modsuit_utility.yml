@@ -1,0 +1,71 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleMegaphone
+  name: MOD megaphone module
+  description: Amplifies the wearer's voice in the surrounding area.
+  components:
+  - type: Sprite
+    state: megaphone
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ head ]
+  - type: Loudspeaker
+    isActive: true
+    affectChat: true
+    speechSounds: Loudspeaker
+  - type: ModLoudspeakerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleBikeHorn
+  name: MOD bike horn module
+  description: A built-in horn to alert nearby crew.
+  components:
+  - type: Sprite
+    state: bikehorn
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 3
+    cooldown: 1
+  - type: ModSoundModule
+    sound:
+      collection: BikeHorn
+      params:
+        variation: 0.125
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleNoSlip
+  name: MOD anti-slip module
+  description: An active stabilization system that keeps the wearer from slipping.
+  components:
+  - type: Sprite
+    state: noslip
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.1
+    requiredParts: [ shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: NoSlip
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleWaddle
+  name: MOD waddle module
+  description: Honk Co. servo software gives the wearer an unmistakable waddle.
+  components:
+  - type: Sprite
+    state: waddle
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.1
+    requiredParts: [ shoes ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: WaddleAnimation

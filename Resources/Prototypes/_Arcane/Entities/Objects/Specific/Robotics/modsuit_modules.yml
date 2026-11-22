@@ -1,0 +1,396 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseModsuitModule
+  name: MOD module
+  description: A module for a modular suit.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: module
+  - type: Item
+    size: Normal
+  - type: ModModule
+  - type: Tag
+    tags: [ ModsuitModule ]
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+      Glass: 50
+
+- type: entity
+  abstract: true
+  parent: BaseModsuitModule
+  id: BaseModsuitModuleStorage
+  components:
+  - type: ModModule
+    allowFlags: Inactive
+    incompatible:
+      tags: [ ModsuitModuleStorage ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleStorage ]
+  - type: ModStorageModule
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: Storage
+    clickInsert: false
+    openOnActivate: false
+    showVerb: false
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageCompact
+  name: MOD compact storage module
+  description: A set of compartments and pockets integrated into the suit.
+  components:
+  - type: Sprite
+    state: storage
+  - type: ModModule
+    complexity: 1
+  - type: Storage
+    grid:
+    - 0,0,5,3
+    maxItemSize: Normal
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageLarge
+  name: MOD storage module
+  description: Compartments that spread the weight of their contents across the suit.
+  components:
+  - type: Sprite
+    state: storage_large
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,1,3
+    - 3,0,6,3
+    - 8,0,9,3
+    maxItemSize: Huge
+
+- type: entity
+  parent: [ BaseModsuitModuleStorage, BaseSyndicateContraband ]
+  id: ModsuitModuleStorageSyndicate
+  name: MOD syndicate storage module
+  description: A Cybersun module with compartments that compress their contents.
+  components:
+  - type: Sprite
+    state: storage_syndi
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,9,3
+    maxItemSize: Huge
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageBluespace
+  name: MOD bluespace storage module
+  description: A NanoTrasen module with miniature bluespace pockets.
+  components:
+  - type: Sprite
+    state: storage_bluespace
+  - type: ModModule
+    complexity: 3
+  - type: Storage
+    grid:
+    - 0,0,11,5
+    maxItemSize: Huge
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleFlashlight
+  name: MOD flashlight module
+  description: A pair of configurable lights mounted on the suit helmet.
+  components:
+  - type: Sprite
+    state: flashlight
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.4
+    requiredParts: [ head ]
+  - type: ModLightModule
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageCase
+  name: MOD case storage module
+  description: A slimline set of compartments for a compressed MODsuit.
+  components:
+  - type: Sprite
+    state: storage_case
+  - type: Storage
+    grid:
+    - 0,0,3,1
+    maxItemSize: Small
+
+- type: entity
+  parent: BaseModsuitModuleStorage
+  id: ModsuitModuleStorageHolding
+  name: MOD storage module of holding
+  description: A prototype compartment that uses anomalous bluespace to store large amounts of matter.
+  components:
+  - type: Sprite
+    state: storage_holding
+  - type: ModModule
+    complexity: 4
+  - type: Storage
+    grid:
+    - 0,0,14,5
+    maxItemSize: Huge
+
+- type: entity
+  abstract: true
+  parent: BaseModsuitModule
+  id: BaseModsuitModuleVisor
+  components:
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ head ]
+    incompatible:
+      tags: [ ModsuitModuleVisor ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleVisor ]
+
+- type: entity
+  parent: BaseModsuitModuleVisor
+  id: ModsuitModuleVisorMedical
+  name: MOD medical visor module
+  description: Displays the health of organic lifeforms and marks detectable diseases.
+  components:
+  - type: Sprite
+    state: medhud_visor
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ShowHealthBars
+    - type: ShowHealthIcons
+    - type: ShowDiseaseIcons
+
+- type: entity
+  parent: [ BaseModsuitModuleVisor, BaseSecurityContraband ]
+  id: ModsuitModuleVisorSecurity
+  name: MOD security visor module
+  description: Displays crew jobs, mindshields and criminal records.
+  components:
+  - type: Sprite
+    state: sechud_visor
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ShowJobIcons
+    - type: ShowMindShieldIcons
+    - type: ShowCriminalRecordIcons
+    - type: ShowContrabandDetails
+
+- type: entity
+  parent: BaseModsuitModuleVisor
+  id: ModsuitModuleVisorDiagnostic
+  name: MOD diagnostic visor module
+  description: Displays the integrity of synthetic organisms and equipment.
+  components:
+  - type: Sprite
+    state: diaghud_visor
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ShowHealthBars
+      damageContainers: [ Inorganic, Silicon ]
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleWelding
+  name: MOD welding protection module
+  description: A polarized visor filter for protecting the wearer's eyes while welding.
+  components:
+  - type: Sprite
+    state: welding
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.1
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: EyeProtection
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleThermalRegulator
+  name: MOD thermal regulator module
+  description: Circulates coolant through the suit to keep the wearer at a comfortable temperature.
+  components:
+  - type: Sprite
+    state: regulator
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 1.2
+  - type: ModThermalRegulatorModule
+
+- type: entity
+  abstract: true
+  parent: BaseModsuitModule
+  id: BaseModsuitModuleBuiltin
+  components:
+  - type: ModModule
+    removable: false
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinInstrument
+  name: integrated MOD instrument module
+  description: Opens the helmet's built-in synthesizer.
+  components:
+  - type: Sprite
+    state: bikehorn
+  - type: ModModule
+    moduleType: Usable
+    requiredParts: [ head ]
+  - type: ModInstrumentModule
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinGrip
+  name: reinforced grip
+  description: Powered servos in the gauntlets strengthen the wearer's grabs.
+  components:
+  - type: Sprite
+    state: clamp
+  - type: ModModule
+    requiredParts: [ gloves ]
+  - type: ModGrantComponentsModule
+    slot: gloves
+    components:
+    - type: ModGrip
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleHatStabilizer
+  name: MOD hat stabilizer module
+  description: Holds a hat on the MOD helmet, even when the suit is unsealed.
+  components:
+  - type: Sprite
+    state: hat_holder
+  - type: ModModule
+    allowFlags: Inactive
+    requiredParts: [ head ]
+  - type: ModHatStabilizerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleMagneticHarness
+  name: MOD magnetic harness module
+  description: Recalls dropped firearms that were previously worn in the suit storage or back slot.
+  components:
+  - type: Sprite
+    state: mag_harness
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.2
+    requiredParts: [ outerClothing ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModMagneticHarness
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinSecHud
+  name: integrated security visor
+  description: A built-in visor for tracking crew jobs, mindshields and criminal records.
+  components:
+  - type: Sprite
+    state: sechud_visor
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 0.2
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ShowJobIcons
+    - type: ShowMindShieldIcons
+    - type: ShowCriminalRecordIcons
+    - type: ShowContrabandDetails
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinMedHud
+  name: integrated medical visor
+  description: A built-in visor for checking the health of nearby crew.
+  components:
+  - type: Sprite
+    state: medhud_visor
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 0.2
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ShowHealthBars
+    - type: ShowHealthIcons
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinFlashProtection
+  name: integrated flash protection
+  description: A polarized helmet visor that protects against flashes and welding arcs.
+  components:
+  - type: Sprite
+    state: welding
+  - type: ModModule
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: FlashImmunity
+    - type: EyeProtection
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinInsulation
+  name: insulated gauntlets
+  description: Insulates the gauntlets even when the suit is inactive.
+  components:
+  - type: ModModule
+    allowFlags: Inactive
+    requiredParts: [ gloves ]
+  - type: ModGrantComponentsModule
+    slot: gloves
+    components:
+    - type: Insulated
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinAutoInjector
+  name: integrated auto-injector
+  description: Delivers an emergency dose from the chestplate when the wearer enters critical condition.
+  components:
+  - type: Sprite
+    state: injector
+  - type: ModModule
+    requiredParts: [ outerClothing ]
+  - type: ModGrantComponentsModule
+    slot: outerClothing
+    components:
+    - type: ClothingAutoInject
+      reagents:
+        Epinephrine: 10
+        Bicaridine: 10
+        TranexamicAcid: 5
+        Tramadol: 5

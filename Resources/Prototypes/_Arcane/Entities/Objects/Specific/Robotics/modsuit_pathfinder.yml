@@ -1,0 +1,44 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModulePathfinder
+  name: MOD pathfinder module
+  description: An implant-linked recall system. Use the module to implant its receiver, then call your unworn MOD to you.
+  components:
+  - type: Sprite
+    state: gps
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    allowFlags: [ Inactive, Unworn ]
+  - type: ModPathfinder
+  - type: ItemSlots
+  - type: ContainerContainer
+    containers:
+      implanter_slot: !type:ContainerSlot {}
+  - type: Implanter
+    implant: ModPathfinderImplant
+    implantOnly: true
+    allowMultipleImplants: true
+    currentMode: Inject
+    whitelist:
+      components: [ HumanoidProfile ]
+    blacklist:
+      tags: [ Unimplantable ]
+    implanterSlot:
+      name: Implant
+      locked: true
+      whitelist:
+        components: [ ModPathfinderImplant ]
+
+- type: entity
+  parent: BaseSubdermalImplant
+  id: ModPathfinderImplant
+  name: MOD pathfinder implant
+  description: Calls the MOD linked to this receiver to its implanted owner.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SubdermalImplant
+    implantAction: ActionModPathfinderRecall
+    whitelist:
+      components: [ HumanoidProfile ]
+  - type: ModPathfinderImplant

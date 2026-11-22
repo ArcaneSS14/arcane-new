@@ -1,0 +1,174 @@
+- type: entity
+  parent: BaseAction
+  id: ActionModAssistantInterface
+  name: MOD control panel
+  description: Control the MOD that contains your AI or pAI device.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: true
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: InstantAction
+    event: !type:ModAssistantInterfaceEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModPathfinderRecall
+  name: Recall MOD
+  description: Call your linked MOD. The suit must be unworn, powered and on the same map.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: true
+    useDelay: 5
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: gps
+  - type: InstantAction
+    event: !type:ModPathfinderRecallEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSuitActivate
+  name: Toggle MOD activation
+  description: Seal or unseal your MODsuit. All parts must be deployed first.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: true
+    checkConsciousness: true
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: InstantAction
+    event: !type:ModSuitActivateActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSuitDeploy
+  name: Deploy MOD parts
+  description: Deploy or retract every part of your MODsuit.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: true
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModSuitDeployActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModModule
+  name: Use MOD module
+  description: Use or toggle this MODsuit module.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModModuleActionEvent
+
+- type: entity
+  parent: ActionModModule
+  id: ActionModAdrenalineBoost
+  name: Use MOD adrenaline boost
+  description: Injects stimulants and helps you stand up.
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: false
+
+- type: entity
+  parent: BaseAction
+  id: ActionModPowerKick
+  name: Power kick
+  description: Launches the wearer towards a target with a powered kick.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: TargetAction
+    checkCanAccess: false
+    range: 7
+  - type: EntityTargetAction
+    canTargetSelf: false
+  - type: WorldTargetAction
+    event: !type:ModPowerKickActionEvent
+
+- type: entity
+  parent: ActionModPowerKick
+  id: ActionModHydraulicLaunch
+  name: Hydraulic launch
+  description: Uses the hydraulic arms to propel the wearer.
+
+- type: entity
+  parent: ActionModPowerKick
+  id: ActionModNinjaEnergyNet
+  name: Fire energy net
+  description: Launches a breakable hardlight net at the target.
+  components:
+  - type: TargetAction
+    checkCanAccess: false
+    range: 9
+  - type: WorldTargetAction
+    event: !type:ModNinjaNetActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModLoaderMagnet
+  name: Hydraulic magnet
+  description: Pulls a crate or locker closer, or launches the one you are already pulling.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: TargetAction
+    checkCanAccess: false
+    range: 7
+  - type: WorldTargetAction
+    event: !type:ModLoaderMagnetActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModSelectDevice
+  name: Select MOD device
+  description: Choose which device the module will deploy.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ModSelectDeviceActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModRecyclerUnload
+  name: Unload recycler
+  description: Dumps the contents of the recycler at your feet.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+    checkCanInteract: false
+  - type: InstantAction
+    event: !type:ModRecyclerUnloadActionEvent
+
+- type: entity
+  parent: BaseAction
+  id: ActionModShootingMode
+  name: Cycle shooting mode
+  description: Switches the shooting assistant between off, stormtrooper and sharpshooter modes.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+    checkCanInteract: false
+  - type: InstantAction
+    event: !type:ModShootingModeActionEvent

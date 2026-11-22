@@ -29,7 +29,7 @@ public sealed partial class SharedMagbootsSystem : EntitySystem
         if (_clothing.IsEquipped(ent.Owner)
             && _container.TryGetContainingContainer((ent.Owner, null, null), out var container))
         {
-            UpdateMagbootEffects(container.Owner, ent, args.Activated);
+            UpdateMagbootEffects(container.Owner, ent, args.Activated || ent.Comp.PoweredByModule); // Arcane
         }
     }
 
@@ -42,8 +42,24 @@ public sealed partial class SharedMagbootsSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnGotEquipped(Entity<MagbootsComponent> ent, ref ClothingGotEquippedEvent args)
     {
-        UpdateMagbootEffects(args.Wearer, ent, _toggle.IsActivated(ent.Owner));
+        UpdateMagbootEffects(args.Wearer, ent, IsEnabled(ent)); // Arcane
     }
+
+    // Arcane-Start: MOD power and the manual boot switch act independently.
+    public void SetModulePower(Entity<MagbootsComponent> boots, EntityUid? wearer, bool enabled, bool removeAfter = false)
+    {
+        boots.Comp.PoweredByModule = enabled;
+        if (removeAfter)
+            RemComp(boots.Owner, boots.Comp);
+        else
+            Dirty(boots);
+
+        if (wearer is { } user && HasComp<InventoryComponent>(user) && !TerminatingOrDeleted(user))
+            UpdateMagbootEffects(user, boots, !removeAfter && IsEnabled(boots));
+    }
+
+    private bool IsEnabled(Entity<MagbootsComponent> boots) => boots.Comp.PoweredByModule || _toggle.IsActivated(boots.Owner);
+    // Arcane-End
 
     public void UpdateMagbootEffects(EntityUid user, Entity<MagbootsComponent> ent, bool state)
     {
@@ -62,7 +78,7 @@ public sealed partial class SharedMagbootsSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnIsWeightless(Entity<MagbootsComponent> ent, ref IsWeightlessEvent args)
     {
-        if (args.Handled || !_toggle.IsActivated(ent.Owner))
+        if (args.Handled || !IsEnabled(ent)) // Arcane
             return;
 
         // do not cancel weightlessness if the person is in off-grid.

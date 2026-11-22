@@ -7,10 +7,15 @@
   name: Apocryphal modsuit control unit
   description: The main controller for a Apocryphal modsuit.
   components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreVortexCell
   - type: Sprite
     sprite: _EinsteinEngines/Clothing/NanoTrasen/Modsuits/apocryphal.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeApocryphal
+    parts:
       head: ClothingModsuitHelmetApocryphal
       gloves: ClothingModsuitGauntletsApocryphal
       outerClothing: ClothingModsuitChestplateApocryphal

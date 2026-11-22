@@ -85,6 +85,19 @@
   - SecHypo
   - PolymerBaton
   - SpearTelescopic
+  - ModsuitModuleVisorSecurity
+  - ModsuitModuleMegaphone
+  - ModsuitModuleEmpShield
+  - ModsuitModulePepperShoulders
+  - ModsuitModuleRestraintAssist
+  - ModsuitModuleBulwark
+  - ModsuitModuleHolster
+  - ModsuitModuleCriminalCapture
+  - ModsuitModuleMagneticHarness
+  - ModsuitModulePathfinder
+  - ModsuitModuleProjectileDampener
+  - ModsuitModuleShootingAssistant
+  - ModsuitPlatingBrigMed
   position: -1,1
 
 - type: technology
@@ -107,6 +120,8 @@
   - NightVision
   recipeUnlocks:
   - ClothingEyesThermalVisionGoggles
+  - ModsuitModuleThermalVisor
+  - ModsuitModuleShockAbsorber
   position: -2,1
 
 - type: technology

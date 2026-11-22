@@ -34,6 +34,15 @@ public sealed partial class HideLayerClothingSystem : EntitySystem
         SetLayerVisibility(ent!, args.Wearer, hideLayers: false);
     }
 
+    // Arcane-Start: an equipped MOD part changes its hiding rules as it seals.
+    public void RefreshEquippedLayerVisibility(EntityUid clothing, EntityUid wearer, bool hideLayers)
+    {
+        if (TryComp<HideLayerClothingComponent>(clothing, out var layers)
+            && TryComp<ClothingComponent>(clothing, out var worn) && worn.InSlotFlag.HasValue)
+            SetLayerVisibility((clothing, layers, worn), wearer, hideLayers);
+    }
+    // Arcane-End
+
     private void SetLayerVisibility(
         Entity<HideLayerClothingComponent?, ClothingComponent?> clothing,
         Entity<HideableHumanoidLayersComponent?> user,

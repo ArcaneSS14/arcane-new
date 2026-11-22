@@ -143,6 +143,17 @@
   - HandheldCrewMonitor
   - SyringeGun
   - DefibrillatorCompact
+  - ModsuitModuleVisorMedical
+  - ModsuitModuleHealthAnalyzer
+  - ModsuitModuleStatusReadout
+  - ModsuitModuleCrewMonitor
+  - ModsuitModuleInjector
+  - ModsuitModuleDefibrillator
+  - ModsuitModuleNightVisor
+  - ModsuitModuleQuickCarry
+  - ModsuitModuleQuickCarryAdvanced
+  - ModsuitModuleThreadRipper
+  - ModsuitModulePatientTransport
   position: 8,11
 
 - type: technology

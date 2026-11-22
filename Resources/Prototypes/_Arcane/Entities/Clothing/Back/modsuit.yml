@@ -6,8 +6,9 @@
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Back/Modsuits/suspicious.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit
+    theme: ModThemeSuspicious
+    parts:
       head: ClothingModsuitHelmetSuspicious
       gloves: ClothingModsuitGauntletsSuspicious
       outerClothing: ClothingModsuitChestplateSuspicious
@@ -16,3 +17,8 @@
 - type: entity
   parent: [ ClothingModsuitSuspicious, ClothingModsuitStandardPowerCell ]
   id: ClothingModsuitSuspiciousPowerCell
+  components:
+  - type: ContainerFill
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity

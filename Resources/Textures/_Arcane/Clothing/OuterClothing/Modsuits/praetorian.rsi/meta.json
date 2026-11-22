@@ -1,0 +1,118 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Praetorian by Winter Frost, extracted from Nova Sector (5ce2bd2215c0355ba9c54ff56d52ae20c90d36da), modular_nova/master_files/icons/{obj,mob}/clothing/modsuit/mod_clothing.dmi. Introduced in Nova #5679, updated in #6002.",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "control-sealed",
+            "delays": [
+                [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                ]
+            ]
+        },
+        {
+            "name": "control"
+        },
+        {
+            "name": "helmet-sealed"
+        },
+        {
+            "name": "helmet"
+        },
+        {
+            "name": "chestplate-sealed",
+            "delays": [
+                [
+                    0.3,
+                    0.3,
+                    0.3
+                ]
+            ]
+        },
+        {
+            "name": "chestplate"
+        },
+        {
+            "name": "gauntlets-sealed"
+        },
+        {
+            "name": "gauntlets"
+        },
+        {
+            "name": "boots-sealed"
+        },
+        {
+            "name": "boots"
+        },
+        {
+            "name": "equipped-BACKPACK-sealed",
+            "directions": 4
+        },
+        {
+            "name": "equipped-BACKPACK",
+            "directions": 4
+        },
+        {
+            "name": "equipped-HEAD-sealed",
+            "directions": 4
+        },
+        {
+            "name": "equipped-HEAD",
+            "directions": 4
+        },
+        {
+            "name": "equipped-OUTERCLOTHING-sealed",
+            "directions": 4,
+            "delays": [
+                [
+                    0.3,
+                    0.3,
+                    0.3
+                ],
+                [
+                    0.3,
+                    0.3,
+                    0.3
+                ],
+                [
+                    0.3,
+                    0.3,
+                    0.3
+                ],
+                [
+                    0.3,
+                    0.3,
+                    0.3
+                ]
+            ]
+        },
+        {
+            "name": "equipped-OUTERCLOTHING",
+            "directions": 4
+        },
+        {
+            "name": "equipped-HAND-sealed",
+            "directions": 4
+        },
+        {
+            "name": "equipped-HAND",
+            "directions": 4
+        },
+        {
+            "name": "equipped-FEET-sealed",
+            "directions": 4
+        },
+        {
+            "name": "equipped-FEET",
+            "directions": 4
+        }
+    ]
+}

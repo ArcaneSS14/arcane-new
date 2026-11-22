@@ -1,0 +1,94 @@
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinThermal
+  name: integrated thermal visor
+  description: Thermal imaging built into the helmet's visor.
+  components:
+  - type: Sprite
+    state: thermal_visor
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 0.8
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: ThermalVision
+      isEquipment: true
+      isActive: true
+      toggleAction: null
+      lightRadius: 15
+
+- type: entity
+  parent: BaseModsuitModuleBuiltin
+  id: ModsuitModuleBuiltinNightVision
+  name: integrated night vision
+  description: Light amplification built into the helmet's visor.
+  components:
+  - type: Sprite
+    state: night_visor
+  - type: ModModule
+    moduleType: Toggle
+    activePower: 0.4
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    slot: head
+    components:
+    - type: NightVision
+      relayOverlay: true
+      lightingColor: "#98FB9833"
+      overlayColor: "#98FB98"
+
+- type: entity
+  parent: ModsuitModuleBuiltinThermal
+  id: ModsuitModuleThermalVisor
+  name: MOD thermal visor module
+  description: A thermal imaging system mounted inside the helmet visor.
+  components:
+  - type: ModModule
+    removable: true
+    complexity: 2
+    incompatible:
+      tags: [ ModsuitModuleVisor ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleVisor ]
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+      Glass: 50
+
+- type: entity
+  parent: ModsuitModuleBuiltinNightVision
+  id: ModsuitModuleNightVisor
+  name: MOD night visor module
+  description: Amplifies ambient light to make it easier to see in the dark.
+  components:
+  - type: ModModule
+    removable: true
+    complexity: 1
+    incompatible:
+      tags: [ ModsuitModuleVisor ]
+  - type: Tag
+    tags: [ ModsuitModule, ModsuitModuleVisor ]
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+      Glass: 50
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleReagentScanner
+  name: MOD reagent scanner module
+  description: Displays the chemical composition of reagent containers when examined.
+  components:
+  - type: Sprite
+    state: scanner
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 1
+    activePower: 0.2
+    requiredParts: [ head ]
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: SolutionScanner

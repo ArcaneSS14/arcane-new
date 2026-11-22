@@ -1,5 +1,8 @@
 using System.Linq;
+using Content.Arcane.Common.ModSuits;
 using Content.Arcane.Shared.CloneProjector;
+using Content.Arcane.Shared.ModSuits.Components;
+using Content.Arcane.Shared.ModSuits.Systems;
 using Content.Server.Construction.Components;
 using Content.Shared.Access.Components;
 using Content.Shared.Actions.Components;
@@ -9,6 +12,7 @@ using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Destructible;
 using Content.Shared.Interaction.Components;
+using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item;
@@ -34,28 +38,70 @@ public sealed partial class CloneProjectorSystem
     [Dependency] private SharedMechSystem _mechs = default!;
     [Dependency] private SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private ModSuitSystem _modsuits = default!;
 
     private void CopyEquipment(Entity<CloneProjectorComponent> projector, EntityUid host, Entity<GeminiProjectionComponent> clone)
     {
+        HashSet<EntityUid> eligibleItems = new();
+        HashSet<EntityUid> equippedCopies = new();
+        List<(Entity<ModSuitComponent> Source, EntityUid Copy)> projectedSuits = new();
+        List<(EntityUid Source, string Slot)> suitStorage = new();
+        List<(EntityUid Source, EntityUid Copy)> identities = new();
         var slots = _inventory.GetSlotEnumerator(host);
         while (slots.NextItem(out var item, out var slot))
         {
+            if (_whitelist.CheckBoth(item, projector.Comp.ClonedItemBlacklist, projector.Comp.ClonedItemWhitelist))
+                eligibleItems.Add(item);
+
+            var resolve = new ResolveEquipmentCopyItemEvent(item);
+            RaiseLocalEvent(item, ref resolve);
+            if (resolve.Item is not { } source)
+                continue;
+
+            if (slot.SlotFlags.HasFlag(SlotFlags.SUITSTORAGE))
+                suitStorage.Add((source, slot.Name));
+            else
+                CopySlot(source, slot.Name);
+        }
+
+        foreach (var (source, copy) in projectedSuits)
+            _modsuits.CopyDeployment(source, copy, eligibleItems, equippedCopies);
+
+        foreach (var (source, slot) in suitStorage)
+            CopySlot(source, slot);
+
+        // Lock the copies after deployment has moved the parts and their underlying clothing.
+        foreach (var copy in equippedCopies)
+            TrackCopy(copy, clone.Comp.Equipment);
+
+        foreach (var (source, copy) in identities)
+            CopyJobTitle(source, copy, clone.Comp.Equipment);
+
+        void CopySlot(EntityUid item, string slot)
+        {
             if (HasComp<AttachedClothingComponent>(item)
+                || HasComp<GeminiEquipmentComponent>(item)
                 || _whitelist.IsWhitelistFail(projector.Comp.ClonedItemWhitelist, item)
                 || _whitelist.IsWhitelistPass(projector.Comp.ClonedItemBlacklist, item)
                 || Prototype(item) is not { } prototype)
-                continue;
+                return;
 
             var copy = Spawn(prototype.ID, Transform(host).Coordinates);
-            if (!_inventory.TryEquip(clone, copy, slot.Name, silent: true, force: true))
+            if (TryComp<ModSuitComponent>(copy, out var projection))
+                _modsuits.PrepareProjectedSuit((copy, projection));
+
+            if (!_inventory.TryEquip(clone, copy, slot, silent: true, force: true))
             {
                 Del(copy);
-                continue;
+                return;
             }
 
-            TrackCopy(copy, clone.Comp.Equipment);
-            if (slot.Name == IdSlot)
-                CopyJobTitle(item, copy, clone.Comp.Equipment);
+            equippedCopies.Add(copy);
+            if (projection != null && TryComp<ModSuitComponent>(item, out var original))
+                projectedSuits.Add(((item, original), copy));
+
+            if (slot == IdSlot)
+                identities.Add((item, copy));
         }
     }
 
@@ -88,13 +134,25 @@ public sealed partial class CloneProjectorSystem
 
     private void TrackCopy(EntityUid copy, HashSet<EntityUid> copies)
     {
+        if (!copies.Add(copy))
+            return;
+
         RemComp<AccessComponent>(copy);
         if (!HasComp<AttachedClothingComponent>(copy))
             EnsureComp<UnremoveableComponent>(copy);
         RemComp<DestructibleComponent>(copy);
         RemComp<ConstructionComponent>(copy);
         EnsureComp<GeminiEquipmentComponent>(copy);
-        copies.Add(copy);
+
+        if (TryComp<ModSuitComponent>(copy, out var suit))
+        {
+            foreach (var part in suit.PartEntities.Values)
+                TrackCopy(part, copies);
+        }
+        else if (TryComp<ModPartComponent>(copy, out var modPart) && modPart.StoredClothing?.ContainedEntity is { } layer)
+        {
+            TrackCopy(layer, copies);
+        }
 
         foreach (var (_, solution) in _solutions.EnumerateSolutions(copy))
             _solutions.RemoveAllSolution(solution);
@@ -102,14 +160,14 @@ public sealed partial class CloneProjectorSystem
         if (!TryComp(copy, out ContainerManagerComponent? manager))
             return;
 
-        // Keep the suit's attached clothing and its actions. Discard generated items from fills.
+        // Keep attached clothing, MOD parts and action entities. Clear other generated fills.
         foreach (var container in _containers.GetAllContainers(copy, manager))
         {
             foreach (var content in container.ContainedEntities.ToArray())
             {
-                if (HasComp<AttachedClothingComponent>(content))
+                if (HasComp<AttachedClothingComponent>(content) || HasComp<ModPartComponent>(content))
                     TrackCopy(content, copies);
-                else if (!HasComp<ActionComponent>(content) && !HasComp<SolutionComponent>(content))
+                else if (!copies.Contains(content) && !HasComp<ActionComponent>(content) && !HasComp<SolutionComponent>(content))
                     Del(content);
             }
         }

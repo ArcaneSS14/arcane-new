@@ -49,7 +49,7 @@ public abstract partial class SharedSpaceNinjaSystem : EntitySystem
     [SubscribeLocalEvent]
     private void OnBindItem(Entity<SpaceNinjaComponent> ent, ref BindItemEvent args)
     {
-        if (ent.Comp.Katana != null)
+        if (ent.Comp.Katana is { } current && (!args.ReplaceDeleted || !TerminatingOrDeleted(current))) // Arcane
             return;
 
         ent.Comp.Katana = args.Item;

@@ -4,18 +4,8 @@
   abstract: true
   id: BaseModsuitBatteryAntique
   suffix: Antique Power Cell
-  components:
-  - type: ContainerFill
-    containers:
-      cell_slot:
-      - PowerCellVortex # Arcane-Edit: PowerCellAntiqueProto > PowerCellVortex
 
 - type: entity
   abstract: true
   id: BaseModsuitBatteryMicroreactor
   suffix: Microreactor
-  components:
-  - type: ContainerFill
-    containers:
-      cell_slot:
-      - PowerCellBluespaceReactor # Arcane-Edit: PowerCellMicroreactor > PowerCellBluespaceReactor

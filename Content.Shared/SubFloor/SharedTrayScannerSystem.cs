@@ -85,7 +85,7 @@ public abstract partial class SharedTrayScannerSystem : EntitySystem
         args.VisibilityMask |= (int)VisibilityFlags.Subfloor;
     }
 
-    private void OnEquip(EntityUid user)
+    public void RegisterScannerUser(EntityUid user) // Arcane
     {
         if (_netMan.IsClient)
             return;
@@ -98,7 +98,7 @@ public abstract partial class SharedTrayScannerSystem : EntitySystem
         _eye.RefreshVisibilityMask(user);
     }
 
-    private void OnUnequip(EntityUid user)
+    public void UnregisterScannerUser(EntityUid user) // Arcane
     {
         if (_netMan.IsClient)
             return;
@@ -108,31 +108,29 @@ public abstract partial class SharedTrayScannerSystem : EntitySystem
 
         comp.Count--;
 
-        _eye.RefreshVisibilityMask(user); // Trauma - moved above the condition, always refresh it
-        if (comp.Count > 0)
-            return;
-
-        RemComp<TrayScannerUserComponent>(user);
+        if (comp.Count == 0) // Arcane
+            RemComp<TrayScannerUserComponent>(user);
+        _eye.RefreshVisibilityMask(user);
     }
 
     private void OnTrayHandUnequipped(Entity<TrayScannerComponent> ent, ref GotUnequippedHandEvent args)
     {
-        OnUnequip(args.User);
+        UnregisterScannerUser(args.User); // Arcane
     }
 
     private void OnTrayHandEquipped(Entity<TrayScannerComponent> ent, ref GotEquippedHandEvent args)
     {
-        OnEquip(args.User);
+        RegisterScannerUser(args.User); // Arcane
     }
 
     private void OnTrayUnequipped(Entity<TrayScannerComponent> ent, ref GotUnequippedEvent args)
     {
-        OnUnequip(args.EquipTarget);
+        UnregisterScannerUser(args.EquipTarget); // Arcane
     }
 
     private void OnTrayEquipped(Entity<TrayScannerComponent> ent, ref GotEquippedEvent args)
     {
-        OnEquip(args.EquipTarget);
+        RegisterScannerUser(args.EquipTarget); // Arcane
     }
 
     private void OnTrayScannerActivate(Entity<TrayScannerComponent> ent, ref ActivateInWorldEvent args)

@@ -1,0 +1,16 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleKinesis
+  name: MOD kinesis module
+  description: Generates precise anti-gravity fields to move and throw loose objects. It doesn't work on creatures.
+  components:
+  - type: Sprite
+    state: kinesis
+  - type: ModModule
+    moduleType: Active
+    complexity: 3
+    activePower: 1.2
+    requiredParts: [ gloves ]
+  - type: ModKinesisModule
+    blacklist:
+      components: [ MobState ]

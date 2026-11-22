@@ -8,3 +8,21 @@
     tags:
     - ModsuitPart
     - ModsuitPlatingExternal # Change this when they become obtainable
+
+- type: entity
+  parent: [ PartModsuit, BaseSecurityContraband ]
+  id: ModsuitPlatingBrigMed
+  name: MOD standard security trauma plating
+  description: A part used to build a Trauma MODsuit.
+  components:
+  - type: Sprite
+    state: standard-plating
+  - type: Icon
+    state: standard-plating
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 75
+      Glass: 37
+      Plasma: 12
+  - type: Tag
+    tags: [ ModsuitPart, ModsuitPlatingBrigMed ]

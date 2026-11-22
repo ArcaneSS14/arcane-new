@@ -1,0 +1,66 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleStatusReadout
+  name: MOD status readout module
+  description: Displays the wearer's vital signs and sounds an alarm when they die.
+  components:
+  - type: Sprite
+    state: health
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 0.1
+    cooldown: 1
+  - type: ModStatusReadout
+  - type: UserInterface
+    interfaces:
+      enum.ModStatusReadoutUiKey.Key:
+        type: ModStatusReadoutBoundUserInterface
+        # The module is inside a closed MOD. Its read-only UI validates the current wearer on opening.
+        requireInputValidation: false
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleCrewMonitor
+  name: MOD crew monitor module
+  description: A wrist display showing the station's available suit sensor data.
+  components:
+  - type: Sprite
+    state: health
+  - type: ModModule
+    moduleType: Active
+    complexity: 1
+    activePower: 0.3
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceCrewMonitor
+
+- type: entity
+  parent: BaseItem
+  id: ModsuitDeviceCrewMonitor
+  name: MOD crew monitor
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/handheldcrewmonitor.rsi
+    state: scanner
+  - type: Item
+    heldPrefix: scanner
+  - type: ActivatableUI
+    key: enum.CrewMonitoringUIKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.CrewMonitoringUIKey.Key:
+        type: CrewMonitoringBoundUserInterface
+  - type: CrewMonitoringConsole
+  - type: DeviceNetwork
+    deviceNetId: Wireless
+    receiveFrequencyId: CrewMonitor
+    prefix: device-address-prefix-crew-monitor
+  - type: WirelessNetworkConnection
+    range: 500
+  - type: StationLimitedNetwork
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}

@@ -10,17 +10,6 @@
     - 3,0,6,3
     - 8,0,9,3
     maxItemSize: Huge
-  - type: ContainerContainer
-    containers:
-      storagebase: !type:Container
-      toggleable-clothing: !type:Container
-      cell_slot: !type:ContainerSlot
-  - type: UserInterface
-    interfaces:
-      enum.StorageUiKey.Key:
-        type: StorageBoundUserInterface
-      enum.ToggleClothingUiKey.Key:
-        type: ToggleableClothingBoundUserInterface
 
 - type: entity
   abstract: true
@@ -44,48 +33,72 @@
     containers:
       storagebase: !type:Container
         ents: []
-      toggleable-clothing: !type:Container
-      cell_slot: !type:ContainerSlot
+      mod-core: !type:ContainerSlot # Arcane
+      mod-parts: !type:Container # Arcane
+        ents: []
+      mod-modules: !type:Container # Arcane
+        ents: []
+      # Arcane-Start
+      station_ai_mind_slot: !type:ContainerSlot {}
+      mod-pai: !type:ContainerSlot {}
+      # Arcane-End
   - type: UserInterface
     interfaces:
       enum.StorageUiKey.Key:
         type: StorageBoundUserInterface
-      enum.ToggleClothingUiKey.Key:
-        type: ToggleableClothingBoundUserInterface
+      enum.ModSuitUiKey.Key: # Arcane
+        type: ModSuitBoundUserInterface
+        requireInputValidation: false # Arcane
+      enum.ChameleonUiKey.Key: # Arcane
+        type: ChameleonBoundUserInterface
   - type: UseDelay
     delay: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.9
-  - type: ToggleableClothing
-    requiredSlot: back
-    blockUnequipWhenAttached: false # easier to use and now its fixed
-    replaceCurrentClothing: true
-    clothingPrototypes:
+  - type: ModSuit # Arcane: migration to modular controls
+    theme: ModThemeStandard
+    parts:
       head: ClothingModsuitHelmetStandard
       gloves: ClothingModsuitGauntletsStandard
       outerClothing: ClothingModsuitChestplateStandard
       shoes: ClothingModsuitBootsStandard
   - type: WiresPanel
+  # Arcane-Start
+  - type: StationAiHolder
+    renameOnInsert: false
+    slot:
+      name: station-ai-mind-slot
+      disableEject: true
+      whitelist:
+        tags: [StationAi]
+  # Arcane-End
   - type: ItemSlots
     slots:
-      cell_slot:
-        name: power-cell-slot-component-slot-name-default
+      mod-core: # Arcane
+        name: modsuit-core-slot-name
         whitelist:
           components:
-          - PowerCell
+          - ModCore
+      # Arcane-Start
+      mod-pai:
+        name: modsuit-pai-slot-name
+        insertDelay: 5
+        ejectDelay: 5
+        whitelist:
+          components: [PAI]
+      # Arcane-End
   - type: ItemSlotsRequirePanel
     slots:
-      cell_slot: true
-  - type: PowerCellDraw
-    enabled: false # disabled until you seal the suit
-    drawRate: 0.8 # Sealed draw rate
-    useCharge: 4 # Charge used when sealing
-  - type: PowerCellSlot
-    cellSlotId: cell_slot
-    fitsInCharger: false
+      mod-core: true # Arcane
+      # Arcane-Start
+      station_ai_mind_slot: true
+      mod-pai: true
+      # Arcane-End
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandard
   - type: DoAfter
-  - type: SealableClothingControl
-  - type: SealableClothingRequiresPower
   - type: Construction
     graph: Modsuit
     node: standard
@@ -102,15 +115,15 @@
   abstract: true
   id: BaseModsuitBattery
   suffix: High-Capacity Battery
-  components:
-  - type: ContainerFill
-    containers:
-      cell_slot:
-      - PowerCellHigh
 
 - type: entity
   parent: [ ClothingModsuitStandard, BaseModsuitBattery ]
   id: ClothingModsuitStandardPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseSecurityContraband]
@@ -120,8 +133,9 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/security.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeSecurity
+    parts:
       head: ClothingModsuitHelmetSecurity
       gloves: ClothingModsuitGauntletsSecurity
       outerClothing: ClothingModsuitChestplateSecurity
@@ -132,6 +146,11 @@
 - type: entity
   parent: [ ClothingModsuitSecurity, BaseModsuitBattery ]
   id: ClothingModsuitSecurityPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseCommandContraband]
@@ -141,8 +160,12 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/headofsecurity.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeSafeguard
+    inbuiltModules:
+    - ModsuitModuleBuiltinInsulation
+    - ModsuitModuleBuiltinAutoInjector
+    parts:
       head: ClothingModsuitHelmetHeadOfSecurity
       gloves: ClothingModsuitGauntletsHeadOfSecurity
       outerClothing: ClothingModsuitChestplateHeadOfSecurity
@@ -153,6 +176,11 @@
 - type: entity
   parent: [ ClothingModsuitHeadOfSecurity, BaseModsuitBattery ]
   id: ClothingModsuitHeadOfSecurityPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseMedicalContraband]
@@ -162,8 +190,9 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/paramedic.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeMedical
+    parts:
       head: ClothingModsuitHelmetParamedic
       gloves: ClothingModsuitGauntletsParamedic
       outerClothing: ClothingModsuitChestplateParamedic
@@ -174,6 +203,11 @@
 - type: entity
   parent: [ ClothingModsuitParamedic, BaseModsuitBattery ]
   id: ClothingModsuitParamedicPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseEngineeringContraband]
@@ -183,8 +217,10 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/engineer.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeEngineering
+    inbuiltModules: [ ModsuitModuleBuiltinInsulation ]
+    parts:
       head: ClothingModsuitHelmetEngineer
       gloves: ClothingModsuitGauntletsEngineer
       outerClothing: ClothingModsuitChestplateEngineer
@@ -195,6 +231,11 @@
 - type: entity
   parent: [ ClothingModsuitEngineer, BaseModsuitBattery ]
   id: ClothingModsuitEngineerPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseEngineeringContraband]
@@ -204,8 +245,10 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/atmostech.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeAtmospheric
+    inbuiltModules: [ ModsuitModuleBuiltinInsulation ]
+    parts:
       head: ClothingModsuitHelmetAtmostech
       gloves: ClothingModsuitGauntletsAtmostech
       outerClothing: ClothingModsuitChestplateAtmostech
@@ -216,6 +259,11 @@
 - type: entity
   parent: [ ClothingModsuitAtmostech, BaseModsuitBattery ]
   id: ClothingModsuitAtmostechPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseCommandContraband, BaseGrandTheftContraband]
@@ -225,8 +273,10 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/researchdirector.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeResearch
+    inbuiltModules: [ ModsuitModuleBuiltinInsulation ]
+    parts:
       head: ClothingModsuitHelmetResearchDirector
       gloves: ClothingModsuitGauntletsResearchDirector
       outerClothing: ClothingModsuitChestplateResearchDirector
@@ -243,6 +293,11 @@
 - type: entity
   parent: [ ClothingModsuitResearchDirector, BaseModsuitBattery ]
   id: ClothingModsuitResearchDirectorPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
 
 - type: entity
   parent: [ClothingModsuitStandard, BaseCommandContraband]
@@ -252,8 +307,10 @@
   components:
   - type: Sprite
     sprite: _Goobstation/Clothing/Back/Modsuits/captain.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeMagnate
+    inbuiltModules: [ ModsuitModuleBuiltinInsulation ]
+    parts:
       head: ClothingModsuitHelmetCaptain
       gloves: ClothingModsuitGauntletsCaptain
       outerClothing: ClothingModsuitChestplateCaptain
@@ -264,4 +321,9 @@
 - type: entity
   parent: [ ClothingModsuitCaptain, BaseModsuitBattery ]
   id: ClothingModsuitCaptainPowerCell
+  components:
+  - type: ContainerFill # Arcane
+    containers:
+      mod-core:
+      - ModsuitCoreStandardHighCapacity
   suffix: High-Capacity Battery

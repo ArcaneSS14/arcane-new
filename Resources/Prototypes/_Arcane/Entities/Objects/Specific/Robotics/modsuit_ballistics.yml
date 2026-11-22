@@ -1,0 +1,29 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleProjectileDampener
+  name: MOD projectile dampener module
+  description: Slows projectiles and reduces their damage while they are inside the field.
+  components:
+  - type: Sprite
+    state: projectile_dampener
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 3
+    activePower: 15
+    cooldown: 1.5
+    requiredParts: [ outerClothing ]
+  - type: ModProjectileDampenerModule
+
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleShootingAssistant
+  name: MOD shooting assistant module
+  description: Stormtrooper mode fires faster with wider spread. Sharpshooter mode narrows the spread and improves projectile speed and damage at the cost of movement speed.
+  components:
+  - type: Sprite
+    state: shooting_assistant
+  - type: ModModule
+    complexity: 3
+    idlePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModShootingAssistantModule

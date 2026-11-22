@@ -1,11 +1,15 @@
+using System.Linq;
 using Content.Arcane.Server.CloneProjector;
 using Content.Arcane.Shared.CloneProjector;
+using Content.Arcane.Shared.ModSuits.Components;
+using Content.Arcane.Shared.ModSuits.Systems;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Ghost.Roles.Components;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
+using Content.Shared.Armor;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.CombatMode.Pacification;
 using Content.Shared.Containers.ItemSlots;
@@ -27,6 +31,73 @@ namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class P20GeminiRuntimeTest : InteractionTest
 {
+    [Test]
+    public async Task GeminiModProjectionPreservesProtectionWithoutCreatingLoot()
+    {
+        EntityUid host = default;
+        EntityUid control = default;
+        EntityUid projector = default;
+        EntityUid copy = default;
+        EntityUid[] parts = [];
+        await Server.WaitAssertion(() =>
+        {
+            var at = MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f));
+            host = SEntMan.SpawnAttachedTo("MobHuman", at);
+            control = SEntMan.SpawnAttachedTo("ClothingModsuitSyndicateFilled", at);
+            projector = SEntMan.SpawnAttachedTo("ClothingBeltGeminiHoloProjector", at);
+            var inventory = SEntMan.System<InventorySystem>();
+            var suits = SEntMan.System<ModSuitSystem>();
+            var suit = (control, SEntMan.GetComponent<ModSuitComponent>(control));
+            Assert.That(inventory.TryEquip(host, control, "back", force: true), Is.True);
+            foreach (var slot in new[] { "head", "outerClothing", "gloves", "shoes" })
+                Assert.That(suits.TryDeployPart(suit, slot, host), Is.True, slot);
+            Assert.That(suits.TryToggleActivation(suit, host), Is.True);
+            Assert.That(inventory.TryEquip(host, projector, "belt", force: true), Is.True);
+        });
+
+        await RunSeconds(6);
+        await Server.WaitAssertion(() =>
+        {
+            var source = SEntMan.GetComponent<ModSuitComponent>(control);
+            Assert.That(source.State, Is.EqualTo(ModSuitState.Active), "Original suit before projection");
+            var data = SEntMan.GetComponent<CloneProjectorComponent>(projector);
+            var actions = SEntMan.System<SharedActionsSystem>();
+            var action = data.ActionEntity!.Value;
+            Assert.That(actions.PerformAction(host, (action, SEntMan.GetComponent<ActionComponent>(action))), Is.True);
+            var clone = data.CloneUid!.Value;
+            var inventory = SEntMan.System<InventorySystem>();
+            Assert.That(inventory.TryGetSlotEntity(clone, "back", out var controlCopy), Is.True);
+            copy = controlCopy!.Value;
+            var component = SEntMan.GetComponent<ModSuitComponent>(copy);
+            var suit = (copy, component);
+            var suits = SEntMan.System<ModSuitSystem>();
+            Assert.That(component.Projected, Is.True);
+            Assert.That(component.ModulesContainer!.ContainedEntities, Is.Empty);
+            Assert.That(suits.GetCore(suit), Is.Null);
+            Assert.That(suits.GetCore((control, source)), Is.Not.Null);
+            Assert.That(source.ModulesContainer!.ContainedEntities, Is.Not.Empty);
+            parts = component.PartEntities.Values.ToArray();
+            Assert.That(parts, Has.Length.EqualTo(4));
+            foreach (var (slot, part) in component.PartEntities)
+            {
+                Assert.That(suits.IsPartDeployed(suit, slot), Is.True, slot);
+                Assert.That(SEntMan.GetComponent<ModPartComponent>(part).Sealed, Is.True, slot);
+                Assert.That(inventory.TryUnequip(clone, slot), Is.False, slot);
+            }
+            Assert.That(SEntMan.HasComponent<ArmorComponent>(component.PartEntities["outerClothing"]), Is.True);
+            Assert.That(component.State, Is.EqualTo(ModSuitState.Active), "Projected suit");
+            Assert.That(inventory.TryUnequip(host, "belt", force: true), Is.True);
+        });
+
+        await RunTicksSync(3);
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(SEntMan.EntityExists(copy), Is.False);
+            Assert.That(parts.Any(part => SEntMan.EntityExists(part)), Is.False);
+            Assert.That(SEntMan.EntityExists(control), Is.True);
+        });
+    }
+
     [Test]
     public async Task GeminiRecallsAndReleasesOriginalItemsAndMindOnRemoval()
     {

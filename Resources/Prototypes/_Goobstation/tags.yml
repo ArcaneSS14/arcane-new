@@ -396,6 +396,15 @@
   id: ModsuitShell
 
 - type: Tag
+  id: ModsuitPlatingMining # Arcane
+
+- type: Tag
+  id: ModsuitPlatingLoader # Arcane
+
+- type: Tag
+  id: ModsuitPlatingBrigMed # Arcane
+
+- type: Tag
   id: MonkStaff
 
 - type: Tag

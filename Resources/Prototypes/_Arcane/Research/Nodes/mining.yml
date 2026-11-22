@@ -49,6 +49,11 @@
   - Fulton
   - FultonBeacon
   - OreBag
+  - ModsuitModuleOreBag
+  - ModsuitModuleClamp
+  - ModsuitModuleDrill
+  - ModsuitPlatingMining
+  - ModsuitModuleCandelaSpool
   - RadarConsoleCircuitboard
   - DrillHead
   - ClothingHandsGlovesDolphin

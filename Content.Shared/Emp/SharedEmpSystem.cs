@@ -2,6 +2,7 @@ using Content.Shared.Examine;
 using Content.Shared.Rejuvenate;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers; // Arcane
 using Robust.Shared.Map;
 using Robust.Shared.Timing;
 using Robust.Shared.Network;
@@ -17,6 +18,7 @@ public abstract partial class SharedEmpSystem : EntitySystem
     [Dependency] private INetManager _net = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private SharedContainerSystem _containers = default!; // Arcane
 
     [Dependency] private EntityQuery<EmpResistanceComponent> _resistanceQuery = default!;
 
@@ -100,6 +102,18 @@ public abstract partial class SharedEmpSystem : EntitySystem
         RaiseLocalEvent(uid, ref attemptEv);
         if (attemptEv.Cancelled)
             return false;
+
+        // Arcane-Edit-Start: equipment can ward its protected contents (Goob MOD).
+        var current = uid;
+        while (_containers.TryGetContainingContainer(current, out var container))
+        {
+            current = container.Owner;
+            var contained = new ContainedEmpAttemptEvent(uid);
+            RaiseLocalEvent(current, ref contained);
+            if (contained.Cancelled)
+                return false;
+        }
+        // Arcane-Edit-End
 
         return DoEmpEffects(uid, energyConsumption, duration, user);
     }

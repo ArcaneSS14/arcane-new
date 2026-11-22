@@ -148,4 +148,37 @@
   - ModsuitGauntlets
   - ModsuitShell
   - ModsuitPlatingExternal
+  - ModsuitCoreStandard
+  - ModsuitModuleStorageCompact
+  - ModsuitModuleStorageCase
+  - ModsuitModuleFlashlight
+  - ModsuitModuleHatStabilizer
   position: -5,6
+
+- type: technology
+  id: ModsuitEquipment
+  name: research-technology-modsuit-equipment-name
+  description: research-technology-modsuit-equipment-desc
+  icon:
+    sprite: _Arcane/Objects/Specific/Robotics/mod_modules.rsi
+    state: storage_large
+  discipline: Robotics
+  tier: 1
+  pointCosts:
+  - type: General
+    amount: 7500
+  technologyPrerequisites:
+  - ModularSuit
+  recipeUnlocks:
+  - ModsuitCorePlasma
+  - ModsuitModuleStorageLarge
+  - ModsuitModuleWelding
+  - ModsuitModuleThermalRegulator
+  - ModsuitModuleGps
+  - ModsuitModuleVisorDiagnostic
+  - ModsuitModuleReagentScanner
+  - ModsuitModuleJointTorsion
+  - ModsuitModulePlasmaStabilizer
+  - ModsuitModuleRecycler
+  - ModsuitModuleDonkRecycler
+  position: -5,7

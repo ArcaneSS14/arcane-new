@@ -283,6 +283,7 @@ public abstract partial class InventorySystem
             return false;
 
         DebugTools.Assert(slotDefinition.Name == slot);
+        var fitsSuitStorage = false; // Arcane
         if (slotDefinition.DependsOn != null)
         {
             if (!TryGetSlotEntity(target, slotDefinition.DependsOn, out EntityUid? slotEntity, inventory))
@@ -295,9 +296,16 @@ public abstract partial class InventorySystem
                     if (!HasComp(slotEntity, entry.Component.GetType()))
                         return false;
 
-                    if (TryComp<AllowSuitStorageComponent>(slotEntity, out var comp) &&
-                        _whitelistSystem.IsWhitelistFailOrNull(comp.Whitelist, itemUid))
-                        return false;
+                    // Arcane-Edit-Start: restricted suit storage can accept tools as well as wearable items.
+                    if (TryComp<AllowSuitStorageComponent>(slotEntity, out var comp))
+                    {
+                        if (_whitelistSystem.IsWhitelistFailOrNull(comp.Whitelist, itemUid))
+                            return false;
+
+                        fitsSuitStorage = comp.AllowWhitelistedItems && item != null
+                            && slotDefinition.SlotFlags.HasFlag(SlotFlags.SUITSTORAGE);
+                    }
+                    // Arcane-Edit-End
                 }
             }
         }
@@ -305,8 +313,7 @@ public abstract partial class InventorySystem
         var fittingInPocket = slotDefinition.SlotFlags.HasFlag(SlotFlags.POCKET) &&
                               item != null &&
                               _item.GetSizePrototype(item.Size) <= _item.GetSizePrototype(PocketableItemSize);
-        if (clothing == null && !fittingInPocket
-            || clothing != null && !clothing.Slots.HasFlag(slotDefinition.SlotFlags) && !fittingInPocket)
+        if (!fittingInPocket && !fitsSuitStorage && (clothing == null || !clothing.Slots.HasFlag(slotDefinition.SlotFlags))) // Arcane
         {
             reason = "inventory-component-can-equip-does-not-fit";
             return false;

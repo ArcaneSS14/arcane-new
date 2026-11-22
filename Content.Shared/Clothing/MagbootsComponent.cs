@@ -5,9 +5,13 @@ using Robust.Shared.Prototypes;
 namespace Content.Shared.Clothing;
 
 [RegisterComponent, NetworkedComponent]
+[AutoGenerateComponentState] // Arcane
 [Access(typeof(SharedMagbootsSystem))]
 public sealed partial class MagbootsComponent : Component
 {
+    [AutoNetworkedField] // Arcane
+    public bool PoweredByModule;
+
     [DataField]
     public ProtoId<AlertPrototype> MagbootsAlert = "Magboots";
 

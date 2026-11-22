@@ -14,8 +14,9 @@
   name: Inquisitory modsuit control unit
   description: The main controller for a Inquisitory modsuit.
   components:
-  - type: ToggleableClothing
-    clothingPrototypes:
+  - type: ModSuit # Arcane
+    theme: ModThemeResponsory
+    parts:
       head: ClothingModsuitHelmetInquisitory
       gloves: ClothingModsuitGauntletsInquisitory
       outerClothing: ClothingModsuitChestplateInquisitory

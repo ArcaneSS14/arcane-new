@@ -260,6 +260,18 @@ public abstract partial class SharedActionsSystem : EntitySystem
         DirtyField(ent, ent.Comp, nameof(ActionComponent.Enabled));
     }
 
+    // Arcane-Start
+    public void SetCheckCanInteract(Entity<ActionComponent?>? action, bool check)
+    {
+        if (GetAction(action) is not { } ent || ent.Comp.CheckCanInteract == check)
+            return;
+
+        ent.Comp.CheckCanInteract = check;
+        UpdateAction(ent);
+        DirtyField(ent, ent.Comp, nameof(ActionComponent.CheckCanInteract));
+    }
+    // Arcane-End
+
     #endregion
 
     #region Execution
@@ -472,6 +484,12 @@ public abstract partial class SharedActionsSystem : EntitySystem
         if (_actionQuery.Comp(uid).CheckCanInteract && !_actionBlocker.CanInteract(user, target))
             return false;
 
+        // Arcane-Start
+        var origin = new ActionTargetOriginEvent(uid, user);
+        RaiseLocalEvent(user, ref origin);
+        user = origin.Origin;
+        // Arcane-End
+
         if (user == target)
             return comp.CanTargetSelf;
 
@@ -492,6 +510,11 @@ public abstract partial class SharedActionsSystem : EntitySystem
 
     public bool ValidateWorldTarget(EntityUid user, EntityCoordinates target, Entity<WorldTargetActionComponent> ent)
     {
+        // Arcane-Start
+        var origin = new ActionTargetOriginEvent(ent.Owner, user);
+        RaiseLocalEvent(user, ref origin);
+        user = origin.Origin;
+        // Arcane-End
         var targetAction = Comp<TargetActionComponent>(ent);
         return ValidateBaseTarget(user, target, (ent, targetAction));
     }

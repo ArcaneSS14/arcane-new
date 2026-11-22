@@ -545,6 +545,12 @@ namespace Content.Shared.Cuffs
             if (HasComp<DisarmProneComponent>(target))
                 cuffTime = 0.0f; // cuff them instantly.
 
+            // Arcane-Edit-Start: worn MOD restraint assist modifies the calculated duration.
+            var duration = new ModifyCuffDurationEvent(target, cuffTime);
+            RaiseLocalEvent(user, ref duration);
+            cuffTime = duration.Duration;
+            // Arcane-Edit-End
+
             var doAfterEventArgs = new DoAfterArgs(EntityManager, user, cuffTime, new AddCuffDoAfterEvent(), handcuff, target, handcuff)
             {
                 BreakOnMove = true,

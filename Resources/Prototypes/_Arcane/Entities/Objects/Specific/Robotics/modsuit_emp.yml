@@ -1,0 +1,43 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleEmpShield
+  name: MOD EMP shield module
+  description: Shields the suit's electronics from electromagnetic pulses while operating.
+  components:
+  - type: Sprite
+    state: empshield
+  - type: ModModule
+    complexity: 1
+    idlePower: 0.2
+  - type: ModEmpShieldModule
+
+- type: entity
+  parent: ModsuitModuleEmpShield
+  id: ModsuitModuleEmpShieldAdvanced
+  name: MOD advanced EMP shield module
+  description: Shields the suit, wearer, augmentations and carried electronics from electromagnetic pulses while operating.
+  components:
+  - type: ModModule
+    complexity: 2
+    idlePower: 0.8
+  - type: ModGrantComponentsModule
+    target: Wearer
+    components:
+    - type: ModEmpWard
+
+- type: entity
+  parent: [ BaseModsuitModule, BaseSyndicateContraband ]
+  id: ModsuitModuleEmpPulse
+  name: MOD EMP pulse module
+  description: Releases an electromagnetic pulse around the wearer. The module shields the suit's own electronics.
+  components:
+  - type: Sprite
+    state: emp_pulse
+  - type: ModModule
+    moduleType: Usable
+    complexity: 1
+    usePower: 60
+    cooldown: 30
+  - type: ModEmpPulseModule
+  - type: ModEmpShieldModule
+    requireActive: false

@@ -1,0 +1,175 @@
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleMister
+  name: MOD water mister module
+  description: Sprays water to extinguish fires and slowly refills its reservoir.
+  components:
+  - type: Sprite
+    state: mister
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceMister
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleJanitorMister
+  name: MOD janitorial mister module
+  description: Sprays space cleaner and slowly refills its reservoir.
+  components:
+  - type: Sprite
+    state: cleaner
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceJanitorMister
+
+- type: entity
+  parent: BaseModsuitModuleDevice
+  id: ModsuitModuleResinMister
+  name: MOD resin mister module
+  description: Launches quick-setting metal foam to patch breaches at a distance.
+  components:
+  - type: Sprite
+    state: mister
+    color: '#c0d6e8'
+  - type: ModModule
+    moduleType: Active
+    complexity: 2
+    activePower: 0.8
+    requiredParts: [ gloves ]
+  - type: ModDeviceModule
+    device: ModsuitDeviceResinMister
+
+- type: entity
+  abstract: true
+  parent: [ SolutionSpray, BaseItem ]
+  id: BaseModsuitDeviceSprayer
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+  - type: UseDelay
+  - type: Spray
+    solution: spray
+    transferAmount: 10
+    sprayVelocity: 2
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseModsuitDeviceSprayer
+  id: ModsuitDeviceMister
+  name: MOD water mister
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Basic/extinguishernozzle.rsi
+    state: icon
+  - type: Item
+    sprite: Objects/Weapons/Guns/Basic/extinguishernozzle.rsi
+  - type: Solution
+    solution:
+      maxVol: 100
+      reagents:
+      - ReagentId: Water
+        Quantity: 100
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: Water
+        Quantity: 5
+  - type: Spray
+    pushbackAmount: 60
+    spraySound:
+      path: /Audio/Effects/extinguish.ogg
+    sprayedPrototype: ExtinguisherSpray
+    vaporAmount: 3
+    vaporSpread: 90
+
+- type: entity
+  parent: BaseModsuitDeviceSprayer
+  id: ModsuitDeviceJanitorMister
+  name: MOD janitorial mister
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Basic/spraynozzle.rsi
+    state: icon
+  - type: Item
+    sprite: Objects/Weapons/Guns/Basic/spraynozzle.rsi
+  - type: Solution
+    solution:
+      maxVol: 100
+      reagents:
+      - ReagentId: SpaceCleaner
+        Quantity: 100
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: SpaceCleaner
+        Quantity: 5
+  - type: Spray
+    spraySound:
+      path: /Audio/Effects/spray2.ogg
+
+- type: entity
+  parent: BaseItem
+  id: ModsuitDeviceResinMister
+  name: MOD resin launcher
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Basic/extinguishernozzle.rsi
+    state: icon
+    color: '#c0d6e8'
+  - type: Item
+    sprite: Objects/Weapons/Guns/Basic/extinguishernozzle.rsi
+    size: Normal
+  - type: Gun
+    fireRate: 1
+    selectedMode: SemiAuto
+    availableModes: [ SemiAuto ]
+    soundGunshot:
+      path: /Audio/Effects/thunk.ogg
+    soundEmpty:
+      path: /Audio/Items/hiss.ogg
+  - type: BasicEntityAmmoProvider
+    proto: ModsuitResinGlob
+    capacity: 5
+    count: 5
+  - type: RechargeBasicEntityAmmo
+    rechargeCooldown: 6
+    rechargeSound: null
+  - type: AmmoCounter
+  - type: PacifismAllowedGun
+  - type: StaticPrice
+    price: 0
+  - type: PhysicalComposition
+    materialComposition: {}
+
+- type: entity
+  parent: BaseBulletTrigger
+  id: ModsuitResinGlob
+  name: resin glob
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
+    layers:
+    - state: cleanade
+      color: '#c0d6e8'
+  - type: Projectile
+    damage:
+      types:
+        Blunt: 0
+  - type: SmokeOnTrigger
+    duration: 3
+    spreadAmount: 6
+    smokePrototype: AluminiumMetalFoam

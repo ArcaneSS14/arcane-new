@@ -98,6 +98,14 @@ namespace Content.Server.Atmos.EntitySystems
             }
         }
 
+        // Arcane-Edit-Start: recalculate cached values when equipped protection changes without replacing the component.
+        public void RefreshPressureProtection(EntityUid uid)
+        {
+            if (TryComp(uid, out BarotraumaComponent? pressure))
+                UpdateCachedResistances(uid, pressure);
+        }
+        // Arcane-Edit-End
+
         /// <summary>
         /// Computes the pressure resistance for the entity coming from the equipment and any innate resistance.
         /// The ProtectionSlots field of the Barotrauma component specifies which parts must be protected for the protection to have any effet.

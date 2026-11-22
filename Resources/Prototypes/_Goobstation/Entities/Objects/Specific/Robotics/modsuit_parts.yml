@@ -103,15 +103,13 @@
       Plasma: 62
   - type: ContainerContainer
     containers:
-      cell_slot: !type:Container
-      core-container: !type:Container
+      mod-core: !type:ContainerSlot # Arcane
   - type: Construction
     graph: Modsuit
     node: start
     defaultTarget: standard
     containers:
-    - cell_slot
-    - core-container
+    - mod-core # Arcane
   - type: GenericVisualizer
     visuals:
       enum.ConstructionVisuals.Key:
@@ -302,3 +300,18 @@
     materialComposition:
       Plasma: 50
       Glass: 25
+  # Arcane-Start: Standard MOD cores take an interchangeable power cell.
+  - type: ModCore
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        whitelist:
+          components:
+          - PowerCell
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot
+  # Arcane-End

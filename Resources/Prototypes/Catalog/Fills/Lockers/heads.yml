@@ -5,6 +5,7 @@
     - !type:NestedSelector # Trauma
       tableId: LockerFillQuarterMasterTrauma
     - id: BoxEncryptionKeyCargo
+    - id: ModsuitPlatingLoader # Arcane
     - id: BoxFolderQmClipboard
     - id: BoxQMCircuitboards
     - id: BoxQMStamps

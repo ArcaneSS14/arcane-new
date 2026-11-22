@@ -1,0 +1,29 @@
+- type: entity
+  parent: BaseModsuitModule
+  id: ModsuitModuleRecycler
+  name: MOD recycler module
+  description: Collects nearby trash and recycles it into usable materials. Use the unload action to retrieve them.
+  components:
+  - type: Sprite
+    state: recycler
+  - type: ModModule
+    moduleType: Toggle
+    complexity: 2
+    activePower: 0.4
+    requiredParts: [ outerClothing ]
+  - type: ModRecyclerModule
+    whitelist:
+      tags: [ Trash ]
+
+- type: entity
+  parent: ModsuitModuleRecycler
+  id: ModsuitModuleDonkRecycler
+  name: MOD Donksoft recycler module
+  description: A Donk Co. take on the recycler that turns collected trash into foam darts. Use the unload action to retrieve them.
+  components:
+  - type: Sprite
+    state: donk_recycler
+  - type: ModRecyclerModule
+    product: BulletFoam
+    whitelist:
+      tags: [ Trash ]
