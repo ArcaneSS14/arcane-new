@@ -11,9 +11,9 @@ Other fork-owned paths, including `Content.Goobstation.*`, `Content.Lavaland.*`,
 
 | Path class | Examples | Use |
 |---|---|---|
-| Arcane-owned | root `Content.Arcane.*`, `Resources/**/_Arcane/**` | default for Arcane-only behavior; no Arcane edit marker |
+| Arcane-owned | [Owner-local paths](architecture-and-ownership.md#owner-local-paths), including justified base-project/infrastructure exceptions | default for Arcane-only behavior; no Arcane edit marker |
 | Trauma-owned | `Content.Trauma.*`, `Resources/**/_Trauma/**`, `*.Trauma.cs` | use when the change belongs on the Trauma-compatible trajectory; mark our edits with Arcane markers |
-| Vanilla base | root `Content.*` not owned by a fork, `Resources` without an owner directory | change only when the extension cannot live in an owner project/resource path; keep the edit minimal and marked |
+| Inherited vanilla base | root `Content.*` not owned by a fork, `Resources` outside owner-local paths | change only when the extension cannot live in an owner project/resource path; keep the edit minimal and marked |
 | Other fork | `Content.Goobstation.*`, `Content.Lavaland.*`, `Resources/**/_Goobstation/**`, etc. | preserve that fork's conventions and markers; do not place Arcane-only work there |
 
 Prefer an Arcane-owned project/resource path for Arcane-only work. Use a Trauma-owned path only when compatibility with that code trajectory is an explicit design requirement or the supported architecture requires it. Do not choose a destination based only on fewer files or perceived sync cost.
@@ -47,7 +47,7 @@ The requirement is not avoidance. It is that the edit stay cheap to reconcile. R
 
 **5. Keep the hunk contiguous.** A single hunk conflicts once. The same lines scattered across a file conflict several times.
 
-**6. When a value must change, record both sides.** `Arcane-Edit: <upstream value> > <our value>` is what makes the edit replayable by hand after a conflict, because the upstream value is still written down.
+**6. When a value must change, record both sides.** Use `Arcane-Edit: <upstream value> > <our value>` so a later sync can recover the previous value, except for the explicit [sound-path exception](arcane-edit-markers.md#marker-syntax-as-it-exists).
 
 Then, regardless of technique:
 
@@ -71,28 +71,17 @@ Arcane markers and Trauma markers are different systems. The vocabulary is chose
 
 Never mix the two inside one block, and never nest one block inside the other.
 
-Marker placement follows the file's existing structure and `.agents/rules/arcane-edit-markers.md`; do not copy another fork's placement rule as an Arcane rule.
-
-Do not copy another fork's placement rule as an Arcane rule. Follow the file-format and placement guidance in `.agents/rules/arcane-edit-markers.md`.
+Marker placement follows the file's existing structure and the file-format guidance in `.agents/rules/arcane-edit-markers.md`; do not copy another fork's placement rule as an Arcane rule.
 
 `Goobstation-`, `<Goob>`, `DeltaV`, `Shitmed`, and `EinsteinEngines` markers are other forks' vocabularies. Preserve them, do not enforce them, do not convert them.
 
 Before changing a sync-sensitive file, ask whether an Arcane-owned extension point can own the feature. Use it when it preserves the intended behavior and does not violate architecture.
 
-## Prefer a partial over an edit
+## Choose ownership before a partial
 
-The established mechanism for keeping root-project code out of sync conflicts is a fork-suffixed partial file in the same directory.
+Use the [owner-local placement table](architecture-and-ownership.md#owner-local-paths). Independent Arcane behavior belongs in its module; a coupled partial belongs in `_Arcane` within the same assembly. Keep only necessary marked hooks/declaration edits in the inherited file. Do not inline a large extension into that file merely to avoid a separate partial.
 
-```csharp
-// Content.Shared/Atmos/MobStateSystem.cs          base, edited rarely
-// Content.Shared/Atmos/MobStateSystem.Trauma.cs   owner-local, added freely
-```
-
-The suffix identifies the owner of the partial and can avoid changing a base file. Check for an established suffix and applicable scoped guidance before creating one.
-
-Use it whenever the change does not require altering the base declaration. Declaring a partial method in the base file and filling it in a `.Trauma.cs` partial keeps the base diff down to the one attribute line.
-
-When the base class is not already `partial`, adding a fork-suffixed partial may require a minimal edit to the base declaration. Mark that edit and explain why it is needed.
+Existing upstream fork-suffixed partials describe upstream organization, not a preferred destination for new Arcane files. Preserve their untouched content and attribution. A partial cannot cross assemblies; do not introduce cyclic references, reflection or string-based replacement of typed contracts just to move it.
 
 ## Prefer an owner resource path over a base resource edit
 
@@ -103,7 +92,7 @@ Use Arcane-owned resource directories for Arcane resources. For a change to an e
 # Resources/Prototypes/Access/...            vanilla, conflicts on every sync
 ```
 
-A partial prototype can override selected fields and merge or remove components without copying the parent. Use one only when the current loader supports it and the partial expresses the desired change; it reduces direct base-file edits but still requires checking the prototype contract.
+A partial prototype can override selected fields and merge or remove components without copying the parent. Use one when the current loader supports it and the change remains clear to contributors editing the prototype. Keep settings normally edited together at their established configuration point; a minimal marked base edit can be preferable to scattering those settings merely to reduce the base diff. Check the effective prototype contract in either form.
 
 For migrations or other compatibility-sensitive data, verify the existing owner and migration workflow before choosing a destination.
 
@@ -127,7 +116,7 @@ A base edit that is small, marked, and explained is correct. A base edit that is
 - leave an Arcane-authored change in `Content.Trauma.*`, `Resources/_Trauma/**`, `Content.Medical.*`, `Resources/_Shitmed/**`, or a vanilla root path unmarked
 - mark our own change with `Trauma - ` or `<Trauma>`, whatever the surrounding file uses
 - nest an Arcane block inside another fork's marker block, or interleave them
-- keep an upstream marker on a line we changed; it becomes `Arcane-Edit: <old> > <new>`
+- keep an upstream marker on a line we changed; use Arcane's [marker syntax](arcane-edit-markers.md#marker-syntax-as-it-exists)
 - rewrite upstream markers on lines we are not changing
 - rewrite a foreign-fork file in root paths to match this fork's structure
 - rebase, merge, or otherwise resolve history to reduce apparent conflicts

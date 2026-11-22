@@ -13,13 +13,15 @@ Use for any write task that changes a Git worktree, staging, commit, conflict re
 
 Record `git status --short --branch`, the current branch, and remotes. Record existing staged, unstaged, and untracked paths, branch relationship, and any pre-existing SPDX diff. Preserve all user-owned work.
 
+Before switching branches or creating a worktree, follow [Git safety](../../rules/git-safety.md), including hook and dependency side effects.
+
 ## Правила и границы
 
 - Stage only task-related paths and inspect the full staged diff before committing. Do not include generated files, logs, test results, IDE files, or unrelated cleanup unless requested.
 - Follow the [root SPDX boundary](../../../AGENTS.md#ownership-and-edit-markers): no unsolicited metadata changes or automatic REUSE repair. Only the exact SPDX change specified by the user's current request is an exception; preserve other notices.
 - Do not force-push, `reset --hard`, clean untracked files, rewrite published history, or choose merge/rebase without approval.
 - Resolve a conflict from base, incoming, and current versions, never mechanically with blanket `ours`/`theirs`. Follow `.agents/rules/merge-conflict-resolution.md`: choose the result that preserves confirmed behavior and intent; an incoming complete implementation may supersede an older Arcane divergence, while partial or unclear equivalence requires escalation.
-- Create commits only with the exact count/message requested by the user. A local task record, local commit, and remote push are distinct states.
+- Commit only when requested; honor an exact count or message when specified. A local task record, local commit, and remote push are distinct states.
 
 ### Source ledger
 

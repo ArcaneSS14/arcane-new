@@ -30,22 +30,7 @@ Stages are `1` base, `2` ours, `3` theirs, during a merge.
 
 When the three versions disagree, establish the behavior and intent each version represents before choosing a result. An Arcane marker is provenance evidence, not a mechanical winner: it identifies a deliberate divergence that must be understood and either preserved, superseded by a fully equivalent incoming implementation, or escalated.
 
-Marker forms, by file type:
-
-```
-YAML:  # Arcane                                    one added line
-YAML:  # Arcane-Edit: <old> > <new>                  one changed line
-C#:    // Arcane-Edit: <old> > <new>                 one changed line
-YAML:  # Arcane-Start / # Arcane-End                 two or more added lines
-YAML:  # Arcane-Edit-Start / # Arcane-Edit-End       two or more changed lines
-YAML:  # Arcane-Edit-Start: <reason>                 edit block with reason
-```
-
-One line gets a trailing inline marker, bare `Arcane` for an addition and `Arcane-Edit: <old> > <new>` for a change. Two or more lines of the same kind get a `-Start` / `-End` pair. A bare `-Start` or `-End` never appears on its own line as a trailing marker.
-
-The reason suffix is optional and used when the block's purpose is not obvious. `# Arcane-Edit-End` never carries a colon.
-
-No C# block form exists in the tree yet, but the rule covers C#: a merged C# conflict touching two or more lines uses `// Arcane-Edit-Start` / `// Arcane-Edit-End`. When a conflict offers a larger Arcane block than the change actually needs, keep the block minimal and say so.
+Choose [owner-local paths](architecture-and-ownership.md#owner-local-paths) before marking the resolution. For inherited files use the [canonical marker forms and contiguous-run boundaries](arcane-edit-markers.md#which-form-to-use); do not enlarge a block merely because the conflict hunk is larger.
 
 When an Arcane change conflicts with an incoming change to the same line, compare their confirmed behavior. If incoming completely implements the Arcane intent, it may replace the older Arcane implementation; preserve or adapt the marker only when the resolved line remains Arcane-authored. If both sides are only partly equivalent, are behaviorally incompatible, or their intent cannot be proven, stop and ask for a decision.
 
@@ -53,11 +38,11 @@ The `old > new` marker records provenance; it does not settle a later behavioral
 
 Foreign markers are not Arcane markers. `Trauma - ` and `Goobstation-` blocks in the tree record upstream authorship, not ours. They carry the same standing relative to upstream, but they are not this repository's vocabulary.
 
-The rule for any conflicted line: the marker must match who authored the resolved line. Our resolution is Arcane's, so it carries an Arcane marker. When the winning side is an upstream line we did not author, keep its upstream marker intact. When we changed that line, the resolved line is ours and carries `Arcane-Edit: <upstream value> > <our value>`.
+In inherited files, the marker must match who authored the resolved line. When the winning side is an upstream line we did not author, keep its upstream marker intact. Mark our changed lines using the canonical forms above; conflict resolution alone does not make unchanged upstream code ours.
 
 An incoming Trauma change does not arrive as an Arcane change because it lands in our tree. Do not resolve a conflict by adopting upstream's line and re-marking it as ours, and do not resolve it by keeping a `Trauma - ` marker on a line we authored.
 
-Arcane owner-local paths are the root-level `Content.Arcane.*` projects and existing `Resources/**/_Arcane/**` directories. Do not add Arcane markers there. A foreign underscore directory is not Arcane-owned: preserve upstream markers on unchanged lines, but mark Arcane-authored changes in inherited files according to `.agents/rules/arcane-edit-markers.md`, including `_Trauma` and `_Shitmed` paths.
+Do not add Arcane markers in owner-local paths, including the justified same-assembly and infrastructure exceptions in the placement table. A foreign underscore directory is not Arcane-owned: preserve upstream markers on unchanged lines, but mark our changes in inherited `_Trauma`, `_Shitmed` and other foreign paths.
 
 ### Trajectory
 
@@ -65,7 +50,7 @@ Syncs arrive along the Trauma trajectory. Before resolving, classify the file, b
 
 | File class | Cost of keeping our side |
 |---|---|
-| Arcane owner-local, root `Content.Arcane.*` or `_Arcane` resources | none; resolve normally |
+| Arcane owner-local under the placement table | none; resolve normally |
 | Trauma-owned, `Content.Trauma.*`, `Resources/**/_Trauma/**`, or `*.Trauma.cs` | sync-sensitive; preserve confirmed intent and mark Arcane-authored resolution |
 | vanilla space-station-14, unmarked | high; this is the conflict surface |
 | foreign fork path, `Content.Goobstation.*`, `_Goobstation`, `_DV`, `_EinsteinEngines` | low; not part of this trajectory |
@@ -85,6 +70,7 @@ When both sides changed the same thing for a reason, produce the third version t
 - different hunks, same intent: keep one simplest verified form
 - same key, different value: choose by confirmed behavior and record why
 - structural move plus content change: apply the content change at the new location, preserving both confirmed intents
+- enum/flag extensions: compare numeric identities, intentional aliases/composite masks and serialized consumers; distinct names can collide. Preserve established values unless an agreed compatibility change requires otherwise.
 
 A merge that resolves without a single thought is a merge resolved wrong.
 

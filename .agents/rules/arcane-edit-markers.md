@@ -2,7 +2,7 @@
 
 Marking an inherited file is what makes an Arcane change survive the next upstream sync. A change that is not marked is a change that will be reverted by someone else's rebase.
 
-Marking applies only outside owner-local paths. Arcane runtime projects are root-level `Content.Arcane.*`; Arcane-owned resource directories include existing `Resources/**/_Arcane/**` paths. `Modules/Arcane` currently contains guidance files, not runtime code.
+First choose the [owner-local destination](architecture-and-ownership.md#owner-local-paths), including same-assembly `_Arcane` partials and infrastructure. Mark only changed portions of inherited files. A whole-file wrapper never substitutes for correct placement.
 
 ## Which form to use
 
@@ -15,6 +15,7 @@ The form depends on whether the lines are new or changed, counted per contiguous
 | exactly one line changed | inline `Arcane-Edit` | trailing on the changed line |
 | two or more lines changed, up to 5 | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines |
 | more than 5 lines changed | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines; keep active code and data active |
+| inherited C# block removed | [Deleted C# blocks](#deleted-c-blocks) | retain disabled only when there is no replacement at that site |
 
 The single-line case is the common one, because most changes touch one line. A single added line gets a bare trailing `Arcane`, never `Arcane-Start`:
 
@@ -51,15 +52,15 @@ YAML:  # Arcane-Edit-End
 
 Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more lines in one run require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
 
-Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
+Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon. Start natural-language marker explanations with a capital letter; preserve the case of literal values, types and paths such as `true > false` or `void > bool`.
 
 Use the marker form above consistently in C# and YAML: one added line gets a trailing `Arcane`, multiple added lines get a paired block, one changed line gets a trailing `Arcane-Edit`, and multiple changed lines get a paired edit block.
 
-A multi-line C# change still prefers an owner-local partial file when the addition is additive enough to live there. The marker requirement is separate from that choice: wherever the change does land, it gets the form its line count calls for.
+Apply line-count rules only after establishing that the edit is in an inherited file; owner-local files need no edit markers.
 
 ```csharp
 // two or more changed lines
-// Arcane-Edit-Start: preserve map-load ordering
+// Arcane-Edit-Start: Preserve map-load ordering
 LoadOwnerState();
 SubscribeOwnerEvents();
 // Arcane-Edit-End
@@ -69,9 +70,13 @@ A bare `# Arcane` is the single-line addition form in YAML.
 
 `# Arcane-Edit: <old> > <new>` records what Arcane replaced. During a conflict, use it as provenance and compare base, current, and incoming behavior; it never replaces the semantic resolution process in `.agents/rules/merge-conflict-resolution.md`.
 
+A self-explanatory single-line sound-path replacement may use a bare `# Arcane-Edit`. Other value changes retain `<old> > <new>`.
+
+Use `// Arcane: <reason>` for a standalone explanation only when it adds non-obvious context; it does not mark adjacent code.
+
 ## Added usings
 
-Every added `using` goes below all other `using` directives in the file, and inside a marker. One added `using` gets a trailing `// Arcane`; two or more get the pair.
+Keep `global using` directives before all non-global usings. Within each category, collect Arcane imports into one contiguous group after inherited imports, without blank lines between adjacent directives. Sort our group System-first, then alphabetically; preserve inherited order within each category. One Arcane import uses trailing `// Arcane`; two or more share one pair. In owner-local files, sort each category the same way, without markers.
 
 ```csharp
 // one added using
@@ -88,15 +93,13 @@ using Content.Arcane.Shared.Map;
 // Arcane-End
 ```
 
-Two requirements at once: last position, and marked. A new `using` placed alphabetically among the existing ones is wrong even when it is marked, because it will collide with every upstream edit to the using block.
-
-The current C# tree does not follow this yet. Arcane has never marked a `using` in C#, and existing fork usings use `// <Trauma>` / `// </Trauma>` or a trailing `// Trauma` instead. Those are upstream markers on lines we did not touch, so they stay. New Arcane usings follow the rule above.
+“Last” means after inherited groups, not unsorted after existing Arcane imports. Preserve untouched foreign markers. Keep the header/namespace spacing from [C# layout](csharp-writing-conventions.md#file-layout).
 
 ## More than five modified lines
 
 The line count changes the marker form, not whether the new behavior is enabled. Wrap changed lines in an `Arcane-Edit-Start` / `Arcane-Edit-End` block and leave working code or data active. Add a reason suffix when it helps a future sync understand the change.
 
-Comment out removed entries only when disabling those entries is the intended behavior, the format supports comments, and preserving the old text is useful. Do not comment out a working replacement just to satisfy the marker rule.
+For removed C# blocks, follow [Deleted C# blocks](#deleted-c-blocks). For data entries, retain commented text only when disabling those entries is intended, comments are supported, and the old text remains useful. Do not comment out a working replacement to satisfy the marker rule.
 
 ```yaml
 # Arcane-Edit-Start
@@ -111,6 +114,10 @@ Comment out removed entries only when disabling those entries is the intended be
 ```
 
 This removal pattern is appropriate only when the commented entries are intentionally disabled. For a live replacement, keep the replacement active inside the marker block and preserve old values in a reason suffix when needed.
+
+## Deleted C# blocks
+
+Keep a removed inherited C# block disabled in place between `/* // Arcane-Edit-Start` and `*/ // Arcane-Edit-End` when there is no replacement at that site. If an active replacement occupies that site, use its normal `Arcane-Edit` form instead of retaining the old block beside it. When the old text contains `*/`, use line comments inside a normal edit pair. Keep replacement code active.
 
 ## Merge adjacent markers
 
@@ -203,7 +210,7 @@ cooldown: 5
 Note what the merge costs in a rewrite. The inline form records `1800 > 3000` per line, and the block form has nowhere to put those values. When a future sync needs that history, keep an accurate reason suffix; do not invent values.
 
 ```yaml
-# Arcane-Edit-Start: preserve balance rationale from prior single-line edits
+# Arcane-Edit-Start: Preserve balance rationale from prior single-line edits
 cost: 3000
 cooldown: 5
 # Arcane-Edit-End
@@ -302,7 +309,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 - a line we touched carries an Arcane marker, replacing whatever was there
 - one added line carries a trailing bare `Arcane`, never `Arcane-Start`
 - several added lines are wrapped in `Arcane-Start` / `Arcane-End`
-- one changed line carries a trailing `Arcane-Edit: <old> > <new>`
+- one changed line follows [Marker syntax](#marker-syntax-as-it-exists), including its sound-path exception
 - several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
 - never put a bare `-Start` or `-End` on a line rather than wrapping a pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work
@@ -313,7 +320,7 @@ Placement differs by owner and file. Preserve upstream placement on untouched co
 
 ## Marking inside Trauma files
 
-`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are owner-local for Arcane, but they are also upstream surface for everyone syncing TraumaStation, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
+`Content.Trauma.*`, `Resources/_Trauma/**`, and `*.Trauma.cs` partials are not exempt. They are Trauma-owned upstream surface, so an unmarked Arcane change in them is indistinguishable from a Trauma change and gets reverted.
 
 Mark Arcane changes in inherited Trauma files with Arcane markers:
 
@@ -335,13 +342,13 @@ private static readonly EntProtoId IceWallPrototype = "WallRockSnow"; // Arcane-
 # Arcane-End
 ```
 
-Arcane-owned means no marker is needed for ownership. `Content.Arcane.*` and existing `Resources/**/_Arcane/**` paths do not sync from TraumaStation, so an Arcane marker there is unnecessary.
+Arcane-owned paths from the [placement table](architecture-and-ownership.md#owner-local-paths) need no ownership markers, including runtime and infrastructure `_Arcane` directories.
 
 An `Arcane-Start` block inside a `_Trauma` file means these entries are Arcane's, not Trauma's. That is exactly the information a sync needs.
 
 ## Never do this
 
-- add a marker inside `Content.Arcane.*` or an Arcane-owned `_Arcane` resource directory; the path already identifies ownership
+- add ownership markers inside an owner-local path or wrap a whole file instead of correcting its destination
 - mark our own change with `Trauma - `, `<Trauma>`, or `/* Trauma`, whatever the surrounding file uses
 - leave an Arcane-authored change inside a Trauma or vanilla file unmarked
 - keep an upstream marker on a line we changed. Replacing `Trauma - ` with `Arcane-Edit: <upstream value> > <our value>` is the correct result, not an unauthorized conversion
