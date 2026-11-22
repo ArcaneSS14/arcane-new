@@ -47,7 +47,7 @@ The requirement is not avoidance. It is that the edit stay cheap to reconcile. R
 
 **5. Keep the hunk contiguous.** A single hunk conflicts once. The same lines scattered across a file conflict several times.
 
-**6. When a value must change, record both sides.** `Arcane-Edit: <upstream value> > <our value>` is what makes the edit replayable by hand after a conflict, because the upstream value is still written down.
+**6. When a value must change, record both sides.** Use `Arcane-Edit: <upstream value> > <our value>` so a later sync can recover the previous value, except for the explicit [sound-path exception](arcane-edit-markers.md#marker-syntax-as-it-exists).
 
 Then, regardless of technique:
 
@@ -71,9 +71,7 @@ Arcane markers and Trauma markers are different systems. The vocabulary is chose
 
 Never mix the two inside one block, and never nest one block inside the other.
 
-Marker placement follows the file's existing structure and `.agents/rules/arcane-edit-markers.md`; do not copy another fork's placement rule as an Arcane rule.
-
-Do not copy another fork's placement rule as an Arcane rule. Follow the file-format and placement guidance in `.agents/rules/arcane-edit-markers.md`.
+Marker placement follows the file's existing structure and the file-format guidance in `.agents/rules/arcane-edit-markers.md`; do not copy another fork's placement rule as an Arcane rule.
 
 `Goobstation-`, `<Goob>`, `DeltaV`, `Shitmed`, and `EinsteinEngines` markers are other forks' vocabularies. Preserve them, do not enforce them, do not convert them.
 
@@ -94,7 +92,7 @@ Use Arcane-owned resource directories for Arcane resources. For a change to an e
 # Resources/Prototypes/Access/...            vanilla, conflicts on every sync
 ```
 
-A partial prototype can override selected fields and merge or remove components without copying the parent. Use one only when the current loader supports it and the partial expresses the desired change; it reduces direct base-file edits but still requires checking the prototype contract.
+A partial prototype can override selected fields and merge or remove components without copying the parent. Use one when the current loader supports it and the change remains clear to contributors editing the prototype. Keep settings normally edited together at their established configuration point; a minimal marked base edit can be preferable to scattering those settings merely to reduce the base diff. Check the effective prototype contract in either form.
 
 For migrations or other compatibility-sensitive data, verify the existing owner and migration workflow before choosing a destination.
 
@@ -118,7 +116,7 @@ A base edit that is small, marked, and explained is correct. A base edit that is
 - leave an Arcane-authored change in `Content.Trauma.*`, `Resources/_Trauma/**`, `Content.Medical.*`, `Resources/_Shitmed/**`, or a vanilla root path unmarked
 - mark our own change with `Trauma - ` or `<Trauma>`, whatever the surrounding file uses
 - nest an Arcane block inside another fork's marker block, or interleave them
-- keep an upstream marker on a line we changed; it becomes `Arcane-Edit: <old> > <new>`
+- keep an upstream marker on a line we changed; use Arcane's [marker syntax](arcane-edit-markers.md#marker-syntax-as-it-exists)
 - rewrite upstream markers on lines we are not changing
 - rewrite a foreign-fork file in root paths to match this fork's structure
 - rebase, merge, or otherwise resolve history to reduce apparent conflicts

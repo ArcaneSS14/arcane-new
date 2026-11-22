@@ -15,6 +15,7 @@ The form depends on whether the lines are new or changed, counted per contiguous
 | exactly one line changed | inline `Arcane-Edit` | trailing on the changed line |
 | two or more lines changed, up to 5 | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines |
 | more than 5 lines changed | `Arcane-Edit-Start` / `Arcane-Edit-End` | wraps the changed lines; keep active code and data active |
+| inherited C# block removed | [Deleted C# blocks](#deleted-c-blocks) | retain disabled only when there is no replacement at that site |
 
 The single-line case is the common one, because most changes touch one line. A single added line gets a bare trailing `Arcane`, never `Arcane-Start`:
 
@@ -51,7 +52,7 @@ YAML:  # Arcane-Edit-End
 
 Inline `Arcane` and inline `Arcane-Edit` mark exactly one line, trailing on that line. Two or more lines in one run require a `-Start` / `-End` pair. A bare `-Start` never appears as a trailing marker.
 
-Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon.
+Either `-Start` takes an optional `<reason>` suffix, and it means the same thing in both: why this block exists, for a reader who cannot tell from the lines alone. `# Arcane-Start: Syndicate` marks a list as Arcane's. Neither `-End` ever takes a colon. Start natural-language marker explanations with a capital letter; preserve the case of literal values, types and paths such as `true > false` or `void > bool`.
 
 Use the marker form above consistently in C# and YAML: one added line gets a trailing `Arcane`, multiple added lines get a paired block, one changed line gets a trailing `Arcane-Edit`, and multiple changed lines get a paired edit block.
 
@@ -59,7 +60,7 @@ Apply line-count rules only after establishing that the edit is in an inherited 
 
 ```csharp
 // two or more changed lines
-// Arcane-Edit-Start: preserve map-load ordering
+// Arcane-Edit-Start: Preserve map-load ordering
 LoadOwnerState();
 SubscribeOwnerEvents();
 // Arcane-Edit-End
@@ -68,6 +69,10 @@ SubscribeOwnerEvents();
 A bare `# Arcane` is the single-line addition form in YAML.
 
 `# Arcane-Edit: <old> > <new>` records what Arcane replaced. During a conflict, use it as provenance and compare base, current, and incoming behavior; it never replaces the semantic resolution process in `.agents/rules/merge-conflict-resolution.md`.
+
+A self-explanatory single-line sound-path replacement may use a bare `# Arcane-Edit`. Other value changes retain `<old> > <new>`.
+
+Use `// Arcane: <reason>` for a standalone explanation only when it adds non-obvious context; it does not mark adjacent code.
 
 ## Added usings
 
@@ -94,7 +99,7 @@ using Content.Arcane.Shared.Map;
 
 The line count changes the marker form, not whether the new behavior is enabled. Wrap changed lines in an `Arcane-Edit-Start` / `Arcane-Edit-End` block and leave working code or data active. Add a reason suffix when it helps a future sync understand the change.
 
-Comment out removed entries only when disabling those entries is the intended behavior, the format supports comments, and preserving the old text is useful. Do not comment out a working replacement just to satisfy the marker rule.
+For removed C# blocks, follow [Deleted C# blocks](#deleted-c-blocks). For data entries, retain commented text only when disabling those entries is intended, comments are supported, and the old text remains useful. Do not comment out a working replacement to satisfy the marker rule.
 
 ```yaml
 # Arcane-Edit-Start
@@ -109,6 +114,10 @@ Comment out removed entries only when disabling those entries is the intended be
 ```
 
 This removal pattern is appropriate only when the commented entries are intentionally disabled. For a live replacement, keep the replacement active inside the marker block and preserve old values in a reason suffix when needed.
+
+## Deleted C# blocks
+
+Keep a removed inherited C# block disabled in place between `/* // Arcane-Edit-Start` and `*/ // Arcane-Edit-End` when there is no replacement at that site. If an active replacement occupies that site, use its normal `Arcane-Edit` form instead of retaining the old block beside it. When the old text contains `*/`, use line comments inside a normal edit pair. Keep replacement code active.
 
 ## Merge adjacent markers
 
@@ -201,7 +210,7 @@ cooldown: 5
 Note what the merge costs in a rewrite. The inline form records `1800 > 3000` per line, and the block form has nowhere to put those values. When a future sync needs that history, keep an accurate reason suffix; do not invent values.
 
 ```yaml
-# Arcane-Edit-Start: preserve balance rationale from prior single-line edits
+# Arcane-Edit-Start: Preserve balance rationale from prior single-line edits
 cost: 3000
 cooldown: 5
 # Arcane-Edit-End
@@ -300,7 +309,7 @@ So the asymmetry runs the other way from the usual ownership reflex:
 - a line we touched carries an Arcane marker, replacing whatever was there
 - one added line carries a trailing bare `Arcane`, never `Arcane-Start`
 - several added lines are wrapped in `Arcane-Start` / `Arcane-End`
-- one changed line carries a trailing `Arcane-Edit: <old> > <new>`
+- one changed line follows [Marker syntax](#marker-syntax-as-it-exists), including its sound-path exception
 - several changed lines are wrapped in `Arcane-Edit-Start` / `Arcane-Edit-End`
 - never put a bare `-Start` or `-End` on a line rather than wrapping a pair
 - do not rewrite upstream markers on lines we are not changing, and do not convert them in bulk as a side effect of unrelated work

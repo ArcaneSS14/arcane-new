@@ -13,6 +13,8 @@ Use for any write task that changes a Git worktree, staging, commit, conflict re
 
 Record `git status --short --branch`, the current branch, and remotes. Record existing staged, unstaged, and untracked paths, branch relationship, and any pre-existing SPDX diff. Preserve all user-owned work.
 
+Before switching branches or creating a worktree, follow [Git safety](../../rules/git-safety.md), including hook and dependency side effects.
+
 ## Правила и границы
 
 - Stage only task-related paths and inspect the full staged diff before committing. Do not include generated files, logs, test results, IDE files, or unrelated cleanup unless requested.

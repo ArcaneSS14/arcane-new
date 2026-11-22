@@ -128,9 +128,10 @@ Our own changes carry Arcane markers only:
 
 * one added line: trailing `// Arcane` or `# Arcane`, no `-Start` / `-End`
 * two or more added lines: `// Arcane-Start` / `// Arcane-End`, `# Arcane-Start` / `# Arcane-End`
-* one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`
+* one changed line: trailing `// Arcane-Edit: <old> > <new>` or `# Arcane-Edit: <old> > <new>`; see the [sound-path exception](.agents/rules/arcane-edit-markers.md#marker-syntax-as-it-exists)
 * two or more changed lines: `// Arcane-Edit-Start` / `// Arcane-Edit-End`, `# Arcane-Edit-Start` / `# Arcane-Edit-End`
-* over 5 changed lines: keep the active change inside an `Arcane-Edit` block; comment out removed content only when disabling it is the intended behavior
+* over 5 changed lines: keep the active change inside an `Arcane-Edit` block; handle removals under [the marker rule](.agents/rules/arcane-edit-markers.md#more-than-five-modified-lines)
+* removed inherited C# blocks: follow [deletion handling](.agents/rules/arcane-edit-markers.md#deleted-c-blocks)
 * merge only contiguous Arcane blocks of the same kind into one pair; never bridge unchanged or unrelated content, or merge an `Arcane-Start` block into an `Arcane-Edit-Start` block
 * in inherited files, Arcane imports form one sorted final group under [Added usings](.agents/rules/arcane-edit-markers.md#added-usings); preserve inherited groups
 * never put a bare `-Start` or `-End` on a line instead of a pair
@@ -148,7 +149,7 @@ Editing a Trauma file is allowed and often correct. Keep it cheap to reconcile:
 3. prefer additive over destructive; achieve removals through a partial or `!Remove`
 4. do not reformat, reorder, re-alphabetize, or tidy neighbouring lines
 5. keep the hunk contiguous
-6. record both sides when a value changes, as `Arcane-Edit: <old> > <new>`
+6. record changed values using the [marker syntax](.agents/rules/arcane-edit-markers.md#marker-syntax-as-it-exists)
 
 Changing a line that carries an upstream marker makes that line ours, so the marker becomes `Arcane-Edit`. Leave upstream markers on lines we did not touch alone, and never convert them in bulk.
 
