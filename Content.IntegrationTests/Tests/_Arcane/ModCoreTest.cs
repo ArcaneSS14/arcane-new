@@ -1863,9 +1863,9 @@ public sealed class ModCoreTest : InteractionTest
             wearer = SEntMan.SpawnAttachedTo("MobHuman", location);
             unit = SEntMan.SpawnAttachedTo("TestModControlUnit", location);
             lamp = SEntMan.SpawnAttachedTo("ModsuitModuleFlashlight", location);
-            storageModule = SEntMan.SpawnAttachedTo("ModsuitModuleStorageCompact", location);
+            storageModule = SEntMan.SpawnAttachedTo("ModsuitModuleStorageBluespace", location);
             nativeItem = SEntMan.SpawnAttachedTo("ClothingHeadHatBeret", location);
-            moduleItem = SEntMan.SpawnAttachedTo("ClothingHeadHatBeret", location);
+            moduleItem = SEntMan.SpawnAttachedTo("WeaponRifleAk", location);
             var core = SEntMan.SpawnAttachedTo("ModsuitCoreStandardHighCapacity", location);
             var inventory = SEntMan.System<InventorySystem>();
             var storage = SEntMan.System<SharedStorageSystem>();
@@ -1928,6 +1928,7 @@ public sealed class ModCoreTest : InteractionTest
             Assert.That(SEntMan.GetComponent<StorageComponent>(unit).Container.Contains(nativeItem), Is.True);
             Assert.That(SEntMan.GetComponent<StorageComponent>(storageModule).Container.Count, Is.Zero);
             Assert.That(SEntMan.EntityExists(moduleItem), Is.True);
+            Assert.That(SEntMan.System<SharedStorageSystem>().Insert(storageModule, moduleItem, out _), Is.False);
         });
     }
 

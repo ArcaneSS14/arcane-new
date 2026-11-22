@@ -12,6 +12,7 @@ using Content.Shared.Storage.Components;
 using Content.Shared.Storage.EntitySystems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
+using Content.Arcane.Shared.ModSuits.Components; // Arcane
 
 namespace Content.IntegrationTests.Tests.Storage;
 
@@ -37,6 +38,7 @@ public sealed class StorageTest : GameTest
         var itemName = compFact.CompName<ItemComponent>();
         var storageName = compFact.CompName<StorageComponent>();
         // </Trauma>
+        var moduleStorageName = compFact.CompName<ModStorageModuleComponent>(); // Arcane
 
         var itemSys = entMan.System<SharedItemSystem>();
 
@@ -49,6 +51,12 @@ public sealed class StorageTest : GameTest
                     storage.MaxItemSize == null ||
                     !proto.TryComp<ItemComponent>(itemName, out var item)) // Trauma - use itemName
                     continue;
+
+                // Arcane-Start
+                // MOD storage only works while installed; removing the module empties it.
+                if (proto.TryComp<ModStorageModuleComponent>(moduleStorageName, out _))
+                    continue;
+                // Arcane-End
 
                 Assert.That(itemSys.GetSizePrototype(storage.MaxItemSize.Value).Weight,
                     Is.LessThanOrEqualTo(itemSys.GetSizePrototype(item.Size).Weight),
