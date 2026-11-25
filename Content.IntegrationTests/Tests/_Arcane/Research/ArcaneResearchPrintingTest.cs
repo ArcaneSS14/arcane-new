@@ -40,7 +40,7 @@ public sealed class ArcaneResearchPrintingTest : GameTest
             SEntMan.System<PowerReceiverSystem>().SetNeedsPower(lathe, false);
             recipe = Server.ProtoMan.Index<LatheRecipePrototype>(recipeId);
             Assert.That(recipe.Result, Is.Not.Null);
-            originalResults = FindResults(recipe.Result.Value.Id);
+            originalResults = FindResults(recipe.Result!.Value.Id);
 
             var materialStorage = SEntMan.System<SharedMaterialStorageSystem>();
             var component = SComp<LatheComponent>(lathe);
