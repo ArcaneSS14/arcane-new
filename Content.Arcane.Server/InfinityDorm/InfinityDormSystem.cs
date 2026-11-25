@@ -65,6 +65,12 @@ public sealed partial class InfinityDormSystem : EntitySystem
 
     private void HandleTeleporterMessage(EntityUid uid, InfinityDormTeleporterComponent component, InfinityDormTeleportMessage args)
     {
+        if (!_cfg.GetCVar(ArcaneCVars.InfinityDormsEnabled))
+        {
+            _chat.TrySendInGameICMessage(uid, Loc.GetString("infinity-dorm-warning-disabled"), InGameICChatType.Speak, false);
+            return;
+        }
+
         var station = _station.GetOwningStation(uid);
         if (station != null && _alertLevel.TryGetLevel(station.Value, out var level) && level != component.NeedAlertLevel)
         {

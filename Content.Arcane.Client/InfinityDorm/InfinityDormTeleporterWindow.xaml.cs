@@ -50,7 +50,7 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        ReloadRooms();
+        _cfg.OnValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged, true);
         _proto.PrototypesReloaded += OnProtoReload;
 
         NumberInput.OnTextChanged += args => ValidateDormNumber(args.Text);
@@ -65,6 +65,18 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
         base.Close();
 
         _proto.PrototypesReloaded -= OnProtoReload;
+        _cfg.UnsubValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _proto.PrototypesReloaded -= OnProtoReload;
+            _cfg.UnsubValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged);
+        }
+
+        base.Dispose(disposing);
     }
 
     public void SetRoomsAvailable(int available)
@@ -80,12 +92,25 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
         ReloadRooms();
     }
 
+    private void OnDormsEnabledChanged(bool enabled)
+    {
+        Confirm.Disabled = !enabled;
+        NumberInput.Editable = enabled;
+        ReloadRooms();
+    }
+
     private void ReloadRooms()
     {
         if (Disposed)
             return;
 
         RoomsContainer.RemoveAllChildren();
+
+        if (!_cfg.GetCVar(ArcaneCVars.InfinityDormsEnabled))
+        {
+            RoomsContainer.AddChild(new Label { Text = Loc.GetString("infinity-dorm-warning-disabled") });
+            return;
+        }
 
         var rooms = _proto.EnumeratePrototypes<InfinityDormPrototype>();
 
