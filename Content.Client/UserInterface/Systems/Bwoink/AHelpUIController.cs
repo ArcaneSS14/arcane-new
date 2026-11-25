@@ -577,10 +577,8 @@ public sealed class UserAHelpUIHandler : IAHelpUIHandler
 
     public void ToggleWindow()
     {
-        // Arcane-Edit-Start
-        EnsureInit(_discordRelayActive);
-        if (_window!.IsOpen)
-        // Arcane-Edit-End
+        var createdWindow = EnsureInit(_discordRelayActive);
+        if (!createdWindow && _window!.IsOpen)
         {
             _window.Close();
         }
