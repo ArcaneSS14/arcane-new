@@ -10,4 +10,7 @@ public readonly record struct SharedAdminLog(
     LogImpact Impact,
     DateTime Date,
     string Message,
-    Guid[] Players);
+    // Arcane-Edit-Start
+    Guid[] Players,
+    int RoundId = 0);
+    // Arcane-Edit-End

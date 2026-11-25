@@ -37,8 +37,12 @@ namespace Content.Shared.Administration
             public bool PlaySound { get; }
 
             public readonly bool AdminOnly;
+            // Arcane-Start
+            public int? RoundId { get; }
+            public string? HistoryText { get; set; }
+            // Arcane-End
 
-            public BwoinkTextMessage(NetUserId userId, NetUserId trueSender, string text, DateTime? sentAt = default, bool playSound = true, bool adminOnly = false)
+            public BwoinkTextMessage(NetUserId userId, NetUserId trueSender, string text, DateTime? sentAt = default, bool playSound = true, bool adminOnly = false, int? roundId = null) // Arcane-Edit: retain round with live AHelp messages
             {
                 SentAt = sentAt ?? DateTime.Now;
                 UserId = userId;
@@ -46,6 +50,7 @@ namespace Content.Shared.Administration
                 Text = text;
                 PlaySound = playSound;
                 AdminOnly = adminOnly;
+                RoundId = roundId; // Arcane
             }
         }
     }

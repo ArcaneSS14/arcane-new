@@ -979,10 +979,29 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
                 };
             }
 
+            // Arcane-Start
+            if (filter.Cursor is { } cursor)
+            {
+                var date = cursor.Date;
+                var round = cursor.RoundId;
+                var id = cursor.Id;
+                query = filter.DateOrder switch
+                {
+                    DateOrder.Ascending => query.Where(log => log.Date > date ||
+                        log.Date == date && log.RoundId > round ||
+                        log.Date == date && log.RoundId == round && log.Id > id),
+                    DateOrder.Descending => query.Where(log => log.Date < date ||
+                        log.Date == date && log.RoundId < round ||
+                        log.Date == date && log.RoundId == round && log.Id < id),
+                    _ => throw new ArgumentOutOfRangeException(nameof(filter))
+                };
+            }
+            // Arcane-End
+
             query = filter.DateOrder switch
             {
-                DateOrder.Ascending => query.OrderBy(log => log.Date),
-                DateOrder.Descending => query.OrderByDescending(log => log.Date),
+                DateOrder.Ascending => query.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id), // Arcane-Edit: stable composite order
+                DateOrder.Descending => query.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id), // Arcane-Edit: stable composite order
                 _ => throw new ArgumentOutOfRangeException(nameof(filter),
                     $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
             };
@@ -1025,7 +1044,7 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
                     players[i] = log.Players[i].PlayerUserId;
                 }
 
-                yield return new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players);
+                yield return new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players, log.RoundId); // Arcane-Edit: preserve round in stored log
             }
         }
 
