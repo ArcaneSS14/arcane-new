@@ -1,0 +1,6 @@
+# Arcane-Start
+author: AraiMaia
+changes:
+- type: Add
+  message: Added configurable pain flashes with an enable toggle and intensity slider under Accessibility.
+# Arcane-End
