@@ -1,0 +1,9 @@
+- type: entity
+  id: BaseStationJobsSpawning
+  components:
+  - type: ArcaneStationJobs
+    requiredJob: Captain
+    additionalJobs:
+      Adjutant: [1, 1]
+      IAA: [1, 1]
+      CommandMaid: [1, 1]

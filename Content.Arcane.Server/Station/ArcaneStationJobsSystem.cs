@@ -1,43 +1,30 @@
 using Content.Server.Station.Systems;
-using Content.Shared.Roles;
 using Content.Shared.Station.Components;
-using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Server.Station;
 
 /// <summary>
-/// Gives every crewed station one slot each of the Arcane command jobs, as old Arcane did on every map,
-/// without editing each map prototype.
+/// Applies a station's additional job defaults before the core job counters are initialized.
 /// </summary>
 public sealed partial class ArcaneStationJobsSystem : EntitySystem
 {
-    private static readonly ProtoId<JobPrototype> Captain = "Captain";
-
-    private static readonly ProtoId<JobPrototype>[] ExtraJobs =
-    [
-        "Adjutant",
-        "IAA",
-        "CommandMaid",
-    ];
-
     public override void Initialize()
     {
         base.Initialize();
 
-        // Before the job list is built from the station's setup jobs.
-        SubscribeLocalEvent<StationInitializedEvent>(OnStationInitialized, before: [typeof(ServerStationJobsSystem)]);
+        // The core init handler derives both the total and overflow jobs from the completed setup data.
+        SubscribeLocalEvent<StationJobsComponent, ComponentInit>(OnJobsInit, before: [typeof(ServerStationJobsSystem)]);
     }
 
-    private void OnStationInitialized(StationInitializedEvent ev)
+    private void OnJobsInit(Entity<StationJobsComponent> ent, ref ComponentInit args)
     {
-        if (!TryComp<StationJobsComponent>(ev.Station, out var jobs)
-            || !jobs.SetupAvailableJobs.ContainsKey(Captain))
+        if (!TryComp<ArcaneStationJobsComponent>(ent, out var defaults)
+            || !ent.Comp.SetupAvailableJobs.ContainsKey(defaults.RequiredJob))
             return;
 
-        foreach (var job in ExtraJobs)
+        foreach (var (job, slots) in defaults.AdditionalJobs)
         {
-            if (jobs.SetupAvailableJobs.TryAdd(job, [1, 1]))
-                jobs.MidRoundTotalJobs += 1;
+            ent.Comp.SetupAvailableJobs.TryAdd(job, (int[]) slots.Clone());
         }
     }
 }
