@@ -50,8 +50,7 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        _cfg.OnValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged, true);
-        _proto.PrototypesReloaded += OnProtoReload;
+        OnDormsEnabledChanged(_cfg.GetCVar(ArcaneCVars.InfinityDormsEnabled));
 
         NumberInput.OnTextChanged += args => ValidateDormNumber(args.Text);
 
@@ -60,23 +59,18 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
         SetRoomsAvailable(0);
     }
 
-    public override void Close()
+    protected override void EnteredTree()
     {
-        base.Close();
-
-        _proto.PrototypesReloaded -= OnProtoReload;
-        _cfg.UnsubValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged);
+        base.EnteredTree();
+        _cfg.OnValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged, true);
+        _proto.PrototypesReloaded += OnProtoReload;
     }
 
-    protected override void Dispose(bool disposing)
+    protected override void ExitedTree()
     {
-        if (disposing)
-        {
-            _proto.PrototypesReloaded -= OnProtoReload;
-            _cfg.UnsubValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged);
-        }
-
-        base.Dispose(disposing);
+        _proto.PrototypesReloaded -= OnProtoReload;
+        _cfg.UnsubValueChanged(ArcaneCVars.InfinityDormsEnabled, OnDormsEnabledChanged);
+        base.ExitedTree();
     }
 
     public void SetRoomsAvailable(int available)

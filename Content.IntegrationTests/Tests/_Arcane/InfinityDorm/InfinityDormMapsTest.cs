@@ -20,9 +20,9 @@ public sealed class InfinityDormMapsTest : GameTest
 {
     [Test]
     [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
-    [EnsureCVar(Side.Server, typeof(ArcaneCVars), nameof(ArcaneCVars.InfinityDormsEnabled), true)]
     public async Task DisabledDormsRejectEntryAndCreationWhileVisitorsCanExit()
     {
+        await OverrideCVar(Side.Server, ArcaneCVars.InfinityDormsEnabled, true);
         var server = Pair.Server;
         var entities = server.ResolveDependency<IEntityManager>();
         var configuration = server.ResolveDependency<IConfigurationManager>();
