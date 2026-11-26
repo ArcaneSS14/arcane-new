@@ -13,11 +13,15 @@ using Content.Trauma.Server.Language;
 using Robust.Shared.Audio.Components;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests._Arcane;
 
 public sealed class RadioSpeechBarkTest : GameTest
 {
+    private static readonly ProtoId<RadioChannelPrototype> CommonChannel = "Common";
+    private static readonly ProtoId<LanguagePrototype> Dwarvish = "Dwarvish";
+
     [TestCase(false)]
     [TestCase(true)]
     public async Task RadioSpeechBarkOnlyReachesAnEnabledReceiver(bool headset)
@@ -55,7 +59,7 @@ public sealed class RadioSpeechBarkTest : GameTest
                 Server.ResolveDependency<IConfigurationManager>().SetCVar(GoobCVars.BarksEnabled, true);
             });
             await Pair.ReallyBeIdle(5);
-            await Server.WaitPost(() => SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "Radio voice test", SProtoMan.Index<RadioChannelPrototype>("Common"), speaker));
+            await Server.WaitPost(() => SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "Radio voice test", SProtoMan.Index(CommonChannel), speaker));
             await Pair.ReallyBeIdle(5);
             await RunTicksSync(2);
             await Client.WaitAssertion(() =>
@@ -81,7 +85,7 @@ public sealed class RadioSpeechBarkTest : GameTest
                 languages.AddLanguage(speaker, "Dwarvish");
                 languages.RemoveLanguage(listener, "Dwarvish");
                 Assert.That(languages.CanUnderstand(listener, "Dwarvish"), Is.False);
-                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, privateMessage, SProtoMan.Index<RadioChannelPrototype>("Common"), speaker, language: SProtoMan.Index<LanguagePrototype>("Dwarvish"));
+                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, privateMessage, SProtoMan.Index(CommonChannel), speaker, language: SProtoMan.Index(Dwarvish));
             });
             await Pair.ReallyBeIdle(5);
             await Client.WaitAssertion(() =>
@@ -95,12 +99,12 @@ public sealed class RadioSpeechBarkTest : GameTest
             {
                 SEntMan.GetComponent<ActiveRadioComponent>(receiver).ReceiveAllChannels = false;
                 SEntMan.GetComponent<ActiveRadioComponent>(receiver).Channels.Clear();
-                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "No listener", SProtoMan.Index<RadioChannelPrototype>("Common"), speaker);
+                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "No listener", SProtoMan.Index(CommonChannel), speaker);
                 SEntMan.GetComponent<ActiveRadioComponent>(receiver).ReceiveAllChannels = true;
                 Server.ResolveDependency<IConfigurationManager>().SetCVar(GoobCVars.BarksEnabled, false);
-                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "Barks disabled", SProtoMan.Index<RadioChannelPrototype>("Common"), speaker);
+                SEntMan.System<RadioSystem>().SendRadioMessage(speaker, "Barks disabled", SProtoMan.Index(CommonChannel), speaker);
                 Server.ResolveDependency<IConfigurationManager>().SetCVar(GoobCVars.BarksEnabled, true);
-                SEntMan.System<RadioSystem>().SendRadioMessage(listener, "Own message", SProtoMan.Index<RadioChannelPrototype>("Common"), speaker);
+                SEntMan.System<RadioSystem>().SendRadioMessage(listener, "Own message", SProtoMan.Index(CommonChannel), speaker);
             });
             await Pair.ReallyBeIdle(5);
             await Client.WaitAssertion(() => Assert.That(Client.System<RadioSpeechBarkProbeSystem>().Events.Count, Is.EqualTo(2)));
