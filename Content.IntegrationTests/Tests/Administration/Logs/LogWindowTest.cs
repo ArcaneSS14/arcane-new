@@ -8,6 +8,10 @@ using Content.IntegrationTests.Tests.Interaction;
 using Content.Server.Administration.Commands;
 using Content.Server.Administration.Logs;
 using Content.Shared.Database;
+// Arcane-Start
+using Content.Client.UserInterface.Systems.Bwoink;
+using Robust.Shared.Network;
+// Arcane-End
 
 namespace Content.IntegrationTests.Tests.Administration.Logs;
 
@@ -66,4 +70,20 @@ public sealed class LogWindowTest : InteractionTest
         Assert.That(searchResult, Has.Length.EqualTo(1));
         Assert.That(searchResult[0].Log.Message, Contains.Substring($" test log 2: {guid}"));
     }
+    // Arcane-Start
+    [Test]
+    public async Task AhelpWindowOpensOnFirstToggle()
+    {
+        await Client.WaitAssertion(() =>
+        {
+            using var helper = new UserAHelpUIHandler(new NetUserId(Guid.NewGuid()));
+            helper.ToggleWindow();
+            Assert.That(helper.IsOpen, Is.True);
+            helper.ToggleWindow();
+            Assert.That(helper.IsOpen, Is.False);
+            helper.ToggleWindow();
+            Assert.That(helper.IsOpen, Is.True);
+        });
+    }
+    // Arcane-End
 }

@@ -94,6 +94,8 @@
   id: MobHumanoidXeno
   name: Urist McXeno
   components:
+  - type: Damageable
+    damageModifierSet: HumanoidXenomorph
   - type: LanguageSpeaker
     speaks:
     - TauCetiBasic
