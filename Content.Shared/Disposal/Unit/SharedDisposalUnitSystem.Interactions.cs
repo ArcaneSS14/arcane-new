@@ -156,6 +156,14 @@ public abstract partial class SharedDisposalUnitSystem
             return;
         }
 
+        // Arcane-Start: anchored objects must be detached before entering disposal.
+        if (Transform(args.EntityUid).Anchored)
+        {
+            args.Cancel();
+            return;
+        }
+        // Arcane-End
+
         if (_whitelist.IsWhitelistPass(ent.Comp.Blacklist, args.EntityUid) ||
             _whitelist.IsWhitelistFail(ent.Comp.Whitelist, args.EntityUid))
         {

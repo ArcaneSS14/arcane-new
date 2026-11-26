@@ -89,6 +89,7 @@ namespace Content.IntegrationTests.Tests.Disposal
   id: WrenchDummy
   components:
   - type: Item
+  - type: Anchorable # Arcane
   - type: Tool
     qualities:
       - Anchoring
@@ -188,6 +189,13 @@ namespace Content.IntegrationTests.Tests.Disposal
 
                 // Can't insert the trunk or the unit into itself
                 UnitInsertContains(unitUid, unitComponent, false, disposalSystem, disposalUnit, disposalTrunk);
+
+                // Arcane-Start: anchored items cannot be inserted until detached.
+                var wrenchTransform = entityManager.GetComponent<TransformComponent>(wrench);
+                Assert.That(xformSystem.AnchorEntity(wrench, wrenchTransform), Is.True);
+                UnitInsertContains(unitUid, unitComponent, false, disposalSystem, wrench);
+                xformSystem.Unanchor(wrench, wrenchTransform);
+                // Arcane-End
 
                 // Can insert mobs and items
                 UnitInsertContains(unitUid, unitComponent, true, disposalSystem, human, wrench);
