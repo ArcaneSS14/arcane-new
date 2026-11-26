@@ -100,6 +100,8 @@
   id: MobDemon
   name: Urist McDemon
   components:
+  - type: Damageable
+    damageModifierSet: DemonArcana
   - type: LanguageSpeaker
     speaks:
     - TauCetiBasic
@@ -148,6 +150,19 @@
     staminaDrainRate: 13
     sprintSpeedMultiplier: 1.63
 
+
+- type: entity
+  parent: MobDemon
+  id: MobDemonRandom
+  name: Urist McDemon
+  suffix: Random Appearance
+  components:
+  - type: RandomHumanoidAppearance
+  - type: RandomMetadata
+    nameSegments:
+    - NamesFirst
+    - NamesLast
+    nameFormat: name-format-standard
 - type: entity
   parent: OrganBaseOrganic
   id: OrganDemon
