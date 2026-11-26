@@ -1,0 +1,17 @@
+- type: infinityDormCategory
+  id: General
+  color: "#7c4f1caa"
+  name: Classic
+  priority: 2
+
+- type: infinityDormCategory
+  id: Unusual
+  color: "#801e37aa"
+  name: Unusual
+  priority: 1
+
+- type: infinityDormCategory
+  id: Exotic
+  color: "#1c772caa"
+  name: Exotic
+  priority: 0

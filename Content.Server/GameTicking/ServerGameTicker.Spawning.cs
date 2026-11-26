@@ -29,6 +29,7 @@ using Content.Arcane.Common.GameTicking;
 // Arcane-Start
 using Content.Arcane.Common.Thunderdome;
 using Robust.Shared.Enums;
+using Content.Arcane.Common.CCVar;
 // Arcane-End
 
 namespace Content.Server.GameTicking
@@ -284,13 +285,22 @@ namespace Content.Server.GameTicking
 
             if (lateJoin && !silent)
             {
+                // Arcane-Start
+                var arrivalJobName = jobName;
+                if (Cfg.GetCVar(ArcaneCVars.AlternateJobTitlesEnabled)
+                    && character.JobAlternateTitles.TryGetValue(jobId, out var titleId)
+                    && jobPrototype.AlternateTitles.Contains(titleId)
+                    && ProtoMan.TryIndex(titleId, out var title))
+                    arrivalJobName = title.LocalizedName(character.Gender);
+                // Arcane-End
+
                 if (jobPrototype.JoinNotifyCrew)
                 {
                     _chatSystem.DispatchStationAnnouncement(station,
                         Loc.GetString("latejoin-arrival-announcement-special",
                             ("character", MetaData(mob).EntityName),
                             ("entity", mob),
-                            ("job", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(jobName))),
+                            ("job", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(arrivalJobName))), // Arcane-Edit: jobName > arrivalJobName
                         Loc.GetString("latejoin-arrival-sender"),
                         playDefaultSound: false,
                         colorOverride: Color.Gold);
@@ -301,7 +311,7 @@ namespace Content.Server.GameTicking
                         Loc.GetString("latejoin-arrival-announcement",
                             ("character", MetaData(mob).EntityName),
                             ("entity", mob),
-                            ("job", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(jobName))),
+                            ("job", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(arrivalJobName))), // Arcane-Edit: jobName > arrivalJobName
                         Loc.GetString("latejoin-arrival-sender"),
                         playDefaultSound: false);
                 }

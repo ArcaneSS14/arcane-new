@@ -160,10 +160,12 @@ public sealed partial class StoreSystem
                 EntityManager.AddComponents(buyer, productComponentsEntity.Components);
         }
 
+        EntityUid? purchasedProduct = null; // Arcane
         //spawn entity
         if (listing.ProductEntity != null)
         {
             var product = Spawn(listing.ProductEntity, Transform(buyer).Coordinates);
+            purchasedProduct = product; // Arcane
             _hands.PickupOrDrop(buyer, product);
 
             RaiseLocalEvent(product, new ItemPurchasedEvent(buyer));
@@ -302,7 +304,11 @@ public sealed partial class StoreSystem
         var buyFinished = new StoreBuyFinishedEvent
         {
             PurchasedItem = listing,
-            StoreUid = uid
+            StoreUid = uid, // Arcane-Edit: uid > uid,
+            // Arcane-Start
+            ProductEntity = purchasedProduct,
+            PaidCost = cost.ToDictionary()
+            // Arcane-End
         };
         RaiseLocalEvent(ref buyFinished);
 
@@ -547,4 +553,13 @@ public sealed partial class StoreSystem
 public readonly record struct StoreBuyFinishedEvent(
     EntityUid StoreUid,
     ListingDataWithCostModifiers PurchasedItem
-);
+// Arcane-Edit-Start
+)
+{
+    /// <summary>The physical product, if this purchase spawned one.</summary>
+    public EntityUid? ProductEntity { get; init; }
+
+    /// <summary>Actual paid amounts, captured before purchase observers reset discounts.</summary>
+    public IReadOnlyDictionary<ProtoId<CurrencyPrototype>, FixedPoint2>? PaidCost { get; init; }
+}
+// Arcane-Edit-End

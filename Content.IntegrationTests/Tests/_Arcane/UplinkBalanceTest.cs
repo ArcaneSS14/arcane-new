@@ -8,7 +8,7 @@ using Content.Shared.Store.Components;
 namespace Content.IntegrationTests.Tests._Arcane;
 
 [TestFixture]
-public sealed class UplinkBalanceTest : GameTest
+public sealed partial class UplinkBalanceTest : GameTest // Arcane-Edit: class > partial class
 {
     private static readonly (ProtoId<ListingPrototype> Listing, int Price)[] ApprovedPrices =
     [

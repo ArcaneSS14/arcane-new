@@ -1,6 +1,7 @@
 using System.Threading;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Database;
+using Content.Arcane.Common.Administration; // Arcane
 
 namespace Content.Server.Administration.Logs;
 
@@ -29,6 +30,8 @@ public sealed class LogFilter
     public bool IncludeNonPlayers { get; set; }
 
     public int? LastLogId { get; set; }
+
+    public AdminLogCursor? Cursor { get; set; } // Arcane
 
     public int LogsSent { get; set; }
 

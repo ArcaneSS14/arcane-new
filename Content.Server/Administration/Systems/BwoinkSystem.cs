@@ -29,6 +29,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Administration; // Arcane
 
 namespace Content.Server.Administration.Systems
 {
@@ -725,7 +726,10 @@ namespace Content.Server.Administration.Systems
                 senderId, // Trauma - use senderId not session
                 bwoinkText,
                 playSound: playSound,
-                adminOnly: input.AdminOnly);
+                // Arcane-Edit-Start
+                adminOnly: input.AdminOnly,
+                roundId: _gameTicker.RoundId);
+                // Arcane-Edit-End
         }
 
         // Frontier: webhook text messages
@@ -800,6 +804,19 @@ namespace Content.Server.Administration.Systems
             var adminMsg = await FormatFullMessageForRecipient(forAdmin: true, bwoinkParams.SenderAdmin, bwoinkParams.SenderId, bwoinkParams.Message,
                 bwoinkParams.SenderName, bwoinkParams.FromWebhook, bwoinkParams.RoleName, bwoinkParams.RoleColor); // Trauma
 
+            // Arcane-Start
+            var historyMessage = adminMsg;
+            if (!bwoinkParams.Message.AdminOnly)
+            {
+                historyMessage = await FormatFullMessageForRecipient(forAdmin: false,
+                    bwoinkParams.SenderAdmin, bwoinkParams.SenderId, bwoinkParams.Message,
+                    bwoinkParams.SenderName, bwoinkParams.FromWebhook, bwoinkParams.RoleName, bwoinkParams.RoleColor);
+            }
+            adminMsg.HistoryText = historyMessage.Text;
+            RaiseLocalEvent(new BwoinkHistoryEntryEvent(bwoinkParams.Message.UserId,
+                historyMessage.Text, bwoinkParams.Message.AdminOnly));
+            // Arcane-End
+
             // Notify all admins
             foreach (var channel in admins)
             {
@@ -811,9 +828,7 @@ namespace Content.Server.Administration.Systems
             {
                 if (!admins.Contains(session.Channel))
                 {
-                    var playerMsg = await FormatFullMessageForRecipient(forAdmin: false, bwoinkParams.SenderAdmin, bwoinkParams.SenderId, bwoinkParams.Message,
-                        bwoinkParams.SenderName, bwoinkParams.FromWebhook, bwoinkParams.RoleName, bwoinkParams.RoleColor); // Trauma
-                    RaiseNetworkEvent(playerMsg, session.Channel);
+                    RaiseNetworkEvent(historyMessage, session.Channel); // Arcane-Edit: reuse the public recipient format
                 }
             }
 

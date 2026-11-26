@@ -47,6 +47,7 @@ public sealed partial class GuidebookUIController : UIController, IOnStateEntere
 
         // setup window
         _guideWindow = UIManager.CreateWindow<GuidebookWindow>();
+        ConfigureWorkspaceWindow(_guideWindow, true); // Arcane
         _guideWindow.OnClose += OnWindowClosed;
         _guideWindow.OnOpen += OnWindowOpen;
 
@@ -77,6 +78,7 @@ public sealed partial class GuidebookUIController : UIController, IOnStateEntere
 
     private void HandleStateExited()
     {
+        CloseWorkspaceWindows(); // Arcane
         if (_guideWindow == null)
             return;
 
@@ -206,12 +208,14 @@ public sealed partial class GuidebookUIController : UIController, IOnStateEntere
         }
         var changed = _guideWindow.UpdateGuides(guides, rootEntries, forceRoot, selected);
 
-        // Expand up to depth-2.
-        if (changed)
-        {
-            _guideWindow.Tree.SetAllExpanded(false);
-            _guideWindow.Tree.SetAllExpanded(true, 1);
-        }
+        // Arcane-Edit-Start: the workspace restores the expansion state per category
+        // // Expand up to depth-2.
+        // if (changed)
+        // {
+        //     _guideWindow.Tree.SetAllExpanded(false);
+        //     _guideWindow.Tree.SetAllExpanded(true, 1);
+        // }
+        // Arcane-Edit-End
 
         _guideWindow.OpenCenteredRight();
     }
