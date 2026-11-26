@@ -1,5 +1,6 @@
 using Content.Shared.FixedPoint;
 using Content.Client.Clothing;
+using Content.Client.Clothing.Systems;
 using Content.Client.Items.Systems;
 using Content.Shared.Clothing;
 using Content.Shared.Hands;
@@ -23,6 +24,7 @@ public sealed partial class StainableSystem : SharedStainableSystem
         base.Initialize();
 
         SubscribeLocalEvent<StainableComponent, AppearanceChangeEvent>(OnAppearanceChanged);
+        SubscribeLocalEvent<StainableComponent, ChameleonSpriteUpdatedEvent>(OnChameleonSpriteUpdated);
         SubscribeLocalEvent<StainableComponent, GetEquipmentVisualsEvent>(OnClothingVisuals, after: [typeof(ClientClothingSystem)]);
         SubscribeLocalEvent<StainableComponent, GetInhandVisualsEvent>(OnItemVisuals, after: [typeof(ItemSystem)]);
 
@@ -34,8 +36,26 @@ public sealed partial class StainableSystem : SharedStainableSystem
         if (args.Sprite is not {} sprite)
             return;
 
-        foreach (var layer in ent.Comp.RevealedIconVisuals.OrderByDescending(index => index))
-            sprite.RemoveLayer(layer);
+        UpdateIconVisuals(ent, sprite, false);
+    }
+
+    private void OnChameleonSpriteUpdated(Entity<StainableComponent> ent, ref ChameleonSpriteUpdatedEvent args)
+    {
+        // The event can also be raised when the disguise has no sprite to copy.
+        if (!args.Disguise.TryComp(out SpriteComponent? _, Factory) || !TryComp<SpriteComponent>(ent, out var sprite))
+            return;
+
+        UpdateIconVisuals(ent, sprite, true);
+    }
+
+    private void UpdateIconVisuals(Entity<StainableComponent> ent, SpriteComponent sprite, bool spriteReplaced)
+    {
+        // After CopyFrom the old indices refer to the disguise's layers, not the old stains.
+        if (!spriteReplaced)
+        {
+            foreach (var layer in ent.Comp.RevealedIconVisuals.OrderByDescending(index => index))
+                sprite.RemoveLayer(layer);
+        }
 
         ent.Comp.RevealedIconVisuals.Clear();
 
