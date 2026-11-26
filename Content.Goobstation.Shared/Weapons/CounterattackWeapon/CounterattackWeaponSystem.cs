@@ -2,6 +2,7 @@
 
 using System.Linq;
 using Content.Medical.Shared.ItemSwitch;
+using Content.Shared.CombatMode;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Timing.Components;
 using Content.Shared.Timing.Systems;
@@ -15,6 +16,7 @@ namespace Content.Goobstation.Shared.Weapons.CounterattackWeapon;
 public sealed partial class CounterattackWeaponSystem : EntitySystem
 {
     [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedCombatModeSystem _combat = default!; // Arcane
     [Dependency] private UseDelaySystem _delay = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedMeleeWeaponSystem _melee = default!;
@@ -49,8 +51,10 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
 
         // Arcane-Edit-Start: Keep the guard until nested attack events and switching have finished.
         _counterattacking.Add(ent.Owner);
+        var wasInCombat = _combat.IsInCombatMode(ent.Owner); // Arcane
         try
         {
+            _combat.SetInCombatMode(ent.Owner, true); // Arcane
             meleeComp.NextAttack = TimeSpan.Zero;
             _melee.AttemptLightAttack(ent, meleeWeapon, meleeComp, args.User);
             meleeComp.NextAttack = TimeSpan.Zero;
@@ -60,6 +64,7 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
         }
         finally
         {
+            _combat.SetInCombatMode(ent.Owner, wasInCombat); // Arcane
             _counterattacking.Remove(ent.Owner);
         }
         // Arcane-Edit-End
