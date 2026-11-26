@@ -19,6 +19,9 @@ public sealed partial class ErpStatusSystem : EntitySystem
 
     private void OnPlayerAttached(Entity<HumanoidProfileComponent> ent, ref PlayerAttachedEvent args)
     {
+        if (!HasComp<ErpAllowedComponent>(ent))
+            return;
+
         var profile = _prefs.GetPreferencesOrNull(args.Player.UserId)?.SelectedCharacter as HumanoidCharacterProfile;
         var preference = profile?.ErpPreference ?? ErpPreference.Ask;
         // The body's age counts, not the profile's: ghost roles and polymorphs have their own.

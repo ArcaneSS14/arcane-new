@@ -1,0 +1,9 @@
+# ArcaneStationJobsSystem adds these jobs to every station with a Captain, so they spawn with the captain.
+- type: entity
+  id: SpawnPointCaptain
+  components:
+  - type: SpawnPoint
+    extraJobs:
+    - Adjutant
+    - IAA
+    - CommandMaid

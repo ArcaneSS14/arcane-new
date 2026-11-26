@@ -1,0 +1,98 @@
+
+# region Classic
+- type: infinityDorm
+  id: Nature
+  title: Nature
+  author: seemah
+  description: A pleasant rest in nature.
+  category: General
+  gridPath: /Maps/_Arcane/InfinityDorms/nature.yml
+
+- type: infinityDorm
+  id: Retro
+  title: Retro
+  author: seemah
+  description: A lounge straight out of the past!
+  category: General
+  gridPath: /Maps/_Arcane/InfinityDorms/retro.yml
+
+- type: infinityDorm
+  id: Hotel
+  title: Abandoned hotel
+  author: archehya.
+  description: An abandoned hotel in the woods, with a surprise.
+  category: General
+  gridPath: /Maps/_Arcane/InfinityDorms/hotel.yml
+
+- type: infinityDorm
+  id: Apartment
+  title: Station apartment
+  author: Anto, ChangelingRUES
+  description: A spacious apartment on a space station.
+  category: General
+  gridPath: /Maps/_Arcane/InfinityDorms/apartment.yml
+
+- type: infinityDorm
+  id: Bath
+  title: Sauna
+  author: HappyRoach
+  description: A large sauna with a bathhouse and everything else you need for a good rest.
+  category: General
+  gridPath: /Maps/_Arcane/InfinityDorms/bath.yml
+
+# endregion Classic
+
+# region Unusual
+
+- type: infinityDorm
+  id: Aurora
+  title: Aurora
+  author: Vecortys
+  description: A spacious winter room with a cozy spot by the fireplace.
+  category: Unusual
+  gridPath: /Maps/_Arcane/InfinityDorms/aurora.yml
+
+- type: infinityDorm
+  id: Pivo
+  title: Beer hall
+  author: seemah
+  description: Viva la pivo!
+  category: Unusual
+  gridPath: /Maps/_Arcane/InfinityDorms/pivo.yml
+
+- type: infinityDorm
+  id: Techno
+  title: Ratvar's Blessing
+  author: seemah
+  description: A shrine of the machine god.
+  category: Unusual
+  gridPath: /Maps/_Arcane/InfinityDorms/techno.yml
+  
+- type: infinityDorm
+  id: Beach
+  title: Beach
+  author: ChangelingRUES
+  description: A beach carved out inside a mountain.
+  category: Unusual
+  gridPath: /Maps/_Arcane/InfinityDorms/beach.yml
+
+- type: infinityDorm
+  id: Sport
+  title: Sports club
+  author: ChangelingRUES
+  description: A famous venue named after one famous green lizard.
+  category: Unusual
+  gridPath: /Maps/_Arcane/InfinityDorms/sport.yml
+# endregion Unusual
+
+# region Exotic
+
+- type: infinityDorm
+  id: Cosmic
+  title: Andromeda
+  author: seemah
+  description: For lovers of the unknown and cosmic exotica.
+  category: Exotic
+  gridPath: /Maps/_Arcane/InfinityDorms/cosmic.yml
+
+# endregion Exotic

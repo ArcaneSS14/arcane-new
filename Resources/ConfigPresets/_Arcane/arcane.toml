@@ -8,3 +8,7 @@ lobby_music_collection = "ArcaneLobbyMusic"
 preset_enabled = false
 timermap = 120
 timerpreset = 120
+
+[server]
+# The guidebook rules page and the rules popup show the Arcane rules.
+rules_file = "ArcaneRuleset"

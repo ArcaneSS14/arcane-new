@@ -187,6 +187,13 @@ public abstract partial class SharedFultonSystem : EntitySystem
 
         args.Handled = true;
 
+        // Arcane-Start
+        var beforeFultoned = new Content.Arcane.Common.Salvage.BeforeFultonedEvent(args.Target.Value);
+        RaiseLocalEvent(args.User, beforeFultoned);
+        if (beforeFultoned.Cancelled)
+            return;
+        // Arcane-End
+
         var ev = new FultonedDoAfterEvent();
         _doAfter.TryStartDoAfter(
             new DoAfterArgs(EntityManager, args.User, component.ApplyFultonDuration, ev, args.Target, args.Target, args.Used)

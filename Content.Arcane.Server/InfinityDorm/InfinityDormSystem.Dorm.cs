@@ -1,0 +1,124 @@
+// MIT License
+
+// Copyright (c) 2026 Vecortys (vecortys@gmail.com)
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using System.Numerics;
+using Content.Server.Shuttles.Components;
+using Content.Server.Shuttles.Systems;
+using Content.Arcane.Shared.InfinityDorm;
+using Content.Trauma.Shared.Carrying;
+using Content.Trauma.Common.Carrying;
+using Content.Shared.Shuttles.Components;
+using Content.Shared.Chat;
+using Robust.Shared.EntitySerialization.Systems;
+using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
+
+namespace Content.Arcane.Server.InfinityDorm;
+
+public sealed partial class InfinityDormSystem
+{
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private MapLoaderSystem _loader = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private ShuttleSystem _shuttleSystem = default!;
+    [Dependency] private CarryingSystem _carrying = default!;
+
+    private bool TryCreateDorm(EntityUid teleporter, EntityUid creator, string room, int number)
+    {
+        if (IsDormExists(number))
+            return true;
+
+        if (!CheckUserDormsLimit(creator))
+        {
+            _chat.TrySendInGameICMessage(teleporter, Loc.GetString("infinity-dorm-warning-dorms-limit"), InGameICChatType.Speak, false);
+            return false;
+        }
+
+        if (!_proto.TryIndex<InfinityDormPrototype>(room, out var dormProto))
+            return false;
+
+        var offset = new Vector2(_lastPosition + _step, 0);
+        if (!_loader.TryLoadGrid(_dormsMapId, dormProto.GridPath, out var grid, offset: offset))
+            return false;
+
+        _lastPosition = offset.X;
+
+        var shuttle = EnsureComp<ShuttleComponent>(grid.Value);
+        _shuttleSystem.Disable(grid.Value);
+        shuttle.Enabled = false;
+
+        var dormComp = EnsureComp<InfinityDormComponent>(grid.Value);
+        dormComp.ConnectedTeleporter = teleporter;
+        dormComp.Number = number;
+        dormComp.Creator = creator;
+
+        return IsDormExists(number);
+    }
+
+    private void TeleportToDorm(EntityUid uid, int number)
+    {
+        if (TryComp<CarryingComponent>(uid, out var carrying))
+            _carrying.DropCarried(uid, carrying.Carried);
+
+        var query = EntityQueryEnumerator<InfinityDormSpawnMarkerComponent>();
+
+        while (query.MoveNext(out var dormUid, out var _))
+        {
+            if (TryComp<InfinityDormComponent>(_transform.GetParentUid(dormUid), out var dormComp) && dormComp.Number != number)
+                continue;
+
+            var xform = Transform(dormUid);
+            var targetCoords = new MapCoordinates(_transform.GetWorldPosition(dormUid), xform.MapID);
+
+            EnsureComp<InfinityDormVisitorComponent>(uid);
+            _transform.SetMapCoordinates(uid, targetCoords);
+            return;
+        }
+    }
+
+    private bool IsDormExists(int number)
+    {
+        var query = EntityQueryEnumerator<InfinityDormComponent>();
+
+        while (query.MoveNext(out var _, out var comp))
+        {
+            if (comp.Number == number)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool CheckUserDormsLimit(EntityUid uid)
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<InfinityDormComponent>();
+
+        while (query.MoveNext(out var _, out var comp))
+        {
+            if (comp.Creator == uid)
+                count++;
+        }
+
+        return count < _maxUserDorms;
+    }
+}
