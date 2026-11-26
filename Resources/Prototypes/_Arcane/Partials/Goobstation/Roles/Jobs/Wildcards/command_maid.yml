@@ -39,11 +39,12 @@
   equipment: !Clear
     id: CommandMaidPDA
     ears: ClothingHeadsetCommandMaid
-    belt: ClothingBeltJanitorFilled
+    pocket2: MopBucketCubeWrapped
   inhand: !Clear []
   storage:
     back:
     - Flash
+    - MopItem
 
 - type: chameleonOutfit
   id: CommandMaidChameleonOutfit
