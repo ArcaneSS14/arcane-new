@@ -304,12 +304,14 @@ public sealed class StationJobsTest : GameTest
     */
 
     // Arcane-Start
+    private static readonly ProtoId<GameMapPrototype> ArcaneDefaultsMap = "ArcaneJobDefaultsTest";
+
     [Test]
     public async Task ArcaneJobDefaultsPreserveExplicitSlotsAndInitializeCounters()
     {
         var server = Pair.Server;
         var prototypes = server.ResolveDependency<IPrototypeManager>();
-        var map = prototypes.Index<GameMapPrototype>("ArcaneJobDefaultsTest");
+        var map = prototypes.Index(ArcaneDefaultsMap);
         var entities = server.ResolveDependency<IEntityManager>();
         var stations = entities.System<ServerStationSystem>();
 
