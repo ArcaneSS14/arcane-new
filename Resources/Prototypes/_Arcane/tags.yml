@@ -182,9 +182,6 @@
   id: HorseEmotes
 
 - type: Tag
-  id: Magazine50BMG
-
-- type: Tag
   id: Dishware
 
 - type: Tag
