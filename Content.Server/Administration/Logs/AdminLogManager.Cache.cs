@@ -51,7 +51,7 @@ public sealed partial class AdminLogManager
     private void CacheLog(AdminLog log)
     {
         var players = log.Players.Select(player => player.PlayerUserId).ToArray();
-        var record = new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players);
+        var record = new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players, log.RoundId); // Arcane-Edit: preserve round in cached log
 
         CacheLog(record);
     }
@@ -89,8 +89,8 @@ public sealed partial class AdminLogManager
 
         query = filter.DateOrder switch
         {
-            DateOrder.Ascending => query,
-            DateOrder.Descending => query.Reverse(),
+            DateOrder.Ascending => query.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id), // Arcane-Edit: stable composite order
+            DateOrder.Descending => query.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id), // Arcane-Edit: stable composite order
             _ => throw new ArgumentOutOfRangeException(nameof(filter),
                 $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
         };
@@ -140,6 +140,24 @@ public sealed partial class AdminLogManager
         {
             query = query.Where(log => log.Players.Length == 0);
         }
+
+        // Arcane-Start
+        if (filter.Cursor is { } cursor)
+        {
+            query = filter.DateOrder switch
+            {
+                DateOrder.Ascending => query.Where(log =>
+                    log.Date > cursor.Date ||
+                    log.Date == cursor.Date && log.RoundId > cursor.RoundId ||
+                    log.Date == cursor.Date && log.RoundId == cursor.RoundId && log.Id > cursor.Id),
+                DateOrder.Descending => query.Where(log =>
+                    log.Date < cursor.Date ||
+                    log.Date == cursor.Date && log.RoundId < cursor.RoundId ||
+                    log.Date == cursor.Date && log.RoundId == cursor.RoundId && log.Id < cursor.Id),
+                _ => throw new ArgumentOutOfRangeException(nameof(filter))
+            };
+        }
+        // Arcane-End
 
         if (filter.LogsSent != 0)
         {
