@@ -2,6 +2,7 @@
 using Robust.Shared.Timing;
 // </Trauma>
 using Content.Shared.Item.ItemToggle.Components;
+using Robust.Shared.Network; // Arcane
 
 namespace Content.Shared.Item.ItemToggle;
 
@@ -13,6 +14,8 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
     // <Trauma>
     [Dependency] private IGameTiming _timing = default!;
     // </Trauma>
+    [Dependency] private INetManager _netManager = default!; // Arcane
+
     public override void Initialize()
     {
         base.Initialize();
@@ -51,14 +54,22 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
         }
         else
         {
-            if (component.Target == null)
+            // Arcane-Edit-Start
+            var target = component.Target;
+            if (target == null)
+            {
+                if (!_netManager.IsClient)
+                    return;
+
+                target = component.Parent ? Transform(uid).ParentUid : uid;
+            }
+
+            if (TerminatingOrDeleted(target.Value))
                 return;
 
-            if (TerminatingOrDeleted(component.Target.Value))
-                return;
-
-            EntityManager.RemoveComponents(component.Target.Value, component.RemoveComponents ?? component.Components);
-            EntityManager.AddComponents(component.Target.Value, component.DeactivateComponents); // Trauma
+            EntityManager.RemoveComponents(target.Value, component.RemoveComponents ?? component.Components);
+            EntityManager.AddComponents(target.Value, component.DeactivateComponents);
+            // Arcane-Edit-End
         }
     }
 }
