@@ -8,4 +8,5 @@
       effects:
       - !type:WashCumOverlayReaction
   - type: ScentPath
+  - type: ErpAllowed
   - type: ErpPanelOwner
