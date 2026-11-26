@@ -140,6 +140,9 @@ public sealed partial class TTSSystem : EntitySystem
 
     private void OnTTSAnnouncePlayEvent(ref TTSAnnouncePlayEvent args)
     {
+        if (!_isEnabled)
+            return;
+
         string? voice = null;
         if (TryComp<TTSComponent>(args.Sender, out var ttsComponent)
             && ttsComponent.VoicePrototype is { } voiceId
