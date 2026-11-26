@@ -3,6 +3,12 @@ using Content.Server.Administration.Logs;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Database;
 using Robust.Shared.GameObjects;
+// Arcane-Start
+using Content.Arcane.Common.Administration;
+using Content.Server.Database;
+using System.Linq;
+using System.Text.Json;
+// Arcane-End
 
 namespace Content.IntegrationTests.Tests.Administration.Logs;
 
@@ -105,4 +111,56 @@ public sealed class FilterTests : GameTest
             return firstFound && secondFound;
         });
     }
+    // Arcane-Start
+    [Test]
+    public async Task HistoryCursorKeepsLogsWithTheSameDateAcrossRounds()
+    {
+        var db = Server.ResolveDependency<IServerDbManager>();
+        var dbServer = await db.AddOrGetServer($"history-cursor-{Guid.NewGuid()}");
+        var firstRound = await db.AddNewRound(dbServer);
+        var secondRound = await db.AddNewRound(dbServer);
+        var date = DateTime.UtcNow.AddDays(-1);
+        var marker = Guid.NewGuid().ToString();
+        using var json = JsonDocument.Parse("{}");
+        var logs = new List<AdminLog>();
+        foreach (var round in new[] { firstRound, secondRound })
+        {
+            for (var id = 1; id <= 2; id++)
+            {
+                logs.Add(new AdminLog
+                {
+                    RoundId = round,
+                    Id = id,
+                    Date = date,
+                    Type = LogType.Ahelp,
+                    Impact = LogImpact.Low,
+                    Message = marker,
+                    Json = json,
+                    Players = new(),
+                });
+            }
+        }
+        await db.AddAdminLogs(logs);
+
+        var filter = new LogFilter
+        {
+            Search = marker,
+            Types = new() { LogType.Ahelp },
+            DateOrder = DateOrder.Ascending,
+            Limit = 2,
+        };
+        var first = new List<Content.Shared.Administration.Logs.SharedAdminLog>();
+        await foreach (var log in db.GetAdminLogs(filter))
+            first.Add(log);
+        Assert.That(first.Select(log => (log.RoundId, log.Id)),
+            Is.EqualTo(new[] { (firstRound, 1), (firstRound, 2) }));
+
+        filter.Cursor = new AdminLogCursor(date, firstRound, 2);
+        var second = new List<Content.Shared.Administration.Logs.SharedAdminLog>();
+        await foreach (var log in db.GetAdminLogs(filter))
+            second.Add(log);
+        Assert.That(second.Select(log => (log.RoundId, log.Id)),
+            Is.EqualTo(new[] { (secondRound, 1), (secondRound, 2) }));
+    }
+    // Arcane-End
 }

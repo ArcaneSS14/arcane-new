@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Trauma.Common.Language.Systems;
 using Content.Server.Chat.Systems;
+using Content.Server._Arcane.Telephone;
 using Content.Server.Radio.EntitySystems;
 using Content.Arcane.Common.Radio;
 using Content.Server.Communications;
@@ -13,6 +14,7 @@ using Content.Arcane.Common.CCVar;
 using Content.Arcane.Shared.TTS;
 using Content.Shared.Chat;
 using Content.Shared.Humanoid;
+using Content.Shared.Holopad;
 using Content.Shared.Examine;
 using Content.Shared.GameTicking;
 using Content.Shared.Ghost;
@@ -43,6 +45,7 @@ public sealed partial class TTSSystem : EntitySystem
         _cfg.OnValueChanged(ArcaneCVars.TTSEnabled, v => _isEnabled = v, true);
 
         SubscribeLocalEvent<TTSComponent, EntitySpokeEvent>(OnEntitySpoke, after: [typeof(RadioSystem), typeof(HeadsetSystem)]);
+        SubscribeLocalEvent<TelephoneRelaySpeechComponent, EntitySpokeEvent>(OnRelaySpoke, after: [typeof(RadioSystem), typeof(HeadsetSystem)]);
 
         SubscribeLocalEvent<TransformSpeechEvent>(OnTransformSpeech);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(_ =>
@@ -63,18 +66,32 @@ public sealed partial class TTSSystem : EntitySystem
         SubscribeNetworkEvent<TTSVoiceChangeSelectedMessage>(OnVoiceChangeSelected);
     }
 
-    private async void OnEntitySpoke(EntityUid uid, TTSComponent component, EntitySpokeEvent args)
+    private void OnEntitySpoke(EntityUid uid, TTSComponent component, EntitySpokeEvent args)
     {
-        if (!_isEnabled || args.Message.Length > MaxMessageChars)
+        // A relayed voice is handled by OnRelaySpoke when the original speaker has a voice.
+        if (TryComp<TelephoneRelaySpeechComponent>(uid, out var relay)
+            && TryComp<TTSComponent>(relay.Source, out var original)
+            && original.VoicePrototype is not null)
             return;
 
-        if (!args.Language.SpeechOverride.RequireSpeech)
+        PlaySpeech(uid, component, args, component.Effect);
+    }
+
+    private void OnRelaySpoke(EntityUid uid, TelephoneRelaySpeechComponent relay, EntitySpokeEvent args)
+    {
+        if (!TryComp<TTSComponent>(relay.Source, out var original) || original.VoicePrototype is null)
             return;
 
-        var voiceId = component.VoicePrototype;
-        var effect = component.Effect;
+        var effect = HasComp<HolopadHologramComponent>(uid) ? "robotic" : original.Effect;
+        PlaySpeech(uid, original, args, effect);
+    }
 
-        if (!_prototypeManager.TryIndex(voiceId, out var protoVoice))
+    private void PlaySpeech(EntityUid uid, TTSComponent component, EntitySpokeEvent args, string? effect)
+    {
+        if (!_isEnabled || args.Message.Length > MaxMessageChars || !args.Language.SpeechOverride.RequireSpeech)
+            return;
+
+        if (!_prototypeManager.TryIndex(component.VoicePrototype, out var protoVoice))
             return;
 
         if (args.IsWhisper)
@@ -140,6 +157,9 @@ public sealed partial class TTSSystem : EntitySystem
 
     private void OnTTSAnnouncePlayEvent(ref TTSAnnouncePlayEvent args)
     {
+        if (!_isEnabled)
+            return;
+
         string? voice = null;
         if (TryComp<TTSComponent>(args.Sender, out var ttsComponent)
             && ttsComponent.VoicePrototype is { } voiceId
