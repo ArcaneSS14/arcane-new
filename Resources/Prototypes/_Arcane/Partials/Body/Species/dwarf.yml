@@ -1,0 +1,5 @@
+- type: entity
+  id: MobDwarf
+  components:
+  - type: Damageable
+    damageModifierSet: Dwarf
