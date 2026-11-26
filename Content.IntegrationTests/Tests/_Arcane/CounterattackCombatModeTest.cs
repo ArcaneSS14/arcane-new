@@ -6,7 +6,6 @@ using Content.Medical.Shared.ItemSwitch;
 using Content.Shared.CombatMode;
 using Content.Shared.CombatMode.Pacification;
 using Content.Shared.Damage.Systems;
-using Content.Shared.FixedPoint;
 using Content.Shared.Weapons.Melee.Events;
 
 namespace Content.IntegrationTests.Tests._Arcane;
@@ -33,12 +32,13 @@ public sealed class CounterattackCombatModeTest : InteractionTest
             if (pacified)
                 SEntMan.AddComponent<PacifiedComponent>(SPlayer);
 
+            var damageBefore = SEntMan.System<DamageableSystem>().GetTotalDamage(attacker);
             var attacked = new AttackedEvent(attacker, attacker, Xform(SPlayer).Coordinates);
             SEntMan.EventBus.RaiseLocalEvent(SPlayer, attacked);
 
             Assert.That(combat.IsInCombatMode(SPlayer), Is.EqualTo(combatMode));
             var damage = SEntMan.System<DamageableSystem>().GetTotalDamage(attacker);
-            Assert.That(damage, pacified ? Is.EqualTo(FixedPoint2.Zero) : Is.GreaterThan(FixedPoint2.Zero));
+            Assert.That(damage, pacified ? Is.EqualTo(damageBefore) : Is.GreaterThan(damageBefore));
         });
     }
 }
