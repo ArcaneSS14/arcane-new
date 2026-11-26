@@ -18,4 +18,5 @@ ui-options-jukebox-volume = Boombox volume:
 
 ui-options-actions-bar-free-placement = Drag hotbar buttons
 ui-options-actions-bar-layout-reset = Reset
-ui-options-actions-bar-layout-reset-tooltip = Return the actions bar and all hotbar buttons to their default positions.ui-options-hud-theme-ninja = Ninja
+ui-options-actions-bar-layout-reset-tooltip = Return the actions bar and all hotbar buttons to their default positions.
+ui-options-hud-theme-ninja = Ninja
