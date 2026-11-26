@@ -87,7 +87,7 @@ public sealed class TelephoneTtsRelayTest : GameTest
 
             await Pair.RunUntilSynced();
 
-            async Task SendAndExpect(string text, ProtoId<TTSVoicePrototype> voice, string? effect)
+            async Task SendAndExpect(string text, ProtoId<TTSVoicePrototype> voice, string effect)
             {
                 await Server.WaitAssertion(() =>
                 {
