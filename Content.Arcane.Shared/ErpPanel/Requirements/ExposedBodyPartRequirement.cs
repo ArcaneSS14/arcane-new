@@ -1,5 +1,7 @@
 using Content.Arcane.Shared.ERP;
 using Content.Shared.Inventory;
+using Content.Shared.Tag;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Content.Arcane.Shared.Body.Part;
 
@@ -8,6 +10,8 @@ namespace Content.Arcane.Shared.ErpPanel.Requirements;
 [Serializable, NetSerializable]
 public sealed partial class ExposedBodyPartRequirement : InvertableErpRequirement
 {
+    private static readonly ProtoId<TagPrototype> SkirtTag = "Skirt";
+
     [DataField(required: true)]
     public ErpBodyPartType Part;
 
@@ -30,10 +34,16 @@ public sealed partial class ExposedBodyPartRequirement : InvertableErpRequiremen
             return false;
 
         var isExposed = true;
+        var tag = entityManager.System<TagSystem>();
 
         while (slots.MoveNext(out var containerSlot))
         {
             if (containerSlot?.ContainedEntity is not { } item)
+                continue;
+
+            if (Part is ErpBodyPartType.Groin or ErpBodyPartType.Butt
+                && entityManager.TryGetComponent<TagComponent>(item, out var tags)
+                && tag.HasTag(tags, SkirtTag))
                 continue;
 
             if (entityManager.TryGetComponent<CondomComponent>(item, out var condom) && !condom.Full)
