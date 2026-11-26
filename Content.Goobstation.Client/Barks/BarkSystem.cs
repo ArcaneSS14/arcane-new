@@ -30,6 +30,7 @@ public sealed partial class BarkSystem : EntitySystem
     {
         base.Initialize();
         SubscribeNetworkEvent<PlayBarkEvent>(OnPlayBark);
+        SubscribeNetworkEvent<PlayRadioSpeechBarkEvent>(OnPlayRadioSpeechBark); // Arcane
         SubscribeLocalEvent<PreviewBarkEvent>(OnPreviewBark);
     }
 
@@ -58,18 +59,26 @@ public sealed partial class BarkSystem : EntitySystem
         PlayBark(sourceEntity, ev.Message, ev.Whisper, proto);
     }
 
-    private void PlayBark(EntityUid? source, string message, bool whisper, BarkPrototype proto)
+    // Arcane-Start: play radio voices globally, including speakers outside the listener's PVS.
+    private void OnPlayRadioSpeechBark(PlayRadioSpeechBarkEvent ev)
+    {
+        if (ProtoMan.TryIndex<BarkPrototype>(ev.Voice, out var proto))
+            PlayBark(null, ev.Message, false, proto, radio: true);
+    }
+    // Arcane-End
+
+    private void PlayBark(EntityUid? source, string message, bool whisper, BarkPrototype proto, bool radio = false) // Arcane
     {
         if (_cfg.GetCVar(ArcaneCVars.UseTTS) && _cfg.GetCVar(ArcaneCVars.TTSEnabled)) // Arcane: TTS replaces barks
             return; // Arcane
 
-        if (proto.SoundCollection is null)
+        if (proto.SoundCollection is null || message.Length == 0) // Arcane
             return;
 
         if (message.Length > 50)
             message = message[..50];
 
-        var volume = GetVolume(whisper, proto);
+        var volume = GetVolume(whisper, proto, radio); // Arcane
         if (volume <= -20f)
             return;
 
@@ -90,7 +99,8 @@ public sealed partial class BarkSystem : EntitySystem
         var activeBark = new ActiveBark
         {
             Source = source,
-            IsPreview = source == null,
+            IsPreview = source == null && !radio, // Arcane
+            IsRadio = radio, // Arcane
             Message = message,
             Prototype = proto,
             Volume = volume,
@@ -113,7 +123,7 @@ public sealed partial class BarkSystem : EntitySystem
             if (bark.NextSound > _timing.CurTime)
                 continue;
 
-            if (!bark.IsPreview && TerminatingOrDeleted(bark.Source!.Value))
+            if (!bark.IsRadio && !bark.IsPreview && TerminatingOrDeleted(bark.Source!.Value)) // Arcane
             {
                 _activeBarks.RemoveAt(i);
                 continue;
@@ -163,7 +173,7 @@ public sealed partial class BarkSystem : EntitySystem
         audioParams = audioParams.WithVolume(bark.Volume);
 
         var filter = Filter.Local();
-        var soundEntity = bark.IsPreview
+        var soundEntity = bark.IsPreview || bark.IsRadio // Arcane
             ? _sharedAudio.PlayGlobal(sound, filter, false, audioParams)
             : _sharedAudio.PlayEntity(sound, filter, bark.Source!.Value, false, audioParams);
 
@@ -172,17 +182,17 @@ public sealed partial class BarkSystem : EntitySystem
             _contentAudio.MarkInterfaceAudio(preview.Entity);
         // Arcane-End
 
-        if (!bark.IsPreview && proto.Stop)
+        if (!bark.IsRadio && !bark.IsPreview && proto.Stop) // Arcane
         {
             if (_playingSounds.TryGetValue(GetNetEntity(bark.Source!.Value), out var playing))
                 _sharedAudio.Stop(playing);
         }
 
-        if (!bark.IsPreview && soundEntity is not null)
+        if (!bark.IsRadio && !bark.IsPreview && soundEntity is not null) // Arcane
             _playingSounds[GetNetEntity(bark.Source!.Value)] = soundEntity.Value.Entity;
     }
 
-    private float GetVolume(bool whisper, BarkPrototype proto)
+    private float GetVolume(bool whisper, BarkPrototype proto, bool radio = false) // Arcane
     {
         var volume = proto.Volume;
 
@@ -191,6 +201,9 @@ public sealed partial class BarkSystem : EntitySystem
 
         var barksVolume = _cfg.GetCVar(GoobCVars.BarksVolume);
         volume *= barksVolume / 3f;
+        if (radio) // Arcane-Start: follow the listener's radio volume as well.
+            volume *= _cfg.GetCVar(ArcaneCVars.RadioBarkVolume) * 2f;
+        // Arcane-End
 
         return SharedAudioSystem.GainToVolume(volume);
     }
@@ -199,6 +212,7 @@ public sealed partial class BarkSystem : EntitySystem
     {
         public EntityUid? Source;
         public bool IsPreview;
+        public bool IsRadio; // Arcane
         public string Message = string.Empty;
         public BarkPrototype Prototype = default!;
         public float Volume;
