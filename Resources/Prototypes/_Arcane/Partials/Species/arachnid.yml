@@ -2,13 +2,11 @@
   id: Arachnid
   customName: true
   sexes:
-  - Unsexed
   - Male
   - Female
-  defaultSoundsBySex:
+  defaultSoundsBySex: !Clear
   - UnisexArachnid
   - FemaleArachnid
   - UnisexArachnid
   voices:
-  - UnisexArachnid
   - FemaleArachnid
