@@ -3,7 +3,7 @@ namespace Content.Shared.Silicons.Borgs;
 public sealed partial class BorgSubtypePrototype
 {
     /// <summary>
-    /// Sprite state overrides of this subtype. Only stored for now: the borg visuals do not read them yet.
+    /// Sprite state overrides for this subtype.
     /// </summary>
     [DataField]
     public BorgSubtypeVisuals Visuals = new();
