@@ -75,6 +75,10 @@
   - type: Sprite
     sprite: _Arcane/ERP/Toys/Handcuffs/soft_handcuffs.rsi
     state: icon
+  - type: Clothing
+    sprite: _Arcane/ERP/Toys/Handcuffs/soft_handcuffs.rsi
+    slots: [ belt ]
+    quickEquip: false
   - type: Tag
     tags:
     - Handcuffs
