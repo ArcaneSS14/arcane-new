@@ -1,0 +1,5 @@
+- type: entity
+  id: RubberStampLawyer
+  components:
+  - type: Stamp
+    stampedColor: "#ac3030"

@@ -23,7 +23,7 @@
   storage:
     back:
     - ExecutiveIDCard # Goobstation - Executive Access!
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled
     - BoxZiptie
     - CrowbarRed
     - MagazinePistolSubMachineGun
@@ -55,7 +55,7 @@
 #  duffelbag: ClothingBackpackDuffelInteQ
   storage:
     back:
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled # Goobstation - No reason not to.
     - BoxZiptie
     - CrowbarRed
     - MagazineLightRifle
@@ -100,6 +100,7 @@
     - MagazineBoxPistolInteQ
 
 # InteQ ERT Strike Team
+
 - type: startingGear
   id: ERT-Strike-InteQVanguardLeaderGear
   equipment:
@@ -124,7 +125,7 @@
   storage:
     back:
     - ExecutiveIDCard # Goobstation - Executive Access!
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled
     - BoxZiptie
     - CrowbarRed
     - MagazinePistolSubMachineGun
@@ -155,7 +156,7 @@
 #  duffelbag: ClothingBackpackDuffelInteQ
   storage:
     back:
-    - MedkitCombatFilled # Goobstation - No reason not to.
+    - MedkitCombatStandardFilled # Goobstation - No reason not to.
     - BoxZiptie
     - CrowbarRed
     - MagazineLightRifle

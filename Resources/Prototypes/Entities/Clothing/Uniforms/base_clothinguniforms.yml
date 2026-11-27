@@ -28,7 +28,7 @@
       path: /Audio/Items/jumpsuit_equip.ogg
   # Arcane-Start: underwear is worn under the jumpsuit (Orion #208)
   - type: SlotBlock
-    slots: UNDERSHIRT, UNDERWEAR
+    slots: UNDERSHIRT, UNDERWEAR, PLUG
   # Arcane-End
   - type: ToolRefinable
     refineResult:
@@ -49,7 +49,7 @@
     - ClothMade
     - Recyclable
     - WhitelistChameleon
-    - Skirt # Goobstation
+    # - Skirt # Arcane-Edit: enabled on all uniforms > skirt bases only
 
 - type: entity
   abstract: true
@@ -61,8 +61,16 @@
     femaleMask: UniformTop
   # Arcane-Start: the underwear stays reachable but hidden under a skirt
   - type: SlotBlock
-    slots: UNDERSHIRT
+    slots: UNDERSHIRT, PLUG
     hiddenSlots: UNDERWEAR
+  # Arcane-End
+  # Arcane-Start: skirt tags belong to skirt bases
+  - type: Tag
+    tags:
+    - ClothMade
+    - Recyclable
+    - WhitelistChameleon
+    - Skirt
   # Arcane-End
 
 
@@ -94,7 +102,7 @@
     femaleMask: UniformTop
   # Arcane-Start: the underwear stays reachable but hidden under a skirt
   - type: SlotBlock
-    slots: UNDERSHIRT
+    slots: UNDERSHIRT, PLUG
     hiddenSlots: UNDERWEAR
   # Arcane-End
   - type: Tag # Goob - add Skirt tag

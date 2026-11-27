@@ -1,0 +1,6 @@
+- type: entity
+  id: CarvedPumpkin
+  components:
+  - type: Tag
+    tags:
+    - SexToyOnahole

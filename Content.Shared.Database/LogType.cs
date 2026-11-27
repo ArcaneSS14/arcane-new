@@ -535,4 +535,11 @@ public enum LogType
     ChemiCompiler = 20005,
 
     Paint = 10006, // Arcane
+    // Arcane-Start
+    /// <summary>A public AHelp conversation message.</summary>
+    Ahelp = 5005,
+
+    /// <summary>An administrator-only AHelp conversation message.</summary>
+    AhelpAdminOnly = 5006,
+    // Arcane-End
 }

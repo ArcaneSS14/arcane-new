@@ -4,6 +4,7 @@
   id: EarsShadowkin
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   forcedColoring: true
   sprites:
     - sprite: _Arcane/Mobs/Customization/Shadowkin/ears.rsi
@@ -13,6 +14,7 @@
   id: EarsShadowkinStriped
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -79,6 +81,7 @@
   id: EarsShadekinMotley
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -98,6 +101,7 @@
   id: EarsShadekinShady
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: shady
@@ -106,6 +110,7 @@
   id: EarsShadekinPiercingAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -125,6 +130,7 @@
   id: EarsShadekinPiercingLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -144,6 +150,7 @@
   id: EarsShadekinPiercingRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -163,6 +170,7 @@
   id: EarsShadekinRingedAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -182,6 +190,7 @@
   id: EarsShadekinRingedLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -201,6 +210,7 @@
   id: EarsShadekinRingedRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   coloring:
     default:
       type:
@@ -220,6 +230,7 @@
   id: EarsShadekinGauzedAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _Arcane/Mobs/Customization/Shadowkin/ears.rsi
       state: shadowkin
@@ -230,6 +241,7 @@
   id: EarsShadekinGauzedLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _Arcane/Mobs/Customization/Shadowkin/ears.rsi
       state: shadowkin
@@ -240,6 +252,7 @@
   id: EarsShadekinGauzedRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _Arcane/Mobs/Customization/Shadowkin/ears.rsi
       state: shadowkin
@@ -250,6 +263,7 @@
   id: EarsShadekinFluffy
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -258,6 +272,7 @@
   id: EarsShadekinFluffyButterfly
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -268,6 +283,7 @@
   id: EarsShadekinFluffyCowling
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -278,6 +294,7 @@
   id: EarsShadekinFluffyCrow
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -288,6 +305,7 @@
   id: EarsShadekinFluffyMotley
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -298,6 +316,7 @@
   id: EarsShadekinFluffySpidy
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -308,6 +327,7 @@
   id: EarsShadekinFluffyRingedAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -318,6 +338,7 @@
   id: EarsShadekinFluffyRingedLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -328,6 +349,7 @@
   id: EarsShadekinFluffyRingedRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: fluffy_default
@@ -338,6 +360,7 @@
   id: EarsShadekinSaggy
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -346,6 +369,7 @@
   id: EarsShadekinSaggyBrawly
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -356,6 +380,7 @@
   id: EarsShadekinSaggyZebra
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -366,6 +391,7 @@
   id: EarsShadekinSaggyGradient
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -376,6 +402,7 @@
   id: EarsShadekinSaggyGauzedAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -386,6 +413,7 @@
   id: EarsShadekinSaggyGauzedLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -396,6 +424,7 @@
   id: EarsShadekinSaggyGauzedRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: saggy_default
@@ -406,6 +435,7 @@
   id: EarsShadekinShort
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: short_default
@@ -414,6 +444,7 @@
   id: EarsShadekinShortButterfly
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: short_default
@@ -424,6 +455,7 @@
   id: EarsShadekinShortRingedAll
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: short_default
@@ -434,6 +466,7 @@
   id: EarsShadekinShortRingedLeft
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: short_default
@@ -444,6 +477,7 @@
   id: EarsShadekinShortRingedRight
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: short_default
@@ -454,6 +488,7 @@
   id: EarsShadekinBull
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: bull_default
@@ -462,6 +497,7 @@
   id: EarsShadekinBullSmooth
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: bull_default
@@ -472,6 +508,7 @@
   id: EarsShadekinAqua
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: aqua_default
@@ -480,6 +517,7 @@
   id: EarsShadekinAquaIncolor
   bodyPart: HeadTop
   groupWhitelist: [Shadowkin]
+  underHair: true
   sprites:
     - sprite: _ADT/Mobs/Customization/Shadekin/shadekin_ears_32x32.rsi
       state: aqua_default

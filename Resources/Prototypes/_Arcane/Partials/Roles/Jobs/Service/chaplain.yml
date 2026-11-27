@@ -1,0 +1,6 @@
+- type: job
+  id: Chaplain
+  alternateTitles:
+  - ChaplainPreacher
+  - ChaplainSpiritualAdvisor
+  - ChaplainShrineGuardian

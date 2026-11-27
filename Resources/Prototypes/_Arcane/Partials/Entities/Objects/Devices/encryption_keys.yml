@@ -1,0 +1,6 @@
+- type: entity
+  id: EncryptionKeyStationMaster
+  components:
+  - type: EncryptionKey
+    channels:
+    - Legal

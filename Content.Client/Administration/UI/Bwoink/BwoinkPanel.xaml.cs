@@ -5,6 +5,10 @@ using Robust.Client.UserInterface.RichText;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+// Arcane-Start
+using Content.Arcane.Common.Administration;
+using System.Linq;
+// Arcane-End
 
 namespace Content.Client.Administration.UI.Bwoink
 {
@@ -23,6 +27,15 @@ namespace Content.Client.Administration.UI.Bwoink
         };
 
         private readonly Action<string> _messageSender;
+        // Arcane-Start
+        private static readonly TimeSpan HistoryRequestTimeout = TimeSpan.FromSeconds(35);
+        private DateTime _historyRequestedAt = DateTime.MinValue;
+        private AdminLogCursor? _nextHistoryCursor;
+        private bool _historyLoaded;
+        private readonly List<BwoinkHistoryMessage> _historyMessages = new();
+        private readonly List<SharedBwoinkSystem.BwoinkTextMessage> _liveMessages = new();
+        private int? _displayedRoundId;
+        // Arcane-End
 
         public int Unread { get; private set; } = 0;
         public DateTime LastMessage { get; private set; } = DateTime.MinValue;
@@ -70,11 +83,94 @@ namespace Content.Client.Administration.UI.Bwoink
             if (!Visible)
                 Unread++;
 
-            var formatted = new FormattedMessage(1);
-            formatted.AddMarkupOrThrow($"[color=gray]{message.SentAt.ToShortTimeString()}[/color] {message.Text}");
-            TextOutput.AddMessage(formatted, AllowedTags);
-            LastMessage = message.SentAt;
+            // Arcane-Edit-Start
+            if (!_historyLoaded)
+                _liveMessages.Add(message);
+
+            AddLine(message.SentAt, message.Text, message.RoundId);
+            // Arcane-Edit-End
         }
+
+        // Arcane-Start
+        public bool TryBeginHistoryRequest(out AdminLogCursor? cursor)
+        {
+            cursor = _nextHistoryCursor;
+            if (_historyLoaded || DateTime.UtcNow - _historyRequestedAt < HistoryRequestTimeout)
+                return false;
+
+            _historyRequestedAt = DateTime.UtcNow;
+            return true;
+        }
+
+        public void ClearHistory()
+        {
+            TextOutput.Clear();
+            LastMessage = DateTime.MinValue;
+            _displayedRoundId = null;
+        }
+
+        public void ReceiveHistory(IEnumerable<BwoinkHistoryMessage> messages, AdminLogCursor? requestCursor, AdminLogCursor? nextCursor, bool hasMore)
+        {
+            if (_historyLoaded || requestCursor != _nextHistoryCursor)
+                return;
+
+            if (requestCursor == null)
+                _historyMessages.Clear();
+
+            _historyMessages.AddRange(messages);
+            RenderMessages();
+
+            _historyRequestedAt = DateTime.MinValue;
+            if (hasMore && nextCursor != null)
+                _nextHistoryCursor = nextCursor;
+            else
+            {
+                _historyLoaded = true;
+                _liveMessages.Clear();
+                _historyMessages.Clear();
+            }
+        }
+
+        private void RenderMessages()
+        {
+            ClearHistory();
+            var unmatchedLive = new List<SharedBwoinkSystem.BwoinkTextMessage>(_liveMessages);
+
+            foreach (var message in _historyMessages)
+            {
+                // Saved admin logs are UTC even if the database does not preserve DateTime.Kind.
+                var utcTime = DateTime.SpecifyKind(message.SentAt, DateTimeKind.Utc);
+                AddLine(utcTime.ToLocalTime(), message.Text, message.RoundId);
+
+                var duplicate = unmatchedLive.FindIndex(live =>
+                    (live.HistoryText ?? live.Text) == message.Text &&
+                    live.AdminOnly == message.AdminOnly &&
+                    live.RoundId == message.RoundId &&
+                    Math.Abs((live.SentAt.ToUniversalTime() - utcTime).TotalSeconds) < 5);
+                if (duplicate >= 0)
+                    unmatchedLive.RemoveAt(duplicate);
+            }
+
+            foreach (var message in unmatchedLive)
+                AddLine(message.SentAt, message.Text, message.RoundId);
+        }
+
+        private void AddLine(DateTime sentAt, string text, int? roundId)
+        {
+            if (roundId is > 0 && _displayedRoundId != roundId)
+            {
+                var separator = new FormattedMessage();
+                separator.AddText(Loc.GetString("bwoink-history-round-separator", ("round", roundId)));
+                TextOutput.AddMessage(separator);
+                _displayedRoundId = roundId;
+            }
+
+            var formatted = new FormattedMessage(1);
+            formatted.AddMarkupOrThrow($"[color=gray]{sentAt.ToShortTimeString()}[/color] {text}");
+            TextOutput.AddMessage(formatted, AllowedTags);
+            LastMessage = sentAt;
+        }
+        // Arcane-End
 
         private void UpdateTypingIndicator()
         {

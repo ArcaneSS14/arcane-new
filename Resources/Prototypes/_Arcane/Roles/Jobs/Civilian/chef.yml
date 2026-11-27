@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: ChefLineCook
+  name: job-name-alt-chef-2
+
+- type: jobAlternateTitle
+  id: ChefSousChef
+  name: job-name-alt-chef-1
+
+- type: jobAlternateTitle
+  id: ChefCulinarySpecialist
+  name: job-name-alt-chef-3
+
+- type: jobAlternateTitle
+  id: ChefPastryChef
+  name: job-name-alt-chef-4

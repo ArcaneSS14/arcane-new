@@ -65,7 +65,7 @@ public partial class SharedDiseaseSystem
             return;
 
         var sound = ent.Comp.Sound;
-        if (ent.Comp.SoundFemale != null && TryComp<HumanoidProfileComponent>(args.Ent, out var humanoid) && humanoid.Sex == Sex.Female)
+        if (ent.Comp.SoundFemale != null && TryComp<HumanoidProfileComponent>(args.Ent, out var humanoid) && humanoid.Sex is Sex.Female or Sex.Futanari) // Arcane-Edit: == Sex.Female > is Female or Futanari
             sound = ent.Comp.SoundFemale;
 
         _audio.PlayPvs(sound, args.Ent);

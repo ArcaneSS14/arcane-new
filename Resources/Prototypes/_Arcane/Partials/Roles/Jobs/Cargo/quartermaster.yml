@@ -1,0 +1,6 @@
+- type: job
+  id: Quartermaster
+  alternateTitles:
+  - QuartermasterSupplyDirector
+  - QuartermasterSupplyForeman
+  - QuartermasterLogisticsCoordinator

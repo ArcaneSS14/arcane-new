@@ -1,0 +1,47 @@
+- type: entity
+  id: CMMobXenoCrusherSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoBurrowerSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoDroneSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoQueenSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoWarriorSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoRavagerSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoKingSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
+
+- type: entity
+  id: CMMobXenoRogueKingSentient
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph

@@ -1,0 +1,4 @@
+- type: language
+  id: RobotTalk
+  speech:
+    color: "#13a10e"

@@ -1,0 +1,5 @@
+- type: entity
+  id: MobXenomorphDrone
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph

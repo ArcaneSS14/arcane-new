@@ -1,0 +1,11 @@
+- type: entity
+  id: MobObserver
+  components:
+  - type: InteractionPopup
+    successChance: 1
+    interactSuccessString: petting-success-cat
+    interactFailureString: petting-failure-generic
+    interactSuccessSpawn: EffectHearts
+    interactSuccessSound:
+      path: /Audio/Animals/cat_meow.ogg
+

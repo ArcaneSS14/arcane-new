@@ -494,6 +494,7 @@
     name: seeds-potato-name
     packetPrototype: PotatoSeeds
     productPrototypes: [ FoodPotato ]
+    mutationPrototypes: [ PomatoPlants ] # Arcane
   - type: Plant
     lifespan: 30
     maturation: 10

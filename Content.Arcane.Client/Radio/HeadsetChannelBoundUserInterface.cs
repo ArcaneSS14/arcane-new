@@ -1,0 +1,43 @@
+using Content.Arcane.Shared.Radio;
+using JetBrains.Annotations;
+using Robust.Client.UserInterface;
+
+namespace Content.Arcane.Client.Radio;
+
+[UsedImplicitly]
+public sealed class HeadsetChannelBoundUserInterface : BoundUserInterface
+{
+    [ViewVariables]
+    private HeadsetChannelWindow? _window;
+
+    public HeadsetChannelBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
+    {
+    }
+
+    protected override void Open()
+    {
+        if (IsOpened)
+            return;
+
+        base.Open();
+        _window = this.CreateWindow<HeadsetChannelWindow>();
+        _window.ChannelMuteToggled += (frequency, muted) => SendMessage(new HeadsetChannelMuteMessage(frequency, muted));
+        SendMessage(new HeadsetChannelUiRequestMessage());
+    }
+
+    protected override void ReceiveMessage(BoundUserInterfaceMessage message)
+    {
+        base.ReceiveMessage(message);
+        if (message is not HeadsetChannelUiUpdateMessage update)
+            return;
+
+        _window?.UpdateState(update.Channels, update.MutedFrequencies);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        _window?.Close();
+        _window = null;
+    }
+}

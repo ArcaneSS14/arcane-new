@@ -1,0 +1,5 @@
+- type: entity
+  id: portableChemicalMixer
+  components:
+  - type: ChemMaster
+    pillDosageLimit: 50

@@ -1,0 +1,5 @@
+- type: entity
+  id: C4
+  components:
+  - type: GhostRole
+    banJob: GhostRoleSyndicate

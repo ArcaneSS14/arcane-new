@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: WardenWarden
+  name: job-name-alt-warden-1
+
+- type: jobAlternateTitle
+  id: WardenSecurityCommandant
+  name: job-name-alt-warden-2
+
+- type: jobAlternateTitle
+  id: WardenSecurityDutyOfficer
+  name: job-name-alt-warden-3

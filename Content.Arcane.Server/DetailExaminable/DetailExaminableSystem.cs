@@ -69,7 +69,8 @@ public sealed partial class DetailExaminableSystem : EntitySystem
             profile?.Gender ?? Robust.Shared.Enums.Gender.Epicene,
             target.Comp.Content,
             showNsfw ? target.Comp.Extended : target.Comp.Extended.WithoutNsfw(),
-            showNsfw);
+            showNsfw,
+            profile?.Customization.CustomSpeciesName ?? string.Empty);
 
         var eui = new DetailExaminableEui(state);
         _eui.OpenEui(eui, actor.PlayerSession);

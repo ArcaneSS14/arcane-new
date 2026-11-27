@@ -1,0 +1,91 @@
+- type: entity
+  id: MedkitOxygenFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: SyringeConvermol
+        - id: SalbutamolAutoInjector
+        - id: EmergencyMedipen
+        - id: PillCanisterDexalin
+        - id: SyringeConvermol
+          amount: 2
+        - id: SyringeInaprovaline
+        - id: PillCanisterIron
+
+- type: entity
+  id: MedkitFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: Gauze
+        - id: Brutepack
+        - id: Ointment
+        - id: PillCanisterTricordrazine
+        - id: EmergencyMedipen
+
+- type: entity
+  id: MedkitRadiationFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: SyringePhalanximine
+        - id: PillGenecide
+        - id: PillCanisterPotassiumIodide
+        - id: PillPentenicAcid
+        - id: MedicalPatchPrefilledFormaldehyde
+        - id: RadAutoInjector
+        - id: MedicalPatchPrefilledHyronalin
+          amount: 2
+
+- type: entity
+  id: MedkitToxinFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: PillAmmoniatedMercury
+        - id: PillBicaridineSmall
+        - id: PillCanisterMultiver
+        - id: ChemistryBottleIpecac
+        - id: SyringeHaloperidol
+        - id: SyringeEthylredoxrazine
+        - id: AntiPoisonMedipen
+        - id: PillCanisterDylovene
+
+- type: entity
+  id: MedkitCombatFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: Suture
+        - id: RegenerativeMeshClosed
+        - id: SyringeEphedrine
+        - id: SyringeSaline
+        - id: PillAntiBrute
+        - id: PillAntiBurn
+
+- type: entity
+  id: MedkitAdvancedFilled
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      storagebase: !type:AllSelector
+        children: !Clear
+        - id: Suture
+          amount: 2
+        - id: RegenerativeMeshClosed
+          amount: 2
+        - id: MedicalPatchPrefilledSynthflesh
+          amount: 3
+        - id: PillCanisterIron
+        - id: SyringeSaline
+        - id: AdvancedEmergencyMedipen

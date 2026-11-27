@@ -12,4 +12,5 @@ public static class ArcaneKeyFunctions
     public static readonly BoundKeyFunction PosingOffsetDown = "PosingOffsetDown";
     public static readonly BoundKeyFunction PosingRotateNegative = "PosingRotateNegative";
     public static readonly BoundKeyFunction PosingRotatePositive = "PosingRotatePositive";
+    public static readonly BoundKeyFunction OfferItem = "OfferItem";
 }

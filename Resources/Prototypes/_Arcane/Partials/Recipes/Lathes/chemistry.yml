@@ -1,0 +1,6 @@
+- type: latheRecipe
+  id: BluespaceBeaker
+  materials:
+    BSCrystal: 25
+    Silver: !Remove
+    Uranium: 50
