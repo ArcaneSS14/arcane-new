@@ -6,5 +6,9 @@
   dollPrototype: AppearanceSynth
   defaultSkinTone: "#ffffff"
   skinColoration: Hues
+  sexes:
+  - Unsexed
+  - Male
+  - Female
   defaultSoundsBySex: [ UnisexSilicon, UnisexSilicon, UnisexSilicon ]
   voices: [ UnisexSilicon ]

@@ -1,0 +1,8 @@
+- type: entity
+  id: PolymorphBloodCrawlJaunt
+  components:
+  - type: BloodCrawl
+    blood:
+    - FluorosulfuricAcidHumanoidXeno
+    - Slime
+    - Sap

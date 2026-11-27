@@ -205,11 +205,19 @@ namespace Content.Client.Administration.UI.Bwoink
         }
 
 
-        public void SelectChannel(NetUserId channel)
+        public bool SelectChannel(NetUserId channel) // Arcane-Edit: void > bool
         {
             if (!ChannelSelector.PlayerInfo.TryFirstOrDefault(
                 i => i.SessionId == channel, out var info))
-                return;
+                return false; // Arcane-Edit: return > return false
+
+            // Arcane-Start
+            if (_currentPlayer?.SessionId == channel)
+            {
+                SwitchToChannel(channel);
+                return true;
+            }
+            // Arcane-End
 
             // clear filter if we're trying to select a channel for a player that isn't currently filtered
             // i.e. through the message verb.
@@ -221,6 +229,7 @@ namespace Content.Client.Administration.UI.Bwoink
 
             ChannelSelector.PopulateList();
             ChannelSelector.PlayerListContainer.Select(data);
+            return true; // Arcane
         }
 
         public void UpdateButtons()
@@ -286,6 +295,7 @@ namespace Content.Client.Administration.UI.Bwoink
             {
                 var panel = AHelpHelper.EnsurePanel(ch.Value);
                 panel.Visible = true;
+                AHelpHelper.TryRequestHistory(ch.Value); // Arcane
             }
         }
 

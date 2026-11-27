@@ -8,7 +8,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 defaultWindowTitle: Space Station 14
-windowIconSet: /Textures/Logo/icon
-splashLogo: /Textures/Logo/logo.png
+# Arcane-Edit-Start: replace /Textures/Logo/icon and /Textures/Logo/logo.png
+windowIconSet: /Textures/_Arcane/Logo/icon-arcane
+splashLogo: /Textures/_Arcane/Logo/logo-arcane.png
+# Arcane-Edit-End
 
 # PJB PLEASE

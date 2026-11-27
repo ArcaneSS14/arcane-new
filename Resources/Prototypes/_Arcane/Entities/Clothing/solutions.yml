@@ -1,0 +1,10 @@
+# Reagents soaked into a piece of clothing (blood, puddles, spills). Stainable reads the "stain" solution.
+- type: entity
+  parent: Solution
+  id: SolutionClothingStain
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stain
+    solution:
+      maxVol: 5

@@ -44,6 +44,7 @@
   - RandomPrice
   - TemperatureDamage
   - TemperatureSpeed
+  - TTS # Arcane
   # accents
   - Accentless
   - BackwardsAccent

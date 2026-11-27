@@ -1,0 +1,110 @@
+// Arcane - gradient.
+// Roots and tips arrive in Oklab so the per-pixel blend stays perceptually even without per-pixel conversions.
+uniform highp vec3 rootsLab;
+uniform highp vec3 tipsLab;
+uniform lowp int gradientStyle;
+uniform highp float gradientOffset;
+uniform highp float frameWidth;
+uniform sampler2D displacementMap;
+uniform highp float displacementSize;
+uniform highp vec4 displacementUV;
+uniform lowp int applyDisplacement;
+
+varying highp vec2 displacementUVOut;
+
+// Atlas UV rects (min.xy, max.xy) of the layer's direction frames; anything else is drawn as south.
+uniform highp vec4 frameNorth;
+uniform highp vec4 frameEast;
+uniform highp vec4 frameWest;
+
+highp vec3 oklab_to_linear_srgb(highp vec3 c) {
+    highp float l_ = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+    highp float m_ = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+    highp float s_ = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+
+    highp float l = l_ * l_ * l_;
+    highp float m = m_ * m_ * m_;
+    highp float s = s_ * s_ * s_;
+
+    return vec3(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+    );
+}
+
+bool inFrame(highp vec4 frame) {
+    return UV.x >= frame.x && UV.x <= frame.z && UV.y >= frame.y && UV.y <= frame.w;
+}
+
+void vertex() {
+    displacementUVOut = mix(displacementUV.xy, displacementUV.zw, tCoord2);
+}
+
+void fragment() {
+    highp vec4 texColor;
+    if (applyDisplacement != 0) {
+        highp vec4 displacementSample = texture2D(displacementMap, displacementUVOut);
+        highp vec2 displacementValue = (displacementSample.xy - vec2(128.0 / 255.0)) / (1.0 - 128.0 / 255.0);
+        texColor = zTexture(UV + displacementValue * TEXTURE_PIXEL_SIZE * displacementSize * vec2(1.0, -1.0));
+        texColor.a *= displacementSample.a;
+    } else {
+        texColor = zTexture(UV);
+    }
+    if (texColor.a == 0.0) {
+        discard;
+    }
+
+    highp float lum = zGrayscale(texColor.rgb);
+    highp float smoothT = 0.0;
+
+    if (gradientStyle == 1) {
+        // Split: roots color is the character's right side, as seen on the left in the front view.
+        if (inFrame(frameEast)) {
+            smoothT = 0.0;
+        } else if (inFrame(frameWest)) {
+            smoothT = 1.0;
+        } else {
+            highp float side = inFrame(frameNorth) ? 1.0 - UV2.x : UV2.x;
+            // Feathered, strand-aware parting instead of a hard vertical cut.
+            highp float center = 0.5 + (gradientOffset - 0.5) * 0.25;
+            highp float strandWeave = (lum - 0.5) * 0.08;
+            smoothT = smoothstep(center - 0.08, center + 0.08, side + strandWeave);
+        }
+    } else if (gradientStyle == 2) {
+        // Underdye: shadowed lower strands get the accent. Depth spans the four sprite shades (~0.4-0.9 linear),
+        // and a per-column offset keeps the dye edge on strands instead of a straight cut.
+        highp float depth = clamp((0.95 - lum) / 0.55, 0.0, 1.0);
+        highp float lowness = clamp((0.95 - UV2.y) / 0.45, 0.0, 1.0);
+        highp float strand = fract(sin(floor(UV2.x * frameWidth) * 78.233) * 43758.5453);
+        highp float threshold = 0.4 + gradientOffset * 0.45;
+        smoothT = smoothstep(threshold - 0.05, threshold + 0.05, depth * 0.55 + lowness * 0.35 + strand * 0.2);
+    } else if (gradientStyle == 3) {
+        // Streaks: painted strands reach the accent at different heights and thicken toward the tips.
+        highp float column = floor(UV2.x * frameWidth);
+        highp float strand = 0.5 + 0.5 * sin(column * 1.9 + sin(column * 0.7) * 2.0);
+        highp float base = clamp((0.8 + gradientOffset * 0.3 - UV2.y) / 0.3, 0.0, 1.0);
+        smoothT = smoothstep(0.0, 1.0, clamp(base + (strand - 0.5) * 0.9 + (lum - 0.5) * 0.15, 0.0, 1.0));
+    } else {
+        // Ombre: vertical transition that follows the head curvature.
+        highp float dx = (UV2.x - 0.5) * 2.0;
+        highp float curvature = dx * dx * 0.08;
+        highp float shift = (gradientOffset - 0.5) * 0.35;
+        highp float t = clamp((0.93 - shift - (UV2.y + curvature)) / 0.43, 0.0, 1.0);
+
+        highp float strandOffset = (lum - 0.5) * 0.12;
+        smoothT = smoothstep(0.0, 1.0, clamp(t + strandOffset, 0.0, 1.0));
+    }
+
+    highp vec3 gradientColor = clamp(oklab_to_linear_srgb(mix(rootsLab, tipsLab, smoothT)), 0.0, 1.0);
+
+    highp float shade = lum;
+    // Lift the accent so it reads as the picked color instead of a darker one.
+    if (gradientStyle == 2) {
+        shade = mix(lum, 0.5 + lum * 0.5, smoothT);
+    } else if (gradientStyle == 3) {
+        shade = mix(lum, 0.5 + lum * 0.5, smoothT * 0.5);
+    }
+
+    COLOR = vec4(vec3(shade) * gradientColor, texColor.a);
+}

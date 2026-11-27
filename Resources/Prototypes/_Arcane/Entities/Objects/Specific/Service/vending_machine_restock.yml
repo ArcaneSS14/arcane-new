@@ -1,0 +1,16 @@
+- type: entity
+  parent: BaseVendingMachineRestock
+  id: VendingMachineLoveRestock
+  name: lovemat supply kit
+  description: A box with consumables to refill the vending machine.
+  components:
+  - type: VendingMachineRestock
+    canRestock:
+    - LoveMateInventory
+  - type: Sprite
+    layers:
+    - state: base
+    - state: green_bit
+      shader: unshaded
+    - sprite: _Arcane/Objects/Specific/Service/vending_machine_restock.rsi
+      state: refill_love

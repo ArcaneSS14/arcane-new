@@ -1,0 +1,5 @@
+- type: entity
+  id: MobBingle
+  components:
+  - type: GhostRole
+    banJob: GhostRoleBingle

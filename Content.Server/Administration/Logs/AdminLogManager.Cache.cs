@@ -51,7 +51,7 @@ public sealed partial class AdminLogManager
     private void CacheLog(AdminLog log)
     {
         var players = log.Players.Select(player => player.PlayerUserId).ToArray();
-        var record = new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players);
+        var record = new SharedAdminLog(log.Id, log.Type, log.Impact, log.Date, log.Message, players, log.RoundId); // Arcane-Edit: players > players, log.RoundId
 
         CacheLog(record);
     }
@@ -86,14 +86,6 @@ public sealed partial class AdminLogManager
 
         // TODO ADMIN LOGS a better heuristic than linq spaghetti
         var query = cache.AsEnumerable();
-
-        query = filter.DateOrder switch
-        {
-            DateOrder.Ascending => query,
-            DateOrder.Descending => query.Reverse(),
-            _ => throw new ArgumentOutOfRangeException(nameof(filter),
-                $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
-        };
 
         if (filter.Search != null)
         {
@@ -140,6 +132,34 @@ public sealed partial class AdminLogManager
         {
             query = query.Where(log => log.Players.Length == 0);
         }
+
+        // Arcane-Start
+        if (filter.Cursor is { } cursor)
+        {
+            query = filter.DateOrder switch
+            {
+                DateOrder.Ascending => query.Where(log =>
+                    log.Date > cursor.Date ||
+                    log.Date == cursor.Date && log.RoundId > cursor.RoundId ||
+                    log.Date == cursor.Date && log.RoundId == cursor.RoundId && log.Id > cursor.Id),
+                DateOrder.Descending => query.Where(log =>
+                    log.Date < cursor.Date ||
+                    log.Date == cursor.Date && log.RoundId < cursor.RoundId ||
+                    log.Date == cursor.Date && log.RoundId == cursor.RoundId && log.Id < cursor.Id),
+                _ => throw new ArgumentOutOfRangeException(nameof(filter))
+            };
+        }
+        // Arcane-End
+
+        query = filter.DateOrder switch
+        {
+            // Arcane-Edit-Start: order by date, round and log ID
+            DateOrder.Ascending => query.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id),
+            DateOrder.Descending => query.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id),
+            // Arcane-Edit-End
+            _ => throw new ArgumentOutOfRangeException(nameof(filter),
+                $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
+        };
 
         if (filter.LogsSent != 0)
         {

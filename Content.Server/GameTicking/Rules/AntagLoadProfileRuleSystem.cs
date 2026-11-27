@@ -30,7 +30,7 @@ public sealed partial class AntagLoadProfileRuleSystem : GameRuleSystem<AntagLoa
             return;
 
         var profile = args.Session != null
-            ? _prefs.GetPreferences(args.Session.UserId).SelectedCharacter as HumanoidCharacterProfile
+            ? _prefs.GetValidatedSelectedCharacter(args.Session) // Arcane-Edit: revalidate permissions at spawn
             : HumanoidCharacterProfile.RandomWithSpecies();
 
 

@@ -1,0 +1,5 @@
+- type: entity
+  id: MobArachnid
+  components:
+  - type: Damageable
+    damageModifierSet: Arachnid
