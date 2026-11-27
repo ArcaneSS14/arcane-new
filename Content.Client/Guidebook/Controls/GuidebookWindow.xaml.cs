@@ -312,12 +312,10 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
         var name = Loc.GetString(entry.Name);
         item.Label.Text = name;
 
-        // Arcane-Edit-Start
-        foreach (var child in GetSortedEntries(entry.Children))
+        foreach (var child in GetSortedEntries(entry.Children)) // Arcane-Edit: entry.Children > GetSortedEntries(entry.Children)
         {
-            AddEntry(child.Id, item, addedEntries);
+            AddEntry(child.Id, item, addedEntries); // Arcane-Edit: child > child.Id
         }
-        // Arcane-Edit-End
 
         return item;
     }
