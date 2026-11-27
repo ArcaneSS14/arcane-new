@@ -4,3 +4,9 @@
   sexes:
   - Male
   - Female
+  defaultSoundsBySex: !Clear
+  - UnisexArachnid
+  - FemaleArachnid
+  - UnisexArachnid
+  voices:
+  - FemaleArachnid

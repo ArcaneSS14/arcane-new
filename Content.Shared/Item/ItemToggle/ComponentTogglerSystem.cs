@@ -13,6 +13,7 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
     // <Trauma>
     [Dependency] private IGameTiming _timing = default!;
     // </Trauma>
+
     public override void Initialize()
     {
         base.Initialize();
@@ -45,20 +46,25 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
                 return;
 
             component.Target = target;
+            Dirty(uid, component); // Arcane
 
             EntityManager.RemoveComponents(target, component.DeactivateComponents); // Trauma
             EntityManager.AddComponents(target, component.Components);
         }
         else
         {
-            if (component.Target == null)
+            var target = component.Target; // Arcane
+            if (target == null || TerminatingOrDeleted(target.Value)) // Arcane-Edit: separate null and termination checks > combined target check
                 return;
 
-            if (TerminatingOrDeleted(component.Target.Value))
-                return;
-
-            EntityManager.RemoveComponents(component.Target.Value, component.RemoveComponents ?? component.Components);
-            EntityManager.AddComponents(component.Target.Value, component.DeactivateComponents); // Trauma
+            // Arcane-Edit-Start: use the saved target
+            EntityManager.RemoveComponents(target.Value, component.RemoveComponents ?? component.Components);
+            EntityManager.AddComponents(target.Value, component.DeactivateComponents);
+            // Arcane-Edit-End
+            // Arcane-Start
+            component.Target = null;
+            Dirty(uid, component);
+            // Arcane-End
         }
     }
 }

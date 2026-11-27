@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-4.0",
+    "copyright": "Made by theanemone (discord)",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "fish"
+        },
+        {
+            "name": "takoyaki"
+        }
+    ],
+    "source": "https://github.com/ArcaneSS14/arcane/tree/c9178d4483ca64f4a697ebc95056b9c377d307a0/Resources/Textures/_Arcane/Objects/Consumable/Food/bay_treats.rsi"
+}

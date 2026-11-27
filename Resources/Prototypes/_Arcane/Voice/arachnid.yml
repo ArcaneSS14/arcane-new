@@ -1,0 +1,9 @@
+- type: emoteSounds
+  parent: UnisexArachnid
+  id: FemaleArachnid
+  voiceSelectorName: humanoid-profile-editor-voice-feminine
+  sounds:
+    Gasp:
+      collection: FemaleGasp
+    Moan:
+      collection: MoansFemale

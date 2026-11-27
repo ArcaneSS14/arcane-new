@@ -9,12 +9,14 @@ using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+using Content.Shared.CombatMode; // Arcane
 
 namespace Content.Goobstation.Shared.Weapons.CounterattackWeapon;
 
 public sealed partial class CounterattackWeaponSystem : EntitySystem
 {
     [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedCombatModeSystem _combat = default!; // Arcane
     [Dependency] private UseDelaySystem _delay = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedMeleeWeaponSystem _melee = default!;
@@ -49,8 +51,14 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
 
         // Arcane-Edit-Start: Keep the guard until nested attack events and switching have finished.
         _counterattacking.Add(ent.Owner);
+        // Arcane-Edit-End
+        var wasInCombat = _combat.IsInCombatMode(ent.Owner); // Arcane
+        // Arcane-Edit-Start
         try
         {
+            // Arcane-Edit-End
+            _combat.SetInCombatMode(ent.Owner, true); // Arcane
+            // Arcane-Edit-Start
             meleeComp.NextAttack = TimeSpan.Zero;
             _melee.AttemptLightAttack(ent, meleeWeapon, meleeComp, args.User);
             meleeComp.NextAttack = TimeSpan.Zero;
@@ -60,6 +68,9 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
         }
         finally
         {
+            // Arcane-Edit-End
+            _combat.SetInCombatMode(ent.Owner, wasInCombat); // Arcane
+            // Arcane-Edit-Start
             _counterattacking.Remove(ent.Owner);
         }
         // Arcane-Edit-End

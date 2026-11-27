@@ -109,10 +109,11 @@ public sealed partial class WantedListUiFragment : BoxContainer
         ));
 
         // Set reason
-        WantedReason.SetMessage(GetLoc(
-            "wanted-list-reason-label",
-            ("reason", record.Reason ?? Loc.GetString("wanted-list-unknown-reason-label"))
-        ));
+        // Arcane-Edit-Start
+        WantedReason.Visible = record.Reason != null;
+        if (record.Reason is { } reason)
+            WantedReason.SetMessage(GetLoc("wanted-list-reason-label", ("reason", reason)));
+        // Arcane-Edit-End
 
         // Set status
         PersonState.SetMessage(GetLoc(

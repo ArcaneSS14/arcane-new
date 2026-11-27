@@ -1,0 +1,51 @@
+# Arcane #587 by Зюзя and UmbiMax: interns use their selected appearance and receive their CentComm equipment.
+- type: entity
+  id: LeadIntern
+  components:
+  - !Remove type: Loadout
+  - type: CloningAppearance
+    startingGear: LeadInternGear
+    components:
+    - type: AutoImplant
+      implants:
+      - MindShieldImplant
+    - type: AntagImmune
+
+- type: entity
+  id: NTIntern
+  components:
+  - !Remove type: Loadout
+  - type: CloningAppearance
+    startingGear: NTInternGear
+    components:
+    - type: AutoImplant
+      implants:
+      - MindShieldImplant
+    - type: AntagImmune
+
+- type: entity
+  id: NTNerdIntern
+  components:
+  - !Remove type: Loadout
+  - type: CloningAppearance
+    startingGear: NTNerdInternGear
+    components:
+    - type: AutoImplant
+      implants:
+      - MindShieldImplant
+    - type: AntagImmune
+
+- type: startingGear
+  id: LeadInternGear
+  equipment:
+    id: NTInternIDCard
+
+- type: startingGear
+  id: NTInternGear
+  equipment:
+    id: NTInternIDCard
+
+- type: startingGear
+  id: NTNerdInternGear
+  equipment:
+    id: NTInternIDCard

@@ -1,0 +1,362 @@
+# Ported from Arcane #620 by RabbitBat and Bun; sprite credits are in each RSI.
+
+- type: entity
+  parent: ClothingEyesBase
+  id: ClothingEyesGlassesTeacher
+  name: teacher's glasses
+  description: Strict glasses for a strict teacher.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Eyes/Glasses/teacher_glasses.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Eyes/Glasses/teacher_glasses.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatPolicemanHat
+  name: policeman hat
+  description: A strict police cap. Respect the law!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/policeman_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/policeman_hat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatNurseCap
+  name: nurse cap
+  description: A white cap with a red cross. For real angels of mercy.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/nurse_cap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/nurse_cap.rsi
+
+- type: entity
+  abstract: true
+  parent: ClothingUniformFoldableBase
+  id: ClothingUniformFoldableBaseOpened
+  components:
+  - type: Foldable
+    folded: true
+
+- type: entity
+  parent: [ClothingUniformBase, ClothingUniformFoldableBase]
+  id: ClothingUniformJumpsuitTeacher
+  name: teacher's uniform
+  description: A strict teacher's uniform. Can be unbuttoned.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/teacher_suit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/teacher_suit.rsi
+  - type: FoldableClothing
+    foldedEquippedPrefix: open
+
+- type: entity
+  parent: [ClothingUniformFoldableBaseOpened, ClothingUniformJumpsuitTeacher]
+  id: ClothingUniformJumpsuitTeacherOpen
+  name: teacher's uniform (open)
+  description: A strict teacher's uniform, unbuttoned.
+  components:
+  - type: Clothing
+    equippedPrefix: open
+  - type: FoldableClothing
+    foldedEquippedPrefix: open
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpskirtTeacher
+  name: teacher's jumpskirt
+  description: A strict teacher's jumpskirt.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/teacher_dress.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/teacher_dress.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitNurse
+  name: nurse's dress
+  description: A neat nurse's dress. For real angels of mercy.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/sexynurse_dress.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/sexynurse_dress.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitPupil
+  name: pupil's dress
+  description: A neat school uniform for a diligent pupil.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/pupil_dress.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/pupil_dress.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitRabbit
+  name: rabbit suit
+  description: A fluffy rabbit costume. Hop hop!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/rabbit_suit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/rabbit_suit.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpskirtSexyMaid
+  name: sexy maid dress
+  description: A bold and revealing maid dress. Someone will be punished tonight...
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/sexymaid_dress.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/sexymaid_dress.rsi
+
+- type: entity
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitPoliceman
+  name: policeman's suit
+  description: A strict police uniform. Stop, you scum!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Innerclothing/policeman_suit.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Innerclothing/policeman_suit.rsi
+
+- type: entity
+  parent: ClothingMaskBase
+  id: ClothingMaskRabbit
+  name: rabbit mask
+  description: A cute rabbit mask with long ears.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Mask/rabbit_mask.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Mask/rabbit_mask.rsi
+
+- type: entity
+  parent: ClothingShoesBase
+  id: ClothingShoesPupil
+  name: pupil shoes
+  description: Classic school shoes.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Shoes/pupil_shoes.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Shoes/pupil_shoes.rsi
+
+- type: entity
+  parent: ClothingSocksBase
+  id: ClothingSocksPupil
+  name: pupil socks
+  description: Neat white socks for a diligent pupil.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Socks/pupil_socks.rsi
+
+- type: entity
+  parent: ClothingSocksBase
+  id: ClothingSocksRabbitTights
+  name: rabbit tights
+  description: White tights with a fluffy tail.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Socks/rabbit_tights.rsi
+
+- type: entity
+  parent: BaseItem
+  id: TeacherRuler
+  name: teacher's ruler
+  description: A wooden ruler. It can be used for discipline... or other purposes.
+  components:
+  - type: Sprite
+    sprite: _Arcane/ERP/Toys/Whip/teacher_ruler.rsi
+    state: icon
+  - type: Item
+    size: Small
+    sprite: _Arcane/ERP/Toys/Whip/teacher_ruler.rsi
+  - type: StaminaDamageOnHit
+    damage: 8
+  - type: MeleeWeapon
+    canWideSwing: false
+    soundHit:
+      path: /Audio/_Arcane/Items/other/Handcuffs/blow-whip.ogg
+    damage:
+      types:
+        Blunt: 0
+
+- type: entity
+  parent: BaseItem
+  id: MaidPanicle
+  name: maid's panicle
+  description: A soft panicle for cleaning. Or for punishment.
+  components:
+  - type: Sprite
+    sprite: _Arcane/ERP/Toys/Whip/maid_panicle.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: _Arcane/ERP/Toys/Whip/maid_panicle.rsi
+  - type: StaminaDamageOnHit
+    damage: 8
+  - type: MeleeWeapon
+    canWideSwing: false
+    soundHit:
+      path: /Audio/_Arcane/Items/other/Handcuffs/blow-whip.ogg
+    damage:
+      types:
+        Blunt: 0
+
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseLovemateKit
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policeman_kit.rsi
+    state: icon
+  - type: Item
+    size: Small
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policeman_kit.rsi
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitOfficer
+  name: officer kit
+  description: A complete officer costume set. Includes uniform, policeman hat, and soft handcuffs.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policeman_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policeman_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpsuitPoliceman
+    - id: ClothingHeadHatPolicemanHat
+    - id: SoftHandcuffs
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitOfficerDress
+  name: officer dress kit
+  description: A complete officer dress costume set. Includes dress, officer cap, and soft handcuffs.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policewoman_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/policewoman_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingJumpsuitOfficerDress
+    - id: ClothingHatOficerCapLovemate
+    - id: SoftHandcuffs
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitTeacher
+  name: teacher kit
+  description: A complete teacher costume set. Includes uniform, glasses, and ruler.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/teacher_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/teacher_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpsuitTeacher
+    - id: ClothingEyesGlassesTeacher
+    - id: TeacherRuler
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitTeacherDress
+  name: teacher dress kit
+  description: A complete teacher dress costume set. Includes dress, glasses, and ruler.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexyteacher_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexyteacher_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpskirtTeacher
+    - id: ClothingEyesGlassesTeacher
+    - id: TeacherRuler
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitNurse
+  name: nurse kit
+  description: A complete nurse costume set. Includes uniform and cap.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexynurse_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexynurse_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpsuitNurse
+    - id: ClothingHeadHatNurseCap
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitPupil
+  name: pupil kit
+  description: A complete pupil costume set. Includes uniform, shoes, and socks.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/pupil_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/pupil_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpsuitPupil
+    - id: ClothingShoesPupil
+    - id: ClothingSocksPupil
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitRabbit
+  name: rabbit kit
+  description: A complete rabbit costume set. Includes uniform, mask, and tights.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/rabbit_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/rabbit_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpsuitRabbit
+    - id: ClothingMaskRabbit
+    - id: ClothingSocksRabbitTights
+
+- type: entity
+  parent: BaseLovemateKit
+  id: KitSexyMaid
+  name: sexy maid kit
+  description: A complete sexy maid costume set. Includes dress and panicle.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexymaid_kit.rsi
+    state: icon
+  - type: Item
+    sprite: _Arcane/Objects/Specific/Lootboxes/Clothing/sexymaid_kit.rsi
+  - type: SpawnItemsOnUse
+    items:
+    - id: ClothingUniformJumpskirtSexyMaid
+    - id: MaidPanicle
