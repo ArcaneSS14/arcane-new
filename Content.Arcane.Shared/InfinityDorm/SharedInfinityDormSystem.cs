@@ -137,10 +137,14 @@ public sealed partial class SharedInfinityDormSystem : EntitySystem
             return;
 
         var isDorm = HasComp<InfinityDormComponent>(_transform.GetParentUid(args.Entity));
-        if (isDorm && HasComp<InfinityDormVisitorComponent>(args.Entity))
+        if (isDorm)
+        {
+            // Anyone entering the room is a visitor, including arrivals outside the teleporter.
+            EnsureComp<InfinityDormVisitorComponent>(args.Entity);
             return;
+        }
 
-        if (!HasInfiniteDormItem(args.Entity) && !isDorm)
+        if (!HasInfiniteDormItem(args.Entity))
             return;
 
         _gibbing.Gib(args.Entity);
