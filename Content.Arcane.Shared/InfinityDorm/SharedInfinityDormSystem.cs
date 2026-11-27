@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using Content.Arcane.Common.Salvage;
+using Content.Shared.Body;
 using Content.Shared.Gibbing;
 using Content.Shared.Chat;
 using Content.Shared.DoAfter;
@@ -126,6 +127,10 @@ public sealed partial class SharedInfinityDormSystem : EntitySystem
             return;
 
         if (HasComp<GhostComponent>(args.Entity))
+            return;
+
+        // The old GibBody only affected bodies; Gib also destroys ordinary items.
+        if (!HasComp<BodyComponent>(args.Entity))
             return;
 
         if (!HasComp<MapGridComponent>(_transform.GetParentUid(args.Entity)))
