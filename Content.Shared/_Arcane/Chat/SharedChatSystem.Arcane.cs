@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.Chat;
 
 public abstract partial class SharedChatSystem
@@ -12,3 +13,4 @@ public abstract partial class SharedChatSystem
         SendEntityEmote(source, action, range, null, _language.GetLanguage(source), hideLog: hideLog, checkEmote: false);
     }
 }
+// Arcane-End
