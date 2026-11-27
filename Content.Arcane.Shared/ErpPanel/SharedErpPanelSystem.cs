@@ -93,7 +93,7 @@ public sealed partial class SharedErpPanelSystem : EntitySystem
 
     private void OnBoundUIClosed(Entity<ErpPanelOwnerComponent> entity, ref BoundUIClosedEvent args)
     {
-        if (args.UiKey is not ErpPanelKey.Key)
+        if (args.UiKey is not ErpPanelKey.Key || args.Actor != entity.Owner)
             return;
 
         entity.Comp.Target = null;

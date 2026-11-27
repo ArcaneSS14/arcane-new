@@ -50,14 +50,21 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         if (!Resolve(ent, ref ent.Comp))
             return;
 
-        if (!TryComp<OfferItemComponent>(ent.Comp.Target, out var offerItem))
+        if (ent.Comp.Target is not { } source || !TryComp<OfferItemComponent>(source, out var offerItem))
+        {
+            UnOffer(ent.Owner, ent.Comp);
             return;
+        }
 
-        if (offerItem.Hand is null)
+        if (!ent.Comp.IsInReceiveMode || offerItem.Target != ent.Owner ||
+            offerItem.Hand is not { } offeredHand || offerItem.Item is not { } offeredItem ||
+            !TryComp<HandsComponent>(source, out var sourceHands) ||
+            _hands.GetHeldItem((source, sourceHands), offeredHand) != offeredItem ||
+            !_transform.InRange(source, ent.Owner, offerItem.MaxOfferDistance))
+        {
+            UnOffer(source, offerItem);
             return;
-
-        if (ent.Comp.Target is null)
-            return;
+        }
 
         if (!TryComp<HandsComponent>(ent, out var hands))
             return;
@@ -95,6 +102,14 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         if (args.User == uid || component.IsInReceiveMode || !offerItem.IsInOfferMode || offerItem.IsInReceiveMode && offerItem.Target != uid)
             return;
 
+        if (offerItem.Hand is not { } hand || offerItem.Item != args.Used ||
+            !TryComp<HandsComponent>(args.User, out var hands) ||
+            _hands.GetHeldItem((args.User, hands), hand) != args.Used)
+        {
+            UnOffer(args.User, offerItem);
+            return;
+        }
+
         component.IsInReceiveMode = true;
         component.Target = args.User;
 
@@ -117,11 +132,10 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
 
     private void OnMove(EntityUid uid, OfferItemComponent component, MoveEvent args)
     {
-        if (component.Target is null ||
-            _transform.InRange(args.NewPosition,
-                Transform(component.Target.Value).Coordinates,
-                component.MaxOfferDistance)
-            )
+        if (component.Target is not { } target)
+            return;
+
+        if (Exists(target) && _transform.InRange(args.NewPosition, Transform(target).Coordinates, component.MaxOfferDistance))
             return;
 
         UnOffer(uid, component);
@@ -132,8 +146,6 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
     /// </summary>
     protected void UnOffer(EntityUid uid, OfferItemComponent component)
     {
-        if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHandId is null)
-            return;
         if (component.Target is not null && component.Target.Value.Valid && Exists(component.Target.Value))
         {
             if (TryComp<OfferItemComponent>(component.Target.Value, out var offerItem))
@@ -198,6 +210,8 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         if (offerItem is null && !TryComp(component.Target.Value, out offerItem))
             return;
 
+        var source = component.Target.Value;
+
         if (!TryComp<HandsComponent>(uid, out var hands) || hands.ActiveHandId is null)
             return;
 
@@ -221,6 +235,8 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         offerItem.Item = null;
         offerItem.Hand = null;
         component.IsInReceiveMode = false;
+
+        Dirty(source, offerItem);
 
         if (uid.Valid && Exists(uid))
         {

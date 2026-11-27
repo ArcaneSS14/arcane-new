@@ -123,6 +123,20 @@ public sealed class ErpPanelAuthorizationTest : InteractionTest
         });
     }
 
+    [Test]
+    public async Task AnotherActorClosingDoesNotClearOwnersTarget()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            var other = OpenPanel();
+            var close = new BoundUIClosedEvent(ErpPanelKey.Key, SPlayer, other);
+            SEntMan.EventBus.RaiseLocalEvent(SPlayer, close);
+            Assert.That(SEntMan.GetComponent<ErpPanelOwnerComponent>(SPlayer).Target, Is.EqualTo(other));
+            SEntMan.System<SharedUserInterfaceSystem>().CloseUi(SPlayer, ErpPanelKey.Key, SPlayer);
+            Assert.That(SEntMan.GetComponent<ErpPanelOwnerComponent>(SPlayer).Target, Is.Null);
+        });
+    }
+
     private EntityUid OpenPanel()
     {
         var target = SEntMan.SpawnAttachedTo("MobHuman", MapData.GridCoords.Offset(new Vector2(0.5f, 0.5f)));

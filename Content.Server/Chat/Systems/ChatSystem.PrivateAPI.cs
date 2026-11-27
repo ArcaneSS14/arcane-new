@@ -220,7 +220,7 @@ public sealed partial class ChatSystem
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, replayWrap, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
         // </Trauma>
 
-        var ev = new EntitySpokeEvent(source, message, channel, false, language); // Trauma - changed second null to false, added language
+        var ev = new EntitySpokeEvent(source, message, channel, true, language); // Arcane-Edit: false > true for whispers
         RaiseLocalEvent(source, ev, true);
         if (!hideLog)
             if (originalMessage == message)

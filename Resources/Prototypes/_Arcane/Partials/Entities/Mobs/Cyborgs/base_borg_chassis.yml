@@ -1,6 +1,7 @@
 - type: entity
   id: BaseBorgChassisNotIonStormable
   components:
+  - type: SiliconStanding
   - type: LanguageSpeaker
     speaks:
     - Dwarvish
