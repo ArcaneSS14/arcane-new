@@ -1408,9 +1408,11 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnName("hair_gradient_enabled");
                     // Arcane-End
 
+                    // Arcane-Start
                     b.Property<int>("ErpPreference")
                         .HasColumnType("integer")
-                        .HasColumnName("erp_preference"); // Arcane
+                        .HasColumnName("erp_preference");
+                    // Arcane-End
 
                     b.Property<string>("TtsVoice")
                         .IsRequired()
