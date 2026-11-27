@@ -62,15 +62,17 @@ public sealed partial class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeS
             }
             // </Trauma>
             _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.Body, prototype.SpriteBodyState);
-            _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.LightStatus, subtypePrototype.Visuals.ToggleLightState ?? prototype.SpriteToggleLightState); // Arcane-Edit: subtype override
+            _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.LightStatus, subtypePrototype.Visuals.ToggleLightState ?? prototype.SpriteToggleLightState); // Arcane-Edit: prototype.SpriteToggleLightState > subtype override or prototype
         }
 
         if (TryComp(entity, out BorgChassisComponent? chassis))
         {
             _borgSystem.SetMindStates(
                 (entity.Owner, chassis),
-                subtypePrototype.Visuals.HasMindState ?? prototype.SpriteHasMindState, // Arcane-Edit: subtype override
-                subtypePrototype.Visuals.NoMindState ?? prototype.SpriteNoMindState); // Arcane-Edit: subtype override
+                // Arcane-Edit-Start: use subtype overrides when present
+                subtypePrototype.Visuals.HasMindState ?? prototype.SpriteHasMindState,
+                subtypePrototype.Visuals.NoMindState ?? prototype.SpriteNoMindState);
+                // Arcane-Edit-End
 
             if (TryComp(entity, out AppearanceComponent? appearance))
             {
@@ -80,7 +82,8 @@ public sealed partial class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeS
         }
 
         base.UpdateEntityAppearance(entity, prototype, subtypePrototype); // Goob - add subtype
-        var arcaneVisualsUpdated = new Content.Arcane.Common.SiliconStanding.BorgVisualsUpdatedEvent(); // Arcane-Start: restore resting visuals after a subtype change
+        // Arcane-Start: restore resting visuals after a subtype change
+        var arcaneVisualsUpdated = new Content.Arcane.Common.SiliconStanding.BorgVisualsUpdatedEvent();
         RaiseLocalEvent(entity, ref arcaneVisualsUpdated);
         // Arcane-End
     }

@@ -1,4 +1,3 @@
-// Arcane-Start: allow supported borg subtypes to rest
 using Content.Arcane.Common.SiliconStanding;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Actions;
@@ -105,4 +104,3 @@ public sealed partial class SharedSiliconStandingSystem : EntitySystem
         RaiseLocalEvent(ent.Owner, ref ev);
     }
 }
-// Arcane-End

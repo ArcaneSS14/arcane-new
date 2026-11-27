@@ -19,6 +19,7 @@ namespace Content.Arcane.Client.Invisibility;
 public sealed partial class InvisibilityVisualSystem : EntitySystem
 {
     private static readonly ProtoId<ShaderPrototype> ShaderPrototype = "ArcaneInvisibility";
+    private static readonly HumanoidVisualLayers[] HumanoidLayers = Enum.GetValues<HumanoidVisualLayers>();
 
     [Dependency] private BodySystem _body = default!;
     [Dependency] private HairGradientSystem _hairGradient = default!;
@@ -84,7 +85,7 @@ public sealed partial class InvisibilityVisualSystem : EntitySystem
     /// </summary>
     private IEnumerable<int> BodyLayers(Entity<SpriteComponent> ent)
     {
-        foreach (var layer in Enum.GetValues<HumanoidVisualLayers>())
+        foreach (var layer in HumanoidLayers)
         {
             if (_sprite.LayerMapTryGet(ent.AsNullable(), layer, out var index, false))
                 yield return index;

@@ -1,4 +1,3 @@
-// Arcane-Start: render supported borg subtypes resting
 using Content.Arcane.Common.SiliconStanding;
 using Content.Arcane.Shared.SiliconStanding;
 using Content.Shared.Mobs;
@@ -58,4 +57,3 @@ public sealed partial class SiliconRestingVisualSystem : EntitySystem
         }
     }
 }
-// Arcane-End
