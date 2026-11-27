@@ -25,21 +25,13 @@ public sealed partial class OfferItemSystem : SharedOfferItemSystem
         var query = EntityQueryEnumerator<OfferItemComponent, HandsComponent>();
         while (query.MoveNext(out var uid, out var offerItem, out var hands))
         {
-            if (_hands.GetActiveHand(uid) == null)
-                continue;
-
             // TODO implement a normal fix. More info on this:
             // https://github.com/space-syndicate/space-station-14-next/blob/27f6125c828b5ad051f67a5f557bf67bd1d3c2be/Content.Server/_CorvaxNext/OfferItem/OfferItemSystem.cs#L31
-            if (offerItem.Hand is not null && _hands.GetHeldItem((uid, hands), offerItem.Hand) == null)
+            if (offerItem.Hand is not null &&
+                (offerItem.Item is null || _hands.GetHeldItem((uid, hands), offerItem.Hand) != offerItem.Item))
             {
-                if (offerItem.Target is not null)
-                {
-                    UnReceive(offerItem.Target.Value, offerItem: offerItem);
-                    offerItem.IsInOfferMode = false;
-                    Dirty(uid, offerItem);
-                }
-                else
-                    UnOffer(uid, offerItem);
+                UnOffer(uid, offerItem);
+                continue;
             }
 
             if (!offerItem.IsInReceiveMode)

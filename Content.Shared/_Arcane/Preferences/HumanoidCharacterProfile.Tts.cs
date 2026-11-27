@@ -1,3 +1,4 @@
+// Arcane-Start: character TTS preferences
 using System.Linq;
 using Content.Shared.Humanoid;
 using Content.Shared.TTS;
@@ -54,10 +55,13 @@ public sealed partial class HumanoidCharacterProfile
     }
 
     /// <summary>
-    /// The voice if it exists, otherwise the default voice of the sex.
+    /// The voice if available in character setup, otherwise the default voice of the sex.
     /// </summary>
     private ProtoId<TTSVoicePrototype> ValidatedTtsVoice(IPrototypeManager prototypes, Sex sex)
     {
-        return prototypes.HasIndex(TtsVoice) ? TtsVoice : DefaultSexTtsVoice.GetValueOrDefault(sex, DefaultTtsVoice);
+        return prototypes.TryIndex(TtsVoice, out var voice) && voice.RoundStart
+            ? TtsVoice
+            : DefaultSexTtsVoice.GetValueOrDefault(sex, DefaultTtsVoice);
     }
 }
+// Arcane-End
