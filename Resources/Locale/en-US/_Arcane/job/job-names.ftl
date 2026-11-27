@@ -1,4 +1,5 @@
 job-name-admiral = Admiral NanoTrasen
+job-title-nt-intern = CentComm Intern
 job-description-admiral = The steel fist of Nanotrasen. Break the unworthy, punish the traitors, turn chaos to ash. Your power is limitless. Your word is a death sentence.
 JobCentralCommandAdmiral = { job-name-admiral }
 
