@@ -53,16 +53,18 @@ public sealed partial class ComponentTogglerSystem : EntitySystem
         }
         else
         {
-            // Arcane-Edit-Start
-            var target = component.Target;
-            if (target == null || TerminatingOrDeleted(target.Value))
+            var target = component.Target; // Arcane
+            if (target == null || TerminatingOrDeleted(target.Value)) // Arcane-Edit: separate null and termination checks > combined target check
                 return;
 
+            // Arcane-Edit-Start: use the saved target
             EntityManager.RemoveComponents(target.Value, component.RemoveComponents ?? component.Components);
             EntityManager.AddComponents(target.Value, component.DeactivateComponents);
+            // Arcane-Edit-End
+            // Arcane-Start
             component.Target = null;
             Dirty(uid, component);
-            // Arcane-Edit-End
+            // Arcane-End
         }
     }
 }

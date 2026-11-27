@@ -132,8 +132,8 @@ namespace Content.Server.PDA
             // Arcane-Edit-Start
             if (args.Container.ID != pda.IdSlot.ID && args.Container.ID != pda.PenSlot.ID &&
                 args.Container.ID != pda.PaiSlot.ID && args.Container.ID != pda.PaperSlot?.ID)
-                return;
             // Arcane-Edit-End
+                return;
 
             // TODO: This is super cursed just use compstates please.
             if (MetaData(uid).EntityLifeStage >= EntityLifeStage.Terminating)

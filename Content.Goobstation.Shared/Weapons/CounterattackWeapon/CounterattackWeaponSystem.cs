@@ -51,10 +51,14 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
 
         // Arcane-Edit-Start: Keep the guard until nested attack events and switching have finished.
         _counterattacking.Add(ent.Owner);
+        // Arcane-Edit-End
         var wasInCombat = _combat.IsInCombatMode(ent.Owner); // Arcane
+        // Arcane-Edit-Start
         try
         {
+            // Arcane-Edit-End
             _combat.SetInCombatMode(ent.Owner, true); // Arcane
+            // Arcane-Edit-Start
             meleeComp.NextAttack = TimeSpan.Zero;
             _melee.AttemptLightAttack(ent, meleeWeapon, meleeComp, args.User);
             meleeComp.NextAttack = TimeSpan.Zero;
@@ -64,7 +68,9 @@ public sealed partial class CounterattackWeaponSystem : EntitySystem
         }
         finally
         {
+            // Arcane-Edit-End
             _combat.SetInCombatMode(ent.Owner, wasInCombat); // Arcane
+            // Arcane-Edit-Start
             _counterattacking.Remove(ent.Owner);
         }
         // Arcane-Edit-End
