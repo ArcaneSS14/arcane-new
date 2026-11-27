@@ -517,8 +517,10 @@ public sealed partial class GhostRoleSystem : EntitySystem
         antags = [];
         jobs = [];
 
-        if (roleEnt.Comp.BanJob is { } banJob) // Arcane
-            jobs.Add(banJob); // Arcane
+        // Arcane-Start
+        if (roleEnt.Comp.BanJob is { } banJob)
+            jobs.Add(banJob);
+        // Arcane-End
 
         // If there is a mind already, check its mind roles.
         // Not sure if this can ever actually happen.
