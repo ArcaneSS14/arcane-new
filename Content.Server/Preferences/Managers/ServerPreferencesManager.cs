@@ -508,6 +508,13 @@ namespace Content.Server.Preferences.Managers
         /// <summary>
         /// Retrieves preferences for the given username from storage.
         /// </summary>
+        // Arcane-Start: validate current permissions without modifying the saved selection
+        public HumanoidCharacterProfile GetValidatedSelectedCharacter(ICommonSession session)
+        {
+            return GetPreferences(session.UserId).SelectedCharacter.Validated(session, _dependencies, SponsorPrototypes.Get(session, _dependencies));
+        }
+        // Arcane-End
+
         public PlayerPreferences GetPreferences(NetUserId userId)
         {
             var prefs = _cachedPlayerPrefs[userId].Prefs;
