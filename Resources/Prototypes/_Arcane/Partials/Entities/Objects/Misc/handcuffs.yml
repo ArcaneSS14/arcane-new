@@ -1,0 +1,17 @@
+- type: entity
+  id: Zipties
+  components:
+  - type: UseDelay
+    delay: 15
+
+- type: entity
+  id: Cablecuffs
+  components:
+  - type: UseDelay
+    delay: 15
+
+- type: entity
+  id: Handcuffs
+  components:
+  - type: UseDelay
+    delay: 30

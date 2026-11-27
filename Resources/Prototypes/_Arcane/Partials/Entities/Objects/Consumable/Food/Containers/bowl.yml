@@ -1,0 +1,6 @@
+- type: entity
+  id: FoodBowlBig
+  components:
+  - type: Tag
+    tags:
+    - Dishware

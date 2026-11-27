@@ -1,0 +1,5 @@
+- type: entity
+  id: GasTankBase
+  components:
+  - type: Explosive
+    maxIntensity: 8

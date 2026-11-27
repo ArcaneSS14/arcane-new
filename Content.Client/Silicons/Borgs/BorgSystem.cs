@@ -91,6 +91,10 @@ public sealed partial class BorgSystem : SharedBorgSystem
 
         _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light, ent.Comp1.BrainEntity != null || hasPlayer);
         _sprite.LayerSetRsiState((ent.Owner, ent.Comp3), BorgVisualLayers.Light, hasPlayer ? ent.Comp1.HasMindState : ent.Comp1.NoMindState);
+        // Arcane-Start: keep resting visuals after a light update
+        var arcaneVisualsUpdated = new Content.Arcane.Common.SiliconStanding.BorgVisualsUpdatedEvent();
+        RaiseLocalEvent(ent.Owner, ref arcaneVisualsUpdated);
+        // Arcane-End
     }
 
     private void OnMMIAppearanceChanged(EntityUid uid, MMIComponent component, ref AppearanceChangeEvent args)

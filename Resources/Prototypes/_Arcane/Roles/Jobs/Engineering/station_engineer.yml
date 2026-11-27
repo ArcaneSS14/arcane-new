@@ -1,0 +1,19 @@
+- type: jobAlternateTitle
+  id: StationEngineerMechanic
+  name: job-name-alt-engineer-5
+
+- type: jobAlternateTitle
+  id: StationEngineerElectricalEngineer
+  name: job-name-alt-engineer-3
+
+- type: jobAlternateTitle
+  id: StationEngineerConstructionEngineer
+  name: job-name-alt-engineer-4
+
+- type: jobAlternateTitle
+  id: StationEngineerDesignEngineer
+  name: job-name-alt-engineer-2
+
+- type: jobAlternateTitle
+  id: StationEngineerMaintenanceSpecialist
+  name: job-name-alt-engineer-1

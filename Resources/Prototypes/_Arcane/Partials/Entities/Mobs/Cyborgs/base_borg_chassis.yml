@@ -1,0 +1,17 @@
+- type: entity
+  id: BaseBorgChassisNotIonStormable
+  components:
+  - type: SiliconStanding
+  - type: LanguageSpeaker
+    speaks:
+    - Dwarvish
+    - Karshan
+    understands:
+    - Dwarvish
+    - Karshan
+  - type: TTS
+    voice: Glados
+  - type: ActionGrant
+    actions:
+    - ActionTTSVoiceChange
+    - ActionOpenRadioChannels

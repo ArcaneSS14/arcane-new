@@ -1,0 +1,11 @@
+- type: entity
+  id: PackageDelivery
+  components:
+  - type: Delivery
+    baseSpesoReward: 1250
+
+- type: entity
+  id: LetterDelivery
+  components:
+  - type: Delivery
+    baseSpesoReward: 750

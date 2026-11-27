@@ -91,7 +91,10 @@ reagent-name-styptic-crystal-catalyst = styptic crystal catalyst
 reagent-desc-styptic-crystal-catalyst = Staple of any school chemistry lab, this usually non-reactive liquid can mix with blood and sodium to produce beautiful crystals with healing potential.
 
 reagent-name-synthflesh = synthflesh
-reagent-desc-synthflesh = Whilst it's just seemingly uninteresting ground up synthmeat, cells with great healing potential can be separated from it. Synthmeat can be created from a somewhat complex reaction with hydroxide byproduct.
+# Arcane-Edit-Start
+# reagent-desc-synthflesh = Whilst it's just seemingly uninteresting ground up synthmeat, cells with great healing potential can be separated from it. Synthmeat can be created from a somewhat complex reaction with hydroxide byproduct.
+reagent-desc-synthflesh = Regenerative biomass that instantly heals wounds on contact. Leaves a toxic residue proportional to the amount used. Effective even on dead tissue.
+# Arcane-Edit-End
 
 reagent-name-hercuri = hercuri
 reagent-desc-hercuri = Strong coolant, both serviceable for internal and external application, though care must be taken not to freeze the patients too much.

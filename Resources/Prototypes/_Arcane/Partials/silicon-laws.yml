@@ -1,0 +1,4 @@
+- type: weightedRandom
+  id: IonStormLawsets
+  weights:
+    ArtPlanetSupportLawset: 1

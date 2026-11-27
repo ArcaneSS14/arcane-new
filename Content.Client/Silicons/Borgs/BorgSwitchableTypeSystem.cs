@@ -62,15 +62,17 @@ public sealed partial class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeS
             }
             // </Trauma>
             _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.Body, prototype.SpriteBodyState);
-            _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.LightStatus, prototype.SpriteToggleLightState);
+            _sprite.LayerSetRsiState((entity, sprite), BorgVisualLayers.LightStatus, subtypePrototype.Visuals.ToggleLightState ?? prototype.SpriteToggleLightState); // Arcane-Edit: prototype.SpriteToggleLightState > subtype override or prototype
         }
 
         if (TryComp(entity, out BorgChassisComponent? chassis))
         {
             _borgSystem.SetMindStates(
                 (entity.Owner, chassis),
-                prototype.SpriteHasMindState,
-                prototype.SpriteNoMindState);
+                // Arcane-Edit-Start: use subtype overrides when present
+                subtypePrototype.Visuals.HasMindState ?? prototype.SpriteHasMindState,
+                subtypePrototype.Visuals.NoMindState ?? prototype.SpriteNoMindState);
+                // Arcane-Edit-End
 
             if (TryComp(entity, out AppearanceComponent? appearance))
             {
@@ -80,5 +82,9 @@ public sealed partial class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeS
         }
 
         base.UpdateEntityAppearance(entity, prototype, subtypePrototype); // Goob - add subtype
+        // Arcane-Start: restore resting visuals after a subtype change
+        var arcaneVisualsUpdated = new Content.Arcane.Common.SiliconStanding.BorgVisualsUpdatedEvent();
+        RaiseLocalEvent(entity, ref arcaneVisualsUpdated);
+        // Arcane-End
     }
 }

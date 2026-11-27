@@ -1,0 +1,13 @@
+- type: startingGear
+  id: ERTLeaderGearEVA
+  storage:
+    back: !Clear
+    - Binoculars
+    - HoloprojectorField
+    - PhoneInstrument
+    - PinpointerNuclear
+    - PowerCellHigh
+    - PowerCellHigh
+    - MedkitCombatFilled
+    - MedkitCombatStandardFilled
+    - TelescopicShield

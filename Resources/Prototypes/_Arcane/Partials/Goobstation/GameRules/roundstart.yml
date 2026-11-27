@@ -1,0 +1,5 @@
+- type: entity
+  id: Devil
+  components:
+  - type: GameRule
+    minPlayers: !Remove

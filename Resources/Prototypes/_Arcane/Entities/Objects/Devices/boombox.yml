@@ -1,0 +1,45 @@
+- type: entity
+  parent: BaseItem
+  id: HandledBoomBox
+  categories: [ HideSpawnMenu ]
+  name: boombox
+  description: Music speaker, portable jukebox.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Devices/boombox.rsi
+    layers:
+    - state: "off"
+      map: ["enum.JukeboxVisualLayers.Base"]
+  - type: Jukebox
+    onState: off # Indicates the presence of power, not playback
+    offState: off
+    selectState: select
+  - type: Item
+    sprite: _Arcane/Objects/Devices/boombox.rsi
+    size: Large
+    shape:
+    - 0,0,3,2
+  - type: Appearance
+  - type: ActivatableUI
+    key: enum.JukeboxUiKey.Key
+  - type: UserInterface
+    interfaces:
+        enum.JukeboxUiKey.Key:
+          type: JukeboxBoundUserInterface
+  - type: Damageable
+    damageModifierSet: Metallic
+  - type: Injurable
+    damageContainer: StructuralInorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 3

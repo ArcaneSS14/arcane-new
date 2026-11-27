@@ -1,0 +1,8 @@
+- type: reaction
+  id: Aranesp
+  products:
+    Aranesp: 3
+  reactants:
+    Desoxyephedrine: !Remove
+    Morphine:
+      amount: 1

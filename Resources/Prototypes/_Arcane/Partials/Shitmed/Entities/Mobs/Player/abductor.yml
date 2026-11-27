@@ -1,0 +1,9 @@
+- type: startingGear
+  id: LoneAbductorGear
+  equipment:
+    outerClothing: ClothingOuterCoatAbductorUnremoveable
+
+- type: startingGear
+  id: AbductorScientistGear
+  equipment:
+    outerClothing: ClothingOuterCoatAbductorUnremoveable

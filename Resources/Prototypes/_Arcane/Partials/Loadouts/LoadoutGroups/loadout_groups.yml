@@ -1,0 +1,24 @@
+- type: loadoutGroup
+  id: SurvivalClown
+  loadouts:
+  - EmergencySynth
+
+- type: loadoutGroup
+  id: SurvivalSyndicate
+  loadouts:
+  - EmergencySynth
+
+- type: loadoutGroup
+  id: Survival
+  loadouts:
+  - EmergencySynth
+
+- type: loadoutGroup
+  id: SurvivalSecurity
+  loadouts:
+  - EmergencySynth
+
+- type: loadoutGroup
+  id: SurvivalExtended
+  loadouts:
+  - EmergencySynth

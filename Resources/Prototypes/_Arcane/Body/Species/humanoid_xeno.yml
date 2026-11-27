@@ -1,0 +1,318 @@
+- type: markingsGroup
+  id: HumanoidXeno
+  onlyGroupWhitelisted: true
+  limits:
+    enum.HumanoidVisualLayers.Head:
+      limit: 1
+      required: true
+      default: [ HumanoidXenoHeadDrone ]
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: true
+      default: [ HumanoidXenoTailDrone ]
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LHand:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RHand:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LFoot:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RFoot:
+      limit: 1
+      required: false
+
+- type: entity
+  parent: BaseSpeciesAppearance
+  id: AppearanceHumanoidXeno
+  categories: [ HideSpawnMenu ]
+  name: xenomorph appearance
+  components:
+  - type: Inventory
+    speciesId: reptilian
+    templateId: humanoidxeno
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _White/Mobs/Species/displacement.rsi
+            state: jumpsuit-female
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _White/Mobs/Species/displacement.rsi
+            state: jumpsuit
+  - type: InitialBody
+    organs:
+      Torso: OrganHumanoidXenoTorso
+      Head: OrganHumanoidXenoHead
+      Tail: OrganHumanoidXenoTail
+      ArmLeft: OrganHumanoidXenoArmLeft
+      ArmRight: OrganHumanoidXenoArmRight
+      HandRight: OrganHumanoidXenoHandRight
+      HandLeft: OrganHumanoidXenoHandLeft
+      LegLeft: OrganHumanoidXenoLegLeft
+      LegRight: OrganHumanoidXenoLegRight
+      FootLeft: OrganHumanoidXenoFootLeft
+      FootRight: OrganHumanoidXenoFootRight
+      Brain: OrganHumanoidXenoBrain
+      Eyes: OrganHumanEyes
+      Tongue: OrganHumanoidXenoTongue
+      Ears: OrganHumanEars
+      Lungs: OrganHumanoidXenoLungs
+      Heart: OrganHumanoidXenoHeart
+      Stomach: OrganHumanoidXenoStomach
+      Liver: OrganHumanoidXenoLiver
+      Kidneys: OrganHumanoidXenoKidneys
+  - type: HumanoidProfile
+    species: HumanoidXeno
+
+- type: entity
+  parent:
+  - AppearanceHumanoidXeno
+  - BaseSpeciesMobOrganic
+  id: MobHumanoidXeno
+  name: Urist McXeno
+  components:
+  - type: Damageable
+    damageModifierSet: HumanoidXenomorph
+  - type: LanguageSpeaker
+    speaks:
+    - TauCetiBasic
+    - Xeno
+    understands:
+    - TauCetiBasic
+    - Xeno
+  - type: PermanentStatusEffects
+    statusEffects:
+    - StatusEffectPressureImmunity
+  - type: TypingIndicator
+    proto: alien
+  - type: TemperatureDamage
+    coldDamage:
+      types:
+        Cold: 0
+    heatDamage:
+      types:
+        Heat: 3
+  - type: Speech
+    speechVerb: LargeMob
+    allowedEmotes: [ 'Hiss', 'Roars', 'Rumbles', 'Growl', 'Scream' ]
+  - type: MeleeWeapon
+    hidden: true
+    soundHit:
+      collection: Punch
+    angle: 30
+    animation: WeaponArcClaw
+    attackRate: 1
+    damage:
+      types:
+        Blunt: 5
+        Slash: 5
+        Caustic: 1
+  - type: LizardAccent
+  - type: Bloodstream
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: FluorosulfuricAcidHumanoidXeno
+        Quantity: 300
+  - type: ProtectedFromStepTriggers
+  - type: Puller
+    needsHands: false
+  - type: NightVision
+    overlayColor: "#44944A"
+  - type: Stamina
+    baseCritThreshold: 110
+  - type: FacehuggerImmune
+  - type: Icon
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+    state: full
+  - type: Perishable
+  - type: Butcherable
+    spawned:
+    - id: FoodMeatXeno
+      amount: 5
+  - type: CollectiveMind
+    defaultChannel: HumanoidXenomind
+    channels:
+    - HumanoidXenomind
+  - type: Tag
+    tags:
+    - CanPilot
+    - FootstepSound
+    - DoorBumpOpener
+    - AnomalyHost
+    - HumanoidXeno
+
+- type: entity
+  parent: OrganBaseOrganic
+  id: OrganHumanoidXeno
+  abstract: true
+  suffix: xenomorph
+
+- type: entity
+  id: OrganHumanoidXenoMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]
+
+- type: entity
+  parent: OrganHumanoidXeno
+  id: OrganHumanoidXenoExternal
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Arcane/Mobs/Species/HumanoidXeno/parts.rsi
+  - type: VisualOrganMarkings
+    markingData:
+      group: HumanoidXeno
+
+- type: entity
+  parent: [ OrganBaseTorsoTailed, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoTorso
+  components:
+  - type: Sprite
+    state: torso_m
+  - type: VisualOrgan
+    data:
+      state: torso_m
+
+- type: entity
+  parent: [ OrganBaseHead, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoHead
+  components:
+  - type: Sprite
+    state: head_m
+  - type: VisualOrgan
+    data:
+      state: head_m
+
+- type: entity
+  parent: [ OrganBaseTail, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoTail
+  components:
+  - type: Sprite
+    state: tail_drone
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the tail marking draws it
+
+- type: entity
+  parent: [ OrganBaseArmLeft, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoArmLeft
+
+- type: entity
+  parent: [ OrganBaseArmRight, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoArmRight
+
+- type: entity
+  parent: [ OrganBaseHandLeft, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoHandLeft
+
+- type: entity
+  parent: [ OrganBaseHandRight, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoHandRight
+
+- type: entity
+  parent: [ OrganBaseLegLeft, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoLegLeft
+
+- type: entity
+  parent: [ OrganBaseLegRight, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoLegRight
+
+- type: entity
+  parent: [ OrganBaseFootLeft, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoFootLeft
+
+- type: entity
+  parent: [ OrganBaseFootRight, OrganHumanoidXenoExternal ]
+  id: OrganHumanoidXenoFootRight
+
+- type: entity
+  parent: OrganHumanBrain
+  id: OrganHumanoidXenoBrain
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: brain
+
+- type: entity
+  parent: OrganHumanTongue
+  id: OrganHumanoidXenoTongue
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: tongue
+
+- type: entity
+  parent: OrganHumanLungs
+  id: OrganHumanoidXenoLungs
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: lung-l
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]
+
+- type: entity
+  parent: OrganHumanHeart
+  id: OrganHumanoidXenoHeart
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]
+
+- type: entity
+  parent: OrganHumanStomach
+  id: OrganHumanoidXenoStomach
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: stomach
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]
+
+- type: entity
+  parent: OrganHumanLiver
+  id: OrganHumanoidXenoLiver
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: liver
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]
+
+- type: entity
+  parent: OrganHumanKidneys
+  id: OrganHumanoidXenoKidneys
+  components:
+  - type: Sprite
+    sprite: _Arcane/Mobs/Species/HumanoidXeno/organs.rsi
+    state: kidney-l
+  - type: Metabolizer
+    metabolizerTypes: [ HumanoidXeno ]

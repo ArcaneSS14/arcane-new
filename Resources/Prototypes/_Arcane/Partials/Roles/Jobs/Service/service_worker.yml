@@ -1,0 +1,7 @@
+- type: job
+  id: ServiceWorker
+  alternateTitles:
+  - ServiceWorkerWaiter
+  - ServiceWorkerJuniorCook
+  - ServiceWorkerBartenderApprentice
+  - ServiceWorkerCroupier

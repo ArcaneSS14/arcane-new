@@ -2,3 +2,39 @@
   id: MobSlimePerson
   components:
   - type: Jiggle
+
+- type: markingsGroup
+  id: Slime
+  limits:
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Wings:
+      limit: 1
+      required: false
+
+- type: entity
+  id: AppearanceSlimePerson
+  components:
+  - type: InitialBody
+    organs:
+      Tail: OrganSlimePersonTail
+      Wings: OrganSlimePersonWings
+
+- type: entity
+  id: OrganSlimePersonTorso
+  components:
+  - type: BodyPart
+    slots:
+    - Tail
+    - Wings
+
+- type: entity
+  id: MobSlimePerson
+  components:
+  - type: Reactive
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCumOverlayReaction

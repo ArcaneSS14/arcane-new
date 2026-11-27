@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: CaptainStationDirector
+  name: job-name-alt-captain-1
+
+- type: jobAlternateTitle
+  id: CaptainCommander
+  name: job-name-alt-captain-2
+
+- type: jobAlternateTitle
+  id: CaptainStationChief
+  name: job-name-alt-captain-3

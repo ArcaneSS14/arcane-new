@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: TechnicalAssistantTrainee
+  name: job-name-alt-technicalassistant-2
+
+- type: jobAlternateTitle
+  id: TechnicalAssistantApprentice
+  name: job-name-alt-technicalassistant-1
+
+- type: jobAlternateTitle
+  id: TechnicalAssistantTechApprentice
+  name: job-name-alt-technicalassistant-4
+
+- type: jobAlternateTitle
+  id: TechnicalAssistantTechIntern
+  name: job-name-alt-technicalassistant-3

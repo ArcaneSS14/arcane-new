@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: PsychologistTherapist
+  name: job-name-alt-psychologist-1
+
+- type: jobAlternateTitle
+  id: PsychologistGuidanceCounselor
+  name: job-name-alt-psychologist-2
+
+- type: jobAlternateTitle
+  id: PsychologistPsychiatrist
+  name: job-name-alt-psychologist-3

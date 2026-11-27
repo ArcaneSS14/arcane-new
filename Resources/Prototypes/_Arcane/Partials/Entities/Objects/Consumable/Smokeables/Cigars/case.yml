@@ -1,0 +1,6 @@
+- type: entity
+  id: CigarCase
+  components:
+  - type: Tag 
+    tags:
+    - CigStorage 

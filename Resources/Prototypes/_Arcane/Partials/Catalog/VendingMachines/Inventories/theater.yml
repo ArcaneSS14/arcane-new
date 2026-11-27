@@ -1,0 +1,4 @@
+- type: vendingMachineInventory
+  id: AutoDrobeInventory
+  contrabandInventory:
+    ReverbScytheToy: 1

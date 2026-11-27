@@ -3,6 +3,7 @@ using Content.Shared.Administration;
 using JetBrains.Annotations;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
+using Content.Arcane.Common.Administration; // Arcane
 
 namespace Content.Client.Administration.Systems
 {
@@ -18,6 +19,13 @@ namespace Content.Client.Administration.Systems
         {
             OnBwoinkTextMessageRecieved?.Invoke(this, message);
         }
+
+        // Arcane-Start
+        public void RequestHistory(NetUserId channel, AdminLogCursor? cursor = null)
+        {
+            RaiseNetworkEvent(new BwoinkHistoryRequest(channel, cursor));
+        }
+        // Arcane-End
 
         public void Send(NetUserId channelId, string text, bool playSound, bool adminOnly)
         {

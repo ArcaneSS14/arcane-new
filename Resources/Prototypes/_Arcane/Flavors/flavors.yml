@@ -2,3 +2,8 @@
   id: oriocookies
   flavorType: Complex
   description: flavor-complex-orio-cookies
+
+- type: flavor
+  id: bobda
+  flavorType: Base
+  description: flavor-bobda

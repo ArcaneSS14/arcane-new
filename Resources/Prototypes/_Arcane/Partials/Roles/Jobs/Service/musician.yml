@@ -1,0 +1,6 @@
+- type: job
+  id: Musician
+  alternateTitles:
+  - MusicianVisitingCelebrity
+  - MusicianPerformer
+  - MusicianRadioDJ
