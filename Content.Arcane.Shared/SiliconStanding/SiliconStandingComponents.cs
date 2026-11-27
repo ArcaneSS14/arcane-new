@@ -1,4 +1,3 @@
-// Arcane-Start: silicon rest state
 using Content.Shared.Actions;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -25,4 +24,3 @@ public enum SiliconStandingVisuals : byte
 {
     Resting,
 }
-// Arcane-End
