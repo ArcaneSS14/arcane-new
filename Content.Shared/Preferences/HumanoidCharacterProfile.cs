@@ -214,6 +214,8 @@ namespace Content.Shared.Preferences
             Scale = other.Scale;
             // Arcane-End
             ExtendedFlavor = other.ExtendedFlavor; // Arcane
+            Customization = other.Customization; // Arcane
+            ErpPreference = other.ErpPreference; // Arcane
         }
 
         /// <summary>
@@ -482,6 +484,7 @@ namespace Content.Shared.Preferences
             {
                 Species = species,
                 Scale = speciesPrototype.DefaultScale,
+                Customization = CustomizationWithoutSpeciesName(),
             };
             // Arcane-Edit-End
         }
@@ -695,6 +698,8 @@ namespace Content.Shared.Preferences
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
             if (!ExtendedFlavor.Equals(other.ExtendedFlavor)) return false; // Arcane
+            if (!Customization.Equals(other.Customization)) return false; // Arcane
+            if (ErpPreference != other.ErpPreference) return false; // Arcane
             return Appearance.Equals(other.Appearance);
         }
 
@@ -722,6 +727,7 @@ namespace Content.Shared.Preferences
                 Sex.Male => Sex.Male,
                 Sex.Female => Sex.Female,
                 Sex.Unsexed => Sex.Unsexed,
+                Sex.Futanari => Sex.Futanari, // Arcane
                 _ => Sex.Male // Invalid enum values.
             };
 
@@ -834,7 +840,9 @@ namespace Content.Shared.Preferences
             Name = name;
             FlavorText = flavortext;
             ExtendedFlavor = extendedFlavor; // Arcane
+            Customization = ValidatedCustomization(prototypeManager, configManager); // Arcane
             Age = age;
+            ErpPreference = ValidatedErpPreference(age); // Arcane
             Sex = sex;
             Voice = voice;
             Gender = gender;
@@ -923,6 +931,7 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var profile = new HumanoidCharacterProfile(this);
+            profile._loadouts = _loadouts.ToDictionary(pair => pair.Key, pair => pair.Value.Clone()); // Arcane: validation must not mutate saved selections
             profile.EnsureValid(session, collection, sponsorPrototypes);
             return profile;
         }
@@ -957,6 +966,8 @@ namespace Content.Shared.Preferences
             hashCode.Add(Name);
             hashCode.Add(FlavorText);
             hashCode.Add(ExtendedFlavor); // Arcane
+            hashCode.Add(Customization); // Arcane
+            hashCode.Add((int) ErpPreference); // Arcane
             hashCode.Add(Species);
             // Arcane-Start: Hash character scale settings
             hashCode.Add(Scale);

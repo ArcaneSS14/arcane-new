@@ -98,3 +98,15 @@
     FoodMeatCutlet: 1
     FoodOnionSlice: 1
     FoodTomato: 1
+
+- type: microwaveMealRecipe
+  id: RecipeMisoSoup
+  name: Miso soup recipe
+  result: FoodSoupMiso
+  time: 10
+  group: Soup
+  reagents:
+    Water: 10
+  solids:
+    FoodTofuSlice: 2
+    FoodBowlBig: 1

@@ -1,0 +1,41 @@
+- type: trait
+  id: CatNature
+  name: trait-catnature-name
+  description: trait-catnature-desc
+  category: Nature
+  cost: 1
+  components:
+  - type: Nature
+    emoteTag: FelinidEmotes
+    newSounds:
+      Male: MaleCatNature
+      Female: FemaleCatNature
+      Unsexed: MaleCatNature
+
+- type: trait
+  id: FoxNature
+  name: trait-foxnature-name
+  description: trait-foxnature-desc
+  category: Nature
+  cost: 1
+  components:
+  - type: Nature
+    emoteTag: VulpEmotes
+    newSounds:
+      Male: MaleFoxNature
+      Female: FemaleFoxNature
+      Unsexed: MaleFoxNature
+
+- type: trait
+  id: HorseNature
+  name: trait-horsenature-name
+  description: trait-horsenature-desc
+  category: Nature
+  cost: 1
+  components:
+  - type: Nature
+    emoteTag: HorseEmotes
+    newSounds:
+      Male: MaleHorse
+      Female: FemaleHorse
+      Unsexed: MaleHorse

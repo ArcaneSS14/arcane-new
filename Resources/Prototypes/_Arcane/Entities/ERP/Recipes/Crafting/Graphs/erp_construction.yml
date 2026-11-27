@@ -1,0 +1,79 @@
+- type: construction
+  id: ClothingStraponHuman
+  graph: ClothingStraponHuman
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponAvian
+  graph: ClothingStraponAvian
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponDog
+  graph: ClothingStraponDog
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponDragon
+  graph: ClothingStraponDragon
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponHorse
+  graph: ClothingStraponHorse
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponPlussize
+  graph: ClothingStraponPlussize
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponSlime
+  graph: ClothingStraponSlime
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
+
+- type: construction
+  id: ClothingStraponXeno
+  graph: ClothingStraponXeno
+  startNode: start
+  targetNode: erp
+  category: construction-category-erp
+  objectType: Item
+  theory:
+    FabricationKnowledge: 0
