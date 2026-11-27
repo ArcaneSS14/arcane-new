@@ -50,6 +50,7 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
     [Dependency] private INetManager _net = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private ActionBlockerSystem _actionBlocker = default!;
+    [Dependency] private SharedInteractionSystem _interaction = default!;
     [Dependency] private SharedContainerSystem _containers = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private SharedDoAfterSystem _doAfter = default!;
@@ -234,7 +235,7 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
     private void OnGetAlternativeVerbs(Entity<WashingMachineComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
     {
         var user = args.User;
-        if (!args.CanInteract || !args.CanComplexInteract)
+        if (!args.CanAccess || !args.CanInteract || !args.CanComplexInteract)
             return;
 
         if (CanExtractContents(ent))
@@ -256,7 +257,7 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
             {
                 Text = Loc.GetString("washing-machine-start"),
                 Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/Spare/poweronoff.svg.192dpi.png")),
-                Act = () => TryActivate(ent)
+                Act = () => TryActivate(ent, user)
             };
 
             args.Verbs.Add(verb);
@@ -279,7 +280,7 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
             args.Verbs.Add(verb);
         }
 
-        if (CanExtractContents(ent))
+        if (args.CanAccess && args.CanInteract && args.CanComplexInteract && CanExtractContents(ent))
         {
             var extractVerb = new ActivationVerb()
             {
@@ -293,9 +294,18 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
 
     }
 
-    private bool TryActivate(Entity<WashingMachineComponent> ent)
+    private bool CanOperate(EntityUid user, EntityUid machine)
     {
-        if (!CanActivate(ent))
+        return !TerminatingOrDeleted(user)
+               && !TerminatingOrDeleted(machine)
+               && _actionBlocker.CanInteract(user, machine)
+               && _actionBlocker.CanComplexInteract(user)
+               && _interaction.InRangeAndAccessible(user, machine);
+    }
+
+    private bool TryActivate(Entity<WashingMachineComponent> ent, EntityUid user)
+    {
+        if (!CanOperate(user, ent.Owner) || !CanActivate(ent))
             return false;
 
         Activate(ent);
@@ -468,7 +478,7 @@ public abstract partial class SharedWashingMachineSystem : EntitySystem
 
     private void TryExtractContents(Entity<WashingMachineComponent> ent, EntityUid user)
     {
-        if (!CanExtractContents(ent))
+        if (!CanOperate(user, ent.Owner) || !CanExtractContents(ent))
             return;
 
         if (!_net.IsServer)

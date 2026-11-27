@@ -1,5 +1,8 @@
 using Content.Shared.TTS;
 using Content.Arcane.Shared.TTS;
+using Content.Arcane.Common.CCVar;
+using Content.Server.Players.RateLimiting;
+using Content.Shared.Players.RateLimiting;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 
@@ -9,6 +12,14 @@ namespace Content.Arcane.Server.TTS;
 public sealed partial class TTSSystem
 {
     [Dependency] private IRobustRandom _robustRandom = default!;
+    [Dependency] private PlayerRateLimitManager _previewRateLimit = default!;
+    private const string PreviewRateLimitKey = "TTSPreview";
+
+    private void InitializePreviewRateLimit()
+    {
+        _previewRateLimit.Register(PreviewRateLimitKey,
+            new RateLimitRegistration(ArcaneCVars.TTSRateLimitPeriod, ArcaneCVars.TTSRateLimitCount, null));
+    }
 
     private readonly List<string> _sampleText = new() // TODO: Локализация?
     {
@@ -26,13 +37,13 @@ public sealed partial class TTSSystem
         "Бармен, налей мне самого крепкого вина, которое есть в твоих запасах!"
     };
 
-    /// <summary>
-    /// </summary>
-    /// <param name="ev"></param>
-    /// <param name="args"></param>
+    /// <summary>Rate-limits preview requests per session before consulting the cache or provider.</summary>
     private async void OnRequestPreviewTTS(RequestPreviewTTSEvent ev, EntitySessionEventArgs args)
     {
         if (!_isEnabled || !_prototypeManager.TryIndex<TTSVoicePrototype>(ev.VoiceId, out var protoVoice))
+            return;
+
+        if (_previewRateLimit.CountAction(args.SenderSession, PreviewRateLimitKey) != RateLimitStatus.Allowed)
             return;
 
         var txt = _robustRandom.Pick(_sampleText);

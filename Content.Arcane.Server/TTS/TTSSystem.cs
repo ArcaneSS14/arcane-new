@@ -42,6 +42,7 @@ public sealed partial class TTSSystem : EntitySystem
 
     public override void Initialize()
     {
+        InitializePreviewRateLimit();
         _cfg.OnValueChanged(ArcaneCVars.TTSEnabled, v => _isEnabled = v, true);
 
         SubscribeLocalEvent<TTSComponent, EntitySpokeEvent>(OnEntitySpoke, after: [typeof(RadioSystem), typeof(HeadsetSystem)]);
@@ -58,6 +59,7 @@ public sealed partial class TTSSystem : EntitySystem
         SubscribeLocalEvent<TTSAnnouncePlayEvent>(OnTTSAnnouncePlayEvent);
         SubscribeLocalEvent<CommunicationConsoleAnnouncementEvent>(OnConsoleAnnouncement);
         SubscribeLocalEvent<TTSComponent, HumanoidProfileAppliedEvent>(OnProfileApplied);
+        SubscribeLocalEvent<TTSComponent, HumanoidProfileCaptureEvent>(OnProfileCaptured);
         SubscribeLocalEvent<PlayerDetachedEvent>(OnPlayerDetached);
 
         SubscribeNetworkEvent<RequestPreviewTTSEvent>(OnRequestPreviewTTS);
@@ -140,6 +142,12 @@ public sealed partial class TTSSystem : EntitySystem
         ent.Comp.VoicePrototype = args.Profile.TtsVoice;
     }
 
+    private void OnProfileCaptured(Entity<TTSComponent> ent, ref HumanoidProfileCaptureEvent args)
+    {
+        if (ent.Comp.VoicePrototype is { } voice)
+            args.Profile = args.Profile.WithTtsVoice(voice);
+    }
+
     /// <summary>
     /// Reads a communications console announcement to everyone on the console's station, in the author's voice.
     /// </summary>
@@ -198,15 +206,10 @@ public sealed partial class TTSSystem : EntitySystem
     private async void HandleSay(EntityUid uid, string message, LanguagePrototype language, string speaker, string? effect)
     {
         var normal = await GenerateTTS(message, speaker, effect);
-        if (normal is null)
+        if (normal is null || TerminatingOrDeleted(uid))
             return;
 
-        // var obfuscated = await GenerateTTS(_language.ObfuscateSpeech(message, language), speaker);
-        // if (obfuscated is null)
-        //     return;
-
         var nilter = Filter.Empty();
-        var lilter = Filter.Empty();
         foreach (var session in Filter.Pvs(uid).Recipients)
         {
             if (!session.AttachedEntity.HasValue)
@@ -218,28 +221,20 @@ public sealed partial class TTSSystem : EntitySystem
             TryComp(session.AttachedEntity.Value, out LanguageSpeakerComponent? lang);
             if (_language.CanUnderstand(new(session.AttachedEntity.Value, lang), language.ID))
                 nilter.AddPlayer(session);
-            else
-                lilter.AddPlayer(session);
         }
 
         RaiseNetworkEvent(new PlayTTSEvent(normal, GetNetEntity(uid)), nilter);
-        // RaiseNetworkEvent(new PlayTTSEvent(obfuscated, GetNetEntity(uid)), lilter, false);
     }
 
     private async void HandleWhisper(EntityUid uid, string message, LanguagePrototype language, string speaker, string? effect = null)
     {
         var normal = await GenerateTTS(message, speaker, effect);
-        if (normal is null)
+        if (normal is null || TerminatingOrDeleted(uid))
             return;
-
-        // var obfuscated = await GenerateTTS(_language.ObfuscateSpeech(message, language), speaker);
-        // if (obfuscated is null)
-        //     return;
 
         var xformQuery = GetEntityQuery<TransformComponent>();
         var sourcePos = _xforms.GetWorldPosition(xformQuery.GetComponent(uid), xformQuery);
         var nilter = Filter.Empty();
-        var lilter = Filter.Empty();
         foreach (var session in Filter.Pvs(uid).Recipients)
         {
             if (!session.AttachedEntity.HasValue)
@@ -257,12 +252,9 @@ public sealed partial class TTSSystem : EntitySystem
             if (_language.CanUnderstand(new(session.AttachedEntity.Value, lang), language.ID)
                 && distance <= ChatSystem.WhisperClearRange)
                 nilter.AddPlayer(session);
-            else
-                lilter.AddPlayer(session);
         }
 
         RaiseNetworkEvent(new PlayTTSEvent(normal, GetNetEntity(uid), true), nilter);
-        // RaiseNetworkEvent(new PlayTTSEvent(obfuscated, GetNetEntity(uid), true), lilter, false);
     }
 
     private bool InLocalChatRangeUnOccluded(EntityUid source, EntityUid listener, float range)
@@ -287,13 +279,17 @@ public sealed partial class TTSSystem : EntitySystem
 
         await _lock.WaitAsync();
         Task<byte[]?> task;
+        var owner = false;
         try
         {
             if (_ttsTasks.TryGetValue(taskKey, out var existing))
-                return await existing;
-
-            task = _ttsManager.ConvertTextToSpeech(speaker, textSanitized, effect);
-            _ttsTasks[taskKey] = task;
+                task = existing;
+            else
+            {
+                task = _ttsManager.ConvertTextToSpeech(speaker, textSanitized, effect);
+                _ttsTasks[taskKey] = task;
+                owner = true;
+            }
         }
         finally
         {
@@ -306,9 +302,12 @@ public sealed partial class TTSSystem : EntitySystem
         }
         finally
         {
-            await _lock.WaitAsync();
-            try { _ttsTasks.Remove(taskKey); }
-            finally { _lock.Release(); }
+            if (owner)
+            {
+                await _lock.WaitAsync();
+                try { _ttsTasks.Remove(taskKey); }
+                finally { _lock.Release(); }
+            }
         }
     }
 }
