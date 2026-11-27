@@ -91,6 +91,9 @@ public abstract partial class SharedLeashSystem : EntitySystem
     /// </summary>
     private void OnCollarUnequipped(EntityUid uid, CollarComponent component, GotUnequippedEvent args)
     {
+        if (args.Slot != "neck")
+            return;
+
         if (TryComp<LeashedComponent>(args.EquipTarget, out var leashed) && leashed.Leash != null)
         {
             TryDetachLeash(leashed.Leash.Value);
