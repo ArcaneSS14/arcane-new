@@ -1,3 +1,4 @@
+// Arcane-Start
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Humanoid.Prototypes;
@@ -17,3 +18,4 @@ public sealed partial class SpeciesPrototype : ISerializationHooks
             DefaultSoundsBySex = [.. DefaultSoundsBySex, DefaultSoundsBySex[(int) Sex.Female]];
     }
 }
+// Arcane-End

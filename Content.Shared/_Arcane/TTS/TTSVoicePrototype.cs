@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Humanoid;
 using Robust.Shared.Prototypes;
 
@@ -29,3 +30,4 @@ public sealed partial class TTSVoicePrototype : IPrototype
     [DataField("roundStart")]
     public bool RoundStart { get; private set; } = true;
 }
+// Arcane-End

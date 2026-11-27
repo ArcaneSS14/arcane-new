@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.Preferences;
 using Content.Shared.Preferences;
 using Robust.Client.UserInterface;
@@ -60,3 +61,4 @@ public sealed partial class HumanoidProfileEditor
         _updatingErp = false;
     }
 }
+// Arcane-End

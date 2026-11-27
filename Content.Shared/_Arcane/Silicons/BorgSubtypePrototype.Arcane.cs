@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.Silicons.Borgs;
 
 public sealed partial class BorgSubtypePrototype
@@ -51,3 +52,4 @@ public sealed partial class BorgSubtypeVisuals
     [DataField]
     public bool DisableMovementVisuals;
 }
+// Arcane-End

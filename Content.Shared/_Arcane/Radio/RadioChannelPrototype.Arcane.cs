@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.StatusIcon;
 using Robust.Shared.Prototypes;
 
@@ -11,3 +12,4 @@ public sealed partial class RadioChannelPrototype
     [DataField]
     public ProtoId<JobIconPrototype> Icon { get; private set; } = "JobIconUnknown";
 }
+// Arcane-End

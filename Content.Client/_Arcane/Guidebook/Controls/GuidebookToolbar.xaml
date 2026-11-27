@@ -1,3 +1,4 @@
+<!-- Arcane-Start -->
 <BoxContainer 
     xmlns="https://spacestation14.io" 
     Orientation="Vertical">
@@ -22,3 +23,4 @@
     </ScrollContainer>
     <Label Name="Status" Access="Public" Visible="False" />
 </BoxContainer>
+<!-- Arcane-End -->
