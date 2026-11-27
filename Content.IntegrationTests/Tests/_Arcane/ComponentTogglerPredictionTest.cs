@@ -4,6 +4,8 @@ using Content.Shared.CombatMode;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
+using Content.Shared.Inventory;
+using Content.Shared.Administration.Components;
 using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests._Arcane;
@@ -107,7 +109,7 @@ public sealed class ComponentTogglerPredictionTest : GameTest
             Assert.That(CEntMan.HasComponent<DisarmMalusComponent>(clientTarget), Is.True);
             var clientToggler = CComp<ComponentTogglerComponent>(clientItem);
             Assert.That(clientToggler.Parent, Is.EqualTo(parent));
-            Assert.That(clientToggler.Target, Is.Null);
+            Assert.That(clientToggler.Target, Is.EqualTo(clientTarget));
 
             Assert.That(Client.System<ItemToggleSystem>().TryDeactivate(clientItem), Is.True);
 
@@ -120,6 +122,36 @@ public sealed class ComponentTogglerPredictionTest : GameTest
         {
             Assert.That(SComp<ItemToggleComponent>(item).Activated, Is.True);
             Assert.That(SEntMan.HasComponent<DisarmMalusComponent>(target), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task PredictedUnequipRemovesEffectFromPreviousWearer()
+    {
+        var map = await Pair.CreateTestMap();
+        NetEntity holderNet = default;
+        NetEntity itemNet = default;
+        await Server.WaitAssertion(() =>
+        {
+            var holder = SSpawnAtPosition("MobHuman", map.GridCoords);
+            Server.PlayerMan.SetAttachedEntity(Pair.Player, holder, out _, true);
+            var item = SSpawnAtPosition("ClothingHeadHatCatEarsValid", map.GridCoords);
+            Assert.That(Server.System<InventorySystem>().TryEquip(holder, item, "head"), Is.True);
+            Assert.That(Server.System<ItemToggleSystem>().TryActivate(item, holder), Is.True);
+            Assert.That(SHasComp<KillSignComponent>(holder), Is.True);
+            holderNet = SEntMan.GetNetEntity(holder);
+            itemNet = SEntMan.GetNetEntity(item);
+        });
+        await Pair.RunUntilSynced();
+        await Client.WaitAssertion(() =>
+        {
+            var holder = CEntMan.GetEntity(holderNet);
+            var item = CEntMan.GetEntity(itemNet);
+            Assert.That(CComp<ComponentTogglerComponent>(item).Target, Is.EqualTo(holder));
+            Assert.That(CEntMan.HasComponent<KillSignComponent>(holder), Is.True);
+            Assert.That(Client.System<InventorySystem>().TryUnequip(holder, "head", predicted: true), Is.True);
+            Assert.That(CEntMan.HasComponent<KillSignComponent>(holder), Is.False);
+            Assert.That(CComp<ItemToggleComponent>(item).Activated, Is.False);
         });
     }
 

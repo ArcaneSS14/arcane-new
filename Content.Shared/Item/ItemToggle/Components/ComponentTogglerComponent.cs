@@ -7,7 +7,7 @@ namespace Content.Shared.Item.ItemToggle.Components;
 /// Adds or removes components when toggled.
 /// Requires <see cref="ItemToggleComponent"/>.
 /// </summary>
-[RegisterComponent, NetworkedComponent, Access(typeof(ComponentTogglerSystem))]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, Access(typeof(ComponentTogglerSystem))] // Arcane-Edit: network the activation target for prediction
 public sealed partial class ComponentTogglerComponent : Component
 {
     /// <summary>
@@ -32,6 +32,6 @@ public sealed partial class ComponentTogglerComponent : Component
     // <summary>
     // It holds the entity that the component gave the component to, so it can remove from it even if it changes parent.
     // </summary>
-    [DataField]
+    [DataField, AutoNetworkedField] // Arcane-Edit: network the activation target
     public EntityUid? Target;
 }
