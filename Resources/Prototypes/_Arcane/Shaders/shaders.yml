@@ -12,3 +12,5 @@
   id: ArcaneHairGradient
   kind: source
   path: "/Textures/_Arcane/Shaders/hair_gradient.swsl"
+  params:
+    displacementSize: 127

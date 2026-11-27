@@ -3,6 +3,7 @@ using Robust.Shared.Containers;
 using Content.Shared.CombatMode;
 using Content.Shared.Popups;
 using Content.Shared.Interaction;
+using Content.Shared.ActionBlocker;
 using Content.Shared.Access.Components;
 using Content.Server.Access.Systems;
 using Robust.Shared.Audio.Systems;
@@ -27,6 +28,8 @@ public sealed partial class AggressionInhibitorSystem : EntitySystem
     [Dependency] private SharedCombatModeSystem _combatMode = default!;
     [Dependency] private SharedContainerSystem _containerSystem = default!;
     [Dependency] private IPlayerManager _playerManager = default!;
+    [Dependency] private SharedInteractionSystem _interaction = default!;
+    [Dependency] private ActionBlockerSystem _actionBlocker = default!;
 
     public override void Initialize()
     {
@@ -106,12 +109,7 @@ public sealed partial class AggressionInhibitorSystem : EntitySystem
 
     public void OpenDialog(EntityUid uid, AggressionInhibitorComponent comp, EntityUid user)
     {
-        EntityUid? parent = _containerSystem.TryGetContainingContainer((uid, null, null), out var container)
-            ? container.Owner
-            : null;
-
-        var targetEntity = parent ?? uid;
-        if (!_transformSystem.InRange(user, targetEntity, 2f))
+        if (!CanUseInhibitor(user, uid))
             return;
 
         if (!_handsSystem.TryGetActiveItem(user, out var heldItem) ||
@@ -133,7 +131,11 @@ public sealed partial class AggressionInhibitorSystem : EntitySystem
 
         _quickDialog.OpenDialog(session, Loc.GetString("stabikor-dialog-title"), Loc.GetString("stabikor-dialog-field") + "\n", (string input) =>
         {
-            if (!Exists(uid) || comp.IsLocked)
+            if (!Exists(uid) || comp.IsLocked || !CanUseInhibitor(user, uid)
+                || !_handsSystem.TryGetActiveItem(user, out var activeItem)
+                || !_idCard.TryFindIdCard(activeItem.Value, out var activeCard)
+                || !TryComp<AccessComponent>(activeCard.Owner, out var activeAccess)
+                || !GetHasLockAccess(comp, activeAccess.Tags))
                 return;
 
             if (string.IsNullOrEmpty(input))
@@ -169,8 +171,7 @@ public sealed partial class AggressionInhibitorSystem : EntitySystem
             ? container.Owner
             : null;
 
-        var targetEntity = parent ?? uid;
-        if (!_transformSystem.InRange(user, targetEntity, 2f))
+        if (!CanUseInhibitor(user, uid))
             return;
 
         if (!_handsSystem.TryGetActiveItem(user, out var heldItem) ||
@@ -198,6 +199,20 @@ public sealed partial class AggressionInhibitorSystem : EntitySystem
             else
                 PlaybackDenySound(uid, comp);
         }
+    }
+
+    private bool CanUseInhibitor(EntityUid user, EntityUid inhibitor)
+    {
+        if (TerminatingOrDeleted(user) || TerminatingOrDeleted(inhibitor))
+            return false;
+
+        var target = _containerSystem.TryGetContainingContainer((inhibitor, null, null), out var container)
+            ? container.Owner
+            : inhibitor;
+        return !TerminatingOrDeleted(target)
+               && _actionBlocker.CanInteract(user, inhibitor)
+               && _actionBlocker.CanComplexInteract(user)
+               && _interaction.InRangeAndAccessible(user, target, 2f);
     }
 
     private bool ActivateInhibitor(EntityUid uid, EntityUid wearerUid, AggressionInhibitorComponent comp, EntityUid user)
