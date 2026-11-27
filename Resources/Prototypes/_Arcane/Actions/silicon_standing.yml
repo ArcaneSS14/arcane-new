@@ -7,8 +7,9 @@
   components:
   - type: Action
     itemIconStyle: NoItem
-    icon:
-      sprite: _Arcane/Interface/Actions/silicon_standing.rsi
-      state: rest
+  - type: Sprite
+    sprite: _Arcane/Interface/Actions/silicon_standing.rsi
+    layers:
+    - state: rest
   - type: InstantAction
     event: !type:ToggleSiliconRestingEvent
