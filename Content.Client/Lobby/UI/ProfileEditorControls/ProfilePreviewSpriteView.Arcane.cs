@@ -1,5 +1,4 @@
 using Content.Shared.Clothing;
-using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Preferences;
 using Content.Shared.Preferences.Loadouts;
@@ -7,6 +6,7 @@ using Content.Shared.Roles;
 using Content.Trauma.Common.Inventory;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.Humanoid; // Arcane
 
 namespace Content.Client.Lobby.UI.ProfileEditorControls;
 
@@ -55,6 +55,7 @@ public sealed partial class ProfilePreviewSpriteView
         }
     }
 
+    // Arcane-Start
     /// <summary>
     /// The doll only gets the appearance, so the hair gradient is copied over by hand.
     /// </summary>
@@ -63,4 +64,5 @@ public sealed partial class ProfilePreviewSpriteView
         if (EntMan.TryGetComponent<HumanoidProfileComponent>(PreviewDummy, out var profile))
             profile.Customization = humanoid.Customization;
     }
+    // Arcane-End
 }
