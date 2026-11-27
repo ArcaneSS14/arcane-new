@@ -113,6 +113,50 @@ public sealed class FilterTests : GameTest
     }
     // Arcane-Start
     [Test]
+    [TestCase(DateOrder.Ascending)]
+    [TestCase(DateOrder.Descending)]
+    public async Task CurrentRoundFilteredCursorPagesKeepOrder(DateOrder order)
+    {
+        var logs = Server.ResolveDependency<IAdminLogManager>();
+        var marker = Guid.NewGuid().ToString();
+        await Server.WaitPost(() =>
+        {
+            logs.Add(LogType.Unknown, $"{marker} first");
+            logs.Add(LogType.Ahelp, $"{marker} excluded");
+            logs.Add(LogType.Unknown, $"{marker} second");
+            logs.Add(LogType.Unknown, $"{marker} third");
+        });
+
+        var filter = new LogFilter
+        {
+            Search = marker,
+            Types = new() { LogType.Unknown },
+            DateOrder = order,
+        };
+        var all = new List<Content.Shared.Administration.Logs.SharedAdminLog>();
+        await PoolManager.WaitUntil(Server, async () =>
+        {
+            all = await logs.CurrentRoundLogs(filter);
+            return all.Count == 3;
+        });
+
+        var expected = order == DateOrder.Ascending
+            ? all.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id).ToArray()
+            : all.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id).ToArray();
+        filter.Limit = 1;
+        var actual = new List<Content.Shared.Administration.Logs.SharedAdminLog>();
+        for (var i = 0; i < expected.Length; i++)
+        {
+            var page = await logs.CurrentRoundLogs(filter);
+            Assert.That(page, Has.Count.EqualTo(1));
+            actual.Add(page[0]);
+            filter.Cursor = new AdminLogCursor(page[0].Date, page[0].RoundId, page[0].Id);
+        }
+        Assert.That(actual.Select(log => log.Id), Is.EqualTo(expected.Select(log => log.Id)));
+        Assert.That(await logs.CurrentRoundLogs(filter), Is.Empty);
+    }
+
+    [Test]
     public async Task HistoryCursorKeepsLogsWithTheSameDateAcrossRounds()
     {
         var db = Server.ResolveDependency<IServerDbManager>();
