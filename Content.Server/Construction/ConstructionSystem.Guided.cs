@@ -114,6 +114,11 @@ namespace Content.Server.Construction
 
                     if (!preventStepExamine)
                         targetEdge.Steps[0].DoExamine(args);
+
+                    // Arcane-Start
+                    if (!preventStepExamine)
+                        ExamineAlternativeFinishes(uid, component, targetEdge, args);
+                    // Arcane-End
                     return;
                 }
 

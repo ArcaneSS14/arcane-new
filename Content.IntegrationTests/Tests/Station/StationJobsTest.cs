@@ -108,6 +108,45 @@ public sealed class StationJobsTest : GameTest
           availableJobs:
             TMime: [1, 1]
 
+# Arcane-Start
+- type: gameMap
+  id: ArcaneJobDefaultsTest
+  minPlayers: 0
+  mapName: ArcaneJobDefaultsTest
+  mapPath: /Maps/Test/empty.yml
+  stations:
+    Defaults:
+      stationProto: StandardNanotrasenStation
+      components:
+      - type: StationJobs
+        availableJobs:
+          Captain: [1, 1]
+    Explicit:
+      stationProto: StandardNanotrasenStation
+      components:
+      - type: StationJobs
+        availableJobs:
+          Captain: [0, 0]
+          Adjutant: [0, 0]
+          IAA: [2, 4]
+    Configured:
+      stationProto: StandardNanotrasenStation
+      components:
+      - type: StationJobs
+        availableJobs:
+          TCaptain: [1, 1]
+      - type: ArcaneStationJobs
+        requiredJob: TCaptain
+        additionalJobs:
+          TChaplain: [2, 3]
+    NoCaptain:
+      stationProto: StandardNanotrasenStation
+      components:
+      - type: StationJobs
+        availableJobs:
+          Passenger: [-1, -1]
+# Arcane-End
+
 - type: job
   id: TAssistant
   name: job-name-passenger # Trauma - its required now
@@ -263,6 +302,58 @@ public sealed class StationJobsTest : GameTest
         }
     }
     */
+
+    // Arcane-Start
+    [Test]
+    public async Task ArcaneJobDefaultsPreserveExplicitSlotsAndInitializeCounters()
+    {
+        var server = Pair.Server;
+        var prototypes = server.ResolveDependency<IPrototypeManager>();
+        ProtoId<GameMapPrototype> mapId = "ArcaneJobDefaultsTest";
+        var map = prototypes.Index(mapId);
+        var entities = server.ResolveDependency<IEntityManager>();
+        var stations = entities.System<ServerStationSystem>();
+
+        await server.WaitAssertion(() =>
+        {
+            var defaultsStation = stations.InitializeNewStation(map.Stations["Defaults"], null);
+            var explicitStation = stations.InitializeNewStation(map.Stations["Explicit"], null);
+            var noCaptainStation = stations.InitializeNewStation(map.Stations["NoCaptain"], null);
+            var configuredStation = stations.InitializeNewStation(map.Stations["Configured"], null);
+            var defaults = entities.GetComponent<StationJobsComponent>(defaultsStation);
+            var explicitJobs = entities.GetComponent<StationJobsComponent>(explicitStation);
+            var noCaptain = entities.GetComponent<StationJobsComponent>(noCaptainStation);
+            var configured = entities.GetComponent<StationJobsComponent>(configuredStation);
+            entities.EventBus.RaiseLocalEvent(defaultsStation, new StationInitializedEvent(defaultsStation), broadcast: true);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(defaults.SetupAvailableJobs["Adjutant"], Is.EqualTo(new[] { 1, 1 }));
+                Assert.That(defaults.SetupAvailableJobs["IAA"], Is.EqualTo(new[] { 1, 1 }));
+                Assert.That(defaults.SetupAvailableJobs["CommandMaid"], Is.EqualTo(new[] { 1, 1 }));
+                Assert.That(defaults.JobList["CommandMaid"], Is.EqualTo(1));
+                Assert.That(defaults.MidRoundTotalJobs, Is.EqualTo(4));
+                Assert.That(defaults.TotalJobs, Is.EqualTo(4));
+                Assert.That(defaults.PercentJobsRemaining, Is.EqualTo(1f));
+                Assert.That(explicitJobs.SetupAvailableJobs["Adjutant"], Is.EqualTo(new[] { 0, 0 }));
+                Assert.That(explicitJobs.SetupAvailableJobs["IAA"], Is.EqualTo(new[] { 2, 4 }));
+                Assert.That(explicitJobs.SetupAvailableJobs["CommandMaid"], Is.EqualTo(new[] { 1, 1 }));
+                Assert.That(explicitJobs.JobList["Adjutant"], Is.Zero);
+                Assert.That(explicitJobs.MidRoundTotalJobs, Is.EqualTo(5));
+                Assert.That(explicitJobs.TotalJobs, Is.EqualTo(5));
+                Assert.That(noCaptain.SetupAvailableJobs.ContainsKey("Adjutant"), Is.False);
+                Assert.That(noCaptain.SetupAvailableJobs.ContainsKey("IAA"), Is.False);
+                Assert.That(noCaptain.SetupAvailableJobs.ContainsKey("CommandMaid"), Is.False);
+                Assert.That(noCaptain.MidRoundTotalJobs, Is.Zero);
+                Assert.That(noCaptain.OverflowJobs, Does.Contain((ProtoId<JobPrototype>) "Passenger"));
+                Assert.That(configured.SetupAvailableJobs["TChaplain"], Is.EqualTo(new[] { 2, 3 }));
+                Assert.That(configured.JobList["TChaplain"], Is.EqualTo(3));
+                Assert.That(configured.MidRoundTotalJobs, Is.EqualTo(4));
+                Assert.That(configured.TotalJobs, Is.EqualTo(4));
+            });
+        });
+    }
+    // Arcane-End
 
     [Test]
     public async Task AdjustJobsTest()

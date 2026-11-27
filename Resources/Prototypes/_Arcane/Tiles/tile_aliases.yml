@@ -1,0 +1,4 @@
+# Old Arcane maps (Infinity Dorm rooms) use tiles from the old codebase.
+- type: tileAlias
+  id: FloorFlockZone3
+  target: FloorDark

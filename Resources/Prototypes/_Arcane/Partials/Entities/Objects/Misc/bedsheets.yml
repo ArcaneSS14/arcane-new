@@ -1,0 +1,5 @@
+- type: entity
+  id: BedsheetBase
+  components:
+  - type: StaticPrice
+    price: 7.5

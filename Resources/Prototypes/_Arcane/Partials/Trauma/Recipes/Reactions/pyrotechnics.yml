@@ -1,0 +1,5 @@
+- type: reaction
+  id: Octogen
+  reactants:
+    Vestine:
+      amount: 1

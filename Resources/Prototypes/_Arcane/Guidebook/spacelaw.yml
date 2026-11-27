@@ -1,0 +1,113 @@
+- type: guideEntry
+  id: SpaceRights
+  name: guide-entry-space-law-laws-space-rights
+  priority: 2
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/SpaceRights.xml"
+
+- type: guideEntry
+  id: Procedures
+  name: guide-entry-space-law-laws-procedures
+  priority: 3
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Procedures.xml"
+
+- type: guideEntry
+  id: SpaceLawTable
+  name: guide-entry-space-law-table
+  priority: 1
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/SpaceLaw-Law_Table.xml"
+  children:
+    - SpaceLaw_Law-0
+    - SpaceLaw_Law-1
+    - SpaceLaw_Law-2
+    - SpaceLaw_Law-3
+    - SpaceLaw_Law-4
+    - SpaceLaw_Law-5
+    - SpaceLaw_Law-6
+    - SpaceLaw_Law-7
+    - SpaceLaw_Law-8
+    - SpaceLaw_Law-9
+    - SpaceLaw_Law-10
+
+- type: guideEntry
+  id: SpaceLaw_Law-0
+  name: guide-entry-space-law-laws-0
+  priority: 0
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T0.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-1
+  name: guide-entry-space-law-laws-1
+  priority: 1
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T1.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-2
+  name: guide-entry-space-law-laws-2
+  priority: 2
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T2.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-3
+  name: guide-entry-space-law-laws-3
+  priority: 3
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T3.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-4
+  name: guide-entry-space-law-laws-4
+  priority: 4
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T4.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-5
+  name: guide-entry-space-law-laws-5
+  priority: 5
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T5.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-6
+  name: guide-entry-space-law-laws-6
+  priority: 6
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T6.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-7
+  name: guide-entry-space-law-laws-7
+  priority: 7
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T7.xml"
+
+- type: guideEntry
+  id: SpaceLaw_Law-8
+  name: guide-entry-space-law-laws-8
+  priority: 8
+  text: /ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T8.xml
+
+- type: guideEntry
+  id: SpaceLaw_Law-9
+  name: guide-entry-space-law-laws-9
+  priority: 9
+  text: /ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T9.xml
+
+- type: guideEntry
+  id: SpaceLaw_Law-10
+  name: guide-entry-space-law-laws-10
+  priority: 10
+  text: /ServerInfo/_Arcane/Guidebook/SpaceLaw/Laws/Laws-T10.xml
+
+- type: guideEntry
+  id: PunishmentTypes
+  name: guide-entry-space-law-punishment-types
+  priority: 4
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/PunishmentTypes.xml"
+
+- type: guideEntry
+  id: PunishmentTerms
+  name: guide-entry-space-law-punishment-terms
+  priority: 5
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/PunishmentTerms.xml"
+
+- type: guideEntry
+  id: UseOfForce
+  name: guide-entry-space-law-use-of-force
+  priority: 7
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/UseOfForce.xml"

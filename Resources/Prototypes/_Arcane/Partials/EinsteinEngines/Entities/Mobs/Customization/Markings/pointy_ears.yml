@@ -1,0 +1,31 @@
+- type: marking
+  id: PointyEarsUpwards
+  underHair: true
+
+- type: marking
+  id: PointyEarsSmall
+  underHair: true
+
+- type: marking
+  id: PointyEarsWide
+  underHair: true
+
+- type: marking
+  id: PointyEarsSlanted
+  underHair: true
+
+- type: marking
+  id: PointyEarsTall
+  underHair: true
+
+- type: marking
+  id: PointyEarsLarge
+  underHair: true
+
+- type: marking
+  id: PointyEarsThin
+  underHair: true
+
+- type: marking
+  id: PointyEarsStandard
+  underHair: true

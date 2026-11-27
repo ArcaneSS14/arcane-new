@@ -1,0 +1,7 @@
+- type: entity
+  id: MalignRiftSpawn
+  components:
+  - type: StationEvent
+    earliestStart: 30
+    maxOccurrences: 1
+    minimumPlayers: 30

@@ -38,6 +38,16 @@ namespace Content.Shared.Construction
                         ("requiredElement", name))); // Trauma - remove Loc.GetString it's an entity prototype
                 }
 
+                // Arcane-Start: list the stock parts too
+                foreach (var (part, amount) in component.PartRequirements)
+                {
+                    var partProto = ProtoMan.Index(part);
+                    args.PushMarkup(Loc.GetString("machine-board-component-required-element-entry-text",
+                        ("amount", amount),
+                        ("requiredElement", ProtoMan.Index(partProto.StockPartPrototype).Name)));
+                }
+                // Arcane-End
+
                 foreach (var (_, info) in component.ComponentRequirements)
                 {
                     var examineName = _construction.GetExamineName(info);

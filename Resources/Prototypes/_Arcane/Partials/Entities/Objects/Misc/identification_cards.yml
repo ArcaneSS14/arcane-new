@@ -1,0 +1,4 @@
+- type: entity
+  id: IDCardStandard
+  components:
+  - type: BitrunningPoints

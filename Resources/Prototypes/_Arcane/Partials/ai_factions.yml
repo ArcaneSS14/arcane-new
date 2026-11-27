@@ -1,0 +1,19 @@
+- type: npcFaction
+  id: SimpleHostile
+  hostile:
+  - Changeling
+
+- type: npcFaction
+  id: Dragon
+  hostile:
+  - Changeling
+
+- type: npcFaction
+  id: Xeno
+  hostile:
+  - Changeling
+
+- type: npcFaction
+  id: Revolutionary
+  hostile:
+  - Changeling

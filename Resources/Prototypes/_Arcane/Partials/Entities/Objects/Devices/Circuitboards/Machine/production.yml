@@ -1,0 +1,7 @@
+- type: entity
+  id: FlatpackerMachineCircuitboard
+  components:
+  - type: MachineBoard
+    partRequirements:
+      MicroLaser: 3
+      Servo: !Remove

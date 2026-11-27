@@ -100,12 +100,12 @@
     head: ClothingHeadHelmetERTMedic
     neck: ExecutiveIDCard # Goobstation - Executive Access!
     eyes: ClothingEyesGlassesMedSec # Goobstation
-    gloves: ClothingHandsGlovesNitrile
+    gloves: ClothingHandsGlovesSurgical
     outerClothing: ClothingOuterArmorBasic
     id: ERTMedicPDA
     ears: ClothingHeadsetAltCentCom
     belt: ClothingBeltSecurityWebbingFilledMedical # Fancier
-    pocket1: Flare
+    # pocket2: Flare
   storage:
     back:
     - CentCommHypo
@@ -114,6 +114,5 @@
     - ChemistryBottleOmnizine
     - JugOxandrolone
     - JugSalicylicAcid
-    - ParamedHypo
-    - CartridgeAtropine
-    - CartridgeAtropine
+  inhand:
+  - MedicalBeamGunBattery

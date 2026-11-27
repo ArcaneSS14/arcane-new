@@ -1,0 +1,51 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Made by bulbo44kkey (Discord)",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "chris_claws_left",
+            "directions": 4
+        },
+        {
+            "name": "chris_claws_right",
+            "directions": 4
+        },
+        {
+            "name": "razor_feet_left",
+            "directions": 4
+        },
+        {
+            "name": "razor_feet_right",
+            "directions": 4
+        },
+        {
+            "name": "burrower_claws_l_foot",
+            "directions": 4
+        },
+        {
+            "name": "burrower_claws_r_foot",
+            "directions": 4
+        },
+        {
+            "name": "queen_heel_l",
+            "directions": 4
+        },
+        {
+            "name": "queen_heel_r",
+            "directions": 4
+        },
+        {
+            "name": "red-queen-leg-left",
+            "directions": 4
+        },
+        {
+            "name": "red-queen-leg-right",
+            "directions": 4
+        }
+    ]
+}

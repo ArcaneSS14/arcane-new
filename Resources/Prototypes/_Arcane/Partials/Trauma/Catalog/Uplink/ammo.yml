@@ -1,0 +1,9 @@
+- type: listing
+  id: UplinkPistolMagazineCaselessTranquilizer
+  cost:
+    Telecrystal: 17
+
+- type: listing
+  id: UplinkPistolMagazineCaselessPoison
+  cost:
+    Telecrystal: 15

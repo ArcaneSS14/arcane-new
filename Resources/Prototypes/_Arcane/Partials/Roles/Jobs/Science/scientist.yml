@@ -1,0 +1,9 @@
+- type: job
+  id: Scientist
+  alternateTitles:
+  - ScientistXenoarchaeologist
+  - ScientistAnomalyResearcher
+  - ScientistHardwareTechnician
+  - ScientistResearchScientist
+  - ScientistLaboratoryTechnician
+  - ScientistScientificAdvisor

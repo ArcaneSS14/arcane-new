@@ -1,0 +1,13 @@
+- type: reagent
+  id: BaseSoda
+  metabolisms:
+    Bloodstream:
+      effects:
+        - !type:HealthChange
+          conditions:
+          - !type:MetabolizerTypeCondition
+            type:
+            - HumanoidXeno
+          damage:
+            types:
+              Poison: 2

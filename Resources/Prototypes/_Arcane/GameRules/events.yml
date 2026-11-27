@@ -47,3 +47,15 @@
     prototype: AnomalyWormhole
     minCount: 30
     maxCount: 50
+
+- type: entity
+  parent: BaseGameRule
+  id: InvisibleSpawn
+  components:
+  - type: StationEvent
+    weight: 6
+    duration: 1
+    earliestStart: 10
+  - type: GameRule
+  - type: RandomSpawnRule
+    prototype: InvisibleSpawner

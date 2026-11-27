@@ -558,6 +558,7 @@
 - type: marking
   id: TajaranOutears
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/tajaran_head.rsi
@@ -598,6 +599,7 @@
 - type: marking
   id: TajaranInears
   bodyPart: HeadTop
+  underHair: true
   groupWhitelist: [Tajaran]
   sprites:
   - sprite: _Arcane/Mobs/Customization/Tajaran/tajaran_head.rsi

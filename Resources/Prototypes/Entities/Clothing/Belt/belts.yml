@@ -73,7 +73,7 @@
 ## Belts without visualizers
 
 - type: entity
-  parent: [ClothingBeltAmmoProviderBase, BaseSecurityBartenderContraband]
+  parent: [ClothingBeltStorageBase, BaseSecurityBartenderContraband] # Arcane-Edit: [ClothingBeltAmmoProviderBase, BaseSecurityBartenderContraband] > [ClothingBeltStorageBase, BaseSecurityBartenderContraband]
   id: ClothingBeltBandolier
   name: bandolier
   description: A bandolier for holding shotgun ammunition.
@@ -84,11 +84,19 @@
     sprite: Clothing/Belt/bandolier.rsi
   - type: Item
     size: Huge
-  - type: BallisticAmmoProvider
+  - type: Storage # Arcane-Edit: BallisticAmmoProvider > Storage
     whitelist:
       tags:
         - ShellShotgun
-    capacity: 14
+    # Arcane-Edit-Start: capacity 14 > grid 0,0,6,2
+    grid:
+    - 0,0,6,2
+    # Arcane-Edit-End
+    # Arcane-Start
+    quickInsert: true
+    areaInsert: true
+    # Arcane-End
+  - type: Dumpable # Arcane
 
 - type: entity
   parent: [ ClothingBeltStorageBase, BaseMagicalContraband ]

@@ -32,6 +32,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
         _sawmill = Logger.GetSawmill("guidebook");
+        InitializeWorkspace(); // Arcane
 
         Tree.OnSelectedItemChanged += OnSelectionChanged;
         TableOfContents.OnSelectedItemChanged += OnTableOfContentsSelectionChanged;
@@ -44,9 +45,17 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
 
     public void HandleClick(string link)
     {
+        // Arcane-Edit-Start
+        HandleWorkspaceLink(link);
+    }
+
+    private void SelectGuide(string link)
+    {
+        // Arcane-Edit-End
         if (!_entries.TryGetValue(link, out var entry))
             return;
 
+        SelectEntryCategory(entry); // Arcane
         if (Tree.TryGetIndexFromMetadata(entry, out var index))
         {
             Tree.ExpandParentEntries(index.Value);
@@ -100,7 +109,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
 
             var isRulesEntry = entry.RuleEntry;
             ReturnContainer.Visible = isRulesEntry;
-            HomeButton.OnPressed += _ => ShowGuide(entry);
+            _ruleHomeEntry = entry.RuleEntry ? entry.Id : null; // Arcane-Edit: HomeButton.OnPressed += _ => ShowGuide(entry) > the workspace home button
         }
         else
             ClearSelectedGuide();
@@ -123,6 +132,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
 
     public void ClearSelectedGuide()
     {
+        ClearWorkspaceArticle(); // Arcane
         Placeholder.Visible = true;
         EntryContainer.Visible = false;
         SearchContainer.Visible = false;
@@ -133,6 +143,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
 
     private void ShowGuide(GuideEntry entry)
     {
+        RememberArticleScroll(); // Arcane
         Scroll.SetScrollValue(default);
         Placeholder.Visible = false;
         EntryContainer.Visible = true;
@@ -150,6 +161,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
         }
 
         Selected = entry.Id;
+        RefreshWorkspaceArticle(entry); // Arcane
 
         var (linkableControls, linkControls) = GetLinkableControlsAndLinks(EntryContainer);
 
@@ -229,31 +241,10 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
     {
         // check if old and new entries are equal
         var sameAsLastUpdate = entries.Count != _entries.Count || !entries.All(_entries.Contains);
-        if (sameAsLastUpdate)
-        {
-            _entries = entries;
-            RepopulateTree(rootEntries, forceRoot);
-            Split.State = SplitContainer.SplitState.Auto;
-            if (entries.Count == 1)
-            {
-                TreeBox.Visible = false;
-                Split.ResizeMode = SplitContainer.SplitResizeMode.NotResizable;
-                selected = entries.Keys.First();
-            }
-            else
-            {
-                TreeBox.Visible = true;
-                Split.ResizeMode = SplitContainer.SplitResizeMode.RespectChildrenMinSize;
-            }
-        }
-
-        if (selected == null)
-            ClearSelectedGuide();
-        else
-        {
-            var item = Tree.Items.FirstOrDefault(x => x.Metadata is GuideEntry entry && entry.Id == selected);
-            Tree.SetSelectedIndex(item?.Index);
-        }
+        // Arcane-Edit-Start: the workspace rebuilds the categories, tree and selection
+        _entries = entries;
+        UpdateWorkspaceGuides(rootEntries, forceRoot, selected);
+        // Arcane-Edit-End
 
         return sameAsLastUpdate;
     }
@@ -275,6 +266,7 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
         // As defined in the SS14 Dev Wiki, children are already sorted based on their child field order within their parent's prototype definition.
         // Roots are sorted by priority. If there is no defined priority for a root then it is by definition sorted undefined.
         return rootEntries
+            .Where(_entries.ContainsKey) // Arcane
             .Select(rootEntryId => _entries[rootEntryId])
             .OrderBy(rootEntry => rootEntry.Priority)
             .ThenBy(rootEntry => Loc.GetString(rootEntry.Name));
@@ -320,9 +312,9 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler, IA
         var name = Loc.GetString(entry.Name);
         item.Label.Text = name;
 
-        foreach (var child in entry.Children)
+        foreach (var child in GetSortedEntries(entry.Children)) // Arcane-Edit: entry.Children > GetSortedEntries(entry.Children)
         {
-            AddEntry(child, item, addedEntries);
+            AddEntry(child.Id, item, addedEntries); // Arcane-Edit: child > child.Id
         }
 
         return item;

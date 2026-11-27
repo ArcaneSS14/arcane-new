@@ -28,7 +28,7 @@
   - type: Item
     size: Small
   - type: StaticPrice
-    price: 24
+    price: 7
   - type: Tag
     tags:
     - Bedsheet

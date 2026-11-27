@@ -1,0 +1,11 @@
+- type: entity
+  id: CommandMaidIDCard
+  description: Command Maid ID card.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Objects/Misc/id_cards.rsi
+    layers: !Clear
+    - state: ert_commaid
+    - state: idcommaid
+  - type: Item
+    heldPrefix: pink

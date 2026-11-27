@@ -1,0 +1,43 @@
+- type: entity
+  id: ClothingHeadPyjamaSyndicateBlack
+  components:
+  - type: StaticPrice
+    price: 5
+
+- type: entity
+  id: ClothingHeadHatBeretSecurity
+  components:
+  - type: Armor
+    priceMultiplier: 0
+  - type: StaticPrice
+    price: 5
+
+- type: entity
+  id: ClothingHeadHatCentcomcap
+  components:
+  - type: Armor
+    priceMultiplier: 0
+
+- type: entity
+  id: ClothingHeadHatWarden
+  components:
+  - type: Armor
+    priceMultiplier: 0
+
+- type: entity
+  id: ClothingHeadHatCapcap
+  components:
+  - type: Armor
+    priceMultiplier: 0
+
+- type: entity
+  id: ClothingHeadHatBeretSeniorPhysician
+  components:
+  - type: StaticPrice
+    price: 5
+
+- type: entity
+  id: ClothingHeadHatUshanka
+  components:
+  - type: StaticPrice
+    price: 5

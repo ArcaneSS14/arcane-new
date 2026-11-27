@@ -201,3 +201,5 @@ marking-RodentiaFootLeftBasic-l_foot = Foot
 
 marking-RodentiaFootRightBasic = Right Foot - Basic
 marking-RodentiaFootRightBasic-r_foot = Foot
+
+marking-RodentiaTailJerboa = Jerboa tail

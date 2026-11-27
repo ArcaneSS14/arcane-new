@@ -1,0 +1,67 @@
+- type: marking
+  id: GauzeLefteyePatch
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeLowerLegLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeBlindfold
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeLeftArm
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeShoulder
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeLefteyePad
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeLowerLegRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeUpperLegLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeUpperArmRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeStomach
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeLowerArmRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeBoxerWrapLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeBoxerWrapRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeUpperLegRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeRighteyePad
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeHead
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: GauzeRighteyePatch
+  groupWhitelist: [ Demon ]

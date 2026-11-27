@@ -1,0 +1,34 @@
+- type: entity
+  id: FoodPlate
+  components:
+  - type: Tag
+    tags:
+    - Dishware
+
+- type: entity
+  id: FoodPlateMuffinTin
+  components:
+  - type: Tag
+    tags:
+    - Dishware
+
+- type: entity
+  id: FoodPlateSmallPlastic
+  components:
+  - type: Tag
+    tags:
+    - Dishware
+
+- type: entity
+  id: FoodPlateTin
+  components:
+  - type: Tag
+    tags:
+    - Dishware
+
+- type: entity
+  id: FoodPlatePlastic
+  components:
+  - type: Tag
+    tags:
+    - Dishware

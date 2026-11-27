@@ -1,0 +1,6 @@
+- type: job
+  id: AtmosphericTechnician
+  alternateTitles:
+  - AtmosphericTechnicianGasTechnician
+  - AtmosphericTechnicianAtmosphereSpecialist
+  - AtmosphericTechnicianGasSystemsOperator

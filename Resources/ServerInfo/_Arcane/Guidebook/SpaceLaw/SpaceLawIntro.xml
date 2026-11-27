@@ -1,0 +1,389 @@
+<Document>
+
+  # Космический Закон
+
+  [bold]Основные положения и регламент[/bold]
+
+  Космический Закон (он же Корпоративный Закон) - уголовно-правовой, административный и процессуальный кодекс [color=Aqua]НаноТрейзен[/color], принятый 1 января 2501 года. Данный закон применяется на каждом объекте Корпорации для осуществления наказания нарушителей правопорядка. Его действие распространяется на всех сотрудников и собственность корпорации, союзные корпорации, а также на иных посетителей с их имуществом, таких как: работников ближайших станций/космические корабли и любых иных неустановленных/неавторизованных лиц.
+
+  Каждый сотрудник Мега-Корпорации должен быть ознакомлен с Космическим Законом на базовом уровне и соблюдать его. Сотрудники, чья деятельность тесно связана с Космическим Законом, обязаны владеть им на продвинутом уровне.
+
+  ## Интерпретация космического закона
+  Для обеспечения максимальной продуктивности всем членам экипажа необходимо обладать единым пониманием положений Космического закона.
+
+  [italic]В случае назначения временного заключения сроком более 35-и минут, нарушитель должен быть помещен в пермабриг (вместо ИВС) и отбывать там наказание до его истечения.[/italic]
+
+  [italic]Если срок заключения составляет более 60-ти минут, то данного преступника следует приговорить к пожизненному заключение в Пермабриг до конца смены.[/italic]
+
+  ## Модификаторы преступлений
+
+  <Table Columns="3">
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]Название модификатора[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]Описание модификатора[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]Влияние на наказание[/bold]
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОМ-1. Должностное преступление[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Преступление совершенное должностным лицом. Не применяется к статьям Х04 категории.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Добавляется 15% к общему сроку или штрафу
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОМ-2. Рецидив[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Лицо уже ранее было осуждено и совершило преступление по той же статье во второй раз.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Повышение срока на 25% на первый рецидив и на 50% по второму случаю этого же рецидива
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОМ-3. Преступление против должностного лица[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Действие совершно против должностного лица в связи с исполнением им функций представителя власти. Не применяется к статьям 303, 203 КЗ.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Увеличение срока или штрафа на 25%
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОМ-4. Пособничество[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Оказание материальной или иной помощи преступнику в результате сговора или стихийной с целью помочь ему совершить преступление.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Тот же срок, что и у исполнителя
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-1. Преступление по неосторожности[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Преступление признается совершенным по неосторожности, если лицо, его совершившее, предвидело возможность наступления общественно опасных или вредных последствий своих действий (или бездействия), но легкомысленно рассчитывало на их предотвращение, ЛИБО не предвидело возможности наступления таких последствий, хотя при необходимой внимательности и осмотрительности (в рамках своей профессии) должно было и могло их предвидеть. Не применяется к статьям "Халатность", "Грубая Халатность".
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Снижение срока от 10% до 50%
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-2. Отсутствие вины[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Деяние совершено без умысла, а также без признаков легкомыслия или небрежности. Лицо не предвидело, не желало и объективно не могло предвидеть наступления опасных последствий.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Освобождение
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-3. Сотрудничество со следствием[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Оказание помощи Службе Безопасности в раскрытии преступления путем информации о подельниках, искомом имуществе или иной важной информации. Информация должна быть достоверной.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        На усмотрение должностного лица или снижение срока на 25%
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-4. Крайняя необходимость[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Действия направленные в условиях чрезвычайной ситуации на благополучие персонала станции или NanoTrasen.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Освобождение
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-5. Самооборона[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Допустимой самообороной признаются действия, когда для отражения нападения применялась соразмерная опасности сила. Например, в ответ на удар кулаком пострадавший нанес аналогичный удар, однако, если нападавший наносил множественные удары кулаками с угрозой для жизни - использование ножа будет оправданным.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Освобождение или в случаях превышения мер допустимой самообороны снижение срока на 25%
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-6. Вражеская конвертация[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Лицо, которому неподвластен собственный разум, должно быть задержано нелетальным образом и освобождено от внешнего контроля разума. После данного освобождения с такого лица должны быть сняты все обвинения. Любая контрабанда и опасные предметы, полученные во время действия конвертации, должны быть изъяты без юридических последствий.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Деконвертация и немедленное освобождение
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]СМ-7. Добровольный отказ от преступления[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Действия когда лицо добровольно в момент совершения отказывается от своего преступления устраняя свое нарушение и фактически исключает тяжких последствий.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Освобождение или снижение срока на 10% в случаях, если отказ от преступления был безуспешным
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#1a5fb4">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОС-1. Покушение на преступление[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Действия, когда лицо готовилось к совершению преступления или не смогло его осуществить по независящим от него обстоятельствам. В случаях покушения на убийство первой степени, следует назначать убийство второй степени без этого модификатора.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Должно рассматриваться индивидуально. В большинстве случаев это снижение наказания на 25% или замена казни на пожизненное лишение свободы
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#1a5fb4">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОС-2. Решение Центрального Командования[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Любое решение Центрального Командования может сильно отличаться от требований действующего КЗ, но их выполнение обязательно.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Выполнение в полном объеме
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#1a5fb4">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        [bold]ОС-3. Решение суда[/bold]
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Судья может установить особый способ наказания или срок, если посчитает, что цели наказания будут достигнуты лучше. Это также дает право вольно трактовать суду КЗ и гибко применять его. Корпоративный Закон призван защищать, а не мешать.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#222222">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Выполнение решения суда в полном объеме
+      </Box>
+    </ColorBox>
+
+  </Table>
+
+  ## Враги корпорации
+
+  Особая категория нарушителей, представители которой были специально направлены или каким-либо иным образом оказались в пределах объекта [color=Aqua]НаноТрейзен[/color], и намеренно ведут подрывную деятельность против самого объекта, его экипажа или корпорации Nanotrasen в целом. Враги корпорации могут быть как рядовыми членами экипажа, запуганными или подкупленными, так и враждебными инопланетными сущностями, в данном списке представлены основные их категории:
+
+  Лицо, имеющее доказанное сотрудничество с враждебной по отношению к [color=Aqua]НаноТрейзен[/color] корпорацией или организацией.
+  Лицо или группа лиц, следующая опасным религиозным воззрениям и ритуалам, нацеленным на причинение вреда станции или его экипажу.
+  Лицо или группа лиц, не являющихся членами экипажа и осуществляющих нападение на объект [color=Aqua]НаноТрейзен[/color] с преследованием открыто враждебных целей.
+  Паранормальная или инопланетная сущность, создающая угрозу объекту [color=Aqua]НаноТрейзен[/color] или его экипажу (к примеру генокрад, абдуктор, блоб, кортикальный паразит и т.д.).
+  Лицо или группа лиц, нарушивших статьи 5XX-уровня более 2-х раз.
+
+  <Table Columns="2">
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Экипаж:
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#af3c3c">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Враги корпорации:
+      </Box>
+    </ColorBox>
+  </Table>
+
+  <Table Columns="4">
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Конвертированные сотрудники:
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#bf9821">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Вечный пермабриг:
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#cc7500">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Казнь/изгнание:
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Уничтожение на месте:
+      </Box>
+    </ColorBox>
+
+    <ColorBox Color="#138808">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Культист,
+        Раб Вампира,
+        Жертва промывки мозгов,
+        Жертва импланта рабства,
+        Член революции,
+        Члены "Семьи".
+      </Box>
+    </ColorBox>
+    <ColorBox  Color="#bf9821">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Агент Синдиката,
+        Враждебно настроенные Воксы (не члены экипажа),
+        Работорговцы,
+        Еретик.
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#cc7500">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Истинный вампир,
+        Глава революции (установка МЩ невозможна),
+        Агент-культист,
+        Сбежавший заключенный из Пермабрига и перма-каторги,
+        Еретик (Возвысившийся).
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#b11e13">
+      <Box HorizontalAlignment="Center" VerticalAlignment="Center">
+        Генокрад,
+        Космический ниндзя,
+        Маг и ученик мага,
+        Неразумные и агрессивно настроенные существа,
+        Одинокий оперативник,
+        Абдукторы похитители,
+        Оперативники Синдиката,
+        Преступники, нарушившие более 2-ух статей 5ХХ-уровня,
+        Космические Пираты,
+        Ксеноморф,
+        Блоб,
+        Морф,
+        Паук террора,
+        Инфицированный зомби-вирусом,
+        Хедкрабы,
+        Дьявол.
+      </Box>
+    </ColorBox>
+  </Table>
+
+  Нахождение оптимальных способов взаимодействия с представителями указанных категорий ложится на плечи уполномоченных лиц. Способы должны основываться на исходящей от врагов корпорации угрозе, их численности, возможности ареста и последующего содержания.
+
+  Помните: не подпадающие под действие закона Враги Корпорации не ограничены обычными статьями, поэтому вам разрешается находить и применять нестандартные методы для устранения угрозы, однако рекомендуется ограничиться менее радикальными методами, а также методами с меньшим применением насилия, если только не существует другого выхода.
+
+  [bold]Задача службы безопасности заключается в подавлении угрозы с минимизацией ущерба активам и экипажу объекта Корпорации, а не в её уничтожении любой ценой.[/bold]
+
+
+  # Должностные лица
+
+  Данные лица имеют права использовать инструменты с доступом к офицерской Базе Данных (СБ-худы), носить их и изменять статус другим членам экипажа. Несанкционированный экипаж с данным устройством подлежит аресту по статье 206, а имущество обязано быть конфисковано.
+
+  - Все члены командования (в том числе офицеры мостика).
+  - Представитель корпорации (НТР).
+  - Синий Щит.
+  - Весь персонал СБ.
+  - Иной персонал юридического департамента и ЦК.
+
+  ## Категории преступлений
+
+  - [textlink="Преступления категории (ХХ0)" link="SpaceLaw_Law-0"]
+  - [textlink="Преступления категории (ХХ1)" link="SpaceLaw_Law-1"]
+  - [textlink="Преступления категории (ХХ2)" link="SpaceLaw_Law-2"]
+  - [textlink="Преступления категории (ХХ3)" link="SpaceLaw_Law-3"]
+  - [textlink="Преступления категории (ХХ4)" link="SpaceLaw_Law-4"]
+  - [textlink="Преступления категории (ХХ5)" link="SpaceLaw_Law-5"]
+  - [textlink="Преступления категории (ХХ6)" link="SpaceLaw_Law-6"]
+  - [textlink="Преступления категории (ХХ7)" link="SpaceLaw_Law-7"]
+  - [textlink="Преступления категории (ХХ8)" link="SpaceLaw_Law-8"]
+  - [textlink="Преступления категории (ХХ9)" link="SpaceLaw_Law-9"]
+  - [textlink="Преступления категории (ХХ10)" link="SpaceLaw_Law-10"]
+
+
+</Document>

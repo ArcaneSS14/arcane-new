@@ -1,0 +1,9 @@
+- type: job
+  id: Passenger
+  alternateTitles:
+  - AssistantPassenger
+  - AssistantVisitor
+  - AssistantOffDuty
+  - AssistantTourist
+  - AssistantTraveler
+  - AssistantCivilian

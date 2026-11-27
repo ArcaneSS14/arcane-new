@@ -1,0 +1,5 @@
+- type: entity
+  id: Supermatter
+  components:
+    - type: Supermatter
+      radiationOutputFactor: 0.01

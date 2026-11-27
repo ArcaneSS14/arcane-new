@@ -1,0 +1,10 @@
+- type: reagent
+  id: Coldsauce
+  metabolisms:
+    Digestion:
+      effects:
+      - !type:AdjustTemperature
+        amount: -25
+        conditions:
+        - !type:TemperatureCondition
+          min: 270

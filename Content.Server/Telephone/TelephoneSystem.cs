@@ -23,6 +23,7 @@ using Robust.Shared.Utility;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using System.Linq;
+using Content.Server._Arcane.Telephone; // Arcane
 
 namespace Content.Server.Telephone;
 
@@ -120,7 +121,26 @@ public sealed partial class TelephoneSystem : SharedTelephoneSystem
         var range = args.TelephoneSource.Comp.LinkedTelephones.Count > 1 ? ChatTransmitRange.HideChat : ChatTransmitRange.GhostRangeLimit;
         var volume = entity.Comp.SpeakerVolume == TelephoneVolume.Speak ? InGameICChatType.Speak : InGameICChatType.Whisper;
 
-        _chat.TrySendInGameICMessage(speaker, args.Message, volume, range, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language); // Eisntein Engines - Language
+        // Arcane-Edit-Start: Preserve the original speaker for the duration of the relay.
+        var hadRelay = TryComp<TelephoneRelaySpeechComponent>(speaker, out var relay);
+        relay ??= AddComp<TelephoneRelaySpeechComponent>(speaker);
+        var previousSource = relay.Source;
+        relay.Source = args.MessageSource;
+        try
+        {
+            _chat.TrySendInGameICMessage(speaker, args.Message, volume, range, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language);
+        }
+        finally
+        {
+            if (!TerminatingOrDeleted(speaker))
+            {
+                if (hadRelay)
+                    relay.Source = previousSource;
+                else
+                    RemComp<TelephoneRelaySpeechComponent>(speaker);
+            }
+        }
+        // Arcane-Edit-End
     }
 
     #endregion

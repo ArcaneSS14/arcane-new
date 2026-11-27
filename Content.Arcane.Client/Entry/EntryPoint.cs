@@ -1,5 +1,6 @@
-using Robust.Shared.ContentPack;
+using Content.Arcane.Client.IoC;
 using Content.Arcane.Client.JoinQueue;
+using Robust.Shared.ContentPack;
 using Robust.Shared.Prototypes;
 
 namespace Content.Arcane.Client.Entry;
@@ -11,12 +12,15 @@ public sealed class EntryPoint : GameClient
     public override void PreInit()
     {
         Dependencies.Register<JoinQueueManager>();
+        ClientArcaneContentIoC.Register(Dependencies);
     }
 
     public override void Init()
     {
         base.Init();
         Dependencies.Resolve<IPrototypeManager>().RegisterIgnore("achievement");
+
+        Dependencies.BuildGraph();
     }
 
     public override void PostInit()

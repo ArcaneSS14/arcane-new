@@ -43,9 +43,7 @@ public sealed partial class OutfitSystem : EntitySystem
         if (TryComp(target, out ActorComponent? actorComponent))
         {
             session = actorComponent.PlayerSession;
-            var userId = actorComponent.PlayerSession.UserId;
-            var prefs = _preferenceManager.GetPreferences(userId);
-            profile = prefs.SelectedCharacter;
+            profile = _preferenceManager.GetValidatedSelectedCharacter(session); // Arcane-Edit: revalidate permissions before equipping
         }
 
         if (_invSystem.TryGetSlots(target, out var slots))

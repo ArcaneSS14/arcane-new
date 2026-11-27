@@ -1,0 +1,5 @@
+- type: damageModifierSet
+  id: IPC
+  coefficients:
+    Heat: 1.4
+    Radiation: 0.2

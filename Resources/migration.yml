@@ -385,7 +385,7 @@ WarpPointLibrary: null
 WarpPointMorgue: null
 WarpPointReporter: null
 WarpPointSingulo: null
-WashingMachine: null
+# WashingMachine: null # Arcane-Edit: WashingMachine: null > removed, the washing machine exists again
 WashingMachineBroken: null
 WashingMachineFilledClothes: null
 WeaponShotgunKammererNonLethal: null
@@ -1632,4 +1632,40 @@ Shower: null
 AntiPsychicKnife: null
 
 DresserCaptainFilled: CaptainDrobe
+# Arcane-End
+
+# Arcane-Start: Infinity Dorm rooms use entities from old Arcane that this tree lacks
+MannequinMan: Mannequin
+MannequinWoman: Mannequin
+RMCStreetlight: LightPostSmall
+RMCStreetlightBroken: LightPostSmall
+RMCCampfire: Bonfire
+ClothingEyesWelding: ClothingHeadHatWelding
+BaseTennisRacket: null
+NTTennisRacket: null
+SyndicateTennisRacket: null
+CratePlasticTennisGame: null
+ClothingNeckBeerWings: ClothingNeckScarfStripedBrown
+ClothingOuterSuitBeer: ClothingOuterSuitChicken
+ClothingUniformJumpsuitVeteranSecurity: ClothingUniformJumpsuitSecGrey
+DrinkKvassGlass: null
+HeadResomi: null
+LeftLegResomi: null
+RightArmResomi: null
+PosterVivaLaPivo: null
+RMCHybrisaProsperaMedicalSign: null
+RMCOverheadBillboard1B: null
+RMCOverheadBillboard3B: null
+RMCOverheadBillboard4C: null
+RMCOverheadBillboardBigger4: null
+RMCOverheadBillboardWallmount10: null
+RMCOverheadBillboardWallmount13: null
+RMCOverheadLatticeHorizontal5A: null
+RMCOverheadLatticeHorizontal6A: null
+RMCOverheadLatticeHorizontal6B: null
+RMCOverheadLatticeVertical1: null
+RMCOverheadLatticeVertical2: null
+RMCOverheadLatticeVertical2D: null
+RMCOverheadLatticeVertical3: null
+RMCOverheadLatticeVertical3D: null
 # Arcane-End
