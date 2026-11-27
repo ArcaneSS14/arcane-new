@@ -50,6 +50,8 @@ public sealed class HeadsetChannelRuntimeTest : InteractionTest
             Assert.That(ui.TryGetOpenUi<HeadsetChannelBoundUserInterface>(clientHeadset, HeadsetChannelUiKey.Key, out var bui), Is.True);
             var field = typeof(HeadsetChannelBoundUserInterface).GetField("_window", BindingFlags.Instance | BindingFlags.NonPublic)!;
             var window = (HeadsetChannelWindow) field.GetValue(bui)!;
+            typeof(HeadsetChannelBoundUserInterface).GetMethod("Open", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(bui, null);
+            Assert.That(field.GetValue(bui), Is.SameAs(window), "A repeated open must not create another window.");
             var rows = window.FindControl<BoxContainer>("ChannelList").Children.OfType<BoxContainer>().ToArray();
             var prototypes = Client.ResolveDependency<IPrototypeManager>();
             var command = Loc.GetString(prototypes.Index(Command).Name);
