@@ -19,12 +19,13 @@ public sealed class HeadsetChannelBoundUserInterface : BoundUserInterface
         base.Open();
         _window = this.CreateWindow<HeadsetChannelWindow>();
         _window.ChannelMuteToggled += (frequency, muted) => SendMessage(new HeadsetChannelMuteMessage(frequency, muted));
+        SendMessage(new HeadsetChannelUiRequestMessage());
     }
 
-    protected override void UpdateState(BoundUserInterfaceState state)
+    protected override void ReceiveMessage(BoundUserInterfaceMessage message)
     {
-        base.UpdateState(state);
-        if (state is not HeadsetChannelUiState update)
+        base.ReceiveMessage(message);
+        if (message is not HeadsetChannelUiUpdateMessage update)
             return;
 
         _window?.UpdateState(update.Channels, update.MutedFrequencies);

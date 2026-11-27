@@ -938,6 +938,7 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile Validated(ICommonSession session, IDependencyCollection collection, string[]? sponsorPrototypes = null) // Arcane-Edit: added sponsorPrototypes
         {
             var profile = new HumanoidCharacterProfile(this);
+            profile._loadouts = _loadouts.ToDictionary(pair => pair.Key, pair => pair.Value.Clone()); // Arcane: validation must not mutate saved selections
             profile.EnsureValid(session, collection, sponsorPrototypes);
             return profile;
         }
