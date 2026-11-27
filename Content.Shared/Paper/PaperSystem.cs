@@ -169,6 +169,10 @@ public sealed partial class PaperSystem : EntitySystem
         // If a stamp, attempt to stamp paper
         if (TryComp<StampComponent>(args.Used, out var stampComp) && TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState, args.User)) // Arcane-Edit: TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState) > TryStamp(entity, GetStampInfo(stampComp), stampComp.StampState, args.User)
         {
+            // Arcane-Start: report successful use of the stamp
+            var stampImprinted = new Content.Arcane.Common.Paper.StampImprintedEvent();
+            RaiseLocalEvent(args.Used, ref stampImprinted);
+            // Arcane-End
             // successfully stamped, play popup
             var stampPaperOtherMessage = Loc.GetString("paper-component-action-stamp-paper-other",
                     ("user", args.User),

@@ -31,7 +31,19 @@ public sealed partial class UplinkRefundableComponent : Component
     [DataField]
     public List<string>? OriginalContainerPrototypes;
 
+    /// <summary>Original item entities throughout the purchased container tree.</summary>
+    [DataField]
+    public HashSet<EntityUid> OriginalContainedItems = new();
+
     /// <summary>Combined reagent quantities across the product's solutions at purchase.</summary>
     [DataField]
     public Dictionary<string, FixedPoint2>? OriginalSolutionReagents;
+}
+
+/// <summary>Connects purchased contents to the product whose refund they affect.</summary>
+[RegisterComponent]
+public sealed partial class UplinkRefundUsageComponent : Component
+{
+    [DataField]
+    public EntityUid Product;
 }

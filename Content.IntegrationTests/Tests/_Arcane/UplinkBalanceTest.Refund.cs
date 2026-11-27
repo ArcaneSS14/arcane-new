@@ -7,11 +7,17 @@ using Content.Server.PDA.Ringer;
 using Content.Server.Store.Systems;
 using Content.Server.Traitor.Uplink;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.FixedPoint;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
+using Content.Shared.Paper;
+using Content.Shared.Storage;
+using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Weapons.Ranged.Components;
+using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Mind;
 using Content.Shared.Store;
 using Content.Shared.Store.Components;
@@ -32,6 +38,8 @@ public sealed partial class UplinkBalanceTest
     private const string RefundContainerListing = "ArcaneTestUplinkRefundContainer";
     private const string RefundSolutionListing = "ArcaneTestUplinkRefundSolution";
     private const string RefundWizardListing = "ArcaneTestWizardRefund";
+    private const string RefundBriefcaseListing = "ArcaneTestRefundBriefcase";
+    private const string RefundStampListing = "ArcaneTestRefundStamp";
 
     [TestPrototypes]
     private const string RefundPrototypes = """
@@ -70,7 +78,112 @@ public sealed partial class UplinkBalanceTest
   cost:
     WizCoin: 9
   categories: [ SpellbookEquipment ]
+- type: listing
+  id: ArcaneTestRefundBriefcase
+  discountCategory: null
+  productEntity: BriefcaseWeaponC20Filled
+  cost:
+    Telecrystal: 9
+  categories: [ UplinkPointless ]
+- type: listing
+  id: ArcaneTestRefundStamp
+  discountCategory: null
+  productEntity: RubberStampChameleon
+  cost:
+    Telecrystal: 9
+  categories: [ UplinkPointless ]
 """;
+
+    [Test]
+    public async Task UntouchedBriefcaseRemainsRefundable()
+    {
+        var map = await Pair.CreateTestMap();
+        await Server.WaitAssertion(() =>
+        {
+            var buyer = SSpawnAtPosition(Buyer.Id, map.GridCoords);
+            var uplink = SSpawnAtPosition(OrdinaryUplink.Id, map.GridCoords);
+            SComp<StoreComponent>(uplink).Balance[UplinkSystem.TelecrystalCurrencyPrototype] = 100;
+            var product = BuyRefundItem(uplink, buyer, RefundBriefcaseListing);
+            Assert.That(SComp<UplinkRefundableComponent>(product).OriginalContainedItems.Count, Is.GreaterThan(0));
+            Assert.That(ReturnRefundItem(uplink, buyer, product), Is.True);
+        });
+    }
+
+    [Test]
+    public async Task ReplacingNestedMagazineDoesNotMatchOriginalContents()
+    {
+        var map = await Pair.CreateTestMap();
+        await Server.WaitAssertion(() =>
+        {
+            var buyer = SSpawnAtPosition(Buyer.Id, map.GridCoords);
+            var uplink = SSpawnAtPosition(OrdinaryUplink.Id, map.GridCoords);
+            SComp<StoreComponent>(uplink).Balance[UplinkSystem.TelecrystalCurrencyPrototype] = 100;
+            var product = BuyRefundItem(uplink, buyer, RefundBriefcaseListing);
+            var gun = SComp<StorageComponent>(product).Container.ContainedEntities.Single(SEntMan.HasComponent<GunComponent>);
+            var slots = Server.System<ItemSlotsSystem>();
+            var magazine = slots.GetItemOrNull(gun, "gun_magazine");
+            Assert.That(magazine, Is.Not.Null);
+            SEntMan.DeleteEntity(magazine!.Value);
+            var replacement = SSpawnAtPosition("MagazinePistolSubMachineGun", map.GridCoords);
+            Assert.That(slots.TryInsert(gun, "gun_magazine", replacement, null), Is.True);
+            Assert.That(SComp<UplinkRefundableComponent>(product).IsUsed, Is.False);
+            Assert.That(ReturnRefundItem(uplink, buyer, product), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task SuccessfulStampMakesPurchaseNonRefundable()
+    {
+        var map = await Pair.CreateTestMap();
+        await Server.WaitAssertion(() =>
+        {
+            var buyer = SSpawnAtPosition(Buyer.Id, map.GridCoords);
+            var uplink = SSpawnAtPosition(OrdinaryUplink.Id, map.GridCoords);
+            SComp<StoreComponent>(uplink).Balance[UplinkSystem.TelecrystalCurrencyPrototype] = 100;
+            var stamp = BuyRefundItem(uplink, buyer, RefundStampListing);
+            var paper = SSpawnAtPosition("Paper", map.GridCoords);
+            SEntMan.EventBus.RaiseLocalEvent(paper, new InteractUsingEvent(buyer, stamp, paper, map.GridCoords));
+            Assert.That(SComp<PaperComponent>(paper).StampedBy, Is.Not.Empty);
+            Assert.That(SComp<UplinkRefundableComponent>(stamp).IsUsed, Is.True);
+            Assert.That(ReturnRefundItem(uplink, buyer, stamp), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task FiringExtractedGunMakesBriefcaseNonRefundable()
+    {
+        var map = await Pair.CreateTestMap();
+        EntityUid buyer = default;
+        EntityUid uplink = default;
+        EntityUid product = default;
+        EntityUid gun = default;
+        await Server.WaitAssertion(() =>
+        {
+            buyer = SSpawnAtPosition(Buyer.Id, map.GridCoords);
+            uplink = SSpawnAtPosition(OrdinaryUplink.Id, map.GridCoords);
+            SComp<StoreComponent>(uplink).Balance[UplinkSystem.TelecrystalCurrencyPrototype] = 100;
+            product = BuyRefundItem(uplink, buyer, RefundBriefcaseListing);
+            var storage = SComp<StorageComponent>(product);
+            gun = storage.Container.ContainedEntities.Single(SEntMan.HasComponent<GunComponent>);
+            Assert.That(Server.System<SharedContainerSystem>().Remove(gun, storage.Container, destination: map.GridCoords), Is.True);
+        });
+        await Pair.RunUntilSynced();
+        await Server.WaitAssertion(() =>
+        {
+            Assert.That(Server.System<SharedHandsSystem>().TryPickupAnyHand(buyer, gun, checkActionBlocker: false), Is.True);
+            Server.System<SharedGunSystem>().UseChambered(gun, SComp<ChamberMagazineAmmoProviderComponent>(gun), buyer);
+        });
+        await Pair.RunTicksSync(10);
+        await Server.WaitAssertion(() =>
+        {
+            var guns = Server.System<SharedGunSystem>();
+            Assert.That(guns.AttemptShoot(buyer, (gun, SComp<GunComponent>(gun)), map.GridCoords.Offset(new Vector2(2, 0))), Is.True);
+            Assert.That(SComp<UplinkRefundableComponent>(product).IsUsed, Is.True);
+            Assert.That(Server.System<SharedHandsSystem>().TryDrop(buyer, gun), Is.True);
+            Assert.That(Server.System<SharedStorageSystem>().Insert(product, gun, out _, user: buyer), Is.True);
+            Assert.That(ReturnRefundItem(uplink, buyer, product), Is.False);
+        });
+    }
 
     [TestCase("BaseUplinkRadio", false)]
     [TestCase("BaseUplinkRadio225TC", true)]

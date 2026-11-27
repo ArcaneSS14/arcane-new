@@ -8,6 +8,8 @@ using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
+using Content.Shared.Item;
+using Content.Arcane.Common.Paper;
 using Content.Shared.Access.Components;
 using Content.Shared.Mind;
 using Content.Shared.Popups;
@@ -54,6 +56,10 @@ public sealed partial class UplinkRefundSystem : EntitySystem
         refundable.OriginalUplink = args.StoreUid;
         refundable.Currency = UplinkSystem.TelecrystalCurrencyPrototype;
         refundable.RefundAmount = FixedPoint2.New((int) MathF.Floor(amount.Float() * RefundRatio));
+        refundable.OriginalContainedItems = GetContainedItems(product);
+        EnsureComp<UplinkRefundUsageComponent>(product).Product = product;
+        foreach (var containedItem in refundable.OriginalContainedItems)
+            EnsureComp<UplinkRefundUsageComponent>(containedItem).Product = product;
 
         if (TryComp<ContainerManagerComponent>(product, out var containers))
         {
@@ -87,16 +93,40 @@ public sealed partial class UplinkRefundSystem : EntitySystem
         }
     }
 
-    private void MarkUsed(UplinkRefundableComponent comp)
+    private HashSet<EntityUid> GetContainedItems(EntityUid root)
     {
-        if (comp.IsUsed)
+        var result = new HashSet<EntityUid>();
+        var visited = new HashSet<EntityUid> { root };
+        var pending = new Stack<EntityUid>();
+        pending.Push(root);
+        while (pending.TryPop(out var current))
+        {
+            if (!TryComp<ContainerManagerComponent>(current, out var manager))
+                continue;
+
+            foreach (var container in manager.Containers.Values)
+            foreach (var contained in container.ContainedEntities)
+            {
+                if (!visited.Add(contained))
+                    continue;
+                if (HasComp<ItemComponent>(contained))
+                    result.Add(contained);
+                pending.Push(contained);
+            }
+        }
+        return result;
+    }
+
+    private void MarkUsed(UplinkRefundUsageComponent usage)
+    {
+        if (!TryComp<UplinkRefundableComponent>(usage.Product, out var comp) || comp.IsUsed)
             return;
 
         comp.IsUsed = true;
     }
 
     [SubscribeLocalEvent]
-    private void OnGunShot(Entity<UplinkRefundableComponent> ent, ref GunShotEvent args)
+    private void OnGunShot(Entity<UplinkRefundUsageComponent> ent, ref GunShotEvent args)
     {
         if (args.Ammo.Count == 0)
             return;
@@ -105,7 +135,7 @@ public sealed partial class UplinkRefundSystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnMeleeHit(Entity<UplinkRefundableComponent> ent, ref MeleeHitEvent args)
+    private void OnMeleeHit(Entity<UplinkRefundUsageComponent> ent, ref MeleeHitEvent args)
     {
         if (!args.IsHit || args.HitEntities.Count == 0)
             return;
@@ -114,13 +144,13 @@ public sealed partial class UplinkRefundSystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnThrown(Entity<UplinkRefundableComponent> ent, ref ThrowEvent args)
+    private void OnThrown(Entity<UplinkRefundUsageComponent> ent, ref ThrowEvent args)
     {
         MarkUsed(ent.Comp);
     }
 
     [SubscribeLocalEvent(after: new[] { typeof(SharedTetherGunSystem) })]
-    private void OnAfterInteract(Entity<UplinkRefundableComponent> ent, ref AfterInteractEvent args)
+    private void OnAfterInteract(Entity<UplinkRefundUsageComponent> ent, ref AfterInteractEvent args)
     {
         if (HasComp<GunComponent>(ent) || HasComp<TimerTriggerComponent>(ent))
             return;
@@ -139,6 +169,22 @@ public sealed partial class UplinkRefundSystem : EntitySystem
 
         if (args.Handled)
             MarkUsed(ent.Comp);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnStampImprinted(Entity<UplinkRefundUsageComponent> ent, ref StampImprintedEvent args)
+    {
+        MarkUsed(ent.Comp);
+    }
+
+    [SubscribeLocalEvent]
+    private void OnRefundableShutdown(Entity<UplinkRefundableComponent> ent, ref ComponentShutdown args)
+    {
+        foreach (var contained in ent.Comp.OriginalContainedItems)
+        {
+            if (TryComp<UplinkRefundUsageComponent>(contained, out var usage) && usage.Product == ent.Owner)
+                RemComp<UplinkRefundUsageComponent>(contained);
+        }
     }
 
     [SubscribeLocalEvent]
@@ -251,6 +297,12 @@ public sealed partial class UplinkRefundSystem : EntitySystem
 
     private bool CanRefundItem(EntityUid used, UplinkRefundableComponent refundable, EntityUid user)
     {
+        if (!refundable.OriginalContainedItems.SetEquals(GetContainedItems(used)))
+        {
+            _popup.PopupEntity(Loc.GetString("uplink-refund-fail-container-changed"), used, user);
+            return false;
+        }
+
         if (refundable.OriginalContainerPrototypes != null)
         {
             var currentPrototypes = new List<string>();
