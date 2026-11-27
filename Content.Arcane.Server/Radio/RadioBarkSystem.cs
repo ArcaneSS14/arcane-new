@@ -37,7 +37,7 @@ public sealed partial class RadioBarkSystem : EntitySystem
         RaiseNetworkEvent(new RadioBarkEvent(sound.Path, sound.Params), ent.Comp.PlayerSession.Channel);
 
         var ev = args.RelayedEvent;
-        _tts.PlayRadio(ent, ev.MessageSource, ev.OriginalChatMsg.Message, ev.Language, ev.Channel.Frequency.Int());
+        _tts.PlayRadio(ent, ev.MessageSource, ev.OriginalChatMsg.Message, ev.Language, ev.Channel.Frequency.Value);
         var audibleMessage = _language.CanUnderstand(ent.Owner, ev.Language.ID)
             ? ev.OriginalChatMsg.Message
             : ev.LanguageObfuscatedChatMsg.Message;

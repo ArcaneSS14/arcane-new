@@ -157,24 +157,29 @@ namespace Content.Server.Chemistry.EntitySystems
             var container = _itemSlotsSystem.GetItemOrNull(chemMaster.Owner, SharedChemMaster.InputSlotName);
             if (container is null ||
                 !_solutionContainerSystem.TryGetFitsInDispenser(container.Value, out var containerSoln, out var containerSolution) ||
-                !_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out _, out var bufferSolution))
+                !_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out var bufferSoln, out var bufferSolution)) // Arcane-Edit: notify buffer changes
             {
                 return;
             }
 
             if (fromBuffer) // Buffer to container
             {
-                amount = FixedPoint2.Min(amount, containerSolution.AvailableVolume);
+                amount = FixedPoint2.Min(amount, FixedPoint2.Max(FixedPoint2.Zero, containerSolution.AvailableVolume)); // Arcane-Edit: reject negative free capacity
                 amount = bufferSolution.RemoveReagent(id, amount, preserveOrder: true);
                 _solutionContainerSystem.TryAddReagent(containerSoln.Value, id, amount, out var _);
             }
             else // Container to buffer
             {
                 amount = FixedPoint2.Min(amount, containerSolution.GetReagentQuantity(id));
+                amount = FixedPoint2.Min(amount, FixedPoint2.Max(FixedPoint2.Zero, bufferSolution.AvailableVolume)); // Arcane: respect the buffer capacity
 
-                _solutionContainerSystem.RemoveReagent(containerSoln.Value, id, amount);
+                amount = _solutionContainerSystem.RemoveReagent(containerSoln.Value, id, amount); // Arcane-Edit: use the actual removed quantity
                 bufferSolution.AddReagent(id, amount);
             }
+
+            if (amount > FixedPoint2.Zero) // Arcane-Start: update visuals without making the buffer react
+                _solutionContainerSystem.UpdateChemicals(bufferSoln.Value, needsReactionsProcessing: false);
+            // Arcane-End
 
             // <Trauma>
             if (user.HasValue)
@@ -193,8 +198,11 @@ namespace Content.Server.Chemistry.EntitySystems
         {
             if (fromBuffer)
             {
-                if (_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out _, out var bufferSolution))
-                    bufferSolution.RemoveReagent(id, amount, preserveOrder: true);
+                if (_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out var bufferSoln, out var bufferSolution)) // Arcane-Edit: notify buffer changes
+                {
+                    if (bufferSolution.RemoveReagent(id, amount, preserveOrder: true) > FixedPoint2.Zero)
+                        _solutionContainerSystem.UpdateChemicals(bufferSoln.Value, needsReactionsProcessing: false);
+                }
                 else
                     return;
             }
@@ -310,7 +318,7 @@ namespace Content.Server.Chemistry.EntitySystems
             switch (chemMaster.Comp.DrawSource)
             {
                 case ChemMasterDrawSource.Internal:
-                    if (!_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out _, out solution))
+                    if (!_solutionContainerSystem.TryGetSolution(chemMaster.Owner, SharedChemMaster.BufferSolutionName, out soln, out solution)) // Arcane-Edit: notify buffer changes
                         return false;
 
                     if (solution.Volume == 0)
@@ -365,7 +373,7 @@ namespace Content.Server.Chemistry.EntitySystems
             outputSolution = solution.SplitSolution(neededVolume);
 
             if (soln.HasValue)
-                _solutionContainerSystem.UpdateChemicals(soln.Value);
+                _solutionContainerSystem.UpdateChemicals(soln.Value, needsReactionsProcessing: chemMaster.Comp.DrawSource != ChemMasterDrawSource.Internal); // Arcane-Edit: keep buffer non-reactive
 
             return true;
         }

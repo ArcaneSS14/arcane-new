@@ -58,7 +58,7 @@ public sealed partial class HeadsetChannelWindow : FancyWindow
 
     private void AddChannelRow(RadioChannelPrototype channel, IReadOnlySet<int> mutedFrequencies)
     {
-        var muted = mutedFrequencies.Contains(channel.Frequency.Int());
+        var muted = mutedFrequencies.Contains(channel.Frequency.Value);
 
         var row = new BoxContainer
         {
@@ -93,7 +93,7 @@ public sealed partial class HeadsetChannelWindow : FancyWindow
         };
         row.AddChild(enableCheckBox);
 
-        var frequency = channel.Frequency.Int();
+        var frequency = channel.Frequency.Value;
         enableCheckBox.Pressed = !muted;
         enableCheckBox.OnToggled += _ => ChannelMuteToggled?.Invoke(frequency, !enableCheckBox.Pressed);
 

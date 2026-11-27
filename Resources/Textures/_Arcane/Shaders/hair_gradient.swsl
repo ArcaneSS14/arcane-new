@@ -5,6 +5,12 @@ uniform highp vec3 tipsLab;
 uniform lowp int gradientStyle;
 uniform highp float gradientOffset;
 uniform highp float frameWidth;
+uniform sampler2D displacementMap;
+uniform highp float displacementSize;
+uniform highp vec4 displacementUV;
+uniform lowp int applyDisplacement;
+
+varying highp vec2 displacementUVOut;
 
 // Atlas UV rects (min.xy, max.xy) of the layer's direction frames; anything else is drawn as south.
 uniform highp vec4 frameNorth;
@@ -31,8 +37,20 @@ bool inFrame(highp vec4 frame) {
     return UV.x >= frame.x && UV.x <= frame.z && UV.y >= frame.y && UV.y <= frame.w;
 }
 
+void vertex() {
+    displacementUVOut = mix(displacementUV.xy, displacementUV.zw, tCoord2);
+}
+
 void fragment() {
-    highp vec4 texColor = zTexture(UV);
+    highp vec4 texColor;
+    if (applyDisplacement != 0) {
+        highp vec4 displacementSample = texture2D(displacementMap, displacementUVOut);
+        highp vec2 displacementValue = (displacementSample.xy - vec2(128.0 / 255.0)) / (1.0 - 128.0 / 255.0);
+        texColor = zTexture(UV + displacementValue * TEXTURE_PIXEL_SIZE * displacementSize * vec2(1.0, -1.0));
+        texColor.a *= displacementSample.a;
+    } else {
+        texColor = zTexture(UV);
+    }
     if (texColor.a == 0.0) {
         discard;
     }

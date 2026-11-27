@@ -10,6 +10,7 @@ using Robust.Shared.Network;
 using Content.Shared.CombatMode;
 using Content.Shared.Inventory;
 using Content.Shared.Electrocution;
+using Content.Shared.Interaction;
 
 namespace Content.Arcane.Shared.AggressionInhibitor.Systems;
 
@@ -23,6 +24,7 @@ public sealed partial class SharedAggressionInhibitorSystem : EntitySystem
     [Dependency] private InventorySystem _inventorySystem = default!;
     [Dependency] private SharedElectrocutionSystem _electrocution = default!;
     [Dependency] private SharedCombatModeSystem _combatMode = default!;
+    [Dependency] private SharedInteractionSystem _interaction = default!;
     public override void Initialize()
     {
         base.Initialize();
@@ -139,7 +141,8 @@ public sealed partial class SharedAggressionInhibitorSystem : EntitySystem
         var isInContainer = _containerSystem.TryGetContainingContainer((uid, null, null), out var container)
             && container.Owner.IsValid();
 
-        if (!isInContainer && (!args.CanAccess || !args.CanInteract))
+        if (!args.CanInteract || !args.CanComplexInteract
+            || !args.CanAccess && (!isInContainer || !_interaction.InRangeAndAccessible(args.User, container!.Owner, 2f)))
             return;
 
         if (!comp.IsLocked)

@@ -1,0 +1,14 @@
+- type: guideEntry
+  id: SpaceLaw
+  name: guide-entry-space-law
+  priority: 1
+  text: "/ServerInfo/_Arcane/Guidebook/SpaceLaw/SpaceLawIntro.xml"
+  children:
+  - !Remove SpaceLawCrimeList
+  - !Remove SpaceLawRightsCharter
+  - SpaceLawTable
+  - Procedures
+  - SpaceRights
+  - PunishmentTypes
+  - PunishmentTerms
+  - UseOfForce

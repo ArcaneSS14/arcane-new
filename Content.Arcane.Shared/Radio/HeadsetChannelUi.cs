@@ -11,7 +11,7 @@ public enum HeadsetChannelUiKey : byte
 }
 
 [Serializable, NetSerializable]
-public sealed class HeadsetChannelUiState : BoundUserInterfaceState
+public sealed class HeadsetChannelUiUpdateMessage : BoundUserInterfaceMessage
 {
     /// <summary>
     ///     The radio channels available on the headset.
@@ -20,12 +20,15 @@ public sealed class HeadsetChannelUiState : BoundUserInterfaceState
 
     public HashSet<int> MutedFrequencies;
 
-    public HeadsetChannelUiState(List<ProtoId<RadioChannelPrototype>> channels, HashSet<int> mutedFrequencies)
+    public HeadsetChannelUiUpdateMessage(List<ProtoId<RadioChannelPrototype>> channels, HashSet<int> mutedFrequencies)
     {
         Channels = channels;
         MutedFrequencies = mutedFrequencies;
     }
 }
+
+[Serializable, NetSerializable]
+public sealed class HeadsetChannelUiRequestMessage : BoundUserInterfaceMessage;
 
 [Serializable, NetSerializable]
 public sealed class HeadsetChannelMuteMessage : BoundUserInterfaceMessage

@@ -88,7 +88,7 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
 
     private void OnDormsEnabledChanged(bool enabled)
     {
-        Confirm.Disabled = !enabled;
+        Confirm.Disabled = !enabled || SelectedNumber == 0;
         NumberInput.Editable = enabled;
         ReloadRooms();
     }
@@ -137,10 +137,15 @@ public sealed partial class InfinityDormTeleporterWindow : FancyWindow
 
     private void ValidateDormNumber(string text)
     {
-        if (!int.TryParse(text, out var newNumber))
+        if (!int.TryParse(text, out var newNumber) || newNumber == 0)
+        {
+            SelectedNumber = 0;
+            Confirm.Disabled = true;
             return;
+        }
 
         NumberInput.Text = newNumber.ToString();
         SelectedNumber = newNumber;
+        Confirm.Disabled = !_cfg.GetCVar(ArcaneCVars.InfinityDormsEnabled);
     }
 }

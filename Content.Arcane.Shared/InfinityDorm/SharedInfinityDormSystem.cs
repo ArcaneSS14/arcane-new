@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using Content.Arcane.Common.Salvage;
+using Content.Shared.Body;
 using Content.Shared.Gibbing;
 using Content.Shared.Chat;
 using Content.Shared.DoAfter;
@@ -29,6 +30,7 @@ using Content.Shared.Ghost.Components;
 using Content.Shared.Hands;
 using Content.Shared.Interaction;
 using Content.Shared.Salvage.Fulton;
+using Content.Shared.Storage;
 using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Map.Components;
@@ -59,6 +61,7 @@ public sealed partial class SharedInfinityDormSystem : EntitySystem
         SubscribeLocalEvent<InfinityDormExitComponent, InfinityDormExitDoAfterEvent>(OnExitDoAfter);
         SubscribeLocalEvent<InfinityDormVisitorComponent, ComponentInit>(OnVisitorInit);
         SubscribeLocalEvent<InfinityDormVisitorComponent, DidEquipHandEvent>(OnDidEquipHandEvent);
+        SubscribeLocalEvent<EntInsertedIntoContainerMessage>(OnStorageInserted);
 
         SubscribeLocalEvent<EntParentChangedMessage>(OnVisitorParentChanged);
         SubscribeLocalEvent<InfinityDormVisitorComponent, BeforeFultonedEvent>(OnBeforeFultoned);
@@ -112,12 +115,44 @@ public sealed partial class SharedInfinityDormSystem : EntitySystem
         if (args.Handled)
             return;
 
-        if (_tag.HasTag(args.Equipped, InfiniteDormItemBlockTag))
+        var alreadyOwned = _tag.HasTag(args.Equipped, InfiniteDormItemBlockTag);
+        MarkAcquiredItems(args.Equipped);
+
+        if (alreadyOwned)
             return;
 
-        _tag.AddTag(args.Equipped, InfiniteDormItemTag);
-
         args.Handled = true;
+    }
+
+    private void OnStorageInserted(EntInsertedIntoContainerMessage args)
+    {
+        var parent = args.Container.Owner;
+        if (!HasComp<StorageComponent>(parent))
+            return;
+
+        while (Exists(parent))
+        {
+            if (HasComp<InfinityDormVisitorComponent>(parent))
+            {
+                MarkAcquiredItems(args.Entity);
+                return;
+            }
+
+            parent = _transform.GetParentUid(parent);
+        }
+    }
+
+    private void MarkAcquiredItems(EntityUid item)
+    {
+        if (!_tag.HasTag(item, InfiniteDormItemBlockTag))
+            _tag.AddTag(item, InfiniteDormItemTag);
+
+        if (!TryComp<ContainerManagerComponent>(item, out var manager))
+            return;
+
+        foreach (var container in manager.Containers.Values)
+        foreach (var contained in container.ContainedEntities)
+            MarkAcquiredItems(contained);
     }
 
     private void OnVisitorParentChanged(ref EntParentChangedMessage args)
@@ -128,14 +163,22 @@ public sealed partial class SharedInfinityDormSystem : EntitySystem
         if (HasComp<GhostComponent>(args.Entity))
             return;
 
+        // The old GibBody only affected bodies; Gib also destroys ordinary items.
+        if (!HasComp<BodyComponent>(args.Entity))
+            return;
+
         if (!HasComp<MapGridComponent>(_transform.GetParentUid(args.Entity)))
             return;
 
         var isDorm = HasComp<InfinityDormComponent>(_transform.GetParentUid(args.Entity));
-        if (isDorm && HasComp<InfinityDormVisitorComponent>(args.Entity))
+        if (isDorm)
+        {
+            // Anyone entering the room is a visitor, including arrivals outside the teleporter.
+            EnsureComp<InfinityDormVisitorComponent>(args.Entity);
             return;
+        }
 
-        if (!HasInfiniteDormItem(args.Entity) && !isDorm)
+        if (!HasInfiniteDormItem(args.Entity))
             return;
 
         _gibbing.Gib(args.Entity);
