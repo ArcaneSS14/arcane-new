@@ -129,8 +129,11 @@ namespace Content.Server.PDA
 
         protected override void OnItemRemoved(EntityUid uid, PdaComponent pda, EntRemovedFromContainerMessage args)
         {
-            if (args.Container.ID != pda.IdSlot.ID && args.Container.ID != pda.PenSlot.ID && args.Container.ID != pda.PaiSlot.ID)
+            // Arcane-Edit-Start
+            if (args.Container.ID != pda.IdSlot.ID && args.Container.ID != pda.PenSlot.ID &&
+                args.Container.ID != pda.PaiSlot.ID && args.Container.ID != pda.PaperSlot?.ID)
                 return;
+            // Arcane-Edit-End
 
             // TODO: This is super cursed just use compstates please.
             if (MetaData(uid).EntityLifeStage >= EntityLifeStage.Terminating)
@@ -220,6 +223,7 @@ namespace Content.Server.PDA
                 GetNetEntity(loader.ActiveProgram),
                 pda.FlashlightOn,
                 pda.PenSlot.HasItem,
+                pda.PaperSlot?.HasItem ?? false, // Arcane
                 pda.PaiSlot.HasItem,
                 new PdaIdInfoText
                 {

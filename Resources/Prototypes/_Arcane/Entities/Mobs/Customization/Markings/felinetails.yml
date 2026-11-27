@@ -16,3 +16,15 @@
       state: tail_cat_wag_stripes_prime
     - sprite: _Arcane/Mobs/Customization/felinetails.rsi
       state: tail_cat_wag_stripes_second
+
+- type: marking
+  id: FelinidTailBasic
+  bodyPart: Tail
+  groupWhitelist: [ Human, Tajaran, IPC ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/felinid_tails.rsi
+    state: basic_tail_tip
+  - sprite: _Arcane/Mobs/Customization/felinid_tails.rsi
+    state: basic_tail_stripes_even
+  - sprite: _Arcane/Mobs/Customization/felinid_tails.rsi
+    state: basic_tail_stripes_odd

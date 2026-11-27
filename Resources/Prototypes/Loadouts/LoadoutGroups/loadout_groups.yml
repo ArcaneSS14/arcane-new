@@ -84,6 +84,12 @@
   - TowelColorGold
   # </Trauma>
   - InteQMiniFlag # Arcane
+  # Arcane-Start
+  - PaintCanvas
+  - PaintCanvasSmall
+  - PaintCanvasLandscape
+  - Paintbrush
+  # Arcane-End
 
 - type: loadoutGroup
   id: AssistiveItems
