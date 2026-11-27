@@ -32,6 +32,7 @@ public sealed partial class TTSOptionsTab : Control
 
     private SpriteSystem? _sprites;
     private readonly List<(TextureRect Rect, ProtoId<JobIconPrototype> Icon)> _channelIcons = new();
+    private readonly TTSRadioMixerOption _mixer;
 
     private static readonly Color SeparatorColor = Color.FromHex("#3D4059");
 
@@ -50,6 +51,7 @@ public sealed partial class TTSOptionsTab : Control
             scale: 1f);
         Control.AddOptionCheckBox(ArcaneCVars.UseTTS, UseTTSCheckBox);
 
+        _mixer = Control.AddOption(new TTSRadioMixerOption(Control, _cfg));
         PopulateChannelMixer();
         RefreshChannelIcons();
 
@@ -134,9 +136,6 @@ public sealed partial class TTSOptionsTab : Control
 
     private void AddChannelRow(RadioChannelPrototype channel)
     {
-        var muted = TTSRadioChannelSettings.ParseMuted(_cfg.GetCVar(ArcaneCVars.TTSRadioChannelMuted)).Contains(channel.Frequency.Int());
-        var volume = TTSRadioChannelSettings.ParseVolumes(_cfg.GetCVar(ArcaneCVars.TTSRadioChannelVolumes)).GetValueOrDefault(channel.Frequency.Int(), 1f);
-
         var row = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
@@ -189,24 +188,7 @@ public sealed partial class TTSOptionsTab : Control
         };
         row.AddChild(volumeLabel);
 
-        enabledCheckBox.Pressed = !muted;
-        volumeSlider.Value = volume;
-        volumeLabel.Text = FormatPercent(volume);
-
-        enabledCheckBox.OnToggled += _ =>
-        {
-            _cfg.SetCVar(ArcaneCVars.TTSRadioChannelMuted,
-                TTSRadioChannelSettings.FormatMutedToggle(
-                    _cfg.GetCVar(ArcaneCVars.TTSRadioChannelMuted), channel.Frequency.Int(), !enabledCheckBox.Pressed));
-        };
-
-        volumeSlider.OnValueChanged += _ =>
-        {
-            volumeLabel.Text = FormatPercent(volumeSlider.Value);
-            _cfg.SetCVar(ArcaneCVars.TTSRadioChannelVolumes,
-                TTSRadioChannelSettings.UpsertVolume(
-                    _cfg.GetCVar(ArcaneCVars.TTSRadioChannelVolumes), channel.Frequency.Int(), volumeSlider.Value));
-        };
+        _mixer.AddRow(channel.Frequency.Value, enabledCheckBox, volumeSlider, volumeLabel, FormatPercent);
 
         ChannelList.AddChild(row);
     }
