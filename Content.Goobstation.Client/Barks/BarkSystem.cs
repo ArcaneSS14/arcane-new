@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Arcane.Common.CCVar; // Arcane
 using Content.Goobstation.Common.Barks;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -10,6 +9,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Goobstation.Common.CCVar;
 using Content.Client.Audio; // Arcane
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Goobstation.Client.Barks;
 
@@ -67,18 +67,20 @@ public sealed partial class BarkSystem : EntitySystem
     }
     // Arcane-End
 
-    private void PlayBark(EntityUid? source, string message, bool whisper, BarkPrototype proto, bool radio = false) // Arcane
+    private void PlayBark(EntityUid? source, string message, bool whisper, BarkPrototype proto, bool radio = false) // Arcane-Edit: proto > proto, radio
     {
-        if (_cfg.GetCVar(ArcaneCVars.UseTTS) && _cfg.GetCVar(ArcaneCVars.TTSEnabled)) // Arcane: TTS replaces barks
-            return; // Arcane
+        // Arcane-Start: TTS replaces barks
+        if (_cfg.GetCVar(ArcaneCVars.UseTTS) && _cfg.GetCVar(ArcaneCVars.TTSEnabled))
+            return;
+        // Arcane-End
 
-        if (proto.SoundCollection is null || message.Length == 0) // Arcane
+        if (proto.SoundCollection is null || message.Length == 0) // Arcane-Edit: missing sound > missing sound or empty message
             return;
 
         if (message.Length > 50)
             message = message[..50];
 
-        var volume = GetVolume(whisper, proto, radio); // Arcane
+        var volume = GetVolume(whisper, proto, radio); // Arcane-Edit: GetVolume(whisper, proto) > GetVolume(whisper, proto, radio)
         if (volume <= -20f)
             return;
 
@@ -99,7 +101,7 @@ public sealed partial class BarkSystem : EntitySystem
         var activeBark = new ActiveBark
         {
             Source = source,
-            IsPreview = source == null && !radio, // Arcane
+            IsPreview = source == null && !radio, // Arcane-Edit: source == null > source == null && !radio
             IsRadio = radio, // Arcane
             Message = message,
             Prototype = proto,
@@ -123,7 +125,7 @@ public sealed partial class BarkSystem : EntitySystem
             if (bark.NextSound > _timing.CurTime)
                 continue;
 
-            if (!bark.IsRadio && !bark.IsPreview && TerminatingOrDeleted(bark.Source!.Value)) // Arcane
+            if (!bark.IsRadio && !bark.IsPreview && TerminatingOrDeleted(bark.Source!.Value)) // Arcane-Edit: !IsPreview > !IsRadio && !IsPreview
             {
                 _activeBarks.RemoveAt(i);
                 continue;
@@ -173,7 +175,7 @@ public sealed partial class BarkSystem : EntitySystem
         audioParams = audioParams.WithVolume(bark.Volume);
 
         var filter = Filter.Local();
-        var soundEntity = bark.IsPreview || bark.IsRadio // Arcane
+        var soundEntity = bark.IsPreview || bark.IsRadio // Arcane-Edit: IsPreview > IsPreview || IsRadio
             ? _sharedAudio.PlayGlobal(sound, filter, false, audioParams)
             : _sharedAudio.PlayEntity(sound, filter, bark.Source!.Value, false, audioParams);
 
@@ -182,17 +184,17 @@ public sealed partial class BarkSystem : EntitySystem
             _contentAudio.MarkInterfaceAudio(preview.Entity);
         // Arcane-End
 
-        if (!bark.IsRadio && !bark.IsPreview && proto.Stop) // Arcane
+        if (!bark.IsRadio && !bark.IsPreview && proto.Stop) // Arcane-Edit: !IsPreview > !IsRadio && !IsPreview
         {
             if (_playingSounds.TryGetValue(GetNetEntity(bark.Source!.Value), out var playing))
                 _sharedAudio.Stop(playing);
         }
 
-        if (!bark.IsRadio && !bark.IsPreview && soundEntity is not null) // Arcane
+        if (!bark.IsRadio && !bark.IsPreview && soundEntity is not null) // Arcane-Edit: !IsPreview > !IsRadio && !IsPreview
             _playingSounds[GetNetEntity(bark.Source!.Value)] = soundEntity.Value.Entity;
     }
 
-    private float GetVolume(bool whisper, BarkPrototype proto, bool radio = false) // Arcane
+    private float GetVolume(bool whisper, BarkPrototype proto, bool radio = false) // Arcane-Edit: proto > proto, radio
     {
         var volume = proto.Volume;
 
@@ -201,7 +203,8 @@ public sealed partial class BarkSystem : EntitySystem
 
         var barksVolume = _cfg.GetCVar(GoobCVars.BarksVolume);
         volume *= barksVolume / 3f;
-        if (radio) // Arcane-Start: follow the listener's radio volume as well.
+        // Arcane-Start: follow the listener's radio volume as well.
+        if (radio)
             volume *= _cfg.GetCVar(ArcaneCVars.RadioBarkVolume) * 2f;
         // Arcane-End
 

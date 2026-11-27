@@ -44,11 +44,12 @@
       reagents:
       - ReagentId: Fiber
         Quantity: 30
-  - type: Tag # Arcane-Edit: skirt tags belong to skirt bases
+  - type: Tag
     tags:
     - ClothMade
     - Recyclable
     - WhitelistChameleon
+    # - Skirt # Arcane-Edit: enabled on all uniforms > skirt bases only
 
 - type: entity
   abstract: true
@@ -62,6 +63,8 @@
   - type: SlotBlock
     slots: UNDERSHIRT, PLUG
     hiddenSlots: UNDERWEAR
+  # Arcane-End
+  # Arcane-Start: skirt tags belong to skirt bases
   - type: Tag
     tags:
     - ClothMade
