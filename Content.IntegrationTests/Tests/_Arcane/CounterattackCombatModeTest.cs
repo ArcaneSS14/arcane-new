@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 using Content.Goobstation.Shared.Weapons.CounterattackWeapon;
 using Content.IntegrationTests.Tests.Interaction;
 using Content.Medical.Shared.ItemSwitch;
@@ -42,3 +43,4 @@ public sealed class CounterattackCombatModeTest : InteractionTest
         });
     }
 }
+// Arcane-End

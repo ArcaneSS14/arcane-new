@@ -2,7 +2,6 @@
 
 using System.Linq;
 using Content.Medical.Shared.ItemSwitch;
-using Content.Shared.CombatMode;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Timing.Components;
 using Content.Shared.Timing.Systems;
@@ -10,6 +9,7 @@ using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+using Content.Shared.CombatMode; // Arcane
 
 namespace Content.Goobstation.Shared.Weapons.CounterattackWeapon;
 

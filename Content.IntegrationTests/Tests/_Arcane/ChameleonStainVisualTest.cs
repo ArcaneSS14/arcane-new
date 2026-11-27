@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Arcane-Start
 #nullable enable
 
 using System.Linq;
@@ -62,3 +63,4 @@ public sealed class ChameleonStainVisualTest : InteractionTest
         await Client.WaitAssertion(AssertLayers);
     }
 }
+// Arcane-End
