@@ -1,5 +1,4 @@
 // <Trauma>
-using Content.Arcane.Common.Radio; // Arcane
 using Content.Goobstation.Shared.Radio;
 using Content.Trauma.Common.Language;
 using Content.Trauma.Common.Language.Systems;
@@ -23,6 +22,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Radio; // Arcane
 
 namespace Content.Server.Radio.EntitySystems;
 

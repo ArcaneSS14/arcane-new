@@ -1,7 +1,6 @@
 // <Trauma>
 using Content.Trauma.Common.Language.Systems; // EE
 // </Trauma>
-using Content.Server._Arcane.Telephone; // Arcane
 using Content.Server.Access.Systems;
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Systems;
@@ -24,6 +23,7 @@ using Robust.Shared.Utility;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using System.Linq;
+using Content.Server._Arcane.Telephone; // Arcane
 
 namespace Content.Server.Telephone;
 
@@ -121,7 +121,7 @@ public sealed partial class TelephoneSystem : SharedTelephoneSystem
         var range = args.TelephoneSource.Comp.LinkedTelephones.Count > 1 ? ChatTransmitRange.HideChat : ChatTransmitRange.GhostRangeLimit;
         var volume = entity.Comp.SpeakerVolume == TelephoneVolume.Speak ? InGameICChatType.Speak : InGameICChatType.Whisper;
 
-        // Arcane-Start: Preserve the original speaker for the duration of the relay.
+        // Arcane-Edit-Start: Preserve the original speaker for the duration of the relay.
         var hadRelay = TryComp<TelephoneRelaySpeechComponent>(speaker, out var relay);
         relay ??= AddComp<TelephoneRelaySpeechComponent>(speaker);
         var previousSource = relay.Source;
@@ -140,7 +140,7 @@ public sealed partial class TelephoneSystem : SharedTelephoneSystem
                     RemComp<TelephoneRelaySpeechComponent>(speaker);
             }
         }
-        // Arcane-End
+        // Arcane-Edit-End
     }
 
     #endregion

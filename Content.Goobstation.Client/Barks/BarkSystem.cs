@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Arcane.Common.CCVar; // Arcane
 using Content.Goobstation.Common.Barks;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -10,6 +9,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Goobstation.Common.CCVar;
 using Content.Client.Audio; // Arcane
+using Content.Arcane.Common.CCVar; // Arcane
 
 namespace Content.Goobstation.Client.Barks;
 
@@ -69,8 +69,10 @@ public sealed partial class BarkSystem : EntitySystem
 
     private void PlayBark(EntityUid? source, string message, bool whisper, BarkPrototype proto, bool radio = false) // Arcane
     {
-        if (_cfg.GetCVar(ArcaneCVars.UseTTS) && _cfg.GetCVar(ArcaneCVars.TTSEnabled)) // Arcane: TTS replaces barks
-            return; // Arcane
+        // Arcane-Start: TTS replaces barks
+        if (_cfg.GetCVar(ArcaneCVars.UseTTS) && _cfg.GetCVar(ArcaneCVars.TTSEnabled))
+            return;
+        // Arcane-End
 
         if (proto.SoundCollection is null || message.Length == 0) // Arcane
             return;
