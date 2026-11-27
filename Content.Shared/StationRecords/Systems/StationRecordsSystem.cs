@@ -175,6 +175,7 @@ public sealed partial class StationRecordsSystem : EntitySystem
             JobIcon = jobPrototype.Icon,
             JobPrototype = jobId,
             Species = species,
+            CustomSpeciesName = profile.Customization.CustomSpeciesName, // Arcane
             Gender = gender,
             DisplayPriority = displayPriority,
             Fingerprint = mobFingerprint,

@@ -5,6 +5,7 @@
   prototype: MobRodentia
   dollPrototype: AppearanceRodentia
   defaultSkinTone: "#747474"
+  customName: true
   skinColoration: Hues
   defaultScale: 0.9
   minScale: 0.85

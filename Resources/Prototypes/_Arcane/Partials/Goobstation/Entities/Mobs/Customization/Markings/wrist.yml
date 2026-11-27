@@ -1,0 +1,63 @@
+- type: marking
+  id: WristWatchLeatherRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchColorableRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristBraceletArmRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchHoloLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchGoldLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchGoldRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristBraceletArmLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristBraceletLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchSilverLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchHoloRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchColorableLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristBraceletRight
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchLeatherLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: WristWatchSilverRight
+  groupWhitelist: [ Demon ]

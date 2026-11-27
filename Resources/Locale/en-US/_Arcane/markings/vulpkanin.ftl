@@ -1,0 +1,7 @@
+marking-VulpTailFennecAnimated = Vulpkanin Fennec (animated)
+marking-VulpTailFluffyAnimated = Vulpkanin Fluffy (animated)
+marking-VulpTailHuskyAnimated = Vulpkanin Husky (animated)
+marking-VulpTailLongAnimated = Vulpkanin Long (animated)
+marking-VulpTailVulpAnimated = Vulpkanin (animated)
+marking-VulpTailVulpFadeAnimated = Vulpkanin (Fade, animated)
+marking-VulpTailCoyoteAnimated = Vulpkanin Coyote (animated)

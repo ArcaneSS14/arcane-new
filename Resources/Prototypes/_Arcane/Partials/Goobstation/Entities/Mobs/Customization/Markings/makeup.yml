@@ -1,0 +1,15 @@
+- type: marking
+  id: MakeupLips
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: MakeupNailPolishLeft
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: MakeupBlush
+  groupWhitelist: [ Demon ]
+
+- type: marking
+  id: MakeupNailPolishRight
+  groupWhitelist: [ Demon ]

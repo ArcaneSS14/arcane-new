@@ -62,7 +62,7 @@
 - type: loadout
   id: NanotrasenRepresentativeDuffel
   equipment:
-    back: ClothingBackpackDuffel
+    back: ClothingBackpackDuffellCentcomm # Arcane-Edit: ClothingBackpackDuffel > ClothingBackpackDuffellCentcomm
 
 - type: loadout
   id: NanotrasenRepresentativeSatchel

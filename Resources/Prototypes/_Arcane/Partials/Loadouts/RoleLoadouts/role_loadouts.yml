@@ -1,0 +1,149 @@
+- type: roleLoadout
+  id: JobLawyer
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobJanitor
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobHeadOfSecurity
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobResearchDirector
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobChiefEngineer
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobCargoTechnician
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobLibrarian
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobCaptain
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobSecurityCadet
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobAtmosphericTechnician
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobMusician
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobHeadOfPersonnel
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobSalvageSpecialist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobChaplain
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobScientist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobDetective
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobBotanist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobPassenger
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobChef
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobReporter
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobSecurityOfficer
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobWarden
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobTechnicalAssistant
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobPsychologist
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobQuartermaster
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobBartender
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobClown
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobResearchAssistant
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobStationEngineer
+  groups:
+  - GroupGrimoire
+
+- type: roleLoadout
+  id: JobServiceWorker
+  groups:
+  - GroupGrimoire

@@ -1,0 +1,5 @@
+- type: emoteSounds
+  id: MonkeyMode
+  sounds:
+    Hiss:
+      collection: CatHisses
