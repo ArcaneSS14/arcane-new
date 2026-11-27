@@ -2,6 +2,7 @@
 using System.Linq;
 using Content.Arcane.Server.CloningAppearance;
 using Content.Server.Antag.Components;
+using Content.Server.GameTicking;
 using Content.Shared.Access.Components;
 using Content.Shared.Implants.Components;
 using Content.Shared.Inventory;
@@ -18,11 +19,13 @@ public sealed class CentCommInternPortTest : GameTest
         var map = await Pair.CreateTestMap();
         EntityUid placeholder = default;
         EntityUid? oldAttachment = null;
+        var expectedName = string.Empty;
         try
         {
             await Server.WaitAssertion(() =>
             {
                 oldAttachment = ServerSession!.AttachedEntity;
+                expectedName = Server.System<ServerGameTicker>().GetPlayerProfile(ServerSession).Name;
                 placeholder = SSpawnAtPosition(prototype, map.GridCoords);
                 Assert.That(SHasComp<CloningAppearanceComponent>(placeholder), Is.True);
                 Server.PlayerMan.SetAttachedEntity(ServerSession, placeholder, out _, true);
@@ -32,6 +35,7 @@ public sealed class CentCommInternPortTest : GameTest
             {
                 var mob = ServerSession!.AttachedEntity;
                 Assert.That(mob, Is.Not.Null.And.Not.EqualTo(placeholder));
+                Assert.That(SComp<MetaDataComponent>(mob!.Value).EntityName, Is.EqualTo(expectedName));
                 Assert.That(SHasComp<AntagImmuneComponent>(mob!.Value), Is.True);
                 var inventory = Server.System<InventorySystem>();
                 Assert.That(inventory.TryGetSlotEntity(mob.Value, "id", out var card), Is.True);
