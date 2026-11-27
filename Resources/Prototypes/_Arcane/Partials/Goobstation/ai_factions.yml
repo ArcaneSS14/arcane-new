@@ -1,0 +1,9 @@
+- type: npcFaction
+  id: DevilFaction
+  hostile:
+  - Changeling
+
+- type: npcFaction
+  id: Wraith
+  hostile:
+  - Changeling

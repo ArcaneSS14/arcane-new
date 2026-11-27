@@ -1,0 +1,24 @@
+- type: reagent
+  id: Synthflesh
+  metabolisms: !Clear
+    Bloodstream:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          types:
+            Blunt: -2.5
+            Piercing: -1.25
+            Slash: -2.5
+            Heat: -1.5
+            Cold: -2
+            Shock: -1.25
+            Caustic: -0.4
+            Poison: 1
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: -0.7
+        conditions:
+        - !type:MobStateCondition
+          mobstate: Dead

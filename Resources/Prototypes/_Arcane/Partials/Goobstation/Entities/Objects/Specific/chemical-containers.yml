@@ -1,0 +1,11 @@
+- type: entity
+  id: JugHolyWater
+  categories: !Remove
+
+- type: entity
+  id: JugSalicylicAcid
+  categories: !Remove
+
+- type: entity
+  id: JugOxandrolone
+  categories: !Remove

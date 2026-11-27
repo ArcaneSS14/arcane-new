@@ -1,0 +1,4 @@
+- type: entity
+  id: BaseMobDragon
+  components:
+  - type: AntiRottingContainer

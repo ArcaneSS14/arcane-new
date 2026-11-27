@@ -1,0 +1,7 @@
+- type: weightedRandom
+  id: NinjaThreats
+  weights:
+    Ninja: 1
+    Nukeops: 1
+    Revolutionary: 1
+    Xenoborgs: 1

@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: ChaplainSpiritualAdvisor
+  name: job-name-alt-chaplain-2
+
+- type: jobAlternateTitle
+  id: ChaplainShrineGuardian
+  name: job-name-alt-chaplain-3
+
+- type: jobAlternateTitle
+  id: ChaplainPreacher
+  name: job-name-alt-chaplain-1

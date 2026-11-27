@@ -1,0 +1,22 @@
+- type: entity
+  parent: BaseMentalAction
+  id: ActionToggleGhostRadioTTS
+  categories: [ HideSpawnMenu ]
+  name: Toggle radio voice output
+  description: Toggles the radio's voice output (TTS).
+  components:
+  - type: Action
+    clientExclusive: true
+    checkCanInteract: false
+    raiseOnUser: true
+  - type: Sprite
+    layers:
+    - sprite: _Arcane/Interface/Actions/ghost_radio_tts.rsi
+      state: icon_disabled
+      map: ["enum.ActionVisuals.Icon"]
+    - sprite: Clothing/Ears/Headsets/security.rsi
+      state: icon
+      map: ["enum.ActionVisuals.IconToggled"]
+      visible: false
+  - type: InstantAction
+    event: !type:ToggleGhostRadioTTSActionEvent

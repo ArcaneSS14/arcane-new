@@ -1,0 +1,6 @@
+- type: job
+  id: Paramedic
+  alternateTitles:
+  - ParamedicParamedic
+  - ParamedicDutyPhysician
+  - ParamedicTraumaTeamResponder

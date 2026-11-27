@@ -1,0 +1,6 @@
+- type: job
+  id: Detective
+  alternateTitles:
+  - DetectiveSecurityInvestigator
+  - DetectiveSecurityInspector
+  - DetectiveSecuritySleuth

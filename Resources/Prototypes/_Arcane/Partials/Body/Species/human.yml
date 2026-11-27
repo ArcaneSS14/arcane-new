@@ -1,0 +1,33 @@
+- type: markingsGroup
+  id: Human
+  limits:
+    enum.HumanoidVisualLayers.Tail:
+      limit: 2
+
+- type: entity
+  id: AppearanceHuman
+  components:
+  - type: InitialBody
+    organs:
+      Tail: OrganHumanTail
+
+- type: entity
+  id: OrganHumanTorso
+  components:
+  - type: BodyPart
+    # the base torso slots plus Tail; slots replace the inherited list
+    slots:
+    # parts
+    - Head
+    - Tail
+    - ArmLeft
+    - ArmRight
+    - LegLeft
+    - LegRight
+    # organs
+    - Appendix
+    - Lungs
+    - Heart
+    - Stomach
+    - Liver
+    - Kidneys

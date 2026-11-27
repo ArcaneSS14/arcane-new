@@ -1,0 +1,10 @@
+﻿- type: entity
+  id: StorePresetDemonCantrips
+  abstract: true
+  components:
+  - type: Store
+    name: store-preset-name-demon-cantrips
+    categories:
+    - DemonCantrips
+    currencyWhitelist:
+    - WizCoin

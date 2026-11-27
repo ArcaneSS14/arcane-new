@@ -1,0 +1,23 @@
+- type: jobAlternateTitle
+  id: CargoTechnicianClerk
+  name: job-name-alt-cargotech-3
+
+- type: jobAlternateTitle
+  id: CargoTechnicianPilot
+  name: job-name-alt-cargotech-2
+
+- type: jobAlternateTitle
+  id: CargoTechnicianCourier
+  name: job-name-alt-cargotech-1
+
+- type: jobAlternateTitle
+  id: CargoTechnicianOrderingSpecialist
+  name: job-name-alt-cargotech-4
+
+- type: jobAlternateTitle
+  id: CargoTechnicianSupplySpecialist
+  name: job-name-alt-cargotech-5
+
+- type: jobAlternateTitle
+  id: CargoTechnicianLoadingOperator
+  name: job-name-alt-cargotech-6

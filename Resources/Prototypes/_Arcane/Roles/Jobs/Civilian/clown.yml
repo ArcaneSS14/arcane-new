@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: ClownBouffon
+  name: job-name-alt-clown-2
+
+- type: jobAlternateTitle
+  id: ClownJester
+  name: job-name-alt-clown-1
+
+- type: jobAlternateTitle
+  id: ClownActor
+  name: job-name-alt-clown-3
+
+- type: jobAlternateTitle
+  id: ClownPrankster
+  name: job-name-alt-clown-4

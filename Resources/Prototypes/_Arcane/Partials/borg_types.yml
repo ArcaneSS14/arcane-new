@@ -1,0 +1,9 @@
+- type: borgType
+  id: service
+  defaultModules:
+  - !Remove BorgModuleService
+  - !Remove BorgModuleGardening
+  - !Remove BorgModuleHarvesting
+  - BorgModuleBartending
+  - BorgModuleCooking
+  - BorgModuleHydroponics

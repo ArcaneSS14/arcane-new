@@ -1,0 +1,6 @@
+- type: entity
+  id: CigCartonGreen
+  components:
+  - type: Tag
+    tags:
+    - CigStorage

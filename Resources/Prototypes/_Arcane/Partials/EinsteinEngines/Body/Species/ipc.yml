@@ -1,0 +1,31 @@
+- type: markingsGroup
+  id: IPC
+  limits:
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
+
+- type: entity
+  id: AppearanceIPC
+  components:
+  - type: InitialBody
+    organs:
+      Tail: OrganIPCTail
+
+- type: entity
+  id: OrganIPCTorso
+  components:
+  - type: BodyPart
+    slots:
+    - Tail
+
+- type: entity
+  id: MobIPC
+  components:
+  - type: Reactive
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCumOverlayReaction
+  - type: SparkEjaculation

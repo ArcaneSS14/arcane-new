@@ -1,0 +1,15 @@
+- type: entity
+  parent: BaseAction
+  id: ActionToggleSiliconResting
+  categories: [ HideSpawnMenu ]
+  name: Toggle Rest
+  description: Lie down or stand up.
+  components:
+  - type: Action
+    itemIconStyle: NoItem
+  - type: Sprite
+    sprite: _Arcane/Interface/Actions/silicon_standing.rsi
+    layers:
+    - state: rest
+  - type: InstantAction
+    event: !type:ToggleSiliconRestingEvent

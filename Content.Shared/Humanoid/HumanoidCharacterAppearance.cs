@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Linq; // Arcane
 using Content.Shared.Body;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
@@ -198,7 +199,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
                     continue;
                 }
 
-                var actualMarkings = appearance.Markings.GetValueOrDefault(organ)?.ShallowClone() ?? new();
+                var actualMarkings = appearance.Markings.GetValueOrDefault(organ)?.ToDictionary(pair => pair.Key, pair => new List<Marking>(pair.Value)) ?? new(); // Arcane-Edit: copy lists before validation
 
                 markingManager.EnsureValidColors(actualMarkings);
                 markingManager.EnsureValidGroupAndSex(actualMarkings, organData.Value.Group, sex);

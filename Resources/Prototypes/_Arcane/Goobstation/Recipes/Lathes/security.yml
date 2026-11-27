@@ -1,0 +1,5 @@
+- type: latheRecipe
+  parent: BaseElectronicsRecipe
+  icon: { sprite: Objects/Misc/module.rsi, state: security }
+  id: WeaponEnergyTurretSecurityControlPanelElectronics
+  result: WeaponEnergyTurretSecurityControlPanelElectronics

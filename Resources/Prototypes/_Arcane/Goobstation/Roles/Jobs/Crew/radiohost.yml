@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: RadioHostBroadcaster
+  name: job-name-alt-radiohost-2
+
+- type: jobAlternateTitle
+  id: RadioHostStationDJ
+  name: job-name-alt-radiohost-1
+
+- type: jobAlternateTitle
+  id: RadioHostShowHost
+  name: job-name-alt-radiohost-4
+
+- type: jobAlternateTitle
+  id: RadioHostAnnouncer
+  name: job-name-alt-radiohost-3

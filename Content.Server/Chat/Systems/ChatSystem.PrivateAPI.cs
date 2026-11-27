@@ -171,6 +171,11 @@ public sealed partial class ChatSystem
             if (MessageRangeCheck(session, data, range) != MessageRangeCheckResult.Full)
                 continue; // Won't get logged to chat, and ghosts are too far away to see the pop-up, so we just won't send it to them.
 
+            // Arcane-Start
+            if (WhisperRespectsLOS && !data.Observer && !data.InLOS)
+                continue;
+            // Arcane-End
+
             // <Trauma> - fully rewrote for language and LOS checks
             if (language.SpeechOverride.RequireSpeech && HasComp<DeafComponent>(listener))
                 continue; // blocks anyone with the deaf component from hearing.
@@ -215,7 +220,7 @@ public sealed partial class ChatSystem
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, replayWrap, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
         // </Trauma>
 
-        var ev = new EntitySpokeEvent(source, message, channel, false, language); // Trauma - changed second null to false, added language
+        var ev = new EntitySpokeEvent(source, message, channel, true, language); // Arcane-Edit: false > true for whispers
         RaiseLocalEvent(source, ev, true);
         if (!hideLog)
             if (originalMessage == message)
