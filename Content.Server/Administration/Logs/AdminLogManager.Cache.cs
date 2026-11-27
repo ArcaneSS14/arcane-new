@@ -87,16 +87,6 @@ public sealed partial class AdminLogManager
         // TODO ADMIN LOGS a better heuristic than linq spaghetti
         var query = cache.AsEnumerable();
 
-        query = filter.DateOrder switch
-        {
-            // Arcane-Edit-Start: order by date, round and log ID
-            DateOrder.Ascending => query.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id),
-            DateOrder.Descending => query.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id),
-            // Arcane-Edit-End
-            _ => throw new ArgumentOutOfRangeException(nameof(filter),
-                $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
-        };
-
         if (filter.Search != null)
         {
             query = query.Where(log => log.Message.Contains(filter.Search, StringComparison.OrdinalIgnoreCase));
@@ -160,6 +150,16 @@ public sealed partial class AdminLogManager
             };
         }
         // Arcane-End
+
+        query = filter.DateOrder switch
+        {
+            // Arcane-Edit-Start: order by date, round and log ID
+            DateOrder.Ascending => query.OrderBy(log => log.Date).ThenBy(log => log.RoundId).ThenBy(log => log.Id),
+            DateOrder.Descending => query.OrderByDescending(log => log.Date).ThenByDescending(log => log.RoundId).ThenByDescending(log => log.Id),
+            // Arcane-Edit-End
+            _ => throw new ArgumentOutOfRangeException(nameof(filter),
+                $"Unknown {nameof(DateOrder)} value {filter.DateOrder}")
+        };
 
         if (filter.LogsSent != 0)
         {
