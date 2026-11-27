@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using System.Text.Json;
 using Content.Arcane.Common.Preferences;
@@ -65,3 +66,4 @@ public static class CharacterCustomizationDb
         return customization;
     }
 }
+// Arcane-End
