@@ -107,7 +107,8 @@ public abstract partial class SharedBorgSwitchableTypeSystem : EntitySystem
         _userInterface.CloseUi((ent.Owner, null), BorgSwitchableTypeUiKey.SelectBorgType);
 
         UpdateEntityAppearance(ent);
-        var arcaneSubtypeSelected = new Content.Arcane.Common.SiliconStanding.BorgSubtypeSelectedEvent(); // Arcane-Start: update subtype-dependent actions
+        // Arcane-Start: update subtype-dependent actions
+        var arcaneSubtypeSelected = new Content.Arcane.Common.SiliconStanding.BorgSubtypeSelectedEvent();
         RaiseLocalEvent(ent, ref arcaneSubtypeSelected);
         // Arcane-End
     }
@@ -140,8 +141,10 @@ public abstract partial class SharedBorgSwitchableTypeSystem : EntitySystem
             footstepModifier.FootstepSoundCollection = prototype.FootstepCollection;
         }
 
+        // Arcane-Edit-Start: use subtype movement visuals when available
         if (!subtypePrototype.Visuals.DisableMovementVisuals &&
-            (subtypePrototype.Visuals.MovementBodyState ?? prototype.SpriteBodyMovementState) is { } movementState) // Arcane-Edit: subtype movement visuals
+            (subtypePrototype.Visuals.MovementBodyState ?? prototype.SpriteBodyMovementState) is { } movementState)
+        // Arcane-Edit-End
         {
             var spriteMovement = EnsureComp<SpriteMovementComponent>(entity);
             spriteMovement.NoMovementLayers.Clear();

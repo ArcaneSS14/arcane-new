@@ -1,4 +1,3 @@
-// Arcane-Start: retain the silicon's footstep sound when it rests or stands
 using Content.Arcane.Common.SiliconStanding;
 using Content.Arcane.Shared.SiliconStanding;
 using Content.Shared.Movement.Components;
@@ -22,4 +21,3 @@ public sealed partial class SiliconStandingSoundSystem : EntitySystem
             _audio.PlayPvs(footsteps.FootstepSoundCollection, ent);
     }
 }
-// Arcane-End
