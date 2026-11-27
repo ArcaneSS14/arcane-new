@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Server.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -26,3 +27,4 @@ public sealed class ArcaneCustomization : Migration
         migrationBuilder.DropColumn(name: "hair_gradient_enabled", table: "profile");
     }
 }
+// Arcane-End

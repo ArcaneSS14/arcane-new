@@ -1,3 +1,4 @@
+// Arcane-Start
 #nullable enable
 using System.Linq;
 using Content.Server.Lathe;
@@ -106,3 +107,4 @@ public sealed class ArcaneResearchPrintingTest : GameTest
         return result;
     }
 }
+// Arcane-End

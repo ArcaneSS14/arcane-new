@@ -1,3 +1,4 @@
+// Arcane-Start
 using Robust.Shared.ContentPack;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
@@ -96,3 +97,4 @@ public sealed partial class GuidebookWindowState
     [DataField] public Dictionary<string, bool> Expanded { get; set; } = new();
     [DataField] public Dictionary<string, float> Scroll { get; set; } = new();
 }
+// Arcane-End
