@@ -1,3 +1,4 @@
+// Arcane-Start
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -38,3 +39,4 @@ internal static class ModelDiscordRoles
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
+// Arcane-End
