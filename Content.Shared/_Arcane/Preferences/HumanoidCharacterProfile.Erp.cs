@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.Preferences;
 
 namespace Content.Shared.Preferences;
@@ -32,3 +33,4 @@ public sealed partial class HumanoidCharacterProfile
         return ErpPreference;
     }
 }
+// Arcane-End

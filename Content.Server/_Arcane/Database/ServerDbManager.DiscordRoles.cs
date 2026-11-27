@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,3 +28,4 @@ public sealed partial class ServerDbManager
         return RunDbCommand(() => _db.HasDiscordRole(player, roleId, cancel));
     }
 }
+// Arcane-End
