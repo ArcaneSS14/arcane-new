@@ -1,3 +1,4 @@
+// Arcane-Start
 using System;
 using Content.Server.Database;
 using Microsoft.EntityFrameworkCore;
@@ -62,3 +63,4 @@ public sealed class ArcaneDiscordRoles : Migration
         migrationBuilder.DropColumn(name: "roles_updated_at", table: "rmc_discord_accounts");
     }
 }
+// Arcane-End
