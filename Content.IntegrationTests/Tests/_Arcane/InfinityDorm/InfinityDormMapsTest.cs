@@ -13,12 +13,18 @@ using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Content.Shared.Hands.EntitySystems; // Arcane
+using Content.Shared.Storage; // Arcane
+using Content.Shared.Storage.EntitySystems; // Arcane
+using Content.Shared.Tag; // Arcane
+using Robust.Shared.Containers; // Arcane
 
 namespace Content.IntegrationTests.Tests._Arcane.InfinityDorm;
 
 [TestFixture]
 public sealed class InfinityDormMapsTest : GameTest
 {
+    private static readonly ProtoId<TagPrototype> DormItem = "InfiniteDormItem"; // Arcane
+    private static readonly ProtoId<TagPrototype> OriginalItem = "InfiniteDormItemBlock"; // Arcane
     // Arcane-Start: shared visits and belongings survive in dorms
     [Test]
     [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
@@ -97,6 +103,73 @@ public sealed class InfinityDormMapsTest : GameTest
         }
     }
 
+    // Arcane-End
+
+    // Arcane-Start: bag insertion distinguishes belongings from items acquired in the room
+    [Test]
+    [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
+    public async Task BagKeepsBelongingsButCannotExportDormItems()
+    {
+        await OverrideCVar(Side.Server, ArcaneCVars.InfinityDormsEnabled, true);
+        var server = Pair.Server;
+        var entities = server.ResolveDependency<IEntityManager>();
+        var maps = entities.System<SharedMapSystem>();
+        var transforms = entities.System<SharedTransformSystem>();
+        var hands = entities.System<SharedHandsSystem>();
+        var storage = entities.System<SharedStorageSystem>();
+        var containers = entities.System<SharedContainerSystem>();
+        var tags = entities.System<TagSystem>();
+        var originalMap = MapId.Nullspace;
+        var dormMap = MapId.Nullspace;
+
+        try
+        {
+            await server.WaitAssertion(() =>
+            {
+                maps.CreateMap(out originalMap);
+                var coords = new MapCoordinates(Vector2.One, originalMap);
+                var teleporter = entities.SpawnEntity("InfinityDormTeleporter", coords);
+                var visitor = entities.SpawnEntity("MobHuman", coords);
+                var bag = entities.SpawnEntity("BooksBag", coords);
+                var ownBook = entities.SpawnEntity("BookTruth", coords);
+                Assert.That(storage.Insert(bag, ownBook, out _), Is.True);
+                Assert.That(hands.TryPickupAnyHand(visitor, bag, checkActionBlocker: false), Is.True);
+                entities.EventBus.RaiseLocalEvent(teleporter, new InfinityDormTeleportMessage("Nature", 12345)
+                {
+                    Actor = visitor,
+                    UiKey = InfinityDormTeleporterUiKey.Key,
+                });
+                dormMap = entities.GetComponent<TransformComponent>(visitor).MapID;
+                Assert.That(tags.HasTag(ownBook, OriginalItem), Is.True);
+                Assert.That(tags.HasTag(ownBook, DormItem), Is.False);
+
+                var dormBook = entities.SpawnEntity("BookNarsieLegend", transforms.GetMapCoordinates(visitor));
+                Assert.That(storage.Insert(bag, dormBook, out _, user: visitor), Is.True);
+                Assert.That(tags.HasTag(dormBook, DormItem), Is.True);
+                var exit = entities.AllEntities<InfinityDormExitComponent>()
+                    .First(ent => entities.GetComponent<TransformComponent>(ent).MapID == dormMap);
+                exit.Comp.TimeToExit = TimeSpan.Zero;
+                transforms.SetCoordinates(visitor, entities.GetComponent<TransformComponent>(exit.Owner).Coordinates);
+                entities.EventBus.RaiseLocalEvent(exit.Owner, new InteractHandEvent(visitor, exit.Owner));
+                Assert.That(entities.GetComponent<TransformComponent>(visitor).MapID, Is.EqualTo(dormMap));
+
+                Assert.That(containers.Remove(dormBook, entities.GetComponent<StorageComponent>(bag).Container), Is.True);
+                entities.EventBus.RaiseLocalEvent(exit.Owner, new InteractHandEvent(visitor, exit.Owner));
+                Assert.That(entities.GetComponent<TransformComponent>(visitor).MapID, Is.EqualTo(originalMap));
+                Assert.That(entities.EntityExists(ownBook), Is.True);
+            });
+        }
+        finally
+        {
+            await server.WaitPost(() =>
+            {
+                if (maps.MapExists(dormMap))
+                    maps.DeleteMap(dormMap);
+                if (maps.MapExists(originalMap))
+                    maps.DeleteMap(originalMap);
+            });
+        }
+    }
     // Arcane-End
 
     [Test]
