@@ -45,7 +45,8 @@ public sealed partial class WashingMachineSystem : SharedWashingMachineSystem
         if (ent.Comp.Machine is { } machine && Exists(machine))
         {
             var coords = Transform(machine).Coordinates;
-            TryFindEjectTile(machine, out coords, maxRadius: 2);
+            if (TryFindEjectTile(machine, out var ejectCoords, maxRadius: 2))
+                coords = ejectCoords;
             _transform.SetCoordinates(uid, coords);
         }
 
