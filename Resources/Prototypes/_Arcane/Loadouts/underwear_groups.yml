@@ -90,6 +90,15 @@
   - SwimmingBlack
   - SwimmingBlue
   - SwimmingRed
+  - WarmBra
+  - CowSwimsuit
+  - BraBeer
+  - BraDriada
+  - BraEroticPurple
+  - BraMedusa
+  - BraLeafs
+  - BraPinkFancy
+  - BraRed
 
 - type: loadoutGroup
   id: Underwear
@@ -129,6 +138,20 @@
   - PantiesAlt
   - Thong
   - ThongBabydoll
+  - pantiesSpiderman
+  - boxerwolf
+  - boxerelephant
+  - boxerfrance
+  - boxermaidwithsuspenders
+  - WarmThongs
+  - Driada
+  - EroticPurple
+  - Medusa
+  - Leafs
+  - PinkFancy
+  - Red
+  - UnderwearAx
+  - BeerPants
 
 - type: loadoutGroup
   id: Socks

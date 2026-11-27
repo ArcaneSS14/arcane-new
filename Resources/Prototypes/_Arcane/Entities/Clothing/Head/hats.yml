@@ -1,4 +1,111 @@
 - type: entity
+  abstract: true
+  parent: ClothingHeadBase
+  id: ClothingHeadHatArmored
+  components:
+  - type: Armor
+    coverage:
+    - Head
+    traumaDeductions:
+      Dismemberment: 0.4
+      OrganDamage: 0.5
+      BoneDamage: 0.4
+      VeinsDamage: 0.2
+      NerveDamage: 0.2
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.7
+        Heat: 0.8
+  - type: StaticPrice
+    price: 0
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatBeretAdjutant
+  name: adjutant beret
+  description: Awarded by passing difficult qualification tests and is a matter of extreme pride.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/adjutant_beret.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/adjutant_beret.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatGarrisonCapAdjutant
+  name: adjutant garrisoncap
+  description: A little cotton cap that's just about to fall off his head.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/garrisoncap_adj.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/garrisoncap_adj.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatCapAdjutant
+  name: adjutant cap
+  description: Blue and white, suspiciously reminiscent of the captain's.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/adjcap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/adjcap.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatCommandMaid
+  name: cap
+  description: An exquisite cap for an impeccable person.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/hat_maid.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/hat_maid.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatBowsCommandMaid
+  name: bows cap
+  description: An exquisite cap with bows for an impeccable person.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/hat_maid_bows.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/hat_maid_bows.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatBlackCommandMaid
+  name: black cap
+  description: An exquisite cap for an impeccable person.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/hat_black_maid.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/hat_black_maid.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
   parent: ClothingHeadBase
   id: ClothingHeadInteQBeret
   name: InteQ beret
@@ -25,6 +132,7 @@
   id: ClothingHeadHatInteQMAA
   name: InteQ master at arms hat
   description: Master at arms hat, looks intimidating, I doubt that you will like to communicate with its owner...
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/inteq_peaked.rsi
@@ -36,16 +144,19 @@
   id: ClothingHeadHatInteQTacticalMaidHeadband
   name: tactical maid headband
   description: White headband - dont imagine yourself a Buster.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/inteq_headband.rsi
   - type: Clothing
     sprite: _Arcane/Clothing/Head/Hats/inteq_headband.rsi
+
 - type: entity
   parent: ClothingHeadBase
   id: ClothingHeadHelmetKendoMen
   name: men
   description: The quintessential head armor of the kendo practitioner.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Helmets/men.rsi
@@ -63,21 +174,61 @@
         Piercing: 0.9
 
 - type: entity
-  parent: ClothingHeadBase
-  id: ClothingHeadHatBeretCaptainWhite
-  name: white captain beret
-  description: A white captain beret, an icon of style.
+  abstract: true
+  parent: [ClothingHeadBase]
+  id: ClothingHeadHatArmoredPlus
+  components:
+  - type: Armor
+    coverage:
+    - Head
+    traumaDeductions:
+      Dismemberment: 0.3
+      OrganDamage: 0.4
+      BoneDamage: 0.3
+      VeinsDamage: 0.1
+      NerveDamage: 0.1
+    modifiers:
+      coefficients:
+        Blunt: 0.6
+        Slash: 0.6
+        Piercing: 0.6
+        Heat: 0.7
+
+
+- type: entity
+  parent: [ ClothingHeadHatArmoredPlus, BaseCommandContraband ]
+  id: ClothingHeadHatBeretCaptainWhiteBlue
+  name: captain metamorphic beret
+  description:  A high-tech beret capable of instantly changing its color, a true icon of style.
   components:
   - type: Sprite
-    sprite: _Arcane/Clothing/Head/Hats/white_beret.rsi
+    sprite: _Arcane/Clothing/Head/Hats/white_blue_beret.rsi
   - type: Clothing
-    sprite: _Arcane/Clothing/Head/Hats/white_beret.rsi
+    sprite: _Arcane/Clothing/Head/Hats/white_blue_beret.rsi
+    equippedPrefix: blue
+  - type: Item
+    heldPrefix: blue
+  - type: ItemSwitch
+    state: blue
+    onUse: false
+    states:
+      blue: !type:ItemSwitchState
+        verb: blue
+        sprite:
+          sprite: _Arcane/Clothing/Head/Hats/white_blue_beret.rsi
+          state: blue-icon
+      white: !type:ItemSwitchState
+        verb: white
+        sprite:
+          sprite: _Arcane/Clothing/Head/Hats/white_blue_beret.rsi
+          state: white-icon
 
 - type: entity
   parent: ClothingHeadBase
   id: ClothingHeadHatBeretSheriff
   name: sheriff beret
   description: Beret, a favorite among local sheriffs.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/sheriff_beret.rsi
@@ -89,6 +240,7 @@
   id: ClothingHeadHatCapcapWhite
   name: white cap cap
   description: Stylish white cap cap.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/white_capcap.rsi
@@ -103,6 +255,7 @@
   id: ClothingHeadHatCapcapSheriff
   name: sheriff cap
   description: Stylish sheriff cap.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/sheriff_capcap.rsi
@@ -117,6 +270,7 @@
   id: ClothingHeadCapCentcomNaval
   name: naval cap
   description: A cap worn by those in the Nanotrasen Navy.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/centcom_naval_cap.rsi
@@ -128,6 +282,7 @@
   id: ClothingHeadHatBeretCentcomNaval
   name: naval beret
   description: A beret worn by those in the Nanotrasen Navy.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/centcom_naval_beret.rsi
@@ -140,6 +295,7 @@
   id: ClothingHeadHatsBeretAtmos
   name: atmospheric technician's beret
   description: A blue beret with sewn emblem of engineering department. Smells like frezon.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_atmospheric_technician.rsi
@@ -154,6 +310,7 @@
   id: ClothingHeadHatsParamedicBeret
   name: paramedic's beret
   description: A blue beret of a constantly busy job.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_paramedic.rsi
@@ -168,6 +325,7 @@
   id: ClothingHeadHatBeretSecurityMedic
   name: security medic beret
   description: A robust beret with the medical insignia emblazoned on it. Uses reinforced fabric to offer sufficient protection.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_security_medic.rsi
@@ -182,6 +340,7 @@
   id: ClothingHeadHatBeretCEngineer
   name: chief engineer's beret
   description: A beret for different tasks.
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Arcane/Clothing/Head/Hats/beret_ce.rsi
@@ -190,3 +349,357 @@
   - type: Tag
     tags:
       - HamsterWearable
+
+- type: entity
+  parent: ClothingHeadHatCentcom
+  id: ClothingHatBeretBlueShield
+  name: “Blue Shield” Officer's Beret
+  description: A beret designed for “Blue Shield” employees.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/blueshieldhatberet.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/blueshieldhatberet.rsi
+
+- type: entity
+  parent: ClothingHeadHatCentcom
+  id: ClothingHatCapBlueShield
+  name: “Blue Shield” Officer's Cap
+  description: A cap designed for “Blue Shield” employees.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/blueshieldhatcap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/blueshieldhatcap.rsi
+
+# Sponsor
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatClownPink
+  categories: [ HideSpawnMenu ]
+  name: pink clown hat
+  description: Pink clown hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/clown.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/clown.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCMO
+  categories: [ HideSpawnMenu ]
+  name: CMO's hat
+  description: CMO's hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/CMO_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/CMO_hat.rsi
+
+- type: entity
+  parent: ClothingHeadHatArmoredPlus
+  id: ClothingHatHOSCap
+  categories: [ HideSpawnMenu ]
+  name: HOS' cap.
+  description: HOS' cap.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/HOS_cap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/HOS_cap.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatQMBlackBeret
+  categories: [ HideSpawnMenu ]
+  name: QM's black beret
+  description: QM's black beret.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/QM_beret.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/QM_beret.rsi
+
+- type: entity
+  parent: ClothingHeadHatCentcom
+  id: ClothingHatSanitar
+  categories: [ HideSpawnMenu ]
+  name: sanitar hat
+  description: Sanitar hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/sanitar_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/sanitar_hat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatFlyAgaric
+  name: fly agaric hat
+  description: A hat resempling a cap of a poisonous mushroom.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/fly_agaric_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/fly_agaric_hat.rsi
+
+# USSP
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatUSSPBeretPolice
+  name: policer beret
+  description: A beret with the emblem of USSP police department.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/USSP/police_beret.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/USSP/police_beret.rsi
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatUSSPCapPolice
+  name: policer cap
+  description: A beret with the emblem of USSP police department.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/USSP/police_cap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/USSP/police_cap.rsi
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatUSSPInvestigator
+  name: investigator hat
+  description: The investigator's black hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/USSP/investigator_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/USSP/investigator_hat.rsi
+
+- type: entity
+  parent: ClothingHeadHatArmored
+  id: ClothingHeadHatUSSPBlueUshanka
+  name: blue ushanka
+  description: Warm fur winter ushanka hat with a USSP police department emblem.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/USSP/blue_ushanka.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/USSP/blue_ushanka.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatUSSPPolicePilotka
+  name: policer pilotka
+  description: A pilotka cap with the emblem of the USSP police department.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/USSP/police_pilotka.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/USSP/police_pilotka.rsi
+
+# Lovemate
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatOficerCapLovemate
+  name: officer cap
+  description: Stop, you scum! You're arrested!
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/officer_cap.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/officer_cap.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadbandCat
+  name: cat headband
+  description: A headband with cat ears.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/headband_cat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/headband_cat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadbandCow
+  name: cow headband
+  description: A decorative headband with cow ears and horns.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/headband_cow.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/headband_cow.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadbandDog
+  name: dog headband
+  description: A soft headband that mimics dog ears.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/headband_dog.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/headband_dog.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadbandFox
+  name: fox headband
+  description: A red headband with fluffy fox ears.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/headband_fox.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/headband_fox.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadbandKitsune
+  name: kitsune headband
+  description: A traditional element of a costume in the style of a mythical fox.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/headband_kitsune.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/headband_kitsune.rsi
+
+# Command
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatMaidFura
+  name: maid cap
+  description: A neat cap fitting for a head maid.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Hats/maid_fura.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Hats/maid_fura.rsi
+
+- type: entity
+  parent: ClothingHeadHatArmoredPlus
+  id: ClothingHatNTRBlackBeret
+  categories: [ HideSpawnMenu ]
+  name: NTR's black beret
+  description: NTR's black beret.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/NTR_beret.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/NTR_beret.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatBotanist
+  categories: [ HideSpawnMenu ]
+  name: botanical hat
+  description: A wide-brimmed hat for working in the sun.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/botanist.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/botanist.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCamouflage
+  categories: [ HideSpawnMenu ]
+  name: camouflage hat
+  description: Camouflage hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/camouflage.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/camouflage.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatClownCilinder
+  categories: [ HideSpawnMenu ]
+  name: clown's cilinder
+  description: Funny stripped cilinder.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/clown_cilinder.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/clown_cilinder.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCow
+  categories: [ HideSpawnMenu ]
+  name: cow helmet
+  description: Cow.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/cow.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/cow.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatFishCookBandana
+  categories: [ HideSpawnMenu ]
+  name: cook's fish bandana
+  description: Fish cutter's bandana.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/fish_cook_bandana.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/fish_cook_bandana.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCookHigh
+  categories: [ HideSpawnMenu ]
+  name: high cook hat
+  description: Probably hides a rat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/high_cook_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/high_cook_hat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCookInclined
+  categories: [ HideSpawnMenu ]
+  name: inclined cook hat
+  description: Inclined cook hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/inclined_cook_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/inclined_cook_hat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatJester
+  categories: [ HideSpawnMenu ]
+  name: jester's hat
+  description: Old-fashioned clown hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/jester_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/jester_hat.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHatCookRed
+  categories: [ HideSpawnMenu ]
+  name: red cook hat
+  description: Red cook hat.
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Head/Sponsor/red_cook_hat.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Head/Sponsor/red_cook_hat.rsi

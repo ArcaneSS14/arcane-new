@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace Content.Arcane.Common.Sponsors;
 
@@ -21,4 +22,10 @@ public interface ISharedSponsorsManager
     public bool TryGetServerOocColor(NetUserId userId, [NotNullWhen(true)] out Color? color);
     public int GetServerExtraCharSlots(NetUserId userId);
     public bool HaveServerPriorityJoin(NetUserId userId);
+
+    /// <summary>
+    /// Loads what the server checks for a player who is still connecting and has no session yet, such as
+    /// <see cref="HaveServerPriorityJoin"/>. Providers that answer from memory need nothing here.
+    /// </summary>
+    public Task PreloadServer(NetUserId userId) => Task.CompletedTask;
 }
