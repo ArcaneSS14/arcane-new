@@ -84,17 +84,19 @@
     sprite: Clothing/Belt/bandolier.rsi
   - type: Item
     size: Huge
-  # Arcane-Edit-Start
-  - type: Storage
+  - type: Storage # Arcane-Edit: BallisticAmmoProvider > Storage
     whitelist:
       tags:
         - ShellShotgun
+    # Arcane-Edit-Start: capacity 14 > grid 0,0,6,2
     grid:
     - 0,0,6,2
+    # Arcane-Edit-End
+    # Arcane-Start
     quickInsert: true
     areaInsert: true
-  - type: Dumpable
-  # Arcane-Edit-End
+    # Arcane-End
+  - type: Dumpable # Arcane
 
 - type: entity
   parent: [ ClothingBeltStorageBase, BaseMagicalContraband ]
