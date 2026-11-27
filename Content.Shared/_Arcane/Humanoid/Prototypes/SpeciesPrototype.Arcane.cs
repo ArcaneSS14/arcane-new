@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.Humanoid.Prototypes;
 
 public sealed partial class SpeciesPrototype
@@ -8,3 +9,4 @@ public sealed partial class SpeciesPrototype
     [DataField]
     public bool CustomName { get; private set; }
 }
+// Arcane-End

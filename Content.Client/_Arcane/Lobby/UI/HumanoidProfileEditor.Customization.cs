@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.Preferences;
 using Content.Client.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
@@ -208,3 +209,4 @@ public sealed partial class HumanoidProfileEditor
         _hairGradientOffsetLabel.Text = Loc.GetString($"humanoid-profile-editor-hair-gradient-offset-{style}", ("value", (int) MathF.Round(_hairGradientOffset.Value)));
     }
 }
+// Arcane-End
