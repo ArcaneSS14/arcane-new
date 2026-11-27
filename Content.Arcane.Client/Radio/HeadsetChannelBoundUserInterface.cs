@@ -16,6 +16,9 @@ public sealed class HeadsetChannelBoundUserInterface : BoundUserInterface
 
     protected override void Open()
     {
+        if (IsOpened)
+            return;
+
         base.Open();
         _window = this.CreateWindow<HeadsetChannelWindow>();
         _window.ChannelMuteToggled += (frequency, muted) => SendMessage(new HeadsetChannelMuteMessage(frequency, muted));
