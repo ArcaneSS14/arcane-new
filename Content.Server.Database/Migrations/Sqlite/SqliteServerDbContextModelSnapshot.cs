@@ -1339,10 +1339,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnName("erp_preference");
                     // Arcane-End
 
+                    // Arcane-Start
                     b.Property<string>("TtsVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasColumnName("tts_voice"); // Arcane
+                        .HasColumnName("tts_voice");
+                    // Arcane-End
 
                     b.Property<string>("BarkVoice")
                         .IsRequired()
