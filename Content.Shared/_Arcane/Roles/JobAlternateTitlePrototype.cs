@@ -1,3 +1,4 @@
+// Arcane-Start
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 
@@ -46,3 +47,4 @@ public sealed partial class JobAlternateTitlePrototype : IPrototype
         };
     }
 }
+// Arcane-End

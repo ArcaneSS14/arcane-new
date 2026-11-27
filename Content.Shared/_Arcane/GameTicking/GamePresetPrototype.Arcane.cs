@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.GameTicking.Prototypes;
 
 public sealed partial class GamePresetPrototype
@@ -14,3 +15,4 @@ public sealed partial class GamePresetPrototype
     [DataField]
     public float PreviousRoundWeightMultiplier = 0.5f;
 }
+// Arcane-End
