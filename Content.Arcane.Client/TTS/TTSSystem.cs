@@ -44,12 +44,11 @@ public sealed partial class TTSSystem : EntitySystem
     private readonly Dictionary<EntityUid, AudioStream> _playingStreams = new();
     private EntityUid? _previewStream;
     private ulong _fileIdx = 0;
-    private static ulong _shareIdx = 0;
 
     public override void Initialize()
     {
         EntityManager.EntityDeleted += OnAudioEntityDeleted;
-        _prefix = ResPath.Root / $"TTS{_shareIdx++}";
+        _prefix = ResPath.Root / $"TTS-{Guid.NewGuid():N}";
         _sawmill = Logger.GetSawmill("tts");
         _res.AddRoot(_prefix, _contentRoot);
         _cfg.OnValueChanged(ArcaneCVars.TTSVolume, OnTtsVolumeChanged, true);
@@ -83,8 +82,8 @@ public sealed partial class TTSSystem : EntitySystem
         _cfg.UnsubValueChanged(ArcaneCVars.TTSRadioChannelMuted, OnTTSRadioChannelMutedChanged);
         _cfg.UnsubValueChanged(ArcaneCVars.TTSRadioChannelVolumes, OnTTSRadioChannelVolumesChanged);
         _cfg.UnsubValueChanged(ArcaneCVars.TTSGhostRadioUseTTS, OnGhostRadioUseTTSChanged);
+        // The resource manager keeps mounted roots; leave this one usable and empty.
         _contentRoot.Clear();
-        _contentRoot.Dispose();
     }
 
     public void RequestGlobalTTS(VoiceRequestType text, string voiceId)
