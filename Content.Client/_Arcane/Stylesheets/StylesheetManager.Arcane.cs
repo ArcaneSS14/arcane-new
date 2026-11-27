@@ -1,3 +1,4 @@
+// Arcane-Start
 using Robust.Client.UserInterface;
 
 namespace Content.Client.Stylesheets;
@@ -48,3 +49,4 @@ public sealed partial class StylesheetManager
             UpdateExplicitStylesheets(child, previousNanotrasen, previousSystem, nanotrasen, system);
     }
 }
+// Arcane-End

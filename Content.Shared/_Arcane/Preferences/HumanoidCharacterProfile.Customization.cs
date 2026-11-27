@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using Content.Arcane.Common.CCVar;
 using Content.Arcane.Common.Preferences;
@@ -40,3 +41,4 @@ public sealed partial class HumanoidCharacterProfile
         return Customization.Validated(allows, config.GetCVar(CCVars.MaxNameLength), forbidden);
     }
 }
+// Arcane-End

@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.Humanoid.Markings;
 
 public sealed partial class MarkingPrototype
@@ -9,3 +10,4 @@ public sealed partial class MarkingPrototype
     [DataField]
     public List<string> SponsorRoles { get; private set; } = new();
 }
+// Arcane-End

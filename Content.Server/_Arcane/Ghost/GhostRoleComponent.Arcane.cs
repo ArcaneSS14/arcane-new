@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Roles;
 using Robust.Shared.Prototypes;
 
@@ -12,3 +13,4 @@ public sealed partial class GhostRoleComponent
     [DataField]
     public ProtoId<JobPrototype>? BanJob;
 }
+// Arcane-End

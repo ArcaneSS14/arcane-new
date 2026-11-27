@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,3 +30,4 @@ public abstract partial class ServerDbBase
             .AnyAsync(cancel);
     }
 }
+// Arcane-End
