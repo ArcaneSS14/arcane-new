@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Server.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -22,3 +23,4 @@ public sealed class ArcaneTtsVoice : Migration
         migrationBuilder.DropColumn(name: "tts_voice", table: "profile");
     }
 }
+// Arcane-End

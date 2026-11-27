@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.Preferences;
 using Content.IntegrationTests.Fixtures;
 using Content.Server.Database;
@@ -93,3 +94,4 @@ public sealed class CharacterCustomizationTest : GameTest
         });
     }
 }
+// Arcane-End

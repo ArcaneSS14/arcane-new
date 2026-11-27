@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Server._Arcane.Telephone;
 
 /// <summary>
@@ -8,3 +9,4 @@ public sealed partial class TelephoneRelaySpeechComponent : Component
 {
     public EntityUid? Source;
 }
+// Arcane-End
