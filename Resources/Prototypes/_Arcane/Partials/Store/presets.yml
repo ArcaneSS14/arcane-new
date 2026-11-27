@@ -1,0 +1,4 @@
+- type: entity
+  id: StorePresetUplink
+  components:
+  - type: UplinkRefundStore
