@@ -1333,14 +1333,18 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnName("hair_gradient_enabled");
                     // Arcane-End
 
+                    // Arcane-Start
                     b.Property<int>("ErpPreference")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("erp_preference"); // Arcane
+                        .HasColumnName("erp_preference");
+                    // Arcane-End
 
+                    // Arcane-Start
                     b.Property<string>("TtsVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasColumnName("tts_voice"); // Arcane
+                        .HasColumnName("tts_voice");
+                    // Arcane-End
 
                     b.Property<string>("BarkVoice")
                         .IsRequired()
