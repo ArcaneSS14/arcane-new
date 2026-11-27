@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.CCVar;
 using Content.Client.Lobby.UI.Roles;
 using Content.Shared.Roles;
@@ -73,3 +74,4 @@ public sealed partial class HumanoidProfileEditor
         title.Visible = false;
     }
 }
+// Arcane-End

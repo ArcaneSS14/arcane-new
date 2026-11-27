@@ -1,3 +1,4 @@
+// Arcane-Start
 namespace Content.Shared.StationRecords;
 
 public sealed partial record GeneralStationRecord
@@ -8,3 +9,4 @@ public sealed partial record GeneralStationRecord
     [DataField]
     public string CustomSpeciesName = string.Empty;
 }
+// Arcane-End

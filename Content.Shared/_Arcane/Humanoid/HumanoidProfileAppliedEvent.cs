@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Shared.Preferences;
 
 namespace Content.Shared.Humanoid;
@@ -8,3 +9,4 @@ namespace Content.Shared.Humanoid;
 /// </summary>
 [ByRefEvent]
 public readonly record struct HumanoidProfileAppliedEvent(HumanoidCharacterProfile Profile);
+// Arcane-End

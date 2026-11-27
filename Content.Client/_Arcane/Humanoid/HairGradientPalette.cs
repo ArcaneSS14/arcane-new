@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Numerics;
 using Content.Client.Stylesheets.Colorspace;
 
@@ -125,3 +126,4 @@ public static class HairGradientPalette
                color.B is >= -epsilon and <= 1f + epsilon;
     }
 }
+// Arcane-End
