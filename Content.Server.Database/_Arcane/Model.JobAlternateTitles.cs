@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -27,3 +28,4 @@ internal static class ModelJobAlternateTitles
                 dict => new Dictionary<string, string>(dict)));
     }
 }
+// Arcane-End

@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using System.Numerics;
 using Content.Client._Arcane.Guidebook;
@@ -62,3 +63,4 @@ public sealed partial class GuidebookUIController
         _additionalGuideWindows.Clear();
     }
 }
+// Arcane-End

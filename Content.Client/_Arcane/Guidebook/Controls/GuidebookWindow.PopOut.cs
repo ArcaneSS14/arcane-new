@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Numerics;
 using Robust.Client.UserInterface.Controls;
 
@@ -45,3 +46,4 @@ public sealed partial class GuidebookWindow
         return window;
     }
 }
+// Arcane-End

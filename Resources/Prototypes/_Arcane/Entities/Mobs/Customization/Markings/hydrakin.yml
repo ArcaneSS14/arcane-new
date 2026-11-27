@@ -102,7 +102,7 @@
   id: HydrakinEarsDefault
   bodyPart: HeadTop
   groupWhitelist: [ Hydrakin ]
-  underHair: true # Arcane
+  underHair: true
   sprites:
   - sprite: _Arcane/Mobs/Customization/Hydrakin/parts.rsi
     state: ears_default
@@ -111,7 +111,7 @@
   id: HydrakinEarsOld
   bodyPart: HeadTop
   groupWhitelist: [ Hydrakin ]
-  underHair: true # Arcane
+  underHair: true
   sprites:
   - sprite: _Arcane/Mobs/Customization/Hydrakin/parts.rsi
     state: ears_old
@@ -120,7 +120,7 @@
   id: HydrakinEarsFin
   bodyPart: HeadTop
   groupWhitelist: [ Hydrakin ]
-  underHair: true # Arcane
+  underHair: true
   sprites:
   - sprite: _Arcane/Mobs/Customization/Hydrakin/parts.rsi
     state: ears_fin
@@ -129,7 +129,7 @@
   id: HydrakinEarsFrilled
   bodyPart: HeadTop
   groupWhitelist: [ Hydrakin ]
-  underHair: true # Arcane
+  underHair: true
   sprites:
   - sprite: _Arcane/Mobs/Customization/Hydrakin/parts.rsi
     state: ears_frilled
@@ -348,7 +348,7 @@
   id: HydrakinHydraSeerEars
   bodyPart: HeadTop
   groupWhitelist: [ Hydrakin ]
-  underHair: true # Arcane
+  underHair: true
   sprites:
   - sprite: _Arcane/Mobs/Customization/Hydrakin/hydraseer.rsi
     state: hydra_seer_ears

@@ -1,3 +1,4 @@
+// Arcane-Start
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +13,19 @@ using Robust.Shared.Map;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
-using Content.Shared.Hands.EntitySystems; // Arcane
-using Content.Shared.Storage; // Arcane
-using Content.Shared.Storage.EntitySystems; // Arcane
-using Content.Shared.Tag; // Arcane
-using Robust.Shared.Containers; // Arcane
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Storage;
+using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Tag;
+using Robust.Shared.Containers;
 
 namespace Content.IntegrationTests.Tests._Arcane.InfinityDorm;
 
 [TestFixture]
 public sealed class InfinityDormMapsTest : GameTest
 {
-    private static readonly ProtoId<TagPrototype> DormItem = "InfiniteDormItem"; // Arcane
-    private static readonly ProtoId<TagPrototype> OriginalItem = "InfiniteDormItemBlock"; // Arcane
-    // Arcane-Start: shared visits and belongings survive in dorms
+    private static readonly ProtoId<TagPrototype> DormItem = "InfiniteDormItem";
+    private static readonly ProtoId<TagPrototype> OriginalItem = "InfiniteDormItemBlock";
     [Test]
     [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
     public async Task MultipleVisitorsAndDroppedBelongingsSurvive()
@@ -103,9 +103,7 @@ public sealed class InfinityDormMapsTest : GameTest
         }
     }
 
-    // Arcane-End
 
-    // Arcane-Start: bag insertion distinguishes belongings from items acquired in the room
     [Test]
     [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
     public async Task BagKeepsBelongingsButCannotExportDormItems()
@@ -170,7 +168,6 @@ public sealed class InfinityDormMapsTest : GameTest
             });
         }
     }
-    // Arcane-End
 
     [Test]
     [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
@@ -280,3 +277,4 @@ public sealed class InfinityDormMapsTest : GameTest
         Assert.That(failures, Is.Empty, string.Join("\n", failures));
     }
 }
+// Arcane-End

@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Arcane.Common.CCVar;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Roles;
@@ -80,3 +81,4 @@ public sealed partial class HumanoidCharacterProfile
         return titles;
     }
 }
+// Arcane-End

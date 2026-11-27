@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using Content.Server.Store.Systems;
 using Content.Server.Traitor.Uplink;
@@ -8,7 +9,7 @@ using Content.Shared.Store.Components;
 namespace Content.IntegrationTests.Tests._Arcane;
 
 [TestFixture]
-public sealed partial class UplinkBalanceTest : GameTest // Arcane-Edit: class > partial class
+public sealed partial class UplinkBalanceTest : GameTest
 {
     private static readonly (ProtoId<ListingPrototype> Listing, int Price)[] ApprovedPrices =
     [
@@ -72,3 +73,4 @@ public sealed partial class UplinkBalanceTest : GameTest // Arcane-Edit: class >
         });
     }
 }
+// Arcane-End
