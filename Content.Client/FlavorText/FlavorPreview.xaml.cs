@@ -84,10 +84,10 @@ public sealed partial class FlavorPreview : Control
         CharacterView.SetEntity(uid);
     }
 
-    public void SetCharacter(string name, ProtoId<SpeciesPrototype> species, Sex sex, Gender gender, string customSpeciesName = "")
+    public void SetCharacter(string name, ProtoId<SpeciesPrototype> species, Sex sex, Gender gender, string customSpeciesName = "") // Arcane-Edit: gender > gender, customSpeciesName
     {
         var speciesName = _proto.TryIndex(species, out var speciesProto) ? Loc.GetString(speciesProto.Name) : species.Id;
-        speciesName = CharacterCustomization.GetSpeciesLongName(speciesName, customSpeciesName);
+        speciesName = CharacterCustomization.GetSpeciesLongName(speciesName, customSpeciesName); // Arcane
         var sexName = Loc.GetString($"humanoid-profile-editor-sex-{sex.ToString().ToLowerInvariant()}-text");
         var genderName = Loc.GetString($"humanoid-profile-editor-pronouns-{gender.ToString().ToLowerInvariant()}-text");
 
