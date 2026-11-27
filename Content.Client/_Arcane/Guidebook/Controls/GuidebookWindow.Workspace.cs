@@ -1,3 +1,4 @@
+// Arcane-Start
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -477,3 +478,4 @@ public sealed partial class GuidebookWindow
         base.Dispose(disposing);
     }
 }
+// Arcane-End
