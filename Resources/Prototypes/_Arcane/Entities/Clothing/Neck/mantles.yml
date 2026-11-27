@@ -1,0 +1,26 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: ClothingNeckMantleAdjutant
+  name: adjutant mantle
+  description: Lightweight, velvet, uninhibited movement, on one shoulder, as if it speaks to your precarious position of command..
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Mantles/adjmantle.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Neck/Mantles/adjmantle.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: ClothingNeckBloodMantle
+  components:
+  - type: Sprite
+    sprite: _Arcane/Clothing/Neck/Mantles/blood_mantle.rsi
+  - type: Clothing
+    sprite: _Arcane/Clothing/Neck/Mantles/blood_mantle.rsi
+    equippedPrefix: off
+    slots:
+    - Neck
+  - type: ItemToggle
+  - type: ToggleClothingPrefix
+    prefixOn: on
+    prefixOff: off

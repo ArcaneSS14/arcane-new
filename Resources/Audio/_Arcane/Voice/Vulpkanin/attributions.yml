@@ -1,0 +1,42 @@
+- files:
+  - female_fox_growl.ogg
+  - female_fox_scream1.ogg
+  - female_fox_scream2.ogg
+  - female_wolf_howl.ogg
+  - fox_cry1.ogg
+  - fox_cry2.ogg
+  - fox_laugh1.ogg
+  - fox_laugh2.ogg
+  - male_fox_scream1.ogg
+  - male_fox_scream2.ogg
+  - male_wolf_growl.ogg
+  - male_wolf_howl.ogg
+  license: "CC-BY-SA-3.0"
+  copyright: "Original sound taken from dead-space-14."
+  source: "https://github.com/dead-space-server/dead-space-14/tree/master/Resources/Audio/_DeadSpace/Voice/Vulpkanin"
+
+
+- files: ["dog_growl1.ogg", "dog_growl2.ogg", "dog_growl3.ogg"]
+  license: "CC0-1.0"
+  copyright: "Original sound by GlitchedTones at https://freesound.org/people/Glitchedtones/sounds/372533/ - cut out three clips of dog growling, cleaned up, converted to ogg"
+  source: "https://freesound.org/people/Glitchedtones/sounds/372533/"
+
+- files: ["dog_growl4.ogg"]
+  license: "CC-BY-NC-SA-3.0"
+  copyright: "Original sound taken from Paradise Station. Renamed to dog_growl4.ogg"
+  source: "https://github.com/ParadiseSS13/Paradise/blob/master/sound/goonstation/voice/growl1.ogg"
+
+- files: ["dog_growl5.ogg"]
+  license: "CC-BY-NC-SA-3.0"
+  copyright: "Original sound taken from Paradise Station. Renamed to dog_growl5.ogg"
+  source: "https://github.com/ParadiseSS13/Paradise/blob/master/sound/goonstation/voice/growl2.ogg"
+
+- files: ["dog_growl6.ogg"]
+  license: "CC-BY-NC-SA-3.0"
+  copyright: "Original sound taken from Paradise Station. Renamed to dog_growl6.ogg"
+  source: "https://github.com/ParadiseSS13/Paradise/blob/master/sound/goonstation/voice/growl3.ogg"
+
+- files: ["howl.ogg"]
+  license: "CC-BY-NC-SA-3.0"
+  copyright: "Original sound taken from Goonstation. Renamed to howl.ogg"
+  source: "https://github.com/goonstation/goonstation/blob/master/sound/voice/animal/werewolf_howl.ogg"

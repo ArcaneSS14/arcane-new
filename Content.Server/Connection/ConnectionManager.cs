@@ -255,6 +255,10 @@ namespace Content.Server.Connection
             }
 
             var adminData = await _db.GetAdminDataForAsync(e.UserId);
+            // Arcane-Start
+            if (_sponsorsMgr != null)
+                await _sponsorsMgr.PreloadServer(userId);
+            // Arcane-End
 
             if (_cfg.GetCVar(CCVars.PanicBunkerEnabled) && adminData == null && !(_sponsorsMgr?.HaveServerPriorityJoin(userId) ?? false)) // Arcane-Edit: sponsor priority join bypasses the bunker
             {

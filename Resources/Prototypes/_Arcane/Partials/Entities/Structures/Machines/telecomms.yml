@@ -1,0 +1,24 @@
+- type: entity
+  id: TelecomServerFilled
+  components:
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeyCommon
+      - EncryptionKeyCargo
+      - EncryptionKeyEngineering
+      - EncryptionKeyMedical
+      - EncryptionKeyScience
+      - EncryptionKeySecurity
+      - EncryptionKeyService
+      - EncryptionKeyCommand
+      - EncryptionKeyLegal
+
+- type: entity
+  id: TelecomServerFilledSecurity
+  components:
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeySecurity
+      - EncryptionKeyLegal

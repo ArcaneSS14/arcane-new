@@ -1,0 +1,11 @@
+- type: jobAlternateTitle
+  id: ChemistPharmacist
+  name: job-name-alt-chemist-1
+
+- type: jobAlternateTitle
+  id: ChemistLabTechnician
+  name: job-name-alt-chemist-2
+
+- type: jobAlternateTitle
+  id: ChemistBiochemist
+  name: job-name-alt-chemist-3

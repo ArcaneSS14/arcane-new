@@ -1,0 +1,15 @@
+# Futanari bodies use the female sprites.
+
+- type: entity
+  id: OrganBaseHeadSexed
+  components:
+  - type: VisualOrgan
+    sexStateOverrides:
+      Futanari: head_f
+
+- type: entity
+  id: OrganBaseTorsoSexed
+  components:
+  - type: VisualOrgan
+    sexStateOverrides:
+      Futanari: torso_f

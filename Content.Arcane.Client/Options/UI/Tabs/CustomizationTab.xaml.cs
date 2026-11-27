@@ -1,3 +1,4 @@
+using Content.Arcane.Client.StyleSheets;
 using System.Linq;
 using Content.Arcane.Client.Chat.UI;
 using Content.Arcane.Client.Radio;
@@ -26,6 +27,7 @@ public sealed partial class CustomizationTab : Control
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
+        Control.AddOptionDropDown(ArcaneCVars.UiTheme, ThemeDropDown, GetThemeOptions());
         Control.AddOptionCheckBox(ArcaneCVars.ChatRunechat, UseRunechat);
         var fontOptions = GetRunechatFontOptions();
         var normalFont = Control.AddOptionDropDown(ArcaneCVars.ChatRunechatFont, RunechatFontDropDown, fontOptions);
@@ -175,6 +177,23 @@ public sealed partial class CustomizationTab : Control
             slider.Slider.OnValueChanged += _ => ValueChanged();
         }
 
+    }
+
+    private static List<OptionDropDownCVar<string>.ValueOption> GetThemeOptions()
+    {
+        var themes = IoCManager.Resolve<IUserInterfaceManager>().GetUIController<ArcaneThemeUIController>();
+        var options = new List<OptionDropDownCVar<string>.ValueOption>
+        {
+            new(ArcaneThemeUIController.StockThemeId, Loc.GetString("ui-theme-nanotrasen")),
+        };
+
+        foreach (var theme in ArcanePalette.Themes)
+        {
+            var name = Loc.GetString(theme.NameLocId);
+            options.Add(new(theme.Id, themes.CanUse(theme) ? name : Loc.GetString("ui-theme-locked", ("theme", name))));
+        }
+
+        return options;
     }
 }
 

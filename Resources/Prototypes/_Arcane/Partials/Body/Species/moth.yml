@@ -1,0 +1,20 @@
+- type: markingsGroup
+  id: Moth
+  limits:
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+
+- type: entity
+  id: OrganMothHead
+  components:
+  - type: VisualOrganMarkings
+    markingData:
+      # the bald head layers plus Hair, for the moth-only hairstyles
+      layers:
+      - Head
+      - Face
+      - Snout
+      - SnoutCover
+      - HeadSide
+      - HeadTop
+      - Hair

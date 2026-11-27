@@ -1,0 +1,548 @@
+- type: entity
+  id: RandomHumanoidVisitorScientist
+  parent: VisitorScienceBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorScientist, VisitorScientistAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+
+    - type: GhostRole
+      name: job-name-scientist
+
+- type: entity
+  id: RandomHumanoidVisitorGeneticist
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorGeneticist, VisitorGeneticistAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: ghost-role-information-medical-geneticist-name
+
+- type: entity
+  id: RandomHumanoidVisitorCMO
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorCMO, VisitorCMOAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-cmo
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorPsychologist
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorPsychologist, VisitorPsychologistAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-psychologist
+
+- type: entity
+  id: RandomHumanoidVisitorQM
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorQM, VisitorQMAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+
+    - type: GhostRole
+      name: job-name-qm
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorChef
+  parent: VisitorCivilianChefBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorChef, VisitorChefAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-chef
+
+- type: entity
+  id: RandomHumanoidVisitorHOP
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorHOP, VisitorHOPAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-hop
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorVirologist
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorVirologist, VisitorVirologistAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: ghost-role-information-medical-virologist-name
+
+- type: entity
+  id: RandomHumanoidVisitorSalvageSpecialist
+  parent: VisitorCargoBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorSalvageSpecialist, VisitorSalvageSpecialistAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+
+    - type: GhostRole
+      name: job-name-salvagespec
+
+- type: entity
+  id: RandomHumanoidVisitorWarden
+  parent: VisitorSecurityBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorWarden, VisitorWardenAlt ]
+          roleLoadout: [ RoleSurvivalSecurity ]
+
+    - type: GhostRole
+      name: job-name-warden
+
+- type: entity
+  id: RandomHumanoidVisitorDetective
+  parent: VisitorSecurityBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorDetective, VisitorDetectiveAlt ]
+          roleLoadout: [ RoleSurvivalSecurity ]
+    - type: GhostRole
+      name: job-name-detective
+
+- type: entity
+  id: RandomHumanoidVisitorLawyerCentcom
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorLawyerCentcom ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: ghost-role-information-civilian-centcom-lawyer-name
+      description: ghost-role-information-civilian-centcom-lawyer-description
+
+- type: entity
+  id: RandomHumanoidVisitorReporter
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorReporter, VisitorReporterAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-reporter
+
+- type: entity
+  id: RandomHumanoidVisitorRD
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorRD, VisitorRDAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-rd
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorSecurityCadet
+  parent: VisitorSecurityBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorSecurityCadet, VisitorSecurityCadetAlt ]
+          roleLoadout: [ RoleSurvivalSecurity ]
+    - type: GhostRole
+      name: job-name-cadet
+
+- type: entity
+  id: RandomHumanoidVisitorMime
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: MimePowers
+        - type: Loadout
+          prototypes: [ VisitorMime, VisitorMimeAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-mime
+
+- type: entity
+  id: RandomHumanoidVisitorMusicianFancy
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorMusicianFancyAltA, VisitorMusicianFancyAltB, VisitorMusicianFancyAltC, VisitorMusicianFancyAltD, VisitorMusicianFancyAltE, VisitorMusicianFancyAltF, VisitorMusicianFancyAltG, VisitorMusicianFancyAltH, VisitorMusicianFancyAltI ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-musician
+
+- type: entity
+  id: RandomHumanoidVisitorLawyer
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorLawyerAltA, VisitorLawyerAltB, VisitorLawyerAltC, VisitorLawyerAltD, VisitorLawyerAltE ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-lawyer
+
+- type: entity
+  id: RandomHumanoidVisitorDentist
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorDentist ]
+          roleLoadout: [ RoleSurvivalMedical ]
+
+    - type: GhostRole
+      name: ghost-role-information-medical-dentist-name
+
+- type: entity
+  id: RandomHumanoidVisitorChemist
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorChemist, VisitorChemistAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-chemist
+
+- type: entity
+  id: RandomHumanoidVisitorServiceWorker
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorServiceWorker, VisitorServiceWorkerAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-serviceworker
+
+- type: entity
+  id: RandomHumanoidVisitorTechnicalAssistant
+  parent: VisitorEngineeringBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorTechnicalAssistant, VisitorTechnicalAssistantAlt ]
+          roleLoadout: [ RoleSurvivalExtended ]
+    - type: GhostRole
+      name: job-name-technical-assistant
+
+- type: entity
+  id: RandomHumanoidVisitorCE
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorCE, VisitorCEAlt ]
+          roleLoadout: [ RoleSurvivalExtended ]
+    - type: GhostRole
+      name: job-name-ce
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorBartender
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorBartender, VisitorBartenderAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-bartender
+
+- type: entity
+  id: RandomHumanoidVisitorResearchAssistant
+  parent: VisitorScienceBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorResearchAssistant, VisitorResearchAssistantAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-research-assistant
+
+- type: entity
+  id: RandomHumanoidVisitorBotanist
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorBotanist, VisitorBotanistAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-botanist
+
+- type: entity
+  id: RandomHumanoidVisitorMusicianRelaxed
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorMusicianRelaxedAltA, VisitorMusicianRelaxedAltB, VisitorMusicianRelaxedAltC, VisitorMusicianRelaxedAltD, VisitorMusicianRelaxedAltE, VisitorMusicianRelaxedAltF, VisitorMusicianMariachi ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-musician
+
+- type: entity
+  id: RandomHumanoidClownTroupeBanana
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ BananaClown ]
+          roleLoadout: [ RoleSurvivalClown ]
+
+
+
+- type: entity
+  id: RandomHumanoidVisitorJanitor
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorJanitor, VisitorJanitorAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-janitor
+
+- type: entity
+  id: RandomHumanoidVisitorCargoTechnician
+  parent: VisitorCargoBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorCargoTech, VisitorCargoTechAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-cargotech
+
+- type: entity
+  id: RandomHumanoidVisitorParamedic
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorParamedic, VisitorParamedicAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-paramedic
+
+- type: entity
+  id: RandomHumanoidVisitorLibrarian
+  parent: VisitorCivilianLibrarianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorLibrarian, VisitorLibrarianAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-librarian
+
+- type: entity
+  id: RandomHumanoidVisitorHOS
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorHOS, VisitorHOSAlt ]
+          roleLoadout: [ RoleSurvivalSecurity ]
+    - type: GhostRole
+      name: job-name-hos
+      description: ghost-role-information-command-description
+
+- type: entity
+  id: RandomHumanoidVisitorChaplain
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: BibleUser
+        - type: CurseImmune
+        - type: Loadout
+          prototypes: [ VisitorChaplain, VisitorChaplainAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-chaplain
+
+- type: entity
+  id: RandomHumanoidVisitorMedicalIntern
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorMedicalIntern, VisitorMedicalInternAlt ]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-intern
+
+- type: entity
+  id: RandomHumanoidVisitorSecurityOfficer
+  parent: VisitorSecurityBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorSecurityOfficer, VisitorSecurityOfficerAlt ]
+          roleLoadout: [ RoleSurvivalSecurity ]
+    - type: GhostRole
+      name: job-name-security
+
+- type: entity
+  id: RandomHumanoidVisitorMusician
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorMusicianFancyAltA, VisitorMusicianFancyAltB, VisitorMusicianFancyAltC, VisitorMusicianFancyAltD, VisitorMusicianFancyAltE, VisitorMusicianFancyAltF, VisitorMusicianFancyAltG, VisitorMusicianFancyAltH, VisitorMusicianFancyAltI, VisitorMusicianRelaxedAltA, VisitorMusicianRelaxedAltB, VisitorMusicianRelaxedAltC, VisitorMusicianRelaxedAltD, VisitorMusicianRelaxedAltE, VisitorMusicianRelaxedAltF, VisitorMusicianMariachi ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-musician
+
+- type: entity
+  id: RandomHumanoidVisitorBoxer
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorBoxer, VisitorBoxerAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-boxer
+
+- type: entity
+  id: RandomHumanoidVisitorAtmosTech
+  parent: VisitorEngineeringBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorAtmosTech, VisitorAtmosTechAlt ]
+          roleLoadout: [ RoleSurvivalExtended ]
+    - type: GhostRole
+      name: job-name-atmostech
+
+- type: entity
+  id: RandomHumanoidVisitorClown
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorClown ]
+          roleLoadout: [ RoleSurvivalClown ]
+        - type: RandomMetadata
+          nameSegments:
+          - NamesClown
+          nameFormat: random-metadata-name-format-default
+    - type: GhostRole
+      name: job-name-clown
+
+- type: entity
+  id: RandomHumanoidVisitorMedicalDoctor
+  parent: VisitorMedicalBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorMedicalDoctor, VisitorMedicalDoctorAlt , VisitorScrubsPurple, VisitorScrubsGreen, VisitorScrubsBlue]
+          roleLoadout: [ RoleSurvivalMedical ]
+    - type: GhostRole
+      name: job-name-doctor
+
+- type: entity
+  id: RandomHumanoidVisitorZookeeper
+  parent: VisitorCivilianBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorZookeeper, VisitorZookeeperAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+
+    - type: GhostRole
+      name: job-name-zookeeper
+
+- type: entity
+  id: RandomHumanoidVisitorEngineer
+  parent: VisitorEngineeringBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorEngineer, VisitorEngineerAlt ]
+          roleLoadout: [ RoleSurvivalExtended ]
+
+    - type: GhostRole
+      name: job-name-engineer
+
+- type: entity
+  id: RandomHumanoidVisitorCaptain
+  parent: VisitorCommandBase
+  components:
+    - type: CloningAppearance
+      components:
+        - type: Loadout
+          prototypes: [ VisitorCaptain, VisitorCaptainAlt ]
+          roleLoadout: [ RoleSurvivalStandard ]
+    - type: GhostRole
+      name: job-name-captain
+      description: ghost-role-information-command-description

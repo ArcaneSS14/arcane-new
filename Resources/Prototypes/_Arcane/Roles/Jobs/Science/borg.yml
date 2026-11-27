@@ -1,0 +1,31 @@
+- type: jobAlternateTitle
+  id: StationAiAutomatedOverseer
+  name: job-name-alt-stationai-1
+
+- type: jobAlternateTitle
+  id: StationAiStationIntelligence
+  name: job-name-alt-stationai-2
+
+- type: jobAlternateTitle
+  id: BorgAndroid
+  name: job-name-alt-borg-2
+
+- type: jobAlternateTitle
+  id: BorgRobot
+  name: job-name-alt-borg-3
+
+- type: jobAlternateTitle
+  id: BorgCyborg
+  name: job-name-alt-borg-1
+
+- type: jobAlternateTitle
+  id: BorgUnit
+  name: job-name-alt-borg-4
+
+- type: jobAlternateTitle
+  id: StationAiCentralAi
+  name: job-name-alt-stationai-3
+
+- type: jobAlternateTitle
+  id: StationAiShipboardAi
+  name: job-name-alt-stationai-4

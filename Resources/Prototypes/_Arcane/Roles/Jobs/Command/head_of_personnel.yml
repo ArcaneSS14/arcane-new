@@ -1,0 +1,19 @@
+- type: jobAlternateTitle
+  id: HoPHumanResourcesOfficer
+  name: job-name-alt-hop-2
+
+- type: jobAlternateTitle
+  id: HoPPersonnelCoordinator
+  name: job-name-alt-hop-1
+
+- type: jobAlternateTitle
+  id: HoPPersonnelChief
+  name: job-name-alt-hop-3
+
+- type: jobAlternateTitle
+  id: HoPStaffAdministrator
+  name: job-name-alt-hop-5
+
+- type: jobAlternateTitle
+  id: HoPHRDirector
+  name: job-name-alt-hop-4

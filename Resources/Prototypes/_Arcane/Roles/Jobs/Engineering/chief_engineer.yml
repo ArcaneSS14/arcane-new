@@ -1,0 +1,15 @@
+- type: jobAlternateTitle
+  id: ChiefEngineerHeadOfEngineering
+  name: job-name-alt-ce-1
+
+- type: jobAlternateTitle
+  id: ChiefEngineerChiefEngineer
+  name: job-name-alt-ce-2
+
+- type: jobAlternateTitle
+  id: ChiefEngineerTechnicalDirector
+  name: job-name-alt-ce-3
+
+- type: jobAlternateTitle
+  id: ChiefEngineerHeadOfEngDept
+  name: job-name-alt-ce-4

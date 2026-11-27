@@ -1,0 +1,5 @@
+- type: entity
+  id: SpawnPointGhostXenomorph
+  components:
+  - type: GhostRole
+    banJob: GhostRoleXenomorph
