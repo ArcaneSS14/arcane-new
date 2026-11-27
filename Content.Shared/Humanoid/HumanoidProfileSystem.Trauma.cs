@@ -159,7 +159,8 @@ public sealed partial class HumanoidProfileSystem
             new(ent.Comp.Knowledge))
             // Arcane-Start
             .WithScale(ent.Comp.Scale)
-            .WithExtendedFlavor(CompOrNull<DetailExaminableComponent>(ent)?.Extended ?? new());
+            .WithExtendedFlavor(CompOrNull<DetailExaminableComponent>(ent)?.Extended ?? new())
+            .WithCustomization(ent.Comp.Customization.Clone());
             // Arcane-End
     }
 

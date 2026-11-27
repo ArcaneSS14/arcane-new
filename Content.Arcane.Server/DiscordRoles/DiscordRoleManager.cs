@@ -22,6 +22,7 @@ public sealed partial class DiscordRoleManager : IPostInjectInit, ISharedDiscord
     private readonly Dictionary<NetUserId, HashSet<DiscordRole>> _roles = new();
     private readonly Dictionary<NetUserId, HashSet<DiscordRole>> _roleOverrides = new();
     private readonly Dictionary<NetUserId, HashSet<DiscordRole>> _connecting = new();
+    private readonly Dictionary<NetUserId, RoleLoadState> _roleLoads = new();
     private readonly DiscordRoleIdMap _roleIds = new(DiscordRoleIds.All);
 
     /// <summary>
@@ -63,11 +64,31 @@ public sealed partial class DiscordRoleManager : IPostInjectInit, ISharedDiscord
     /// </summary>
     public async Task Preload(NetUserId player, CancellationToken cancel = default)
     {
-        var roleIds = await _db.GetDiscordRoleIds(player, cancel);
-        if (_connecting.Count >= MaxConnecting)
-            _connecting.Clear();
+        var state = AcquireRoleLoad(player);
+        var entered = false;
+        try
+        {
+            await state.Gate.WaitAsync(cancel);
+            entered = true;
+            if (!IsCurrentRoleLoad(player, state))
+                return;
 
-        _connecting[player] = _roleIds.Resolve(roleIds);
+            var roleIds = await _db.GetDiscordRoleIds(player, cancel);
+            cancel.ThrowIfCancellationRequested();
+            if (!IsCurrentRoleLoad(player, state))
+                return;
+
+            if (_connecting.Count >= MaxConnecting)
+                _connecting.Clear();
+
+            _connecting[player] = _roleIds.Resolve(roleIds);
+        }
+        finally
+        {
+            if (entered)
+                state.Gate.Release();
+            ReleaseRoleLoad(player, state);
+        }
     }
 
     public async Task<bool> HasRole(NetUserId player, DiscordRole role, CancellationToken cancel)
@@ -78,8 +99,10 @@ public sealed partial class DiscordRoleManager : IPostInjectInit, ISharedDiscord
 
     public async Task ReloadRoles(ICommonSession player, CancellationToken cancel = default)
     {
-        await LoadData(player, cancel);
-        SendRoles(player);
+        if (await TryLoadData(player, cancel)
+            && _player.TryGetSessionById(player.UserId, out var current)
+            && ReferenceEquals(current, player))
+            SendRoles(player);
     }
 
     public void SetRoleOverride(NetUserId player, DiscordRole role, bool enabled)
@@ -109,11 +132,69 @@ public sealed partial class DiscordRoleManager : IPostInjectInit, ISharedDiscord
 
     private async Task LoadData(ICommonSession player, CancellationToken cancel)
     {
-        var roleIds = await _db.GetDiscordRoleIds(player.UserId, cancel);
-        cancel.ThrowIfCancellationRequested();
-        _roles[player.UserId] = _roleIds.Resolve(roleIds);
-        _connecting.Remove(player.UserId);
-        RolesUpdated?.Invoke();
+        await TryLoadData(player, cancel);
+    }
+
+    private async Task<bool> TryLoadData(ICommonSession player, CancellationToken cancel)
+    {
+        var userId = player.UserId;
+        var state = AcquireRoleLoad(userId);
+        var entered = false;
+        try
+        {
+            await state.Gate.WaitAsync(cancel);
+            entered = true;
+            if (!IsCurrentRoleLoad(userId, state))
+                return false;
+
+            var roleIds = await _db.GetDiscordRoleIds(userId, cancel);
+            cancel.ThrowIfCancellationRequested();
+            if (!IsCurrentRoleLoad(userId, state)
+                || !_player.TryGetSessionById(userId, out var current)
+                || !ReferenceEquals(current, player))
+                return false;
+
+            _roles[userId] = _roleIds.Resolve(roleIds);
+            _connecting.Remove(userId);
+            RolesUpdated?.Invoke();
+            return true;
+        }
+        finally
+        {
+            if (entered)
+                state.Gate.Release();
+            ReleaseRoleLoad(userId, state);
+        }
+    }
+
+    private RoleLoadState AcquireRoleLoad(NetUserId userId)
+    {
+        if (!_roleLoads.TryGetValue(userId, out var state))
+            _roleLoads[userId] = state = new RoleLoadState();
+        state.Pending++;
+        return state;
+    }
+
+    private bool IsCurrentRoleLoad(NetUserId userId, RoleLoadState state)
+    {
+        return _roleLoads.TryGetValue(userId, out var current) && ReferenceEquals(current, state);
+    }
+
+    private void ReleaseRoleLoad(NetUserId userId, RoleLoadState state)
+    {
+        state.Pending--;
+        if (state.Pending != 0)
+            return;
+
+        if (IsCurrentRoleLoad(userId, state))
+            _roleLoads.Remove(userId);
+        state.Gate.Dispose();
+    }
+
+    private sealed class RoleLoadState
+    {
+        public readonly SemaphoreSlim Gate = new(1, 1);
+        public int Pending;
     }
 
     private void FinishLoad(ICommonSession player)
@@ -123,6 +204,7 @@ public sealed partial class DiscordRoleManager : IPostInjectInit, ISharedDiscord
 
     private void ClientDisconnected(ICommonSession player)
     {
+        _roleLoads.Remove(player.UserId);
         _roles.Remove(player.UserId);
         _connecting.Remove(player.UserId);
         _roleOverrides.Remove(player.UserId);
