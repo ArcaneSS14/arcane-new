@@ -205,11 +205,11 @@ namespace Content.Client.Administration.UI.Bwoink
         }
 
 
-        public bool SelectChannel(NetUserId channel) // Arcane-Edit: report unavailable channel
+        public bool SelectChannel(NetUserId channel) // Arcane-Edit: void > bool
         {
             if (!ChannelSelector.PlayerInfo.TryFirstOrDefault(
                 i => i.SessionId == channel, out var info))
-                return false; // Arcane-Edit: report unavailable channel
+                return false; // Arcane-Edit: return > return false
 
             // Arcane-Start
             if (_currentPlayer?.SessionId == channel)

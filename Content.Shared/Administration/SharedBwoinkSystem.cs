@@ -42,7 +42,7 @@ namespace Content.Shared.Administration
             public string? HistoryText { get; set; }
             // Arcane-End
 
-            public BwoinkTextMessage(NetUserId userId, NetUserId trueSender, string text, DateTime? sentAt = default, bool playSound = true, bool adminOnly = false, int? roundId = null) // Arcane-Edit: retain round with live AHelp messages
+            public BwoinkTextMessage(NetUserId userId, NetUserId trueSender, string text, DateTime? sentAt = default, bool playSound = true, bool adminOnly = false, int? roundId = null) // Arcane-Edit: adminOnly > adminOnly, roundId
             {
                 SentAt = sentAt ?? DateTime.Now;
                 UserId = userId;

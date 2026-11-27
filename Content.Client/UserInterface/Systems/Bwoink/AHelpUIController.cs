@@ -470,10 +470,10 @@ public sealed class AdminAHelpUIHandler : IAHelpUIHandler
 
     public void Open(NetUserId channelId, bool relayActive)
     {
-        // Arcane-Start
+        // Arcane-Edit-Start: request history when channel selection fails
         if (!SelectChannel(channelId))
             TryRequestHistory(channelId);
-        // Arcane-End
+        // Arcane-Edit-End
         OpenWindow();
     }
 
@@ -532,10 +532,10 @@ public sealed class AdminAHelpUIHandler : IAHelpUIHandler
     }
     public bool TryGetChannel(NetUserId ch, [NotNullWhen(true)] out BwoinkPanel? bp) => _activePanelMap.TryGetValue(ch, out bp);
 
-    private bool SelectChannel(NetUserId uid) // Arcane-Edit: propagate selection result
+    private bool SelectChannel(NetUserId uid) // Arcane-Edit: void > bool
     {
         EnsurePanel(uid);
-        return Control!.SelectChannel(uid); // Arcane-Edit: propagate selection result
+        return Control!.SelectChannel(uid); // Arcane-Edit: SelectChannel(uid) > return SelectChannel(uid)
     }
 
     public void Dispose()

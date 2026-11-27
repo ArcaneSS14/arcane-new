@@ -1,5 +1,4 @@
 // <Trauma>
-using Content.Arcane.Common.Radio; // Arcane
 using Content.Goobstation.Shared.Radio;
 using Content.Trauma.Common.Language;
 using Content.Trauma.Common.Language.Systems;
@@ -23,6 +22,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using Robust.Shared.Utility;
+using Content.Arcane.Common.Radio; // Arcane
 
 namespace Content.Server.Radio.EntitySystems;
 
@@ -86,10 +86,8 @@ public sealed partial class RadioSystem : SharedRadioSystem
             msg = args.LanguageObfuscatedChatMsg;
 
         _netMan.ServerSendMessage(new MsgChatMessage { Message = msg }, actor.PlayerSession.Channel);
-        // Arcane-Start
-        var arcaneEv = new IntrinsicRadioReceivedEvent(args.MessageSource, args.OriginalChatMsg.Message, args.Language.ID, args.Channel.Frequency.Value, msg.Message, args.Language.SpeechOverride.RequireSpeech);
-        RaiseLocalEvent(uid, ref arcaneEv);
-        // Arcane-End
+        var arcaneEv = new IntrinsicRadioReceivedEvent(args.MessageSource, args.OriginalChatMsg.Message, args.Language.ID, args.Channel.Frequency.Value, msg.Message, args.Language.SpeechOverride.RequireSpeech); // Arcane-Edit: frequency > frequency, audible message, speech requirement
+        RaiseLocalEvent(uid, ref arcaneEv); // Arcane
         // <Trauma>
     }
 

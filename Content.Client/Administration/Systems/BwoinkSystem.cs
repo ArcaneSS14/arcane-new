@@ -3,9 +3,7 @@ using Content.Shared.Administration;
 using JetBrains.Annotations;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
-// Arcane-Start
-using Content.Arcane.Common.Administration;
-// Arcane-End
+using Content.Arcane.Common.Administration; // Arcane
 
 namespace Content.Client.Administration.Systems
 {
