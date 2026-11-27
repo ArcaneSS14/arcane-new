@@ -429,6 +429,7 @@ namespace Content.Server.Database
             ModelPollSeen.OnModelCreating(modelBuilder); // Arcane
             ModelCustomVoteLog.OnModelCreating(modelBuilder);
             ModelAchievements.OnModelCreating(modelBuilder); // Arcane
+            ModelDiscordRoles.OnModelCreating(modelBuilder); // Arcane
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)

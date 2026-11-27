@@ -360,9 +360,9 @@ public sealed partial class ServerGameTicker
 
             readyPlayers.Add(session);
             HumanoidCharacterProfile profile;
-            if (_prefsManager.TryGetCachedPreferences(userId, out var preferences))
+            if (_prefsManager.TryGetCachedPreferences(userId, out _)) // Arcane-Edit: validate the cached profile below
             {
-                profile = preferences.SelectedCharacter;
+                profile = _prefsManager.GetValidatedSelectedCharacter(session); // Arcane-Edit: revalidate permissions at spawn
             }
             else
             {

@@ -1,0 +1,255 @@
+# Sponsor loadout groups (Patron, sponsor cloaks, gas masks and the rest) offered to every job.
+
+- type: roleLoadout
+  id: JobCommandMaid
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobCaptain
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobHeadOfPersonnel
+  groups:
+  - HoPMask
+  - Patron
+
+- type: roleLoadout
+  id: JobPassenger
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobBartender
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobServiceWorker
+  groups:
+  - !Remove BartenderJumpsuit
+  - ServiceCloak
+  - ServiceWorkerJumpsuit
+  - ServiceWorkerBelt
+  - ServiceWorkerShoes
+  - Patron
+
+- type: roleLoadout
+  id: JobChef
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobLibrarian
+  groups:
+  - LibrarianGlasses
+  - ServiceCloak
+  - LibrarianShoes
+  - Patron
+
+- type: roleLoadout
+  id: JobLawyer
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobChaplain
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobJanitor
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobBotanist
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobClown
+  groups:
+  - ServiceCloak
+  - ClownUnderwear
+  - Patron
+
+- type: roleLoadout
+  id: JobMime
+  groups:
+  - ServiceCloak
+  - MimeHands
+  - MimeSocks
+  - Patron
+
+- type: roleLoadout
+  id: JobMusician
+  groups:
+  - ServiceCloak
+  - MusicianShoes
+  - Patron
+
+- type: roleLoadout
+  id: JobQuartermaster
+  groups:
+  - QuartermasterMask
+  - QuartermasterHands
+  - Patron
+
+- type: roleLoadout
+  id: JobCargoTechnician
+  groups:
+  - CargoCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobSalvageSpecialist
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobChiefEngineer
+  groups:
+  - ChiefEngineerMask
+  - Patron
+
+- type: roleLoadout
+  id: JobTechnicalAssistant
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobStationEngineer
+  groups:
+  - EngineerCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobAtmosphericTechnician
+  groups:
+  - EngineerCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobResearchDirector
+  groups:
+  - ResearchDirectorMask
+  - Patron
+
+- type: roleLoadout
+  id: JobScientist
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobResearchAssistant
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobHeadOfSecurity
+  groups:
+  - HeadofSecurityMask
+  - Patron
+
+- type: roleLoadout
+  id: JobWarden
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobSecurityOfficer
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobDetective
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobSecurityCadet
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobChiefMedicalOfficer
+  groups:
+  - ChiefMedicalOfficerMask
+  - Patron
+
+- type: roleLoadout
+  id: JobMedicalDoctor
+  groups:
+  - MedicalCloak
+  - DoctorBikini
+  - Patron
+
+- type: roleLoadout
+  id: JobMedicalIntern
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobChemist
+  groups:
+  - ChemistBikini
+  - MedicalCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobParamedic
+  groups:
+  - MedicalCloak
+  - ParamedicBikini
+  - ParamedicVisor
+  - Patron
+
+- type: roleLoadout
+  id: JobReporter
+  groups:
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobPsychologist
+  groups:
+  - MedicalCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobNanotrasenRepresentative
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobRoboticist
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobBrigmedic
+  groups:
+  - Patron
+
+- type: roleLoadout
+  id: JobRadioHost
+  groups:
+  - RadioHostMicrophone
+  - RadioHostOuterclothing
+  - ServiceCloak
+  - Patron
+
+- type: roleLoadout
+  id: JobVirologist
+  groups:
+  - MedicalCloak
+  - VirologistBikini
+  - Patron

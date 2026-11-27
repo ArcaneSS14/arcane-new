@@ -566,6 +566,27 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.ToTable("antag", (string)null);
                 });
 
+            // Arcane-Start: Discord role sponsorship
+            modelBuilder.Entity("Content.Server.Database.ArcaneDiscordAccountRole", b =>
+                {
+                    b.Property<decimal>("DiscordId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("discord_id");
+
+                    b.Property<decimal>("RoleId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("DiscordId", "RoleId")
+                        .HasName("PK_rmc_discord_account_roles");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("IX_rmc_discord_account_roles_role_id");
+
+                    b.ToTable("rmc_discord_account_roles", (string)null);
+                });
+            // Arcane-End
+
             modelBuilder.Entity("Content.Server.Database.AssignedUserId", b =>
                 {
                     b.Property<int>("Id")
@@ -1631,6 +1652,12 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("numeric(20,0)")
                         .HasColumnName("rmc_discord_accounts_id");
 
+                    // Arcane-Start: Discord role sponsorship
+                    b.Property<DateTime?>("RolesUpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("roles_updated_at");
+                    // Arcane-End
+
                     b.HasKey("Id")
                         .HasName("PK_rmc_discord_accounts");
 
@@ -2280,6 +2307,20 @@ namespace Content.Server.Database.Migrations.Postgres
 
                     b.Navigation("Profile");
                 });
+
+            // Arcane-Start: Discord role sponsorship
+            modelBuilder.Entity("Content.Server.Database.ArcaneDiscordAccountRole", b =>
+                {
+                    b.HasOne("Content.Server.Database.RMCDiscordAccount", "Discord")
+                        .WithMany()
+                        .HasForeignKey("DiscordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_rmc_discord_account_roles_rmc_discord_accounts_discord_id");
+
+                    b.Navigation("Discord");
+                });
+            // Arcane-End
 
             modelBuilder.Entity("Content.Server.Database.Ban", b =>
                 {

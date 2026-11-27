@@ -84,11 +84,7 @@ public sealed partial class ChameleonControllerSystem : SharedChameleonControlle
         if (!TryComp<ActorComponent>(user, out var actorComponent))
             return;
 
-        var userId = actorComponent.PlayerSession.UserId;
-        var prefs = _preferences.GetPreferences(userId);
-
-        if (prefs.SelectedCharacter is not HumanoidCharacterProfile profile)
-            return;
+        var profile = _preferences.GetValidatedSelectedCharacter(actorComponent.PlayerSession); // Arcane-Edit: revalidate permissions before selecting gear
 
         var jobProtoId = LoadoutSystem.GetJobPrototype(jobPrototype.ID);
 

@@ -286,7 +286,7 @@
   description: ntr-experimental-hardsuit-desc
   productEntity: SpawnPodHardsuitExperimental
   icon:
-    sprite: _Goobstation/Clothing/OuterClothing/Hardsuits/ntr_experimental.rsi
+    sprite: _Arcane/Clothing/OuterClothing/Hardsuits/ntr_experimental.rsi # Arcane-Edit: _Goobstation/Clothing/OuterClothing/Hardsuits/ntr_experimental.rsi > _Arcane/Clothing/OuterClothing/Hardsuits/ntr_experimental.rsi
     state: icon
   cost:
     NTLoyaltyPoint: 30
