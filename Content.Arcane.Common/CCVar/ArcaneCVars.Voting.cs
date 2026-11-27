@@ -5,7 +5,7 @@ namespace Content.Arcane.Common.CCVar;
 public sealed partial class ArcaneCVars
 {
     /// <summary>
-    /// Start the preset and map votes automatically at the start of the lobby.
+    /// Start a map vote and select a weighted random preset at the start of the lobby.
     /// </summary>
     public static readonly CVarDef<bool> AutoVotingEnabled =
         CVarDef.Create("vote.auto_voting_enabled", false, CVar.SERVERONLY | CVar.ARCHIVE);
