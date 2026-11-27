@@ -828,7 +828,9 @@ namespace Content.Server.Administration.Systems
             {
                 if (!admins.Contains(session.Channel))
                 {
-                    RaiseNetworkEvent(historyMessage, session.Channel); // Arcane-Edit: reuse the public recipient format
+                    // Arcane-Edit-Start: reuse the public recipient format
+                    RaiseNetworkEvent(historyMessage, session.Channel);
+                    // Arcane-Edit-End
                 }
             }
 
