@@ -1,0 +1,5 @@
+- type: latheRecipe
+  parent: [ BaseCircuitboardRecipe, BaseServiceMachineRecipeCategory ]
+  id: WashingMachineCircuitboard
+  icon: { sprite: _Arcane/Structures/Furniture/washing_machine.rsi, state: base }
+  result: WashingMachineCircuitboard

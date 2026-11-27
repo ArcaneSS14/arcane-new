@@ -1,0 +1,11 @@
+- type: marking
+  id: LizardKoboldEarsTall
+  underHair: true
+
+- type: marking
+  id: LizardHornsKoboldEarspiercings
+  underHair: true
+
+- type: marking
+  id: LizardKoboldEarsMid
+  underHair: true

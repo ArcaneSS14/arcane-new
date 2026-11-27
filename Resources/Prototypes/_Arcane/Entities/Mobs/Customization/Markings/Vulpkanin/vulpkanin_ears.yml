@@ -74,10 +74,12 @@
   id: VulpEarFox
   bodyPart: HeadTop
   underHair: true # Arcane
-  groupWhitelist: [ Vulpkanin ]
+  groupWhitelist: [ Vulpkanin, Human, Oni, Slime ]
   sprites:
     - sprite: _Arcane/Mobs/Customization/Vulpkanin/ear_markings.rsi
       state: fox
+    - sprite: _Arcane/Mobs/Customization/Vulpkanin/ear_markings.rsi
+      state: fox-tips
     - sprite: _Arcane/Mobs/Customization/Vulpkanin/ear_markings.rsi
       state: fox-inner
 

@@ -1,0 +1,7 @@
+- type: marking
+  id: TajaranFluffyTailAnim
+  bodyPart: Tail
+  groupWhitelist: [ Human, Tajaran ]
+  sprites:
+  - sprite: _Arcane/Mobs/Customization/Tajaran/tails.rsi
+    state: tail_fluffy_anim

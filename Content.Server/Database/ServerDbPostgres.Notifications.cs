@@ -19,6 +19,7 @@ public sealed partial class ServerDbPostgres
     [
         BanManager.BanNotificationChannel,
         MultiServerKickManager.NotificationChannel,
+        Content.Arcane.Common.DiscordRoles.DiscordRoleConstants.UpdatedNotificationChannel, // Arcane
     ];
 
     private static readonly TimeSpan ReconnectWaitIncrease = TimeSpan.FromSeconds(10);

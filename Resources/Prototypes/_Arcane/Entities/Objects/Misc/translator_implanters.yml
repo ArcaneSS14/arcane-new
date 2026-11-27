@@ -1,0 +1,17 @@
+- type: entity
+  parent: [ BaseTranslatorImplanter ]
+  id: KarshanTranslatorImplanter
+  name: Karshan translator Implanter
+  suffix: Karshan
+  components:
+  - type: Implanter
+    implant: KarshanTranslatorImplant
+
+- type: entity
+  parent: [ BaseTranslatorImplanter ]
+  id: DwarvishTranslatorImplanter
+  name: Dwarvish translator Implanter
+  suffix: Dwarvish
+  components:
+  - type: Implanter
+    implant: DwarvishTranslatorImplant

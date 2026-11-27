@@ -5,3 +5,21 @@
   effects:
   - !type:GroupLoadoutEffect
     proto: MasterCMO
+
+# Back
+- type: loadout
+  id: ChiefMedicalOfficerBackpack
+  equipment:
+    back: ClothingBackpackCMO
+
+# Back
+- type: loadout
+  id: ChiefMedicalOfficerSatchel
+  equipment:
+    back: ClothingBackpackSatchelCMO
+
+# Back
+- type: loadout
+  id: ChiefMedicalOfficerDuffel
+  equipment:
+    back: ClothingBackpackDuffellCMO

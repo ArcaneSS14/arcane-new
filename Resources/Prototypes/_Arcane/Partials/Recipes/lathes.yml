@@ -2,3 +2,13 @@
   id: TopicalsStatic
   recipes:
   - SynthBloodpack
+
+- type: latheRecipePack
+  id: ClothingService
+  recipes:
+  - ClothingUniformJumpskirtMimeSexy
+
+- type: latheRecipePack
+  id: ServiceBoards
+  recipes:
+  - WashingMachineCircuitboard

@@ -12,6 +12,9 @@
       limit: 1
       required: true
       default: [ OniHornDoubleCurved ]
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
     enum.HumanoidVisualLayers.HeadSide:
       limit: 3
       required: true
@@ -59,6 +62,7 @@
     organs:
       Torso: OrganOniTorso
       Head: OrganOniHead
+      Tail: OrganOniTail
       ArmLeft: OrganOniArmLeft
       ArmRight: OrganOniArmRight
       HandLeft: OrganOniHandLeft
@@ -144,8 +148,19 @@
       group: Oni
 
 - type: entity
-  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganOniExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorsoTailed, OrganOniExternal ]
   id: OrganOniTorso
+
+- type: entity
+  parent: [ OrganBaseTail, OrganOniExternal ]
+  id: OrganOniTail
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Species/Vulpkanin/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _Trauma/empty.rsi
+      state: empty # the tail marking draws it
 
 - type: entity
   parent: [ OrganBaseHeadSexed, OrganBaseHeadBald, OrganOniExternal ] # Trauma - bald

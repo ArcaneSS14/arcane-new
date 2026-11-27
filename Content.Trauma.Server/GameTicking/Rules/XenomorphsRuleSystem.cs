@@ -239,11 +239,13 @@ public sealed partial class XenomorphsRuleSystem : GameRuleSystem<XenomorphsRule
             component.Announced = true;
             var stationUid = GetStationGrids().First();
 
-            if (!string.IsNullOrEmpty(component.Announcement))
-                _chat.DispatchGlobalAnnouncement(Loc.GetString(component.Announcement), component.Sender != null ? Loc.GetString(component.Sender) : null, colorOverride: component.AnnouncementColor);
-
-            _sound.StopStationEventMusic(stationUid, StationEventMusicType.Xenomorph);
-            _sound.DispatchStationEventMusic(stationUid, component.XenomorphInfestationSound, StationEventMusicType.Xenomorph, component.XenomorphInfestationSound.Params);
+            // Arcane-Edit-Start: no infestation announcement or music
+            // if (!string.IsNullOrEmpty(component.Announcement))
+            //     _chat.DispatchGlobalAnnouncement(Loc.GetString(component.Announcement), component.Sender != null ? Loc.GetString(component.Sender) : null, colorOverride: component.AnnouncementColor);
+            //
+            // _sound.StopStationEventMusic(stationUid, StationEventMusicType.Xenomorph);
+            // _sound.DispatchStationEventMusic(stationUid, component.XenomorphInfestationSound, StationEventMusicType.Xenomorph, component.XenomorphInfestationSound.Params);
+            // Arcane-Edit-End
         }
 
         CheckRoundEnd(uid, component, gameRule);
