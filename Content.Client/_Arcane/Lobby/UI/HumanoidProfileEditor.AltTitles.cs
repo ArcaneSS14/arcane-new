@@ -53,7 +53,17 @@ public sealed partial class HumanoidProfileEditor
 
         options.OnItemSelected += args =>
         {
-            options.SelectId(args.Id);
+            foreach (var (jobId, other) in _jobPriorities)
+            {
+                if (jobId != job.ID)
+                    continue;
+
+                foreach (var child in other.Children)
+                {
+                    if (child is OptionButton titlesForJob)
+                        titlesForJob.TrySelectId(args.Id);
+                }
+            }
             Profile = Profile?.WithJobAltTitle(job.ID, args.Id == 0 ? null : (ProtoId<JobAlternateTitlePrototype>?) titles[args.Id - 1]);
             SetDirty();
         };

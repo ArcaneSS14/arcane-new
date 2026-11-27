@@ -33,11 +33,11 @@ public sealed partial class HeadsetChannelMuteSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<RadioReceiveAttemptEvent>(OnReceiveAttempt);
-        SubscribeLocalEvent<HeadsetComponent, BoundUIOpenedEvent>(OnUiOpened);
+        SubscribeLocalEvent<HeadsetComponent, HeadsetChannelUiRequestMessage>(OnUiRequest);
         SubscribeLocalEvent<HeadsetComponent, HeadsetChannelMuteMessage>(OnToggleMute);
         SubscribeLocalEvent<HeadsetComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
         SubscribeLocalEvent<IntrinsicRadioReceiverComponent, OpenRadioChannelsActionEvent>(OnOpenRadioChannels);
-        SubscribeLocalEvent<IntrinsicRadioReceiverComponent, BoundUIOpenedEvent>(OnIntrinsicUiOpened);
+        SubscribeLocalEvent<IntrinsicRadioReceiverComponent, HeadsetChannelUiRequestMessage>(OnIntrinsicUiRequest);
         SubscribeLocalEvent<IntrinsicRadioReceiverComponent, HeadsetChannelMuteMessage>(OnIntrinsicToggleMute);
         _players.PlayerStatusChanged += OnPlayerStatusChanged;
     }
@@ -59,7 +59,7 @@ public sealed partial class HeadsetChannelMuteSystem : EntitySystem
             : args.RadioReceiver;
 
         if (TryComp<ActorComponent>(listener, out var actor)
-            && IsMuted(actor.PlayerSession.UserId, args.Channel.Frequency.Int()))
+            && IsMuted(actor.PlayerSession.UserId, args.Channel.Frequency.Value))
         {
             args.Cancelled = true;
         }
@@ -90,7 +90,7 @@ public sealed partial class HeadsetChannelMuteSystem : EntitySystem
         args.Verbs.Add(verb);
     }
 
-    private void OnUiOpened(Entity<HeadsetComponent> ent, ref BoundUIOpenedEvent args)
+    private void OnUiRequest(Entity<HeadsetComponent> ent, ref HeadsetChannelUiRequestMessage args)
     {
         if (args.UiKey is not HeadsetChannelUiKey.Key)
             return;
@@ -108,7 +108,7 @@ public sealed partial class HeadsetChannelMuteSystem : EntitySystem
         _ui.TryOpenUi(ent.Owner, HeadsetChannelUiKey.Key, args.Performer);
     }
 
-    private void OnIntrinsicUiOpened(Entity<IntrinsicRadioReceiverComponent> ent, ref BoundUIOpenedEvent args)
+    private void OnIntrinsicUiRequest(Entity<IntrinsicRadioReceiverComponent> ent, ref HeadsetChannelUiRequestMessage args)
     {
         if (args.UiKey is not HeadsetChannelUiKey.Key)
             return;
@@ -190,12 +190,12 @@ public sealed partial class HeadsetChannelMuteSystem : EntitySystem
     private bool IsChannelOnFrequency(List<ProtoId<RadioChannelPrototype>> channels, int frequency)
     {
         return channels.Any(channel =>
-            _prototypes.TryIndex(channel, out var proto) && proto.Frequency == frequency);
+            _prototypes.TryIndex(channel, out var proto) && proto.Frequency.Value == frequency);
     }
 
     private void UpdateUiState(EntityUid uid, EntityUid actor)
     {
-        var state = new HeadsetChannelUiState(GetChannels(uid), GetMuted(actor));
-        _ui.SetUiState(uid, HeadsetChannelUiKey.Key, state);
+        var update = new HeadsetChannelUiUpdateMessage(GetChannels(uid), new HashSet<int>(GetMuted(actor)));
+        _ui.ServerSendUiMessage(uid, HeadsetChannelUiKey.Key, update, actor);
     }
 }

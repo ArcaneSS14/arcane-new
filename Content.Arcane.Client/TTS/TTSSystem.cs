@@ -41,12 +41,14 @@ public sealed partial class TTSSystem : EntitySystem
     private bool _ghostRadioUseTTS = false;
     private readonly HashSet<int> _mutedRadioChannels = new();
     private readonly Dictionary<int, float> _radioChannelVolumes = new();
+    private readonly Dictionary<EntityUid, AudioStream> _playingStreams = new();
     private EntityUid? _previewStream;
     private ulong _fileIdx = 0;
     private static ulong _shareIdx = 0;
 
     public override void Initialize()
     {
+        EntityManager.EntityDeleted += OnAudioEntityDeleted;
         _prefix = ResPath.Root / $"TTS{_shareIdx++}";
         _sawmill = Logger.GetSawmill("tts");
         _res.AddRoot(_prefix, _contentRoot);
@@ -67,6 +69,13 @@ public sealed partial class TTSSystem : EntitySystem
 
     public override void Shutdown()
     {
+        EntityManager.EntityDeleted -= OnAudioEntityDeleted;
+        foreach (var (uid, stream) in _playingStreams)
+        {
+            Del(uid);
+            stream.Dispose();
+        }
+        _playingStreams.Clear();
         base.Shutdown();
         _cfg.UnsubValueChanged(ArcaneCVars.TTSVolume, OnTtsVolumeChanged);
         _cfg.UnsubValueChanged(ArcaneCVars.TTSRadioVolume, OnTtsRadioVolumeChanged);
@@ -88,6 +97,13 @@ public sealed partial class TTSSystem : EntitySystem
     {
         _audio.Stop(_previewStream);
         _previewStream = null;
+    }
+
+    private void OnAudioEntityDeleted(Entity<MetaDataComponent> entity)
+    {
+        // The audio component has released its source before the buffer is freed.
+        if (_playingStreams.Remove(entity.Owner, out var stream))
+            stream.Dispose();
     }
 
     private void OnTtsVolumeChanged(float volume)
@@ -145,18 +161,22 @@ public sealed partial class TTSSystem : EntitySystem
         var filePath = new ResPath($"{_fileIdx++}.ogg");
         _contentRoot.AddOrUpdateFile(filePath, ev.Data);
 
+        AudioStream? stream = null;
         try
         {
             var audioResource = new AudioResource();
             audioResource.Load(IoCManager.Instance!, _prefix / filePath);
+            stream = audioResource.AudioStream;
 
             var audioParams = AudioParams.Default
                 .WithVolume(AdjustVolume(ev.IsWhisper, isRadio, ev.Frequency, GetSourceVolumeOffset(ev.SourceUid)))
                 .WithMaxDistance(AdjustDistance(ev.IsWhisper));
 
+            EntityUid? playing = null;
             if (ev.IsPreview)
             {
-                _previewStream = _audio.PlayGlobal(audioResource.AudioStream, null, audioParams)?.Entity;
+                playing = _audio.PlayGlobal(stream, null, audioParams)?.Entity;
+                _previewStream = playing;
             }
             else if (ev.SourceUid != null)
             {
@@ -164,15 +184,22 @@ public sealed partial class TTSSystem : EntitySystem
                     return;
                 var sourceUid = GetEntity(ev.SourceUid.Value);
                 if (sourceUid.IsValid())
-                    _audio.PlayEntity(audioResource.AudioStream, sourceUid, null, audioParams);
+                    playing = _audio.PlayEntity(stream, sourceUid, null, audioParams)?.Entity;
             }
             else
             {
-                _audio.PlayGlobal(audioResource.AudioStream, null, audioParams);
+                playing = _audio.PlayGlobal(stream, null, audioParams)?.Entity;
+            }
+
+            if (playing is { } uid)
+            {
+                _playingStreams.Add(uid, stream);
+                stream = null;
             }
         }
         finally
         {
+            stream?.Dispose();
             _contentRoot.RemoveFile(filePath);
         }
     }
