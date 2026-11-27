@@ -119,10 +119,10 @@ public sealed partial class TTSManager
             var requestUrl = BuildRequestUrl(speaker, text, effect);
 
             var timeout = _cfg.GetCVar(ArcaneCVars.TTSApiTimeout);
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
 
             // GET request to ntts.fdev.team API
-            var response = await _httpClient.GetAsync(requestUrl, cts.Token);
+            using var response = await _httpClient.GetAsync(requestUrl, cts.Token);
 
             if (!response.IsSuccessStatusCode)
             {

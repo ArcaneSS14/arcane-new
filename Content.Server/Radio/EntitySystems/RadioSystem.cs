@@ -86,8 +86,10 @@ public sealed partial class RadioSystem : SharedRadioSystem
             msg = args.LanguageObfuscatedChatMsg;
 
         _netMan.ServerSendMessage(new MsgChatMessage { Message = msg }, actor.PlayerSession.Channel);
-        var arcaneEv = new IntrinsicRadioReceivedEvent(args.MessageSource, args.OriginalChatMsg.Message, args.Language.ID, args.Channel.Frequency.Int()); // Arcane
-        RaiseLocalEvent(uid, ref arcaneEv); // Arcane
+        // Arcane-Start
+        var arcaneEv = new IntrinsicRadioReceivedEvent(args.MessageSource, args.OriginalChatMsg.Message, args.Language.ID, args.Channel.Frequency.Value);
+        RaiseLocalEvent(uid, ref arcaneEv);
+        // Arcane-End
         // <Trauma>
     }
 
