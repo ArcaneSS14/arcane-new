@@ -235,7 +235,10 @@ namespace Content.Server.Preferences.Managers
                     NsfwOoc = profile.NsfwOocFlavorText,
                     NsfwLinks = profile.NsfwLinksFlavorText,
                     NsfwTags = profile.NsfwTagsFlavorText,
-                });
+                })
+                .WithCustomization(CharacterCustomizationDb.Read(profile))
+                .WithErpPreference(Enum.IsDefined((ErpPreference) profile.ErpPreference) ? (ErpPreference) profile.ErpPreference : ErpPreference.No)
+                .WithTtsVoice(string.IsNullOrEmpty(profile.TtsVoice) ? HumanoidCharacterProfile.DefaultTtsVoice : profile.TtsVoice);
                 // Arcane-End
         }
 
@@ -508,6 +511,13 @@ namespace Content.Server.Preferences.Managers
         /// <summary>
         /// Retrieves preferences for the given username from storage.
         /// </summary>
+        // Arcane-Start: validate current permissions without modifying the saved selection
+        public HumanoidCharacterProfile GetValidatedSelectedCharacter(ICommonSession session)
+        {
+            return GetPreferences(session.UserId).SelectedCharacter.Validated(session, _dependencies, SponsorPrototypes.Get(session, _dependencies));
+        }
+        // Arcane-End
+
         public PlayerPreferences GetPreferences(NetUserId userId)
         {
             var prefs = _cachedPlayerPrefs[userId].Prefs;

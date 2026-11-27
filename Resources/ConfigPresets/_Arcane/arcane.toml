@@ -1,0 +1,4 @@
+# Arcane server defaults, applied after the Trauma preset.
+
+[audio]
+lobby_music_collection = "ArcaneLobbyMusic"

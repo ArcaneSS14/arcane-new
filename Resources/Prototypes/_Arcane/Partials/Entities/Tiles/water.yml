@@ -1,0 +1,7 @@
+- type: entity
+  id: FloorWaterEntity
+  components:
+  - type: SpeedModifierContacts
+    ignoreWhitelist: !Clear
+      tags:
+      - Feroxi

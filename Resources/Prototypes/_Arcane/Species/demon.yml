@@ -1,0 +1,29 @@
+- type: species
+  id: Demon
+  name: species-name-demon
+  roundStart: true
+  prototype: MobDemon
+  dollPrototype: AppearanceDemon
+  defaultSkinTone: "#34a223"
+  skinColoration: Hues
+  customName: true
+  sexes:
+  - Male
+  - Female
+  - Futanari
+  naming: FirstLast
+  minAge: 18
+  maxAge: 250
+  youngAge: 80
+  oldAge: 175
+  averageWeight: 70
+  defaultScale: 1
+  minScale: 0.9
+  maxScale: 1.2
+  defaultSoundsBySex:
+  - MaleHuman
+  - FemaleHuman
+  - FemaleHuman
+  voices:
+  - MaleHuman
+  - FemaleHuman

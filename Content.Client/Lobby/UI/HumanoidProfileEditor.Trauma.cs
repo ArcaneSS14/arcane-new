@@ -38,6 +38,7 @@ public sealed partial class HumanoidProfileEditor
         ScaleSlider.OnValueChanged += _ => UpdateScale();
         ScaleReset.OnPressed += _ => ResetScale();
         // Arcane-End
+        InitializeCustomization(); // Arcane
     }
 
     // Arcane-Start: Keep slider, profile value, labels, and preview in sync

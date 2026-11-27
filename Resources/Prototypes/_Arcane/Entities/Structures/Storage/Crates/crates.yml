@@ -172,6 +172,16 @@
     sprite: _Arcane/Structures/Storage/Crates/bitrun_secure.rsi
   - type: AccessReader
     access: [["Salvage"]]
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:AllSelector
+        children:
+        - id: ClothingOuterCoatBitrunner
+          amount: 1
+        - id: ClothingUniformBitrunner
+          amount: 1
+        - id: ClothingHandsGlovesBitrunner
+          amount: 1
 
 - type: entity
   parent: [ CrateBaseSecure, CrateCargo ]
