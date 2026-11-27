@@ -1,3 +1,4 @@
+// Arcane-Start
 using Content.Server.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -22,3 +23,4 @@ public sealed class ArcaneJobAlternateTitles : Migration
         migrationBuilder.DropColumn(name: "job_alternate_titles", table: "profile");
     }
 }
+// Arcane-End
